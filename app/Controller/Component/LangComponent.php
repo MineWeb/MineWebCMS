@@ -86,8 +86,21 @@ class LangComponent extends Object {
 
 		if(isset($language_file[$msg])) { // et si le msg existe
 			return $language_file[$msg]; // je retourne le msg config
-		} else { // sinon
-			return $msg; // le msg tel quel
+		} else { // sinon je vérifie si c'est un msg de plugin
+			foreach ($this->EyPlugin->get_list() as $key => $value) {
+				$name = $value['plugins']['name'];
+				if(file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/'.$language.'.json')) {
+					$language_file = file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/'.$language.'.json');
+					$language_file = json_decode($language_file, true);
+				} elseif(file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/fr.json')) {
+					$language_file = file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/fr.json');
+					$language_file = json_decode($language_file, true);
+				}
+				if(isset($language_file[$msg])) {
+					$msg = $language_file[$msg];
+				}
+			}
+			return $msg; // le msg tel quel ou modifié
 		}
 	}
 
