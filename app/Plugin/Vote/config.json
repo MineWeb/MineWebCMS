@@ -1,0 +1,20 @@
+{
+	"name":"Voter",
+	"slug":"vote",
+	"nav":true,
+	"admin":false,
+	"author":"Eywek",
+	"version":"0.1",
+	"plugin_id":"3",
+	"permissions" : {
+		"available" : ["VOTE_SHOW_REWARDS", "VOTE_SHOW_RANKING", "VOTE"],
+		"default" : {
+			"0" : {
+
+				},
+			"2" : {
+				
+			}
+		} 
+	}
+}

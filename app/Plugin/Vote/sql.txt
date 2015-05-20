@@ -1,0 +1,17 @@
+CREATE TABLE IF NOT EXISTS `votes` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `username` varchar(32) NOT NULL,
+  `ip` int(16) NOT NULL,
+  `created` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+|
+CREATE TABLE IF NOT EXISTS `vote_configurations` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `time_vote` int(5) NOT NULL,
+  `page_vote` varchar(255) NOT NULL,
+  `id_vote` int(10) NOT NULL,
+  `rewards_type` int(1) NOT NULL DEFAULT '0',
+  `rewards` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;

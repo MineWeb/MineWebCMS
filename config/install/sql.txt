@@ -1,0 +1,130 @@
+CREATE TABLE IF NOT EXISTS `comments` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `content` text NOT NULL,
+  `created` datetime NOT NULL,
+  `author` varchar(255) NOT NULL,
+  `news_id` int(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+|
+CREATE TABLE IF NOT EXISTS `configurations` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `theme` varchar(50) NOT NULL DEFAULT 'default',
+  `layout` varchar(255) NOT NULL,
+  `maintenance` text NOT NULL,
+  `money_name_singular` varchar(255) NOT NULL,
+  `money_name_plural` varchar(255) NOT NULL,
+  `server_state` int(1) NOT NULL,
+  `server_host` varchar(32) NOT NULL,
+  `server_port` int(6) NOT NULL,
+  `server_secretkey` varchar(50) NOT NULL,
+  `server_timeout` int(2) NOT NULL,
+  `version` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+|
+CREATE TABLE IF NOT EXISTS `histories` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `action` varchar(255) NOT NULL,
+  `category` varchar(50) NOT NULL,
+  `created` datetime NOT NULL,
+  `author` varchar(255) NOT NULL,
+  `other` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+|
+CREATE TABLE IF NOT EXISTS `likes` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `news_id` int(20) NOT NULL,
+  `author` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+|
+CREATE TABLE IF NOT EXISTS `navbars` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `order` int(2) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `type` int(1) NOT NULL DEFAULT '1',
+  `url` varchar(250) NOT NULL,
+  `submenu` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+|
+CREATE TABLE IF NOT EXISTS `news` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `title` varchar(50) NOT NULL,
+  `content` text NOT NULL,
+  `author` varchar(255) NOT NULL,
+  `created` datetime NOT NULL,
+  `updated` datetime NOT NULL,
+  `comments` int(20) NOT NULL DEFAULT '0',
+  `like` int(20) NOT NULL DEFAULT '0',
+  `img` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+|
+CREATE TABLE IF NOT EXISTS `pages` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) NOT NULL,
+  `content` longtext NOT NULL,
+  `slug` varchar(150) NOT NULL,
+  `author` varchar(250) NOT NULL,
+  `created` datetime NOT NULL,
+  `updated` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+|
+CREATE TABLE IF NOT EXISTS `permissions` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `rank` int(1) NOT NULL,
+  `permissions` longtext NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+|
+CREATE TABLE IF NOT EXISTS `plugins` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `plugin_id` int(20) NOT NULL,
+  `created` datetime NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `author` varchar(50) NOT NULL,
+  `version` varchar(20) NOT NULL,
+  `tables` text NOT NULL,
+  `state` int(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+|
+CREATE TABLE IF NOT EXISTS `sliders` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `title` varchar(50) NOT NULL,
+  `subtitle` text NOT NULL,
+  `url_img` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+|
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `pseudo` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `session` varchar(255) DEFAULT NULL,
+  `rank` int(1) NOT NULL,
+  `money` int(20) NOT NULL DEFAULT '0',
+  `vote` int(3) NOT NULL DEFAULT '0',
+  `ip` varchar(255) NOT NULL,
+  `created` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+|
+CREATE TABLE IF NOT EXISTS `visits` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `ip` varchar(20) NOT NULL,
+  `created` datetime NOT NULL,
+  `referer` text NOT NULL,
+  `navigator` varchar(255) NOT NULL,
+  `page` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+|
+INSERT INTO `configurations` (`id`, `name`, `theme`, `layout`, `maintenance`, `money_name_singular`, `money_name_plural`, `server_state`, `server_host`, `server_port`, `server_secretkey`, `server_timeout`, `version`) VALUES
+(1, 'MineWeb', 'Mineweb', 'default', '0', 'point', 'points', 0, '', '', '', '', 'DEV.0.1');

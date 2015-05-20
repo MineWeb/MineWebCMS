@@ -1,0 +1,29 @@
+/*!
+ * Avocado Panel Theme
+ *
+ * Theme: Avocado
+ *
+ * Copyright 2013 Lychee Designs
+ * 
+ *
+ */
+
+.dropdown-menu > .active > a, 
+.dropdown-menu > .active > a:hover, 
+.dropdown-menu > .active > a:focus,
+.navbar-inverse .nav .dropdown-menu .active > a,
+.navbar-inverse .nav .dropdown-menu .active > a:hover, 
+.navbar-inverse .nav .dropdown-menu .active > a:focus {
+	background-color:#72914C;
+}
+
+.legend-color {
+	height: 10px;
+	width: 10px;
+	float: left;
+}
+.legend-text {
+	margin-left: 5px;
+	top: -4px;
+	position: relative;
+}
