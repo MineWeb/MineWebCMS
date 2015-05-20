@@ -9,12 +9,8 @@
 	"permissions" : {
 		"available" : ["CREDIT_ACCOUNT", "CAN_BUY"],
 		"default" : {
-			"0" : {
-
-				},
-			"2" : {
-
-			}
+			"0" : ["CREDIT_ACCOUNT", "CAN_BUY"],
+			"2" : ["CREDIT_ACCOUNT", "CAN_BUY"]
 		} 
 	}
 }

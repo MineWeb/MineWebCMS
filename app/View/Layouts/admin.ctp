@@ -127,6 +127,9 @@ $this->EyPlugin = new EyPluginComponent;
 							<li><a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><?= $Lang->get('THEMES') ?></a></li>
 							<li><a href="<?= $this->Html->url(array('controller' => 'pages', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><?= $Lang->get('PAGES') ?></a></li>
 							<li><a href="<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><?= $Lang->get('NAVBAR') ?></a></li>
+							<li><a href="<?= $this->Html->url(array('controller' => 'lang', 'action' => 'index', 'admin' => true)) ?>"><i class="icon-bold"></i> <?= $Lang->get('LANG') ?></a></li>
+							<li><a href="<?= $this->Html->url(array('controller' => 'api', 'action' => 'index', 'admin' => true)) ?>"><i class="icon-wrench"></i> <?= $Lang->get('API') ?></a></li>
+							<li><a href="<?= $this->Html->url(array('controller' => 'permissions', 'action' => 'index', 'admin' => true)) ?>"><i class="icon-bold"></i> <?= $Lang->get('PERMISSIONS') ?></a></li>
 							<?php if(!empty($plugins_need_admin)) { ?>
 								<li class="dropdown-submenu">
 									<a href="#"><i class="icon-signin"></i> <?= $Lang->get('PLUGINS_ADMINISTRATION') ?></a>
@@ -139,8 +142,6 @@ $this->EyPlugin = new EyPluginComponent;
 							<?php } ?>
 						</ul>
 					</li>
-					<li><a href="<?= $this->Html->url(array('controller' => 'lang', 'action' => 'index', 'admin' => true)) ?>"><i class="icon-bold"></i> <?= $Lang->get('LANG') ?></a></li>
-					<li><a href="<?= $this->Html->url(array('controller' => 'api', 'action' => 'index', 'admin' => true)) ?>"><i class="icon-wrench"></i> <?= $Lang->get('API') ?></a></li>
 					<li><a href="<?= $this->Html->url(array('controller' => 'update', 'action' => 'index', 'admin' => true)) ?>"><i class="icon-sitemap"></i> <?= $Lang->get('UPDATE') ?></a></li>
 				</ul>
 			</div>

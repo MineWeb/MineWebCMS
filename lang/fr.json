@@ -450,5 +450,6 @@
     "UPDATE_SUCCESS":"La mise à jour s'est bien effectuée",
     "ONLINE_PLAYERS":"Joueurs en lignes",
     "BANLIST":"Liste des bannis",
-    "WHITELIST":"Liste blanche"
+    "WHITELIST":"Liste blanche",
+    "PERMISSIONS":"Permissions"
 }

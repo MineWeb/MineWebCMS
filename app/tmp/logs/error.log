@@ -2691,3 +2691,454 @@ Request URL: /Projets%20en%20cours/EyCraft/www/css/font/fontawesome-webfont.svg
 Stack Trace:
 #0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #1 {main}
+2015-05-20 18:19:55 Error: [MissingControllerException] Controller class Font-awesome-4.1.0Controller could not be found.
+Exception Attributes: array (
+  'class' => 'Font-awesome-4.1.0Controller',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/font-awesome-4.1.0/fonts/fontawesome-webfont.woff?v=4.1.0
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 18:19:55 Error: [MissingActionException] Action ThemeController::Mineweb() could not be found.
+Exception Attributes: array (
+  'controller' => 'ThemeController',
+  'action' => 'Mineweb',
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/theme/Mineweb/font/Ridge-Regular-webfont.woff
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(ThemeController), Object(CakeRequest))
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-05-20 18:19:57 Error: [MissingControllerException] Controller class Font-awesome-4.1.0Controller could not be found.
+Exception Attributes: array (
+  'class' => 'Font-awesome-4.1.0Controller',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/font-awesome-4.1.0/fonts/fontawesome-webfont.ttf?v=4.1.0
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 18:19:57 Error: [MissingActionException] Action ThemeController::Mineweb() could not be found.
+Exception Attributes: array (
+  'controller' => 'ThemeController',
+  'action' => 'Mineweb',
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/theme/Mineweb/font/Ridge-Regular-webfont.ttf
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(ThemeController), Object(CakeRequest))
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-05-20 18:19:58 Error: [MissingControllerException] Controller class Font-awesome-4.1.0Controller could not be found.
+Exception Attributes: array (
+  'class' => 'Font-awesome-4.1.0Controller',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/font-awesome-4.1.0/fonts/fontawesome-webfont.svg?v=4.1.0
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 18:19:59 Error: [MissingActionException] Action ThemeController::Mineweb() could not be found.
+Exception Attributes: array (
+  'controller' => 'ThemeController',
+  'action' => 'Mineweb',
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/theme/Mineweb/font/Ridge-Regular-webfont.svg
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(ThemeController), Object(CakeRequest))
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-05-20 18:28:23 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.woff?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 18:28:25 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.ttf?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 18:28:27 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.svg
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 18:28:46 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/img/chosen-sprite.png
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 18:38:39 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.woff?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 18:38:40 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.ttf?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 18:38:42 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.svg
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 18:39:00 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.woff?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 18:39:02 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.ttf?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 18:39:03 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.svg
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 18:39:41 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.woff?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 18:39:45 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.ttf?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 18:39:46 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.svg
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 18:41:04 Error: [MissingControllerException] Controller class PermissionsController could not be found.
+Exception Attributes: array (
+  'class' => 'PermissionsController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/permissions
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 18:41:06 Error: [MissingActionException] Action APIController::admin_get_head_skin() could not be found.
+Exception Attributes: array (
+  'controller' => 'APIController',
+  'action' => 'admin_get_head_skin',
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/API/get_head_skin/Eywek/60
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(APIController), Object(CakeRequest))
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-05-20 18:41:08 Error: [MissingActionException] Action UserController::admin_get_captcha() could not be found.
+Exception Attributes: array (
+  'controller' => 'UserController',
+  'action' => 'admin_get_captcha',
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/user/get_captcha
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-05-20 18:41:09 Error: [MissingControllerException] Controller class PermissionsController could not be found.
+Exception Attributes: array (
+  'class' => 'PermissionsController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/permissions
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 19:10:42 Error: [MissingViewException] View file "/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/View/Themed/Mineweb/Permissions/admin_index.ctp" is missing.
+Exception Attributes: array (
+  'file' => '/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/View/Themed/Mineweb/Permissions/admin_index.ctp',
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/permissions
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/View/View.php(468): View->_getViewFileName(NULL)
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Controller/Controller.php(954): View->render(NULL, NULL)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(198): Controller->render()
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(PermissionsController), Object(CakeRequest))
+#4 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2015-05-20 19:10:46 Error: [MissingActionException] Action APIController::admin_get_head_skin() could not be found.
+Exception Attributes: array (
+  'controller' => 'APIController',
+  'action' => 'admin_get_head_skin',
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/API/get_head_skin/Eywek/60
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(APIController), Object(CakeRequest))
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-05-20 19:10:47 Error: [MissingActionException] Action UserController::admin_get_captcha() could not be found.
+Exception Attributes: array (
+  'controller' => 'UserController',
+  'action' => 'admin_get_captcha',
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/user/get_captcha
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-05-20 19:18:04 Error: Fatal Error (4): syntax error, unexpected 'public' (T_PUBLIC), expecting ',' or ';' in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/PermissionsComponent.php, line 6]
+2015-05-20 19:18:04 Error: [FatalErrorException] syntax error, unexpected 'public' (T_PUBLIC), expecting ',' or ';'
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/permissions
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Error/ErrorHandler.php(203): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/Users/valentin...', 6)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/Users/valentin...', 6, Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(931): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/Users/valentin...', 6, Array)
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(904): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2015-05-20 19:18:33 Error: Fatal Error (4): syntax error, unexpected 'public' (T_PUBLIC), expecting ',' or ';' in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/PermissionsComponent.php, line 6]
+2015-05-20 19:18:33 Error: [FatalErrorException] syntax error, unexpected 'public' (T_PUBLIC), expecting ',' or ';'
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/permissions
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Error/ErrorHandler.php(203): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/Users/valentin...', 6)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/Users/valentin...', 6, Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(931): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/Users/valentin...', 6, Array)
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(904): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2015-05-20 19:19:11 Error: Fatal Error (4): syntax error, unexpected 'public' (T_PUBLIC), expecting ',' or ';' in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/PermissionsComponent.php, line 6]
+2015-05-20 19:19:11 Error: [FatalErrorException] syntax error, unexpected 'public' (T_PUBLIC), expecting ',' or ';'
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/permissions
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Error/ErrorHandler.php(203): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/Users/valentin...', 6)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/Users/valentin...', 6, Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(931): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/Users/valentin...', 6, Array)
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(904): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2015-05-20 19:19:39 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.woff?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 19:19:39 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.ttf?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 19:19:42 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.svg
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 19:22:19 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.woff?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 19:22:20 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.ttf?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 19:22:22 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.svg
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 19:25:06 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.woff?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 19:25:08 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.ttf?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 19:25:10 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.svg
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 19:33:56 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.woff?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 19:33:58 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.ttf?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 19:33:59 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.svg
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-20 19:43:24 Error: Fatal Error (4): syntax error, unexpected ';' in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/PermissionsComponent.php, line 62]
+2015-05-20 19:43:24 Error: [FatalErrorException] syntax error, unexpected ';'
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/permissions
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Error/ErrorHandler.php(203): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/Users/valentin...', 62)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/Users/valentin...', 62, Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(931): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/Users/valentin...', 62, Array)
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(904): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2015-05-20 19:44:19 Error: Fatal Error (4): syntax error, unexpected ';' in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/PermissionsComponent.php, line 62]
+2015-05-20 19:44:19 Error: [FatalErrorException] syntax error, unexpected ';'
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/permissions
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Error/ErrorHandler.php(203): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/Users/valentin...', 62)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/Users/valentin...', 62, Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(931): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/Users/valentin...', 62, Array)
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(904): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2015-05-20 19:47:26 Error: Fatal Error (4): syntax error, unexpected '}', expecting ',' or ';' in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/View/Permissions/admin_index.ctp, line 29]
+2015-05-20 19:47:26 Error: [FatalErrorException] syntax error, unexpected '}', expecting ',' or ';'
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/permissions
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Error/ErrorHandler.php(203): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/Users/valentin...', 29)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/Users/valentin...', 29, Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(931): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/Users/valentin...', 29, Array)
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(904): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2015-05-20 19:47:29 Error: [MissingActionException] Action APIController::admin_get_head_skin() could not be found.
+Exception Attributes: array (
+  'controller' => 'APIController',
+  'action' => 'admin_get_head_skin',
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/API/get_head_skin/Eywek/60
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(APIController), Object(CakeRequest))
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-05-20 19:47:30 Error: [MissingActionException] Action UserController::admin_get_captcha() could not be found.
+Exception Attributes: array (
+  'controller' => 'UserController',
+  'action' => 'admin_get_captcha',
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/user/get_captcha
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-05-20 19:47:31 Error: Fatal Error (4): syntax error, unexpected '}', expecting ',' or ';' in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/View/Permissions/admin_index.ctp, line 29]
+2015-05-20 19:47:31 Error: [FatalErrorException] syntax error, unexpected '}', expecting ',' or ';'
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/permissions
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Error/ErrorHandler.php(203): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/Users/valentin...', 29)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/Users/valentin...', 29, Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(931): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/Users/valentin...', 29, Array)
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(904): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}

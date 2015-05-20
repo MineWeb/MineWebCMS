@@ -9,12 +9,8 @@
 	"permissions" : {
 		"available" : ["VOTE_SHOW_REWARDS", "VOTE_SHOW_RANKING", "VOTE"],
 		"default" : {
-			"0" : {
-
-				},
-			"2" : {
-				
-			}
+			"0" : ["VOTE_SHOW_RANKING", "VOTE_SHOW_REWARDS", "VOTE"],
+			"2" : ["VOTE_SHOW_RANKING", "VOTE_SHOW_REWARDS", "VOTE"]
 		} 
 	}
 }
