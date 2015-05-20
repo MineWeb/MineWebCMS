@@ -1,0 +1,16 @@
+{
+    "REPLY": "R\u00e9pondre",
+    "SHOW_ANSWER": "Voir les r\u00e9ponses",
+    "POST_A_TICKET": "Poster un ticket",
+    "SUPPORT": "Support",
+    "NUMBER_OF_TICKETS": "Nombre des tickets",
+    "NUMBER_OF_RESOLVED": "Nombre de r\u00e9solus",
+    "NUMBER_OF_UNRESOLVED": "Nombre de non-r\u00e9solus",
+    "NO_TICKETS": "Aucun ticket n'a \u00e9t\u00e9 post\u00e9",
+    "UNRESOLVED": "Non-r\u00e9solu",
+    "RESOLVED": "R\u00e9solu",
+    "REPLY_TO_TICKET": "R\u00e9pondre \u00e0 un ticket",
+    "YOUR_REPLY": "Votre r\u00e9ponse",
+    "PROBLEM": "Probl\u00e8me",
+    "PRIVATE_TICKET": "Rendre le ticket priv\u00e9 ?"
+}

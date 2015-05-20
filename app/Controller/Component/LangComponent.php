@@ -52,12 +52,41 @@ class LangComponent extends Object {
 			$language_file = json_decode($language_file, true);
 		}
 
+		App::import('Component', 'EyPlugin');
+		$this->EyPlugin = new EyPluginComponent();
+		foreach ($this->EyPlugin->get_list() as $key => $value) {
+			$name = $value['plugins']['name'];
+			if(file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/'.$language.'.json')) {
+				$pl_language_file = file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/'.$language.'.json');
+				$pl_language_file = json_decode($pl_language_file, true);
+			} elseif(file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/fr.json')) {
+				$pl_language_file = file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/fr.json');
+				$pl_language_file = json_decode($pl_language_file, true);
+			}
+			if(!empty($pl_language_file)) {
+				foreach ($pl_language_file as $k => $v) {
+					$language_file[$k.'-'.$name] = $v;
+				}
+			}
+			unset($pl_language_file);
+		}
 		
 		return $language_file;
     }
 
     function setall($data) {
     	$language = $this->get_lang();
+
+    	// on filtre la data (seulement le contenu du CMS dans le fichier de lang principal)
+    	foreach ($data as $key => $value) {
+    		$explode = explode('-', $key);
+    		if(!isset($explode[1])) {
+    			$data2[$key] = $value; 
+    		} else {
+    			$pl_data[$explode[1]][$explode[0]] = $value;
+    		}
+    	}
+    	$data = $data2;
 
 		if(file_get_contents(ROOT.'/lang/'.$language.'.json')) {
 			$data = json_encode($data, JSON_PRETTY_PRINT);
@@ -69,6 +98,20 @@ class LangComponent extends Object {
 			$fp = fopen(ROOT.'/lang/fr.json',"w+");
 			fwrite($fp, $data);
 			fclose($fp);
+		}
+
+		foreach ($pl_data as $key => $value) { // on update la langue des plugins
+			if(file_get_contents(ROOT.'/app/Plugin/'.$key.'/lang/'.$language.'.json')) {
+				$value = json_encode($value, JSON_PRETTY_PRINT);
+				$fp = fopen(ROOT.'/app/Plugin/'.$key.'/lang/'.$language.'.json',"w+");
+				fwrite($fp, $value);
+				fclose($fp);
+			} else {
+				$value = json_encode($value, JSON_PRETTY_PRINT);
+				$fp = fopen(ROOT.'/app/Plugin/'.$key.'/lang/fr.json',"w+");
+				fwrite($fp, $value);
+				fclose($fp);
+			}
 		}
     }
 
@@ -87,6 +130,8 @@ class LangComponent extends Object {
 		if(isset($language_file[$msg])) { // et si le msg existe
 			return $language_file[$msg]; // je retourne le msg config
 		} else { // sinon je vérifie si c'est un msg de plugin
+		 	App::import('Component', 'EyPlugin');
+    		$this->EyPlugin = new EyPluginComponent();
 			foreach ($this->EyPlugin->get_list() as $key => $value) {
 				$name = $value['plugins']['name'];
 				if(file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/'.$language.'.json')) {

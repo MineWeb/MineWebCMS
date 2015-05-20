@@ -15,7 +15,7 @@
 				foreach ($lang as $key => $value) { ?>
 					<?php if($key != 'FOOTER_ADMIN' AND $key != 'COPYRIGHT') { ?>
 						<div class="control-group">
-							<label class="control-label"><?= $key ?></label>
+							<label class="control-label"><?= explode('-', $key)[0] ?></label>
 							<div class="controls" style="margin-left:300px">
 								<?= $this->Form->input(false, array(
 									'div' => false,
