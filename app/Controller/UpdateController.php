@@ -4,7 +4,7 @@ class UpdateController extends AppController {
 
 	public $components = array('Session', 'Update');
 
-	public function admin_index() {
+	public function admin_index() { // ajout d'un commentaire pour git
 		if($this->Connect->connect() AND $this->Connect->if_admin()) {
 			$this->set('title_for_layout',$this->Lang->get('UPDATE'));
 			$this->layout = 'admin';
