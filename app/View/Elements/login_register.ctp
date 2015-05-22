@@ -22,10 +22,37 @@
                   <input type="password" class="form-control" name="password" id="inputPassword3" placeholder="<?= $Lang->get('ENTER_PASSWORD') ?>">
                 </div>
               </div>
+              <center><a data-dismiss="modal" href="#" data-toggle="modal" data-target="#lostpasswd"><?= $Lang->get('FORGOT_PASSWORD') ?></a></center>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('CLOSE') ?></button>
             <button type="submit" class="btn btn-primary"><?= $Lang->get('LOGIN') ?></button>
+          </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal modal-medium fade" id="lostpasswd" tabindex="-1" role="dialog" aria-labelledby="lostpasswdLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"><?= $Lang->get('CLOSE') ?></span></button>
+            <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('FORGOT_PASSWORD') ?></h4>
+          </div>
+          <div class="modal-body">
+            <div id="msg-lostpasswd"></div>
+            <form class="form-horizontal" role="form" method="POST" id="lostpasswd_form">
+              <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label"><?= $Lang->get('EMAIL') ?></label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="email" id="inputEmail3" placeholder="<?= $Lang->get('ENTER_EMAIL') ?>">
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('CLOSE') ?></button>
+            <button type="submit" class="btn btn-primary"><?= $Lang->get('SEND_EMAIL') ?></button>
           </form>
           </div>
         </div>
@@ -95,6 +122,13 @@
 
 
     <script type="text/javascript">
+        var url = window.location.search;
+        url = url.substring(url.lastIndexOf("?")+1);
+        url = url.split('_');
+        if(url[0] == "resetpsswd") {
+          $('#resetpsswd2').modal('toggle');
+        }
+
         $("#register_form").submit(function( event ) {
             $('#msg-on-register').hide().html('<div class="alert alert-success" role="alert"><p><?= $Lang->get('ON_REGISTER') ?></p></div>').fadeIn(1500);
             var $form = $( this );
@@ -114,7 +148,7 @@
             return false;
         });
 
-        $("#login_form").submit(function( event ) {
+          $("#login_form").submit(function( event ) {
             $('#msg-on-login').hide().html('<div class="alert alert-success" role="alert"><p><?= $Lang->get('ON_LOGIN') ?></p></div>').fadeIn(1500);
             var $form = $( this );
             var pseudo = $form.find("input[name='pseudo']").val();
@@ -129,13 +163,28 @@
             });
             return false;
         });
-$(document).ready(function(){
-  
-   $('#reload').click(function() {
-          var captcha = $("#captcha_image");
-           captcha.attr('src', captcha.attr('src')+'?'+Math.random());
-          return false;
+
+        $("#lostpasswd_form").submit(function( event ) {
+            $('#msg-lostpasswd').hide().html('<div class="alert alert-info" role="alert"><p><?= $Lang->get('LOADING') ?></p></div>').fadeIn(1500);
+            var $form = $( this );
+            var email = $form.find("input[name='email']").val();
+            $.post("<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'ajax_lostpasswd')) ?>", { email : email }, function(data) {
+              if(data == 'true') {
+                $('#msg-lostpasswd').hide().html('<div class="alert alert-success" role="alert"><p><b><?= $Lang->get('SUCCESS') ?> : </b><?= $Lang->get('SUCCESS_SEND_RESET_MAIL') ?></p></div>').fadeIn(1500);
+              } else {
+                $('#msg-lostpasswd').hide().html('<div class="alert alert-danger" role="alert"><p><b><?= $Lang->get('ERROR') ?> : </b>'+data+'</p></div>').fadeIn(1500);
+              }
+            });
+            return false;
+        });
+
+      $(document).ready(function(){
+        
+         $('#reload').click(function() {
+                var captcha = $("#captcha_image");
+                 captcha.attr('src', captcha.attr('src')+'?'+Math.random());
+                return false;
+            });
+        
       });
-  
-});
     </script>

@@ -126,7 +126,6 @@ class APIComponent extends Object {
 
 	public function get_head_skin($name, $size = 50, $where, $cache = true) {
 
-		//ini_set("display_errors",FALSE);
 		header("Content-type: image/png");
 		if($cache){
 		  if(!is_dir($cacheFolder)){

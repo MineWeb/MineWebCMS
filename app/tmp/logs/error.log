@@ -3756,3 +3756,248 @@ Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.
 Stack Trace:
 #0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #1 {main}
+2015-05-22 14:13:09 Error: Fatal Error (4): syntax error, unexpected '}' in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/UserController.php, line 111]
+2015-05-22 14:13:09 Error: [FatalErrorException] syntax error, unexpected '}'
+Request URL: /Projets%20en%20cours/EyCraft/www_git/user/get_captcha
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Error/ErrorHandler.php(203): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/Users/valentin...', 111)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/Users/valentin...', 111, Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(931): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/Users/valentin...', 111, Array)
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(904): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2015-05-22 14:13:16 Error: Fatal Error (4): syntax error, unexpected '}' in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/UserController.php, line 111]
+2015-05-22 14:13:16 Error: [FatalErrorException] syntax error, unexpected '}'
+Request URL: /Projets%20en%20cours/EyCraft/www_git/user/ajax_lostpasswd
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Error/ErrorHandler.php(203): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/Users/valentin...', 111)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/Users/valentin...', 111, Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(931): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/Users/valentin...', 111, Array)
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(904): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2015-05-22 14:15:30 Error: [MissingViewException] View file "/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/View/Themed/Default/User/ajax_lostpasswd.ctp" is missing.
+Exception Attributes: array (
+  'file' => '/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/View/Themed/Default/User/ajax_lostpasswd.ctp',
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/user/ajax_lostpasswd
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/View/View.php(468): View->_getViewFileName(NULL)
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Controller/Controller.php(954): View->render(NULL, NULL)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(198): Controller->render()
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#4 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2015-05-22 14:15:34 Error: [MissingViewException] View file "/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/View/Themed/Default/User/ajax_lostpasswd.ctp" is missing.
+Exception Attributes: array (
+  'file' => '/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/View/Themed/Default/User/ajax_lostpasswd.ctp',
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/user/ajax_lostpasswd
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/View/View.php(468): View->_getViewFileName(NULL)
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Controller/Controller.php(954): View->render(NULL, NULL)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(198): Controller->render()
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#4 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2015-05-22 14:22:30 Error: Fatal Error (64): Cannot redeclare class LostpasswordModel in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Model/Lostpassword.php, line 3]
+2015-05-22 14:22:30 Error: [FatalErrorException] Cannot redeclare class LostpasswordModel
+Request URL: /Projets%20en%20cours/EyCraft/www_git/user/ajax_lostpasswd
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Error/ErrorHandler.php(203): ErrorHandler::handleFatalError(64, 'Cannot redeclar...', '/Users/valentin...', 3)
+#1 [internal function]: ErrorHandler::handleError(64, 'Cannot redeclar...', '/Users/valentin...', 3, Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(931): call_user_func('ErrorHandler::h...', 64, 'Cannot redeclar...', '/Users/valentin...', 3, Array)
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(904): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2015-05-22 14:23:55 Error: Fatal Error (64): Cannot redeclare class LostpasswordModel in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Model/Lostpassword.php, line 2]
+2015-05-22 14:23:55 Error: [FatalErrorException] Cannot redeclare class LostpasswordModel
+Request URL: /Projets%20en%20cours/EyCraft/www_git/user/ajax_lostpasswd
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Error/ErrorHandler.php(203): ErrorHandler::handleFatalError(64, 'Cannot redeclar...', '/Users/valentin...', 2)
+#1 [internal function]: ErrorHandler::handleError(64, 'Cannot redeclar...', '/Users/valentin...', 2, Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(931): call_user_func('ErrorHandler::h...', 64, 'Cannot redeclar...', '/Users/valentin...', 2, Array)
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(904): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2015-05-22 14:24:12 Error: Fatal Error (64): Cannot redeclare class LostpasswordModel in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Model/Lostpassword.php, line 2]
+2015-05-22 14:24:12 Error: [FatalErrorException] Cannot redeclare class LostpasswordModel
+Request URL: /Projets%20en%20cours/EyCraft/www_git/user/ajax_lostpasswd
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Error/ErrorHandler.php(203): ErrorHandler::handleFatalError(64, 'Cannot redeclar...', '/Users/valentin...', 2)
+#1 [internal function]: ErrorHandler::handleError(64, 'Cannot redeclar...', '/Users/valentin...', 2, Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(931): call_user_func('ErrorHandler::h...', 64, 'Cannot redeclar...', '/Users/valentin...', 2, Array)
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(904): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2015-05-22 15:01:18 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.woff?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-22 15:01:19 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.ttf?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-22 15:01:20 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.svg
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-22 15:01:22 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.woff?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-22 15:01:23 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.ttf?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-22 15:01:24 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.svg
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-22 15:01:27 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.woff?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-22 15:01:30 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.ttf?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-22 15:01:31 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.svg
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-22 15:13:14 Error: Fatal Error (4): syntax error, unexpected 'debug' (T_STRING) in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/UserController.php, line 133]
+2015-05-22 15:13:14 Error: [FatalErrorException] syntax error, unexpected 'debug' (T_STRING)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/user/ajax_lostpasswd
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Error/ErrorHandler.php(203): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/Users/valentin...', 133)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/Users/valentin...', 133, Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(931): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/Users/valentin...', 133, Array)
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(904): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2015-05-22 15:13:22 Error: Fatal Error (4): syntax error, unexpected 'debug' (T_STRING) in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/UserController.php, line 133]
+2015-05-22 15:13:22 Error: [FatalErrorException] syntax error, unexpected 'debug' (T_STRING)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/user/ajax_lostpasswd
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Error/ErrorHandler.php(203): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/Users/valentin...', 133)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/Users/valentin...', 133, Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(931): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/Users/valentin...', 133, Array)
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(904): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2015-05-22 15:19:37 Error: [PDOException] SQLSTATE[01000]: Warning: 1265 Data truncated for column 'key' at row 1
+Request URL: /Projets%20en%20cours/EyCraft/www_git/user/ajax_lostpasswd
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `ey...', Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(1012): DboSource->execute('INSERT INTO `ey...')
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Model.php(1850): DboSource->create(Object(Lostpassword), Array, Array)
+#4 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/UserController.php(129): Model->save()
+#5 [internal function]: UserController->ajax_lostpasswd()
+#6 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(UserController), Array)
+#7 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#8 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#9 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-05-22 15:19:48 Error: [PDOException] SQLSTATE[01000]: Warning: 1265 Data truncated for column 'key' at row 1
+Request URL: /Projets%20en%20cours/EyCraft/www_git/user/ajax_lostpasswd
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `ey...', Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(1012): DboSource->execute('INSERT INTO `ey...')
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Model.php(1850): DboSource->create(Object(Lostpassword), Array, Array)
+#4 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/UserController.php(129): Model->save()
+#5 [internal function]: UserController->ajax_lostpasswd()
+#6 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(UserController), Array)
+#7 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#8 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#9 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-05-22 15:20:40 Error: [PDOException] SQLSTATE[HY000]: General error: 1366 Incorrect integer value: 'c7d28d40f0' for column 'key' at row 1
+Request URL: /Projets%20en%20cours/EyCraft/www_git/user/ajax_lostpasswd
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `ey...', Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(1012): DboSource->execute('INSERT INTO `ey...')
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Model.php(1850): DboSource->create(Object(Lostpassword), Array, Array)
+#4 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/UserController.php(129): Model->save()
+#5 [internal function]: UserController->ajax_lostpasswd()
+#6 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(UserController), Array)
+#7 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#8 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#9 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-05-22 15:20:46 Error: [PDOException] SQLSTATE[01000]: Warning: 1265 Data truncated for column 'key' at row 1
+Request URL: /Projets%20en%20cours/EyCraft/www_git/user/ajax_lostpasswd
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `ey...', Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(1012): DboSource->execute('INSERT INTO `ey...')
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Model.php(1850): DboSource->create(Object(Lostpassword), Array, Array)
+#4 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/UserController.php(129): Model->save()
+#5 [internal function]: UserController->ajax_lostpasswd()
+#6 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(UserController), Array)
+#7 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#8 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#9 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-05-22 15:20:47 Error: [PDOException] SQLSTATE[01000]: Warning: 1265 Data truncated for column 'key' at row 1
+Request URL: /Projets%20en%20cours/EyCraft/www_git/user/ajax_lostpasswd
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `ey...', Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(1012): DboSource->execute('INSERT INTO `ey...')
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Model.php(1850): DboSource->create(Object(Lostpassword), Array, Array)
+#4 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/UserController.php(129): Model->save()
+#5 [internal function]: UserController->ajax_lostpasswd()
+#6 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(UserController), Array)
+#7 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#8 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#9 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}

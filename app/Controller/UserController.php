@@ -16,7 +16,7 @@ class UserController extends AppController {
 		
 		$settings = array(
 			'characters' => $random,   
-			'winHeight' => 150,         // captcha image height 
+			'winHeight' => 50,         // captcha image height 
 			'winWidth' => 220,		   // captcha image width
 			'fontSize' => 25,          // captcha image characters fontsize 
 			'fontPath' => WWW_ROOT.'tahomabd.ttf',    // captcha image font
@@ -93,6 +93,49 @@ class UserController extends AppController {
 					echo 'true';
 				} else {
 					echo $this->Lang->get('BAD_PSEUDO_OR_PASSWORD');
+				}
+			} else {
+				echo $this->Lang->get('COMPLETE_ALL_FIELDS');
+			}
+		} else {
+			echo $this->Lang->get('PAGE_BAD_EXECUTED');
+		}
+	}
+
+	function ajax_lostpasswd() {
+		$this->layout = null;
+		$this->autoRender = false;
+		if($this->request->is('ajax')) {
+			if(!empty($this->request->data['email'])) {
+				$this->loadModel('User');
+				if(filter_var($this->request->data['email'], FILTER_VALIDATE_EMAIL)) {
+					$search = $this->User->find('first', array('conditions' => array('email' => $this->request->data['email'])));
+					if(!empty($search)) {
+						$this->loadModel('Lostpassword');
+						$key = substr(md5(rand().date('sihYdm')), 0, 10);
+
+						$to = $this->request->data['email'];
+						$subject = $this->Lang->get('RESET_PASSWORD').' | '.$this->Configuration->get('name').'';
+						$message = $this->Lang->email_reset($this->request->data['email'], $search['User']['pseudo'], $key);
+						$headers = 'From: '.$this->Configuration->get('name').' <'.$this->Configuration->get('email').'>' . "\r\n" .
+     						'Reply-To: '.$this->Configuration->get('email').'' . "\r\n" .
+     						'X-Mailer: PHP/' . phpversion();
+						if(mail($to, $subject, $message, $headers)) {
+							$this->Lostpassword->create();
+							$this->Lostpassword->set(array(
+								'email' => $this->request->data['email'],
+								'key' => $key
+							));
+							$this->Lostpassword->save();
+							echo 'true';
+						} else {
+							echo $this->Lang->get('INTERNAL_ERROR');
+						}
+					} else {
+						echo $this->Lang->get('UNKNONWN_USER');
+					}
+				} else {
+					echo $this->Lang->get('EMAIL_NOT_VALIDATE');
 				}
 			} else {
 				echo $this->Lang->get('COMPLETE_ALL_FIELDS');

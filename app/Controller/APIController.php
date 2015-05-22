@@ -108,7 +108,6 @@ class APIController extends AppController {
 		} else {
 			$where = 'http://www.minecraft.net/skin/';
 		}
-
 		echo $this->API->get_head_skin($name, $size, $where);
 	}
 

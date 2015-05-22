@@ -115,6 +115,28 @@ class LangComponent extends Object {
 		}
     }
 
+    function email_reset($email, $pseudo, $key) {
+    	$msg = "RESET_PASSWORD_MAIL";
+    	$language = $this->get_lang();
+
+		if(file_get_contents(ROOT.'/lang/'.$language.'.json')) {
+			$language_file = file_get_contents(ROOT.'/lang/'.$language.'.json');
+			$language_file = json_decode($language_file, true);
+		} else {
+			$language_file = file_get_contents(ROOT.'/lang/fr.json');
+			$language_file = json_decode($language_file, true);
+		}
+
+		if(isset($language_file[$msg])) { // et si le msg existe
+			$msg = str_replace('{EMAIL}', $email, $language_file[$msg]);
+			$msg = str_replace('{PSEUDO}', $pseudo, $msg);
+			$msg = str_replace('{LINK}', Router::url('/', true), $msg);
+			return $msg;
+		} else { // sinon je vérifie si c'est un msg de plugin
+		 	return $msg;
+		}
+    }
+
     function get($msg) {
 
     	$language = $this->get_lang();

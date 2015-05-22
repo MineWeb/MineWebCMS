@@ -17,13 +17,23 @@
 						<div class="control-group">
 							<label class="control-label"><?= explode('-', $key)[0] ?></label>
 							<div class="controls" style="margin-left:300px">
-								<?= $this->Form->input(false, array(
-									'div' => false,
-								    'type' => 'text',
-				    				'name' => $key,
-				    				'class' => 'span6 m-wrap',
-				    				'value' => $value
-								)); ?>
+								<?php if($key != "RESET_PASSWORD_MAIL") { 
+									echo $this->Form->input(false, array(
+										'div' => false,
+									    'type' => 'text',
+					    				'name' => $key,
+					    				'class' => 'span6 m-wrap',
+					    				'value' => $value
+									)); 
+								} else {
+									echo $this->Form->textarea(false, array(
+										'div' => false,
+									    'type' => 'text',
+					    				'name' => $key,
+					    				'class' => 'span6 m-wrap',
+					    				'value' => $value
+									));
+								} ?>
 								<?php if($key == "FORMATE_DATE") { ?>
 									<span class="help-inline"><?= $Lang->get('AVAILABLE_VARIABLES') ?> : {%day}, {%month}, {%year}, {%hour|24}, {%hour|12}, {%minutes}</span>
 								<?php } ?>
@@ -32,6 +42,9 @@
 								<?php } ?>
 								<?php if($key == "VOTE_SUCCESS_SERVER") { ?>
 									<span class="help-inline"><?= $Lang->get('AVAILABLE_VARIABLES') ?> : {PLAYER}.</span>
+								<?php } ?>
+								<?php if($key == "RESET_PASSWORD_MAIL") { ?>
+									<span class="help-inline"><?= $Lang->get('AVAILABLE_VARIABLES') ?> : {EMAIL}, {PSEUDO}, {LINK}.</span>
 								<?php } ?>
 							</div>
 						</div>
