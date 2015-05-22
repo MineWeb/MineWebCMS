@@ -52,8 +52,10 @@ class StatisticsComponent extends Object {
       } else {
         $referer = 'null';
       }
+      $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+      $language = $language{0}.$language{1};
       $this->Visit->read(null, null);
-      $this->Visit->set(array('ip' => $_SERVER["REMOTE_ADDR"], 'referer' => $referer, 'navigator' => $_SERVER['HTTP_USER_AGENT'], 'page' => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
+      $this->Visit->set(array('ip' => $_SERVER["REMOTE_ADDR"], 'referer' => $referer, 'lang' => $language, 'navigator' => $_SERVER['HTTP_USER_AGENT'], 'page' => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
       $this->Visit->save();
     }
   }
@@ -76,6 +78,17 @@ class StatisticsComponent extends Object {
     }
     $referers = $referer;
     return $referers;
+  }
+
+  function get_referers() {
+    $this->Visit = ClassRegistry::init('Visit');
+    $referers = $this->Visit->find('all', array('group' => 'referer'));
+    foreach ($referers as $key => $value) {
+      $nbr = $this->Visit->find('count', array('conditions' => array('referer' => $value['Visit']['referer'])));
+      $result[$value['Visit']['referer']] = $nbr;
+    }
+    arsort($result);
+    return $result;
   }
 
   function get_all_navigators() {

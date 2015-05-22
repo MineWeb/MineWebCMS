@@ -115,6 +115,7 @@ $this->EyPlugin = new EyPluginComponent;
 							<li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'link', 'admin' => true, 'plugin' => false)) ?>"><i class="icon-th-large"></i> <?= $Lang->get('LINK_SERVER') ?></a></li>
 						</ul>
 					</li>
+					<li><a href="<?= $this->Html->url(array('controller' => 'statistics', 'action' => 'index', 'admin' => true)) ?>"><i class="icon-bar-chart"></i> <?= $Lang->get('STATISTICS') ?></a></li>
 					<!-- / Main Navigation: UI Elements -->
 					<li><a href="<?= $this->Html->url(array('controller' => 'maintenance', 'action' => 'index', 'admin' => true)) ?>"><i class="icon-shield"></i> <?= $Lang->get('MAINTENANCE') ?></a></li>
 					<!-- Main Navigation: Components -->

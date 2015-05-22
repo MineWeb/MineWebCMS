@@ -229,7 +229,7 @@ if ($(".gallery")[0]){
 
 if ($(".data-table")[0]){
 
-    $('.data-table').dataTable();
+    $('.data-table').dataTable({ordering: false, "bSort": false});
 
 };
 
