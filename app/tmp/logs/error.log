@@ -3625,3 +3625,134 @@ Request URL: /Projets%20en%20cours/EyCraft/www_git/css/img/chosen-sprite.png
 Stack Trace:
 #0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #1 {main}
+2015-05-22 13:18:59 Error: [PDOException] SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pages' in 'group statement'
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/statistics
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('SELECT `Visit`....', Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(666): DboSource->execute('SELECT `Visit`....', Array, Array)
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(1106): DboSource->fetchAll('SELECT `Visit`....', false)
+#4 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Model.php(2921): DboSource->read(Object(Visit), Array)
+#5 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Model.php(2893): Model->_readDataSource('all', Array)
+#6 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/StatisticsComponent.php(96): Model->find('all', Array)
+#7 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/StatisticsController.php(14): StatisticsComponent->get_pages()
+#8 [internal function]: StatisticsController->admin_index()
+#9 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(StatisticsController), Array)
+#10 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#11 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(StatisticsController), Object(CakeRequest))
+#12 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#13 {main}
+2015-05-22 13:19:01 Error: [MissingActionException] Action APIController::admin_get_head_skin() could not be found.
+Exception Attributes: array (
+  'controller' => 'APIController',
+  'action' => 'admin_get_head_skin',
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/API/get_head_skin/Eywek/60
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(APIController), Object(CakeRequest))
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-05-22 13:19:02 Error: [MissingActionException] Action UserController::admin_get_captcha() could not be found.
+Exception Attributes: array (
+  'controller' => 'UserController',
+  'action' => 'admin_get_captcha',
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/user/get_captcha
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-05-22 13:19:04 Error: [PDOException] SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pages' in 'group statement'
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/statistics
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('SELECT `Visit`....', Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(666): DboSource->execute('SELECT `Visit`....', Array, Array)
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(1106): DboSource->fetchAll('SELECT `Visit`....', false)
+#4 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Model.php(2921): DboSource->read(Object(Visit), Array)
+#5 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Model.php(2893): Model->_readDataSource('all', Array)
+#6 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/StatisticsComponent.php(96): Model->find('all', Array)
+#7 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/StatisticsController.php(14): StatisticsComponent->get_pages()
+#8 [internal function]: StatisticsController->admin_index()
+#9 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(StatisticsController), Array)
+#10 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#11 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(StatisticsController), Object(CakeRequest))
+#12 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#13 {main}
+2015-05-22 13:19:36 Error: [PDOException] SQLSTATE[42S22]: Column not found: 1054 Unknown column 'pages' in 'where clause'
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/statistics
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('SELECT COUNT(*)...', Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(666): DboSource->execute('SELECT COUNT(*)...', Array, Array)
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(1106): DboSource->fetchAll('SELECT COUNT(*)...', false)
+#4 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Model.php(2921): DboSource->read(Object(Visit), Array)
+#5 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Model.php(2893): Model->_readDataSource('count', Array)
+#6 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/StatisticsComponent.php(98): Model->find('count', Array)
+#7 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/StatisticsController.php(14): StatisticsComponent->get_pages()
+#8 [internal function]: StatisticsController->admin_index()
+#9 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(StatisticsController), Array)
+#10 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#11 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(StatisticsController), Object(CakeRequest))
+#12 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#13 {main}
+2015-05-22 13:19:37 Error: [MissingActionException] Action UserController::admin_get_captcha() could not be found.
+Exception Attributes: array (
+  'controller' => 'UserController',
+  'action' => 'admin_get_captcha',
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/user/get_captcha
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-05-22 13:19:38 Error: [MissingActionException] Action APIController::admin_get_head_skin() could not be found.
+Exception Attributes: array (
+  'controller' => 'APIController',
+  'action' => 'admin_get_head_skin',
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/admin/API/get_head_skin/Eywek/60
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(APIController), Object(CakeRequest))
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-05-22 13:24:38 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/img/chosen-sprite.png
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-22 13:24:38 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.woff?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-22 13:24:40 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.ttf?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-22 13:24:42 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.svg
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}

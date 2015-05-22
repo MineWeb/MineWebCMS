@@ -91,6 +91,28 @@ class StatisticsComponent extends Object {
     return $result;
   }
 
+  function get_pages() {
+    $this->Visit = ClassRegistry::init('Visit');
+    $pages = $this->Visit->find('all', array('group' => 'page'));
+    foreach ($pages as $key => $value) {
+      $nbr = $this->Visit->find('count', array('conditions' => array('page' => $value['Visit']['page'])));
+      $result[$value['Visit']['page']] = $nbr;
+    }
+    arsort($result);
+    return $result;
+  }
+
+  function get_language() {
+    $this->Visit = ClassRegistry::init('Visit');
+    $pages = $this->Visit->find('all', array('group' => 'lang'));
+    foreach ($pages as $key => $value) {
+      $nbr = $this->Visit->find('count', array('conditions' => array('lang' => $value['Visit']['lang'])));
+      $result[$value['Visit']['lang']] = $nbr;
+    }
+    arsort($result);
+    return $result;
+  }
+
   function get_all_navigators() {
     $this->Visit = ClassRegistry::init('Visit');
     $navigators = $this->Visit->find('all');
@@ -99,11 +121,5 @@ class StatisticsComponent extends Object {
     }
     $navigators = $navigator;
     return $navigators;
-  }
-
-  function get_rush_hours() {
-    $this->Visit = ClassRegistry::init('Visit');
-    $rush_hours = $this->Visit->find('Visit.created');
-
   }
 }
