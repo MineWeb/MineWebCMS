@@ -130,7 +130,7 @@ class LangComponent extends Object {
 		if(isset($language_file[$msg])) { // et si le msg existe
 			$msg = str_replace('{EMAIL}', $email, $language_file[$msg]);
 			$msg = str_replace('{PSEUDO}', $pseudo, $msg);
-			$msg = str_replace('{LINK}', Router::url('/', true), $msg);
+			$msg = str_replace('{LINK}', Router::url('/?resetpasswd_'.$key, true), $msg);
 			return $msg;
 		} else { // sinon je vérifie si c'est un msg de plugin
 		 	return $msg;

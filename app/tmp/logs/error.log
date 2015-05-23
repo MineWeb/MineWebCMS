@@ -4001,3 +4001,35 @@ Stack Trace:
 #8 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
 #9 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #10 {main}
+2015-05-24 00:52:35 Error: Fatal Error (1): Call to undefined method PagesController::delete() in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/PagesController.php, line 80]
+2015-05-24 00:52:35 Error: [FatalErrorException] Call to undefined method PagesController::delete()
+Request URL: /Projets%20en%20cours/EyCraft/www_git/pages/index?resetpsswd_0caf5be2fa=
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Error/ErrorHandler.php(203): ErrorHandler::handleFatalError(1, 'Call to undefin...', '/Users/valentin...', 80)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to undefin...', '/Users/valentin...', 80, Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(931): call_user_func('ErrorHandler::h...', 1, 'Call to undefin...', '/Users/valentin...', 80, Array)
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(904): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2015-05-24 00:52:38 Error: Fatal Error (1): Call to undefined method PagesController::delete() in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/PagesController.php, line 80]
+2015-05-24 00:52:38 Error: [FatalErrorException] Call to undefined method PagesController::delete()
+Request URL: /Projets%20en%20cours/EyCraft/www_git/pages/index?resetpsswd_0caf5be2fa=
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Error/ErrorHandler.php(203): ErrorHandler::handleFatalError(1, 'Call to undefin...', '/Users/valentin...', 80)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to undefin...', '/Users/valentin...', 80, Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(931): call_user_func('ErrorHandler::h...', 1, 'Call to undefin...', '/Users/valentin...', 80, Array)
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(904): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2015-05-24 01:15:42 Error: [MissingViewException] View file "/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/View/Themed/Default/User/ajax_resetpasswd.ctp" is missing.
+Exception Attributes: array (
+  'file' => '/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/View/Themed/Default/User/ajax_resetpasswd.ctp',
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/user/ajax_resetpasswd
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/View/View.php(468): View->_getViewFileName(NULL)
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Controller/Controller.php(954): View->render(NULL, NULL)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(198): Controller->render()
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(UserController), Object(CakeRequest))
+#4 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}

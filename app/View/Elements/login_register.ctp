@@ -59,6 +59,42 @@
       </div>
     </div>
 
+    <?php if(!empty($resetpsswd)) { ?>
+      <div class="modal modal-medium fade" id="lostpasswd2" tabindex="-1" role="dialog" aria-labelledby="lostpasswd2Label" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"><?= $Lang->get('CLOSE') ?></span></button>
+              <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('FORGOT_PASSWORD') ?></h4>
+            </div>
+            <div class="modal-body">
+              <div id="msg-resetpasswd"></div>
+              <form class="form-horizontal" role="form" method="POST" id="resetpassword_form">
+                <input type="hidden" name="pseudo" value="<?= $resetpsswd['pseudo'] ?>">
+                <input type="hidden" name="email" value="<?= $resetpsswd['email'] ?>">
+                <div class="form-group">
+                  <label for="inputEmail3" class="col-sm-2 control-label"><?= $Lang->get('PASSWORD') ?></label>
+                  <div class="col-sm-10">
+                    <input type="password" class="form-control" name="password" id="inputEmail3" placeholder="<?= $Lang->get('ENTER_PASSWORD') ?>">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="inputEmail3" class="col-sm-2 control-label"><?= $Lang->get('PASSWORD_CONFIRMATION') ?></label>
+                  <div class="col-sm-10">
+                    <input type="password" class="form-control" name="password2" id="inputEmail3" placeholder="<?= $Lang->get('ENTER_PASSWORD_CONFIRMATION') ?>">
+                  </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('CLOSE') ?></button>
+              <button type="submit" class="btn btn-success"><?= $Lang->get('SAVE') ?></button>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    <?php } ?>
+
     <div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="registerLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -122,12 +158,6 @@
 
 
     <script type="text/javascript">
-        var url = window.location.search;
-        url = url.substring(url.lastIndexOf("?")+1);
-        url = url.split('_');
-        if(url[0] == "resetpsswd") {
-          $('#resetpsswd2').modal('toggle');
-        }
 
         $("#register_form").submit(function( event ) {
             $('#msg-on-register').hide().html('<div class="alert alert-success" role="alert"><p><?= $Lang->get('ON_REGISTER') ?></p></div>').fadeIn(1500);
@@ -178,7 +208,28 @@
             return false;
         });
 
+        $("#resetpassword_form").submit(function( event ) {
+            $('#msg-resetpasswd').hide().html('<div class="alert alert-info" role="alert"><p><?= $Lang->get('LOADING') ?></p></div>').fadeIn(1500);
+            var $form = $( this );
+            var email = $form.find("input[name='email']").val();
+            var password = $form.find("input[name='password']").val();
+            var password2 = $form.find("input[name='password2']").val();
+            $.post("<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'ajax_resetpasswd')) ?>", { email : email, password : password, password2 : password2 }, function(data) {
+              if(data == 'true') {
+                $('#msg-resetpasswd').hide().html('<div class="alert alert-success" role="alert"><p><b><?= $Lang->get('SUCCESS') ?> : </b><?= $Lang->get('SUCCESS_RESET_PASSWORD') ?></p></div>').fadeIn(1500);
+                window.setTimeout(location.reload('/'), 5000);
+              } else {
+                $('#msg-resetpasswd').hide().html('<div class="alert alert-danger" role="alert"><p><b><?= $Lang->get('ERROR') ?> : </b>'+data+'</p></div>').fadeIn(1500);
+              }
+            });
+            return false;
+        });
+
       $(document).ready(function(){
+
+        <?php if(!empty($resetpsswd)) { ?>
+          $('#lostpasswd2').modal('show');
+        <?php } ?>
         
          $('#reload').click(function() {
                 var captcha = $("#captcha_image");

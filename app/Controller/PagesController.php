@@ -54,7 +54,34 @@ class PagesController extends AppController {
 
 		$this->layout = $this->Configuration->get_layout();
 
-		require('../../config/lang.php');
+		$passwd = explode('?' ,$_SERVER['REQUEST_URI']); // on récupére l'url
+		if(isset($passwd[1])) { // si il y a un truc en plus
+			$passwd = explode('_', $passwd[1]);
+			if(isset($passwd[0]) AND $passwd[0] == "resetpasswd") { // si c'est pour reset le password
+				if(!empty($passwd[1])) {
+					$this->loadModel('Lostpassword');
+					$search = $this->Lostpassword->find('all', array('conditions' => array('key' => $passwd[1]))); // on cherche la key de reset password
+					if(!empty($search)) { // si elle existe
+						if(strtotime(date('Y-m-d H:i:s', strtotime($search[0]['Lostpassword']['created'])).' +1 hour') >= time()) { // si le lien ne date pas de plus d'1 heure
+							$resetpsswd['email'] = $search[0]['Lostpassword']['email'];
+							$this->loadModel('User');
+							$search = $this->User->find('all', array('conditions' => array('email' => $resetpsswd['email'])));
+							$resetpsswd['pseudo'] = $search[0]['User']['pseudo'];
+							$this->set(compact('resetpsswd'));
+						}
+					}
+				}
+			}
+		}
+
+		// on delete tout les liens de reset de password au dessus de 1 heure
+		$this->loadModel('Lostpassword');
+		$search_passwd = $this->Lostpassword->find('all');
+		foreach ($search_passwd as $key => $value) {
+			if(strtotime(date('Y-m-d H:i:s', strtotime($value['Lostpassword']['created'])).' +1 hour') < time()) {
+				$this->Lostpassword->delete($value['Lostpassword']['id']);
+			}
+		}
 
 		$path = func_get_args();
 

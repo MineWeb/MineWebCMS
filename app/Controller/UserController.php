@@ -145,6 +145,54 @@ class UserController extends AppController {
 		}
 	}
 
+	function ajax_resetpasswd() {
+		$this->autoRender = false;
+		if($this->request->is('ajax')) {
+			if(!empty($this->request->data['password']) AND !empty($this->request->data['password2']) AND !empty($this->request->data['email'])) {
+				$this->request->data['password'] = password($this->request->data['password']);
+				$this->request->data['password2'] =password($this->request->data['password2']);
+				if($this->request->data['password'] == $this->request->data['password2']) {
+					unset($this->request->data['password2']);
+					$this->loadModel('User');
+					$search = $this->User->find('all', array('conditions' => array('email' => $this->request->data['email'])));
+					if(!empty($search)) {
+
+						$this->loadModel('Lostpassword');
+						$Lostpassword = $this->Lostpassword->find('all', array('conditions' => array('email' => $this->request->data['email'])));
+						if(!empty($Lostpassword)) {
+
+							$this->Lostpassword->delete($Lostpassword[0]['Lostpassword']['id']);
+
+							$session = md5(rand());
+							$this->request->data['session'] = $session; // on connecte l'utilisateur
+							$this->Session->write('user', $session);
+
+							$this->User->read(null, $search['0']['User']['id']);
+							$this->User->set($this->request->data);
+							$this->User->save();
+
+							$this->History->set('RESET_PASSWORD', 'user');
+
+							echo 'true';
+
+						} else {
+							echo $this->Lang->get('INVALID_KEY_FOR_RESET');
+						}
+					} else {
+						echo $this->Lang->get('INTERNAL_ERROR');
+					}
+				} else {
+					echo $this->Lang->get('PASSWORD_NOT_SAME');
+				}
+			} else {
+				debug($this->request->data);
+				echo $this->Lang->get('COMPLETE_ALL_FIELDS');
+			}
+		} else {
+			echo $this->Lang->get('PAGE_BAD_EXECUTED');
+		}
+	}
+
 	function logout() {
 		$this->layout = null;
 		$this->Session->delete('user');
