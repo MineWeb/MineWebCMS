@@ -56,7 +56,9 @@
 				    selector: "textarea",
 				    height : 300,
 				    width : '100%',
-				    language : 'fr_FR'
+				    language : 'fr_FR',
+				    plugins: "textcolor code",
+    				toolbar: "fontselect fontsizeselect bold italic underline strikethrough forecolor backcolor alignleft aligncenter alignright alignjustify cut copy paste bullist numlist outdent indent blockquote code"
 				 });
 				</script>
 				<?php

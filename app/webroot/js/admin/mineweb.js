@@ -124,8 +124,10 @@ function progressbar(n) {
 tinymce.init({
     selector: "textarea.editor",
     theme: "modern",
-      skin: 'light',
-    language : 'fr_FR'
+    skin: 'light',
+    language : 'fr_FR',
+    plugins: "textcolor code",
+    toolbar: "fontselect fontsizeselect bold italic underline strikethrough forecolor backcolor alignleft aligncenter alignright alignjustify cut copy paste bullist numlist outdent indent blockquote code"
  });
 
 /* INPUT MODIFIABLE */

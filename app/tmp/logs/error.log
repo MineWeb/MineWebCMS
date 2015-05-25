@@ -4895,3 +4895,192 @@ Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.
 Stack Trace:
 #0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #1 {main}
+2015-05-25 22:19:01 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.woff?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 22:19:08 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.woff?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 22:19:15 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.woff?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 22:19:19 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.ttf?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 22:19:23 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.svg
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 22:19:59 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.woff?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 22:20:03 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.ttf?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 22:20:06 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.svg
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 22:22:27 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.woff?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 22:22:30 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.ttf?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 22:22:34 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.svg
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 22:24:37 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.woff?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 22:24:41 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.ttf?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 22:24:45 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.svg
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 22:50:41 Error: [MissingControllerException] Controller class UserController could not be found.
+Exception Attributes: array (
+  'class' => 'UserController',
+  'plugin' => 'Shop',
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/shop/user/get_captcha
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:07:45 Error: [MissingControllerException] Controller class APIController could not be found.
+Exception Attributes: array (
+  'class' => 'APIController',
+  'plugin' => 'Shop',
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/shop/API/get_head_skin/Eywek/60
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:07:56 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.woff?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:07:59 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.ttf?v=3.2.1
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:08:03 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/font/fontawesome-webfont.svg
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:08:11 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/css/img/chosen-sprite.png
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:09:53 Error: [MissingControllerException] Controller class APIController could not be found.
+Exception Attributes: array (
+  'class' => 'APIController',
+  'plugin' => 'Shop',
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/shop/API/get_head_skin/Eywek/60
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}

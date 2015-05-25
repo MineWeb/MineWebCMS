@@ -242,7 +242,6 @@ ul#items .a-like p a {
 }
 
 .dropdown .dropdown-menu {
-	padding: 10px;
 	width: auto;
 	height: auto;
 	-webkit-border-radius: 5px;
@@ -256,6 +255,11 @@ ul#items .a-like p a {
 
 .dropdown .dropdown-menu a {
 	padding-top: 6px !important;
+}
+
+.dropdown .dropdown-menu a:hover, a:focus, a:active {
+	background-color: #2e86c1;
+	color: #fff;
 }
 
 .dropdown .dropdown-menu .divider {
