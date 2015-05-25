@@ -1,10 +1,24 @@
-<h2><?php echo $message; ?></h2>
-<p class="error">
-	<strong><?php echo __d('cake', 'Error'); ?>: </strong>
-	<?php echo __d('cake', 'An Internal Error Has Occurreed.'); ?>
-</p>
-<?php
-if (Configure::read('debug') > 0):
-	echo $this->element('exception_stack_trace');
-endif;
-?>
+<div class="push-nav"></div>
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-6">
+            <h1 style="display: inline-block;"><?= $Lang->get('ERROR_500_TITLE') ?></h1>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+					<?= $Lang->get('INTERNAL_ERROR') ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php if (Configure::read('debug') > 0) { ?>
+<div class="error-actions">
+    <?= $this->element('exception_stack_trace'); ?>
+</div>
+<?php } ?>

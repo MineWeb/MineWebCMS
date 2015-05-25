@@ -5084,3 +5084,633 @@ Request URL: /Projets%20en%20cours/EyCraft/www_git/shop/API/get_head_skin/Eywek/
 Stack Trace:
 #0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #1 {main}
+2015-05-25 23:10:42 Error: [MissingControllerException] Controller class ShopeController could not be found.
+Exception Attributes: array (
+  'class' => 'ShopeController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/shope
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:10:50 Warning: Warning (2): mkdir() [<a href='http://php.net/function.mkdir'>function.mkdir</a>]: No such file or directory in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 132]
+Trace:
+mkdir - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 132
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:10:50 Warning: Warning (2): imagepng(/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png) [<a href='http://php.net/function.imagepng'>function.imagepng</a>]: failed to open stream: Permission denied in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 160]
+Trace:
+imagepng - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 160
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:10:50 Warning: Warning (2): include(/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png) [<a href='http://php.net/function.include'>function.include</a>]: failed to open stream: No such file or directory in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 161]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:10:50 Warning: Warning (2): include() [<a href='http://php.net/function.include'>function.include</a>]: Failed opening '/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png' for inclusion (include_path='/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib:.:/usr/local/php5/lib/php') in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 161]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:10:51 Warning: Warning (2): imagedestroy() expects parameter 1 to be resource, null given in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 166]
+Trace:
+imagedestroy - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 166
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:10:54 Error: [MissingControllerException] Controller class ShopeController could not be found.
+Exception Attributes: array (
+  'class' => 'ShopeController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/shope
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:11:20 Error: [MissingControllerException] Controller class ShopeController could not be found.
+Exception Attributes: array (
+  'class' => 'ShopeController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/shope
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:11:27 Warning: Warning (2): mkdir() [<a href='http://php.net/function.mkdir'>function.mkdir</a>]: No such file or directory in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 132]
+Trace:
+mkdir - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 132
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:11:27 Warning: Warning (2): imagepng(/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png) [<a href='http://php.net/function.imagepng'>function.imagepng</a>]: failed to open stream: Permission denied in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 160]
+Trace:
+imagepng - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 160
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:11:27 Warning: Warning (2): include(/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png) [<a href='http://php.net/function.include'>function.include</a>]: failed to open stream: No such file or directory in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 161]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:11:27 Warning: Warning (2): include() [<a href='http://php.net/function.include'>function.include</a>]: Failed opening '/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png' for inclusion (include_path='/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib:.:/usr/local/php5/lib/php') in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 161]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:11:27 Warning: Warning (2): imagedestroy() expects parameter 1 to be resource, null given in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 166]
+Trace:
+imagedestroy - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 166
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:12:27 Error: [MissingControllerException] Controller class ShopeController could not be found.
+Exception Attributes: array (
+  'class' => 'ShopeController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/shope
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:12:37 Warning: Warning (2): mkdir() [<a href='http://php.net/function.mkdir'>function.mkdir</a>]: No such file or directory in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 132]
+Trace:
+mkdir - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 132
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:12:37 Warning: Warning (2): imagepng(/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png) [<a href='http://php.net/function.imagepng'>function.imagepng</a>]: failed to open stream: Permission denied in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 160]
+Trace:
+imagepng - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 160
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:12:37 Warning: Warning (2): include(/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png) [<a href='http://php.net/function.include'>function.include</a>]: failed to open stream: No such file or directory in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 161]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:12:37 Warning: Warning (2): include() [<a href='http://php.net/function.include'>function.include</a>]: Failed opening '/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png' for inclusion (include_path='/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib:.:/usr/local/php5/lib/php') in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 161]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:12:37 Warning: Warning (2): imagedestroy() expects parameter 1 to be resource, null given in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 166]
+Trace:
+imagedestroy - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 166
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:13:59 Error: [MissingControllerException] Controller class ShopeController could not be found.
+Exception Attributes: array (
+  'class' => 'ShopeController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/shope
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:14:09 Warning: Warning (2): mkdir() [<a href='http://php.net/function.mkdir'>function.mkdir</a>]: No such file or directory in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 132]
+Trace:
+mkdir - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 132
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:14:09 Warning: Warning (2): imagepng(/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png) [<a href='http://php.net/function.imagepng'>function.imagepng</a>]: failed to open stream: Permission denied in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 160]
+Trace:
+imagepng - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 160
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:14:09 Warning: Warning (2): include(/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png) [<a href='http://php.net/function.include'>function.include</a>]: failed to open stream: No such file or directory in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 161]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:14:09 Warning: Warning (2): include() [<a href='http://php.net/function.include'>function.include</a>]: Failed opening '/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png' for inclusion (include_path='/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib:.:/usr/local/php5/lib/php') in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 161]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:14:09 Warning: Warning (2): imagedestroy() expects parameter 1 to be resource, null given in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 166]
+Trace:
+imagedestroy - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 166
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:14:41 Error: [MissingControllerException] Controller class ShopeController could not be found.
+Exception Attributes: array (
+  'class' => 'ShopeController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/shope
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:14:51 Warning: Warning (2): mkdir() [<a href='http://php.net/function.mkdir'>function.mkdir</a>]: No such file or directory in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 132]
+Trace:
+mkdir - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 132
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:14:51 Warning: Warning (2): imagepng(/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png) [<a href='http://php.net/function.imagepng'>function.imagepng</a>]: failed to open stream: Permission denied in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 160]
+Trace:
+imagepng - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 160
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:14:51 Warning: Warning (2): include(/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png) [<a href='http://php.net/function.include'>function.include</a>]: failed to open stream: No such file or directory in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 161]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:14:51 Warning: Warning (2): include() [<a href='http://php.net/function.include'>function.include</a>]: Failed opening '/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png' for inclusion (include_path='/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib:.:/usr/local/php5/lib/php') in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 161]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:14:51 Warning: Warning (2): imagedestroy() expects parameter 1 to be resource, null given in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 166]
+Trace:
+imagedestroy - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 166
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:16:45 Error: [MissingControllerException] Controller class ShopeController could not be found.
+Exception Attributes: array (
+  'class' => 'ShopeController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/shope
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:16:52 Warning: Warning (2): mkdir() [<a href='http://php.net/function.mkdir'>function.mkdir</a>]: No such file or directory in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 132]
+Trace:
+mkdir - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 132
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:16:52 Warning: Warning (2): imagepng(/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png) [<a href='http://php.net/function.imagepng'>function.imagepng</a>]: failed to open stream: Permission denied in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 160]
+Trace:
+imagepng - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 160
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:16:52 Warning: Warning (2): include(/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png) [<a href='http://php.net/function.include'>function.include</a>]: failed to open stream: No such file or directory in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 161]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:16:52 Warning: Warning (2): include() [<a href='http://php.net/function.include'>function.include</a>]: Failed opening '/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png' for inclusion (include_path='/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib:.:/usr/local/php5/lib/php') in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 161]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:16:52 Warning: Warning (2): imagedestroy() expects parameter 1 to be resource, null given in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 166]
+Trace:
+imagedestroy - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 166
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:17:04 Error: [MissingControllerException] Controller class ShopeController could not be found.
+Exception Attributes: array (
+  'class' => 'ShopeController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/shope
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:17:11 Warning: Warning (2): mkdir() [<a href='http://php.net/function.mkdir'>function.mkdir</a>]: No such file or directory in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 132]
+Trace:
+mkdir - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 132
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:17:11 Warning: Warning (2): imagepng(/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png) [<a href='http://php.net/function.imagepng'>function.imagepng</a>]: failed to open stream: Permission denied in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 160]
+Trace:
+imagepng - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 160
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:17:11 Warning: Warning (2): include(/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png) [<a href='http://php.net/function.include'>function.include</a>]: failed to open stream: No such file or directory in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 161]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:17:11 Warning: Warning (2): include() [<a href='http://php.net/function.include'>function.include</a>]: Failed opening '/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png' for inclusion (include_path='/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib:.:/usr/local/php5/lib/php') in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 161]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:17:11 Warning: Warning (2): imagedestroy() expects parameter 1 to be resource, null given in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 166]
+Trace:
+imagedestroy - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 166
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:17:27 Error: [MissingControllerException] Controller class ShopeController could not be found.
+Exception Attributes: array (
+  'class' => 'ShopeController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/shope
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:18:38 Error: [MissingControllerException] Controller class ShopeController could not be found.
+Exception Attributes: array (
+  'class' => 'ShopeController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/shope
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:18:54 Error: [MissingControllerException] Controller class ShopeController could not be found.
+Exception Attributes: array (
+  'class' => 'ShopeController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/shope
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:19:53 Error: [MissingControllerException] Controller class ShopeController could not be found.
+Exception Attributes: array (
+  'class' => 'ShopeController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/shope
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:20:03 Error: [MissingControllerException] Controller class ShopeController could not be found.
+Exception Attributes: array (
+  'class' => 'ShopeController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/shope
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:20:14 Error: [MissingControllerException] Controller class ShopeController could not be found.
+Exception Attributes: array (
+  'class' => 'ShopeController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/shope
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:21:43 Error: [MissingControllerException] Controller class ShopeController could not be found.
+Exception Attributes: array (
+  'class' => 'ShopeController',
+  'plugin' => NULL,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/shope
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-05-25 23:21:50 Warning: Warning (2): mkdir() [<a href='http://php.net/function.mkdir'>function.mkdir</a>]: No such file or directory in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 132]
+Trace:
+mkdir - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 132
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:21:50 Warning: Warning (2): imagepng(/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png) [<a href='http://php.net/function.imagepng'>function.imagepng</a>]: failed to open stream: Permission denied in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 160]
+Trace:
+imagepng - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 160
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:21:50 Warning: Warning (2): include(/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png) [<a href='http://php.net/function.include'>function.include</a>]: failed to open stream: No such file or directory in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 161]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:21:50 Warning: Warning (2): include() [<a href='http://php.net/function.include'>function.include</a>]: Failed opening '/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png' for inclusion (include_path='/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib:.:/usr/local/php5/lib/php') in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 161]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:21:50 Warning: Warning (2): imagedestroy() expects parameter 1 to be resource, null given in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 166]
+Trace:
+imagedestroy - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 166
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:22:07 Warning: Warning (2): mkdir() [<a href='http://php.net/function.mkdir'>function.mkdir</a>]: No such file or directory in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 132]
+Trace:
+mkdir - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 132
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:22:07 Warning: Warning (2): imagepng(/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png) [<a href='http://php.net/function.imagepng'>function.imagepng</a>]: failed to open stream: Permission denied in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 160]
+Trace:
+imagepng - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 160
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:22:07 Warning: Warning (2): include(/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png) [<a href='http://php.net/function.include'>function.include</a>]: failed to open stream: No such file or directory in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 161]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:22:07 Warning: Warning (2): include() [<a href='http://php.net/function.include'>function.include</a>]: Failed opening '/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/tmp/cache/skins/Eywek.png' for inclusion (include_path='/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib:.:/usr/local/php5/lib/php') in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 161]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 161
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:22:07 Warning: Warning (2): imagedestroy() expects parameter 1 to be resource, null given in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 166]
+Trace:
+imagedestroy - [internal], line ??
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 166
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+

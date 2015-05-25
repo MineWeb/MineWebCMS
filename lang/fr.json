@@ -333,5 +333,8 @@
     "RESET_PASSWORD_MAIL": "Salut {PSEUDO} !\r\n\r\nTu a demander un la r\u00e9nitialisation de ton mot de passe ! Tu trouvera ci-dessous le lien pour r\u00e9initialiser ton mot de passe (Le lien expirera dans 1h).\r\n{LINK}\r\n\r\nCeci est un message automatique.",
     "SAVE":"Sauvegarder",
     "SUCCESS_RESET_PASSWORD":"Mot de passe modifié avec succès !",
-    "INVALID_KEY_FOR_RESET":"La clé de rénitialisation du mot de passe est invalide"
+    "INVALID_KEY_FOR_RESET":"La clé de rénitialisation du mot de passe est invalide",
+    "ERROR_404_TITLE":"Page introuvable",
+    "ERROR_404_CONTENT":"La page <b>{URL}</b> n'a pas été touvée ! Celle-ci a surement été supprimée ou déplacée",
+    "ERROR_500_TITLE":"Erreur 500"
 }

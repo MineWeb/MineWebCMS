@@ -53,3 +53,273 @@ ExceptionRenderer::render() - /Users/valentin/Dropbox/Projets en cours/EyCraft/w
 ErrorHandler::handleException() - /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Error/ErrorHandler.php, line 119
 [main] - [internal], line ??
 
+2015-05-25 23:10:50 Notice: Notice (8): Undefined variable: cacheFolder in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 131]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 131
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:10:50 Notice: Notice (8): Undefined variable: cacheFolder in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 132]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 132
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:10:51 Notice: Notice (8): Undefined variable: im in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 166]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 166
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:11:27 Notice: Notice (8): Undefined variable: cacheFolder in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 131]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 131
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:11:27 Notice: Notice (8): Undefined variable: cacheFolder in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 132]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 132
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:11:27 Notice: Notice (8): Undefined variable: im in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 166]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 166
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:12:37 Notice: Notice (8): Undefined variable: cacheFolder in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 131]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 131
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:12:37 Notice: Notice (8): Undefined variable: cacheFolder in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 132]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 132
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:12:37 Notice: Notice (8): Undefined variable: im in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 166]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 166
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:14:09 Notice: Notice (8): Undefined variable: cacheFolder in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 131]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 131
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:14:09 Notice: Notice (8): Undefined variable: cacheFolder in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 132]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 132
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:14:09 Notice: Notice (8): Undefined variable: im in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 166]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 166
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:14:51 Notice: Notice (8): Undefined variable: cacheFolder in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 131]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 131
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:14:51 Notice: Notice (8): Undefined variable: cacheFolder in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 132]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 132
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:14:51 Notice: Notice (8): Undefined variable: im in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 166]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 166
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:16:52 Notice: Notice (8): Undefined variable: cacheFolder in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 131]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 131
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:16:52 Notice: Notice (8): Undefined variable: cacheFolder in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 132]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 132
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:16:52 Notice: Notice (8): Undefined variable: im in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 166]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 166
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:17:11 Notice: Notice (8): Undefined variable: cacheFolder in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 131]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 131
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:17:11 Notice: Notice (8): Undefined variable: cacheFolder in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 132]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 132
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:17:11 Notice: Notice (8): Undefined variable: im in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 166]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 166
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:21:50 Notice: Notice (8): Undefined variable: cacheFolder in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 131]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 131
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:21:50 Notice: Notice (8): Undefined variable: cacheFolder in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 132]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 132
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:21:50 Notice: Notice (8): Undefined variable: im in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 166]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 166
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:22:07 Notice: Notice (8): Undefined variable: cacheFolder in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 131]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 131
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:22:07 Notice: Notice (8): Undefined variable: cacheFolder in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 132]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 132
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
+2015-05-25 23:22:07 Notice: Notice (8): Undefined variable: im in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/APIComponent.php, line 166]
+Trace:
+APIComponent::get_head_skin() - APP/Controller/Component/APIComponent.php, line 166
+APIController::get_head_skin() - APP/Controller/APIController.php, line 117
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 191
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 165
+[main] - APP/webroot/index.php, line 108
+
