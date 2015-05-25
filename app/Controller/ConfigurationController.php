@@ -13,9 +13,9 @@ class ConfigurationController extends AppController {
 						$this->Configuration->set($key, $value);
 						if($key == "mineguard") {
 							if($value == "true") {
-								$this->Server->call(array('activateMineguard' => 'true'), true);
+								$this->Server->call(array('setMineguard' => 'true'), true);
 							} else {
-								$this->Server->call(array('activateMineguard' => 'false'), true);
+								$this->Server->call(array('setMineguard' => 'false'), true);
 							}
 						}
 					}

@@ -200,7 +200,7 @@ class APIComponent extends Object {
 					}
 					return $return;
 				} else {
-					return array('status' => false);
+					return array('status' => true);
 				}
 			} else {
 				return array('status' => false);

@@ -133,7 +133,7 @@
                 <label for="inputPassword3" class="col-sm-2 control-label"><?= $Lang->get('CAPTCHA') ?></label>
                 <div class="col-sm-10">
                   <?php 
-                    echo $this->Html->image(array('controller' => 'user', 'action' => 'get_captcha'),array('id' => 'captcha_image'));
+                    echo $this->Html->image(array('controller' => 'user', 'action' => 'get_captcha', 'plugin' => false),array('id' => 'captcha_image', 'plugin' => false));
                     echo $this->Html->link($Lang->get('RELOAD_CAPTCHA'), 'javascript:void(0);',array('id' => 'reload'));
                   ?>
                 </div>

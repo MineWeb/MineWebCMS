@@ -15,8 +15,8 @@ class ServerComponent extends Object {
 	    $this->secretkey = $this->Configuration->get('server_secretkey');
 	    $this->timeout = $this->Configuration->get('server_timeout');
 	    $this->url = 'http://'.$this->host.':'.$this->port.'?';
-	    //$this->url_key = 'key='.sha1($this->secretkey);
-	    $this->url_key = 'key='.$this->secretkey;
+	    $this->url_key = 'key='.sha1($this->secretkey);
+	    //$this->url_key = 'key='.$this->secretkey;
 	}
 
 	function initialize(&$controller) {
@@ -99,12 +99,12 @@ class ServerComponent extends Object {
 	function check($type, $value) {
 		if($type == 'connection') {
 			if(!empty($value) AND is_array($value)) {
-				$url = 'http://'.$value['host'].':'.$value['port'].'?key='.sha1($value['secret_key']).'&domain='.Router::url('/', true).'&performCommand='.rawurlencode('say La liaison site-serveur a bien été effectuée !');
+				$url = 'http://'.$value['host'].':'.$value['port'].'?key='.sha1($value['secret_key']).'&domain='.rawurlencode(Router::url('/', true));
 				$opts = array('http' => array('timeout' => $value['timeout']));
 				@$get = file_get_contents($url, false, stream_context_create($opts));
 				if($get != false) {
 					$response = json_decode($get, true);
-					if($response['performCommand'] != 'NEED_KEY') {
+					if(isset($response['REQUEST']) AND $response['REQUEST'] == 'INSTALLATION_COMPLETED') {
 						return true; // response
 					} else {
 						return false;
@@ -121,8 +121,8 @@ class ServerComponent extends Object {
 	function banner_infos() {
 		if(Configure::read('server.online')) {
 			$search = $this->call(array('getMOTD' => 'server', 'getVersion' => 'server', 'getPlayerMax' => 'server', 'getPlayerCount' => 'server'));
-			if($search['getPlayerList'] == "none") {
-				$search['getPlayerList'] = 0;
+			if($search['getPlayerCount'] == "null") {
+				$search['getPlayerCount'] = 0;
 			}
 	      	return $search;
 	    } else {

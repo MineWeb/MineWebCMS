@@ -18,6 +18,18 @@ class ServerController extends AppController {
 		}
 	}
 
+	public function admin_test_call($key, $value) {
+		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+			$this->autoRender = false;
+			 
+			echo '<pre>';
+			var_dump($this->Server->call(array($key => $value)));
+			echo '</pre>';
+		} else {
+			$this->redirect('/');
+		}
+	}
+
 	public function admin_link_ajax() {
 		if($this->Connect->connect() AND $this->Connect->if_admin()) {
 			 
@@ -34,6 +46,7 @@ class ServerController extends AppController {
 						$this->Configuration->set('server_timeout', $this->request->data['timeout']);
 						echo $this->Lang->get('SUCCESS_CONNECTION_SERVER').'|true';
 					} else {
+						$this->Configuration->set('server_state', 0);
 						echo $this->Lang->get('SERVER_CONNECTION_FAILED').'|false';
 					}
 				} else {
@@ -52,8 +65,9 @@ class ServerController extends AppController {
 			$this->layout = "admin";
 			$list = $this->Server->call('getPlayersBanned');
 			if($list != 'NEED_SERVER_ON') {
-				$list = explode(',', $list);
+				$list = explode(',', $list['getPlayersBanned']);
 			}
+			if(isset($list[0]) AND $list[0] == "none") { $list = array(); }
 			$this->set(compact('list'));
 			$this->set('title_for_layout',$this->Lang->get('BANLIST'));
 		} else {
@@ -66,8 +80,9 @@ class ServerController extends AppController {
 			$this->layout = "admin";
 			$list = $this->Server->call('getPlayersWhitelisted');
 			if($list != 'NEED_SERVER_ON') {
-				$list = explode(',', $list);
+				$list = explode(',', $list['getPlayersWhitelisted']);
 			}
+			if(isset($list[0]) AND $list[0] == "none") { $list = array(); }
 			$this->set(compact('list'));
 			$this->set('title_for_layout',$this->Lang->get('WHITELIST'));
 		} else {
@@ -80,8 +95,9 @@ class ServerController extends AppController {
 			$this->layout = "admin";
 			$list = $this->Server->call('getPlayerList');
 			if($list != 'NEED_SERVER_ON') {
-				$list = explode(',', $list);
+				$list = explode(',', $list['getPlayerList']);
 			}
+			if(isset($list[0]) AND $list[0] == "none") { $list = array(); }
 			$this->set(compact('list'));
 			$this->set('title_for_layout',$this->Lang->get('ONLINE'));
 		} else {

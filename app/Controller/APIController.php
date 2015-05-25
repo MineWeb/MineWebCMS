@@ -11,6 +11,12 @@ class APIController extends AppController {
 		echo json_encode($this->API->verifIp($username, $ip));
 	}
 
+	public function launcher($username, $password, $args = null) {
+		$this->autoRender = false;
+		$args = explode(',', $args);
+		echo json_encode($this->API->get($username, $password, $args));
+	}
+
 	public function delete_ip() {
 		$this->autoRender = false;
         if($this->Connect->connect()) {

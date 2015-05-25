@@ -1,4 +1,3 @@
-<?php   ?>
 <h2><?= $Lang->get('ERROR_404_TITLE') ?></h2>
 <p class="error">
 	<strong><?php echo __d('cake', 'Error'); ?>: </strong>
