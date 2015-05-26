@@ -195,10 +195,12 @@ $this->EyPlugin = new EyPluginComponent;
         <h4 class="modal-title" id="myModalLabel">Exécuter une commande</h4>
       </div>
       <div class="modal-body">
-        <div class="input-append">
-            <input class="no-margin span4" type="text"></input>
-            <button class="btn btn-info" type="button">Envoyer</button>
-        </div>
+        <form action="" method="post">
+          <div class="input-append">
+              <input class="no-margin span4" name="cmd" type="text"></input>
+              <button class="btn btn-info" type="button">Envoyer</button>
+          </div>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>

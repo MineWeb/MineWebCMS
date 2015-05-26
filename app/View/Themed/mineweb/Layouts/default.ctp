@@ -52,7 +52,6 @@ $theme_config = json_decode($theme_config, true);
                 <p><?= $Lang->get('COPYRIGHT') ?></p>
             </div>
         </footer>
-
     
     <?= $this->element('login_register') ?>
     <?= $this->element('script') ?>

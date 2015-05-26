@@ -60,7 +60,7 @@ $this->EyPlugin = new EyPluginComponent;
                         <ul class="dropdown-menu" role="menu">
                           <?php if($this->Connect->connect()) { ?>
                             
-                            <img class="img-rounded" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/<?= $this->Connect->get_pseudo() ?>/60" title="<?= $this->Connect->get_pseudo() ?>">
+                            <img class="img-rounded" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/', 'plugin' => false)) ?>/<?= $this->Connect->get_pseudo() ?>/60" title="<?= $this->Connect->get_pseudo() ?>">
 
                             <span class="info pull-right">
                               <?php 

@@ -25,6 +25,7 @@
 						   		'name' => 'time_vote',
 						    	'class' => 'span6 m-wrap',
 						    	'value' => $vote['time_vote'],
+						    	'placeholder' => 'minutes'
 							));
 						?>
 					</div>

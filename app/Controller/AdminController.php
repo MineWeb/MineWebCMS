@@ -74,6 +74,14 @@ class AdminController extends AppController {
 			} else {
 				$this->set('counts_items', 0);
 			}
+
+			if($this->request->is('post')) {
+				if(!empty($this->request->data['cmd'])) {
+					$this->Server->call(array('performCommand' => $this->request->data['cmd']), true);
+					$this->setFlash($this->Lang->get('SUCCESS_SEND_COMMAND'), 'default.success');
+				}
+			}
+
 		} else {
 			$this->redirect('/');
 		}

@@ -336,5 +336,6 @@
     "INVALID_KEY_FOR_RESET":"La clé de rénitialisation du mot de passe est invalide",
     "ERROR_404_TITLE":"Page introuvable",
     "ERROR_404_CONTENT":"La page <b>{URL}</b> n'a pas été touvée ! Celle-ci a surement été supprimée ou déplacée",
-    "ERROR_500_TITLE":"Erreur 500"
+    "ERROR_500_TITLE":"Erreur 500",
+    "SUCCESS_SEND_COMMAND":"Commande envoyée avec succès !"
 }
