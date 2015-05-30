@@ -5949,3 +5949,37 @@ Stack Trace:
 #3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(904): App::_checkFatalError()
 #4 [internal function]: App::shutdown()
 #5 {main}
+2015-05-30 17:21:12 Error: [MissingConnectionException] Database connection "Mysql" is missing, or could not be created.
+Exception Attributes: array (
+  'class' => 'Mysql',
+  'message' => 'SQLSTATE[HY000] [2002] No such file or directory',
+  'enabled' => true,
+)
+Request URL: /Projets%20en%20cours/EyCraft/www_git/vote
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Datasource/DboSource.php(260): Mysql->connect()
+#1 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/ConnectionManager.php(105): DboSource->__construct(Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Model.php(3498): ConnectionManager::getDataSource('default')
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Model.php(1136): Model->setDataSource('default')
+#4 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Model.php(3525): Model->setSource('configurations')
+#5 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Model.php(2921): Model->getDataSource()
+#6 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Model/Model.php(2893): Model->_readDataSource('first', Array)
+#7 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/ConfigurationComponent.php(65): Model->find('first')
+#8 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/Controller/Component/ServerComponent.php(13): ConfigurationComponent->get('server_host')
+#9 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Controller/ComponentCollection.php(116): ServerComponent->__construct(Object(ComponentCollection), Array)
+#10 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Controller/ComponentCollection.php(53): ComponentCollection->load('Server', Array)
+#11 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Controller/Controller.php(643): ComponentCollection->init(Object(VoterController))
+#12 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(186): Controller->constructClasses()
+#13 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Routing/Dispatcher.php(165): Dispatcher->_invoke(Object(VoterController), Object(CakeRequest))
+#14 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#15 {main}
+2015-05-30 17:21:12 Error: Fatal Error (1): Call to a member function get() on null in [/Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/app/View/Errors/errordatabase.ctp, line 4]
+2015-05-30 17:21:12 Error: [FatalErrorException] Call to a member function get() on null
+Request URL: /Projets%20en%20cours/EyCraft/www_git/vote
+Stack Trace:
+#0 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Error/ErrorHandler.php(203): ErrorHandler::handleFatalError(1, 'Call to a membe...', '/Users/valentin...', 4)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to a membe...', '/Users/valentin...', 4, Array)
+#2 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(931): call_user_func('ErrorHandler::h...', 1, 'Call to a membe...', '/Users/valentin...', 4, Array)
+#3 /Users/valentin/Dropbox/Projets en cours/EyCraft/www_git/lib/Cake/Core/App.php(904): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}

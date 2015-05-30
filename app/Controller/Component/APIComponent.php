@@ -124,19 +124,22 @@ class APIComponent extends Object {
 		imagepng($rendered);
 	}
 
-	public function get_head_skin($name, $size = 50, $where, $cache = true) {
+	public function get_head_skin($name, $size = 50, $where, $cache = false) {
 
 		header("Content-type: image/png");
+		
 		if($cache){
-		  if(!is_dir($cacheFolder)){
-		    mkdir($cacheFolder);
-		  }
-		  $cachePath = ROOT.'/app/tmp/cache/skins/'.$name . '.png';
-		  if(is_file($cachePath) && !isset($_GET['skip'])){
-		    include($cachePath);
-		    exit();
-		  }
+			$cacheFolder = ROOT.'/app/tmp/cache/skins/';
+		  	if(!is_dir($cacheFolder)){
+		    	mkdir($cacheFolder);
+		  	}
+		  	$cachePath = ROOT.'/app/tmp/cache/skins/'.$name . '.png';
+		  	if(is_file($cachePath)){
+		    	include($cachePath);
+	    		exit();
+		  	}
 		}
+		
 		$src = imagecreatefrompng($where.$name.'.png');
 		$dest   = imagecreatetruecolor(8, 8);
 		imagecopy($dest, $src, 0, 0, 8, 8, 8, 8); 
@@ -163,7 +166,6 @@ class APIComponent extends Object {
 		else {
 		  imagepng($final);
 		}
-		imagedestroy($im);
 		imagedestroy($dest);
 		imagedestroy($final);
 
