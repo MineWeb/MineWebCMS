@@ -307,7 +307,7 @@
     "WIDTH_MAX": "Maximum 64 pixels de largeur",
     "HEIGHT_MAX": "Maximum 32 pixels de hauteur",
     "BE_PNG": "Doit \u00eatre au format PNG",
-    "LAST_VERSION": "Derni\u00e8re version du CMS disponibe",
+    "LAST_VERSION": "Derni\u00e8re version du CMS disponible",
     "LOG_LAST_UPDATE": "Log de la derni\u00e8re mise \u00e0 jour",
     "UPDATE_FILE": "Fichier mis \u00e0 jour",
     "CREATE_FILE": "Cr\u00e9ation de fichier",
@@ -337,5 +337,6 @@
     "ERROR_404_TITLE":"Page introuvable",
     "ERROR_404_CONTENT":"La page <b>{URL}</b> n'a pas été touvée ! Celle-ci a surement été supprimée ou déplacée",
     "ERROR_500_TITLE":"Erreur 500",
-    "SUCCESS_SEND_COMMAND":"Commande envoyée avec succès !"
+    "SUCCESS_SEND_COMMAND":"Commande envoyée avec succès !",
+    "ON_UPDATE":"Mise à jour en cours ..."
 }

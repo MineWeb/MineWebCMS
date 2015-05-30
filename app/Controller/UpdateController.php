@@ -31,11 +31,10 @@ class UpdateController extends AppController {
 		if($this->Connect->connect() AND $this->Connect->if_admin()) {
 			$this->autoRender = false;
 			if($this->Update->update($this->Update->get_version())) {
-				$this->Session->setFlash($this->Lang->get('UPDATE_SUCCESS'), 'default.error');
+				echo $this->Lang->get('UPDATE_SUCCESS').'|true';
 			} else {
-				$this->Session->setFlash($this->Lang->get('UPDATE_FAILED'), 'default.error');
+				echo $this->Lang->get('UPDATE_FAILED').'|false';
 			}
-			$this->redirect(array('controller' => 'update', 'action' => 'index', 'admin' => true));
 		} else {
 			$this->redirect('/');
 		}
