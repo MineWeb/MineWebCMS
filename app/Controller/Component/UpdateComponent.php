@@ -134,6 +134,62 @@ class UpdateComponent extends Object {
 		}
 	}
 
+	public function plugin($url, $plugin_name, $plugin_id) {
+		// récupérer les fichiers mis à jour sur mineweb.org (le zip dans un dossier temp)
+		$zip = file_get_contents($url);
+		if (!is_dir(ROOT.'/temp/')) mkdir(ROOT.'/temp/');
+		$write = fopen(ROOT.'/temp/'.$plugin_name.'-'.$plugin_id.'.zip', 'w+');
+		if(!fwrite($write, $zip)) { 
+			return false;
+		}
+		fclose($write);
+
+		// on ouvre le zip et on met les fichiers
+		$zipHandle = zip_open(ROOT.'/temp/'.$plugin_name.'-'.$plugin_id.'.zip');
+		$rand = substr(md5(rand()), 0, 5);
+		while ($aF = zip_read($zipHandle)) {
+			$thisFileName = zip_entry_name($aF);
+			$thisFileDir = dirname($thisFileName);
+			if(substr($thisFileName,-1,1) == '/') continue;
+			if(!is_dir (ROOT.'/'.$thisFileDir)) {
+				if(strstr($thisFileDir, '__MACOSX') === false) {
+					mkdir (ROOT.'/'.$thisFileDir);
+				}
+			}
+			if (!is_dir(ROOT.'/'.$thisFileName)) {
+				$contents = zip_entry_read($aF, zip_entry_filesize($aF));
+				$contents = str_replace("\r\n", "\n", $contents);
+				$updateThis = '';
+				
+				if($thisFileName == $plugin_name.'_update.php') {
+					$upgradeExec = fopen(ROOT'/temp/'.$plugin_name.'_update.php','w');
+					fwrite($upgradeExec, $contents);
+					fclose($upgradeExec);
+				} elseif($thisFileName != ".DS_Store") {
+					if(file_exists(ROOT.'/'.$thisFileName)) {
+						$exist = true;
+					} else {
+						$exist = false;
+					}
+					if(strstr($thisFileName, '__MACOSX') === false AND strstr($thisFileName, '.DS_Store') === false) {
+						if($updateThis = fopen(ROOT.'/'.$thisFileName, 'w')) {
+							$aF_time = filemtime($aF);
+							$last_time = filemtime(ROOT.'/'.$thisFileName);
+							if($aF_time != $last_time OR $exist === false) {
+								fwrite($updateThis, $contents);
+								fclose($updateThis);
+								unset($contents);
+							}
+						} else {
+							return false;
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
+
 	public function set_log($action, $state = "success", $args, $rand) {
 		// set les logs de la mise à jour 
 		$filename = ROOT.'/app/tmp/logs/update/'.$this->get_version().'-'.$rand.'.log';

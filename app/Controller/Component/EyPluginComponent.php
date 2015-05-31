@@ -305,38 +305,36 @@ class EyPluginComponent extends Object {
     }
   }
 
-    function update($plugin_id = false, $plugin_name = false) {
-    if(unzip('http://mineweb.org/api/mineweb_plugins/plugins/'.$plugin_id.'-'.$plugin_name.'.zip', ROOT.'/app/Plugin')) {
-      $this->plugins = ClassRegistry::init('plugins');
-      /*$p_author = file_get_contents('../../app/Plugin/'.$plugin_name.'/author.txt');
-      $version = file_get_contents('../../app/Plugin/'.$plugin_name.'/version.txt');*/
+  function update($plugin_id = false, $plugin_name = false) {
+    App::import('Component', 'UpdateComponent');
+    $this->Update = new UpdateComponent();
+    if($this->Update->plugin('http://mineweb.org/api/mineweb_plugins/plugins/'.$plugin_id.'-'.$plugin_name.'.zip', $plugin_name, $plugin_id)) { // on update
+    // si ca réussi
+      // on récupère la nouvelle config
       $config = file_get_contents(ROOT.'/app/Plugin/'.$plugin_name.'/config.json');
       $config = json_decode($config, true);
       $version = $config['version'];
-      $p_author = $config['author'];
       $p_tables = file_get_contents(ROOT.'/app/Plugin/'.$plugin_name.'/sql_name.txt');
       $p_tables = explode(',', $p_tables);
+
+      // on change la version/les tables dans la base de donnée
       $id = $this->plugins->find('all', array('conditions' => array('plugin_id' => $plugin_id)));
       $id = $id[0]['plugins']['id'];
       $this->plugins->read(null, $id);
-      $this->plugins->set(array('plugin_id' => $plugin_id, 'name' => $plugin_name, 'author' => $p_author, 'version' => $version, 'tables' => serialize($p_tables)));
+      $this->plugins->set(array('version' => $version, 'tables' => serialize($p_tables)));
       $this->plugins->save();
-      $tables_plugins = file_get_contents(ROOT.'/app/Plugin/'.$plugin_name.'/sql.txt');
-      if(!empty($tables_plugins)) {
-        $tables_plugins = explode('|', $tables_plugins);
-        App::import('Model', 'ConnectionManager');
-        $con = new ConnectionManager;
-        $cn = $con->getDataSource('default');
-        foreach ($tables_plugins as $do) {
-          if(!empty($do)) {
-            $cn->query($do);
-          }
-        }
+
+      // on execute le fichier de modification si il existe (suppresion de fichier, modification sql)
+      if(file_exists(ROOT.'/temp/'.$plugin_name.'_update.php')) {
+        include(ROOT.'/temp/'.$plugin_name.'_update.php'); // on l'inclue
+        unlink(ROOT.'/temp/'.$plugin_name.'_update.php'); // et on le supprime
       }
+
+      // on supprime les fichiers inutiles
       clearDir(ROOT.'/app/Plugin/__MACOSX');
       clearFolder(ROOT.'/app/tmp/cache/models/');
       clearFolder(ROOT.'/app/tmp/cache/persistent/');
-      return true;
+      return true; // et on dis qu'on a réussi
     } else {
       return false;
     }
