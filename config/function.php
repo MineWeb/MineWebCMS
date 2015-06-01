@@ -185,7 +185,7 @@ return true;
 function clearFolder($folder)
 {
 	// 1 ouvrir le dossier
-	$dossier=opendir($folder);
+	@$dossier=opendir($folder);
 	//2)Tant que le dossier est aps vide
 	while ($fichier = readdir($dossier))
 	{

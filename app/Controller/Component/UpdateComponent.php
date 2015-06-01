@@ -105,7 +105,7 @@ class UpdateComponent extends Object {
 						}
 						if(strstr($thisFileName, '__MACOSX') === false AND strstr($thisFileName, '.DS_Store') === false) {
 							if($updateThis = fopen(ROOT.'/'.$thisFileName, 'w')) {
-								$aF_time = filemtime($aF);
+								$aF_time = filemtime(zip_entry_read($aF, zip_entry_filesize($aF)));
 								$last_time = filemtime(ROOT.'/'.$thisFileName);
 								if($aF_time != $last_time OR $exist === false) {
 									fwrite($updateThis, $contents);
@@ -151,30 +151,30 @@ class UpdateComponent extends Object {
 			$thisFileName = zip_entry_name($aF);
 			$thisFileDir = dirname($thisFileName);
 			if(substr($thisFileName,-1,1) == '/') continue;
-			if(!is_dir (ROOT.'/'.$thisFileDir)) {
+			if(!is_dir (ROOT.'/app/Plugin/'.$thisFileDir)) {
 				if(strstr($thisFileDir, '__MACOSX') === false) {
-					mkdir (ROOT.'/'.$thisFileDir);
+					mkdir (ROOT.'/app/Plugin/'.$thisFileDir);
 				}
 			}
-			if (!is_dir(ROOT.'/'.$thisFileName)) {
+			if (!is_dir(ROOT.'/app/Plugin/'.$thisFileName)) {
 				$contents = zip_entry_read($aF, zip_entry_filesize($aF));
 				$contents = str_replace("\r\n", "\n", $contents);
 				$updateThis = '';
 				
 				if($thisFileName == $plugin_name.'_update.php') {
-					$upgradeExec = fopen(ROOT'/temp/'.$plugin_name.'_update.php','w');
+					$upgradeExec = fopen(ROOT.'/temp/'.$plugin_name.'_update.php','w');
 					fwrite($upgradeExec, $contents);
 					fclose($upgradeExec);
 				} elseif($thisFileName != ".DS_Store") {
-					if(file_exists(ROOT.'/'.$thisFileName)) {
+					if(file_exists(ROOT.'/app/Plugin/'.$thisFileName)) {
 						$exist = true;
 					} else {
 						$exist = false;
 					}
 					if(strstr($thisFileName, '__MACOSX') === false AND strstr($thisFileName, '.DS_Store') === false) {
-						if($updateThis = fopen(ROOT.'/'.$thisFileName, 'w')) {
-							$aF_time = filemtime($aF);
-							$last_time = filemtime(ROOT.'/'.$thisFileName);
+						if($updateThis = fopen(ROOT.'/app/Plugin/'.$thisFileName, 'w')) {
+							$aF_time = filemtime(zip_entry_read($aF, zip_entry_filesize($aF)));
+							$last_time = filemtime(ROOT.'/app/Plugin/'.$thisFileName);
 							if($aF_time != $last_time OR $exist === false) {
 								fwrite($updateThis, $contents);
 								fclose($updateThis);

@@ -51,7 +51,7 @@ $this->EyPlugin = new EyPluginComponent;
                        <?php } ?>
                     	<a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete/'.$value['plugins']['id'], 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>
                       <?php if($value['plugins']['version'] != $this->EyPlugin->get_last_version($value['plugins']['plugin_id'])) { ?>
-                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'update/'.$value['plugin_id'].'/'.$value['name'], 'admin' => true)) ?>" class="btn btn-warning"><?= $Lang->get('UPDATE') ?></a>
+                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'update/'.$value['plugins']['plugin_id'].'/'.$value['plugins']['name'], 'admin' => true)) ?>" class="btn btn-warning"><?= $Lang->get('UPDATE') ?></a>
                       <?php } ?>
                     </td>
                   </tr>
