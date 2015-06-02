@@ -180,7 +180,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                 <br>
             </div>
           <?php } ?>
-
+          <?php if($paysafecard_enabled) { ?>
             <a class="btn btn-info btn-block" data-toggle="collapse" href="#PaySafeCard" aria-expanded="false" aria-controls="PaySafeCard">PaySafeCard</a>
             <br>
             <div class="collapse" id="PaySafeCard">
@@ -211,6 +211,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                 <button type="submit" class="btn btn-default pull-right"><?= $Lang->get('SUBMIT') ?></button>
               </form>
             </div>
+          <?php } ?>
         <?php } else { ?>
             <p><?= $Lang->get('NEED_CONNECT') ?></p>
         <?php } ?>

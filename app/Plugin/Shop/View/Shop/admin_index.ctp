@@ -152,7 +152,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
 	<div class="row-fluid">
 		<div class="span6">
 			<div class="top-bar">
-				<h3><?= $Lang->get('PAYSAFECARD') ?></h3>
+				<h3><?= $Lang->get('PAYSAFECARD') ?>&nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'toggle_paysafecard', 'admin' => true)) ?>" class="btn btn-success"><?php if($paysafecard_enabled) { echo $Lang->get('DISABLE'); } else { echo $Lang->get('ENABLE'); } ?></a></h3>
 			</div>
 
 			<div class="well no-padding">

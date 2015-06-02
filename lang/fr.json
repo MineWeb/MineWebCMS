@@ -338,5 +338,9 @@
     "ERROR_404_CONTENT":"La page <b>{URL}</b> n'a pas été touvée ! Celle-ci a surement été supprimée ou déplacée",
     "ERROR_500_TITLE":"Erreur 500",
     "SUCCESS_SEND_COMMAND":"Commande envoyée avec succès !",
-    "ON_UPDATE":"Mise à jour en cours ..."
+    "ON_UPDATE":"Mise à jour en cours ...",
+    "PAYSAFECARD_DISABLE_SUCCESS":"Les PaySafeCard ont bien été désactivées !",
+    "PAYSAFECARD_ENABLE_SUCCESS":"Les PaySafeCard ont bien été activée !",
+    "ENABLE":"Activer",
+    "DISABLE":"Désactiver"
 }

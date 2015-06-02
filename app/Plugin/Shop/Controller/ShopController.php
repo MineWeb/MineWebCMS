@@ -27,6 +27,15 @@ class ShopController extends AppController {
 		$this->loadModel('Starpass');
 		$starpass_offers = $this->Starpass->find('all');
 		$this->set(compact('starpass_offers'));
+
+		$this->loadModel('Paysafecard');
+		$paysafecard_enabled = $this->Paysafecard->find('all', array('conditions' => array('amount' => '0', 'code' => 'disable', 'author' => 'website', 'created' => '1990/00/00 15:00:00')));
+		if(!empty($paysafecard_enabled)) {
+			$paysafecard_enabled = false;
+		} else {
+			$paysafecard_enabled = true;
+		}
+		$this->set(compact('paysafecard_enabled'));
 	}
 
 	function ajax_get($id) { // Permet d'afficher le contenu du modal avant l'achat (ajax)
@@ -109,8 +118,16 @@ class ShopController extends AppController {
 			$this->set(compact('search_categories'));
 
 			$this->loadModel('Paysafecard');
-			$psc = $this->Paysafecard->find('all');
+			$psc = $this->Paysafecard->find('all', array('conditions' => array('amount !=' => '0', 'code !=' => 'disable', 'author !=' => 'website', 'created !=' => '1990/00/00 15:00:00')));
 			$this->set(compact('psc'));
+
+			$paysafecard_enabled = $this->Paysafecard->find('all', array('conditions' => array('amount' => '0', 'code' => 'disable', 'author' => 'website', 'created' => '1990/00/00 15:00:00')));
+			if(!empty($paysafecard_enabled)) {
+				$paysafecard_enabled = false;
+			} else {
+				$paysafecard_enabled = true;
+			}
+			$this->set(compact('paysafecard_enabled'));
 
 			$this->loadModel('Voucher');
 			$vouchers = $this->Voucher->find('all');
@@ -334,6 +351,34 @@ class ShopController extends AppController {
 			$this->redirect('/');
 		}
 	}
+	
+	public function admin_toggle_paysafecard() {
+		$this->autoRender = false;
+		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+			$this->loadModel('Paysafecard');
+			$paysafecard_enabled = $this->Paysafecard->find('all', array('conditions' => array('amount' => '0', 'code' => 'disable', 'author' => 'website', 'created' => '1990/00/00 15:00:00')));
+			if(!empty($paysafecard_enabled)) {
+				$this->Paysafecard->delete($paysafecard_enabled[0]['Paysafecard']['id']);
+
+				$this->History->set('ENABLE_PAYSAFECARD', 'shop');
+					 
+				$this->Session->setFlash($this->Lang->get('PAYSAFECARD_ENABLE_SUCCESS'), 'default.success');
+				$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
+			} else {
+				$this->Paysafecard->read(null, $paysafecard_enabled[0]['Paysafecard']['id']);
+				$this->Paysafecard->set(array('amount' => '0', 'code' => 'disable', 'author' => 'website', 'created' => '1990/00/00 15:00:00'));
+				$this->Paysafecard->save();
+
+				$this->History->set('DISABLE_PAYSAFECARD', 'shop');
+					 
+				$this->Session->setFlash($this->Lang->get('PAYSAFECARD_DISABLE_SUCCESS'), 'default.success');
+				$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
+			}
+
+		} else {
+			$this->redirect('/');
+		}
+	}
 
 	public function admin_paysafecard_valid($id = false, $money = false) {
 		if($this->Connect->connect() AND $this->Connect->if_admin()) {
@@ -361,6 +406,8 @@ class ShopController extends AppController {
 						'added_points' => intval($money)
 					));
 					$this->PaysafecardMessage->save();
+
+					$this->History->set('VALID_PAYSAFECARD', 'shop');
 					 
 					$this->Session->setFlash($this->Lang->get('PAYSAFECARD_VALID_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
@@ -391,6 +438,8 @@ class ShopController extends AppController {
 						'added_points' => 0
 					));
 					$this->PaysafecardMessage->save();
+
+					$this->History->set('INVALID_PAYSAFECARD', 'shop');
 					 
 					$this->Session->setFlash($this->Lang->get('PAYSAFECARD_INVALID_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
