@@ -68,20 +68,6 @@
 						</div>
 					</div>
 
-					<div class="control-group">
-						<label class="control-label"><?= $Lang->get('COLOR_CODE') ?></label>
-						<div class="controls">
-							<?= $this->Form->input(false, array(
-								'div' => false,
-							    'type' => 'text',
-			    				'name' => 'color_code',
-			    				'class' => 'span6 m-wrap',
-			    				'value' => $config['color_code'],
-			    				'placeholder' => $Lang->get('DEFAULT').' : #3498db'
-							)); ?>
-						</div>
-					</div>
-
 					<div class="form-actions">
 						<?= $this->Form->button($Lang->get('SUBMIT'), array(
 							'type' => 'submit',

@@ -109,7 +109,7 @@ class EyPluginComponent extends Object {
   function delete($id) {
     $this->plugins = ClassRegistry::init('plugins');
     $search = $this->plugins->find('all', array('conditions' => array('id' => $id)));
-    $config = file_get_contents(ROOT.'/app/Plugin/'.$search['plugins']['name'].'/config.json');
+    $config = file_get_contents(ROOT.'/app/Plugin/'.$search[0]['plugins']['name'].'/config.json');
     $config = json_decode($config, true);
     $tables_plugins = unserialize($search['0']['plugins']['tables']);
     App::import('Model', 'ConnectionManager');
@@ -175,10 +175,14 @@ class EyPluginComponent extends Object {
     } else {
       $plugins = $this->plugins->find('all');
     }
-    foreach ($plugins as $key => $value) {
-      $plugins_list[] = $value['plugins']['name']; 
+    if(!empty($plugins)) {
+      foreach ($plugins as $key => $value) {
+        $plugins_list[] = $value['plugins']['name']; 
+      }
+      $plugins = $plugins_list;
+    } else {
+      $plugins = array();
     }
-    $plugins = $plugins_list;
     return $plugins;
   }
 
