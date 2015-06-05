@@ -149,6 +149,22 @@
 					</div>
 				</div><?php */ ?>
 				<div class="control-group">
+					<label class="control-label"><?= $Lang->get('END_DATE') ?></label>
+					<div class="controls">
+						<?php 
+							echo $this->Form->input('', array(
+								'div' => false,
+								'label' => false,
+						   		'type' => 'text',
+						   		'name' => 'end_date',
+						    	'class' => 'span6 m-wrap',
+						    	'placeholder' => 'Format : '.$Lang->get('YEAR').'-'.$Lang->get('MONTH').'-'.$Lang->get('DAY').' '.$Lang->get('HOUR').':'.$Lang->get('MINUTES').':'.$Lang->get('SECONDS')
+							));
+						?>
+						<span class="help-inline">Ex: 10</span>
+					</div>
+				</div>
+				<div class="control-group">
 					<label class="control-label"><?= $Lang->get('AFFICH') ?></label>
 					<div class="controls">
 						<?= $this->Form->checkbox(false, array(
@@ -209,8 +225,9 @@
         var effective_on_categorie = $form.find("#effective_on_categorie").val();
         var type = $form.find("select[name='type']").val();
         var reduction = $form.find("input[name='reduction']").val();
+        var end_date = $form.find("input[name='end_date']").val();
         var affich = $form.find("#affich").val();
-        $.post("<?= $this->Html->url(array('controller' => 'shop', 'action' => 'admin_add_voucher_ajax', 'admin' => true)) ?>", { code : code, effective_on : effective_on, effective_on_item : effective_on_item, effective_on_categorie : effective_on_categorie, type : type, reduction : reduction, affich : affich }, function(data) {
+        $.post("<?= $this->Html->url(array('controller' => 'shop', 'action' => 'admin_add_voucher_ajax', 'admin' => true)) ?>", { code : code, effective_on : effective_on, effective_on_item : effective_on_item, effective_on_categorie : effective_on_categorie, type : type, reduction : reduction, end_date : end_date, affich : affich }, function(data) {
           	data2 = data.split("|");
 		  	if(data.indexOf('true') != -1) {
           		$('.ajax-msg').empty().html('<div class="alert alert-success" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);

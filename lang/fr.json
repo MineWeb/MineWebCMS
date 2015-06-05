@@ -342,5 +342,11 @@
     "PAYSAFECARD_DISABLE_SUCCESS":"Les PaySafeCard ont bien été désactivées !",
     "PAYSAFECARD_ENABLE_SUCCESS":"Les PaySafeCard ont bien été activée !",
     "ENABLE":"Activer",
-    "DISABLE":"Désactiver"
+    "DISABLE":"Désactiver",
+    "YEAR":"Année",
+    "MONTH":"Mois",
+    "DAY":"Jour",
+    "HOUR":"Heure",
+    "MINUTES":"Minutes",
+    "SECONDS":"Secondes"
 }

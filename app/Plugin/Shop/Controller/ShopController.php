@@ -743,6 +743,7 @@ class ShopController extends AppController {
 						'type' => intval($this->request->data['type']),
 						'reduction' => $this->request->data['reduction'],
 						//'limit_per_user' => $this->request->data['limit_per_ip'],
+						'end_date' => $this->request->data['end_date'],
 						'affich' => $this->request->data['affich'],
 					));
 					$this->Voucher->save();
