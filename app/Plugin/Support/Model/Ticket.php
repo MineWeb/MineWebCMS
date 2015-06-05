@@ -3,7 +3,7 @@ App::uses('CakeEvent', 'Event');
 
 class Ticket extends SupportAppModel {
 	
-	public function afterSave($created, $options = array()) {
+	public function beforeSave($created, $options = array()) {
 		if($created) {
 			// nouvel enregistrement
 			$this->getEventManager()->dispatch(new CakeEvent('addTicket', $this));
@@ -13,7 +13,7 @@ class Ticket extends SupportAppModel {
 		}
 	}
 
-	public function afterDelete() {
+	public function beforeDelete() {
 		$this->getEventManager()->dispatch(new CakeEvent('deleteTicket', $this));
 	}
 
