@@ -43,7 +43,13 @@ $theme_config = json_decode($theme_config, true);
 <body><!-- grey.png -->
     <?= $this->element($theme_config['navbar']) ?>
 
-            <?= $this->Session->flash() ?>
+            <?php 
+            $flash = $this->Session->flash();
+            if(!empty($flash)) { ?><br><br><br>
+              <div class="container">
+                <?= $flash ?>
+              </div>
+            <?php } ?>
             <?= $this->fetch('content'); ?>
         <!-- Footer -->
     </div>
