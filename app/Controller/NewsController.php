@@ -197,7 +197,7 @@ class NewsController extends AppController {
 	function admin_add_ajax() {
 		if($this->Connect->connect() AND $this->Connect->if_admin()) {
 			$this->layout = null;
-			 
+
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['title']) AND !empty($this->request->data['content']) AND !empty($this->request->data['slug'])) {
 					$this->loadModel('News');

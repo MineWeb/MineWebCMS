@@ -17,7 +17,7 @@ class ShopController extends AppController {
 		$search_categories = $this->Category->find('all'); $this->set(compact('search_categories')); // on cherche toutes les catégories et on envoie à la vue
 		
 		$search_first_category = $this->Category->find('first'); //
-		$search_first_category = $search_first_category['Category']['id']; //
+		$search_first_category = @$search_first_category['Category']['id']; //
 		$this->set(compact('search_first_category')); // on cherche la première catégorie et on envoie à la vue
 
 		$this->loadModel('Paypal');

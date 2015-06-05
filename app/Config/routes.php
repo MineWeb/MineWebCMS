@@ -16,14 +16,6 @@
 
 		Router::connect('/profile/modify', array('controller' => 'user', 'action' => 'modify_profile'));
 
-		Router::connect('/shop/c/*', array('controller' => 'shop', 'action' => 'index', 'plugin' => 'shop'));
-
-		// Voter
-		Router::connect('/vote', array('controller' => 'voter', 'action' => 'index', 'plugin' => 'vote'));
-
-		// Support
-		Router::connect('/support', array('controller' => 'home', 'action' => 'index', 'plugin' => 'support'));
-
 		// Admin
 		Configure::write('Routing.prefixes', array('admin'));
 		Router::connect(
