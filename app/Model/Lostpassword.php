@@ -3,14 +3,14 @@ App::uses('CakeEvent', 'Event');
 
 class Lostpassword extends AppModel {
 
-	public function beforeSave($created, $options = array()) {
+	public function afterSave($created, $options = array()) {
 		if($created) {
 			// nouvel enregistrement
 			$this->getEventManager()->dispatch(new CakeEvent('lostPassword', $this));
 		}
 	}
 
-	public function beforeDelete() {
+	public function afterDelete($cascade = true) {
 		$this->getEventManager()->dispatch(new CakeEvent('resetPassword', $this));
 	}
 

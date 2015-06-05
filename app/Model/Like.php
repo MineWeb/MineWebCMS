@@ -3,14 +3,14 @@ App::uses('CakeEvent', 'Event');
 
 class Like extends AppModel {
 
-	public function beforeSave($created, $options = array()) {
+	public function afterSave($created, $options = array()) {
 		if($created) {
 			// nouvel enregistrement
 			$this->getEventManager()->dispatch(new CakeEvent('addLike', $this));
 		}
 	}
 
-	public function beforeDelete() {
+	public function afterDelete() {
 		$this->getEventManager()->dispatch(new CakeEvent('deleteLike', $this));
 	}
 }

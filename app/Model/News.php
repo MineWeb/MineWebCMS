@@ -3,7 +3,7 @@ App::uses('CakeEvent', 'Event');
 
 class News extends AppModel {
 
-	public function beforeSave($created, $options = array()) {
+	public function afterSave($created, $options = array()) {
 		if($created) {
 			// nouvel enregistrement
 			$this->getEventManager()->dispatch(new CakeEvent('addNews', $this));
@@ -13,7 +13,7 @@ class News extends AppModel {
 		}
 	}
 
-	public function beforeDelete() {
+	public function afterDelete($cascade = true) {
 		$this->getEventManager()->dispatch(new CakeEvent('deleteNews', $this));
 	}
 
