@@ -6,6 +6,7 @@
 	"author":"Eywek",
 	"version":"0.1",
 	"plugin_id":"1",
+	"useEvents":false,
 	"permissions" : {
 		"available" : ["CREDIT_ACCOUNT", "CAN_BUY"],
 		"default" : {

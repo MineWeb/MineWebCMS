@@ -29,7 +29,6 @@ $this->EyPlugin = new EyPluginComponent;
 	<?php echo $this->Html->css('bootstrap-responsive.css'); ?>
 
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
-	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false"></script>
 	<?php echo $this->Html->script('admin/charts/excanvas.min.js'); ?>
 	<?php echo $this->Html->script('admin/charts/jquery.flot.js'); ?>
 	<?php echo $this->Html->script('admin/jquery.jpanelmenu.min.js'); ?>

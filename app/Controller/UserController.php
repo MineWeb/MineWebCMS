@@ -185,7 +185,6 @@ class UserController extends AppController {
 					echo $this->Lang->get('PASSWORD_NOT_SAME');
 				}
 			} else {
-				debug($this->request->data);
 				echo $this->Lang->get('COMPLETE_ALL_FIELDS');
 			}
 		} else {

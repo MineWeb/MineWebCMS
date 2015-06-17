@@ -6,6 +6,7 @@
 	"author":"Eywek",
 	"version":"0.1",
 	"plugin_id":"2",
+	"useEvents":false,
 	"permissions" : {
 		"available" : ["POST_TICKET", "VIEW_TICKETS", "VIEW_ALL_TICKETS", "DELETE_ALL_TICKETS", "DELETE_HIS_TICKET", "RESOLVE_HIS_TICKET", "RESOLVE_ALL_TICKETS", "SHOW_TICKETS_ANWSERS", "REPLY_TO_HIS_TICKETS", "REPLY_TO_ALL_TICKETS"],
 		"default" : {

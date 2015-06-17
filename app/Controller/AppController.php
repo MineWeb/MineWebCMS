@@ -22,6 +22,8 @@
 App::uses('Controller', 'Controller');
 require ROOT.'/config/function.php';
 
+
+
 /**
  * Application Controller
  *
@@ -39,6 +41,19 @@ class AppController extends Controller {
 	var $view = 'Theme';
 
 	public function beforeFilter() {
+
+		/* Charger les components des plugins si ils s'appellent "EventsConpoment.php" */
+
+		$plugins = $this->EyPlugin->get_list();
+		foreach ($plugins as $key => $value) {
+			$useEvents = $this->EyPlugin->get('useEvents', $value['plugins']['name']);
+			if($useEvents) {
+				$this->Components->load($value['plugins']['name'].'.Events');
+			}
+		}
+
+		/* ---- */
+
 		if($this->Connect->connect()) {
 			if($this->Connect->get('rank') == 5 AND $this->params['controller'] != "maintenance") {
 				$this->redirect(array('controller' => 'maintenance', 'action' => 'index/banned'));

@@ -50,8 +50,6 @@ class PagesController extends AppController {
 
 	public function display() {
 
-		//debug($this->Server->commands('say BLABLA[{+}]broardcast mdr[{+}]save-all'));
-
 		$this->layout = $this->Configuration->get_layout();
 
 		$passwd = explode('?' ,$_SERVER['REQUEST_URI']); // on récupére l'url
