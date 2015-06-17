@@ -83,6 +83,10 @@ class AppController extends Controller {
 		$this->__setTheme();
 	}
 
+	function beforeRender() {
+		$this->getEventManager()->dispatch(new CakeEvent('onLoadPage', $this, $this->request->data));
+	}
+
 	function __setTheme() {
         $this->theme = Configure::read('theme');
     }

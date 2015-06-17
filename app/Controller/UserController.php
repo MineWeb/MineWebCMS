@@ -45,6 +45,9 @@ class UserController extends AppController {
 							if(empty($search_member_by_email)) {
 								$captcha = $this->Session->read('captcha_code');
 								if($captcha == $this->request->data['captcha']) {
+
+									$this->getEventManager()->dispatch(new CakeEvent('onRegister', $this, $this->request->data));
+
 									$this->request->data['pseudo'] = before_display($this->request->data['pseudo']);
 									$this->request->data['email'] = before_display($this->request->data['email']);
 									$session = md5(rand());
@@ -85,6 +88,9 @@ class UserController extends AppController {
 			if(!empty($this->request->data['pseudo']) && !empty($this->request->data['password'])) {
 				$search_user = $this->User->find('all', array('conditions' => array('pseudo' => $this->request->data['pseudo'], 'password' => password($this->request->data['password']))));
 				if(!empty($search_user)) {
+
+					$this->getEventManager()->dispatch(new CakeEvent('onLogin', $this, $this->request->data));
+
 					$session = md5(rand());
 					$this->User->read(null, $search_user['0']['User']['id']);
 					$this->User->set(array('session' => $session));
