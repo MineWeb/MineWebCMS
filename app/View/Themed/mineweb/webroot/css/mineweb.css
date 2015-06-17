@@ -33,9 +33,10 @@ nav {
 nav .container {
 	height: 80px;
 }
-
-.nav.navbar-nav {
-	height: 80px !important;
+@media (min-width: 768px) {
+	.nav.navbar-nav {
+		height: 80px !important;
+	}
 }
 
 .nav.navbar-nav .li-nav {
@@ -1335,3 +1336,51 @@ footer p {
    box-shadow: 0px 0px 2px rgba(255, 255, 255, 0.3);
    }
 /* --  */
+
+@media (max-width: 768px) {
+	nav .container {
+		height: auto !important;
+	}
+	.nav.navbar-nav {
+		margin: 7.5px -15px !important;
+	}
+	.nav.navbar-nav .li-nav {
+		height: auto !important;
+	}
+	#bs-example-navbar-collapse-1 {
+		background-color: #101010;
+	}
+	.nav.navbar-nav li a {
+		padding-top: 15px;
+		padding-bottom: 15px;
+	}
+	.nav.navbar-nav li .btn-group {
+		display: block;
+  		width: 100%;
+	}
+	.nav.navbar-nav li .btn-group a.btn.btn-primary {
+		padding-top: 6px;
+		padding-bottom: 6px;
+		width: 90%;
+	}
+	.nav.navbar-nav li .btn-group button.btn.btn-primary.dropdown-toggle {
+		width: 10%;
+	}
+	.nav.navbar-nav li .btn-group ul.dropdown-menu {
+		margin-top: 37px;
+	}
+	.navbar-fixed-top .navbar-collapse, .navbar-fixed-bottom .navbar-collapse {
+		max-height: none;
+	}
+
+
+	.modal.modal-large .modal-dialog {
+		width: 734px;
+	}
+	.modal.modal-medium .modal-dialog {
+		width: 734px;
+	}
+	.modal.modal-small .modal-dialog {
+		width: 734px;
+	}
+}
