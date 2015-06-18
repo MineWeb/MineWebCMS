@@ -110,23 +110,27 @@ if($this->Connect->connect()) {
 					<center><button class="btn btn-primary"><?= $Lang->get('SUBMIT') ?></button></center>
 				</form>
 
-				<hr>
+				<?php if($shop_active) { ?>
 
-				<h3><?= $Lang->get('SEND_POINTS') ?></h3>
+					<hr>
 
-				<form id="send_points">
-					<div class="ajax-msg-points"></div>
-					<div class="section password input">
-						<input type="text" class="form-control" name="to" placeholder="<?= $Lang->get('TO') ?>">
-					</div>
-					<div class="section password input">
-						<input type="text" class="form-control" name="how" placeholder="<?= $Lang->get('HOW') ?>">
-					</div>
+					<h3><?= $Lang->get('SEND_POINTS') ?></h3>
 
-					<div class="clearfix"></div>
+					<form id="send_points">
+						<div class="ajax-msg-points"></div>
+						<div class="section password input">
+							<input type="text" class="form-control" name="to" placeholder="<?= $Lang->get('TO') ?>">
+						</div>
+						<div class="section password input">
+							<input type="text" class="form-control" name="how" placeholder="<?= $Lang->get('HOW') ?>">
+						</div>
 
-					<center><button class="btn btn-primary"><?= $Lang->get('SUBMIT') ?></button></center>
-				</form>
+						<div class="clearfix"></div>
+
+						<center><button class="btn btn-primary"><?= $Lang->get('SUBMIT') ?></button></center>
+					</form>
+
+				<?php } ?>
 
 				<?php if($this->Configuration->get('mineguard') == "true") { ?>
 

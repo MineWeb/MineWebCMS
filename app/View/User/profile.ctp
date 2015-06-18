@@ -94,23 +94,27 @@ if($this->Connect->connect()) {
 					</div>
 				</form>
 
-				<hr>
+				<?php if($shop_active) { ?>
 
-				<h3><?= $Lang->get('SEND_POINTS') ?></h3>
+					<hr>
 
-				<form class="form-inline" id="send_points">
-					<div class="ajax-msg-points"></div>
-					<div class="form-group">
-						<input type="text" class="form-control" name="to" placeholder="<?= $Lang->get('TO') ?>">
-					</div>
-					<div class="form-group">
-						<input type="text" class="form-control" name="how" placeholder="<?= $Lang->get('HOW') ?>">
-					</div>
+					<h3><?= $Lang->get('SEND_POINTS') ?></h3>
 
-					<div class="form-group">
-						<button class="btn btn-primary"><?= $Lang->get('SUBMIT') ?></button>
-					</div>
-				</form>
+					<form class="form-inline" id="send_points">
+						<div class="ajax-msg-points"></div>
+						<div class="form-group">
+							<input type="text" class="form-control" name="to" placeholder="<?= $Lang->get('TO') ?>">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" name="how" placeholder="<?= $Lang->get('HOW') ?>">
+						</div>
+
+						<div class="form-group">
+							<button class="btn btn-primary"><?= $Lang->get('SUBMIT') ?></button>
+						</div>
+					</form>
+
+				<?php } ?>
 
 				<?php if($this->Configuration->get('mineguard') == "true") { ?>
 
