@@ -97,7 +97,7 @@ class APIController extends AppController {
 			$target = substr($config['skin_filename'], 0, (strrpos($config['skin_filename'], '/') + 1));
 			$where = WWW_ROOT.$target;
 		} else {
-			$where = 'http://www.minecraft.net/skin/';
+			$where = 'https://skins.minecraft.net/MinecraftSkins/';
 		}
 
 		echo $this->API->get_skin($name, $where);
@@ -112,7 +112,7 @@ class APIController extends AppController {
 			$target = substr($config['skin_filename'], 0, (strrpos($config['skin_filename'], '/') + 1));
 			$where = WWW_ROOT.$target;
 		} else {
-			$where = 'http://www.minecraft.net/skin/';
+			$where = 'https://skins.minecraft.net/MinecraftSkins/';
 		}
 		echo $this->API->get_head_skin($name, $size, $where);
 	}
