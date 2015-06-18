@@ -52,7 +52,8 @@
 						    'name' => 'slug',
 						    'class' => 'span6 m-wrap',
 						    'style' => 'display:inline-block;',
-						    'id' => 'slug'
+						    'id' => 'slug',
+						    'value' => $news['slug'],
 						));
 						?>
 						<a href="#" id="generate_slug" class="btn btn-info"><?= $Lang->get('GENERATE') ?></a>
