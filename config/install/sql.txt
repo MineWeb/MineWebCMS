@@ -156,6 +156,10 @@ CREATE TABLE IF NOT EXISTS `api_configurations` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 |
+INSERT INTO `permissions` (`id`, `rank`, `permissions`) VALUES
+(1, 0, 'a:3:{i:0;s:12:"COMMENT_NEWS";i:1;s:9:"LIKE_NEWS";i:2;s:18:"DELETE_HIS_COMMENT";}'),
+(2, 2, 'a:3:{i:0;s:12:"COMMENT_NEWS";i:1;s:9:"LIKE_NEWS";i:2;s:18:"DELETE_HIS_COMMENT";}');
+|
 INSERT INTO `api_configurations` (`id`, `skins`, `skin_filename`, `skin_free`, `capes`, `cape_filename`, `cape_free`) VALUES
 (1, 1, 'skins/{PLAYER}_skin', 1, 1, 'skins/capes/{PLAYER}_cape', 0);
 |
