@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `money` int(20) NOT NULL DEFAULT '0',
   `vote` int(3) NOT NULL DEFAULT '0',
   `ip` varchar(255) NOT NULL,
-  `allowed_ip` text NOT NULL DEFAULT '0',
+  `allowed_ip` text NOT NULL,
   `skin` int(1) NOT NULL DEFAULT '0',
   `cape` int(1) NOT NULL DEFAULT '0',
   `created` datetime NOT NULL,
