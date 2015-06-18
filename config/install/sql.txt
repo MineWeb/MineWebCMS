@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS `news` (
   `comments` int(20) NOT NULL DEFAULT '0',
   `like` int(20) NOT NULL DEFAULT '0',
   `img` varchar(255) NOT NULL,
+  `slug` varchar(150) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 |
