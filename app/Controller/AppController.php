@@ -35,7 +35,7 @@ require ROOT.'/config/function.php';
  */
 class AppController extends Controller {
 	
-	var $components = array('Session', 'Connect', 'Configuration', 'EyPlugin', 'History', 'Statistics', 'Navbar', 'Server', 'Permissions', 'Lang', 'Update');
+	var $components = array('Module', 'Session', 'Connect', 'Configuration', 'EyPlugin', 'History', 'Statistics', 'Navbar', 'Server', 'Permissions', 'Lang', 'Update');
 	var $helpers = array('Session');
 
 	var $view = 'Theme';
@@ -85,6 +85,12 @@ class AppController extends Controller {
 
 	function beforeRender() {
 		$this->getEventManager()->dispatch(new CakeEvent('onLoadPage', $this, $this->request->data));
+		if($this->request->is('post')) {
+			$this->getEventManager()->dispatch(new CakeEvent('onRequest', $this, $this->request->data));
+		}
+		if($this->params['prefix'] == "admin") {
+			$this->getEventManager()->dispatch(new CakeEvent('onLoadAdminPanel', $this, $this->request->data));
+		}
 	}
 
 	function __setTheme() {

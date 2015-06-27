@@ -113,4 +113,5 @@ $this->Connect = new ConnectComponent;
             </div> 
             </div>
         </div>
+        <?= $Module->loadModules('news') ?>
     </div>

@@ -208,6 +208,8 @@ if($this->Connect->connect()) {
 					</form>	
 				<?php } ?>
 
+				<?= $Module->loadModules('user_profile') ?>
+
 		  	</div>
 		</div>
 	</div>

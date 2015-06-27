@@ -62,6 +62,8 @@ $theme_config = json_decode($theme_config, true);
     <?= $this->element('login_register') ?>
     <?= $this->element('script') ?>
 
+    <?= $Module->loadModules('user_profile') ?>
+
 
     <script>
     $("#ticket-form_post_m").submit(function( event ) {

@@ -224,6 +224,8 @@ if($this->Connect->connect()) {
 					</form>	
 				<?php } ?>
 
+				<?= $Module->loadModules('user_profile') ?>
+
 				<div class="clearfix"></div>
 			</div>
 		</div>

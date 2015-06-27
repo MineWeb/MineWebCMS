@@ -58,6 +58,7 @@ $this->Connect = new ConnectComponent;
             </div>
         </div>
     </div>
+    <?= $Module->loadModules('news') ?>
 <div class="modal fade" id="postcomment" tabindex="-1" role="dialog" aria-labelledby="postcommentLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">

@@ -100,6 +100,8 @@ $theme_config = json_decode($theme_config, true);
                 </div>
             </div>
         </div>
+
+        <?= $Module->loadModules('home') ?>
         <script>
         $(document).ready(function() {
             $('.carousel').carousel({
