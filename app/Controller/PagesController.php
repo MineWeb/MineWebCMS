@@ -194,8 +194,18 @@ class PagesController extends AppController {
 					$content_if = $content[0];
 
 					ob_start();
-					$content_if = str_replace('{isConnected}', $this->Connect->connect(), $content_if);
-					$content_if = str_replace('{isServerOnline}', Configure::read('server.online'), $content_if);
+					if($this->Connect->connect()) {
+						$connected = 1;
+					} else {
+						$connected = 0;
+					}
+					if(Configure::read('server.online')) {
+						$server_online = 1;
+					} else {
+						$server_online = 0;
+					}
+					$content_if = str_replace('{isConnected}', $connected, $content_if);
+					$content_if = str_replace('{isServerOnline}', $server_online, $content_if);
 
 					if(explode(' == ', $content_if)) {
 
