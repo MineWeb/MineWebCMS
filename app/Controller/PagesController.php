@@ -174,6 +174,49 @@ class PagesController extends AppController {
 			if(!empty($search)) {
 				$this->layout = $this->Configuration->get('layout');
 				$page = $search[0]['Page'];
+
+				// Parser variables
+
+				$page['content'] = str_replace('{username}', $this->Connect->get_pseudo(), $page['content']);
+
+				// Parser les conditions
+
+				$count = mb_substr_count($page['content'], '{%') / 2; // on regarde combien de fois il y a une condition (divise par 2 car {% endif %})
+
+				$i = 0;
+				while ($i < $count) { // on fais une boucle pour les conditions
+					$i++;
+
+					$start = explode('{% if(', $page['content']); // on récupère le contenu de la condition
+					$content = explode(') %}', $start[1]);
+					$end = explode('{% endif %}', $content[1]); // et ce qu'on doit afficher pour condition
+
+					$content_if = $content[0];
+
+					ob_start();
+					$content_if = str_replace('{isConnected}', $this->Connect->connect(), $content_if);
+					$content_if = str_replace('{isServerOnline}', Configure::read('server.online'), $content_if);
+
+					if(explode(' == ', $content_if)) {
+
+						$content_if = explode(' == ', $content_if);
+
+						if($content_if[0] == $content_if[1]) { // si la condition s'effectue
+							echo $end[0];
+						}
+
+					} else {
+
+						if($content_if) { // si la condition s'effectue
+							echo $end[0];
+						}
+
+					}
+					$if_result = ob_get_clean();
+					$page['content'] = str_replace('{% if('.$content[0].') %}'.$end[0].'{% endif %}', $if_result, $page['content']);
+				}
+				//
+
 				$this->set(compact('page'));
 				$this->set('title_for_layout', $page['title']);
 			} else {
