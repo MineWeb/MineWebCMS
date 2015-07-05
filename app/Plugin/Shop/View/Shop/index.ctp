@@ -199,7 +199,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                 <button type="submit" class="btn btn-default pull-right"><?= $Lang->get('SUBMIT') ?></button>
               </form>
             </div>
-          <?php ?>
+          <?php } ?>
         <?php } else { ?>
             <p><?= $Lang->get('NEED_CONNECT') ?></p>
         <?php } ?>

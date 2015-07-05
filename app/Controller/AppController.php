@@ -84,7 +84,17 @@ class AppController extends Controller {
 	}
 
 	function beforeRender() {
-		$this->getEventManager()->dispatch(new CakeEvent('onLoadPage', $this, $this->request->data));
+		/*
+		$return['status'] = 'error';
+        $return['msg'] = 'Un problème d\'évent est survenu !';
+        return $return;
+		*/
+		$event = $this->getEventManager()->dispatch(new CakeEvent('onLoadPage', $this, $this->request->data));
+		//if(!empty($event['result']) && $event['result']['status'] == "error") {
+		//	return throw new InternalException($event['result']['msg']);
+		//}
+
+
 		if($this->request->is('post')) {
 			$this->getEventManager()->dispatch(new CakeEvent('onRequest', $this, $this->request->data));
 		}

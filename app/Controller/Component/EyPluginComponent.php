@@ -64,6 +64,13 @@ class EyPluginComponent extends Object {
               }
             }
           }
+
+          if(file_exists(ROOT.'/app/Plugin/'.$search['0']['plugins']['name'].'/Controller/Component/MainComponent.php')) {
+            App::uses('MainComponent', 'Plugin/'.$search['0']['plugins']['name'].'/Controller/Component');
+            $this->Main = new MainComponent();
+            $this->Main->onEnable();
+          }
+
           // une fois que on a mis les tables, on s'occupe des permissions
           $this->Permission = ClassRegistry::init('Permission');
           if(isset($config['permissions']['default']) AND !empty($config['permissions']['default'])) {
@@ -101,6 +108,14 @@ class EyPluginComponent extends Object {
             }
           }
           $this->plugins->delete($search['0']['plugins']['id']); // je le supprime de la bdd
+          if(file_exists(ROOT.'/app/Plugin/'.$search['0']['plugins']['name'].'/Controller/Component/MainComponent.php')) {
+            App::uses('MainComponent', 'Plugin/'.$search['0']['plugins']['name'].'/Controller/Component');
+            $this->Main = new MainComponent();
+            $this->Main->onDisable();
+          }
+          clearDir(ROOT.'/app/Plugin/'.$search['0']['plugins']['name']);
+          clearFolder(ROOT.'/app/tmp/cache/models/');
+          clearFolder(ROOT.'/app/tmp/cache/persistent/');
         }
       }
     }
@@ -137,6 +152,11 @@ class EyPluginComponent extends Object {
       }
     }
     if($this->plugins->delete($search['0']['plugins']['id'])) {
+      if(file_exists(ROOT.'/app/Plugin/'.$search['0']['plugins']['name'].'/Controller/Component/MainComponent.php')) {
+        App::uses('MainComponent', 'Plugin/'.$search['0']['plugins']['name'].'/Controller/Component');
+        $this->Main = new MainComponent();
+        $this->Main->onDisable();
+      }
       clearDir(ROOT.'/app/Plugin/'.$search['0']['plugins']['name']);
       clearFolder(ROOT.'/app/tmp/cache/models/');
       clearFolder(ROOT.'/app/tmp/cache/persistent/');
@@ -151,6 +171,12 @@ class EyPluginComponent extends Object {
     $this->plugins->read(null, $id);
     $this->plugins->set(array('state' => 1));
     if($this->plugins->save()) {
+      $search = $this->plugins->find('all', array('conditions' => array('id' => $id)));
+      if(file_exists(ROOT.'/app/Plugin/'.$search['0']['plugins']['name'].'/Controller/Component/MainComponent.php')) {
+        App::uses('MainComponent', 'Plugin/'.$search['0']['plugins']['name'].'/Controller/Component');
+        $this->Main = new MainComponent();
+        $this->Main->onEnable();
+      }
       return true;
     } else {
       return false;
@@ -162,6 +188,12 @@ class EyPluginComponent extends Object {
     $this->plugins->read(null, $id);
     $this->plugins->set(array('state' => 0));
     if($this->plugins->save()) {
+      $search = $this->plugins->find('all', array('conditions' => array('id' => $id)));
+      if(file_exists(ROOT.'/app/Plugin/'.$search['0']['plugins']['name'].'/Controller/Component/MainComponent.php')) {
+        App::uses('MainComponent', 'Plugin/'.$search['0']['plugins']['name'].'/Controller/Component');
+        $this->Main = new MainComponent();
+        $this->Main->onDisable();
+      }
       return true;
     } else {
       return false;
@@ -292,6 +324,13 @@ class EyPluginComponent extends Object {
           }
         }
       }
+
+      if(file_exists(ROOT.'/app/Plugin/'.$search['0']['plugins']['name'].'/Controller/Component/MainComponent.php')) {
+        App::uses('MainComponent', 'Plugin/'.$search['0']['plugins']['name'].'/Controller/Component');
+        $this->Main = new MainComponent();
+        $this->Main->onEnable();
+      }
+
       // une fois que on a mis les tables, on s'occupe des permissions
       $this->Permission = ClassRegistry::init('Permission');
       if(isset($config['permissions']['default']) AND !empty($config['permissions']['default'])) {
