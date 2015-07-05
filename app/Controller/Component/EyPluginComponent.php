@@ -17,6 +17,8 @@ class EyPluginComponent extends Object {
   }
 
   function initialize(&$controller) {
+    $this->plugins = ClassRegistry::init('plugins'); // le model plugins 
+
     $dir = ROOT.'/app/Plugin';
     $plugins = scandir($dir);
     $plugins = array_delete_value($plugins, '.');
@@ -26,17 +28,13 @@ class EyPluginComponent extends Object {
       $list_plugins[] = $value;
     }
     if(!empty($plugins)) {
-      $plugins = $list_plugins;
-      Configure::write('eyplugins.plugins.list', $plugins);
+      $plugins_list = $list_plugins;
     } else {
-      Configure::write('eyplugins.plugins.list', false);
+      $plugins_list = false;
     }
-  }
 
-  function startup(&$controller) {
-    $this->plugins = ClassRegistry::init('plugins'); // le model plugins 
-    if(Configure::read('eyplugins.plugins.list') != false) {
-      foreach (Configure::read('eyplugins.plugins.list') as $k => $v) { // boucle de vérification
+    if($plugins_list != false) {
+      foreach ($plugins_list as $k => $v) { // boucle de vérification
         $search = $this->plugins->find('all', array('conditions' => array('name' => $v))); // je cherche tout les plugins du dossier dans la bdd
         if(empty($search)) { // si un est pas activé dans la bdd
           /*$p_author = file_get_contents('../../app/Plugin/'.$v.'/author.txt');
@@ -94,7 +92,7 @@ class EyPluginComponent extends Object {
         $array[] = $value['plugins']['name'];
       }
       $bdd = $array;
-      $diff = array_diff($bdd, Configure::read('eyplugins.plugins.list')); // on cherche le plugin qui est présent dans la bdd et non pas dans le dossier
+      $diff = array_diff($bdd, $plugins_list); // on cherche le plugin qui est présent dans la bdd et non pas dans le dossier
       if(!empty($diff)) { // si il y a une différence entre les deux listes
         foreach ($diff as $key => $value) {
           $search = $this->plugins->find('all', array('conditions' => array('name' => $value)));
@@ -107,11 +105,29 @@ class EyPluginComponent extends Object {
               $cn->query("DROP TABLE ".$v);
             }
           }
-          clearDir(ROOT.'/app/Plugin/'.$search['0']['plugins']['name']);
-          clearFolder(ROOT.'/app/tmp/cache/models/');
-          clearFolder(ROOT.'/app/tmp/cache/persistent/');
+          $this->plugins->delete($search['0']['plugins']['id']); // je le supprime de la bdd
+          @clearDir(ROOT.'/app/Plugin/'.$search['0']['plugins']['name']);
+          @clearFolder(ROOT.'/app/tmp/cache/models/');
+          @clearFolder(ROOT.'/app/tmp/cache/persistent/');
         }
       }
+    }
+  }
+
+  function startup(&$controller) {
+    $dir = ROOT.'/app/Plugin';
+    $plugins = scandir($dir);
+    $plugins = array_delete_value($plugins, '.');
+    $plugins = array_delete_value($plugins, '..');
+    $plugins = array_delete_value($plugins, '.DS_Store');
+    foreach ($plugins as $key => $value) {
+      $list_plugins[] = $value;
+    }
+    if(!empty($plugins)) {
+      $plugins = $list_plugins;
+      Configure::write('eyplugins.plugins.list', $plugins);
+    } else {
+      Configure::write('eyplugins.plugins.list', false);
     }
   }
 
@@ -218,9 +234,13 @@ class EyPluginComponent extends Object {
   }
 
   function get($key, $plugin_name) {
-    $config = file_get_contents(ROOT.'/app/Plugin/'.$plugin_name.'/config.json');
-    $config = json_decode($config, true);
-    return $config[$key];
+    $config = @file_get_contents(ROOT.'/app/Plugin/'.$plugin_name.'/config.json');
+    if($config) {
+      $config = json_decode($config, true);
+      return $config[$key];
+    } else {
+      return false;
+    }
   }
 
   function is_installed($name) {
@@ -265,24 +285,32 @@ class EyPluginComponent extends Object {
   }
 
   function get_last_version($plugin_id) {
-    $available_plugins = file_get_contents('http://mineweb.org/api/mineweb_plugins/all.php');
-    $available_plugins = json_decode($available_plugins, true);
-    foreach ($available_plugins as $key => $value) {
-      if($value['plugin_id'] == $plugin_id) {
-        $version = $value['version'];
+    $available_plugins = @file_get_contents('http://mineweb.org/api/mineweb_plugins/all.php');
+    if($available_plugins) {
+      $available_plugins = json_decode($available_plugins, true);
+      foreach ($available_plugins as $key => $value) {
+        if($value['plugin_id'] == $plugin_id) {
+          $version = $value['version'];
+        }
       }
+    } else {
+      $version = array();
     }
     return $version;
   }
 
   function get_free_plugins() {
-    $available_plugins = file_get_contents('http://mineweb.org/api/mineweb_plugins/free.php');
-    $available_plugins = json_decode($available_plugins, true);
-    $plugins = $this->get_plugins(true);
-    foreach ($available_plugins as $key => $value) {
-      if(!in_array($value['name'], $plugins)) {
-        $free_plugins[] = array('plugin_id' => $value['plugin_id'], 'name' => $value['name'], 'author' => $value['author'], 'version' => $value['version']);
+    $available_plugins = @file_get_contents('http://mineweb.org/api/mineweb_plugins/free.php');
+    if($available_plugins) {
+      $available_plugins = json_decode($available_plugins, true);
+      $plugins = $this->get_plugins(true);
+      foreach ($available_plugins as $key => $value) {
+        if(!in_array($value['name'], $plugins)) {
+          $free_plugins[] = array('plugin_id' => $value['plugin_id'], 'name' => $value['name'], 'author' => $value['author'], 'version' => $value['version']);
+        }
       }
+    } else {
+      $free_plugins = array();
     }
     if(!empty($free_plugins)) {
       return $free_plugins;
