@@ -107,12 +107,6 @@ class EyPluginComponent extends Object {
               $cn->query("DROP TABLE ".$v);
             }
           }
-          $this->plugins->delete($search['0']['plugins']['id']); // je le supprime de la bdd
-          if(file_exists(ROOT.'/app/Plugin/'.$search['0']['plugins']['name'].'/Controller/Component/MainComponent.php')) {
-            App::uses('MainComponent', 'Plugin/'.$search['0']['plugins']['name'].'/Controller/Component');
-            $this->Main = new MainComponent();
-            $this->Main->onDisable();
-          }
           clearDir(ROOT.'/app/Plugin/'.$search['0']['plugins']['name']);
           clearFolder(ROOT.'/app/tmp/cache/models/');
           clearFolder(ROOT.'/app/tmp/cache/persistent/');
