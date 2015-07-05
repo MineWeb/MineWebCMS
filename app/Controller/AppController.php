@@ -42,6 +42,72 @@ class AppController extends Controller {
 
 	public function beforeFilter() {
 
+	/* VERIFICATION API-CMS */
+
+	$last_check = @file_get_contents(ROOT.'/config/last_check');
+	$last_check = @rsa_decrypt($last_check, '-----BEGIN RSA PRIVATE KEY-----
+MIICXAIBAAKBgQDGKSGFj8368AmYYiJ9fp1bsu3mzIiUfU7T2uhWXULe9YFqSvs9
+AA/PqTiOgGj8hid2KDamUvzI9UH5RWI83mwAMsj5mxk+ujuoR6WuZykO+A1XN6n4
+I3MWhBe1ZYWRwwgMgoDDe7DDbT2Y6xMxh6sbgdqxeKmkd4RtVB7+UwyuSwIDAQAB
+AoGAbuXz6bBqIUaWyB4bmUnzvK7tbx4GTbu3Et9O6Y517xtMWvUtl5ziPGBC05VP
+rAtUKE8nDnwhFkITsvI+oTwFCjZOEC4t7B39xtRgzICi3KkR1ICB/k+I6gsadGdU
+GY3Xf7slY5MEYwpvq6wiczxeMYuxkDzeOkPy1U1FgGBcTukCQQD18+M3Sfoko/Kw
+TiVFNk8rDvre/0iOiU1o/Yvi8AU/NXJbPOlm8hVfdXBNH35L+WYmt74uBI7Mxrmb
+YrUUvc7XAkEAzkFyPjcnaL9wnX5oRLgk8j3cAzAiiUFbk/KnFEHTjmdcF00hSyrB
+aQKyqnWAeFFzLIDdXzC3M07fzHR3RP1xrQJAH4sAx/V33D0egdfz1bWKX7ZTHEhX
+MNiREfb6esdXlOyw1tyv/mDrtstj9LAmTW4V2L9V56bz/XU7Fp+JI7jYDwJARbQQ
+a74v71JjOJZznmWs9sC5DcrCoSgZTtJ+bHYijMmZcbZ7Pe/hFR/4SWsUU5UTG0Mh
+jP3lq81IDMx/Ui1ksQJBAO4hTKBstrDNlUPkUr0i/2Pb/edVSgZnJ9t3V94OAD+Z
+wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
+-----END RSA PRIVATE KEY-----');
+	if($last_check) {
+		$last_check = strtotime('+12 hours', $last_check);
+	} else {
+		$last_check = '0';
+	}
+	if($last_check < time()) {
+		$url = 'http://eywek.dev/Projets%20en%20cours/Mineweb/mineweb.org/api/key_verif/';
+		$postfields = array(
+		    'id' => '1',
+		    'key' => '42',
+		);
+
+		$postfields = json_encode($postfields);
+		$post[0] = rsa_encrypt($postfields, '-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvFK7LMlAnF8Hzmku9WGbHqYNb
+ehNueKDbF/j4yYwf8WqIizB7k+S++SznqPw3KzeHOshiPfeCcifGzp0kI43grWs+
+nuScYjSuZw9FEvjDjEZL3La00osWxLJx57zNiEX4Wt+M+9RflMjxtvejqXkQoEr/
+WCqkx22behAGZq6rhwIDAQAB
+-----END PUBLIC KEY-----');
+
+		$curl = curl_init();
+
+		curl_setopt($curl, CURLOPT_URL, $url);
+		curl_setopt($curl, CURLOPT_HEADER, true);
+		curl_setopt($curl, CURLOPT_COOKIESESSION, true);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_POST, true);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
+
+		$return = curl_exec($curl);
+		curl_close($curl);
+
+		if(!preg_match('#500 Internal Server Error#i', $return)) {
+		        $return = explode("\n", $return)[9];
+		        $return = json_decode($return, true);
+		        if($return['status'] == "success") {
+		        	file_put_contents(ROOT.'/config/last_check', $return['time']);
+		        } elseif($return['status'] == "error") {
+		        	die($return['msg']);
+		        }
+		}
+	} else {
+		echo 'nope';
+	}
+
+
+
+
 		/* Charger les components des plugins si ils s'appellent "EventsConpoment.php" */
 
 		$plugins = $this->EyPlugin->get_list();
