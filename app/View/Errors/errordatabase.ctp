@@ -1,9 +1,12 @@
-<?php   ?>
+<?php
+App::import('Component', 'Lang');
+$this->Lang = new LangComponent();
+?>
 <div class="error-template">
 	<div class="well">
-	    <h1><?= $Lang->get('PROBLEM_DATABASE_NO_CONNECTION') ?></h1>
+	    <h1>PROBLEM_DATABASE_NO_CONNECTION</h1>
 	    <div class="error-details">
-	        <?= $Lang->get('PROBLEM_DATABASE_NO_CONNECTION_HOW_DO') ?>
+	        PROBLEM_DATABASE_NO_CONNECTION_HOW_DO
 	    </div>
 	    <?php if (Configure::read('debug') > 0) { ?>
 	    <div class="error-actions">

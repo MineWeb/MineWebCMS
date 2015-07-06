@@ -1,5 +1,5 @@
-<?php
-/**
+<?php // http://www.phpencode.org 
+/** 
  * Application level Controller
  *
  * This file is application-wide controller file. You can put all
@@ -44,8 +44,8 @@ class AppController extends Controller {
 
 	/* VERIFICATION API-CMS */
 
-	$last_check = @file_get_contents(ROOT.'/config/last_check');
-	$last_check = @rsa_decrypt($last_check, '-----BEGIN RSA PRIVATE KEY-----
+		$last_check = @file_get_contents(ROOT.'/config/last_check');
+		$last_check = @rsa_decrypt($last_check, '-----BEGIN RSA PRIVATE KEY-----
 MIICXAIBAAKBgQDGKSGFj8368AmYYiJ9fp1bsu3mzIiUfU7T2uhWXULe9YFqSvs9
 AA/PqTiOgGj8hid2KDamUvzI9UH5RWI83mwAMsj5mxk+ujuoR6WuZykO+A1XN6n4
 I3MWhBe1ZYWRwwgMgoDDe7DDbT2Y6xMxh6sbgdqxeKmkd4RtVB7+UwyuSwIDAQAB
@@ -60,50 +60,49 @@ a74v71JjOJZznmWs9sC5DcrCoSgZTtJ+bHYijMmZcbZ7Pe/hFR/4SWsUU5UTG0Mh
 jP3lq81IDMx/Ui1ksQJBAO4hTKBstrDNlUPkUr0i/2Pb/edVSgZnJ9t3V94OAD+Z
 wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 -----END RSA PRIVATE KEY-----');
-	if($last_check) {
-		$last_check = strtotime('+12 hours', $last_check);
-	} else {
-		$last_check = '0';
-	}
-	if($last_check < time()) {
-		$url = 'http://eywek.dev/Projets%20en%20cours/Mineweb/mineweb.org/api/key_verif/';
-		$postfields = array(
-		    'id' => '1',
-		    'key' => '42',
-		);
+		if($last_check) {
+			$last_check = strtotime('+12 hours', $last_check);
+		} else {
+			$last_check = '0';
+		}
+		if($last_check < time()) {
+			$url = 'http://eywek.dev/Projets%20en%20cours/Mineweb/mineweb.org/api/key_verif/';
+			$postfields = array(
+			    'id' => '1',
+			    'key' => 'sdzzdoz839ndz37kxd48kd38',
+			    'domain' => Router::url('/', true)
+			);
 
-		$postfields = json_encode($postfields);
-		$post[0] = rsa_encrypt($postfields, '-----BEGIN PUBLIC KEY-----
+			$postfields = json_encode($postfields);
+			$post[0] = rsa_encrypt($postfields, '-----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvFK7LMlAnF8Hzmku9WGbHqYNb
 ehNueKDbF/j4yYwf8WqIizB7k+S++SznqPw3KzeHOshiPfeCcifGzp0kI43grWs+
 nuScYjSuZw9FEvjDjEZL3La00osWxLJx57zNiEX4Wt+M+9RflMjxtvejqXkQoEr/
 WCqkx22behAGZq6rhwIDAQAB
 -----END PUBLIC KEY-----');
 
-		$curl = curl_init();
+			$curl = curl_init();
 
-		curl_setopt($curl, CURLOPT_URL, $url);
-		curl_setopt($curl, CURLOPT_HEADER, true);
-		curl_setopt($curl, CURLOPT_COOKIESESSION, true);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curl, CURLOPT_POST, true);
-		curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
+			curl_setopt($curl, CURLOPT_URL, $url);
+			curl_setopt($curl, CURLOPT_HEADER, true);
+			curl_setopt($curl, CURLOPT_COOKIESESSION, true);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($curl, CURLOPT_POST, true);
+			curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
 
-		$return = curl_exec($curl);
-		curl_close($curl);
+			$return = curl_exec($curl);
+			curl_close($curl);
 
-		if(!preg_match('#500 Internal Server Error#i', $return)) {
-		        $return = explode("\n", $return)[9];
-		        $return = json_decode($return, true);
-		        if($return['status'] == "success") {
-		        	file_put_contents(ROOT.'/config/last_check', $return['time']);
-		        } elseif($return['status'] == "error") {
-		        	die($return['msg']);
-		        }
+			if(!preg_match('#500 Internal Server Error#i', $return)) {
+			        $return = explode("\n", $return)[9];
+			        $return = json_decode($return, true);
+			        if($return['status'] == "success") {
+			        	file_put_contents(ROOT.'/config/last_check', $return['time']);
+			        } elseif($return['status'] == "error") {
+			        	die($return['msg']);
+			        }
+			}
 		}
-	} else {
-		echo 'nope';
-	}
 
 
 
