@@ -66,9 +66,9 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 			$last_check = '0';
 		}
 		if($last_check < time()) {
-			$url = 'http://eywek.dev/Projets%20en%20cours/Mineweb/mineweb.org/api/key_verif/';
+			$url = 'http://127.0.0.1/Projets%20en%20cours/MineWeb/mineweb.org/api/key_verif/';
 			$postfields = array(
-			    'id' => '1',
+				'id' => 1,
 			    'key' => 'sdzzdoz839ndz37kxd48kd38',
 			    'domain' => Router::url('/', true)
 			);
@@ -84,7 +84,6 @@ WCqkx22behAGZq6rhwIDAQAB
 			$curl = curl_init();
 
 			curl_setopt($curl, CURLOPT_URL, $url);
-			curl_setopt($curl, CURLOPT_HEADER, true);
 			curl_setopt($curl, CURLOPT_COOKIESESSION, true);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($curl, CURLOPT_POST, true);
@@ -93,14 +92,13 @@ WCqkx22behAGZq6rhwIDAQAB
 			$return = curl_exec($curl);
 			curl_close($curl);
 
-			if(!preg_match('#500 Internal Server Error#i', $return)) {
-			        $return = explode("\n", $return)[9];
-			        $return = json_decode($return, true);
-			        if($return['status'] == "success") {
-			        	file_put_contents(ROOT.'/config/last_check', $return['time']);
-			        } elseif($return['status'] == "error") {
-			        	die($return['msg']);
-			        }
+			if(!preg_match('#Errors#i', $return)) {
+		        $return = json_decode($return, true);
+		        if($return['status'] == "success") {
+		        	file_put_contents(ROOT.'/config/last_check', $return['time']);
+		        } elseif($return['status'] == "error") {
+		        	die($return['msg']);
+		        }
 			}
 		}
 
