@@ -17,7 +17,7 @@ class ThemeController extends AppController{
 		    if(!empty($list_themes)) {
 			    $themes = $list_themes;
 			    $this->set(compact('themes'));
-			    $free_themes_available = file_get_contents('http://mineweb.org/api/mineweb_themes/free.php');
+			    $free_themes_available = file_get_contents('http://mineweb.org/api/getFreeThemes');
 			    $free_themes_available = json_decode($free_themes_available, true);
 			    foreach ($free_themes_available as $key => $value) {
 			      if(!in_array($value['name'], $themes)) {
@@ -27,7 +27,7 @@ class ThemeController extends AppController{
 			} else {
 				$themes = null;
 			    $this->set(compact('themes'));
-			    $free_themes_available = file_get_contents('mineweb.org/api/mineweb_themes/free.php');
+			    $free_themes_available = file_get_contents('http://mineweb.org/api/getFreeThemes');
 			    $free_themes_available = json_decode($free_themes_available, true);
 			    foreach ($free_themes_available as $key => $value) {
 			       $free_themes[] = array('theme_id' => $value['theme_id'], 'name' => $value['name'], 'author' => $value['author'], 'version' => $value['version']);

@@ -39,14 +39,54 @@ class UpdateComponent extends Object {
 
 	public function get_version() {
 		// va check la dernière version sur mineweb.org
-		$get = @file_get_contents('http://mineweb.org/api/update.json');
+		$get = @file_get_contents('http://mineweb.org/api/get_update');
 		$get = json_decode($get, true);
 		return $get['last_version'];
 	}
 
 	public function get_update_files($version) {
+
 		// récupérer les fichiers mis à jour sur mineweb.org (le zip dans un dossier temp)
-		$zip = file_get_contents('http://mineweb.org/api/update_files/'.$version.'.zip');
+
+		$url = 'http://mineweb.org/api/update/';
+		$secure = file_get_contents(ROOT.'/config/secure');
+		$secure = json_decode($secure, true);
+		$postfields = array(
+			'id' => $secure['id'],
+		    'key' => $secure['key'],
+		    'domain' => Router::url('/', true)
+		);
+
+		$postfields = json_encode($postfields);
+		$post[0] = rsa_encrypt($postfields, '-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvFK7LMlAnF8Hzmku9WGbHqYNb
+ehNueKDbF/j4yYwf8WqIizB7k+S++SznqPw3KzeHOshiPfeCcifGzp0kI43grWs+
+nuScYjSuZw9FEvjDjEZL3La00osWxLJx57zNiEX4Wt+M+9RflMjxtvejqXkQoEr/
+WCqkx22behAGZq6rhwIDAQAB
+-----END PUBLIC KEY-----');
+
+		$curl = curl_init();
+
+		curl_setopt($curl, CURLOPT_URL, $url);
+		curl_setopt($curl, CURLOPT_COOKIESESSION, true);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_POST, true);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
+
+		$return = curl_exec($curl);
+		curl_close($curl);
+
+		if(!preg_match('#Errors#i', $return)) {
+	        $return = json_decode($return, true);
+	        if($return['status'] == "success") {
+	        	$zip = $return['zip'];
+	        } elseif($return['status'] == "error") {
+	        	return false;
+	        }
+		} else {
+			return false;
+		}
+
 		if (!is_dir(ROOT.'/temp/')) mkdir(ROOT.'/temp/');
 		$write = fopen(ROOT.'/temp/'.$version.'.zip', 'w+');
 		if(!fwrite($write, $zip)) { 
@@ -58,14 +98,14 @@ class UpdateComponent extends Object {
 
 	public function get_type() {
 		// récupére le type de la dernière màj (forcé ou pas)
-		$get = @file_get_contents('http://mineweb.org/api/update.json');
+		$get = @file_get_contents('http://mineweb.org/api/get_update');
 		$get = json_decode($get, true);
 		return $get['type'];
 	}
 
 	public function get_visible() {
 		// récupére si la màj est signaler à l'utilisateur ou pas
-		$get = @file_get_contents('http://mineweb.org/api/update.json');
+		$get = @file_get_contents('http://mineweb.org/api/get_update');
 		$get = json_decode($get, true);
 		return $get['visible'];
 	}
@@ -134,9 +174,9 @@ class UpdateComponent extends Object {
 		}
 	}
 
-	public function plugin($url, $plugin_name, $plugin_id) {
+	public function plugin($zip, $plugin_name, $plugin_id) {
 		// récupérer les fichiers mis à jour sur mineweb.org (le zip dans un dossier temp)
-		$zip = file_get_contents($url);
+
 		if (!is_dir(ROOT.'/temp/')) mkdir(ROOT.'/temp/');
 		$write = fopen(ROOT.'/temp/'.$plugin_name.'-'.$plugin_id.'.zip', 'w+');
 		if(!fwrite($write, $zip)) { 

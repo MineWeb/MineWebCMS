@@ -36,9 +36,13 @@ function before_display($content) {
 	return $content;
 }
 
-function unzip($file, $path, $name = 'install-zip') {
+function unzip($file, $path, $name = 'install-zip', $file_get_contents = true) {
 	if ( !is_file($file)) {
-		$newUpdate = file_get_contents($file);
+		if($file_get_contents) {
+			$newUpdate = file_get_contents($file);
+		} else {
+			$newUpdate = $file;
+		}
 		if ( !is_dir($path.'/zip') ) {
 			mkdir ($path.'/zip', 0777, true);
 		}

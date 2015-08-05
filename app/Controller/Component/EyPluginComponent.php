@@ -285,7 +285,7 @@ class EyPluginComponent extends Object {
   }
 
   function get_last_version($plugin_id) {
-    $available_plugins = @file_get_contents('http://mineweb.org/api/mineweb_plugins/all.php');
+    $available_plugins = @file_get_contents('http://mineweb.org/api/getAllPlugins');
     if($available_plugins) {
       $available_plugins = json_decode($available_plugins, true);
       foreach ($available_plugins as $key => $value) {
@@ -300,7 +300,7 @@ class EyPluginComponent extends Object {
   }
 
   function get_free_plugins() {
-    $available_plugins = @file_get_contents('http://mineweb.org/api/mineweb_plugins/free.php');
+    $available_plugins = @file_get_contents('http://mineweb.org/api/getFreePlugins');
     if($available_plugins) {
       $available_plugins = json_decode($available_plugins, true);
       $plugins = $this->get_plugins(true);
@@ -321,7 +321,48 @@ class EyPluginComponent extends Object {
 
 
   function install($plugin_id = false, $plugin_name = false) {
-    if(unzip('http://mineweb.org/api/mineweb_plugins/plugins/'.$plugin_id.'-'.$plugin_name.'.zip', ROOT.'/app/Plugin')) {
+
+    // get du zip sur mineweb.org
+    $url = 'http://mineweb.org/api/get_plugin/'.$plugin_id;
+    $secure = file_get_contents(ROOT.'/config/secure');
+    $secure = json_decode($secure, true);
+    $postfields = array(
+      'id' => $secure['id'],
+        'key' => $secure['key'],
+        'domain' => Router::url('/', true)
+    );
+
+    $postfields = json_encode($postfields);
+    $post[0] = rsa_encrypt($postfields, '-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvFK7LMlAnF8Hzmku9WGbHqYNb
+ehNueKDbF/j4yYwf8WqIizB7k+S++SznqPw3KzeHOshiPfeCcifGzp0kI43grWs+
+nuScYjSuZw9FEvjDjEZL3La00osWxLJx57zNiEX4Wt+M+9RflMjxtvejqXkQoEr/
+WCqkx22behAGZq6rhwIDAQAB
+-----END PUBLIC KEY-----');
+
+    $curl = curl_init();
+
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_COOKIESESSION, true);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
+
+    $return = curl_exec($curl);
+    curl_close($curl);
+
+    if(!preg_match('#Errors#i', $return)) {
+          $return = json_decode($return, true);
+          if($return['status'] == "success") {
+            $zip = $return['zip'];
+          } elseif($return['status'] == "error") {
+            return false;
+          }
+    } else {
+      return false;
+    }
+
+    if(unzip($zip, ROOT.'/app/Plugin', 'install-zip', true)) {
       $this->plugins = ClassRegistry::init('plugins');
       /*$p_author = file_get_contents('../../app/Plugin/'.$plugin_name.'/author.txt');
       $version = file_get_contents('../../app/Plugin/'.$plugin_name.'/version.txt');*/
@@ -379,9 +420,50 @@ class EyPluginComponent extends Object {
   }
 
   function update($plugin_id = false, $plugin_name = false) {
+
+    // get du zip sur mineweb.org
+    $url = 'http://mineweb.org/api/get_plugin/'.$plugin_id;
+    $secure = file_get_contents(ROOT.'/config/secure');
+    $secure = json_decode($secure, true);
+    $postfields = array(
+      'id' => $secure['id'],
+      'key' => $secure['key'],
+      'domain' => Router::url('/', true)
+    );
+
+    $postfields = json_encode($postfields);
+    $post[0] = rsa_encrypt($postfields, '-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvFK7LMlAnF8Hzmku9WGbHqYNb
+ehNueKDbF/j4yYwf8WqIizB7k+S++SznqPw3KzeHOshiPfeCcifGzp0kI43grWs+
+nuScYjSuZw9FEvjDjEZL3La00osWxLJx57zNiEX4Wt+M+9RflMjxtvejqXkQoEr/
+WCqkx22behAGZq6rhwIDAQAB
+-----END PUBLIC KEY-----');
+
+    $curl = curl_init();
+
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_COOKIESESSION, true);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
+
+    $return = curl_exec($curl);
+    curl_close($curl);
+
+    if(!preg_match('#Errors#i', $return)) {
+          $return = json_decode($return, true);
+          if($return['status'] == "success") {
+            $zip = $return['zip'];
+          } elseif($return['status'] == "error") {
+            return false;
+          }
+    } else {
+      return false;
+    }
+
     App::import('Component', 'UpdateComponent');
     $this->Update = new UpdateComponent();
-    if($this->Update->plugin('http://mineweb.org/api/mineweb_plugins/plugins/'.$plugin_id.'-'.$plugin_name.'.zip', $plugin_name, $plugin_id)) { // on update
+    if($this->Update->plugin($zip, $plugin_name, $plugin_id)) { // on update
     // si ca réussi
       // on récupère la nouvelle config
       $config = file_get_contents(ROOT.'/app/Plugin/'.$plugin_name.'/config.json');

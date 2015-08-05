@@ -90,12 +90,14 @@ class ServerComponent extends Object {
 
 	function get($type) {
 		if($type == "secret_key") {
-			$url = 'http://127.0.0.1/Projets%20en%20cours/MineWeb/mineweb.org/api/get_secret_key/';
-			$postfields = array(
-			    'id' => '1',
-			    'key' => 'sdzzdoz839ndz37kxd48kd38',
-			    'domain' => Router::url('/', true)
-			);
+			$url = 'http://mineweb.org/api/get_secret_key/';
+			$secure = file_get_contents(ROOT.'/config/secure');
+		    $secure = json_decode($secure, true);
+		    $postfields = array(
+		      'id' => $secure['id'],
+		      'key' => $secure['key'],
+		      'domain' => Router::url('/', true)
+		    );
 
 			$postfields = json_encode($postfields);
 			$post[0] = rsa_encrypt($postfields, '-----BEGIN PUBLIC KEY-----

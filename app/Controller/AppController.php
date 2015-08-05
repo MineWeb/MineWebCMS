@@ -61,15 +61,17 @@ jP3lq81IDMx/Ui1ksQJBAO4hTKBstrDNlUPkUr0i/2Pb/edVSgZnJ9t3V94OAD+Z
 wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 -----END RSA PRIVATE KEY-----');
 		if($last_check) {
-			$last_check = strtotime('+12 hours', $last_check);
+			$last_check = strtotime('+8 hours', $last_check);
 		} else {
 			$last_check = '0';
 		}
 		if($last_check < time()) {
-			$url = 'http://127.0.0.1/Projets%20en%20cours/MineWeb/mineweb.org/api/key_verif/';
+			$url = 'http://mineweb.org/api/key_verif/';
+			$secure = file_get_contents(ROOT.'/config/secure');
+			$secure = json_decode($secure, true);
 			$postfields = array(
-				'id' => 1,
-			    'key' => 'sdzzdoz839ndz37kxd48kd38',
+				'id' => $secure['id'],
+			    'key' => $secure['key'],
 			    'domain' => Router::url('/', true)
 			);
 
@@ -101,8 +103,6 @@ WCqkx22behAGZq6rhwIDAQAB
 		        }
 			}
 		}
-
-
 
 
 		/* Charger les components des plugins si ils s'appellent "EventsConpoment.php" */
