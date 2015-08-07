@@ -12,7 +12,7 @@ class ThemeController extends AppController{
     		$themes = array_delete_value($themes, '..');
     		$themes = array_delete_value($themes, '.DS_Store');
 			foreach ($themes as $key => $value) {
-		      $list_themes[] = $value;
+		      $list_themes[] = strtolower($value);
 		    }
 		    if(!empty($list_themes)) {
 			    $themes = $list_themes;
@@ -20,7 +20,7 @@ class ThemeController extends AppController{
 			    $free_themes_available = file_get_contents('http://mineweb.org/api/getFreeThemes');
 			    $free_themes_available = json_decode($free_themes_available, true);
 			    foreach ($free_themes_available as $key => $value) {
-			      if(!in_array($value['name'], $themes)) {
+			      if(!in_array(strtolower($value['name']), $themes)) {
 			        $free_themes[] = array('theme_id' => $value['theme_id'], 'name' => $value['name'], 'author' => $value['author'], 'version' => $value['version']);
 			      }
 			    }
@@ -87,8 +87,48 @@ class ThemeController extends AppController{
 	function admin_install($theme_id = false, $theme_name = false) {
 		if($this->Connect->connect() AND $this->Connect->if_admin()) {
 			if($theme_id != false AND $theme_name != false) {
+
+				// get du zip sur mineweb.org
+			    $url = 'http://mineweb.org/api/get_theme/'.$theme_id;
+			    $secure = file_get_contents(ROOT.'/config/secure');
+			    $secure = json_decode($secure, true);
+			    $postfields = array(
+			      'id' => $secure['id'],
+			      'key' => $secure['key'],
+			      'domain' => Router::url('/', true)
+			    );
+
+			    $postfields = json_encode($postfields);
+			    $post[0] = rsa_encrypt($postfields, '-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvFK7LMlAnF8Hzmku9WGbHqYNb
+ehNueKDbF/j4yYwf8WqIizB7k+S++SznqPw3KzeHOshiPfeCcifGzp0kI43grWs+
+nuScYjSuZw9FEvjDjEZL3La00osWxLJx57zNiEX4Wt+M+9RflMjxtvejqXkQoEr/
+WCqkx22behAGZq6rhwIDAQAB
+-----END PUBLIC KEY-----');
+
+			    $curl = curl_init();
+
+			    curl_setopt($curl, CURLOPT_URL, $url);
+			    curl_setopt($curl, CURLOPT_COOKIESESSION, true);
+			    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			    curl_setopt($curl, CURLOPT_POST, true);
+			    curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
+
+			    $return = curl_exec($curl);
+			    curl_close($curl);
+
+			    if(!preg_match('#Errors#i', $return)) {
+			          $return_json = json_decode($return, true);
+			          if(!$return_json) {
+			            $zip = $return;
+			          } elseif($return_json['status'] == "error") {
+			            return false;
+			          }
+			    } else {
+			      return false;
+			    }
 				 
-				if(unzip('http://mineweb.org/api/mineweb_themes/themes/'.$theme_id.'-'.$theme_name.'.zip', '../View/Themed')) {
+				if(unzip($zip, '../View/Themed', 'install-zip', true)) {
 					clearDir(ROOT.'/app/View/Themed/__MACOSX');
 					$this->History->set('INSTALL_THEME', 'theme');
 					$this->Session->setFlash($this->Lang->get('THEME_INSTALL_SUCCESS'), 'default.success');

@@ -36,9 +36,9 @@ function before_display($content) {
 	return $content;
 }
 
-function unzip($file, $path, $name = 'install-zip', $file_get_contents = true) {
-	if ( !is_file($file)) {
-		if($file_get_contents) {
+function unzip($file, $path, $name = 'install-zip', $No_file_get_contents = false) {
+	if ($No_file_get_contents === true OR !is_file($file)) {
+		if(!$No_file_get_contents) {
 			$newUpdate = file_get_contents($file);
 		} else {
 			$newUpdate = $file;

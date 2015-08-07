@@ -77,12 +77,12 @@ WCqkx22behAGZq6rhwIDAQAB
 		curl_close($curl);
 
 		if(!preg_match('#Errors#i', $return)) {
-	        $return = json_decode($return, true);
-	        if($return['status'] == "success") {
-	        	$zip = $return['zip'];
-	        } elseif($return['status'] == "error") {
-	        	return false;
-	        }
+	        $return_json = json_decode($return, true);
+          	if(!$return_json) {
+	            $zip = $return;
+    	      } elseif($return_json['status'] == "error") {
+        	    return false;
+          	}
 		} else {
 			return false;
 		}

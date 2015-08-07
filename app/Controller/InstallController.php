@@ -66,14 +66,19 @@ class InstallController extends AppController {
 				 
 				if(!empty($this->request->data['host']) AND !empty($this->request->data['port']) AND !empty($this->request->data['timeout'])) {
 					$secret_key = $this->Server->get('secret_key');
-					if($this->Server->check('connection', array('host' => $this->request->data['host'], 'port' => $this->request->data['port'], 'timeout' => $this->request->data['timeout'], 'secret_key' => $secret_key))) {
-						$this->Configuration->set('server_state', 1);
-						$this->Configuration->set('server_host', $this->request->data['host']);
-						$this->Configuration->set('server_port', $this->request->data['port']);
-						$this->Configuration->set('server_secretkey', $secret_key);
-						$this->Configuration->set('server_timeout', $this->request->data['timeout']);
-						echo $this->Lang->get('SUCCESS_CONNECTION_SERVER').'|true';
+					if($secret_key !== false) {
+						if($this->Server->check('connection', array('host' => $this->request->data['host'], 'port' => $this->request->data['port'], 'timeout' => $this->request->data['timeout'], 'secret_key' => $secret_key))) {
+							$this->Configuration->set('server_state', 1);
+							$this->Configuration->set('server_host', $this->request->data['host']);
+							$this->Configuration->set('server_port', $this->request->data['port']);
+							$this->Configuration->set('server_secretkey', $secret_key);
+							$this->Configuration->set('server_timeout', $this->request->data['timeout']);
+							echo $this->Lang->get('SUCCESS_CONNECTION_SERVER').'|true';
+						} else {
+							echo $this->Lang->get('SERVER_CONNECTION_FAILED').'|false';
+						}
 					} else {
+						$this->Configuration->set('server_state', 0);
 						echo $this->Lang->get('SERVER_CONNECTION_FAILED').'|false';
 					}
 				} else {

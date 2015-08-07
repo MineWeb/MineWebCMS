@@ -63,8 +63,8 @@ class EyPluginComponent extends Object {
             }
           }
 
-          if(file_exists(ROOT.'/app/Plugin/'.$search['0']['plugins']['name'].'/Controller/Component/MainComponent.php')) {
-            App::uses('MainComponent', 'Plugin/'.$search['0']['plugins']['name'].'/Controller/Component');
+          if(file_exists(ROOT.'/app/Plugin/'.$v.'/Controller/Component/MainComponent.php')) {
+            App::uses('MainComponent', 'Plugin/'.$v.'/Controller/Component');
             $this->Main = new MainComponent();
             $this->Main->onEnable();
           }
@@ -76,7 +76,7 @@ class EyPluginComponent extends Object {
               $where = $this->Permission->find('all', array('conditions' => array('rank' => $key))); // je cherche les perms du rank 
               if(!empty($where)) {
                 $addperm = unserialize($where['0']['Permission']['permissions']);
-                foreach ($key as $k2 => $v2) {
+                foreach ($addperm as $k2 => $v2) {
                   $addperm[] = $v2; // on ajoute les perms
                 }
                 $this->Permission->read(null, $where['0']['Permission']['id']);
@@ -152,8 +152,8 @@ class EyPluginComponent extends Object {
         $where = $this->Permission->find('all', array('conditions' => array('rank' => $key))); // je cherche les perms du rank 
         if(!empty($where)) {
           $addperm = unserialize($where['0']['Permission']['permissions']);
-          foreach ($key as $k2 => $v2) {
-             array_delete_value($v2); // on supprime les perms
+          foreach ($addperm as $k2 => $v2) {
+             array_delete_value($addperm, $v2); // on supprime les perms
           }
           $this->Permission->read(null, $where['0']['Permission']['id']);
           $this->Permission->set(array('permissions' => serialize($addperm)));
@@ -352,10 +352,10 @@ WCqkx22behAGZq6rhwIDAQAB
     curl_close($curl);
 
     if(!preg_match('#Errors#i', $return)) {
-          $return = json_decode($return, true);
-          if($return['status'] == "success") {
-            $zip = $return['zip'];
-          } elseif($return['status'] == "error") {
+           $return_json = json_decode($return, true);
+          if(!$return_json) {
+            $zip = $return;
+          } elseif($return_json['status'] == "error") {
             return false;
           }
     } else {
@@ -388,8 +388,8 @@ WCqkx22behAGZq6rhwIDAQAB
         }
       }
 
-      if(file_exists(ROOT.'/app/Plugin/'.$search['0']['plugins']['name'].'/Controller/Component/MainComponent.php')) {
-        App::uses('MainComponent', 'Plugin/'.$search['0']['plugins']['name'].'/Controller/Component');
+      if(file_exists(ROOT.'/app/Plugin/'.$plugin_name.'/Controller/Component/MainComponent.php')) {
+        App::uses('MainComponent', 'Plugin/'.$plugin_name.'/Controller/Component');
         $this->Main = new MainComponent();
         $this->Main->onEnable();
       }
@@ -401,7 +401,7 @@ WCqkx22behAGZq6rhwIDAQAB
           $where = $this->Permission->find('all', array('conditions' => array('rank' => $key))); // je cherche les perms du rank 
           if(!empty($where)) {
             $addperm = unserialize($where['0']['Permission']['permissions']);
-            foreach ($key as $k2 => $v2) {
+            foreach ($addperm as $k2 => $v2) {
               $addperm[] = $v2; // on ajoute les perms
             }
             $this->Permission->read(null, $where['0']['Permission']['id']);
@@ -451,10 +451,10 @@ WCqkx22behAGZq6rhwIDAQAB
     curl_close($curl);
 
     if(!preg_match('#Errors#i', $return)) {
-          $return = json_decode($return, true);
-          if($return['status'] == "success") {
-            $zip = $return['zip'];
-          } elseif($return['status'] == "error") {
+          $return_json = json_decode($return, true);
+          if(!$return_json) {
+            $zip = $return;
+          } elseif($return_json['status'] == "error") {
             return false;
           }
     } else {
