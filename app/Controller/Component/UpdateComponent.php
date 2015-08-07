@@ -234,7 +234,9 @@ WCqkx22behAGZq6rhwIDAQAB
 		// set les logs de la mise à jour 
 		$filename = ROOT.'/app/tmp/logs/update/'.$this->get_version().'-'.$rand.'.log';
 		if(!file_exists($filename)) {
-			mkdir(ROOT.'/app/tmp/logs/update');
+			if(!is_dir(ROOT.'/app/tmp/logs/update')) {
+				mkdir(ROOT.'/app/tmp/logs/update');
+			}
 			$write = fopen($filename, "x+");
 			$header = json_encode(array('head' => array('date' => date('d/m/Y H:i:s'), 'version' => $this->get_version())), JSON_PRETTY_PRINT);
 			fwrite($write, $header);
@@ -244,7 +246,7 @@ WCqkx22behAGZq6rhwIDAQAB
 		$before = json_decode($before, true);
 		$write = fopen($filename, 'w+');
 		$string = $before;
-		$i = count($string['update']) + 1;
+		$i = @count($string['update']) + 1;
 		$string['update'][$i][$action]['statut'] = $state;
 		$string['update'][$i][$action]['arg'] = $args;
 		$string = json_encode($string, JSON_PRETTY_PRINT);
