@@ -1,27 +1,3 @@
-// -------------------------------------------------------------------
-// Avocado Panel Custom JS/jQuery (Pre-Dom)
-// -------------------------------------------------------------------
-
-// Theme Changer Save (cookie) 
-// -------------------------------------------------------------------
-// URL: Lychee Designs
-// -------------------------------------------------------------------
-
-if ($.cookie("style") != null) {
-  var savedStyle = $.cookie("style");
-  $('#theme-style').attr("href", "assets/css/theme/" + savedStyle + ".css");
-};
-
-jQuery(document).ready(function() {
-	if ($.cookie("style") != null) {
-	  $("#theme a").attr("class", "");
-
-	  var currentStyle = $("#theme").find("[data-style='" + savedStyle + "']");
-	  $(currentStyle).addClass("active");
-	};
-});
-
-
 jQuery(document).ready(function() {
 
 // Top-Bar Padding Removal (Lychee Designs)

@@ -18,8 +18,7 @@ $this->EyPlugin = new EyPluginComponent;
     <?php echo $this->Html->css('admin/chosen'); ?>
     <?php echo $this->Html->css('admin/bootstrap.min.css'); ?>
     <?php echo $this->Html->css('admin/theme/avocado'); ?>
-    <?php echo $this->Html->css('admin/prism'); ?>
-    <?php echo $this->Html->css('admin/fullcalendar.css'); ?>
+
     <?php echo $this->Html->css('font-awesome.min.css'); ?>
     <?php echo $this->fetch('css'); ?>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,600,300' rel='stylesheet' type='text/css'> 
@@ -28,14 +27,11 @@ $this->EyPlugin = new EyPluginComponent;
 	</style>
 	<?php echo $this->Html->css('bootstrap-responsive.css'); ?>
 
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
-	<?php echo $this->Html->script('admin/charts/excanvas.min.js'); ?>
-	<?php echo $this->Html->script('admin/charts/jquery.flot.js'); ?>
+	<?php echo $this->Html->script('admin/jquery.1.9.1.min.js'); ?>
+
 	<?php echo $this->Html->script('admin/jquery.jpanelmenu.min.js'); ?>
-	<?php echo $this->Html->script('admin/jquery.cookie.js'); ?>
 	<?php echo $this->Html->script('admin/avocado-custom-predom.js'); ?>
-	<?php //echo $this->Html->script('chart.js'); ?>
-	<script type="text/javascript" src="http://eywek.fr/chart.js"></script>
+	<?php echo $this->Html->script('admin/chart.js'); ?>
 
 </head>
 <body>
@@ -211,21 +207,18 @@ $this->EyPlugin = new EyPluginComponent;
       </div>
 	</footer>
 
-	<?php echo $this->Html->script('admin/jquery.hotkeys.js'); ?>
-	<?php echo $this->Html->script('admin/calendar/fullcalendar.min.js'); ?>
-	<?php echo $this->Html->script('admin/jquery-ui-1.10.2.custom.min.js'); ?>
-	<?php echo $this->Html->script('admin/jquery.pajinate.js'); ?>
-	<?php echo $this->Html->script('admin/jquery.prism.min.js'); ?>
-	<?php echo $this->Html->script('admin/jquery.dataTables.min.js'); ?>
-	<?php echo $this->Html->script('admin/charts/jquery.flot.time.js'); ?>
-	<?php echo $this->Html->script('admin/charts/jquery.flot.pie.js'); ?>
-	<?php echo $this->Html->script('admin/charts/jquery.flot.resize.js'); ?>
+	<?php //echo $this->Html->script('admin/jquery-ui-1.10.2.custom.min.js'); ?>
+
+	<?= $this->Html->script('admin/all.js') ?>
+
+	<?php //echo $this->Html->script('admin/jquery.dataTables.min.js'); ?>
+	<?php //echo $this->Html->script('admin/charts/jquery.flot.time.js'); ?>
+	<?php //echo $this->Html->script('admin/charts/jquery.flot.pie.js'); ?>
+	<?php //echo $this->Html->script('admin/charts/jquery.flot.resize.js'); ?>
 	<?php echo $this->Html->script('admin/bootstrap/bootstrap.min.js'); ?>
-	<?php echo $this->Html->script('admin/bootstrap/bootstrap-wysiwyg.js'); ?>
-	<?php echo $this->Html->script('admin/bootstrap/bootstrap-typeahead.js'); ?>
-	<?php echo $this->Html->script('admin/jquery.easing.min.js'); ?>
-	<?php echo $this->Html->script('admin/jquery.chosen.min.js'); ?>
-	<?php echo $this->Html->script('admin/avocado-custom.js'); ?>
+
+	<?php //echo $this->Html->script('admin/jquery.chosen.min.js'); ?>
+	<?php //echo $this->Html->script('admin/avocado-custom.js'); ?>
 	<?php echo $this->fetch('script'); ?>
 </body>
 </html>

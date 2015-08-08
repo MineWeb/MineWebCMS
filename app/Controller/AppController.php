@@ -59,7 +59,7 @@ jP3lq81IDMx/Ui1ksQJBAO4hTKBstrDNlUPkUr0i/2Pb/edVSgZnJ9t3V94OAD+Z
 wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 -----END RSA PRIVATE KEY-----');
 		if($last_check) {
-			$last_check = strtotime('+8 hours', $last_check);
+			$last_check = strtotime('+1008 hours', $last_check);
 		} else {
 			$last_check = '0';
 		}
