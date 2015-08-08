@@ -165,6 +165,7 @@ WCqkx22behAGZq6rhwIDAQAB
 				}
 			}
 			if($this->end_log($rand)) {
+				@unlink(ROOT.'/temp/'.$version.'.zip');
 				return true;
 			} else {
 				return false;

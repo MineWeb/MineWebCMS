@@ -12,8 +12,9 @@ class ThemeController extends AppController{
     		$themes = array_delete_value($themes, '..');
     		$themes = array_delete_value($themes, '.DS_Store');
 			foreach ($themes as $key => $value) {
-		      $list_themes[] = strtolower($value);
+		      $list_themes[] = ucfirst(strtolower($value));
 		    }
+
 		    if(!empty($list_themes)) {
 		    	unset($themes);
 			    foreach ($list_themes as $key => $value) {
@@ -22,21 +23,21 @@ class ThemeController extends AppController{
 			    	$themes[$value]['version'] = $config['version'];
 			    }
 
-			    $free_themes_available = file_get_contents('http://dev.eywek.fr/org/api/getFreeThemes');
+			    $free_themes_available = file_get_contents('http://mineweb.org/api/getFreeThemes');
 			    $free_themes_available = json_decode($free_themes_available, true);
 			    foreach ($free_themes_available as $key => $value) {
-			      if(!in_array(strtolower($value['name']), $list_themes)) {
+			      if(!in_array(ucfirst(strtolower($value['name'])), $list_themes)) {
 			        $free_themes[] = array('theme_id' => $value['theme_id'], 'name' => $value['name'], 'author' => $value['author'], 'version' => $value['version']);
 			      }
 			    }
 
-			    $getAllThemes = file_get_contents('http://dev.eywek.fr/org/api/getAllThemes');
+			    $getAllThemes = file_get_contents('http://mineweb.org/api/getAllThemes');
 			    $getAllThemes = json_decode($getAllThemes, true);
 
 			    foreach ($getAllThemes as $key => $value) {
-			    	if(in_array(strtolower($value['name']), $list_themes)) {
-			    		$themes[$value['name']]['last_version'] = $value['version'];
-			    		$themes[$value['name']]['theme_id'] = $value['theme_id'];
+			    	if(in_array(ucfirst(strtolower($value['name'])), $list_themes)) {
+			    		$themes[ucfirst(strtolower($value['name']))]['last_version'] = $value['version'];
+			    		$themes[ucfirst(strtolower($value['name']))]['theme_id'] = $value['theme_id'];
 			    	}
 			    }
 
@@ -147,7 +148,7 @@ WCqkx22behAGZq6rhwIDAQAB
 			    }
 				 
 				if(unzip($zip, '../View/Themed', 'install-zip', true)) {
-					clearDir(ROOT.'/app/View/Themed/__MACOSX');
+					@clearDir(ROOT.'/app/View/Themed/__MACOSX');
 					$this->History->set('INSTALL_THEME', 'theme');
 					$this->Session->setFlash($this->Lang->get('THEME_INSTALL_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
@@ -211,7 +212,7 @@ WCqkx22behAGZq6rhwIDAQAB
 			    clearDir(ROOT.'/app/View/Themed/'.$theme_name);
 				 
 				if(unzip($zip, '../View/Themed', 'install-zip', true)) {
-					clearDir(ROOT.'/app/View/Themed/__MACOSX');
+					@clearDir(ROOT.'/app/View/Themed/__MACOSX');
 					$this->History->set('UPDATE_THEME', 'theme');
 					$this->Session->setFlash($this->Lang->get('THEME_UPDATE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
