@@ -22,8 +22,6 @@
 App::uses('Controller', 'Controller');
 require ROOT.'/config/function.php';
 
-
-
 /**
  * Application Controller
  *
