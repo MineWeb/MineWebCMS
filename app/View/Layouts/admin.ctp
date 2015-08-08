@@ -206,19 +206,12 @@ $this->EyPlugin = new EyPluginComponent;
         <?= $Lang->get('FOOTER_ADMIN') ?>
       </div>
 	</footer>
-
-	<?php //echo $this->Html->script('admin/jquery-ui-1.10.2.custom.min.js'); ?>
-
 	<?= $this->Html->script('admin/all.js') ?>
-
-	<?php //echo $this->Html->script('admin/jquery.dataTables.min.js'); ?>
-	<?php //echo $this->Html->script('admin/charts/jquery.flot.time.js'); ?>
-	<?php //echo $this->Html->script('admin/charts/jquery.flot.pie.js'); ?>
-	<?php //echo $this->Html->script('admin/charts/jquery.flot.resize.js'); ?>
 	<?php echo $this->Html->script('admin/bootstrap/bootstrap.min.js'); ?>
-
-	<?php //echo $this->Html->script('admin/jquery.chosen.min.js'); ?>
-	<?php //echo $this->Html->script('admin/avocado-custom.js'); ?>
 	<?php echo $this->fetch('script'); ?>
 </body>
 </html>
+<?php 
+$timestamp_fin = microtime(true);
+$difference_ms = $timestamp_fin - TIMESTAMP_DEBUT;
+echo '<!-- Exécution du script : ' . $difference_ms . ' secondes. -->'; ?>

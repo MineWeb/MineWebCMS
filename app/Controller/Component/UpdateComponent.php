@@ -9,10 +9,13 @@ class UpdateComponent extends Object {
 	function initialize(&$controller) {
 		$controller->set('Update', new UpdateComponent());
 
-		if($this->available() != false) {
-			if($this->get_type() == "forced") {
-				$this->update($this->get_version());
+		if(!file_exists(ROOT.'/config/update') OR strtotime('+5 hours', filemtime(ROOT.'/config/update')) < time()) {
+			if($this->available() != false) {
+				if($this->get_type() == "forced") {
+					$this->update($this->get_version());
+				}
 			}
+			file_put_contents(ROOT.'/config/update', 1);
 		}
 	}
 	function startup(&$controller) {}

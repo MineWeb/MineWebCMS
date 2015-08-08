@@ -1,6 +1,4 @@
 <?php 
- 
-$this->Navbar = new NavbarComponent;
 $this->Configuration = new ConfigurationComponent;
 $this->EyPlugin = new EyPluginComponent;
 ?>
@@ -21,7 +19,6 @@ $this->EyPlugin = new EyPluginComponent;
                         <a href="<?= $this->Html->url('/') ?>"><i class="fa fa-home" title="<?= $Lang->get('HOME') ?>"></i></a>
                     </li>
                     <?php 
-                      $nav = $this->Navbar->get();
                         if(!empty($nav)) {
                           $i = 0;
                           foreach ($nav as $key => $value) { ?>

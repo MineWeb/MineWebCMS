@@ -1,6 +1,4 @@
-<?php 
- 
-$this->Navbar = new NavbarComponent;
+<?php
 $this->Configuration = new ConfigurationComponent;
 $this->EyPlugin = new EyPluginComponent;
 ?>
@@ -71,7 +69,6 @@ $this->EyPlugin = new EyPluginComponent;
                       </div>
                     </li>
                     <?php 
-                    $nav = $this->Navbar->get();
                         if(!empty($nav)) {
                           $i = 0;
                           $count = count($nav);

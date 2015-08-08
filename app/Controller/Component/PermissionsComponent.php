@@ -12,13 +12,12 @@ class PermissionsComponent extends Object {
   function startup(&$controller) {
     $controller->set('Permissions', new PermissionsComponent());
   }
-  function __construct() {
+  function __construct() {}
+  
+  public function can($perm) {
     App::import('Component', 'Connect');
     $this->Connect = new ConnectComponent();
     $this->Perm = ClassRegistry::init('Permission');
-  }
-  
-  public function can($perm) {
     if($this->Connect->connect()) {
       if($this->Connect->if_admin()) {
         return true;
@@ -37,6 +36,9 @@ class PermissionsComponent extends Object {
   }
 
   public function have($rank, $perm) {
+    App::import('Component', 'Connect');
+    $this->Connect = new ConnectComponent();
+    $this->Perm = ClassRegistry::init('Permission');
     $search_perm = $this->Perm->find('all', array('conditions' => array('rank' => $rank)));
     $search_perm = unserialize($search_perm[0]['Permission']['permissions']);
     if(in_array($perm, $search_perm)) {
@@ -47,6 +49,9 @@ class PermissionsComponent extends Object {
   }
 
   public function get_all() {
+    App::import('Component', 'Connect');
+    $this->Connect = new ConnectComponent();
+    $this->Perm = ClassRegistry::init('Permission');
     $return = $this->permissions;
     // on récupére les perms des plugins
     App::import('Component', 'EyPlugin');

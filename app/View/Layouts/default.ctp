@@ -2,12 +2,10 @@
 App::import('Component', 'Connect');
 App::import('Component', 'EyPlugin');
 App::import('Component', 'History');
-App::import('Component', 'Navbar');
 App::import('Component', 'Configuration');
 $this->Connect = new ConnectComponent;
 $this->EyPlugin = new EyPluginComponent;
 $this->History = new HistoryComponent;
-$this->Navbar = new NavbarComponent;
 $this->Configuration = new ConfigurationComponent;
 
 $theme_config = file_get_contents(ROOT.'/config/theme.default.json');
@@ -73,7 +71,6 @@ $theme_config = json_decode($theme_config, true);
                         <a href="<?= $this->Html->url('/') ?>"><?= $Lang->get('HOME') ?></a>
                     </li>
                     <?php
-                        $nav = $this->Navbar->get();
                         if(!empty($nav)) {
                           $i = 0;
                           foreach ($nav as $key => $value) { ?>
@@ -163,3 +160,7 @@ $theme_config = json_decode($theme_config, true);
 </body>
 
 </html>
+<?php 
+$timestamp_fin = microtime(true);
+$difference_ms = $timestamp_fin - TIMESTAMP_DEBUT;
+echo '<!-- Exécution du script : ' . $difference_ms . ' secondes. -->'; ?>

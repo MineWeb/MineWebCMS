@@ -18,7 +18,7 @@
  * @since         CakePHP(tm) v 0.2.9
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-
+define('TIMESTAMP_DEBUT', microtime(true));
 App::uses('Controller', 'Controller');
 require ROOT.'/config/function.php';
 
@@ -33,7 +33,7 @@ require ROOT.'/config/function.php';
  */
 class AppController extends Controller {
 	
-	var $components = array('Module', 'Session', 'Connect', 'Configuration', 'EyPlugin', 'History', 'Statistics', 'Navbar', 'Server', 'Permissions', 'Lang', 'Update');
+	var $components = array('Module', 'Session', 'Connect', 'Configuration', 'EyPlugin', 'History', 'Statistics', 'Permissions', 'Lang', 'Update', 'Server');
 	var $helpers = array('Session');
 
 	var $view = 'Theme';
@@ -104,7 +104,6 @@ WCqkx22behAGZq6rhwIDAQAB
 
 
 		/* Charger les components des plugins si ils s'appellent "EventsConpoment.php" */
-
 		$plugins = $this->EyPlugin->get_list();
 		foreach ($plugins as $key => $value) {
 			$useEvents = $this->EyPlugin->get('useEvents', $value['plugins']['name']);
@@ -135,6 +134,15 @@ WCqkx22behAGZq6rhwIDAQAB
 			}
 			$this->set(compact('plugins_need_admin'));
 		}
+
+		$this->loadModel('Navbar');
+		$nav = $this->Navbar->find('all', array('order' => 'order'));
+		if(!empty($nav)) {
+			$nav = $nav;
+		} else {
+			$nav = false;
+		}
+		$this->set(compact('nav'));
 
 		if($this->params['controller'] == "user" OR $this->params['controller'] == "maintenance" OR $this->Configuration->get('maintenance') == '0' OR $this->Connect->connect() AND $this->Connect->if_admin()) {
 		} else {

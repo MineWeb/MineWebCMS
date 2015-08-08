@@ -1,9 +1,5 @@
 <?php 
-  
 $this->Connect = new ConnectComponent;
-$this->EyPlugin = new EyPluginComponent;
-$this->History = new HistoryComponent;
-$this->Configuration = new ConfigurationComponent;
 $theme_config = file_get_contents(ROOT.'/app/View/Themed/Mineweb/config/config.json');
 $theme_config = json_decode($theme_config, true);
 ?>
@@ -18,7 +14,7 @@ $theme_config = json_decode($theme_config, true);
     <meta name="description" content="">
     <meta name="author" content="Eywek">
 
-    <title><?= $title_for_layout; ?> - <?= $this->Configuration->get('name') ?></title>
+    <title><?= $title_for_layout; ?> - <?= $Configuration->get('name') ?></title>
 
     <?= $this->Html->css('bootstrap.css') ?>
     <?= $this->Html->css('modern-business.css') ?>
@@ -110,3 +106,7 @@ $theme_config = json_decode($theme_config, true);
 </body>
 
 </html>
+<?php 
+$timestamp_fin = microtime(true);
+$difference_ms = $timestamp_fin - TIMESTAMP_DEBUT;
+echo '<!-- Exécution du script : ' . $difference_ms . ' secondes. -->'; ?>

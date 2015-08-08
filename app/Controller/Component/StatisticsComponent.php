@@ -28,7 +28,8 @@
 * location
 *
 **/
-
+App::uses('AppHelper', 'View/Helper');
+App::uses('CakeSession', 'Model/Datasource');
 class StatisticsComponent extends Object {
   
   function shutdown(&$controller) {
@@ -44,19 +45,23 @@ class StatisticsComponent extends Object {
   }
 
   function startup(&$controller) {
-    $this->Visit = ClassRegistry::init('Visit');
-    $visits = $this->Visit->find('all', array('conditions' => array('ip' => $_SERVER["REMOTE_ADDR"], 'created LIKE' => date('Y-m-d').'%')));
-    if(empty($visits)) {
-      if(!empty($_SERVER['HTTP_REFERER'])) {
-        $referer = $_SERVER['HTTP_REFERER'];
-      } else {
-        $referer = 'null';
+    $cookie = CakeSession::read('visit_check');
+    if(!isset($cookie) OR empty($cookie)) {
+      $this->Visit = ClassRegistry::init('Visit');
+      $visits = $this->Visit->find('all', array('conditions' => array('ip' => $_SERVER["REMOTE_ADDR"], 'created LIKE' => date('Y-m-d').'%')));
+      if(empty($visits)) {
+        if(!empty($_SERVER['HTTP_REFERER'])) {
+          $referer = $_SERVER['HTTP_REFERER'];
+        } else {
+          $referer = 'null';
+        }
+        $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+        $language = $language{0}.$language{1};
+        $this->Visit->read(null, null);
+        $this->Visit->set(array('ip' => $_SERVER["REMOTE_ADDR"], 'referer' => $referer, 'lang' => $language, 'navigator' => $_SERVER['HTTP_USER_AGENT'], 'page' => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
+        $this->Visit->save();
       }
-      $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-      $language = $language{0}.$language{1};
-      $this->Visit->read(null, null);
-      $this->Visit->set(array('ip' => $_SERVER["REMOTE_ADDR"], 'referer' => $referer, 'lang' => $language, 'navigator' => $_SERVER['HTTP_USER_AGENT'], 'page' => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
-      $this->Visit->save();
+      CakeSession::write('visit_check', true, true, '1 day');
     }
   }
 

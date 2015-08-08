@@ -7,16 +7,19 @@ class ServerComponent extends Object {
   	private $port;
   	private $secretkey;
   	private $timeout;
+  	private $server_state;
 
   	function __construct() {
-  		$this->Configuration = new ConfigurationComponent;
-	    $this->host = $this->Configuration->get('server_host');
-	    $this->port = $this->Configuration->get('server_port');
-	    $this->secretkey = $this->Configuration->get('server_secretkey');
-	    $this->timeout = $this->Configuration->get('server_timeout');
+  		$this->Configuration = ClassRegistry::init('Configuration');
+  		$request = $this->Configuration->find('first');
+
+	    $this->host = $request['Configuration']['server_host'];
+	    $this->port = $request['Configuration']['server_port'];
+	    $this->secretkey = $request['Configuration']['server_secretkey'];
+	    $this->timeout = $request['Configuration']['server_timeout'];
 	    $this->url = 'http://'.$this->host.':'.$this->port.'?';
 	    $this->url_key = 'key='.sha1($this->secretkey);
-	    //$this->url_key = 'key='.$this->secretkey;
+	    $this->server_state = $request['Configuration']['server_state'];
 	}
 
 	function initialize(&$controller) {
@@ -26,7 +29,7 @@ class ServerComponent extends Object {
 
 	function startup(&$controller) {
 		// server online ? server function not disable ?
-		if($this->Configuration->get('server_state') == 1) {
+		if($this->server_state == 1) {
 			$url = $this->url.'getPlayerLimit=server';
 			$opts = array('http' => array('timeout' => $this->timeout));
 			@$get = file_get_contents($url, false, stream_context_create($opts));
