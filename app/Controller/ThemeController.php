@@ -31,6 +31,19 @@ class ThemeController extends AppController{
 			      }
 			    }
 
+			    // themes payés
+			    $secure = file_get_contents(ROOT.'/config/secure');
+    			$secure = json_decode($secure, true);
+			    $purchased_themes = @file_get_contents('http://mineweb.org/api/getPurchasedThemes/'.$secure['id']);
+			    $purchased_themes = json_decode($purchased_themes, true);
+			    if(@$purchased_themes['status'] == "success") {
+				    foreach ($purchased_themes['success'] as $key => $value) {
+				      if(!in_array(ucfirst(strtolower($value['name'])), $list_themes)) {
+				        $free_themes[] = array('theme_id' => $value['theme_id'], 'name' => $value['name'], 'author' => $value['author'], 'version' => $value['version']);
+				      }
+				    }
+				}
+
 			    $getAllThemes = file_get_contents('http://mineweb.org/api/getAllThemes');
 			    $getAllThemes = json_decode($getAllThemes, true);
 

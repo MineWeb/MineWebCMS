@@ -300,10 +300,10 @@ class EyPluginComponent extends Object {
   }
 
   function get_free_plugins() {
+    $plugins = $this->get_plugins(true);
     $available_plugins = @file_get_contents('http://mineweb.org/api/getFreePlugins');
     if($available_plugins) {
       $available_plugins = json_decode($available_plugins, true);
-      $plugins = $this->get_plugins(true);
       foreach ($available_plugins as $key => $value) {
         if(!in_array($value['name'], $plugins)) {
           $free_plugins[] = array('plugin_id' => $value['plugin_id'], 'name' => $value['name'], 'author' => $value['author'], 'version' => $value['version']);
@@ -312,6 +312,22 @@ class EyPluginComponent extends Object {
     } else {
       $free_plugins = array();
     }
+
+    // plugins payés
+    $secure = file_get_contents(ROOT.'/config/secure');
+    $secure = json_decode($secure, true);
+    $purchased_plugins = @file_get_contents('http://mineweb.org/api/getPurchasedPlugins/'.$secure['id']);
+    if($purchased_plugins) {
+      $purchased_plugins = json_decode($purchased_plugins, true);
+      if($purchased_plugins['status'] == "success") {
+        foreach ($purchased_plugins as $key => $value) {
+          if(!in_array($value['name'], $plugins)) {
+            $free_plugins[] = array('plugin_id' => $value['plugin_id'], 'name' => $value['name'], 'author' => $value['author'], 'version' => $value['version']);
+          }
+        }
+      }
+    }
+
     if(!empty($free_plugins)) {
       return $free_plugins;
     } else {
