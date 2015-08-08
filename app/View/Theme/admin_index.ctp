@@ -43,10 +43,10 @@ $this->Configuration = new ConfigurationComponent;
                 <?php if(!empty($themes)) { ?>
                 	<?php foreach ($themes as $key => $value) { ?>
                   <tr>
-                    <td><?= $value ?></td>
+                    <td><?= $key ?></td>
                     <td>
                       <?php
-                      if($value == $this->Configuration->get('theme')) {
+                      if($key == $this->Configuration->get('theme')) {
                         echo '<span class="label label-success">'.$Lang->get('ENABLED').'</span>';
                       } else {
                         echo '<span class="label label-danger">'.$Lang->get('DISABLED').'</span>';
@@ -54,12 +54,17 @@ $this->Configuration = new ConfigurationComponent;
                       ?>
                     </td>
                     <td>
-                       <?php if($value != $this->Configuration->get('theme')) { ?>
-                        <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable/'.$value, 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('ENABLED') ?></a>
+                       <?php if($key != $this->Configuration->get('theme')) { ?>
+                        <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable/'.$key, 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('ENABLED') ?></a>
                        <?php } ?>
-                    	<a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'theme', 'action' => 'delete/'.$value, 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>
-                      <?php if(file_exists(ROOT.'/app/View/Themed/'.$value.'/config/config.json')) { ?>
-                        <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom/'.$value, 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('CUSTOMIZATION') ?></a>
+                    	<a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'theme', 'action' => 'delete/'.$key, 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>
+                      <?php if(file_exists(ROOT.'/app/View/Themed/'.$key.'/config/config.json')) { ?>
+                        <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom/'.$key, 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('CUSTOMIZATION') ?></a>
+                      <?php } ?>
+                      <?php if(isset($value['last_version'])) { ?>
+                        <?php if($value['version'] !== $value['last_version']) { ?>
+                          <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'update/'.$value['theme_id'].'/'.$key, 'admin' => true)) ?>" class="btn btn-warning"><?= $Lang->get('UPDATE') ?></a>
+                        <?php } ?>
                       <?php } ?>
                     </td>
                   </tr>

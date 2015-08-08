@@ -348,5 +348,6 @@
     "DAY":"Jour",
     "HOUR":"Heure",
     "MINUTES":"Minutes",
-    "SECONDS":"Secondes"
+    "SECONDS":"Secondes",
+    "THEME_UPDATE_SUCCESS":"Le thème à été mis à jour avec succès !",
 }
