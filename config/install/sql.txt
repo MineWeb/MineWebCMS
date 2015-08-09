@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `configurations` (
   `server_host` varchar(32) NOT NULL,
   `server_port` int(6) NOT NULL,
   `server_secretkey` varchar(50) NOT NULL,
-  `server_timeout` int(2) NOT NULL,
+  `server_timeout` float NOT NULL,
   `version` varchar(50) NOT NULL,
   `skype` text NOT NULL,
   `youtube` text NOT NULL,

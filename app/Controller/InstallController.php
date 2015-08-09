@@ -34,13 +34,13 @@ class InstallController extends AppController {
 	public function index() {
 		if(!file_exists('../../config/installed.txt')) {
 			$this->layout = 'install';
-			$data = file_get_contents('../Config/database.php');
+			//$data = file_get_contents('../Config/database.php');
 			 
 			$this->set('title_for_layout',$this->Lang->get('INSTALL'));
-			$data = explode("'", $data);
+			/*$data = explode("'", $data);
 			$host = $data['9']; $this->set(compact('host'));
 			$login = $data['13']; $this->set(compact('login'));
-			$database = $data['21']; $this->set(compact('database'));
+			$database = $data['21']; $this->set(compact('database'));*/
 
 			$this->set('server_host', $this->Configuration->get('server_host'));
 			$this->set('port', $this->Configuration->get('server_port'));

@@ -27,7 +27,7 @@
 	} else {
 
 		// if not install
-    	Router::connect('/:controller/:action', array('controller' => 'install', 'action' => 'action'));
+    	Router::connect('/*', array('controller' => 'install', 'action' => 'index'));
 
 	}
 

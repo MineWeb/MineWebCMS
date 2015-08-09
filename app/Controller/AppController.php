@@ -41,7 +41,7 @@ class AppController extends Controller {
 	public function beforeFilter() {
 
 	/* VERIFICATION API-CMS */
-
+	if(file_exists(ROOT.'/config/installed.txt') AND file_exists(ROOT.'/config/install.txt')) {
 		$last_check = @file_get_contents(ROOT.'/config/last_check');
 		$last_check = @rsa_decrypt($last_check, '-----BEGIN RSA PRIVATE KEY-----
 MIICXAIBAAKBgQDGKSGFj8368AmYYiJ9fp1bsu3mzIiUfU7T2uhWXULe9YFqSvs9
@@ -59,7 +59,7 @@ jP3lq81IDMx/Ui1ksQJBAO4hTKBstrDNlUPkUr0i/2Pb/edVSgZnJ9t3V94OAD+Z
 wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 -----END RSA PRIVATE KEY-----');
 		if($last_check) {
-			$last_check = strtotime('+1008 hours', $last_check);
+			$last_check = strtotime('+8 hours', $last_check);
 		} else {
 			$last_check = '0';
 		}
@@ -101,6 +101,7 @@ WCqkx22behAGZq6rhwIDAQAB
 		        }
 			}
 		}
+	}
 
 
 		/* Charger les components des plugins si ils s'appellent "EventsConpoment.php" */

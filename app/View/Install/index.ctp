@@ -1,4 +1,3 @@
-<?php require '../../config/lang.php' ?>
 <div class="col-xs-12 col-sm-9">
 
     <div class="tab-content">
@@ -9,20 +8,8 @@
             <p>
                 <form>
                     <div class="form-group">
-                        <label><?= $Lang->get('HOST') ?></label>
-                        <input type="text" class="form-control" value="<?= $host ?>" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label><?= $Lang->get('DATABASE') ?></label>
-                        <input type="text" class="form-control" value="<?= $database ?>" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label><?= $Lang->get('LOGIN_BDD') ?></label>
-                        <input type="text" class="form-control"  value="<?= $login ?>" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label><?= $Lang->get('PASSWORD') ?></label>
-                        <input type="password" class="form-control" value="**********" disabled>
+                        <label>License key</label>
+                        <input type="text" name="key" class="form-control">
                     </div>
                     <ul class="pager wizard">
                         <li class="previous disabled"><a href="javascript:;"><?= $Lang->get('PREVIOUS') ?></a></li>
