@@ -42,6 +42,15 @@ class InstallController extends AppController {
 			$login = $data['13']; $this->set(compact('login'));
 			$database = $data['21']; $this->set(compact('database'));*/
 
+			$url = 'http://mineweb.org/api/key_verif/';
+			$secure = file_get_contents(ROOT.'/config/secure');
+			$secure = @json_decode($secure, true);
+			if($secure['key'] != "NOT_INSTALL") {
+				$this->set('step1_ok', true);
+			} else {
+				$this->set('step1_ok', false);
+			}
+
 			$this->set('server_host', $this->Configuration->get('server_host'));
 			$this->set('port', $this->Configuration->get('server_port'));
 			$this->set('secret_key', $this->Configuration->get('server_secretkey'));
@@ -58,6 +67,68 @@ class InstallController extends AppController {
 			$this->redirect(array('controller' => 'install', 'action' => 'end'));
 		}
 	}
+
+	public function step_1() {
+		$this->autoRender = false;
+		if(!file_exists('../../config/installed.txt')) {
+			$this->layout = null;
+			if($this->request->is('ajax')) {
+				 
+				if(!empty($this->request->data['key'])) {
+					
+					$url = 'http://mineweb.org/api/key_verif/';
+					$secure = file_get_contents(ROOT.'/config/secure');
+					$secure = json_decode($secure, true);
+					$postfields = array(
+						'id' => $secure['id'],
+					    'key' => $this->request->data['key'],
+					    'domain' => Router::url('/', true)
+					);
+
+					$postfields = json_encode($postfields);
+					$post[0] = rsa_encrypt($postfields, '-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvFK7LMlAnF8Hzmku9WGbHqYNb
+ehNueKDbF/j4yYwf8WqIizB7k+S++SznqPw3KzeHOshiPfeCcifGzp0kI43grWs+
+nuScYjSuZw9FEvjDjEZL3La00osWxLJx57zNiEX4Wt+M+9RflMjxtvejqXkQoEr/
+WCqkx22behAGZq6rhwIDAQAB
+-----END PUBLIC KEY-----');
+
+					$curl = curl_init();
+
+					curl_setopt($curl, CURLOPT_URL, $url);
+					curl_setopt($curl, CURLOPT_COOKIESESSION, true);
+					curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+					curl_setopt($curl, CURLOPT_POST, true);
+					curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
+
+					$return = curl_exec($curl);
+					curl_close($curl);
+
+					if(!preg_match('#Errors#i', $return)) {
+				        $return = json_decode($return, true);
+				        if($return['status'] == "success") {
+				        	file_put_contents(ROOT.'/config/last_check', $return['time']);
+				        	file_put_contents(ROOT.'/config/secure', json_encode(array('id' => $secure['id'], 'key' => $this->request->data['key'])));
+				        	echo $this->Lang->get('SUCCESS_CONNECTED_TO_API').'|true';
+				        } elseif($return['status'] == "error") {
+				        	echo $this->Lang->get('LICENSE_ERROR__'.$return['msg']).'|false';
+				        }
+					} else {
+						echo 'error';
+					}
+
+				} else {
+					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+				}
+
+			} else {
+				echo $this->Lang->get('NOT_POST' ,$language).'|false';
+			}
+		} else {
+			echo $this->Lang->get('ALREADY_INSTALL' ,$language).'|false';
+		}
+	}
+
 
 	public function step_2() {
 		if(!file_exists('../../config/installed.txt')) {

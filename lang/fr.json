@@ -349,5 +349,9 @@
     "HOUR":"Heure",
     "MINUTES":"Minutes",
     "SECONDS":"Secondes",
-    "THEME_UPDATE_SUCCESS":"Le thème à été mis à jour avec succès !"
+    "THEME_UPDATE_SUCCESS":"Le thème à été mis à jour avec succès !",
+    "SUCCESS_CONNECTED_TO_API":"Le CMS s'est connecté avec succès à l'API !",
+    "LICENSE_ERROR__ID_OR_KEY_INVALID":"Licence inconnue",
+    "LICENSE_ERROR__INVALID_URL":"Site d'installation non valide",
+    "LICENSE_ERROR__LICENSE_DISABLED":"Licence désactivée"
 }

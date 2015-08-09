@@ -80,7 +80,47 @@
     			'debug': false, 
 
     			onNext: function(tab, navigation, index) {
-					if(index==2) {
+    				if(index==1) {
+	                    var $form = $('#step1');
+	                    if($form.find("input[name='step1']").val() == "true") {
+	                    	return true;
+	                    } else {
+		                    var key = $form.find("input[name='key']").val();
+							var step1success = false;
+		                    $.ajax({
+							 	type : 'POST',
+							 	url : "<?= $this->Html->url(array('controller' => 'install', 'action' => 'step_1')) ?>", 
+							 	data : { key : key }, 
+							 	success : function(data){
+			                      	data2 = data.split("|");
+								  	if(data.indexOf('true') != -1) {
+						          		$('.ajax-msg-step1').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+						          		step1success = true;
+						          		return true;
+						          	} else if(data.indexOf('false') != -1) {
+						            	$('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+						            	step1success = false;
+						            	return false;
+							        } else {
+								    	$('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+								    	step1success = false;
+								    	return false;
+								    }
+		                    	},
+		                    	error : function(data){
+		                    		$('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+								    var step1success = false;
+								    return false;
+		                    	},
+		                    	async: false
+							});
+							if(step1success == true) {
+								return true;
+							} else {
+								return false;
+							}
+						}
+					} else if(index==2) {
 	                    var $form = $('#step2');
 	                    if($form.find("input[name='step2']").val() == "true") {
 	                    	return true;
