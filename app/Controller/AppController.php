@@ -97,7 +97,7 @@ WCqkx22behAGZq6rhwIDAQAB
 		        if($return['status'] == "success") {
 		        	file_put_contents(ROOT.'/config/last_check', $return['time']);
 		        } elseif($return['status'] == "error") {
-		        	die($return['msg']);
+		        	throw new LicenseException($return['msg']);
 		        }
 			}
 		}

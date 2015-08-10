@@ -626,3 +626,15 @@ class NotImplementedException extends CakeException {
 //@codingStandardsIgnoreEnd
 
 }
+
+class LicenseException extends CakeException {
+
+	protected $_messageTemplate = 'Error with your license';
+
+	public function __construct($message = null, $code = 500) {
+		if (empty($message)) {
+			$message = 'Error with you license';
+		}
+	parent::__construct($message, $code);
+	}
+};

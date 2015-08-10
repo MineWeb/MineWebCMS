@@ -169,6 +169,7 @@ WCqkx22behAGZq6rhwIDAQAB
 			}
 			if($this->end_log($rand)) {
 				@unlink(ROOT.'/temp/'.$version.'.zip');
+				@unlink(ROOT.'/config/update');
 				return true;
 			} else {
 				return false;

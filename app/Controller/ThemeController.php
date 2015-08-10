@@ -154,10 +154,12 @@ WCqkx22behAGZq6rhwIDAQAB
 			          if(!$return_json) {
 			            $zip = $return;
 			          } elseif($return_json['status'] == "error") {
-			            return false;
+			            $this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
+						$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
 			          }
 			    } else {
-			      return false;
+			      	$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
+					$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
 			    }
 				 
 				if(unzip($zip, '../View/Themed', 'install-zip', true)) {

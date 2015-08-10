@@ -320,7 +320,7 @@ class EyPluginComponent extends Object {
     if($purchased_plugins) {
       $purchased_plugins = json_decode($purchased_plugins, true);
       if($purchased_plugins['status'] == "success") {
-        foreach ($purchased_plugins as $key => $value) {
+        foreach ($purchased_plugins['success'] as $key => $value) {
           if(!in_array($value['name'], $plugins)) {
             $free_plugins[] = array('plugin_id' => $value['plugin_id'], 'name' => $value['name'], 'author' => $value['author'], 'version' => $value['version']);
           }
