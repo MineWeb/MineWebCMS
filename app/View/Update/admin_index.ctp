@@ -19,32 +19,33 @@
       </center>
 			<br>
 
-      <hr>
-
-      <h5 class="text-center"><?= $Lang->get('LOG_LAST_UPDATE') ?></h5>
-      <div id="log-update">
-        <p><b><?= $Lang->get('VERSION') ?></b> : <?= $logs['head']['version'] ?><br>
-        <b><?= $Lang->get('CREATED') ?></b> : <?= $logs['head']['date'] ?></p>
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th><?= $Lang->get('ACTION') ?></th>
-              <th><?= $Lang->get('STATE') ?></th>
-              <th><?= $Lang->get('FILE') ?></th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($logs['update'] as $k => $v) { ?>
-            <tr>
-              <td><?= $Lang->get(key($v)) ?></td>
-              <td><?= $Lang->get(strtoupper($v[key($v)]['statut'])) ?></td>
-              <td><?= $v[key($v)]['arg'] ?></td>
-              <td></td>
-            </tr>
-            <?php } ?>
-          </tbody>
-        </table>
-      </div>
+      <?php if(!empty($logs)) { ?>
+        <hr>
+        <h5 class="text-center"><?= $Lang->get('LOG_LAST_UPDATE') ?></h5>
+        <div id="log-update">
+          <p><b><?= $Lang->get('VERSION') ?></b> : <?= $logs['head']['version'] ?><br>
+          <b><?= $Lang->get('CREATED') ?></b> : <?= $logs['head']['date'] ?></p>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th><?= $Lang->get('ACTION') ?></th>
+                <th><?= $Lang->get('STATE') ?></th>
+                <th><?= $Lang->get('FILE') ?></th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($logs['update'] as $k => $v) { ?>
+              <tr>
+                <td><?= $Lang->get(key($v)) ?></td>
+                <td><?= $Lang->get(strtoupper($v[key($v)]['statut'])) ?></td>
+                <td><?= $v[key($v)]['arg'] ?></td>
+                <td></td>
+              </tr>
+              <?php } ?>
+            </tbody>
+          </table>
+        </div>
+      <?php } ?>
 
 		</div>
 

@@ -43,7 +43,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                             <div class="col-sm-4 col-lg-4 col-md-4">
                                 <div class="thumbnail">
                                     <?php if(isset($v['Item']['img_url'])) { ?><img src="<?= $v['Item']['img_url'] ?>" alt=""><?php } ?>
-                                    <div class="caption">
+                                    <div class="caption" style="height:auto;">
                                         <h4 class="pull-right"><?= $v['Item']['price'] ?><?php if($v['Item']['price'] == 1) { echo  ' '.$this->Configuration->get_money_name(false, true); } else { echo  ' '.$this->Configuration->get_money_name(); } ?></h4>
                                         <h4><a href="#"><?= before_display($v['Item']['name']) ?></a>
                                         </h4>

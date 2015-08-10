@@ -22,7 +22,7 @@ $this->Connect = new ConnectComponent;
 								<div class="panel panel-default panel-ticket">
 								  <div class="panel-body">
 								  	<div class="head">
-								    	<img class="support" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/<?= $value['Ticket']['author'] ?>/135" title="<?= $value['Ticket']['author'] ?>">
+								    	<img class="support" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/', 'plugin' => false)) ?>/<?= $value['Ticket']['author'] ?>/135" title="<?= $value['Ticket']['author'] ?>">
 								    	<div class="clearfix"></div>
 								    	<p class="author"><?php if(strlen($value['Ticket']['author']) > "8") { echo '<abbr title="'.$value['Ticket']['author'].'">'.substr($value['Ticket']['author'], 0, 8).'...</abbr>'; } else { echo $value['Ticket']['author']; } ?></p>
 								    </div>
@@ -57,7 +57,7 @@ $this->Connect = new ConnectComponent;
 												<div class="col-md-11 reply-col">
 													<div class="panel panel-default">
 													  <div class="panel-body">
-													    <img class="support" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/<?= $v['ReplyTicket']['author']; ?>/60" title="<?= $v['ReplyTicket']['author']; ?>">
+													    <img class="support" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/', 'plugin' => false)) ?>/<?= $v['ReplyTicket']['author']; ?>/60" title="<?= $v['ReplyTicket']['author']; ?>">
 													    <?php if($this->Connect->connect() AND $this->Connect->if_admin()) { ?>
 													    <div class="pull-right">
 														    <p><button id="<?= $v['ReplyTicket']['id'] ?>" title="<?= $Lang->get('DELETE') ?>" class="btn btn-danger btn-sm reply-delete"><icon class="fa fa-times"></icon></button></p>

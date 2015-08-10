@@ -16,8 +16,6 @@ $this->Connect = new ConnectComponent;
                 <p><span class="glyphicon glyphicon-time"></span> <?= $Lang->get('POSTED_ON') . ' ' . $Lang->date($created); ?></p>
 
                 <hr>
-                <img class="img-responsive" src="http://placehold.it/900x300" alt="">
-                <hr>
                 <p class="lead"><?= /*before_display($content)*/ $content ?></p>
                 <button id="<?= $id ?>" type="button" class="btn btn-primary pull-right like<?php if(!empty($likes)) { foreach ($likes as $t) { if($t == $id) { echo ' active'; } } } ?>"<?php if(!$Permissions->can('LIKE_NEWS')) { echo ' disabled'; } ?>><?= $like ?> <i class="fa fa-thumbs-up"></i></button><br>
                 <?php if($Permissions->can('COMMENT_NEWS')) { ?>

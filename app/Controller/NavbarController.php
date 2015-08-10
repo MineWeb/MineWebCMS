@@ -102,7 +102,7 @@ class NavbarController extends AppController {
 			foreach ($url_pages as $key => $value) {
 				$url_pages2[$value['Page']['slug']] = $value['Page']['title'];
 			}
-			$url_pages = $url_pages2;
+			$url_pages = @$url_pages2;
 			$this->set(compact('url_plugins'));
 			$this->set(compact('url_pages'));
 		} else {

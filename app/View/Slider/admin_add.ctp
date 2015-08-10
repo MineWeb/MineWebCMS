@@ -1,4 +1,3 @@
-<?php require '../../config/lang.php' ?>
 <div class="row-fluid">
 
 	<div class="span12">

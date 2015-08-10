@@ -1,8 +1,3 @@
-<?php 
- 
-$this->EyPlugin = new EyPluginComponent;
-$this->Navbar = new NavbarComponent;
-?>
 <div class="row-fluid">
 
 	<div class="span12">
