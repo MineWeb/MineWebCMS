@@ -46,9 +46,11 @@ if($this->Connect->connect()) {
 						?>
 					</p>
 				</div>
-				<div class="section">
-					<p><b><?= $Lang->get('MONEY') ?> :</b> <span class="money"><?= $this->Connect->get('money'); ?></span></p>
-				</div>
+				<?php } if($this->EyPlugin->is_installed('Shop')) { ?>
+					<div class="section">
+						<p><b><?= $Lang->get('MONEY') ?> :</b> <span class="money"><?= $this->Connect->get('money'); ?></span></p>
+					</div>
+				<?php } ?>
 
 				<div class="section">
 					<p><b><?= $Lang->get('IP') ?> :</b> <?= $this->Connect->get('ip'); ?></p>

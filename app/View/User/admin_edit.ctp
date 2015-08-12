@@ -75,19 +75,21 @@
 				?>
 					</div>
 				</div>
-				<div class="control-group">
-					<label class="control-label"><?= $Lang->get('MONEY') ?></label>
-					<div class="controls">
-						<?php 
-							echo $this->Form->input('', array(
-						   		'type' => 'text',
-						   		'name' => 'money',
-						    	'class' => 'span6 m-wrap',
-						    	'value' => $user['money'],
-							));
-						?>
+				<?php if($this->EyPlugin->is_installed('Shop')) { ?>
+					<div class="control-group">
+						<label class="control-label"><?= $Lang->get('MONEY') ?></label>
+						<div class="controls">
+							<?php 
+								echo $this->Form->input('', array(
+							   		'type' => 'text',
+							   		'name' => 'money',
+							    	'class' => 'span6 m-wrap',
+							    	'value' => $user['money'],
+								));
+							?>
+						</div>
 					</div>
-				</div>
+				<?php } ?>
 				<?php if($this->EyPlugin->is_installed('Vote')) { ?>
 					<div class="control-group">
 						<label class="control-label"><?= $Lang->get('NBR_OF_VOTE') ?></label>
