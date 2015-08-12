@@ -17,7 +17,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
 	<div class="row-fluid">
 		<div class="span6">
 			<div class="top-bar">
-				<h3><i class="icon-calendar"></i> <?= $Lang->get('ITEMS_ON_SALE') ?> &nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_item', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('ADD') ?></a></h3>
+				<h3><i class="icon-calendar"></i> <?= $Lang->get('ITEMS_ON_SALE') ?> &nbsp;&nbsp;<a href="<?php if(!empty($search_categories)) { ?><?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_item', 'admin' => true)) ?><?php } ?>" class="btn btn-success<?php if(empty($search_categories)) { echo ' disabled'; } ?>"><?= $Lang->get('ADD') ?></a></h3>
 			</div>
 
 			<div class="well no-padding">
@@ -326,7 +326,7 @@ function confirmDel(url) {
     return false;
 }
 </script>
-<div class="modal fade" id="manage_vouchers" tabindex="-1" role="dialog" aria-labelledby="manage_vouchersLabel" aria-hidden="true">
+<div class="modal fade" id="manage_vouchers" tabindex="-1" role="dialog" aria-labelledby="manage_vouchersLabel" aria-hidden="true" style="display:none;">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

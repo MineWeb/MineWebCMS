@@ -80,9 +80,8 @@ WCqkx22behAGZq6rhwIDAQAB
 		curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
 
 		$return = curl_exec($curl);
-		curl_close($curl);
 
-		if(!preg_match('#Errors#i', $return)) {
+		if(!curl_errno($curl)) {
 	        $return_json = json_decode($return, true);
           	if(!$return_json) {
 	            $zip = $return;
@@ -92,6 +91,8 @@ WCqkx22behAGZq6rhwIDAQAB
 		} else {
 			return false;
 		}
+
+		curl_close($curl);
 
 		if (!is_dir(ROOT.'/temp/')) mkdir(ROOT.'/temp/');
 		$write = fopen(ROOT.'/temp/'.$version.'.zip', 'w+');
@@ -116,12 +117,22 @@ WCqkx22behAGZq6rhwIDAQAB
 		return $get['visible'];
 	}
 
+	public function stop_update() {
+		return file_put_contents(ROOT.'/stop_update', '1');
+	}
+
 	public function update($version) {
 		// update le site avec le zip dans ROOT/temp/
+		$rand = substr(md5(rand()), 0, 5);
 		if($this->get_update_files($version)) {
 			$zipHandle = zip_open(ROOT.'/temp/'.$version.'.zip');
-			$rand = substr(md5(rand()), 0, 5);
 			while ($aF = zip_read($zipHandle)) {
+				if(file_exists(ROOT.'/stop_update')) {
+					unlink(ROOT.'/stop_update');
+					@unlink(ROOT.'/temp/'.$version.'.zip');
+					@unlink(ROOT.'/config/update');
+					break;
+				}
 				$thisFileName = zip_entry_name($aF);
 				$thisFileDir = dirname($thisFileName);
 				if(substr($thisFileName,-1,1) == '/') continue;
@@ -143,7 +154,7 @@ WCqkx22behAGZq6rhwIDAQAB
 						include 'modify.php';
 						unlink('modify.php');
 						$this->set_log('EXECUTE', 'success', $thisFileName, $rand);
-					} elseif($thisFileName != ".DS_Store") {
+					} elseif($thisFileName != ".DS_Store" AND $thisFileName != "database.php" AND $thisFileName != "secure") {
 						if(file_exists(ROOT.'/'.$thisFileName)) {
 							$exist = true;
 						} else {

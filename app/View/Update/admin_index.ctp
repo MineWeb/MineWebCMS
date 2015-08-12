@@ -12,6 +12,7 @@
       <center>
         <p class="text-center"><?= $Lang->get('LAST_VERSION') ?> : <?= $Update->get_version() ?></p>
   			<button id="update" class="btn btn-large btn-lg btn-primary"><?= $Lang->get('UPDATE') ?></button>
+        <button style="display:none;" id="stop_update" class="btn btn-large btn-lg btn-dangerr">Stop</button>
         <div id="update-msg"></div>
         <div class="progress progress-striped active" style="display:none;">
           <div class="bar" style="width: 40%;"></div>
@@ -55,6 +56,7 @@
   $('#update').click(function() {
     $('#update').attr('disabled', 'disabled');
     $('#update-msg').html('<br><div class="alert alert-info"><?= $Lang->get('ON_UPDATE') ?></div>').fadeIn(500);
+    $('#stop_update').css('display', 'inline-block');
     $.ajax({
       xhr: function() {
             $('.progress').css('display', 'block');
@@ -77,6 +79,22 @@
             $("#log-update").load("<?= $this->Html->url(array('controller' => 'update', 'action' => 'index', 'admin' => true)) ?> #log-update").fadeIn(500);
         } else if(data2.indexOf('false') != -1) {
           $('#update-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+        }
+        $('.progress').remove();
+      }
+    });
+  });
+  $('#stop_update').click(function() {
+    $.ajax({
+      type: 'POST', 
+      url: '<?= $this->Html->url(array('controller' => 'update', 'action' => 'stop_update', 'admin' => true)) ?>', 
+      data: {}, 
+      complete: function(response, status, xhr) {
+        data2 = response['responseText'].split("|");
+        if(data2.indexOf('true') != -1) {
+          location.reload();
+        } else if(data2.indexOf('false') != -1) {
+          $('#update-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><b><?= $Lang->get('ERROR') ?> :</b> <?= addslashes($Lang->get('INTERNAL_ERROR')) ?></i></div>').fadeIn(500);
         }
         $('.progress').remove();
       }

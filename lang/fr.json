@@ -75,7 +75,7 @@
     "STEP_1": "\u00c9tape 1",
     "DESC_STEP_1": "Veuillez entrer votre clé de licence disponible sur votre espace membre de mineweb.org",
     "STEP_2": "\u00c9tape 2",
-    "DESC_STEP_2": "Veuillez configurer la liaison au serveur, celle-ci permet au site d'int\u00e9ragir avec le serveur. Pour que cela fonctionne, les ports de votre serveur minecraft doivent \u00eatre ouverts. Un tutoriel est disponible a cette adresse : <a>http:\/\/eywek.fr...<\/a>.",
+    "DESC_STEP_2": "Veuillez configurer la liaison au serveur, celle-ci permet au site d'int\u00e9ragir avec le serveur. Pour que cela fonctionne, les ports de votre serveur minecraft doivent \u00eatre ouverts. Un tutoriel est disponible a cette adresse : <a href=\"http://mineweb.org/wiki/setup\">http://mineweb.org/wiki/setup<\/a>.",
     "STEP_3": "\u00c9tape 3",
     "DESC_STEP_3": "La liaison au serveur s'est bien d\u00e9eroul\u00e9e, vous pouvez maintenant configurer votre compte Administrateur",
     "STEP_4": "\u00c9tape 4",

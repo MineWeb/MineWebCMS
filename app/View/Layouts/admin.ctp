@@ -48,7 +48,7 @@ $this->EyPlugin = new EyPluginComponent;
 				<a class="brand" href="#"><?= $Lang->get('ADMIN_PANEL') ?></a>
 				<ul class="nav pull-right">
 					<li class="dropdown">
-						<a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'profile')); ?>" class="dropdown-toggle" data-toggle="dropdown">
+						<a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'profile', 'admin' => false)); ?>" class="dropdown-toggle" data-toggle="dropdown">
 							<i class="icon-user icon-white"></i> 
 							<span class="hidden-phone"><?= $this->Connect->get_pseudo() ?></span>
 						</a>

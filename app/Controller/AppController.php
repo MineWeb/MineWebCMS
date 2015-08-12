@@ -41,7 +41,7 @@ class AppController extends Controller {
 	public function beforeFilter() {
 
 	/* VERIFICATION API-CMS */
-	if(file_exists(ROOT.'/config/installed.txt') AND file_exists(ROOT.'/config/install.txt')) {
+	if($this->params['controller'] != "install") {
 		$last_check = @file_get_contents(ROOT.'/config/last_check');
 		$last_check = @rsa_decrypt($last_check, '-----BEGIN RSA PRIVATE KEY-----
 MIICXAIBAAKBgQDGKSGFj8368AmYYiJ9fp1bsu3mzIiUfU7T2uhWXULe9YFqSvs9

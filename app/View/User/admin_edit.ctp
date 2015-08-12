@@ -88,19 +88,21 @@
 						?>
 					</div>
 				</div>
-				<div class="control-group">
-					<label class="control-label"><?= $Lang->get('NBR_OF_VOTE') ?></label>
-					<div class="controls">
-						<?php 
-							echo $this->Form->input('', array(
-						   		'type' => 'text',
-						   		'name' => 'nbr_vote',
-						    	'class' => 'span6 m-wrap',
-						    	'value' => $user['vote'],
-							));
-						?>
+				<?php if($this->EyPlugin->is_installed('Vote')) { ?>
+					<div class="control-group">
+						<label class="control-label"><?= $Lang->get('NBR_OF_VOTE') ?></label>
+						<div class="controls">
+							<?php 
+								echo $this->Form->input('', array(
+							   		'type' => 'text',
+							   		'name' => 'nbr_vote',
+							    	'class' => 'span6 m-wrap',
+							    	'value' => $user['vote'],
+								));
+							?>
+						</div>
 					</div>
-				</div>
+				<?php } ?>
 
 				<div class="control-group">
 					<label class="control-label">IP</label>

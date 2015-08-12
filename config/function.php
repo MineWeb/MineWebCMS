@@ -63,6 +63,8 @@ function unzip($file, $path, $name = 'install-zip', $No_file_get_contents = fals
 	  clearDir($path.'/__MACOSX');
 	  return true;
 	} else {
+	  unlink($path.'/zip/'.$name.'.zip');
+	  rmdir($path.'/zip');
 	  return false;
 	}
 }
