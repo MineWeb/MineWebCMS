@@ -198,7 +198,7 @@ $this->EyPlugin = new EyPluginComponent;
         <form action="" method="post">
           <div class="input-append">
               <input class="no-margin span4" name="cmd" type="text"></input>
-              <button class="btn btn-info" type="button">Envoyer</button>
+              <button class="btn btn-info" type="submit">Envoyer</button>
           </div>
         </form>
       </div>
