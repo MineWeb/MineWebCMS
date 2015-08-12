@@ -353,5 +353,6 @@
     "SUCCESS_CONNECTED_TO_API":"Le CMS s'est connecté avec succès à l'API !",
     "LICENSE_ERROR__ID_OR_KEY_INVALID":"Licence inconnue",
     "LICENSE_ERROR__INVALID_URL":"Site d'installation non valide",
-    "LICENSE_ERROR__LICENSE_DISABLED":"Licence désactivée"
+    "LICENSE_ERROR__LICENSE_DISABLED":"Licence désactivée",
+    "CANT_WRITE":"Le dossier où est situé MineWeb n'est pas disponible en écriture, veuillez mettre le <b>CHMOD</b> à <b>777</b> sur votre dossier contenant MineWeb"
 }

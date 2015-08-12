@@ -6,21 +6,27 @@
             <p><?= $Lang->get('DESC_STEP_1') ?></p>
             <br>
             <p>
-                <form id="step1">
-                    <div class="ajax-msg-step1"></div>
-                    <?php if($step1_ok) { ?>
-                        <input type="hidden" name="step1" value="true">
-                    <?php } ?>
-                    <div class="form-group">
-                        <label>License key</label>
-                        <input type="text" name="key" class="form-control"<?php if($step1_ok) { ?> value="***********************" disabled<?php } ?>>
-                    </div>
-                    <ul class="pager wizard">
-                        <li class="previous disabled"><a href="javascript:;"><?= $Lang->get('PREVIOUS') ?></a></li>
-                        <li class="next" style="display: inline;"><a id="tabsleft-link" href="javascript:;"><?= $Lang->get('NEXT') ?></a></li>
-                        <li class="next finish hidden" style="display: none;"><a href="javascript:;"><?= $Lang->get('END') ?></a></li>
-                    </ul>
-                </form>
+                <?php 
+                $write = is_writable(ROOT);
+                if($write) { ?>
+                    <form id="step1">
+                        <div class="ajax-msg-step1"></div>
+                        <?php if($step1_ok) { ?>
+                            <input type="hidden" name="step1" value="true">
+                        <?php } ?>
+                        <div class="form-group">
+                            <label>License key</label>
+                            <input type="text" name="key" class="form-control"<?php if($step1_ok) { ?> value="***********************" disabled<?php } ?>>
+                        </div>
+                        <ul class="pager wizard">
+                            <li class="previous disabled"><a href="javascript:;"><?= $Lang->get('PREVIOUS') ?></a></li>
+                            <li class="next" style="display: inline;"><a id="tabsleft-link" href="javascript:;"><?= $Lang->get('NEXT') ?></a></li>
+                            <li class="next finish hidden" style="display: none;"><a href="javascript:;"><?= $Lang->get('END') ?></a></li>
+                        </ul>
+                    </form>
+                <?php } else { ?>
+                    <div class="alert alert-danger"><?= $Lang->get('CANT_WRITE') ?></div>
+                <?php } ?>
             </p>
         </div>
         <div class="tab-pane" id="tabsleft-tab2">
