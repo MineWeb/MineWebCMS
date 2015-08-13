@@ -8,7 +8,10 @@
             <p>
                 <?php 
                 $write = is_writable(ROOT);
-                if($write) { ?>
+                $write_config = is_writable(ROOT.'/config/');
+                $write_tmp = is_writable(ROOT.'/app/tmp/');
+                $write_plugin = is_writable(ROOT.'/app/Plugin/');
+                if($write && $write_config && $write_tmp && $write_plugin) { ?>
                     <form id="step1">
                         <div class="ajax-msg-step1"></div>
                         <?php if($step1_ok) { ?>
