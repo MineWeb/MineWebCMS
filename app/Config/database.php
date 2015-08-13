@@ -8,7 +8,6 @@ class DATABASE_CONFIG {
 		'login' => 'root',
 		'password' => 'root',
 		'database' => 'eycraft',
-		//'prefix' => 'eycraft_',
 		'encoding' => 'utf8',
 	);
 }
