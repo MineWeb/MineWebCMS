@@ -15,8 +15,8 @@ class UpdateController extends AppController {
                   		$files[$file] = filemtime(ROOT.'/app/tmp/logs/update/'.$file); 
                   	}
               	}
+              	$files = array_keys($files);
 	          	ksort($files);
-	          	$files = array_keys($files);
 	          	$logs = array_shift($files);
 	          	$logs = file_get_contents(ROOT.'/app/tmp/logs/update/'.$logs);
 	          	$logs = json_decode($logs, true);

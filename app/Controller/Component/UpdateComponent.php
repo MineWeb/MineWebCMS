@@ -125,6 +125,8 @@ WCqkx22behAGZq6rhwIDAQAB
 		// update le site avec le zip dans ROOT/temp/
 		$rand = substr(md5(rand()), 0, 5);
 		if($this->get_update_files($version)) {
+			$zipTmp = new ZipArchive;
+			$res = $zipTmp->open(ROOT.'/temp/'.$version.'.zip');
 			$zipHandle = zip_open(ROOT.'/temp/'.$version.'.zip');
 			while ($aF = zip_read($zipHandle)) {
 				if(file_exists(ROOT.'/stop_update')) {
@@ -154,17 +156,19 @@ WCqkx22behAGZq6rhwIDAQAB
 						include 'modify.php';
 						unlink('modify.php');
 						$this->set_log('EXECUTE', 'success', $thisFileName, $rand);
-					} elseif($thisFileName != ".DS_Store" AND $thisFileName != "database.php" AND $thisFileName != "secure") {
+					} elseif($thisFileName != ".DS_Store" AND $thisFileName != "app/Config/database.php" AND $thisFileName != "config/secure") {
 						if(file_exists(ROOT.'/'.$thisFileName)) {
 							$exist = true;
 						} else {
 							$exist = false;
 						}
 						if(strstr($thisFileName, '__MACOSX') === false AND strstr($thisFileName, '.DS_Store') === false) {
-							if($updateThis = fopen(ROOT.'/'.$thisFileName, 'w')) {
-								$aF_time = filemtime(zip_entry_read($aF, zip_entry_filesize($aF)));
-								$last_time = filemtime(ROOT.'/'.$thisFileName);
-								if($aF_time != $last_time OR $exist === false) {
+							$aF_time = $zipTmp->statname($thisFileName)["mtime"];
+							$last_time = @filemtime(ROOT.'/'.$thisFileName);
+							$filezip_size = zip_entry_filesize($aF);
+							$file_size = @filesize(ROOT.'/'.$thisFileName);
+							if($filezip_size != $file_size OR $exist === false) {
+								if($updateThis = fopen(ROOT.'/'.$thisFileName, 'w')) {
 									fwrite($updateThis, $contents);
 									fclose($updateThis);
 									unset($contents);
@@ -173,9 +177,9 @@ WCqkx22behAGZq6rhwIDAQAB
 									} else {
 										$this->set_log('CREATE_FILE', 'success', $thisFileName, $rand);
 									}
+								} else {
+									$this->set_log('CREATE_FILE', 'error', $thisFileName, $rand);
 								}
-							} else {
-								$this->set_log('CREATE_FILE', 'error', $thisFileName, $rand);
 							}
 						}
 					}
@@ -204,6 +208,8 @@ WCqkx22behAGZq6rhwIDAQAB
 		fclose($write);
 
 		// on ouvre le zip et on met les fichiers
+		$zipTmp = new ZipArchive;
+		$res = $zipTmp->open(ROOT.'/temp/'.$plugin_name.'-'.$plugin_id.'.zip');
 		$zipHandle = zip_open(ROOT.'/temp/'.$plugin_name.'-'.$plugin_id.'.zip');
 		$rand = substr(md5(rand()), 0, 5);
 		while ($aF = zip_read($zipHandle)) {
@@ -231,16 +237,18 @@ WCqkx22behAGZq6rhwIDAQAB
 						$exist = false;
 					}
 					if(strstr($thisFileName, '__MACOSX') === false AND strstr($thisFileName, '.DS_Store') === false) {
-						if($updateThis = fopen(ROOT.'/app/Plugin/'.$thisFileName, 'w')) {
-							$aF_time = filemtime(zip_entry_read($aF, zip_entry_filesize($aF)));
-							$last_time = filemtime(ROOT.'/app/Plugin/'.$thisFileName);
-							if($aF_time != $last_time OR $exist === false) {
+						$aF_time = $zipTmp->statname($thisFileName)["mtime"];
+						$last_time = @filemtime(ROOT.'/app/Plugin/'.$thisFileName);
+						$filezip_size = zip_entry_filesize($aF);
+						$file_size = @filesize(ROOT.'/app/Plugin/'.$thisFileName);
+						if($filezip_size != $file_size OR $exist === false) {
+							if($updateThis = fopen(ROOT.'/app/Plugin/'.$thisFileName, 'w')) {
 								fwrite($updateThis, $contents);
 								fclose($updateThis);
 								unset($contents);
+							} else {
+								return false;
 							}
-						} else {
-							return false;
 						}
 					}
 				}
@@ -275,9 +283,20 @@ WCqkx22behAGZq6rhwIDAQAB
 
 	public function end_log($rand) {
 		$filename = ROOT.'/app/tmp/logs/update/'.$this->get_version().'-'.$rand.'.log';
+		if(!file_exists($filename)) {
+			if(!is_dir(ROOT.'/app/tmp/logs/update')) {
+				mkdir(ROOT.'/app/tmp/logs/update');
+			}
+			$write = fopen($filename, "x+");
+			$header = json_encode(array('head' => array('date' => date('d/m/Y H:i:s'), 'version' => $this->get_version())), JSON_PRETTY_PRINT);
+			fwrite($write, $header);
+			fclose($write);
+		}
 		$content = file_get_contents($filename);
 		$content = json_decode($content, true);
 		if(in_array('error', $content)) {
+			App::import('Component', 'Configuration');
+			$this->Configuration = new ConfigurationComponent();
 			$this->Configuration->set('version', $this->get_version());
 			return true;
 		} else {
