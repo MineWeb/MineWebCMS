@@ -32,7 +32,7 @@ $this->Configuration = new ConfigurationComponent();
 							    				'value' => $value
 											)); ?>
 											<?php if($key == "lang") { ?>
-												<span class="help-inline"><?= $Lang->get('AVAILABLE') ?> : fr, dev. <?= $Lang->get('DEFAULT') ?> : fr.</span>
+												<span class="help-inline"><?= $Lang->get('AVAILABLE') ?> : fr, en. <?= $Lang->get('DEFAULT') ?> : fr.</span>
 											<?php } ?>
 										</div>
 									</div>
