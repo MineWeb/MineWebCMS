@@ -35,13 +35,15 @@
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($logs['update'] as $k => $v) { ?>
-              <tr>
-                <td><?= $Lang->get(key($v)) ?></td>
-                <td><?= $Lang->get(strtoupper($v[key($v)]['statut'])) ?></td>
-                <td><?= $v[key($v)]['arg'] ?></td>
-                <td></td>
-              </tr>
+              <?php if(!empty($logs['update'])) {
+                <?php foreach ($logs['update'] as $k => $v) { ?>
+                <tr>
+                  <td><?= $Lang->get(key($v)) ?></td>
+                  <td><?= $Lang->get(strtoupper($v[key($v)]['statut'])) ?></td>
+                  <td><?= $v[key($v)]['arg'] ?></td>
+                  <td></td>
+                </tr>
+                <?php } ?>
               <?php } ?>
             </tbody>
           </table>
