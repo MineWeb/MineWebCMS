@@ -41,11 +41,11 @@ $this->Configuration = new ConfigurationComponent;
 		  </div>
 		  <div class="panel-body">
 		  	<p><?= $Lang->get('STEP_2_DESC_VOTE') ?></p>
-		  	<a class="btn btn-info btn-block btn-step2 disabled" href="http://www.rpg-paradize.com/?page=vote&vote=<?= $id_vote ?>" target="_blank">Voter</a>
+		  	<a class="btn btn-info btn-block btn-step2 disabled" href="<?= $vote_page ?>" target="_blank">Voter</a>
 		  </div>
 		</div>
 
-		<div class="panel panel-default panel-step step3" style="opacity : 0.5;">
+		<?php /*<div class="panel panel-default panel-step step3" style="opacity : 0.5;">
 		  <div class="panel-heading">
 		    <h3 class="panel-title"><?= $Lang->get('STEP') ?> 3 : <?= $Lang->get('TAKE_OUT') ?> <span id="sec"></span><i style="display:none" id="icon_step3" class="glyphicon glyphicon-ok"></i></h3>
 		  </div>
@@ -60,11 +60,11 @@ $this->Configuration = new ConfigurationComponent;
 			</form>
 		  </div>
 		  	<div class="response_step3"></div>
-		</div>
+		</div><?php */ ?>
 
 		<div class="panel panel-default panel-step step4" style="opacity : 0.5;">
 		  <div class="panel-heading">
-		    <h3 class="panel-title"><?= $Lang->get('STEP') ?> 4 : <?= $Lang->get('REWARDS') ?> <span id="sec"></span><i style="display:none" id="icon_step4" class="glyphicon glyphicon-ok"></i></h3>
+		    <h3 class="panel-title"><?= $Lang->get('STEP') ?> 3 : <?= $Lang->get('REWARDS') ?> <span id="sec"></span><i style="display:none" id="icon_step4" class="glyphicon glyphicon-ok"></i></h3>
 		  </div>
 		  <div class="panel-body">
 		  	<p><?= $Lang->get('STEP_4_DESC_VOTE') ?></p>
@@ -195,15 +195,19 @@ $this->Configuration = new ConfigurationComponent;
           		$('.btn-step2').addClass('disabled');
           		$('#icon_step2').css("display", "");
           		$('#script_step2').remove();
-		    	$('.btn-step3').removeClass('disabled');
-		    	$('.input-step3').prop('disabled', false);
+		    	/*$('.btn-step3').removeClass('disabled');
+		    	$('.input-step3').prop('disabled', false);*/
+
+		    	$('.step4').css("opacity", "");
+		    	$('#step4').removeClass('disabled');
+		    	$('.btn-step4').removeClass('disabled');
         	}
       	}
         compteur();
     });
 
     </script>
-    <script type="text/javascript" id="script_step3">
+    <?php /*<script type="text/javascript" id="script_step3">
 
     $('#step3').submit(function(e) {
 		e.preventDefault();
@@ -230,7 +234,7 @@ $this->Configuration = new ConfigurationComponent;
 		});
 	});
 
-	</script>
+	</script><?php */ ?>
 	<script type="text/javascript" id="script_step4">
 
 	$(".btn-step4").click( function(e) {

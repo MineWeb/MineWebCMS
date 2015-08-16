@@ -21,8 +21,8 @@
         </div>
     </div>
 </div>
-<?php if (Configure::read('debug') > 0) { ?>
+<?php /* if (Configure::read('debug') > 0) { ?>
 <div class="error-actions">
     <?= $this->element('exception_stack_trace'); ?>
 </div>
-<?php } ?>
+<?php }*/ ?>

@@ -7,28 +7,34 @@ class VoterController extends VoteAppController {
         if($this->Permissions->can('VOTE')) {
             $this->loadModel('VoteConfiguration');
             $search = $this->VoteConfiguration->find('all');
-            $id_vote = $search['0']['VoteConfiguration']['id_vote'];
-            $this->set(compact('id_vote'));
+            if(!empty($search)) {
+                //$id_vote = $search['0']['VoteConfiguration']['id_vote'];
+                //$this->set(compact('id_vote'));
 
-            $page_vote = $this->VoteConfiguration->find('all');
-            $page_vote = $page_vote['0']['VoteConfiguration']['page_vote'];
-            $page = file_get_contents($page_vote);
+               /* $page_vote = $this->VoteConfiguration->find('all');
+                $page_vote = $page_vote['0']['VoteConfiguration']['page_vote'];
+                $page = file_get_contents($page_vote);
 
-            $str = substr($page, strpos($page, 'Position'), 20);
-            $position = filter_var($str, FILTER_SANITIZE_NUMBER_INT);
-            $this->set(compact('position'));
+                $str = substr($page, strpos($page, 'Position'), 20);
+                $position = filter_var($str, FILTER_SANITIZE_NUMBER_INT);
+                $this->set(compact('position'));
 
-            $str = substr($page, strpos($page, 'Vote'), 20);
-            $votes = filter_var($str, FILTER_SANITIZE_NUMBER_INT);
-            $this->set(compact('votes'));
+                $str = substr($page, strpos($page, 'Vote'), 20);
+                $votes = filter_var($str, FILTER_SANITIZE_NUMBER_INT);
+                $this->set(compact('votes'));*/
 
-            $rewards = $search[0]['VoteConfiguration']['rewards'];
-            $rewards = unserialize($rewards);
-            $this->set(compact('rewards'));
+                $this->set('vote_page', $search[0]['VoteConfiguration']['page_vote']);
 
-            $this->loadModel('User');
-            $ranking = $this->User->find('all', array('limit' => '10', 'order' => 'vote desc'));
-            $this->set(compact('ranking'));
+                $rewards = $search[0]['VoteConfiguration']['rewards'];
+                $rewards = unserialize($rewards);
+                $this->set(compact('rewards'));
+
+                $this->loadModel('User');
+                $ranking = $this->User->find('all', array('limit' => '10', 'order' => 'vote desc'));
+                $this->set(compact('ranking'));
+            } else {
+                throw new NotFoundException();
+            }
         } else {
             $this->redirect('/');
         }
@@ -74,7 +80,7 @@ class VoterController extends VoteAppController {
         					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
         				}
 
-        			} elseif($this->request->data['step'] == 3) { // STEP 3
+        			/*} elseif($this->request->data['step'] == 3) { // STEP 3
 
         				if(!empty($this->request->data['out'])) { // si l'out n'est pas vide
                             $this->loadModel('VoteConfiguration');
@@ -95,11 +101,11 @@ class VoterController extends VoteAppController {
 
         				} else {
         					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
-        				}
+        				}*/
 
         			} elseif($this->request->data['step'] == 4) { // STEP 4
 
-                        if(!empty($this->request->data['out']) AND !empty($this->request->data['pseudo'])) {
+                        if(/*!empty($this->request->data['out']) AND */!empty($this->request->data['pseudo'])) {
 
                             // je dois refaire toutes les vérifications
 
@@ -125,12 +131,12 @@ class VoterController extends VoteAppController {
                                     $this->loadModel('VoteConfiguration');
                                     $page_vote = $this->VoteConfiguration->find('all');
                                     $page_vote = $page_vote['0']['VoteConfiguration']['page_vote'];
-                                    $page = file_get_contents($page_vote);
+                                    /*$page = file_get_contents($page_vote);
                                     $str = substr($page, strpos($page, 'Clic Sortant'), 20);
                                     $out = filter_var($str, FILTER_SANITIZE_NUMBER_INT);
-                                    $array = array($out, $out-1, $out-2, $out-3, $out+1, $out+2, $out+3);
+                                    $array = array($out, $out-1, $out-2, $out-3, $out+1, $out+2, $out+3);*/
                             
-                                    if(in_array($this->request->data['out'], $array)) {
+                                    //if(in_array($this->request->data['out'], $array)) {
 
                                         // out valide alors on l'enregistre dans la bdd et fais la commande jsonapi
                                         $this->loadModel('VoteConfiguration');
@@ -307,9 +313,9 @@ class VoterController extends VoteAppController {
                                             echo $this->Lang->get('INTERNAL_ERROR').'|false';
                                         }
 
-                                    } else {
+                                    /*} else {
                                         echo $this->Lang->get('OUT_INVALID').'|false';
-                                    }
+                                    }*/
 
 
                                 } else {
@@ -342,8 +348,12 @@ class VoterController extends VoteAppController {
              
             $this->loadModel('VoteConfiguration');
             $vote = $this->VoteConfiguration->find('first');
-            $vote = $vote['VoteConfiguration'];
-            $vote['rewards'] = unserialize($vote['rewards']);
+            if(!empty($vote)) {
+                $vote = $vote['VoteConfiguration'];
+                $vote['rewards'] = unserialize($vote['rewards']);
+            } else {
+                $vote = array();
+            }
             //debug($vote['rewards']);
             $this->set(compact('vote'));
             $this->set('title_for_layout',$this->Lang->get('VOTE_TITLE'));
@@ -371,7 +381,7 @@ class VoterController extends VoteAppController {
             $this->layout = null;
              
             if($this->request->is('post')) {
-                if(!empty($this->request->data['time_vote']) AND !empty($this->request->data['page_vote']) AND !empty($this->request->data['id_vote']) AND $this->request->data['rewards_type'] == '0' OR $this->request->data['rewards_type'] == '1') {
+                if(!empty($this->request->data['time_vote']) AND !empty($this->request->data['page_vote']) AND /*!empty($this->request->data['id_vote']) AND*/ $this->request->data['rewards_type'] == '0' OR $this->request->data['rewards_type'] == '1') {
                     if(!empty($this->request->data['reward_type']) AND $this->request->data['reward_type'] != 'undefined' AND !empty($this->request->data['reward_value']) AND $this->request->data['reward_value'] != 'undefined') {
                         $this->loadModel('VoteConfiguration');
                         /*
@@ -414,7 +424,7 @@ class VoterController extends VoteAppController {
                         $this->VoteConfiguration->set(array(
                             'time_vote' => $this->request->data['time_vote'],
                             'page_vote' => $this->request->data['page_vote'],
-                            'id_vote' => $this->request->data['id_vote'],
+                            'id_vote' => /*$this->request->data['id_vote']*/0,
                             'rewards_type' => $this->request->data['rewards_type'],
                             'rewards' => $rewards
                         ));

@@ -29,11 +29,11 @@ $this->Configuration = new ConfigurationComponent;
 			  </div>
 			  <div class="panel-body">
 			  	<p><?= $Lang->get('STEP_2_DESC_VOTE') ?></p>
-			  	<a class="btn btn-info btn-block btn-step2 disabled" href="http://www.rpg-paradize.com/?page=vote&vote=<?= $id_vote ?>" target="_blank">Voter</a>
+			  	<a class="btn btn-info btn-block btn-step2 disabled" href="<?= $vote_page ?>" target="_blank">Voter</a>
 			  </div>
 			</div>
 
-			<div class="panel panel-default step3" style="opacity : 0.5;">
+			<?php /*<div class="panel panel-default step3" style="opacity : 0.5;">
 			  <div class="panel-heading">
 			    <h3 class="panel-title"><b><?= $Lang->get('STEP') ?> 3 :</b> <?= $Lang->get('TAKE_OUT') ?> <span id="sec"></span><i style="display:none" id="icon_step3" class="glyphicon glyphicon-ok"></i></h3>
 			  </div>
@@ -48,11 +48,11 @@ $this->Configuration = new ConfigurationComponent;
 				</form>
 			  </div>
 			  	<div class="response_step3"></div>
-			</div>
+			</div> */ ?>
 
 			<div class="panel panel-default step4" style="opacity : 0.5;">
 			  <div class="panel-heading">
-			    <h3 class="panel-title"><b><?= $Lang->get('STEP') ?> 4 :</b> <?= $Lang->get('REWARDS') ?> <span id="sec"></span><i style="display:none" id="icon_step4" class="glyphicon glyphicon-ok"></i></h3>
+			    <h3 class="panel-title"><b><?= $Lang->get('STEP') ?> 3 :</b> <?= $Lang->get('REWARDS') ?> <span id="sec"></span><i style="display:none" id="icon_step4" class="glyphicon glyphicon-ok"></i></h3>
 			  </div>
 			  <div class="panel-body">
 			  	<p><?= $Lang->get('STEP_4_DESC_VOTE') ?></p>
@@ -61,7 +61,7 @@ $this->Configuration = new ConfigurationComponent;
 			  	<div class="response_step4"></div>
 			</div>
 		</div>
-		<div class="col-md-3 hidden-xs hidden-sm">
+		<?php /* ?><div class="col-md-3 hidden-xs hidden-sm">
             <div class="well">
                 <h4><?= $Lang->get('STATS') ?></h4>
                 <p><b><?= $Lang->get('NUMBER_OF_VOTES') ?> : </b><span id="nbr-ticket"><?= $votes ?></span></p>
@@ -73,7 +73,7 @@ $this->Configuration = new ConfigurationComponent;
             <?php if($Permissions->can('VOTE_SHOW_RANKING')) { ?>
 				<button data-toggle="modal" data-target="#ranking" class="btn btn-primary btn-block"><?= $Lang->get('RANKING') ?></button>
 			<?php } ?>
-        </div> 
+        </div> <?php */ ?>
 	</div>
 	<?php if($Permissions->can('VOTE_SHOW_REWARDS')) { ?>
 		<div class="modal fade" id="rewards" tabindex="-1" role="dialog" aria-labelledby="rewardsLabel" aria-hidden="false">
@@ -196,14 +196,18 @@ $this->Configuration = new ConfigurationComponent;
           		$('.btn-step2').addClass('disabled');
           		$('#icon_step2').css("display", "");
           		$('#script_step2').remove();
-		    	$('.btn-step3').removeClass('disabled');
-		    	$('.input-step3').prop('disabled', false);
+		    	//$('.btn-step3').removeClass('disabled');
+		    	//$('.input-step3').prop('disabled', false);
+
+		    	$('#step4').removeClass('disabled');
+		    	$('.btn-step4').removeClass('disabled');
+		    	$('.step4').css("opacity", "");
         	}
       	}
         compteur();
     });
 
-    </script>
+    </script><?php /* ?>
     <script type="text/javascript" id="script_step3">
 
     $('#step3').submit(function(e) {
@@ -231,7 +235,7 @@ $this->Configuration = new ConfigurationComponent;
 		});
 	});
 
-	</script>
+	</script><?php */ ?>
 	<script type="text/javascript" id="script_step4">
 
 	$(".btn-step4").click( function(e) {

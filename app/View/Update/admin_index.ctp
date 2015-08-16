@@ -35,7 +35,7 @@
               </tr>
             </thead>
             <tbody>
-              <?php if(!empty($logs['update'])) {
+              <?php if(!empty($logs['update'])) { ?>
                 <?php foreach ($logs['update'] as $k => $v) { ?>
                 <tr>
                   <td><?= $Lang->get(key($v)) ?></td>

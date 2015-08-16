@@ -24,7 +24,7 @@
 						   		'type' => 'text',
 						   		'name' => 'time_vote',
 						    	'class' => 'span6 m-wrap',
-						    	'value' => $vote['time_vote'],
+						    	'value' => @$vote['time_vote'],
 						    	'placeholder' => 'minutes'
 							));
 						?>
@@ -38,29 +38,32 @@
 						   		'type' => 'text',
 						   		'name' => 'page_vote',
 						    	'class' => 'span6 m-wrap',
-						    	'value' => $vote['page_vote'],
+						    	'value' => @$vote['page_vote'],
 							));
 						?>
 					</div>
 				</div>
-				<div class="control-group">
-					<label class="control-label"><?= $Lang->get('ID_VOTE') ?></label>
-					<div class="controls">
-						<?php 
-							echo $this->Form->input('', array(
-						   		'type' => 'text',
-						   		'name' => 'id_vote',
-						    	'class' => 'span6 m-wrap',
-						    	'value' => $vote['id_vote'],
-							));
-						?>
+				<?php /*
+				<div id="useRPG" style="display:none;">
+					<div class="control-group">
+						<label class="control-label"><?= $Lang->get('ID_VOTE') ?></label>
+						<div class="controls">
+							<?php 
+								echo $this->Form->input('', array(
+							   		'type' => 'text',
+							   		'name' => 'id_vote',
+							    	'class' => 'span6 m-wrap',
+							    	'value' => @$vote['id_vote'],
+								));
+							?>
+						</div>
 					</div>
-				</div>
+				</div> */ ?>
 				<div class="control-group">
 					<label class="control-label"><?= $Lang->get('REWARDS_TYPE') ?></label>
 					<div class="controls">
 						<?php
-							if($vote['rewards_type'] == 0) {
+							if(@$vote['rewards_type'] == 0) {
 								$options = array('0' => $Lang->get('RANDOM'), '1' => $Lang->get('ALL'));
 							} else {
 								$options = array('1' => $Lang->get('ALL'), '0' => $Lang->get('RANDOM'));
@@ -179,7 +182,7 @@
         var $form = $( this );
         var time_vote = $form.find("input[name='time_vote']").val();
         var page_vote = $form.find("input[name='page_vote']").val();
-        var id_vote = $form.find("input[name='id_vote']").val();
+        /*var id_vote = $form.find("input[name='id_vote']").val();*/
         var rewards_type = $form.find("select[name='rewards_type']").val();
 
 	    	var reward_type = $('.reward_type').serialize();
@@ -197,7 +200,7 @@
 		    	rewards[l] = p;
 		    }*/
 
-        $.post("<?= $this->Html->url(array('controller' => 'voter', 'action' => 'add_ajax', 'admin' => true)) ?>", { time_vote : time_vote, page_vote : page_vote, id_vote : id_vote, rewards_type : rewards_type, reward_type : reward_type, reward_value : reward_value }, function(data) {
+        $.post("<?= $this->Html->url(array('controller' => 'voter', 'action' => 'add_ajax', 'admin' => true)) ?>", { time_vote : time_vote, page_vote : page_vote/*, id_vote : id_vote*/, rewards_type : rewards_type, reward_type : reward_type, reward_value : reward_value }, function(data) {
           	data2 = data.split("|");
 		  	if(data.indexOf('true') != -1) {
           		$('.ajax-msg').empty().html('<div class="alert alert-success" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
