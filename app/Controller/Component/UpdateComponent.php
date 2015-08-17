@@ -294,7 +294,7 @@ WCqkx22behAGZq6rhwIDAQAB
 		}
 		$content = file_get_contents($filename);
 		$content = json_decode($content, true);
-		if(in_array('error', $content)) {
+		if(!in_array('error', $content)) {
 			App::import('Component', 'Configuration');
 			$this->Configuration = new ConfigurationComponent();
 			$this->Configuration->set('version', $this->get_version());

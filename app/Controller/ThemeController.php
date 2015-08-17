@@ -272,6 +272,8 @@ WCqkx22behAGZq6rhwIDAQAB
 					$this->set(compact('config'));
 
 					if($this->request->is('post')) {
+						$config = json_decode(file_get_contents(ROOT.'/app/View/Themed/'.$theme_name.'/config/config.json'), true);
+						$this->request->data['version'] = $config['version'];
 						$data = json_encode($this->request->data, JSON_PRETTY_PRINT);
 						$fp = fopen(ROOT.'/app/View/Themed/'.$theme_name.'/config/config.json',"w+");
 						fwrite($fp, $data);
