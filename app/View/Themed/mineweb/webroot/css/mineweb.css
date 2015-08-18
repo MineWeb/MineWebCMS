@@ -13,12 +13,17 @@
 
 body {
 	background-image: url(../img/background.png);
+	position: relative;
 	/*background-image: url('../img/bg.png');*/
 }
 
 /*.container.bg {
 	background-color: rgba(228, 223, 228, 0.30);
 }*/
+
+header.carousel {
+	height: 37%;
+}
 
 nav {
 	height: 80px;
@@ -457,9 +462,14 @@ footer {
 	font-size: 20px;
 	color: #dedede;
 	padding: 10px;
-	position: relative;
+	/*position: relative;*/
     clear:both;
     margin-bottom: 0px!important;
+
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 footer p {

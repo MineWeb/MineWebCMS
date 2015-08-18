@@ -97,6 +97,9 @@ $theme_config = json_decode($theme_config, true);
         });
         return false;
     });
+
+$('html').height($(document).height());
+$('body').height($(document).height());
     </script>
      
 
