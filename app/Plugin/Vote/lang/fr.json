@@ -16,7 +16,7 @@
     "UNKNOWN_USERNAME": "Utilisateur inconnu",
     "OUT_SUCCESS": "Nombre d'OUT correct !",
     "OUT_INVALID": "Nombre d'OUT incorrect !",
-    "VOTE_SUCCESS_SERVER": "[Vote] {PLAYER} vient de voter sur le site !",
+    "VOTE_SUCCESS_SERVER": "[Vote] {PSEUDO} vient de voter sur le site !",
     "REWARD": "R\u00e9compense",
     "INTERNAL_ERROR": "Erreur interne, veuillez pr\u00e9venir l'Administrateur du site",
     "STEP_INVALID": "Erreur interne : \u00c9tape inconnue",

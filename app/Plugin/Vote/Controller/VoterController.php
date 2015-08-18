@@ -234,8 +234,6 @@ class VoterController extends VoteAppController {
                                                         $msg = str_replace('{PSEUDO}', $this->request->data['pseudo'], $this->Lang->get('VOTE_SUCCESS_SERVER'));
                                                         $this->Server->send_command('say '.$msg);
 
-                                                        $success_msg[] = $value['name']; 
-
                                                     } else {
 
                                                         $success_msg[] = 'server_error';
@@ -293,18 +291,23 @@ class VoterController extends VoteAppController {
                                                 ));
                                                 $this->User->save();
 
-                                                echo $this->Lang->get('VOTE_SUCCESS').' ! '.$this->Lang->get('REWARDS').' : ';
+                                                echo $this->Lang->get('VOTE_SUCCESS').' ! ';
+                                                if(!empty($success_msg)) {
+                                                    $this->Lang->get('REWARDS').' : ';
 
-                                                $i = 0;
-                                                $count = count($success_msg);
-                                                foreach ($success_msg as $k => $v) {
-                                                    $i++;
-                                                    echo '<b>'.$v.'</b>';
-                                                    if($i < $count) {
-                                                        echo ', ';
-                                                    } else {
-                                                        echo '.|true';
+                                                    $i = 0;
+                                                    $count = count($success_msg);
+                                                    foreach ($success_msg as $k => $v) {
+                                                        $i++;
+                                                        echo '<b>'.$v.'</b>';
+                                                        if($i < $count) {
+                                                            echo ', ';
+                                                        } else {
+                                                            echo '.|true';
+                                                        }
                                                     }
+                                                } else {
+                                                    echo '|true';
                                                 }
 
                                             }

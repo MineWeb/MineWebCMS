@@ -16,7 +16,7 @@
     "UNKNOWN_USERNAME": "Unkown user",
     "OUT_SUCCESS": "Correct OUT Number !",
     "OUT_INVALID": "Incorrect OUT Number !",
-    "VOTE_SUCCESS_SERVER": "[Vote] {PLAYER} just voted on the Website !",
+    "VOTE_SUCCESS_SERVER": "[Vote] {PSEUDO} just voted on the Website !",
     "REWARD": "Reward",
     "INTERNAL_ERROR": "Internal error, please contact the website administrator",
     "STEP_INVALID": "Internal error : unkown step",
