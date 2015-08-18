@@ -117,7 +117,7 @@ WCqkx22behAGZq6rhwIDAQAB
 
 		if($this->Connect->connect()) {
 			if($this->Connect->get('rank') == 5 AND $this->params['controller'] != "maintenance") {
-				$this->redirect(array('controller' => 'maintenance', 'action' => 'index/banned'));
+				$this->redirect(array('controller' => 'maintenance', 'action' => 'index/banned', 'plugin' => false, 'admin' => false));
 			}
 		}
 
@@ -147,7 +147,7 @@ WCqkx22behAGZq6rhwIDAQAB
 
 		if($this->params['controller'] == "user" OR $this->params['controller'] == "maintenance" OR $this->Configuration->get('maintenance') == '0' OR $this->Connect->connect() AND $this->Connect->if_admin()) {
 		} else {
-			$this->redirect(array('controller' => 'maintenance', 'action' => 'index'));
+			$this->redirect(array('controller' => 'maintenance', 'action' => 'index', 'plugin' => false, 'admin' => false));
 		}
 		Configure::write('theme', $this->Configuration->get('theme'));
 		$this->__setTheme();
