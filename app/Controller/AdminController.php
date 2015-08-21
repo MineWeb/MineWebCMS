@@ -89,7 +89,7 @@ class AdminController extends AppController {
 
 	function admin_stop() {
 		if($this->Connect->connect() AND $this->Connect->if_admin()) {
-			if(Configure::read('server.online')) {
+			if($this->Server->online()) {
 				$this->layout = null;
 				$this->Server->call(array('performCommand' => 'save-all'), true);
 				$this->Server->call(array('performCommand' => 'stop'), true);

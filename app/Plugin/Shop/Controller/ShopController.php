@@ -72,7 +72,7 @@ class ShopController extends AppController {
 		$this->layout = null;
 		  
 		if($this->Connect->connect() AND $this->Permissions->can('CAN_BUY')) {
-			if(Configure::read('server.online')) {
+			if($this->Server->online()) {
 				$this->loadModel('Item');
 				$search_item = $this->Item->find('all', array('conditions' => array('id' => $id)));
 				$item_price = $search_item['0']['Item']['price'];

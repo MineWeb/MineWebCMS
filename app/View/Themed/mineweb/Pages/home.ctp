@@ -52,7 +52,7 @@ $theme_config = json_decode($theme_config, true);
     <div class="mini-navbar mini-navbar-dark hidden-xs">
       <div class="container">
         <div class="col-sm-12">
-          <?php if(Configure::read('server.online')) { ?>
+          <?php if($Server->online()) { ?>
             <p class="text-center"><?= $Lang->banner_server($Server->banner_infos()) ?></span></p>
           <?php } else { ?>
             <p class="text-center"><?= $Lang->get('SERVER_OFF') ?></p>

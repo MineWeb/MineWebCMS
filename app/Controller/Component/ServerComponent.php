@@ -3,92 +3,140 @@ class ServerComponent extends Object {
   	
   	public $components = array('Session', 'Configuration');
 
-  	private $host;
-  	private $port;
-  	private $secretkey;
-  	private $timeout;
-  	private $server_state;
-
-  	function __construct() {
-  		$this->Configuration = ClassRegistry::init('Configuration');
-  		$request = $this->Configuration->find('first');
-
-	    $this->host = $request['Configuration']['server_host'];
-	    $this->port = $request['Configuration']['server_port'];
-	    $this->secretkey = $request['Configuration']['server_secretkey'];
-	    $this->timeout = $request['Configuration']['server_timeout'];
-	    $this->url = 'http://'.$this->host.':'.$this->port.'?';
-	    $this->url_key = 'key='.sha1($this->secretkey);
-	    $this->server_state = $request['Configuration']['server_state'];
-	}
-
 	function initialize(&$controller) {
 	    $this->controller =& $controller;
 		$this->controller->set('Server', new ServerComponent());
 	}
 
-	function startup(&$controller) {
-		// server online ? server function not disable ?
-		if($this->server_state == 1) {
-			$url = $this->url.'getPlayerLimit=server';
-			$opts = array('http' => array('timeout' => $this->timeout));
-			@$get = file_get_contents($url, false, stream_context_create($opts));
-			if($get != false) {
-				Configure::write('server.online', true); // response
-			} else {
-				Configure::write('server.online', false); // timeout 
-			}
-		} else {
-			Configure::write('server.online', false); // server_state disable
-		}
-	}
+	function startup(&$controller) {}
  
-	function beforeRender(&$controller) {
+	function beforeRender(&$controller) {}
+
+	function shutdown(&$controller) {}
+
+	function beforeRedirect() {}
+
+	function call($method = false, $needsecretkey = false, $server_id = 1) {
+	    if($this->online($server_id)) {
+	        // method example : $method = array('getPlayerLimit' => 'server', 'getPlayer' => 'Eywek');
+	        // or $method = 'getPlayerLimit';
+	        if($method != false) {
+	            if(is_array($method)) {
+	                foreach ($method as $key => $value) {
+	                    if(is_array($value)) {
+	                        $value = implode('|', $value);
+	                    }
+	                    $list_method[$key] = $value;
+	                }
+	                $list_method = implode('&', array_map(
+	                    function ($v, $k) { 
+	                        return sprintf("%s=%s", $k, rawurlencode($v)); 
+	                    }, 
+	                    $list_method, array_keys($list_method)
+	                ));
+	            } else {
+	                $list_method = $method.'=server';
+	            }
+	            $method = $list_method;
+	            if(!$needsecretkey) {
+	                $url = $this->getUrl($server_id).$method;
+	            } else {
+	                $url = $this->getUrl($server_id).$this->url_key.'&'.$method;
+	            }
+	            $opts = array('http' => array('timeout' => $this->getTimeout()));
+	            $get = file_get_contents($url, false, stream_context_create($opts));
+	            $result = json_decode($get, true);
+	            return $result;
+	        } else {
+	            return array('status' => 'error', 'code' => '2', 'msg' => 'This method doesn\'t exist');
+	        }
+	    } else {
+	        return array('status' => 'error', 'code' => '1', 'msg' => 'This server is not online');
+	    }
 	}
 
-	function shutdown(&$controller) {
+	private function getTimeout() {
+    	$this->Configuration = ClassRegistry::init('Configuration');
+    	return $this->Configuration->find('first')['Configuration']['server_timeout'];
 	}
 
-	function beforeRedirect() { 
+	private function getConfig($server_id = 1) {
+	    if(!empty($server_id)) {
+	        $this->Configuration = ClassRegistry::init('Configuration');
+	        $configuration = $this->Configuration->find('first');
+	        if($configuration['Configuration']['server_state'] == 1) {
+	            $this->Server = ClassRegistry::init('Server');
+	            $search = $this->Server->find('first', array('conditions' => array('id' => $server_id)));
+	            if(!empty($search)) {
+	                return array('ip' => $search['Server']['ip'], 'port' => $search['Server']['port']);
+	            } else {
+	                return false;
+	            }
+	        } else {
+	            return false;
+	        }
+	    } else {
+	        return false;
+	    }
 	}
 
-	function call($method = false, $needsecretkey = false) {
-		if(Configure::read('server.online')) {
-			// method example : $method = array('getPlayerLimit' => 'server', 'getPlayer' => 'Eywek');
-			// or $method = 'getPlayerLimit';
-			if($method != false) {
-				if(is_array($method)) {
-					foreach ($method as $key => $value) {
-						if(is_array($value)) {
-							$value = implode('|', $value);
-						}
-						$list_method[$key] = $value;
-					}
-					$list_method = implode('&', array_map(
-						function ($v, $k) { 
-							return sprintf("%s=%s", $k, rawurlencode($v)); 
-						}, 
-						$list_method, array_keys($list_method)
-					));
-				} else {
-					$list_method = $method.'=server';
-				}
-				$method = $list_method;
-				if(!$needsecretkey) {
-					$url = $this->url.$method;
-				} else {
-					$url = $this->url.$this->url_key.'&'.$method;
-				}
-				$opts = array('http' => array('timeout' => $this->timeout));
-				$get = file_get_contents($url, false, stream_context_create($opts));
-				$result = json_decode($get, true);
-				return $result;
-			} else {
-				return 'NEED_SERVER_METHOD';
-			}
-		} else {
-			return 'NEED_SERVER_ON';
-		}
+	private function getUrl($server_id, $key = false) {
+	    if(!empty($server_id)) {
+	        $config = $this->getConfig();
+	        if($config) {
+	            if($key) {
+	                $this->Configuration = ClassRegistry::init('Configuration');
+	                $key = $this->Configuration->find('first')['Configuration']['server_secretkey'];
+	                return 'http://'.$config['ip'].':'.$config['port'].'?'.'key='.sha1($key);
+	            } else {
+	                return 'http://'.$config['ip'].':'.$config['port'].'?';
+	            }
+	        } else {
+	            return false;
+	        }
+	    } else {
+	        return false;
+	    }
+	}
+
+	function online($server_id = 1) {
+	    if(!empty($server_id)) {
+	        $config = $this->getConfig();
+	        if($config) {
+	            $url = $this->getUrl($server_id).'getPlayerLimit=server';
+	            $opts = array('http' => array('timeout' => $this->getTimeout()));
+	            @$get = file_get_contents($url, false, stream_context_create($opts));
+	            if($get != false) {
+	                return true;
+	            } else {
+	                return false;
+	            }
+	        } else {
+	            return false;
+	        }
+	    } else {
+	        return false;
+	    }
+	}
+
+	function getAllServers() {
+    	$this->Server = ClassRegistry::init('Server');
+    	$search = $this->Server->find('first');
+    	foreach ($search as $key => $value) {
+    	    $return[]['server_id'] = $value['Server']['id'];
+    	}
+	}
+
+	function serversOnline() { // savoir si au moins 1 serveur est en ligne
+	    $all_servers = $this->getAllServers();
+	    foreach ($all_servers as $key => $value) {
+	        $return[][$value['server_id']] = $this->online($value['server_id']);
+	        if(in_array($return, true)) {
+	            break;
+	            return true;
+	        }
+	    }
+	    return false;
 	}
 
 	function get($type) {
@@ -171,33 +219,48 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 		}
 	}
 
-	function banner_infos() {
-		if(Configure::read('server.online')) {
-			$search = $this->call(array('getMOTD' => 'server', 'getVersion' => 'server', 'getPlayerMax' => 'server', 'getPlayerCount' => 'server'));
-			if($search['getPlayerCount'] == "null") {
-				$search['getPlayerCount'] = 0;
-			}
-	      	return $search;
+	function banner_infos($server_id = 1) { // On précise l'ID du serveur ou vont veux les infos, ou alors on envoie "all" qui va aller chercher les infos sur tout les serveurs
+	    if($server_id != "all") {
+	        if($this->online($server_id)) {
+	            $search = $this->call(array('getMOTD' => 'server', 'getVersion' => 'server', 'getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $server_id);
+	            if($search['getPlayerCount'] == "null") {
+	                $search['getPlayerCount'] = 0;
+	            }
+	            return $search;
+	        } else {
+	          return false;
+	        }
 	    } else {
-	      return false;
+	        $servers = $this->getAllServers();
+	        foreach ($servers as $key => $value) {
+	            if($this->online($value['server_id'])) {
+	                $search = $this->call(array('getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $value['server_id']);
+	                if($search['getPlayerCount'] == "null") {
+	                    $search['getPlayerCount'] = 0;
+	                }
+	                $return['getPlayerMax'] += $search['getPlayerMax'];
+	                $return['getPlayerCount'] += $search['getPlayerCount'];
+	            }
+	        }
+	        return $return;
 	    }
 	}
 
-	function send_command($cmd) {
-	    if(Configure::read('server.online')) {
-	      $this->call(array('performCommand' => $cmd), true);
+	function send_command($cmd, $server_id = 1) {
+   		if($this->online($server_id)) {
+	      	$this->call(array('performCommand' => $cmd), true, $server_id);
 	    }
 	  }
 
-	function commands($commands) {
-	    if(Configure::read('server.online')) {
+	function commands($commands, $server_id = 1) {
+	    if($this->online($server_id)) {
 	      App::import('Component', 'ConnectComponent');
 	      $this->Connect = new ConnectComponent;
 	      $commands = str_replace('{PLAYER}', $this->Connect->get_pseudo(), $commands);
 	      $commands = explode('[{+}]', $commands);
 	      $performCommands = array();
 	      foreach ($commands as $key => $value) {
-	        $result[] = $this->call(array('performCommand' => $value), true);
+	        $result[] = $this->call(array('performCommand' => $value), true, $server_id);
 	      }
 	      return $result;
 	    }

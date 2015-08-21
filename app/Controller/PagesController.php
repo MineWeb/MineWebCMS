@@ -199,7 +199,7 @@ class PagesController extends AppController {
 					} else {
 						$connected = 0;
 					}
-					if(Configure::read('server.online')) {
+					if($this->Server->online()) {
 						$server_online = 1;
 					} else {
 						$server_online = 0;

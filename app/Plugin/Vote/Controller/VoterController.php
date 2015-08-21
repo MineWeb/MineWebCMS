@@ -151,7 +151,7 @@ class VoterController extends VoteAppController {
 
                                             if($rewards[$random]['type'] == 'server') { // si c'est une commande serveur
 
-                                                if(Configure::read('server.online')) {
+                                                if($this->Server->online()) {
                                                     $cmd = str_replace('{PLAYER}', $this->request->data['pseudo'], $rewards[$random]['command']);
                                                     $this->Server->send_command($cmd); // on envoie la commande puis enregistre le vote
                                                     $msg = str_replace('{PLAYER}', $this->request->data['pseudo'], $this->Lang->get('VOTE_SUCCESS_SERVER'));
@@ -228,7 +228,7 @@ class VoterController extends VoteAppController {
 
                                                 if($value['type'] == 'server') { // si c'est une commande serveur
 
-                                                    if(Configure::read('server.online')) {
+                                                    if($this->Server->online()) {
                                                         $cmd = str_replace('{PSEUDO}', $this->request->data['pseudo'], $value['command']);
                                                         $this->Server->send_command($cmd); // on envoie la commande puis enregistre le vote
                                                         $msg = str_replace('{PSEUDO}', $this->request->data['pseudo'], $this->Lang->get('VOTE_SUCCESS_SERVER'));

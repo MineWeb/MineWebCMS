@@ -166,7 +166,7 @@ $this->EyPlugin = new EyPluginComponent;
                 </div>
 
                 <div class="well">
-                    <?php if(Configure::read('server.online')) { ?>
+                    <?php if($Server->online()) { ?>
                         <div class="row-fluid text-center">
                             <button class="btn" type="button" data-toggle="modal" data-target="#executeCommand" style="padding: 4px 12px;margin-right: 8px;"><i class="icon-terminal"></i><?= $Lang->get('COMMAND') ?></button>
                             <a href="<?= $this->Html->url(array('controller' => 'admin', 'admin' => true, 'action' => 'stop')) ?>" class="btn" type="button" style="padding: 4px 12px;margin-right: 8px;"><i class="icon-off"></i><?= $Lang->get('SHUTDOWN') ?></a>
