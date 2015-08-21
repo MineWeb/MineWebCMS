@@ -41,12 +41,16 @@ class ServerComponent extends Object {
 	            if(!$needsecretkey) {
 	                $url = $this->getUrl($server_id).$method;
 	            } else {
-	                $url = $this->getUrl($server_id).$this->url_key.'&'.$method;
+	                $url = $this->getUrl($server_id, true).'&'.$method;
 	            }
 	            $opts = array('http' => array('timeout' => $this->getTimeout()));
-	            $get = file_get_contents($url, false, stream_context_create($opts));
-	            $result = json_decode($get, true);
-	            return $result;
+	            $get = @file_get_contents($url, false, stream_context_create($opts));
+	            if($get) {
+		            $result = json_decode($get, true);
+		            return $result;
+		        } else {
+		        	return array('status' => 'error', 'code' => '3', 'msg' => 'Request timeout');
+		        }
 	        } else {
 	            return array('status' => 'error', 'code' => '2', 'msg' => 'This method doesn\'t exist');
 	        }

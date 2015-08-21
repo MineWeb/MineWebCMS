@@ -13,7 +13,7 @@
 
 body {
 	background-image: url(../img/background.png);
-	position: relative;
+	/*position: relative;
 	/*background-image: url('../img/bg.png');*/
 }
 
@@ -466,10 +466,10 @@ footer {
     clear:both;
     margin-bottom: 0px!important;
 
-    position: absolute;
+    /*position: absolute;
     bottom: 0;
     left: 0;
-    right: 0;
+    right: 0;*/
 }
 
 footer p {

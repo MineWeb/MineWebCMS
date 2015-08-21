@@ -137,4 +137,3 @@ $theme_config = json_decode($theme_config, true);
             
         });
         </script>
-        <br><br><br>
