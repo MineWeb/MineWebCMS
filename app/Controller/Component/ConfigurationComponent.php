@@ -7,6 +7,8 @@ class ConfigurationComponent extends Object {
   	
   public $components = array('Session');
 
+  private $data;
+
   function __construct() {
     if(!file_exists(ROOT.'/config/install.txt')) {
       $tables = file_get_contents(ROOT.'/config/install/sql.txt');
@@ -39,20 +41,18 @@ class ConfigurationComponent extends Object {
     function startup(&$controller) {}
 
     public function get_all() {
-      $this->Configuration = ClassRegistry::init('Configuration');
-      $config = $this->Configuration->find('first');
-      return $config;
+      if(empty($this->data)) {
+        $this->data = ClassRegistry::init('Configuration')->find('first');
+      }
+      return $this->data;
     }
 
     public function get_layout() {
-      $this->Configuration = ClassRegistry::init('Configuration');
-      $layout = $this->Configuration->find('first');
-      return $layout['Configuration']['layout'];
+      return $this->get_all()['Configuration']['layout'];
     }
 
     public function get_money_name($plural = true, $singular = false) {
-      $this->Configuration = ClassRegistry::init('Configuration');
-      $money = $this->Configuration->find('first');
+      $money = $this->get_all();
       if($plural) {
         return $money['Configuration']['money_name_plural'];
       } elseif ($singular) {
@@ -61,9 +61,7 @@ class ConfigurationComponent extends Object {
     }
 
     public function get($key) {
-      $this->Configuration = ClassRegistry::init('Configuration');
-      $layout = $this->Configuration->find('first');
-      return $layout['Configuration'][$key];
+      return $this->get_all()['Configuration'][$key];
     }
 
     public function set($key, $value) {

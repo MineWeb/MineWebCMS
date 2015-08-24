@@ -1,5 +1,9 @@
 <?php
 class ServerComponent extends Object {
+
+	private $timeout = NULL;
+	private $config = NULL;
+	private $online = NULL;
   	
   	public $components = array('Session', 'Configuration');
 
@@ -60,28 +64,40 @@ class ServerComponent extends Object {
 	}
 
 	private function getTimeout() {
-    	$this->Configuration = ClassRegistry::init('Configuration');
-    	return $this->Configuration->find('first')['Configuration']['server_timeout'];
+		if(empty($this->timeout)) {
+    		return ClassRegistry::init('Configuration')->find('first')['Configuration']['server_timeout'];
+    	} else {
+    		return $this->timeout;
+    	}
 	}
 
 	private function getConfig($server_id = 1) {
-	    if(!empty($server_id)) {
-	        $this->Configuration = ClassRegistry::init('Configuration');
-	        $configuration = $this->Configuration->find('first');
-	        if($configuration['Configuration']['server_state'] == 1) {
-	            $this->Server = ClassRegistry::init('Server');
-	            $search = $this->Server->find('first', array('conditions' => array('id' => $server_id)));
-	            if(!empty($search)) {
-	                return array('ip' => $search['Server']['ip'], 'port' => $search['Server']['port']);
-	            } else {
-	                return false;
-	            }
-	        } else {
-	            return false;
-	        }
-	    } else {
-	        return false;
-	    }
+		if(empty($this->config[$server_id])) {
+		    if(!empty($server_id)) {
+		        $this->Configuration = ClassRegistry::init('Configuration');
+		        $configuration = $this->Configuration->find('first');
+		        if($configuration['Configuration']['server_state'] == 1) {
+		        	$this->Timeout = $configuration['Configuration']['server_timeout'];
+		            $this->Server = ClassRegistry::init('Server');
+		            $search = $this->Server->find('first', array('conditions' => array('id' => $server_id)));
+		            if(!empty($search)) {
+		            	$this->config[$server_id] = array('ip' => $search['Server']['ip'], 'port' => $search['Server']['port']);
+		                return $this->config[$server_id];
+		            } else {
+		            	$this->config[$server_id] = false;
+		                return false;
+		            }
+		        } else {
+		        	$this->config[$server_id] = false;
+		            return false;
+		        }
+		    } else {
+		    	$this->config[$server_id] = false;
+		        return false;
+		    }
+		} else {
+			return $this->config[$server_id];
+		}
 	}
 
 	private function getUrl($server_id, $key = false) {
@@ -104,23 +120,31 @@ class ServerComponent extends Object {
 	}
 
 	function online($server_id = 1) {
-	    if(!empty($server_id)) {
-	        $config = $this->getConfig();
-	        if($config) {
-	            $url = $this->getUrl($server_id).'getPlayerLimit=server';
-	            $opts = array('http' => array('timeout' => $this->getTimeout()));
-	            @$get = file_get_contents($url, false, stream_context_create($opts));
-	            if($get != false) {
-	                return true;
-	            } else {
-	                return false;
-	            }
-	        } else {
-	            return false;
-	        }
-	    } else {
-	        return false;
-	    }
+		if(empty($this->online[$server_id])) {
+		    if(!empty($server_id)) {
+		        $config = $this->getConfig();
+		        if($config) {
+		            $url = $this->getUrl($server_id).'getPlayerLimit=server';
+		            $opts = array('http' => array('timeout' => $this->getTimeout()));
+		            @$get = file_get_contents($url, false, stream_context_create($opts));
+		            if($get != false) {
+		            	$this->online[$server_id] = true;
+		                return true;
+		            } else {
+		            	$this->online[$server_id] = false;
+		                return false;
+		            }
+		        } else {
+		        	$this->online[$server_id] = false;
+		            return false;
+		        }
+		    } else {
+		    	$this->online[$server_id] = false;
+		        return false;
+		    }
+		} else {
+			return $this->online[$server_id];
+		}
 	}
 
 	function getAllServers() {
