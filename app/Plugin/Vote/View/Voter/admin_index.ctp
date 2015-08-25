@@ -97,6 +97,12 @@
 									</div>
 								</div>
 								<div class="control-group">
+									<label class="control-label"><?= $Lang->get('NAME') ?></label>
+									<div class="controls">
+										<input type="text" class="span6 m-wrap reward_name" name="reward_name" value="<?= $v['name'] ?>">
+									</div>
+								</div>
+								<div class="control-group">
 									<label class="control-label"><?= $Lang->get('REWARD_VALUE') ?></label>
 									<div class="controls">
 										<?php 
@@ -115,6 +121,7 @@
 										?>
 									</div>
 								</div>
+								<button id="<?= $i ?>" class="btn btn-danger pull-right delete"><?= $Lang->get('DELETE') ?></button><br>
 							</div>
 						<?php } ?>
 					<?php } else { $i = 1; ?>
@@ -126,6 +133,12 @@
 										<option value="money"><?= $Lang->get('MONEY') ?></option>
 										<option value="server"><?= $Lang->get('SERVER') ?></option>
 									</select>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label"><?= $Lang->get('NAME') ?></label>
+								<div class="controls">
+									<input type="text" class="span6 m-wrap reward_name" name="reward_name">
 								</div>
 							</div>
 							<div class="control-group">
@@ -166,12 +179,19 @@
 
 </div>
 <script type="text/javascript">
+
+	$('.delete').click(function(e) {
+		e.preventDefault();
+		var id = $(this).attr('id');
+		$('#reward-'+id).slideUp(500).empty();
+	});
+
 	$('#add_reward').click(function(e) {
 		e.preventDefault();
 		var how = $('#add-js').attr('data-number');
 		how = parseInt(how) + 1;
 		var before = $('#add-js').html();
-		var add = before+'<div class="control-group"><div class="well" id="reward-'+how+'"><div class="control-group"><label class="control-label"><?= $Lang->get('REWARD_TYPE') ?></label><div class="controls"><select name="type_reward" class="reward_type"><option value="money"><?= $Lang->get('MONEY') ?></option><option value="server"><?= $Lang->get('SERVER') ?></option></select></div></div><div class="control-group"><label class="control-label"><?= $Lang->get('REWARD_VALUE') ?></label><div class="controls"><?php echo $this->Form->input('', array('type' => 'text','name' => 'reward_value','class' => 'span6 m-wrap reward_value','placeholder' => $Lang->get('CMD_OR_MONEY')));?></div></div></div></div>';
+		var add = before+'<div class="control-group"><div class="well" id="reward-'+how+'"><div class="control-group"><label class="control-label"><?= $Lang->get('REWARD_TYPE') ?></label><div class="controls"><select name="type_reward" class="reward_type"><option value="money"><?= $Lang->get('MONEY') ?></option><option value="server"><?= $Lang->get('SERVER') ?></option></select></div></div><div class="control-group"><label class="control-label"><?= $Lang->get('NAME') ?></label><div class="controls"><input type="text" class="span6 m-wrap reward_name" name="reward_name"></div></div><div class="control-group"><label class="control-label"><?= $Lang->get('REWARD_VALUE') ?></label><div class="controls"><?php echo $this->Form->input('', array('type' => 'text','name' => 'reward_value','class' => 'span6 m-wrap reward_value','placeholder' => $Lang->get('CMD_OR_MONEY')));?></div></div></div></div>';
 		$('#add-js').html(add);
 		$('#add-js').attr('data-number', how);
 	});
@@ -187,8 +207,11 @@
 
 	    	var reward_type = $('.reward_type').serialize();
 	    	reward_type = reward_type.split('&');
+	    	var reward_name = $('.reward_name').serialize();
+	    	reward_name = reward_name.split('&');
 	    	var reward_value = $('.reward_value').serialize();
 	    	reward_value = reward_value.split('&');
+
 	    	/*var rewards = {};
 	    	var test = "success"
 		    for (var key in test = reward_type)
@@ -200,7 +223,7 @@
 		    	rewards[l] = p;
 		    }*/
 
-        $.post("<?= $this->Html->url(array('controller' => 'voter', 'action' => 'add_ajax', 'admin' => true)) ?>", { time_vote : time_vote, page_vote : page_vote/*, id_vote : id_vote*/, rewards_type : rewards_type, reward_type : reward_type, reward_value : reward_value }, function(data) {
+       $.post("<?= $this->Html->url(array('controller' => 'voter', 'action' => 'add_ajax', 'admin' => true)) ?>", { time_vote : time_vote, page_vote : page_vote/*, id_vote : id_vote*/, rewards_type : rewards_type, reward_name : reward_name, reward_type : reward_type, reward_value : reward_value }, function(data) {
           	data2 = data.split("|");
 		  	if(data.indexOf('true') != -1) {
           		$('.ajax-msg').empty().html('<div class="alert alert-success" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);

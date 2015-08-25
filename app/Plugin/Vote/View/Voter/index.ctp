@@ -96,7 +96,7 @@ $this->Configuration = new ConfigurationComponent;
 									if($value['type'] == "money") {
 										echo '<tr><td>'.$value['how'].' '.$this->Configuration->get_money_name().'</td></tr>';
 									} else {
-										echo '<tr><td>'.$value['command'].'</td></tr>';
+										echo '<tr><td>'.$value['name'].'</td></tr>';
 									}
 								}
 								?>
