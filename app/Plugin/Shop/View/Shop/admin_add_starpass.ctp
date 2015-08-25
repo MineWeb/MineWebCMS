@@ -9,7 +9,11 @@ $this->Configuration = new ConfigurationComponent;
 		<div class="top-bar">
 			<h3><i class="icon-cog"></i> <?= $Lang->get('ADD_OFFER_STARPASS') ?></h3>
 		</div>
-
+		<div class="well">
+			<p><b>URL 1 :</b> <?= $this->Html->url(array('controller' => 'shop', 'action' => 'starpass', 'plugin' => 'shop', 'admin' => false), true) ?></p>
+			<p><b>URL 2 :</b> <?= $this->Html->url(array('controller' => 'shop', 'action' => 'starpass_verif', 'plugin' => 'shop', 'admin' => false), true) ?></p>
+			<p><b>URL 3 :</b> <?= $this->Html->url(array('controller' => 'shop', 'action' => 'starpass', 'plugin' => 'shop', 'admin' => false, 'error'), true) ?></p>
+		</div>
 		<div class="well no-padding">
 			<div class="ajax-msg"></div>
 
