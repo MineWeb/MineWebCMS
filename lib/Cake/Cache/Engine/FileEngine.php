@@ -373,15 +373,16 @@ class FileEngine extends CacheEngine {
  */
 	protected function _active() {
 		$dir = new SplFileInfo($this->settings['path']);
-		if (Configure::read('debug')) {
-			$path = $dir->getPathname();
-			if (!is_dir($path)) {
-				mkdir($path, 0775, true);
-			}
+		$path = $dir->getPathname();
+		if (!is_dir($path)) {
+			if(!mkdir($path, 0775, true)) {
+				exit(file_get_contents(ROOT.'/lib/Cake/View/Errors/permissions_errors.ctp'));
+				return false;
+			} 
 		}
 		if ($this->_init && !($dir->isDir() && $dir->isWritable())) {
 			$this->_init = false;
-			trigger_error(__d('cake_dev', '%s is not writable', $this->settings['path']), E_USER_WARNING);
+			exit(file_get_contents(ROOT.'/lib/Cake/View/Errors/permissions_errors.ctp'));
 			return false;
 		}
 		return true;
