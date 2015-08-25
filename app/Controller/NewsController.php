@@ -64,7 +64,7 @@ class NewsController extends AppController {
 			if($this->Permissions->can('COMMENT_NEWS')) {
 				if(!empty($this->request->data['content']) && !empty($this->request->data['news_id']) && !empty($this->request->data['author'])) {
 					$this->loadModel('Comment');
-					$this->request->data['content'] = before_display($this->request->data['content']);
+					$this->request->data['content'] = $this->request->data['content'];
 					$this->Comment->save($this->request->data);
 					$comments = $this->News->find('all', array('conditions' => array('id' => $this->request->data['news_id'])));
 					$comments = $comments['0']['News']['comments'];
@@ -137,6 +137,11 @@ class NewsController extends AppController {
         $search = $this->Comment->find('all', array('conditions' => array('id' => $this->request->data['id'])));
         if($this->Permissions->can('DELETE_COMMENT') OR $this->Permissions->can('DELETE_HIS_COMMENT') AND $this->Connect->get_pseudo() == $search[0]['Comment']['author']) {
             if($this->request->is('post')) {
+            	$this->loadModel('News');
+            	$news = $this->News->find('first', array('conditions' => $search[0]['Comment']['news_id']));
+            	$this->News->read(null, $search[0]['Comment']['news_id']);
+            	$this->News->set(array('comments' => ($news['News']['comments'] - 1)));
+            	$this->News->save();
                 $this->Comment->delete($this->request->data['id']);
                 echo 'true';
             } else {

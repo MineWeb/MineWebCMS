@@ -31,9 +31,7 @@ function rand_color_news() {
 
 // Fonction qui sert a retourner un texte sécurisé avant de l'afficher (exemple: contenu d'une news).
 function before_display($content) {
-	$content = htmlentities($content);
-	$content = stripcslashes($content);
-	return $content;
+	return htmlentities($content);
 }
 
 function unzip($file, $path, $name = 'install-zip', $No_file_get_contents = false) {

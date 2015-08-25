@@ -82,7 +82,7 @@ class HomeController extends AppController {
                     if($this->Connect->connect() AND $this->Connect->if_admin() OR $this->Connect->connect() AND $this->Connect->get_pseudo() == $pseudo AND $this->Permissions->can('REPLY_TO_HIS_TICKETS') OR $this->Permissions->can('REPLY_TO_ALL_TICKETS')) {
                         $this->loadModel('ReplyTicket');
                         $this->ReplyTicket->create();
-                        $this->ReplyTicket->set(array('ticket_id' => $this->request->data['id'], 'reply' => before_display($this->request->data['message']), 'author' => $this->Connect->get_pseudo()));
+                        $this->ReplyTicket->set(array('ticket_id' => $this->request->data['id'], 'reply' => $this->request->data['message'], 'author' => $this->Connect->get_pseudo()));
                         $this->ReplyTicket->save();
                         echo 'true';
                     } else {

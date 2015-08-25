@@ -43,7 +43,7 @@ $this->Connect = new ConnectComponent;
 									    <p><button id="<?= $value['Ticket']['id'] ?>" title="<?= $Lang->get('REPLY') ?>" class="btn btn-warning btn-sm ticket-reply"><icon class="fa fa-mail-reply" style="font-size: 10px;"></icon></button></p>
 										<?php } ?>
 									</div>
-								    <p class="support"><?= $value['Ticket']['content'] ?></p>
+								    <p class="support"><?= before_display($value['Ticket']['content']) ?></p>
 								    <div class="clearfix"></div>
 								  </div>
 								</div>
@@ -63,7 +63,7 @@ $this->Connect = new ConnectComponent;
 														    <p><button id="<?= $v['ReplyTicket']['id'] ?>" title="<?= $Lang->get('DELETE') ?>" class="btn btn-danger btn-sm reply-delete"><icon class="fa fa-times"></icon></button></p>
 														</div>
 														<?php } ?>
-													    <p class="support"><?= $v['ReplyTicket']['reply']; ?></p>
+													    <p class="support"><?= before_display($v['ReplyTicket']['reply']); ?></p>
 													  </div>
 													</div>
 												</div>
