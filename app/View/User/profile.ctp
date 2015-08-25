@@ -2,6 +2,7 @@
   
 App::import('Component', 'ConnectComponent');
 $this->Connect = new ConnectComponent;
+$this->EyPlugin = new EyPluginComponent;
 $this->Configuration = new ConfigurationComponent;
 if($this->Connect->connect()) {
 ?>
@@ -46,7 +47,7 @@ if($this->Connect->connect()) {
 						?>
 					</p>
 				</div>
-				<?php } if($this->EyPlugin->is_installed('Shop')) { ?>
+				<?php if($this->EyPlugin->is_installed('Shop')) { ?>
 					<div class="section">
 						<p><b><?= $Lang->get('MONEY') ?> :</b> <span class="money"><?= $this->Connect->get('money'); ?></span></p>
 					</div>
