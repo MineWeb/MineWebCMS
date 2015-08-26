@@ -89,6 +89,18 @@ class ShopController extends AppController {
 					$commands = $search_item['0']['Item']['commands'];
 					// executer les commandes
 					$this->Server->commands($commands);
+
+					// si y'a une timed command à faire
+					if($search_item[0]['Item']['timedCommand']) {
+						$time = strtotime('+ '.$search_item[0]['Item']['timedCommand_time'].' minutes');
+						$commands = str_replace('{PLAYER}', $this->Connect->get_pseudo(), $search_item[0]['Item']['timedCommand_cmd']);
+					    $commands = explode('[{+}]', $commands);
+					    $performCommands = array();
+					    foreach ($commands as $key => $value) {
+					    	$result[] = $this->Server->call(array('performTimedCommand' => $time.':!:'.$value), true);
+					    }
+					}
+
 					echo '<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('CLOSE').'</span></button><strong>'.$this->Lang->get('SUCCESS').' :</strong> '.$this->Lang->get('BUY_SUCCESS').'</div>';
 				} else {
 					echo '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('CLOSE').'</span></button><strong>'.$this->Lang->get('ERROR').' :</strong> '.$this->Lang->get('NO_ENOUGH_MONEY').'</div>';
@@ -186,10 +198,15 @@ class ShopController extends AppController {
 				if(empty($this->request->data['category'])) {
 					$this->request->data['category'] = $this->request->data['category_default'];
 				}
-				if(!empty($this->request->data['id']) AND !empty($this->request->data['name']) AND !empty($this->request->data['description']) AND !empty($this->request->data['category']) AND !empty($this->request->data['price']) AND !empty($this->request->data['commands'])) {
+				if(!empty($this->request->data['id']) AND !empty($this->request->data['name']) AND !empty($this->request->data['description']) AND !empty($this->request->data['category']) AND !empty($this->request->data['price']) AND !empty($this->request->data['commands']) AND !empty($this->request->data['timedCommand'])) {
 					$this->loadModel('Category');
 					$this->request->data['category'] = $this->Category->find('all', array('conditions' => array('name' => $this->request->data['category'])));
 					$this->request->data['category'] = $this->request->data['category'][0]['Category']['id'];
+					$this->request->data['timedCommand'] = ($this->request->data['timedCommand'] == 'true') ? 1 : 0;
+					if(!$this->request->data['timedCommand']) {
+						$this->request->data['timedCommand_cmd'] = NULL;
+						$this->request->data['timedCommand_time'] = NULL;
+					}
 					$this->loadModel('Item');
 					$this->Item->read(null, $this->request->data['id']);
 					$this->Item->set(array(
@@ -198,7 +215,10 @@ class ShopController extends AppController {
 						'category' => $this->request->data['category'],
 						'price' => $this->request->data['price'],
 						'commands' => $this->request->data['commands'],
-						'img_url' => $this->request->data['img_url']
+						'img_url' => $this->request->data['img_url'],
+						'timedCommand' => $this->request->data['timedCommand'],
+						'timedCommand_cmd' => $this->request->data['timedCommand_cmd'],
+						'timedCommand_time' => $this->request->data['timedCommand_time']
 						));
 					$this->Item->save();
 					$this->Session->setFlash($this->Lang->get('ITEM_SUCCESS_EDIT'), 'default.success');
@@ -235,10 +255,15 @@ class ShopController extends AppController {
 			 
 			$this->layout = null;
 			if($this->request->is('post')) {
-				if(!empty($this->request->data['name']) AND !empty($this->request->data['description']) AND !empty($this->request->data['category']) AND !empty($this->request->data['price']) AND !empty($this->request->data['commands'])) {
+				if(!empty($this->request->data['name']) AND !empty($this->request->data['description']) AND !empty($this->request->data['category']) AND !empty($this->request->data['price']) AND !empty($this->request->data['commands']) AND !empty($this->request->data['timedCommand'])) {
 					$this->loadModel('Category');
 					$this->request->data['category'] = $this->Category->find('all', array('conditions' => array('name' => $this->request->data['category'])));
 					$this->request->data['category'] = $this->request->data['category'][0]['Category']['id'];
+					$this->request->data['timedCommand'] = ($this->request->data['timedCommand'] == 'true') ? 1 : 0;
+					if(!$this->request->data['timedCommand']) {
+						$this->request->data['timedCommand_cmd'] = NULL;
+						$this->request->data['timedCommand_time'] = NULL;
+					}
 					$this->loadModel('Item');
 					$this->Item->read(null, null);
 					$this->Item->set(array(
@@ -247,7 +272,10 @@ class ShopController extends AppController {
 						'category' => $this->request->data['category'],
 						'price' => $this->request->data['price'],
 						'commands' => $this->request->data['commands'],
-						'img_url' => $this->request->data['img_url']
+						'img_url' => $this->request->data['img_url'],
+						'timedCommand' => $this->request->data['timedCommand'],
+						'timedCommand_cmd' => $this->request->data['timedCommand_cmd'],
+						'timedCommand_time' => $this->request->data['timedCommand_time']
 						));
 					$this->Item->save();
 					$this->History->set('ADD_ITEM', 'shop');

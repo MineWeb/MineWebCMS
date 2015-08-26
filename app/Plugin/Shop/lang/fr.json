@@ -80,5 +80,8 @@
     "EDIT_STARPASS_OFFER_SUCCESS": "Offre StarPass modifi\u00e9e avec succ\u00e8s !",
     "SUCCESS_PAYPAL": "La transaction PayPal s'est bien déroulée ! Vous avez re\u00e7u vos cr\u00e9dits boutique.",
     "CREDIT_STARPASS": "Cr\u00e9diter son compte avec StarPass",
-    "SUCCESS_STARPASS": "La transaction StarPass s'est bien déroulée ! Vous avez re\u00e7u vos cr\u00e9dits boutique."
+    "SUCCESS_STARPASS": "La transaction StarPass s'est bien déroulée ! Vous avez re\u00e7u vos cr\u00e9dits boutique.",
+    "TIMED_COMMAND":"Commande différée",
+    "TIMED_COMMAND_EXPLAIN":"C'est une commande qui s'effectuera après un certains temps (pour des grades par exemple)",
+    "TIME":"Temps"
 }

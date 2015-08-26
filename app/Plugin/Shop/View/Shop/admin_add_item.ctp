@@ -94,6 +94,52 @@
 						<span class="help-inline"><b>{PLAYER}</b> = Pseudo <br> <b>[{+}]</b> <?= $Lang->get('FOR_NEW_COMMAND') ?> <br><b><?= $Lang->get('EXAMPLE') ?>:</b> <i>give {PLAYER} 1 1[{+}]broadcast {PLAYER} ...</i></span>
 					</div>
 				</div>
+				<div class="control-group">
+					<label class="control-label"><?= $Lang->get('TIMED_COMMAND') ?></label>
+					<div class="controls">
+						<label class="radio">
+							<input type="radio" name="timedCommand" value="true">
+						  	<?= $Lang->get('ENABLED') ?>
+						</label>
+						<label class="radio">
+							<input type="radio" name="timedCommand" value="false" checked="">
+						  <?= $Lang->get('DISABLED') ?>
+						</label>
+						<span class="help-inline"><i><?= $Lang->get('TIMED_COMMAND_EXPLAIN') ?></i></span>
+					</div>
+				</div>
+				<div id="timedCommands" style="display:none;">
+					<div class="control-group">
+						<label class="control-label"><?= $Lang->get('COMMANDS') ?></label>
+						<div class="controls">
+							<?php 
+								echo $this->Form->input('', array(
+									'div' => false,
+									'label' => false,
+							   		'type' => 'text',
+							   		'name' => 'timedCommand_cmd',
+							    	'class' => 'span6 m-wrap',
+								));
+							?>
+							<span class="help-inline"><b>{PLAYER}</b> = Pseudo <br> <b>[{+}]</b> <?= $Lang->get('FOR_NEW_COMMAND') ?> <br><b><?= $Lang->get('EXAMPLE') ?>:</b> <i>give {PLAYER} 1 1[{+}]broadcast {PLAYER} ...</i></span>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label"><?= $Lang->get('TIME') ?></label>
+						<div class="controls">
+							<?php 
+								echo $this->Form->input('', array(
+									'div' => false,
+									'label' => false,
+							   		'type' => 'text',
+							   		'name' => 'timedCommand_time',
+							    	'class' => 'span6 m-wrap',
+							    	'placeholder' => 'Minutes'
+								));
+							?>
+						</div>
+					</div>
+				</div>
 				<br><br>
 
 				<div class="form-actions">
@@ -112,6 +158,14 @@
 
 </div>
 <script type="text/javascript">
+	$('input[type="radio"][name="timedCommand"]').change(function(e) {
+		if($('input[type="radio"][name="timedCommand"]').serialize() == "timedCommand=true") {
+			$('#timedCommands').slideDown(500);
+		} else {
+			$('#timedCommands').slideUp(500);
+		}
+	});
+
     $("#add_item").submit(function( event ) {
     	event.preventDefault();
         var $form = $( this );
@@ -121,7 +175,10 @@
         var price = $form.find("input[name='price']").val();
         var img_url = $form.find("input[name='img_url']").val();
         var commands = $form.find("input[name='commands']").val();
-        $.post("<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_item_ajax', 'admin' => true)) ?>", { name : name, description : description, category : category, price : price, img_url : img_url, commands : commands }, function(data) {
+        var timedCommand = $form.find('input[type="radio"][name="timedCommand"]').serialize().split('=')[1];
+        var timedCommand_cmd = $form.find("input[name='timedCommand_cmd']").val();
+        var timedCommand_time = $form.find("input[name='timedCommand_time']").val();
+        $.post("<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_item_ajax', 'admin' => true)) ?>", { name : name, description : description, category : category, price : price, img_url : img_url, commands : commands, timedCommand : timedCommand, timedCommand_time : timedCommand_time, timedCommand_cmd : timedCommand_cmd }, function(data) {
           	data2 = data.split("|");
 		  	if(data.indexOf('true') != -1) {
           		$('.ajax-msg').empty().html('<div class="alert alert-success" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);

@@ -93,7 +93,6 @@ class ServerController extends AppController {
 							echo $this->Lang->get('NEED_CONFIG_SERVER_TIMEOUT').'|false';
 						}
 					} else {
-						$this->Configuration->set('server_state', 0);
 						echo $this->Lang->get('SERVER_CONNECTION_FAILED').'|false';
 					}
 				} else {

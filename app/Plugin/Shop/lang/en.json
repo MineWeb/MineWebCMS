@@ -80,5 +80,8 @@
     "EDIT_STARPASS_OFFER_SUCCESS": "StarPass Offer successfully modified !",
     "SUCCESS_PAYPAL": "PayPal transacion has been carried out, you have received your points.",
     "CREDIT_STARPASS": "Credit his account using StarPass",
-    "SUCCESS_STARPASS": "The StarPass transaction has been carried out, you have received your points."
+    "SUCCESS_STARPASS": "The StarPass transaction has been carried out, you have received your points.",
+    "TIMED_COMMAND":"Timed command",
+    "TIMED_COMMAND_EXPLAIN":"It's a timed command, she'll be executed later (for ranks...)",
+    "TIME":"Time"
 }
