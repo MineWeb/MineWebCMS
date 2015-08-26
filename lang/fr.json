@@ -352,5 +352,10 @@
     "LICENSE_ERROR__ID_OR_KEY_INVALID":"Licence inconnue",
     "LICENSE_ERROR__INVALID_URL":"Site d'installation non valide",
     "LICENSE_ERROR__LICENSE_DISABLED":"Licence désactivée",
-    "CANT_WRITE":"Le dossier où est situé MineWeb n'est pas disponible en écriture, veuillez mettre le <b>CHMOD</b> à <b>777</b> sur votre dossier contenant MineWeb"
+    "CANT_WRITE":"Le dossier où est situé MineWeb n'est pas disponible en écriture, veuillez mettre le <b>CHMOD</b> à <b>777</b> sur votre dossier contenant MineWeb",
+    "CONFIG_SERVER":"Configurer un serveur",
+    "NEED_SERVER_CONFIG_TIMEOUT":"Un timeout doit être configuré pour lier un serveur",
+    "ADD_SERVER":"Ajouter un serveur",
+    "INVALID_TIMEOUT":"Timeout invalide",
+    "SUCCESS_SAVE_TIMEOUT":"Le timeout c'est bien enregistré !"
 }
