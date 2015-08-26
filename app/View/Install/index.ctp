@@ -36,40 +36,6 @@
             <h1><?= $Lang->get('STEP_2') ?></h1>
             <p><?= $Lang->get('DESC_STEP_2') ?></p>
             <p>
-                <form id="step2">
-                    <div class="ajax-msg-step2"></div>
-                    <div class="form-group">
-                        <label><?= $Lang->get('SERVER_HOST') ?></label>
-                        <input type="text" class="form-control" name="host"<?php if(!empty($server_host)) { echo ' value="'.$server_host.'"'; } ?> placeholder="Ex: 127.0.0.1">
-                    </div>
-                    <div class="form-group">
-                        <label><?= $Lang->get('PORT') ?></label>
-                        <input type="text" class="form-control" name="port"<?php if(!empty($port)) { echo ' value="'.$port.'"'; } ?> placeholder="Ex: 8080">
-                    </div>
-                    <div class="form-group">
-                        <label><?= $Lang->get('TIMEOUT') ?> <small><?= $Lang->get('IN_SECONDS') ?> </small></label>
-                        <input type="text" class="form-control" name="timeout"<?php if(!empty($timeout)) { echo ' value="'.$timeout.'"'; } ?> placeholder="Ex: 3">
-                    </div>
-                    <?php if(!empty($server_host)) { ?>
-                        <input type="hidden" name="step2" value="true">
-                    <?php } else { ?>
-                        <input type="hidden" name="step2" value="" id="skip">
-                    <?php } ?>
-                    <ul class="pager wizard">
-                        <li class="previous disabled"><a href="javascript:;"><?= $Lang->get('PREVIOUS') ?></a></li>
-                        <?php if(empty($server_host)) { ?>
-                            <li class="next" style="display: inline;"><a onClick="$('#skip').val('true');" href="javascript:;"><?= $Lang->get('SKIP') ?></a></li>
-                        <?php } ?>
-                        <li class="next" style="display: inline;"><a id="tabsleft-link" href="javascript:;"><?= $Lang->get('NEXT') ?></a></li>
-                        <li class="next finish hidden" style="display: none;"><a href="javascript:;"><?= $Lang->get('END') ?></a></li>
-                    </ul>
-                </form>
-            </p>
-        </div>
-        <div class="tab-pane" id="tabsleft-tab3">
-            <h1><?= $Lang->get('STEP_3') ?></h1>
-            <p><?= $Lang->get('DESC_STEP_3') ?></p>
-            <p>
                 <form id="step3">
                     <div class="ajax-msg-step3"></div>
                     <div class="form-group">
@@ -101,7 +67,7 @@
                 </form>
             </p>
         </div>
-        <div class="tab-pane" id="tabsleft-tab4">
+        <div class="tab-pane" id="tabsleft-tab3">
             <h1><?= $Lang->get('STEP_4') ?></h1>
             <div class="alert alert-success"><?= $Lang->get('DESC_STEP_4') ?></div>
             <p>

@@ -45,8 +45,6 @@
 
 			<li role="presentation"><a title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_1') ?></a></li>
 			<li role="presentation"><a title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_2') ?></a></li>
-			<li role="presentation"><a title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_3') ?></a></li>
-			<li role="presentation"><a title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_4') ?></a></li>
 			<li role="presentation" class="active"><a title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_END') ?></a></li>
 		</ul>
 		<?php } else { ?>
@@ -55,7 +53,6 @@
 				<li role="presentation" class="active"><a href="#tabsleft-tab1" data-toggle="tab" title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_1') ?></a></li>
 				<li role="presentation" class=""><a href="#tabsleft-tab2" data-toggle="tab" data-toggle="tab" title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_2') ?></a></li>
 				<li role="presentation" class=""><a href="#tabsleft-tab3" data-toggle="tab" title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_3') ?></a></li>
-				<li role="presentation" class=""><a href="#tabsleft-tab4" data-toggle="tab" title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_4') ?></a></li>
 			</ul>
 		<?php } ?>
 
@@ -120,49 +117,7 @@
 								return false;
 							}
 						}
-					} else if(index==2) {
-	                    var $form = $('#step2');
-	                    if($form.find("input[name='step2']").val() == "true") {
-	                    	return true;
-	                    } else {
-		                    var host = $form.find("input[name='host']").val();
-		                    var port = $form.find("input[name='port']").val();
-		                    var timeout = $form.find("input[name='timeout']").val();
-							var step2Success = false;
-		                    $.ajax({
-							 	type : 'POST',
-							 	url : "<?= $this->Html->url(array('controller' => 'install', 'action' => 'step_2')) ?>", 
-							 	data : { host : host, port : port, timeout : timeout }, 
-							 	success : function(data){
-			                      	data2 = data.split("|");
-								  	if(data.indexOf('true') != -1) {
-						          		$('.ajax-msg-step2').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-						          		step2Success = true;
-						          		return true;
-						          	} else if(data.indexOf('false') != -1) {
-						            	$('.ajax-msg-step2').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-						            	step2Success = false;
-						            	return false;
-							        } else {
-								    	$('.ajax-msg-step2').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
-								    	step2Success = false;
-								    	return false;
-								    }
-		                    	},
-		                    	error : function(data){
-		                    		$('.ajax-msg-step2').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
-								    var step2Success = false;
-								    return false;
-		                    	},
-		                    	async: false
-							});
-							if(step2Success == true) {
-								return true;
-							} else {
-								return false;
-							}
-						}
-					} else if(index==3) {
+					} else if(index==2) {
 	                    var $form = $('#step3');
 	                    if($form.find("input[name='step3']").val() == "true") {
 	                    	return true;

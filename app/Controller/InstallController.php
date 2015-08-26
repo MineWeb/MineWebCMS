@@ -34,13 +34,8 @@ class InstallController extends AppController {
 	public function index() {
 		if(!file_exists('../../config/installed.txt')) {
 			$this->layout = 'install';
-			//$data = file_get_contents('../Config/database.php');
 			 
 			$this->set('title_for_layout',$this->Lang->get('INSTALL'));
-			/*$data = explode("'", $data);
-			$host = $data['9']; $this->set(compact('host'));
-			$login = $data['13']; $this->set(compact('login'));
-			$database = $data['21']; $this->set(compact('database'));*/
 
 			$url = 'http://mineweb.org/api/key_verif/';
 			$secure = file_get_contents(ROOT.'/config/secure');
@@ -50,11 +45,6 @@ class InstallController extends AppController {
 			} else {
 				$this->set('step1_ok', false);
 			}
-
-			$this->set('server_host', $this->Configuration->get('server_host'));
-			$this->set('port', $this->Configuration->get('server_port'));
-			$this->set('secret_key', $this->Configuration->get('server_secretkey'));
-			$this->set('timeout', $this->Configuration->get('server_timeout'));
 
 			$this->loadModel('User');
 			$admin = $this->User->find('first');
@@ -121,40 +111,6 @@ WCqkx22behAGZq6rhwIDAQAB
 					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
 				}
 
-			} else {
-				echo $this->Lang->get('NOT_POST' ,$language).'|false';
-			}
-		} else {
-			echo $this->Lang->get('ALREADY_INSTALL' ,$language).'|false';
-		}
-	}
-
-
-	public function step_2() {
-		if(!file_exists('../../config/installed.txt')) {
-			$this->layout = null;
-			if($this->request->is('ajax')) {
-				 
-				if(!empty($this->request->data['host']) AND !empty($this->request->data['port']) AND !empty($this->request->data['timeout'])) {
-					$secret_key = $this->Server->get('secret_key');
-					if($secret_key !== false) {
-						if($this->Server->check('connection', array('host' => $this->request->data['host'], 'port' => $this->request->data['port'], 'timeout' => $this->request->data['timeout'], 'secret_key' => $secret_key))) {
-							$this->Configuration->set('server_state', 1);
-							$this->Configuration->set('server_host', $this->request->data['host']);
-							$this->Configuration->set('server_port', $this->request->data['port']);
-							$this->Configuration->set('server_secretkey', $secret_key);
-							$this->Configuration->set('server_timeout', $this->request->data['timeout']);
-							echo $this->Lang->get('SUCCESS_CONNECTION_SERVER').'|true';
-						} else {
-							echo $this->Lang->get('SERVER_CONNECTION_FAILED').'|false';
-						}
-					} else {
-						$this->Configuration->set('server_state', 0);
-						echo $this->Lang->get('SERVER_CONNECTION_FAILED').'|false';
-					}
-				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
-				}
 			} else {
 				echo $this->Lang->get('NOT_POST' ,$language).'|false';
 			}
