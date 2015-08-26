@@ -102,7 +102,7 @@ class ServerComponent extends Object {
 
 	private function getUrl($server_id, $key = false) {
 	    if(!empty($server_id)) {
-	        $config = $this->getConfig();
+	        $config = $this->getConfig($server_id);
 	        if($config) {
 	            if($key) {
 	                $this->Configuration = ClassRegistry::init('Configuration');
@@ -149,10 +149,11 @@ class ServerComponent extends Object {
 
 	function getAllServers() {
     	$this->Server = ClassRegistry::init('Server');
-    	$search = $this->Server->find('first');
+    	$search = $this->Server->find('all');
     	foreach ($search as $key => $value) {
     	    $return[]['server_id'] = $value['Server']['id'];
     	}
+    	return $return;
 	}
 
 	function serversOnline() { // savoir si au moins 1 serveur est en ligne
@@ -260,14 +261,16 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 	        }
 	    } else {
 	        $servers = $this->getAllServers();
+	        $return['getPlayerMax'] = 0;
+	        $return['getPlayerCount'] = 0;
 	        foreach ($servers as $key => $value) {
 	            if($this->online($value['server_id'])) {
 	                $search = $this->call(array('getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $value['server_id']);
 	                if($search['getPlayerCount'] == "null") {
 	                    $search['getPlayerCount'] = 0;
 	                }
-	                $return['getPlayerMax'] += $search['getPlayerMax'];
-	                $return['getPlayerCount'] += $search['getPlayerCount'];
+	                $return['getPlayerMax'] = $return['getPlayerMax'] + $search['getPlayerMax'];
+	                $return['getPlayerCount'] = $return['getPlayerCount'] + $search['getPlayerCount'];
 	            }
 	        }
 	        return $return;

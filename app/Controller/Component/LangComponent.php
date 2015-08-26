@@ -183,10 +183,10 @@ class LangComponent extends Object {
 		}
 
 		if(isset($language_file['BANNER_SERVER'])) {
-			$return = str_replace('{MOTD}', $jsonapi['getMOTD'], $language_file['BANNER_SERVER']);
-			$return = str_replace('{VERSION}', $jsonapi['getVersion'], $return);
-			$return = str_replace('{ONLINE}', $jsonapi['getPlayerCount'], $return);
-			$return = str_replace('{ONLINE_LIMIT}', $jsonapi['getPlayerMax'], $return);
+			$return = str_replace('{MOTD}', @$jsonapi['getMOTD'], $language_file['BANNER_SERVER']);
+			$return = str_replace('{VERSION}', @$jsonapi['getVersion'], $return);
+			$return = str_replace('{ONLINE}', @$jsonapi['getPlayerCount'], $return);
+			$return = str_replace('{ONLINE_LIMIT}', @$jsonapi['getPlayerMax'], $return);
 			return $return;
 		} else {
 			return 'BANNER_SERVER';
