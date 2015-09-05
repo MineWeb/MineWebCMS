@@ -479,7 +479,7 @@ class UserController extends AppController {
 			$this->layout = null;
 			if($this->request->is('post')) {
 				$this->loadModel('User');
-				if(!empty($this->request->data['pseudo']) AND !empty($this->request->data['email']) AND isset($this->request->data['money']) AND isset($this->request->data['vote'])) {
+				if(!empty($this->request->data['pseudo']) AND !empty($this->request->data['email']) AND isset($this->request->data['vote'])) {
 					if(empty($this->request->data['rank'])) {
 						$rank = $this->User->find('all', array('conditions' => array('pseudo' => $this->request->data['pseudo'])));
 						$this->request->data['rank'] = $rank[0]['User']['rank'];

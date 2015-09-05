@@ -7,6 +7,9 @@ Icon?
 ehthumbs.db
 Thumbs.db
 
+app/tmp/
+app/tmp/*
+/app/tmp/
 /app/tmp/*
 !/app/tmp/
  
@@ -37,3 +40,9 @@ Thumbs.db
 /app/tmp/tests/*
 !/app/tmp/tests/
 !/app/tmp/tests/empty
+
+config/last_check
+config/update
+config/install.txt
+config/installed.txt
+

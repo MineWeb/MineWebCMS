@@ -86,7 +86,7 @@ $this->EyPlugin = new EyPluginComponent;
                                 $submenu = json_decode($value['Navbar']['submenu']);
                                 foreach ($submenu as $k => $v) {
                                 ?>
-                                  <li><a href="<?= rawurldecode($v) ?>"><?= $k ?></a></li>
+                                  <li><a href="<?= rawurldecode($v) ?>"><?= rawurldecode(str_replace('+', ' ', $k)) ?></a></li>
                                 <?php } ?>
                                 </ul>
                               </li>

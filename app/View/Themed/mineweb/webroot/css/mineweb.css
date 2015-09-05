@@ -38,6 +38,13 @@ nav {
 nav .container {
 	height: 80px;
 }
+
+@media (max-width: 768px) {
+	header.carousel {
+		margin-top: -10px;
+	}
+}
+
 @media (min-width: 768px) {
 	.nav.navbar-nav {
 		height: 80px !important;
@@ -143,11 +150,24 @@ ul#items li {
 	-moz-box-shadow: 0 -1px 3px rgba(0,0,0,.3);
 	box-shadow: 0 -1px 3px rgba(0,0,0,.3);
 	display: inline-block;
+	
 	margin-right: 30px;
 	margin-left: 30px;
+	
 	margin-top: 10px;
 	position: relative;
 	float: left;
+}
+
+@media (max-width: 768px) {
+	ul#items {
+		padding: 0px!important;
+	}
+	ul#items li {
+		margin-right: 0px!important;
+		margin-left: 0px!important;
+		float: none;
+	}
 }
 
 ul#items li h2 {
