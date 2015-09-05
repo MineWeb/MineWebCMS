@@ -80,6 +80,9 @@ class ShopController extends AppController {
 					$item_price = $this->DiscountVoucher->get_new_price($item_price, $search_item['0']['Item']['category'], $search_item['0']['Item']['name'], $_GET['code']); // j'obtient le nouveau prix si une promotion est en cours sur cet article ou sa catégorie
 				}
 				if($item_price <= $this->Connect->get('money')) {
+
+					$this->getEventManager()->dispatch(new CakeEvent('onBuy', $this));
+
 					$new_sold = $this->Connect->get('money') - $item_price;
 					$this->loadModel('User');
 					$this->User->read(null, $this->Connect->get_id());

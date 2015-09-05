@@ -6,15 +6,15 @@ class News extends AppModel {
 	public function afterSave($created, $options = array()) {
 		if($created) {
 			// nouvel enregistrement
-			$this->getEventManager()->dispatch(new CakeEvent('addNews', $this));
+			$this->getEventManager()->dispatch(new CakeEvent('afterAddNews', $this));
 		} else {
 			// modification d'un enregistrement
-			$this->getEventManager()->dispatch(new CakeEvent('editNews', $this));
+			$this->getEventManager()->dispatch(new CakeEvent('afterEditNews', $this));
 		}
 	}
 
 	public function afterDelete($cascade = true) {
-		$this->getEventManager()->dispatch(new CakeEvent('deleteNews', $this));
+		$this->getEventManager()->dispatch(new CakeEvent('afterDeleteNews', $this));
 	}
 
 }

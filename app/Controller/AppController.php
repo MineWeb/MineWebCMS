@@ -109,9 +109,13 @@ WCqkx22behAGZq6rhwIDAQAB
 		foreach ($plugins as $key => $value) {
 			$useEvents = $this->EyPlugin->get('useEvents', $value['plugins']['name']);
 			if($useEvents) {
-				$this->Components->load($value['plugins']['name'].'.Events');
+				$component = $this->Components->load($value['plugins']['name'].'.Events');
+				$component->startup($this);
+				$this->getEventManager()->attach($component);
 			}
 		}
+
+		$event = $this->getEventManager()->dispatch(new CakeEvent('requestPage', $this, $this->request->data));
 
 		/* ---- */
 

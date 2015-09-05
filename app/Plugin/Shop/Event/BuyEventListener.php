@@ -4,11 +4,11 @@ App::uses('CakeEventListener', 'Event');
 class BuyEventListener implements CakeEventListener {
     public function implementedEvents() {
         return array(
-            'onBuy' => 'onBuy'
+            'afterBuy' => 'afterBuy',
         );
     }
 
-    public function onBuy($event) {
+    public function afterBuy($event) {
         $item_name = $event->subject()['item_name'];
         if($item_name == "Cape") { // si c'est une cape
         	$this->User = ClassRegistry::init('User');

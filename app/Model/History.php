@@ -12,21 +12,21 @@ class History extends AppModel {
 					$author = $this->data['History']['author'];
 					$item_name = $this->data['History']['other'];
 					$informations = array('buyer' => $author, 'item_name' => $item_name);
-					$this->getEventManager()->dispatch(new CakeEvent('onBuy', $informations));
+					$this->getEventManager()->dispatch(new CakeEvent('afterBuy', $informations));
 					break;
 				case 'BUY_MONEY':
-					$this->getEventManager()->dispatch(new CakeEvent('addMoney', $this));
+					$this->getEventManager()->dispatch(new CakeEvent('afterAddMoney', $this));
 					break;
 				
 				default:
-					$this->getEventManager()->dispatch(new CakeEvent('addHistory', $this));
+					$this->getEventManager()->dispatch(new CakeEvent('afterAddHistory', $this));
 					break;
 			}
 		}
 	}
 
 	public function afterDelete() {
-		$this->getEventManager()->dispatch(new CakeEvent('deleteHistory', $this));
+		$this->getEventManager()->dispatch(new CakeEvent('afterDeleteHistory', $this));
 	}
 
 }

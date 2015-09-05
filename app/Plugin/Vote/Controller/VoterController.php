@@ -136,12 +136,16 @@ class VoterController extends VoteAppController {
                             
                                     //if(in_array($this->request->data['out'], $array)) {
 
+                                        $this->getEventManager()->dispatch(new CakeEvent('onVote', $this));
+
                                         // out valide alors on l'enregistre dans la bdd et fais la commande jsonapi
                                         $this->loadModel('VoteConfiguration');
                                         $config = $this->VoteConfiguration->find('all');
                                         $rewards_type = $config['0']['VoteConfiguration']['rewards_type']; // si le type de la récompense est 1 -> toutes les commandes sont effecutés, sinon si c'est 0 on fais une commande aléatoirement
                                         $rewards = $config['0']['VoteConfiguration']['rewards'];
                                         $rewards = unserialize($rewards);
+
+                                        $this->getEventManager()->dispatch(new CakeEvent('beforeRecieveRewards', $this, $rewards));
 
                                         if($rewards_type == 0) { // on fais aléatoirement
 
