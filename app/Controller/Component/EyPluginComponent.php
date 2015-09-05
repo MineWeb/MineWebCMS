@@ -79,7 +79,9 @@ class EyPluginComponent extends Object {
               if(!empty($where)) {
                 $addperm = unserialize($where['0']['Permission']['permissions']);
                 foreach ($addperm as $k2 => $v2) {
-                  $addperm[] = $v2; // on ajoute les perms
+                  foreach ($value as $kp => $perm) {
+                    $addperm[] = $perm; // on ajoute les perms
+                  }
                 }
                 $this->Permission->read(null, $where['0']['Permission']['id']);
                 $this->Permission->set(array('permissions' => serialize($addperm)));
@@ -155,7 +157,9 @@ class EyPluginComponent extends Object {
         if(!empty($where)) {
           $addperm = unserialize($where['0']['Permission']['permissions']);
           foreach ($addperm as $k2 => $v2) {
-             array_delete_value($addperm, $v2); // on supprime les perms
+            foreach ($value as $kp => $perm) {
+              array_delete_value($addperm, $perm); // on supprime les perms
+            }
           }
           $this->Permission->read(null, $where['0']['Permission']['id']);
           $this->Permission->set(array('permissions' => serialize($addperm)));
