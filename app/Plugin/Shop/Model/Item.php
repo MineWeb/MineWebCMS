@@ -6,15 +6,15 @@ class Item extends AppModel {
 	public function afterSave($created, $options = array()) {
 		if($created) {
 			// nouvel enregistrement
-			$this->getEventManager()->dispatch(new CakeEvent('addItem', $this));
+			$this->getEventManager()->dispatch(new CakeEvent('afterAddItem', $this));
 		} else {
 			// modification d'un enregistrement
-			$this->getEventManager()->dispatch(new CakeEvent('editItem', $this));
+			$this->getEventManager()->dispatch(new CakeEvent('afterEditItem', $this));
 		}
 	}
 
 	public function afterDelete($cascade = true) {
-		$this->getEventManager()->dispatch(new CakeEvent('deleteItem', $this));
+		$this->getEventManager()->dispatch(new CakeEvent('afterDeleteItem', $this));
 	}
 
 }

@@ -6,7 +6,7 @@ class VoteModel extends VoteAppModel {
 	public function afterSave($created, $options = array()) {
 		if($created) {
 			// nouvel enregistrement
-			$this->getEventManager()->dispatch(new CakeEvent('onVote', $this));
+			$this->getEventManager()->dispatch(new CakeEvent('afterVote', $this));
 		}
 	}
 

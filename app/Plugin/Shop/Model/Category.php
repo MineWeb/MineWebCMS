@@ -6,15 +6,15 @@ class Category extends AppModel {
 	public function afterSave($created, $options = array()) {
 		if($created) {
 			// nouvel enregistrement
-			$this->getEventManager()->dispatch(new CakeEvent('addCategory', $this));
+			$this->getEventManager()->dispatch(new CakeEvent('afterAddCategory', $this));
 		} else {
 			// modification d'un enregistrement
-			$this->getEventManager()->dispatch(new CakeEvent('editCategory', $this));
+			$this->getEventManager()->dispatch(new CakeEvent('afterEditCategory', $this));
 		}
 	}
 
 	public function afterDelete($cascade = true) {
-		$this->getEventManager()->dispatch(new CakeEvent('deleteCategory', $this));
+		$this->getEventManager()->dispatch(new CakeEvent('afterDeleteCategory', $this));
 	}
 
 }
