@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS `configurations` (
   `twitter` text NOT NULL,
   `facebook` text NOT NULL,
   `mineguard` varchar(5) NOT NULL,
+  `banner_server` text DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 |

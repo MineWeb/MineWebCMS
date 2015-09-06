@@ -249,7 +249,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 	}
 
 	function banner_infos($server_id = 1) { // On précise l'ID du serveur ou vont veux les infos, ou alors on envoie "all" qui va aller chercher les infos sur tout les serveurs
-	    if($server_id != "all") {
+	    if(!is_array($server_id)) {
 	        if($this->online($server_id)) {
 	            $search = $this->call(array('getMOTD' => 'server', 'getVersion' => 'server', 'getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $server_id);
 	            if($search['getPlayerCount'] == "null") {
@@ -260,12 +260,12 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 	          return false;
 	        }
 	    } else {
-	        $servers = $this->getAllServers();
+	        $servers = $server_id;
 	        $return['getPlayerMax'] = 0;
 	        $return['getPlayerCount'] = 0;
 	        foreach ($servers as $key => $value) {
-	            if($this->online($value['server_id'])) {
-	                $search = $this->call(array('getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $value['server_id']);
+	            if($this->online($value)) {
+	                $search = $this->call(array('getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $value);
 	                if($search['getPlayerCount'] == "null") {
 	                    $search['getPlayerCount'] = 0;
 	                }

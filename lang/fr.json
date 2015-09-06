@@ -357,5 +357,6 @@
     "NEED_SERVER_CONFIG_TIMEOUT":"Un timeout doit être configuré pour lier un serveur",
     "ADD_SERVER":"Ajouter un serveur",
     "INVALID_TIMEOUT":"Timeout invalide",
-    "SUCCESS_SAVE_TIMEOUT":"Le timeout c'est bien enregistré !"
+    "SUCCESS_SAVE_TIMEOUT":"Le timeout c'est bien enregistré !",
+    "BANNER_SERVER_CHOOSE":"Quels serveurs<br> souhaitez-vous<br> afficher sur <br>la bannière ?"
 }

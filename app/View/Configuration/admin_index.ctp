@@ -20,7 +20,7 @@ $this->Configuration = new ConfigurationComponent();
 						$config = $config['Configuration'];
 						foreach ($config as $key => $value) { ?>
 							<?php if(strpos($key, 'maintenance') === false AND strpos($key, 'id') === false AND strpos($key, 'layout') === false AND strpos($key, 'theme') === false AND strpos($key, 'server_') === false) { ?>
-								<?php if(strpos($key, 'version') === false AND $key != 'mineguard') { ?>
+								<?php if(strpos($key, 'version') === false AND $key != 'mineguard' AND strpos($key, 'banner_server') === false) { ?>
 									<div class="control-group">
 										<label class="control-label"><?= $Lang->get(strtoupper($key)) ?></label>
 										<div class="controls">
@@ -48,6 +48,22 @@ $this->Configuration = new ConfigurationComponent();
 												<input type="radio" name="mineguard" value="false" <?php if($value == 'false') { echo 'checked=""'; } ?>>
 											  <?= $Lang->get('DISABLED') ?>
 											</label>
+										</div>
+									</div>
+								<?php } elseif($key == 'banner_server') { ?>
+									<div class="control-group">
+										<label class="control-label"><?= $Lang->get('BANNER_SERVER_CHOOSE') ?></label>
+										<div class="controls">
+											<?php
+												echo $this->Form->input('field', array(
+														'multiple' => true,
+													  	'label' => false,
+													  	'div' => false,
+													  	'name' => 'banner_server',
+												      	'options' => $servers,
+												      	'selected' => $selected_server
+												  	));
+											?>
 										</div>
 									</div>
 								<?php } else { ?>
