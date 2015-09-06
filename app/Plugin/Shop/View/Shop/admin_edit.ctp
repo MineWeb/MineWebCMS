@@ -87,6 +87,21 @@
 					</div>
 				</div>
 				<div class="control-group">
+					<label class="control-label"><?= $Lang->get('SERVER') ?></label>
+					<div class="controls">
+						<?php
+							echo $this->Form->input('field', array(
+									'multiple' => true,
+								  	'label' => false,
+								  	'div' => false,
+								  	'name' => 'servers',
+							      	'options' => $servers,
+							      	'selected' => $selected_server
+							  	));
+						?>
+					</div>
+				</div>
+				<div class="control-group">
 					<label class="control-label"><?= $Lang->get('COMMANDS') ?></label>
 					<div class="controls">
 						<?php 
@@ -186,11 +201,12 @@
         var category_default = $form.find("input[name='category_default']").val();
         var price = $form.find("input[name='price']").val();
         var img_url = $form.find("input[name='img_url']").val();
+        var servers = $form.find("select[name='servers[]']").val();
         var commands = $form.find("input[name='commands']").val();
         var timedCommand = $form.find('input[type="radio"][name="timedCommand"]').serialize().split('=')[1];
         var timedCommand_cmd = $form.find("input[name='timedCommand_cmd']").val();
         var timedCommand_time = $form.find("input[name='timedCommand_time']").val();
-        $.post("<?= $this->Html->url(array('controller' => 'shop', 'action' => 'edit_ajax', 'admin' => true)) ?>", { id : id, name : name, description : description, category : category, category_default : category_default, price : price, img_url : img_url, commands : commands, timedCommand : timedCommand, timedCommand_cmd : timedCommand_cmd, timedCommand_time : timedCommand_time }, function(data) {
+        $.post("<?= $this->Html->url(array('controller' => 'shop', 'action' => 'edit_ajax', 'admin' => true)) ?>", { id : id, name : name, description : description, category : category, category_default : category_default, price : price, img_url : img_url, servers : servers, commands : commands, timedCommand : timedCommand, timedCommand_cmd : timedCommand_cmd, timedCommand_time : timedCommand_time }, function(data) {
           	data2 = data.split("|");
 		  	if(data.indexOf('true') != -1) {
           		$('.ajax-msg').empty().html('<div class="alert alert-success" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);

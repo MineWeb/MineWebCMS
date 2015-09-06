@@ -45,12 +45,32 @@ class ShopController extends AppController {
 			$this->loadModel('Item'); // je charge le model des articles
 			$search_item = $this->Item->find('all', array('conditions' => array('id' => $id))); // je cherche l'article selon l'id
 			if($search_item['0']['Item']['price'] == 1) { $money = $this->Configuration->get_money_name(false, true); } else { $money = $this->Configuration->get_money_name(); } // je dis que la variable $money = le nom de la money au pluriel ou singulier selon le prix
+			if(!empty($search_item[0]['Item']['servers'])) {
+				$this->loadModel('Server');
+				$search_servers_list = $this->Server->find('all');
+				foreach ($search_servers_list as $key => $value) {
+					$servers_list[$value['Server']['id']] = $value['Server']['name'];
+				}
+				$search_item[0]['Item']['servers'] = unserialize($search_item[0]['Item']['servers']);
+				$servers = '';
+				$i = 0;
+				foreach ($search_item[0]['Item']['servers'] as $key => $value) {
+					$i++;
+					$servers = $servers.$servers_list[$value]; 
+					if($i < count($search_item[0]['Item']['servers'])) {
+						$servers = $servers.', ';
+					}
+				}
+			}
 			echo '
 		<div class="modal-body">
 			<div id="msg_buy"></div>
 			<p><b>'.$this->Lang->get('NAME_OF_ITEM').' :</b> '.$search_item['0']['Item']['name'].'</p>
-			<p><b>'.$this->Lang->get('DESCRIPTION').' :</b> '.$search_item['0']['Item']['description'].'</p>
-			<p><b>'.$this->Lang->get('PRICE').' :</b> '.$search_item['0']['Item']['price'] . ' ' . $money .'</p>
+			<p><b>'.$this->Lang->get('DESCRIPTION').' :</b> '.$search_item['0']['Item']['description'].'</p>';
+			if(!empty($search_item[0]['Item']['servers'])) {
+				echo '<p><b>'.$this->Lang->get('SERVER').' :</b> '.$servers . '</p>';
+			}
+			echo '<p><b>'.$this->Lang->get('PRICE').' :</b> '.$search_item['0']['Item']['price'] . ' ' . $money .'</p>
 			<p><input name="code" type="text" class="form-control" id="code-voucher" style="width:245px;" placeholder="'.$this->Lang->get('HAVE_YOU_VOUCHER').'"></p>
 		</div>
       	<div class="modal-footer">
@@ -91,7 +111,18 @@ class ShopController extends AppController {
 					$this->History->set('BUY_ITEM', 'shop', $search_item['0']['Item']['name']);
 					$commands = $search_item['0']['Item']['commands'];
 					// executer les commandes
-					$this->Server->commands($commands);
+					$search_item['0']['Item']['servers'] = unserialize($search_item['0']['Item']['servers']);
+					if(empty($search_item['0']['Item']['servers'])) {
+
+						$this->Server->commands($commands);
+
+					} else {
+
+						foreach ($search_item['0']['Item']['servers'] as $key => $value) {
+							$this->Server->commands($commands, $value);
+						}
+
+					}
 
 					// si y'a une timed command à faire
 					if($search_item[0]['Item']['timedCommand']) {
@@ -174,6 +205,7 @@ class ShopController extends AppController {
 					$item['category'] = $this->Category->find('all', array('conditions' => array('id' => $item['category'])));
 					$item['category'] = $item['category'][0]['Category']['name'];
 					$this->set(compact('item'));
+
 					$search_categories = $this->Category->find('all', array('fields' => 'name'));
 					foreach ($search_categories as $v) {
 						if($v['Category']['name'] != $item['category']) {
@@ -181,6 +213,21 @@ class ShopController extends AppController {
 						}
 					}
 					$this->set(compact('categories'));
+
+					$this->loadModel('Server');
+					$item['servers'] = unserialize($item['servers']);
+					foreach ($item['servers'] as $key => $value) {
+						$d = $this->Server->find('first', array('conditions' => array('id' => $value)));
+						$selected_server[] = $d['Server']['id'];
+					}
+					$this->set(compact('selected_server'));
+
+					$search_servers = $this->Server->find('all');
+					foreach ($search_servers as $v) {
+						$servers[$v['Server']['id']] = $v['Server']['name'];
+					}
+					$this->set(compact('servers'));
+
 				} else {
 					$this->Session->setFlash($this->Lang->get('UNKNONW_ID'), 'default.error');
 					$this->redirect(array('controller' => 'news', 'action' => 'index', 'admin' => true));
@@ -201,7 +248,7 @@ class ShopController extends AppController {
 				if(empty($this->request->data['category'])) {
 					$this->request->data['category'] = $this->request->data['category_default'];
 				}
-				if(!empty($this->request->data['id']) AND !empty($this->request->data['name']) AND !empty($this->request->data['description']) AND !empty($this->request->data['category']) AND !empty($this->request->data['price']) AND !empty($this->request->data['commands']) AND !empty($this->request->data['timedCommand'])) {
+				if(!empty($this->request->data['id']) AND !empty($this->request->data['name']) AND !empty($this->request->data['description']) AND !empty($this->request->data['category']) AND !empty($this->request->data['price']) AND !empty($this->request->data['servers']) AND !empty($this->request->data['commands']) AND !empty($this->request->data['timedCommand'])) {
 					$this->loadModel('Category');
 					$this->request->data['category'] = $this->Category->find('all', array('conditions' => array('name' => $this->request->data['category'])));
 					$this->request->data['category'] = $this->request->data['category'][0]['Category']['id'];
@@ -217,6 +264,7 @@ class ShopController extends AppController {
 						'description' => $this->request->data['description'],
 						'category' => $this->request->data['category'],
 						'price' => $this->request->data['price'],
+						'servers' => serialize($this->request->data['servers']),
 						'commands' => $this->request->data['commands'],
 						'img_url' => $this->request->data['img_url'],
 						'timedCommand' => $this->request->data['timedCommand'],
@@ -248,6 +296,13 @@ class ShopController extends AppController {
 				$categories[$v['Category']['name']] = $v['Category']['name'];
 			}
 			$this->set(compact('categories'));
+
+			$this->loadModel('Server');
+			$search_servers = $this->Server->find('all');
+			foreach ($search_servers as $v) {
+				$servers[$v['Server']['id']] = $v['Server']['name'];
+			}
+			$this->set(compact('servers'));
 		} else {
 			$this->redirect('/');
 		}
@@ -258,7 +313,7 @@ class ShopController extends AppController {
 			 
 			$this->layout = null;
 			if($this->request->is('post')) {
-				if(!empty($this->request->data['name']) AND !empty($this->request->data['description']) AND !empty($this->request->data['category']) AND !empty($this->request->data['price']) AND !empty($this->request->data['commands']) AND !empty($this->request->data['timedCommand'])) {
+				if(!empty($this->request->data['name']) AND !empty($this->request->data['description']) AND !empty($this->request->data['category']) AND !empty($this->request->data['price']) AND !empty($this->request->data['servers']) AND !empty($this->request->data['commands']) AND !empty($this->request->data['timedCommand'])) {
 					$this->loadModel('Category');
 					$this->request->data['category'] = $this->Category->find('all', array('conditions' => array('name' => $this->request->data['category'])));
 					$this->request->data['category'] = $this->request->data['category'][0]['Category']['id'];
@@ -274,6 +329,7 @@ class ShopController extends AppController {
 						'description' => $this->request->data['description'],
 						'category' => $this->request->data['category'],
 						'price' => $this->request->data['price'],
+						'servers' => serialize($this->request->data['servers']),
 						'commands' => $this->request->data['commands'],
 						'img_url' => $this->request->data['img_url'],
 						'timedCommand' => $this->request->data['timedCommand'],

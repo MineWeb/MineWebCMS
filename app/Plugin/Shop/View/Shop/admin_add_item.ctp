@@ -80,6 +80,20 @@
 					</div>
 				</div>
 				<div class="control-group">
+					<label class="control-label"><?= $Lang->get('SERVER') ?></label>
+					<div class="controls">
+						<?php
+							echo $this->Form->input('field', array(
+									'multiple' => true,
+								  	'label' => false,
+								  	'div' => false,
+								  	'name' => 'servers',
+							      	'options' => $servers,
+							  	));
+						?>
+					</div>
+				</div>
+				<div class="control-group">
 					<label class="control-label"><?= $Lang->get('COMMANDS') ?></label>
 					<div class="controls">
 						<?php 
@@ -174,11 +188,12 @@
         var category = $form.find("select[name='category']").val();
         var price = $form.find("input[name='price']").val();
         var img_url = $form.find("input[name='img_url']").val();
+        var servers = $form.find("select[name='servers[]']").val();
         var commands = $form.find("input[name='commands']").val();
         var timedCommand = $form.find('input[type="radio"][name="timedCommand"]').serialize().split('=')[1];
         var timedCommand_cmd = $form.find("input[name='timedCommand_cmd']").val();
         var timedCommand_time = $form.find("input[name='timedCommand_time']").val();
-        $.post("<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_item_ajax', 'admin' => true)) ?>", { name : name, description : description, category : category, price : price, img_url : img_url, commands : commands, timedCommand : timedCommand, timedCommand_time : timedCommand_time, timedCommand_cmd : timedCommand_cmd }, function(data) {
+        $.post("<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_item_ajax', 'admin' => true)) ?>", { name : name, description : description, servers : servers, category : category, price : price, img_url : img_url, commands : commands, timedCommand : timedCommand, timedCommand_time : timedCommand_time, timedCommand_cmd : timedCommand_cmd }, function(data) {
           	data2 = data.split("|");
 		  	if(data.indexOf('true') != -1) {
           		$('.ajax-msg').empty().html('<div class="alert alert-success" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
