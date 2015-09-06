@@ -21,18 +21,6 @@ class ServerController extends AppController {
 		}
 	}
 
-	public function admin_test_call($key, $value) {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
-			$this->autoRender = false;
-			 
-			echo '<pre>';
-			var_dump($this->Server->call(array($key => $value)));
-			echo '</pre>';
-		} else {
-			$this->redirect('/');
-		}
-	}
-
 	public function admin_config() {
 		$this->autoRender = false;
 		if($this->Connect->connect() AND $this->Connect->if_admin()) {
@@ -106,12 +94,22 @@ class ServerController extends AppController {
 		}
 	}
 
-	public function admin_banlist() {
+	public function admin_banlist($server_id = 1) {
 		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+
+			$this->loadModel('Server');
+			$servers = $this->Server->find('all');
+			$this->set(compact('servers'));
+
 			$this->layout = "admin";
-			$list = $this->Server->call('getPlayersBanned');
+			$this->ServerComponent = $this->Components->load('Server');
+			$list = $this->ServerComponent->call('getPlayersBanned', false, $server_id);
 			if($list != 'NEED_SERVER_ON') {
-				$list = explode(',', $list['getPlayersBanned']);
+				if(!empty($list['getPlayersBanned'])) {
+					$list = explode(',', $list['getPlayersBanned']);
+				} else {
+					$list = array();
+				}
 			}
 			if(isset($list[0]) AND $list[0] == "none") { $list = array(); }
 			$this->set(compact('list'));
@@ -121,12 +119,22 @@ class ServerController extends AppController {
 		}
 	}
 
-	public function admin_whitelist() {
+	public function admin_whitelist($server_id = 1) {
 		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+
+			$this->loadModel('Server');
+			$servers = $this->Server->find('all');
+			$this->set(compact('servers'));
+
 			$this->layout = "admin";
-			$list = $this->Server->call('getPlayersWhitelisted');
+			$this->ServerComponent = $this->Components->load('Server');
+			$list = $this->ServerComponent->call('getPlayersWhitelisted', false, $server_id);
 			if($list != 'NEED_SERVER_ON') {
-				$list = explode(',', $list['getPlayersWhitelisted']);
+				if(!empty($list['getPlayersWhitelisted'])) {
+					$list = explode(',', $list['getPlayersWhitelisted']);
+				} else {
+					$list = array();
+				}
 			}
 			if(isset($list[0]) AND $list[0] == "none") { $list = array(); }
 			$this->set(compact('list'));
@@ -136,12 +144,22 @@ class ServerController extends AppController {
 		}
 	}
 
-	public function admin_online() {
+	public function admin_online($server_id = 1) {
 		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+
+			$this->loadModel('Server');
+			$servers = $this->Server->find('all');
+			$this->set(compact('servers'));
+
 			$this->layout = "admin";
-			$list = $this->Server->call('getPlayerList');
+			$this->ServerComponent = $this->Components->load('Server');
+			$list = $this->ServerComponent->call('getPlayerList', false, $server_id);
 			if($list != 'NEED_SERVER_ON') {
-				$list = explode(',', $list['getPlayerList']);
+				if(!empty($list['getPlayerList'])) {
+					$list = explode(',', $list['getPlayerList']);
+				} else {
+					$list = array();
+				}
 			}
 			if(isset($list[0]) AND $list[0] == "none") { $list = array(); }
 			$this->set(compact('list'));
