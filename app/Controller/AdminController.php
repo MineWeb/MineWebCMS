@@ -75,9 +75,14 @@ class AdminController extends AppController {
 				$this->set('counts_items', 0);
 			}
 
+			$this->loadModel('Server');
+			$servers = $this->Server->find('all');
+			$this->set(compact('servers'));
+
 			if($this->request->is('post')) {
-				if(!empty($this->request->data['cmd'])) {
-					$this->Server->call(array('performCommand' => $this->request->data['cmd']), true);
+				if(!empty($this->request->data['cmd']) && !empty($this->request->data['server_id'])) {
+					$this->ServerComponent = $this->Components->load('Server');
+					$this->ServerComponent->call(array('performCommand' => $this->request->data['cmd']), true, $this->request->data['server_id']);
 					$this->Session->setFlash($this->Lang->get('SUCCESS_SEND_COMMAND'), 'default.success');
 				}
 			}

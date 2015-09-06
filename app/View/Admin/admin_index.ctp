@@ -156,33 +156,32 @@ $this->EyPlugin = new EyPluginComponent;
                       </tbody>
                     </table>
                 </div>
-
             </div>
-            
-            <div class="span4">
+        <?php $i = 0; foreach($servers as $key => $value) { $i++; ?>
+              <div class="span4">
 
-                <div class="top-bar">
-                        <h3><i class="icon-hdd"></i> <?= $Lang->get('SERVER') ?></h3>
-                </div>
+                  <div class="top-bar">
+                          <h3><i class="icon-hdd"></i> <?= $Lang->get('SERVER') ?> - <?= $value['Server']['name'] ?></h3>
+                  </div>
 
-                <div class="well">
-                    <?php if($Server->online()) { ?>
+                  <div class="well">
+                    <?php if($Server->online($value['Server']['id'])) { ?>
                         <div class="row-fluid text-center">
-                            <button class="btn" type="button" data-toggle="modal" data-target="#executeCommand" style="padding: 4px 12px;margin-right: 8px;"><i class="icon-terminal"></i><?= $Lang->get('COMMAND') ?></button>
-                            <a href="<?= $this->Html->url(array('controller' => 'admin', 'admin' => true, 'action' => 'stop')) ?>" class="btn" type="button" style="padding: 4px 12px;margin-right: 8px;"><i class="icon-off"></i><?= $Lang->get('SHUTDOWN') ?></a>
+                            <button class="btn" type="button" data-toggle="modal" onClick="$('#server_id').val(<?= $value['Server']['id'] ?>)" data-target="#executeCommand" style="padding: 4px 12px;margin-right: 8px;"><i class="icon-terminal"></i><?= $Lang->get('COMMAND') ?></button>
                         </div>
                         <br>
                         <button class="btn btn-large btn-block btn-success" type="button"><?= $Lang->get('ONLINE') ?> <br> 
                           <?php 
-                          $get = $Server->call(array('getPlayerCount' => 'server', 'getPlayerMax' => 'server'));
+                          $get = $Server->call(array('getPlayerCount' => 'server', 'getPlayerMax' => 'server'), false, $value['Server']['id']);
                           echo $get['getPlayerCount'].'/'.$get['getPlayerMax'];
                           ?>
                         </button>
                     <?php } else { ?>
                         <button class="btn btn-large btn-block btn-danger" type="button"><?= $Lang->get('OFFLINE') ?></button>
                     <?php } ?>
-                </div>
-            </div>
+                  </div>
+              </div>
+            <?php } ?>
         </div> 
 </div>
 
@@ -196,6 +195,7 @@ $this->EyPlugin = new EyPluginComponent;
       </div>
       <div class="modal-body">
         <form action="" method="post">
+          <input type="hidden" id="server_id" name="server_id">
           <div class="input-append">
               <input class="no-margin span4" name="cmd" type="text"></input>
               <button class="btn btn-info" type="submit">Envoyer</button>
