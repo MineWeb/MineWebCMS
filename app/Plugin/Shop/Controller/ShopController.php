@@ -92,9 +92,17 @@ class ShopController extends AppController {
 		$this->layout = null;
 		  
 		if($this->Connect->connect() AND $this->Permissions->can('CAN_BUY')) {
-			if($this->Server->online()) {
-				$this->loadModel('Item');
-				$search_item = $this->Item->find('all', array('conditions' => array('id' => $id)));
+			$this->loadModel('Item');
+			$search_item = $this->Item->find('all', array('conditions' => array('id' => $id)));
+			$search_item['0']['Item']['servers'] = unserialize($search_item['0']['Item']['servers']);
+			if(!empty($search_item['0']['Item']['servers'])) {
+				foreach ($search_item['0']['Item']['servers'] as $key => $value) {
+					$servers_online[] = $this->Server->online($value);
+				}
+			} else {
+				$servers_online = array($this->Server->online());
+			}
+			if(!in_array(false, $servers_online)) {
 				$item_price = $search_item['0']['Item']['price'];
 				if(!empty($_GET['code'])) {
 					$item_price = $this->DiscountVoucher->get_new_price($item_price, $search_item['0']['Item']['category'], $search_item['0']['Item']['name'], $_GET['code']); // j'obtient le nouveau prix si une promotion est en cours sur cet article ou sa catégorie
@@ -111,7 +119,6 @@ class ShopController extends AppController {
 					$this->History->set('BUY_ITEM', 'shop', $search_item['0']['Item']['name']);
 					$commands = $search_item['0']['Item']['commands'];
 					// executer les commandes
-					$search_item['0']['Item']['servers'] = unserialize($search_item['0']['Item']['servers']);
 					if(empty($search_item['0']['Item']['servers'])) {
 
 						$this->Server->commands($commands);
@@ -215,10 +222,14 @@ class ShopController extends AppController {
 					$this->set(compact('categories'));
 
 					$this->loadModel('Server');
-					$item['servers'] = unserialize($item['servers']);
-					foreach ($item['servers'] as $key => $value) {
-						$d = $this->Server->find('first', array('conditions' => array('id' => $value)));
-						$selected_server[] = $d['Server']['id'];
+					if(!empty($item['servers'])) {
+						$item['servers'] = unserialize($item['servers']);
+						foreach ($item['servers'] as $key => $value) {
+							$d = $this->Server->find('first', array('conditions' => array('id' => $value)));
+							$selected_server[] = $d['Server']['id'];
+						}
+					} else {
+						$selected_server = array();
 					}
 					$this->set(compact('selected_server'));
 

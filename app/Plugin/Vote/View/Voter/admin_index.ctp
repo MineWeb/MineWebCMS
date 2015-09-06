@@ -43,6 +43,21 @@
 						?>
 					</div>
 				</div>
+				<div class="control-group">
+					<label class="control-label"><?= $Lang->get('SERVER') ?></label>
+					<div class="controls">
+						<?php
+							echo $this->Form->input('field', array(
+									'multiple' => true,
+								  	'label' => false,
+								  	'div' => false,
+								  	'name' => 'servers',
+							      	'options' => $servers,
+							      	'selected' => $selected_server
+							  	));
+						?>
+					</div>
+				</div>
 				<?php /*
 				<div id="useRPG" style="display:none;">
 					<div class="control-group">
@@ -202,6 +217,7 @@
         var $form = $( this );
         var time_vote = $form.find("input[name='time_vote']").val();
         var page_vote = $form.find("input[name='page_vote']").val();
+        var servers = $form.find("select[name='servers[]']").val();
         /*var id_vote = $form.find("input[name='id_vote']").val();*/
         var rewards_type = $form.find("select[name='rewards_type']").val();
 
@@ -223,7 +239,7 @@
 		    	rewards[l] = p;
 		    }*/
 
-       $.post("<?= $this->Html->url(array('controller' => 'voter', 'action' => 'add_ajax', 'admin' => true)) ?>", { time_vote : time_vote, page_vote : page_vote/*, id_vote : id_vote*/, rewards_type : rewards_type, reward_name : reward_name, reward_type : reward_type, reward_value : reward_value }, function(data) {
+       $.post("<?= $this->Html->url(array('controller' => 'voter', 'action' => 'add_ajax', 'admin' => true)) ?>", { time_vote : time_vote, page_vote : page_vote/*, id_vote : id_vote*/, servers : servers, rewards_type : rewards_type, reward_name : reward_name, reward_type : reward_type, reward_value : reward_value }, function(data) {
           	data2 = data.split("|");
 		  	if(data.indexOf('true') != -1) {
           		$('.ajax-msg').empty().html('<div class="alert alert-success" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);

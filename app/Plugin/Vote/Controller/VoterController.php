@@ -181,11 +181,29 @@ class VoterController extends VoteAppController {
 
                                             if($rewards[$random]['type'] == 'server') { // si c'est une commande serveur
 
-                                                if($this->Server->online()) {
-                                                    $cmd = str_replace('{PLAYER}', $this->request->data['pseudo'], $rewards[$random]['command']);
-                                                    $this->Server->send_command($cmd); // on envoie la commande puis enregistre le vote
-                                                    $msg = str_replace('{PLAYER}', $this->request->data['pseudo'], $this->Lang->get('VOTE_SUCCESS_SERVER'));
-                                                    $this->Server->send_command('broadcast '.$msg);
+                                                $config['0']['VoteConfiguration']['servers'] = unserialize($config['0']['VoteConfiguration']['servers']);
+                                                if(!empty($config['0']['VoteConfiguration']['servers'])) {
+                                                    foreach ($config['0']['VoteConfiguration']['servers'] as $key => $value) {
+                                                        $servers_online[] = $this->Server->online($value);
+                                                    }
+                                                } else {
+                                                    $servers_online = array($this->Server->online());
+                                                }
+                                                if(!in_array(false, $servers_online)) {
+
+                                                    if(empty($config['0']['VoteConfiguration']['servers'])) {
+                                                        $cmd = str_replace('{PLAYER}', $this->request->data['pseudo'], $rewards[$random]['command']);
+                                                        $this->Server->send_command($cmd); // on envoie la commande puis enregistre le vote
+                                                        $msg = str_replace('{PLAYER}', $this->request->data['pseudo'], $this->Lang->get('VOTE_SUCCESS_SERVER'));
+                                                        $this->Server->send_command('broadcast '.$msg);
+                                                    } else {
+                                                        foreach ($config['0']['VoteConfiguration']['servers'] as $key => $value) {
+                                                            $cmd = str_replace('{PSEUDO}', $this->request->data['pseudo'], $rewards[$random]['command']);
+                                                            $this->Server->send_command($cmd, $value); // on envoie la commande puis enregistre le vote
+                                                            $msg = str_replace('{PSEUDO}', $this->request->data['pseudo'], $this->Lang->get('VOTE_SUCCESS_SERVER'));
+                                                            $this->Server->send_command('broadcast '.$msg, $value);
+                                                        }
+                                                    }
 
                                                     echo $this->Lang->get('VOTE_SUCCESS').' '.$this->Lang->get('REWARD').' : <b>'.$rewards[$random]['name'].'</b>.|true';
 
@@ -211,11 +229,28 @@ class VoterController extends VoteAppController {
 
                                                 if($value['type'] == 'server') { // si c'est une commande serveur
 
-                                                    if($this->Server->online()) {
-                                                        $cmd = str_replace('{PSEUDO}', $this->request->data['pseudo'], $value['command']);
-                                                        $this->Server->send_command($cmd); // on envoie la commande puis enregistre le vote
-                                                        $msg = str_replace('{PSEUDO}', $this->request->data['pseudo'], $this->Lang->get('VOTE_SUCCESS_SERVER'));
-                                                        $this->Server->send_command('broadcast '.$msg);
+                                                    $config['0']['VoteConfiguration']['servers'] = unserialize($config['0']['VoteConfiguration']['servers']);
+                                                    if(!empty($config['0']['VoteConfiguration']['servers'])) {
+                                                        foreach ($config['0']['VoteConfiguration']['servers'] as $key => $value) {
+                                                            $servers_online[] = $this->Server->online($value);
+                                                        }
+                                                    } else {
+                                                        $servers_online = array($this->Server->online());
+                                                    }
+                                                    if(!in_array(false, $servers_online)) {
+                                                        if(empty($config['0']['VoteConfiguration']['servers'])) {
+                                                            $cmd = str_replace('{PSEUDO}', $this->request->data['pseudo'], $value['command']);
+                                                            $this->Server->send_command($cmd); // on envoie la commande puis enregistre le vote
+                                                            $msg = str_replace('{PSEUDO}', $this->request->data['pseudo'], $this->Lang->get('VOTE_SUCCESS_SERVER'));
+                                                            $this->Server->send_command('broadcast '.$msg);
+                                                        } else {
+                                                            foreach ($config['0']['VoteConfiguration']['servers'] as $key => $value) {
+                                                                $cmd = str_replace('{PSEUDO}', $this->request->data['pseudo'], $value['command']);
+                                                                $this->Server->send_command($cmd, $value); // on envoie la commande puis enregistre le vote
+                                                                $msg = str_replace('{PSEUDO}', $this->request->data['pseudo'], $this->Lang->get('VOTE_SUCCESS_SERVER'));
+                                                                $this->Server->send_command('broadcast '.$msg, $value);
+                                                            }
+                                                        }
 
                                                         $success_msg[] = $value['name'];
 
@@ -316,6 +351,25 @@ class VoterController extends VoteAppController {
             }
             //debug($vote['rewards']);
             $this->set(compact('vote'));
+
+            $this->loadModel('Server');
+            if(!empty($vote['servers'])) {
+                $vote['servers'] = unserialize($vote['servers']);
+                foreach ($vote['servers'] as $key => $value) {
+                    $d = $this->Server->find('first', array('conditions' => array('id' => $value)));
+                    $selected_server[] = $d['Server']['id'];
+                }
+            } else {
+                $selected_server = array();
+            }
+            $this->set(compact('selected_server'));
+
+            $search_servers = $this->Server->find('all');
+            foreach ($search_servers as $v) {
+                $servers[$v['Server']['id']] = $v['Server']['name'];
+            }
+            $this->set(compact('servers'));
+
             $this->set('title_for_layout',$this->Lang->get('VOTE_TITLE'));
         } else {
             $this->redirect('/');
@@ -341,7 +395,7 @@ class VoterController extends VoteAppController {
             $this->layout = null;
              
             if($this->request->is('post')) {
-                if(!empty($this->request->data['time_vote']) AND !empty($this->request->data['page_vote']) AND /*!empty($this->request->data['id_vote']) AND*/ $this->request->data['rewards_type'] == '0' OR $this->request->data['rewards_type'] == '1') {
+                if(!empty($this->request->data['time_vote']) AND !empty($this->request->data['page_vote']) AND !empty($this->request->data['servers']) AND /*!empty($this->request->data['id_vote']) AND*/ $this->request->data['rewards_type'] == '0' OR $this->request->data['rewards_type'] == '1') {
                     if(!empty($this->request->data['reward_type']) AND $this->request->data['reward_type'] != 'undefined' AND !empty($this->request->data['reward_value']) AND $this->request->data['reward_value'] != 'undefined') {
                         $this->loadModel('VoteConfiguration');
                         /*
@@ -406,7 +460,8 @@ class VoterController extends VoteAppController {
                             'page_vote' => $this->request->data['page_vote'],
                             'id_vote' => /*$this->request->data['id_vote']*/0,
                             'rewards_type' => $this->request->data['rewards_type'],
-                            'rewards' => $rewards
+                            'rewards' => $rewards,
+                            'servers' => serialize($this->request->data['servers'])
                         ));
                         $this->VoteConfiguration->save();
                         $this->History->set('EDIT_CONFIG', 'vote');
