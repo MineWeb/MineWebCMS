@@ -241,7 +241,7 @@ WCqkx22behAGZq6rhwIDAQAB
 						$last_time = @filemtime(ROOT.'/app/Plugin/'.$thisFileName);
 						$filezip_size = zip_entry_filesize($aF);
 						$file_size = @filesize(ROOT.'/app/Plugin/'.$thisFileName);
-						if($filezip_size != $file_size OR $exist === false) {
+						if($filezip_size != $file_size OR $exist === false OR $thisFileName == "config.json") {
 							if($updateThis = fopen(ROOT.'/app/Plugin/'.$thisFileName, 'w')) {
 								fwrite($updateThis, $contents);
 								fclose($updateThis);
