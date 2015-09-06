@@ -136,6 +136,34 @@ class VoterController extends VoteAppController {
                             
                                     //if(in_array($this->request->data['out'], $array)) {
 
+                                        $this->loadModel('Vote');
+                                        $get_last_vote = $this->Vote->find('all', array('conditions' => array('username' => $this->request->data['pseudo'])));
+                                        
+                                        if(empty($get_last_vote)) {
+                                            $this->Vote->read(null, null);
+                                            $this->Vote->set(array(
+                                                'username' => $this->request->data['pseudo'],
+                                                'ip' => $_SERVER['REMOTE_ADDR']
+                                            ));
+                                            $this->Vote->save();
+                                        } else {
+                                            $this->Vote->read(null, $get_last_vote['0']['Vote']['id']);
+                                            $this->Vote->set(array(
+                                                'username' => $this->request->data['pseudo'],
+                                                'ip' => $_SERVER['REMOTE_ADDR'],
+                                                'created' => date('Y-m-d H:i:s')
+                                            ));
+                                            $this->Vote->save();
+                                        }
+                                        $this->loadModel('User');
+                                        $user_id = $this->User->find('all', array('conditions' => array('pseudo' => $this->request->data['pseudo'])));
+                                        $vote_nbr = $user_id[0]['User']['vote'] + 1;
+                                        $this->User->read(null, $user_id['0']['User']['id']);
+                                        $this->User->set(array(
+                                            'vote' => $vote_nbr
+                                        ));
+                                        $this->User->save();
+
                                         $this->getEventManager()->dispatch(new CakeEvent('onVote', $this));
 
                                         // out valide alors on l'enregistre dans la bdd et fais la commande jsonapi
@@ -159,25 +187,6 @@ class VoterController extends VoteAppController {
                                                     $msg = str_replace('{PLAYER}', $this->request->data['pseudo'], $this->Lang->get('VOTE_SUCCESS_SERVER'));
                                                     $this->Server->send_command('broadcast '.$msg);
 
-                                                    $this->loadModel('Vote');
-                                                    $get_last_vote = $this->Vote->find('all', array('conditions' => array('username' => $this->request->data['pseudo'])));
-                                                    
-                                                    if(empty($get_last_vote)) {
-                                                        $this->Vote->read(null, null);
-                                                        $this->Vote->set(array(
-                                                            'username' => $this->request->data['pseudo'],
-                                                            'ip' => $_SERVER['REMOTE_ADDR']
-                                                        ));
-                                                        $this->Vote->save();
-                                                    } else {
-                                                        $this->Vote->read(null, $get_last_vote['0']['Vote']['id']);
-                                                        $this->Vote->set(array(
-                                                            'username' => $this->request->data['pseudo'],
-                                                            'ip' => $_SERVER['REMOTE_ADDR']
-                                                        ));
-                                                        $this->Vote->save();
-                                                    }
-
                                                     echo $this->Lang->get('VOTE_SUCCESS').' '.$this->Lang->get('REWARD').' : <b>'.$rewards[$random]['name'].'</b>.|true';
 
                                                 } else {
@@ -189,34 +198,6 @@ class VoterController extends VoteAppController {
                                                 $money = $this->Connect->get_to_user('money', $this->request->data['pseudo']);
                                                 $money = $money + intval($rewards[$random]['how']);
                                                 $this->Connect->set_to_user('money', $money, $this->request->data['pseudo']);
-
-                                                $this->loadModel('Vote');
-                                                $get_last_vote = $this->Vote->find('all', array('conditions' => array('username' => $this->request->data['pseudo'])));
-                                                
-                                                if(empty($get_last_vote)) {
-                                                    $this->Vote->read(null, null);
-                                                    $this->Vote->set(array(
-                                                        'username' => $this->request->data['pseudo'],
-                                                        'ip' => $_SERVER['REMOTE_ADDR']
-                                                    ));
-                                                    $this->Vote->save();
-                                                } else {
-                                                    $this->Vote->read(null, $get_last_vote['0']['Vote']['id']);
-                                                    $this->Vote->set(array(
-                                                        'username' => $this->request->data['pseudo'],
-                                                        'ip' => $_SERVER['REMOTE_ADDR'],
-                                                        'created' => date('Y-m-d H:i:s')
-                                                    ));
-                                                    $this->Vote->save();
-                                                }
-                                                $this->loadModel('User');
-                                                $user_id = $this->User->find('all', array('conditions' => array('pseudo' => $this->request->data['pseudo'])));
-                                                $vote_nbr = $user_id[0]['User']['vote'] + 1;
-                                                $this->User->read(null, $user_id['0']['User']['id']);
-                                                $this->User->set(array(
-                                                    'vote' => $vote_nbr
-                                                ));
-                                                $this->User->save();
 
                                                 echo $this->Lang->get('VOTE_SUCCESS').' '.$this->Lang->get('REWARDS').' : <b>'.$rewards[$random]['how'].' '.$this->Configuration->get_money_name().'</b>.|true';
 
@@ -266,34 +247,6 @@ class VoterController extends VoteAppController {
                                                 echo $this->Lang->get('INTERNAL_ERROR').'|false';
 
                                             } else {
-
-                                                $this->loadModel('Vote');
-                                                $get_last_vote = $this->Vote->find('all', array('conditions' => array('username' => $this->request->data['pseudo'])));
-                                                
-                                                if(empty($get_last_vote)) {
-                                                    $this->Vote->read(null, null);
-                                                    $this->Vote->set(array(
-                                                        'username' => $this->request->data['pseudo'],
-                                                        'ip' => $_SERVER['REMOTE_ADDR']
-                                                    ));
-                                                    $this->Vote->save();
-                                                } else {
-                                                    $this->Vote->read(null, $get_last_vote['0']['Vote']['id']);
-                                                    $this->Vote->set(array(
-                                                        'username' => $this->request->data['pseudo'],
-                                                        'ip' => $_SERVER['REMOTE_ADDR'],
-                                                        'created' => date('Y-m-d H:i:s')
-                                                    ));
-                                                    $this->Vote->save();
-                                                }
-                                                $this->loadModel('User');
-                                                $user_id = $this->User->find('all', array('conditions' => array('pseudo' => $this->request->data['pseudo'])));
-                                                $vote_nbr = $user_id[0]['User']['vote'] + 1;
-                                                $this->User->read(null, $user_id['0']['User']['id']);
-                                                $this->User->set(array(
-                                                    'vote' => $vote_nbr
-                                                ));
-                                                $this->User->save();
 
                                                 echo $this->Lang->get('VOTE_SUCCESS').' ! ';
                                                 if(!empty($success_msg)) {
