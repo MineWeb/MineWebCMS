@@ -13,6 +13,6 @@ CREATE TABLE IF NOT EXISTS `vote_configurations` (
   `id_vote` int(10) NOT NULL,
   `rewards_type` int(1) NOT NULL DEFAULT '0',
   `rewards` text NOT NULL,
-  `rewards` text DEFAULT NULL,
+  `servers` text DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
