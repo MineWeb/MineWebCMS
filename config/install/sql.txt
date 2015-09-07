@@ -1,3 +1,11 @@
+CREATE TABLE `servers` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL DEFAULT '',
+  `ip` varchar(20) NOT NULL DEFAULT '',
+  `port` int(5) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+|
 CREATE TABLE IF NOT EXISTS `comments` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `content` text NOT NULL,
@@ -18,8 +26,6 @@ CREATE TABLE IF NOT EXISTS `configurations` (
   `money_name_singular` varchar(255) NOT NULL,
   `money_name_plural` varchar(255) NOT NULL,
   `server_state` int(1) NOT NULL,
-  `server_host` varchar(32) NOT NULL,
-  `server_port` int(6) NOT NULL,
   `server_secretkey` varchar(50) NOT NULL,
   `server_timeout` float NOT NULL,
   `version` varchar(50) NOT NULL,
