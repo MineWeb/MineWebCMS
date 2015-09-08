@@ -12,7 +12,6 @@
       <center>
         <p class="text-center"><?= $Lang->get('LAST_VERSION') ?> : <?= $Update->get_version() ?></p>
   			<button id="update" class="btn btn-large btn-lg btn-primary"><?= $Lang->get('UPDATE') ?></button>
-        <button style="display:none;" id="stop_update" class="btn btn-large btn-lg btn-dangerr">Stop</button>
         <div id="update-msg"></div>
         <div class="progress progress-striped active" style="display:none;">
           <div class="bar" style="width: 40%;"></div>
