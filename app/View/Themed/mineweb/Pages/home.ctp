@@ -56,7 +56,7 @@ $theme_config = json_decode($theme_config, true);
           $banner_server = $this->Configuration->get('banner_server');
           if(empty($banner_server)) {
             if($Server->online()) {
-              echo '<p class="text-center"><?= $Lang->banner_server($Server->banner_infos()) ?></p>';
+              echo '<p class="text-center">'.$Lang->banner_server($Server->banner_infos()).'</p>';
             } else { 
               echo '<p class="text-center">'.$Lang->get('SERVER_OFF').'</p>';
             }

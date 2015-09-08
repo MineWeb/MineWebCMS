@@ -54,16 +54,27 @@ $this->Configuration = new ConfigurationComponent();
 									<div class="control-group">
 										<label class="control-label"><?= $Lang->get('BANNER_SERVER_CHOOSE') ?></label>
 										<div class="controls">
-											<?php
-												echo $this->Form->input('field', array(
-														'multiple' => true,
-													  	'label' => false,
-													  	'div' => false,
-													  	'name' => 'banner_server',
-												      	'options' => $servers,
-												      	'selected' => $selected_server
-												  	));
-											?>
+											<?php if(empty($servers)) { ?>
+												<?php
+													echo $this->Form->input('field', array(
+															'multiple' => true,
+														  	'label' => false,
+														  	'div' => false,
+														  	'disabled' => 'disabled'
+													  	));
+												?>
+											<?php } else { ?>
+												<?php
+													echo $this->Form->input('field', array(
+															'multiple' => true,
+														  	'label' => false,
+														  	'div' => false,
+														  	'name' => 'banner_server',
+													      	'options' => $servers,
+													      	'selected' => $selected_server
+													  	));
+												?>
+											<?php } ?>
 										</div>
 									</div>
 								<?php } else { ?>

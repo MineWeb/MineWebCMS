@@ -73,7 +73,7 @@
 							'type' => 'submit',
 							'class' => 'btn btn-primary'
 						)); ?>
-						<a href="<?= $this->Html->url(array('controller' => '', 'action' => '', 'admin' => true)) ?>" type="button" class="btn"><?= $Lang->get('CANCEL') ?></a>     
+						<a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'index', 'admin' => true)) ?>" type="button" class="btn"><?= $Lang->get('CANCEL') ?></a>     
 					</div>
 
 				</form>          

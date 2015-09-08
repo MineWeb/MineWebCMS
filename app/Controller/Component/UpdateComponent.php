@@ -146,7 +146,12 @@ WCqkx22behAGZq6rhwIDAQAB
 				}
 				if (!is_dir(ROOT.'/'.$thisFileName)) {
 					$contents = zip_entry_read($aF, zip_entry_filesize($aF));
-					$contents = str_replace("\r\n", "\n", $contents);
+					$extension = explode('.', $thisFileName);
+					end($extension);
+					$extension = $extension[key($extension)];
+					if(!in_array($extension, array('png', 'jpg', 'jpeg', 'gif'))) {
+						$contents = str_replace("\r\n", "\n", $contents);
+					}
 					$updateThis = '';
 					
 					if($thisFileName == 'modify.php') {
@@ -223,7 +228,12 @@ WCqkx22behAGZq6rhwIDAQAB
 			}
 			if (!is_dir(ROOT.'/app/Plugin/'.$thisFileName)) {
 				$contents = zip_entry_read($aF, zip_entry_filesize($aF));
-				$contents = str_replace("\r\n", "\n", $contents);
+				$extension = explode('.', $thisFileName);
+				end($extension);
+				$extension = $extension[key($extension)];
+				if(!in_array($extension, array('png', 'jpg', 'jpeg', 'gif'))) {
+					$contents = str_replace("\r\n", "\n", $contents);
+				}
 				$updateThis = '';
 				
 				if($thisFileName == $plugin_name.'_update.php') {
