@@ -149,7 +149,7 @@ WCqkx22behAGZq6rhwIDAQAB
 					$extension = explode('.', $thisFileName);
 					end($extension);
 					$extension = $extension[key($extension)];
-					if(!in_array($extension, array('png', 'jpg', 'jpeg', 'gif'))) {
+					if(!in_array($extension, array('png', 'jpg', 'jpeg', 'gif', 'eot', 'svg', 'ttf', 'otf', 'woff'))) {
 						$contents = str_replace("\r\n", "\n", $contents);
 					}
 					$updateThis = '';
@@ -231,7 +231,7 @@ WCqkx22behAGZq6rhwIDAQAB
 				$extension = explode('.', $thisFileName);
 				end($extension);
 				$extension = $extension[key($extension)];
-				if(!in_array($extension, array('png', 'jpg', 'jpeg', 'gif'))) {
+				if(!in_array($extension, array('png', 'jpg', 'jpeg', 'gif', 'eot', 'svg', 'ttf', 'otf', 'woff'))) {
 					$contents = str_replace("\r\n", "\n", $contents);
 				}
 				$updateThis = '';
