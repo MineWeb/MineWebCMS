@@ -25,7 +25,7 @@
 				$config = $Permissions->get_all();
 				foreach ($config as $key => $value) { ?>
 					<tr>
-                  		<td><?= $key ?></td>
+                  		<td><?= $Lang->get('PERMISSIONS__'.$key) ?></td>
                   		<td><input type="checkbox" name="<?= $key ?>-0"<?php if($value['0'] == "true") { echo ' checked="checked"'; } ?>></td>
                   		<td><input type="checkbox" name="<?= $key ?>-2"<?php if($value['2'] == "true") { echo ' checked="checked"'; } ?>></td>
                   		<td><input type="checkbox" checked="checked" disabled="disabled"></td>

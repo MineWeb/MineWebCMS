@@ -360,5 +360,15 @@
     "SUCCESS_SAVE_TIMEOUT":"Le timeout c'est bien enregistré !",
     "BANNER_SERVER_CHOOSE":"Quels serveurs<br> souhaitez-vous<br> afficher sur <br>la bannière ?",
     "SUCCESS_ENABLE_MINEGUARD":"Vous avez bien activé MineGuard",
-    "SUCCESS_DISABLE_MINEGUARD":"Vous avez bien désactivé MineGuard"
+    "SUCCESS_DISABLE_MINEGUARD":"Vous avez bien désactivé MineGuard",
+
+    "PERMISSIONS__COMMENT_NEWS":"Commenter une news",
+    "PERMISSIONS__LIKE_NEWS":"Aimer une news",
+    "PERMISSIONS__DELETE_HIS_COMMENT":"Supprimer son propre commentaire",
+    "PERMISSIONS__DELETE_COMMENT":"Supprimer n'importe quel commentaire",
+    "PERMISSIONS__ACCESS_DASHBOARD":"Accéder à au dashboard admin",
+    "PERMISSIONS__MANAGE_NEWS":"Gérer les news (suppression, ajout, édition)",
+    "PERMISSIONS__MANAGE_SLIDER":"Gérer les sliders (suppression, ajout, édition)",
+    "PERMISSIONS__MANAGE_PAGE":"Gérer les pages (suppression, ajout, édition)",
+    "PERMISSIONS__MANAGE_NAV":"Gérer la barre de navigation (suppression, ajout, édition)"
 }

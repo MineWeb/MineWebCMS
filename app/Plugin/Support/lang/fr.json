@@ -12,5 +12,16 @@
     "REPLY_TO_TICKET": "R\u00e9pondre \u00e0 un ticket",
     "YOUR_REPLY": "Votre r\u00e9ponse",
     "PROBLEM": "Probl\u00e8me",
-    "PRIVATE_TICKET": "Rendre le ticket priv\u00e9 ?"
+    "PRIVATE_TICKET": "Rendre le ticket priv\u00e9 ?",
+
+    "PERMISSIONS__POST_TICKET": "Poster un ticket",
+    "PERMISSIONS__VIEW_TICKETS": "Voir les tickets",
+    "PERMISSIONS__VIEW_ALL_TICKETS": "Voir tous les tickets (privés ou non)",
+    "PERMISSIONS__DELETE_ALL_TICKETS": "Pouvoir supprimer tous les tickets",
+    "PERMISSIONS__DELETE_HIS_TICKET": "Pouvoir supprimer son propre ticket",
+    "PERMISSIONS__RESOLVE_HIS_TICKET": "Résoudre son propre ticket",
+    "PERMISSIONS__RESOLVE_ALL_TICKETS": "Résoudre tous les tickets",
+    "PERMISSIONS__SHOW_TICKETS_ANWSERS": "Voir les réponses des tickets",
+    "PERMISSIONS__REPLY_TO_HIS_TICKETS": "Répondre à son propre ticket",
+    "PERMISSIONS__REPLY_TO_ALL_TICKETS": "Répondre à tous les tickets"
 }
