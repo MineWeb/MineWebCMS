@@ -18,7 +18,7 @@ class NavbarController extends AppController {
 	}
 
 	public function admin_save_ajax() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_NAV')) {
 			$this->layout = null;
 			 
 			if($this->request->is('post')) {
@@ -67,7 +67,7 @@ class NavbarController extends AppController {
 	}
 
 	public function admin_delete($id = false) {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_NAV')) {
 			if($id != false) {
 				 
 				$this->loadModel('Navbar');
@@ -87,7 +87,7 @@ class NavbarController extends AppController {
 	}
 
 	public function admin_add() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_NAV')) {
 			$this->layout = 'admin';
 			 
 			$this->set('title_for_layout', $this->Lang->get('ADD_NAV'));
@@ -115,7 +115,7 @@ class NavbarController extends AppController {
 	}
 
 	public function admin_add_ajax() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_NAV')) {
 			$this->layout = null;
 			 
 			if($this->request->is('post')) {

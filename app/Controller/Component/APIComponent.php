@@ -322,7 +322,7 @@ SUVORK5CYII='));
 			if(!empty($username)) {
 				$search_user = $this->User->find('all', array('conditions' => array('pseudo' => $username)));
 				if(!empty($search_user)) {
-					$allowed_ip = unserialize($search_user[0]['User']['allowed_ip']);
+					$allowed_ip = @unserialize($search_user[0]['User']['allowed_ip']);
 					if(empty($allowed_ip)) {
 						$allowed_ip[] = $search_user[0]['User']['ip'];
 					}

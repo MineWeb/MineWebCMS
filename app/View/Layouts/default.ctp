@@ -122,7 +122,7 @@ $theme_config = json_decode($theme_config, true);
                           <ul class="dropdown-menu" role="menu">
                             <?php if($this->Connect->connect()) { ?>
                               <li><a href="<?= $this->Html->url(array('controller' => 'profile', 'action' => 'index', 'plugin' => null)) ?>"><?= $Lang->get('PROFILE') ?></a></li>
-                              <?php if($this->Connect->if_admin()) { ?>
+                              <?php if($Permissions->can('ACCESS_DASHBOARD')) { ?>
                                 <li class="divider"></li>
                                     <li><a href="<?= $this->Html->url(array('controller' => '', 'action' => 'index', 'plugin' => 'admin')) ?>"><?= $Lang->get('ADMIN_PANEL') ?></a></li>
                               <?php } ?>

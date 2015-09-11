@@ -1,7 +1,7 @@
 <?php
 class PermissionsComponent extends Object {
 
-  private $permissions = array('COMMENT_NEWS', 'LIKE_NEWS', 'DELETE_HIS_COMMENT', 'DELETE_COMMENT');
+  private $permissions = array('COMMENT_NEWS', 'LIKE_NEWS', 'DELETE_HIS_COMMENT', 'DELETE_COMMENT', 'ACCESS_DASHBOARD', 'MANAGE_NEWS', 'MANAGE_SLIDER', 'MANAGE_PAGE', 'MANAGE_NAV');
   	
   public $components = array('Session', 'Connect');
   

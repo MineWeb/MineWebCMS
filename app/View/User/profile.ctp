@@ -161,6 +161,15 @@ if($this->Connect->connect()) {
 							</form>
 						</div>
 					</div>
+					<div class="row">
+						
+						<div class="ajax-msg-mineguard"></div>
+						<?php if($this->Connect->get('allowed_ip') == '0') { ?>
+							<button onClick="enableMineGuard();" class="btn btn-block btn-success"><?= $Lang->get('ENABLE') ?></button>
+						<?php } else { ?>
+							<button onClick="disableMineGuard();" class="btn btn-block btn-danger"><?= $Lang->get('DISABLE') ?></button>
+						<?php } ?>
+					</div>
 				<?php } ?>
 
 				<?php if($can_skin) { ?>
@@ -218,6 +227,37 @@ if($this->Connect->connect()) {
 	</div>
 <script type="text/javascript">
 	<?php if($this->Configuration->get('mineguard') == "true") { ?>
+
+		function enableMineGuard() {
+			$.post("<?= $this->Html->url(array('controller' => 'api', 'action' => 'enable_mineguard', 'admin' => false)) ?>", {}, function(data) {
+	          	data2 = data.split("|");
+			  	if(data.indexOf('true') != -1) {
+	          		$('.ajax-msg-mineguard').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+	          	} else if(data.indexOf('false') != -1) {
+	            	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+		        } else {
+			    	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+			    }
+	        });
+	        return false;
+		}
+
+		function disableMineGuard() {
+			$.post("<?= $this->Html->url(array('controller' => 'api', 'action' => 'disable_mineguard', 'admin' => false)) ?>", {}, function(data) {
+	          	data2 = data.split("|");
+			  	if(data.indexOf('true') != -1) {
+	          		$('.ajax-msg-mineguard').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+	          		var table_ip = $('#table-ip').html();
+	          		$('#table-mineguard').html(table_ip+'<tr><th>'+ip+'</th></tr>');
+	          	} else if(data.indexOf('false') != -1) {
+	            	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+		        } else {
+			    	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+			    }
+	        });
+	        return false;
+		}
+		
 		$("#allowed_ip").submit(function( event ) {
 			$('.ajax-msg-ip').empty().html('<div class="alert alert-info"><a class="close" data-dismiss="alert">×</a><?= $Lang->get('LOADING') ?>...</div>').fadeIn(500);
 	    	event.preventDefault();

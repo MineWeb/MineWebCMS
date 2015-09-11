@@ -5,7 +5,7 @@ class SliderController extends AppController {
 	public $components = array('Session');
 
 	public function admin_index() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_SLIDER')) {
 			 
 			$this->set('title_for_layout',$this->Lang->get('ADD_SLIDER'));
 			$this->layout = 'admin';
@@ -18,7 +18,7 @@ class SliderController extends AppController {
 	}
 
 	public function admin_delete($id = false) {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_SLIDER')) {
 			if($id != false) {
 				 
 				$this->layout = null;
@@ -42,7 +42,7 @@ class SliderController extends AppController {
 	}
 
 	public function admin_edit($id = false) {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_SLIDER')) {
 			$this->layout = 'admin';
 			 
 			if($id != false) {
@@ -64,7 +64,7 @@ class SliderController extends AppController {
 	}
 
 	public function admin_edit_ajax() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_SLIDER')) {
 			$this->layout = null;
 			 
 			if($this->request->is('post')) {
@@ -92,7 +92,7 @@ class SliderController extends AppController {
 	}
 
 	public function admin_add() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_SLIDER')) {
 			$this->layout = 'admin';
 			 
 			$this->set('title_for_layout', $this->Lang->get('ADD_SLIDER'));
@@ -102,7 +102,7 @@ class SliderController extends AppController {
 	}
 
 	public function admin_add_ajax() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_SLIDER')) {
 			$this->layout = null;
 			 
 			if($this->request->is('post')) {

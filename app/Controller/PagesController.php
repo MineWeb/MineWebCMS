@@ -238,7 +238,7 @@ class PagesController extends AppController {
 	}
 
 	public function admin_index() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_PAGE')) {
 			 
 			$this->set('title_for_layout',$this->Lang->get('PAGES_LIST'));
 			$this->layout = 'admin';
@@ -251,7 +251,7 @@ class PagesController extends AppController {
 	}
 
 	public function admin_add() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_PAGE')) {
 			 
 			$this->set('title_for_layout',$this->Lang->get('ADD_PAGE'));
 			$this->layout = 'admin';
@@ -261,7 +261,7 @@ class PagesController extends AppController {
 	}
 
 	public function admin_add_ajax() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_PAGE')) {
 			 
 			$this->layout = null;
 			if($this->request->is('post')) {
@@ -291,7 +291,7 @@ class PagesController extends AppController {
 	}
 
 	public function admin_delete($id = false) {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_PAGE')) {
 			 
 			$this->layout = null;
 			if($id != false) {
@@ -313,7 +313,7 @@ class PagesController extends AppController {
 	}
 
 	public function admin_edit($id = false) {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_PAGE')) {
 			if($id != false) {
 				 
 				$this->set('title_for_layout',$this->Lang->get('EDIT_PAGE'));
@@ -335,7 +335,7 @@ class PagesController extends AppController {
 	}
 
 	public function admin_edit_ajax() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_PAGE')) {
 			 
 			$this->layout = null;
 			if($this->request->is('post')) {

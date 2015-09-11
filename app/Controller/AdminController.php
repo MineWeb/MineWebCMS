@@ -5,7 +5,7 @@ class AdminController extends AppController {
 	public $components = array('Session', 'History', 'Connect');
 
 	function admin_index() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->Connect->connect() AND $this->Permissions->can('ACCESS_DASHBOARD')) {
 			 
 			$this->set('title_for_layout', $this->Lang->get('HOME'));
 			$this->layout = 'admin';
