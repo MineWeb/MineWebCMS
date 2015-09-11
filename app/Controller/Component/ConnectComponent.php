@@ -103,7 +103,7 @@ class ConnectComponent extends Object {
     if(CakeSession::check('user')) {
       $search_user = $this->getDataBySession(CakeSession::read('user'));
       if($search_user) {
-        $this->User->read(null, $search_user['0']['User']['id']);
+        $this->User->read(null, $search_user['User']['id']);
         $this->User->set(array($key => $value));
         if($this->User->save()) {
           return true;

@@ -63,6 +63,40 @@ class APIController extends AppController {
     	}
 	}
 
+	public function disable_mineguard() {
+		$this->autoRender = false;
+        if($this->Connect->connect()) {
+    		if($this->request->is('post')) {
+    			
+    			$this->Connect->set('allowed_ip', '0');
+
+    			echo $this->Lang->get('SUCCESS_DISABLE_MINEGUARD').'|true';
+
+    		} else {
+    			echo $this->Lang->get('NOT_POST').'|false';
+    		}
+    	} else {
+    		echo $this->Lang->get('NEED_CONNECT').'|false';
+    	}
+	}
+
+	public function enable_mineguard() {
+		$this->autoRender = false;
+        if($this->Connect->connect()) {
+    		if($this->request->is('post')) {
+    			
+    			$this->Connect->set('allowed_ip', serialize(array()));
+
+    			echo $this->Lang->get('SUCCESS_ENABLE_MINEGUARD').'|true';
+
+    		} else {
+    			echo $this->Lang->get('NOT_POST').'|false';
+    		}
+    	} else {
+    		echo $this->Lang->get('NEED_CONNECT').'|false';
+    	}
+	}
+
 	public function admin_index() {
 		if($this->Connect->connect() AND $this->Connect->if_admin()) {
 			$this->set('title_for_layout',$this->Lang->get('API'));

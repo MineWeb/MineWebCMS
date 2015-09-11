@@ -290,14 +290,18 @@ SUVORK5CYII='));
 				if(filter_var($ip, FILTER_VALIDATE_IP)) {
 					$search_user = $this->User->find('all', array('conditions' => array('pseudo' => $username)));
 					if(!empty($search_user)) {
-						$allowed_ip = unserialize($search_user[0]['User']['allowed_ip']);
-						if(empty($allowed_ip)) {
-							$allowed_ip[] = $search_user[0]['User']['ip'];
-						}
-						if(in_array($ip, $allowed_ip)) {
-							return array('result' => 'SUCCESS');
+						if($search_user[0]['User']['allowed_ip'] != '0') {
+							$allowed_ip = unserialize($search_user[0]['User']['allowed_ip']);
+							if(empty($allowed_ip)) {
+								$allowed_ip[] = $search_user[0]['User']['ip'];
+							}
+							if(in_array($ip, $allowed_ip)) {
+								return array('result' => 'SUCCESS');
+							} else {
+								return array('result' => 'NOT_ALLOWED');
+							}
 						} else {
-							return array('result' => 'NOT_ALLOWED');
+							return array('result' => 'SUCCESS');
 						}
 					} else {
 						return array('result' => 'UNKNOWN_USER');
