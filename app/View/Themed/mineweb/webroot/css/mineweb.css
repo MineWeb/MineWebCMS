@@ -283,7 +283,7 @@ ul#items .a-like p a {
 	padding-top: 6px !important;
 }
 
-.dropdown .dropdown-menu a:hover, a:focus, a:active {
+.dropdown .dropdown-menu a:hover, .dropdown .dropdown-menu a:focus, .dropdown .dropdown-menu a:active {
 	background-color: #2e86c1;
 	color: #fff;
 }

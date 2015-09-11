@@ -1,4 +1,4 @@
-CREATE TABLE `servers` (
+CREATE TABLE IF NOT EXISTS `servers` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL DEFAULT '',
   `ip` varchar(20) NOT NULL DEFAULT '',
@@ -171,5 +171,5 @@ INSERT INTO `permissions` (`id`, `rank`, `permissions`) VALUES
 INSERT INTO `api_configurations` (`id`, `skins`, `skin_filename`, `skin_free`, `capes`, `cape_filename`, `cape_free`) VALUES
 (1, 1, 'skins/{PLAYER}_skin', 1, 1, 'skins/capes/{PLAYER}_cape', 0);
 |
-INSERT INTO `configurations` (`id`, `name`, `email`, `lang`, `theme`, `layout`, `maintenance`, `money_name_singular`, `money_name_plural`, `server_state`, `server_host`, `server_port`, `server_secretkey`, `server_timeout`, `version`, `skype`, `youtube`, `twitter`, `facebook`, `mineguard`) VALUES
-(1, 'MineWeb', 'dev@mineweb.org', 'fr', 'Mineweb', 'default', '0', 'point', 'points', 0, '', '', '', '', '0.3.1', 'http://mineweb.org', 'http://mineweb.org', 'http://mineweb.org', 'http://mineweb.org', 'false');
+INSERT INTO `configurations` (`id`, `name`, `email`, `lang`, `theme`, `layout`, `maintenance`, `money_name_singular`, `money_name_plural`, `server_state`, `server_secretkey`, `server_timeout`, `version`, `skype`, `youtube`, `twitter`, `facebook`, `mineguard`) VALUES
+(1, 'MineWeb', 'dev@mineweb.org', 'fr', 'Mineweb', 'default', '0', 'point', 'points', 0, '', '', '0.3.1', 'http://mineweb.org', 'http://mineweb.org', 'http://mineweb.org', 'http://mineweb.org', 'false');
