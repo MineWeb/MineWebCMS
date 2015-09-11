@@ -18,120 +18,148 @@ class EyPluginComponent extends Object {
   function beforeRedirect() { 
   }
 
+/**
+*
+* Fonction lancé au lancement du composant
+* -> Check si il n'y a pas un plugin à installé
+* -> Check si il n'y a pas un plugin à supprimé
+*
+**/
+
   function initialize(&$controller) {
     $this->plugins = ClassRegistry::init('plugins'); // le model plugins 
 
-    $dir = ROOT.'/app/Plugin';
-    $plugins = scandir($dir);
-    $plugins = array_delete_value($plugins, '.');
-    $plugins = array_delete_value($plugins, '..');
-    $plugins = array_delete_value($plugins, '.DS_Store');
-    foreach ($plugins as $key => $value) {
-      $list_plugins[] = $value;
-    }
-    if(!empty($plugins)) {
-      $plugins_list = $list_plugins;
-    } else {
-      $plugins_list = false;
-    }
+    $plugins_list = $this->getPluginsInFolder(); // on récupére tout les plugins dans le dossier
 
     if($plugins_list != false) {
-      foreach ($plugins_list as $k => $v) { // boucle de vérification
-        $search = $this->plugins->find('all', array('conditions' => array('name' => $v))); // je cherche tout les plugins du dossier dans la bdd
-        if(empty($search)) { // si un est pas activé dans la bdd
-          /*$p_author = file_get_contents('../../app/Plugin/'.$v.'/author.txt');
-          $version = file_get_contents('../../app/Plugin/'.$v.'/version.txt');
-          $plugin_id = file_get_contents('../../app/Plugin/'.$v.'/plugin_id.txt');*/
-          $config = file_get_contents(ROOT.'/app/Plugin/'.$v.'/config.json');
-          $config = json_decode($config, true);
-          $version = $config['version'];
-          $plugin_id = $config['plugin_id'];
-          $p_author = $config['author'];
-          $p_tables = file_get_contents(ROOT.'/app/Plugin/'.$v.'/sql_name.txt');
-          $p_tables = explode(',', $p_tables);
-          $this->plugins->create();
-          $this->plugins->set(array('plugin_id' => $plugin_id, 'name' => $v, 'author' => $p_author, 'version' => $version, 'tables' => serialize($p_tables)));
-          $this->plugins->save();
-          $tables_plugins = file_get_contents(ROOT.'/app/Plugin/'.$v.'/sql.txt');
-          if(!empty($tables_plugins)) {
-            $tables_plugins = explode('|', $tables_plugins);
-            App::import('Model', 'ConnectionManager');
-            $con = new ConnectionManager;
-            $cn = $con->getDataSource('default');
-            foreach ($tables_plugins as $do) {
-              if(!empty($do)) {
-                $cn->query($do);
-              }
-            }
-          }
 
-          if(file_exists(ROOT.'/app/Plugin/'.$v.'/Controller/Component/MainComponent.php')) {
+      foreach ($plugins_list as $k => $v) { // on les passes touts 1 à 1 
+
+        $search = $this->plugins->find('all', array('conditions' => array('name' => $v))); // je cherche tout les plugins du dossier dans la bdd
+
+        if(empty($search)) { // si un est pas activé dans la bdd
+
+          $config = file_get_contents(ROOT.'/app/Plugin/'.$v.'/config.json');
+          $config = json_decode($config, true); // on récupère la config
+
+          $p_tables = file_get_contents(ROOT.'/app/Plugin/'.$v.'/sql_name.txt');
+          $p_tables = explode(',', $p_tables); // on récupère les tables qui vont être installés
+
+          $this->plugins->create();
+          $this->plugins->set(array('plugin_id' => $config['plugin_id'], 'name' => $v, 'author' => $config['author'], 'version' => $config['version'], 'tables' => serialize($p_tables)));
+          $this->plugins->save(); // on save le plugin dans la base de données
+          
+          $this->addTables($v); // on ajoute les tables nécessaires
+
+          if(file_exists(ROOT.'/app/Plugin/'.$v.'/Controller/Component/MainComponent.php')) { // On fais le onEnable si il existe
             App::uses('MainComponent', 'Plugin/'.$v.'/Controller/Component');
             $this->Main = new MainComponent();
             $this->Main->onEnable();
-          }
+          } 
 
           // une fois que on a mis les tables, on s'occupe des permissions
-          $this->Permission = ClassRegistry::init('Permission');
-          if(isset($config['permissions']['default']) AND !empty($config['permissions']['default'])) {
-            foreach ($config['permissions']['default'] as $key => $value) {
-              $where = $this->Permission->find('all', array('conditions' => array('rank' => $key))); // je cherche les perms du rank 
-              if(!empty($where)) {
-                $addperm = unserialize($where['0']['Permission']['permissions']);
-                foreach ($addperm as $k2 => $v2) {
-                  foreach ($value as $kp => $perm) {
-                    $addperm[] = $perm; // on ajoute les perms
-                  }
-                }
-                $this->Permission->read(null, $where['0']['Permission']['id']);
-                $this->Permission->set(array('permissions' => serialize($addperm)));
-                $this->Permission->save();
-              }
-            }
-          }
+          $this->addPermissions($config); // on ajoute les perms par défaut
+
         }
       }
+
       $search = $this->plugins->find('all'); // on les cherche tous
-      foreach ($search as $key => $value) {
+
+      foreach ($search as $key => $value) { // on rend ca plus clair pour le array_diff
         $array[] = $value['plugins']['name'];
       }
+
       $bdd = $array;
       $diff = array_diff($bdd, $plugins_list); // on cherche le plugin qui est présent dans la bdd et non pas dans le dossier
+
       if(!empty($diff)) { // si il y a une différence entre les deux listes
-        foreach ($diff as $key => $value) {
-          $search = $this->plugins->find('all', array('conditions' => array('name' => $value)));
-          $tables_plugins = unserialize($search['0']['plugins']['tables']);
+
+        foreach ($diff as $key => $value) { // on les parcours
+
+          $search = $this->plugins->find('all', array('conditions' => array('name' => $value))); // on cherche le nom
+
+          $tables_plugins = unserialize($search['0']['plugins']['tables']); // pour récupérer les tables installées
           App::import('Model', 'ConnectionManager');
           $con = new ConnectionManager;
           $cn = $con->getDataSource('default');
           foreach ($tables_plugins as $k => $v) {
             if(!empty($v)) {
-              $cn->query("DROP TABLE ".$v);
+              $cn->query("DROP TABLE ".$v); // on les supprimes
             }
           }
+
           $this->plugins->delete($search['0']['plugins']['id']); // je le supprime de la bdd
+
           @clearDir(ROOT.'/app/Plugin/'.$search['0']['plugins']['name']);
           @clearFolder(ROOT.'/app/tmp/cache/models/');
-          @clearFolder(ROOT.'/app/tmp/cache/persistent/');
+          @clearFolder(ROOT.'/app/tmp/cache/persistent/'); // et on clear le cache pour éviter les soucis
+        }
+
+      }
+
+    }
+  }
+
+  function startup(&$controller) {
+    $plugins = $this->getPluginsInFolder();
+    if($plugins && !empty($plugins)) {
+      Configure::write('eyplugins.plugins.list', $plugins);
+    } else {
+      Configure::write('eyplugins.plugins.list', false);
+    }
+  }
+
+  private function addTables($plugin_name) {
+    $tables_plugins = file_get_contents(ROOT.'/app/Plugin/'.$plugin_name.'/sql.txt');
+    if(!empty($tables_plugins)) {
+      $tables_plugins = explode('|', $tables_plugins);
+      App::import('Model', 'ConnectionManager');
+      $con = new ConnectionManager;
+      $cn = $con->getDataSource('default');
+      foreach ($tables_plugins as $do) {
+        if(!empty($do)) {
+          $cn->query($do);
         }
       }
     }
   }
 
-  function startup(&$controller) {
+  private function getPluginsInFolder() {
     $dir = ROOT.'/app/Plugin';
     $plugins = scandir($dir);
     $plugins = array_delete_value($plugins, '.');
     $plugins = array_delete_value($plugins, '..');
     $plugins = array_delete_value($plugins, '.DS_Store');
-    foreach ($plugins as $key => $value) {
-      $list_plugins[] = $value;
+    if(!empty($plugins)) {
+      foreach ($plugins as $key => $value) {
+        $list_plugins[] = $value;
+      }
+    } else {
+      return false;
     }
     if(!empty($plugins)) {
-      $plugins = $list_plugins;
-      Configure::write('eyplugins.plugins.list', $plugins);
-    } else {
-      Configure::write('eyplugins.plugins.list', false);
+      return $list_plugins;
+    }
+    return false;
+  }
+
+  private function addPermissions($config) {
+    $this->Permission = ClassRegistry::init('Permission');
+    if(isset($config['permissions']['default']) AND !empty($config['permissions']['default'])) {
+      foreach ($config['permissions']['default'] as $key => $value) {
+        $where = $this->Permission->find('all', array('conditions' => array('rank' => $key))); // je cherche les perms du rank 
+        if(!empty($where)) {
+          $addperm = unserialize($where['0']['Permission']['permissions']);
+          foreach ($addperm as $k2 => $v2) {
+            foreach ($value as $kp => $perm) {
+              $addperm[] = $perm; // on ajoute les perms
+            }
+          }
+          $this->Permission->read(null, $where['0']['Permission']['id']);
+          $this->Permission->set(array('permissions' => serialize($addperm)));
+          $this->Permission->save();
+        }
+      }
     }
   }
 
@@ -386,29 +414,17 @@ WCqkx22behAGZq6rhwIDAQAB
 
     if(unzip($zip, ROOT.'/app/Plugin', 'install-zip', true)) {
       $this->plugins = ClassRegistry::init('plugins');
-      /*$p_author = file_get_contents('../../app/Plugin/'.$plugin_name.'/author.txt');
-      $version = file_get_contents('../../app/Plugin/'.$plugin_name.'/version.txt');*/
       $config = file_get_contents(ROOT.'/app/Plugin/'.$plugin_name.'/config.json');
       $config = json_decode($config, true);
-      $version = $config['version'];
-      $p_author = $config['author'];
+
       $p_tables = file_get_contents(ROOT.'/app/Plugin/'.$plugin_name.'/sql_name.txt');
       $p_tables = explode(',', $p_tables);
+
       $this->plugins->create();
-      $this->plugins->set(array('plugin_id' => $plugin_id, 'name' => $plugin_name, 'author' => $p_author, 'version' => $version, 'tables' => serialize($p_tables)));
+      $this->plugins->set(array('plugin_id' => $plugin_id, 'name' => $plugin_name, 'author' => $config['author'], 'version' => $config['version'], 'tables' => serialize($p_tables)));
       $this->plugins->save();
-      $tables_plugins = file_get_contents(ROOT.'/app/Plugin/'.$plugin_name.'/sql.txt');
-      if(!empty($tables_plugins)) {
-        $tables_plugins = explode('|', $tables_plugins);
-        App::import('Model', 'ConnectionManager');
-        $con = new ConnectionManager;
-        $cn = $con->getDataSource('default');
-        foreach ($tables_plugins as $do) {
-          if(!empty($do)) {
-            $cn->query($do);
-          }
-        }
-      }
+      
+      $this->addTables($plugin_name);
 
       if(file_exists(ROOT.'/app/Plugin/'.$plugin_name.'/Controller/Component/MainComponent.php')) {
         App::uses('MainComponent', 'Plugin/'.$plugin_name.'/Controller/Component');
@@ -417,21 +433,8 @@ WCqkx22behAGZq6rhwIDAQAB
       }
 
       // une fois que on a mis les tables, on s'occupe des permissions
-      $this->Permission = ClassRegistry::init('Permission');
-      if(isset($config['permissions']['default']) AND !empty($config['permissions']['default'])) {
-        foreach ($config['permissions']['default'] as $key => $value) {
-          $where = $this->Permission->find('all', array('conditions' => array('rank' => $key))); // je cherche les perms du rank 
-          if(!empty($where)) {
-            $addperm = unserialize($where['0']['Permission']['permissions']);
-            foreach ($addperm as $k2 => $v2) {
-              $addperm[] = $v2; // on ajoute les perms
-            }
-            $this->Permission->read(null, $where['0']['Permission']['id']);
-            $this->Permission->set(array('permissions' => serialize($addperm)));
-            $this->Permission->save();
-          }
-        }
-      }
+      $this->addPermissions($config);
+
       clearDir(ROOT.'/app/Plugin/__MACOSX');
       clearFolder(ROOT.'/app/tmp/cache/models/');
       clearFolder(ROOT.'/app/tmp/cache/persistent/');
@@ -519,17 +522,3 @@ WCqkx22behAGZq6rhwIDAQAB
   }
 
 }
-
-/**
-* Idée
-*
-* Table avec les différents plugins et leur date d'instalation <-- VERIF A CHAQUE INITIALISATION
-* si un plugin est présent dans le dossier mais non installé d'après la bdd
-* on lance le controller install dans le plugin
-* et on lance le script sql pour créé les bdd nécessaires
-* puis il est ajouté dans la bdd avec le nom, l'auteur et le nom des tables sql créé
-*
-* si un plugin n'est plus dans le dossier mais que il est encore comme activé sur la bdd )
-* on le supprime de la bdd et on supprime selon la liste enregistré                      ) DEMANDER A L ADMIN ? SUPPRESSION DES DONNEES DU PLUGIN ? 
-* les tables sql créé.                                                                   ) 
-**/
