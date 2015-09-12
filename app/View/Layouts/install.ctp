@@ -45,14 +45,14 @@
 
 			<li role="presentation"><a title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_1') ?></a></li>
 			<li role="presentation"><a title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_2') ?></a></li>
-			<li role="presentation" class="active"><a title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_END') ?></a></li>
+			<li role="presentation" class="active"><a title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_4') ?></a></li>
 		</ul>
 		<?php } else { ?>
 		<div id="tabsleft" class="tabbable tabs-left">
 			<ul class="nav nav-tabs nav-pills nav-stacked col-xs-6 col-sm-3" style="max-width: 300px;">
 				<li role="presentation" class="active"><a href="#tabsleft-tab1" data-toggle="tab" title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_1') ?></a></li>
 				<li role="presentation" class=""><a href="#tabsleft-tab2" data-toggle="tab" data-toggle="tab" title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_2') ?></a></li>
-				<li role="presentation" class=""><a href="#tabsleft-tab3" data-toggle="tab" title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_3') ?></a></li>
+				<li role="presentation" class=""><a href="#tabsleft-tab3" data-toggle="tab" title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_4') ?></a></li>
 			</ul>
 		<?php } ?>
 
