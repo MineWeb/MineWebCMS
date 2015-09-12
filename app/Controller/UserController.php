@@ -227,6 +227,14 @@ class UserController extends AppController {
 				$this->set('search_psc_msg', false);
 			}
 
+			$available_ranks = array(0 => $this->Lang->get('MEMBER'), 2 => $this->Lang->get('MODERATOR'), 3 => $this->Lang->get('ADMINISTRATOR'), 4 => $this->Lang->get('ADMINISTRATOR'), 5 => $this->Lang->get('BANNED'));
+			$this->loadModel('Rank');
+			$custom_ranks = $this->Rank->find('all');
+			foreach ($custom_ranks as $key => $value) {
+				$available_ranks[$value['Rank']['rank_id']] = $value['Rank']['name'];
+			}
+			$this->set(compact('available_ranks'));
+
 			$api = $this->API->getIp($this->Connect->get('pseudo'));
 			$this->set(compact('api'));
 
@@ -445,6 +453,14 @@ class UserController extends AppController {
 			$this->loadModel('User');
 			$users = $this->User->find('all');
 			$this->set(compact('users'));
+
+			$available_ranks = array(0 => $this->Lang->get('MEMBER'), 2 => $this->Lang->get('MODERATOR'), 3 => $this->Lang->get('ADMINISTRATOR'), 4 => $this->Lang->get('ADMINISTRATOR'), 5 => $this->Lang->get('BANNED'));
+			$this->loadModel('Rank');
+			$custom_ranks = $this->Rank->find('all');
+			foreach ($custom_ranks as $key => $value) {
+				$available_ranks[$value['Rank']['rank_id']] = $value['Rank']['name'];
+			}
+			$this->set(compact('available_ranks'));
 		} else {
 			$this->redirect('/');
 		}
@@ -460,6 +476,23 @@ class UserController extends AppController {
 				$find = $this->User->find('all', array('conditions' => array('id' => $id)));
 				if(!empty($find)) {
 					$user = $find[0]['User'];
+
+					$options_ranks = array('member' => $this->Lang->get('MEMBER'), 2 => $this->Lang->get('MODERATOR'), 3 => $this->Lang->get('ADMINISTRATOR'), 5 => $this->Lang->get('BANNED'));
+					$this->loadModel('Rank');
+					$custom_ranks = $this->Rank->find('all');
+					foreach ($custom_ranks as $key => $value) {
+						$options_ranks[$value['Rank']['rank_id']] = $value['Rank']['name'];
+					}
+
+					foreach ($options_ranks as $k => $v) {
+						if($user['rank'] == $k OR $k == "member" && $user['rank'] == 0) {
+							$user['rank'] = $v;
+							unset($options_ranks[$k]);
+						}
+					}
+
+					$this->set(compact('options_ranks'));
+
 					$this->set(compact('user'));
 				} else {
 					$this->Session->setFlash($this->Lang->get('UNKNONW_ID'), 'default.error');

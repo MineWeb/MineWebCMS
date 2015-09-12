@@ -38,14 +38,18 @@ class PermissionsComponent extends Object {
   public function have($rank, $perm) {
     App::import('Component', 'Connect');
     $this->Connect = new ConnectComponent();
-    if($rank >= 3) {
+    if($rank == 3 OR $rank == 4) {
       return 'true';
     } else {
       $this->Perm = ClassRegistry::init('Permission');
       $search_perm = $this->Perm->find('all', array('conditions' => array('rank' => $rank)));
-      $search_perm = unserialize($search_perm[0]['Permission']['permissions']);
-      if(in_array($perm, $search_perm)) {
-        return 'true';
+      if(!empty($search_perm)) {
+        $search_perm = unserialize($search_perm[0]['Permission']['permissions']);
+        if(in_array($perm, $search_perm)) {
+          return 'true';
+        } else {
+          return 'false';
+        }
       } else {
         return 'false';
       }
@@ -68,9 +72,14 @@ class PermissionsComponent extends Object {
         array_push($return, $v);
       }
     }
+    $this->Rank = ClassRegistry::init('Rank');
+    $custom_ranks = $this->Rank->find('all');
     foreach ($return as $key => $value) {
       $return[$value]['0'] = $this->have(0, $value);
       $return[$value]['2'] = $this->have(2, $value);
+      foreach ($custom_ranks as $k => $v) {
+         $return[$value][$v['Rank']['rank_id']] = $this->have($v['Rank']['rank_id'], $value);
+      }
       unset($return[$key]);
     }
     return $return;

@@ -361,6 +361,8 @@
     "BANNER_SERVER_CHOOSE":"Quels serveurs<br> souhaitez-vous<br> afficher sur <br>la bannière ?",
     "SUCCESS_ENABLE_MINEGUARD":"Vous avez bien activé MineGuard",
     "SUCCESS_DISABLE_MINEGUARD":"Vous avez bien désactivé MineGuard",
+    "ADD_RANK":"Ajouter un rang",
+    "SUCCESS_ADD_RANK":"Le rang s'est bien ajouté avec succès !",
 
     "PERMISSIONS__COMMENT_NEWS":"Commenter une news",
     "PERMISSIONS__LIKE_NEWS":"Aimer une news",

@@ -32,19 +32,11 @@ if($this->Connect->connect()) {
 				<div class="section">
 					<p>
 						<b><?= $Lang->get('RANK') ?> :</b> 
-						<?php 
-						if($this->Connect->get('rank') == 4) { 
-							echo $Lang->get('ADMINISTRATOR');
-						} elseif ($this->Connect->get('rank') == 3) {
-							echo $Lang->get('ADMINISTRATOR');
-						} elseif ($this->Connect->get('rank') == 2) {
-							echo $Lang->get('MODERATOR');
-						} elseif ($this->Connect->get('rank') == 1) {
-							echo $Lang->get('WRITER');
-						} elseif ($this->Connect->get('rank') == 0) {
-							echo $Lang->get('MEMBER');
-						}
-						?>
+						<?php foreach ($available_ranks as $key => $value) {
+							if($this->Connect->get('rank') == $key) {
+								echo $value;
+							}
+						} ?>
 					</p>
 				</div>
 				<?php if($this->EyPlugin->is_installed('Shop')) { ?>

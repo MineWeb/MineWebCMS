@@ -23,15 +23,35 @@
 						<tr>
 							<td><?= $v["User"]["pseudo"] ?></td>
 							<td>Le <?= $Lang->date($v["User"]["created"]) ?></td>
-							<?php if($v["User"]["rank"] == 3 OR $v["User"]["rank"] == 4) { ?>
-							<td><span class="label label-important"><?= $Lang->get('ADMINISTRATOR') ?></span></td>
-							<?php } elseif($v["User"]["rank"] == 2) { ?>
-							<td><span class="label label-warning"><?= $Lang->get('MODERATOR') ?></span></td>
-							<?php } elseif($v["User"]["rank"] == 5) { ?>
-							<td><span class="label label-primary"><?= $Lang->get('BANNED') ?></span></td>
-							<?php } else { ?>
-							<td><span class="label label-success"><?= $Lang->get('MEMBER') ?></span></td>
-							<?php } ?>
+							<?php foreach ($available_ranks as $key => $value) {
+								if($v['User']['rank'] == $key) {
+
+									switch ($key) {
+										case 3:
+											$label = 'important';
+											break;
+										case 4:
+											$label = 'important';
+											break;
+										case 2:
+											$label = 'warning';
+											break;
+										case 5:
+											$label = 'primary';
+											break;
+										case 0:
+											$label = 'success';
+											break;
+										
+										default:
+											$label = 'info';
+											break;
+									}
+
+									echo '<td><span class="label label-'.$label.'">'.$value.'</span></td>';
+									unset($label);
+								}
+							} ?>
 							<td class="right">
 								<a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'edit/'.$v["User"]["id"], 'admin' => true)) ?>" class="btn btn-info">Modifier</button>
 								<a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'user', 'action' => 'delete/'.$v["User"]["id"], 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></button>

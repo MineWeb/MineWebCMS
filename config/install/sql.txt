@@ -1,3 +1,10 @@
+CREATE TABLE `ranks` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `rank_id` int(11) NOT NULL,
+  `name` varchar(20) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+|
 CREATE TABLE IF NOT EXISTS `servers` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL DEFAULT '',

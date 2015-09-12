@@ -55,25 +55,6 @@ $this->EyPlugin = new EyPluginComponent;
 					<label class="control-label"><?= $Lang->get('RANK') ?></label>
 					<div class="controls">
 				<?php 
-					if($user['rank'] == 0) {
-						$user['rank'] = $Lang->get('MEMBER');
-						$options_ranks = array(2 => $Lang->get('MODERATOR'), 3 => $Lang->get('ADMINISTRATOR'), 5 => $Lang->get('BANNED'));
-					} elseif($user['rank'] == 2) {
-						$user['rank'] = $Lang->get('MODERATOR');
-						$options_ranks = array('member' => $Lang->get('MEMBER'), 3 => $Lang->get('ADMINISTRATOR'), 5 => $Lang->get('BANNED'));
-					} elseif($user['rank'] == 3) {
-						$user['rank'] = $Lang->get('ADMINISTRATOR');
-						$options_ranks = array('member' => $Lang->get('MEMBER'), 2 => $Lang->get('MODERATOR'), 5 => $Lang->get('BANNED'));
-					} elseif($user['rank'] == 4) {
-						$user['rank'] = $Lang->get('ADMINISTRATOR');
-						$options_ranks = array('member' => $Lang->get('MEMBER'), 2 => $Lang->get('MODERATOR'), 5 => $Lang->get('BANNED'));
-					} elseif($user['rank'] == 5) {
-						$user['rank'] = $Lang->get('BANNED');
-						$options_ranks = array('member' => $Lang->get('MEMBER'), 2 => $Lang->get('MODERATOR'), 3 => $Lang->get('ADMINISTRATOR'));
-					} else {
-						$user['rank'] = $Lang->get('UNDEFINED');
-						$options_ranks = array('member' => $Lang->get('MEMBER'), 2 => $Lang->get('MODERATOR'), 3 => $Lang->get('ADMINISTRATOR'), 5 => $Lang->get('BANNED'));
-					}
 					echo $this->Form->input('field', array(
 					  'label' => false,
 					  'div' => false,
