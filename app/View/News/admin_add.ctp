@@ -66,6 +66,19 @@
 				?>
 				</div>
 
+				<div class="control-group">
+					<label class="control-label"><?= $Lang->get('PUBLISH_THIS_NEWS') ?></label>
+					<div class="controls">
+						<?= $this->Form->checkbox(false, array(
+							'div' => false,
+		    				'name' => 'published',
+		    				'class' => 'span6 m-wrap',
+		    				'value' => 0,
+		    				'checked' => false
+						)); ?>
+					</div>
+				</div>
+
 
 				<div class="form-actions">
 					<?php
@@ -90,9 +103,15 @@
         var $form = $( this );
         var title = $form.find("input[name='title']").val();
         var content = tinymce.get('NewsContent').getContent();
+        var published = $('body').find("input[name='published']:checked")
+        if(published.length > 0) {
+        	published = 1;
+        } else {
+        	published = 0;
+        }
         var slug = $form.find("input[name='slug']").val();
 		slug = string_to_slug(slug);
-        $.post("<?= $this->Html->url(array('controller' => 'news', 'action' => 'add_ajax', 'admin' => true)) ?>", { title : title, content : content, slug : slug }, function(data) {
+        $.post("<?= $this->Html->url(array('controller' => 'news', 'action' => 'add_ajax', 'admin' => true)) ?>", { title : title, content : content, slug : slug, published : published }, function(data) {
           	data2 = data.split("|");
 		  	if(data.indexOf('true') != -1) {
           		$('.ajax-msg').empty().html('<div class="alert alert-success" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);

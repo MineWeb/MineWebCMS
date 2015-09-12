@@ -363,6 +363,8 @@
     "SUCCESS_DISABLE_MINEGUARD":"Vous avez bien désactivé MineGuard",
     "ADD_RANK":"Ajouter un rang",
     "SUCCESS_ADD_RANK":"Le rang s'est bien ajouté avec succès !",
+    "PUBLISHED":"Publiée",
+    "PUBLISH_THIS_NEWS":"La publier ?",
 
     "PERMISSIONS__COMMENT_NEWS":"Commenter une news",
     "PERMISSIONS__LIKE_NEWS":"Aimer une news",

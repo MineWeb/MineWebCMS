@@ -215,7 +215,8 @@ class NewsController extends AppController {
 						'comments' => 0,
 						'likes' => 0,
 						'img' => 0,
-						'slug' => $this->request->data['slug']
+						'slug' => $this->request->data['slug'],
+						'published' => $this->request->data['published']
 					));
 					$this->News->save();
 					$this->History->set('ADD_NEWS', 'news');
@@ -266,7 +267,8 @@ class NewsController extends AppController {
 						'title' => $this->request->data['title'],
 						'content' => $this->request->data['content'],
 						'updated' => date('Y-m-d H:i:s'),
-						'slug' => $this->request->data['slug']
+						'slug' => $this->request->data['slug'],
+						'published' => $this->request->data['published']
 					));
 					$this->News->save();
 					$this->History->set('EDIT_NEWS', 'news');

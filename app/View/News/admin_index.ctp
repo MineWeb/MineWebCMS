@@ -17,6 +17,7 @@
                 <tr>
                   <th><?= $Lang->get('TITLE') ?></th>
                   <th><?= $Lang->get('BY') ?></th>
+                  <th><?= $Lang->get('PUBLISHED') ?></th>
                   <th><?= $Lang->get('POSTED_ON') ?></th>
                   <th><?= $Lang->get('NUMBER_OF_COMMENTS') ?></th>
                   <th><?= $Lang->get('NUMBER_OF_LIKES') ?></th>
@@ -28,6 +29,7 @@
                 <tr>
                   <td><?= $v['News']['title'] ?></td>
                   <td><?= $v['News']['author'] ?></td>
+                  <td><?= ($v['News']['published']) ? '<span class="label label-success">'.$Lang->get('YES').'</span>' : '<span class="label label-danger">'.$Lang->get('NO').'</span>'; ?></td>
                   <td><?= $Lang->date($v['News']['created']) ?></td>
                   <td><?= $v['News']['comments'] ?> <?= $Lang->get('COMMENTS') ?></td>
                   <td><?= $v['News']['like'] ?> <?= $Lang->get('LIKES') ?></td>

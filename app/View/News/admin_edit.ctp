@@ -85,6 +85,26 @@
 				?>
 				</div>
 
+				<div class="control-group">
+					<label class="control-label"><?= $Lang->get('PUBLISH_THIS_NEWS') ?></label>
+					<div class="controls">
+						<?php 
+						if($news['published']) {
+							$checked = true;
+						} else {
+							$checked = false;
+						}
+						?>
+						<?= $this->Form->checkbox(false, array(
+							'div' => false,
+		    				'name' => 'published',
+		    				'class' => 'span6 m-wrap',
+		    				'value' => $news['published'],
+		    				'checked' => $checked
+						)); ?>
+					</div>
+				</div>
+
 				<div class="form-actions">
 					<?php
 					echo $this->Form->button($Lang->get('SUBMIT'), array(
@@ -110,8 +130,14 @@
         var content = tinymce.get('NewsContent').getContent();
         var id = $form.find("input[name='id']").val();
         var slug = $form.find("input[name='slug']").val();
+        var published = $('body').find("input[name='published']:checked")
+        if(published.length > 0) {
+        	published = 1;
+        } else {
+        	published = 0;
+        }
 		slug = string_to_slug(slug);
-        $.post("<?= $this->Html->url(array('controller' => 'news', 'action' => 'edit_ajax', 'admin' => true)) ?>", { title : title, content : content, id : id, slug : slug }, function(data) {
+        $.post("<?= $this->Html->url(array('controller' => 'news', 'action' => 'edit_ajax', 'admin' => true)) ?>", { title : title, content : content, id : id, slug : slug, published : published }, function(data) {
           	data2 = data.split("|");
 		  	if(data.indexOf('true') != -1) {
           		$('.ajax-msg').empty().html('<div class="alert alert-success" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);

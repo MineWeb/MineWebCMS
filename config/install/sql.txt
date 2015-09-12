@@ -83,6 +83,7 @@ CREATE TABLE IF NOT EXISTS `news` (
   `like` int(20) NOT NULL DEFAULT '0',
   `img` varchar(255) NOT NULL,
   `slug` varchar(150) NOT NULL,
+  `published` int(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 |

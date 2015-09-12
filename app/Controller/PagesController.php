@@ -114,7 +114,7 @@ class PagesController extends AppController {
 
 		// récupérage des news
 		$this->loadModel('News'); // on charge le model
-		$search_news = $this->News->find('all', array('limit' => '6', 'order' => 'id desc')); // on cherche les 3 dernières news (les plus veille)
+		$search_news = $this->News->find('all', array('limit' => '6', 'order' => 'id desc', 'conditions' => array('published' => 1))); // on cherche les 3 dernières news (les plus veille)
 		$this->set(compact('search_news')); // on envoie les données à la vue
 
 		// je cherche toutes les news que l'utilisateur connecté a aimé
