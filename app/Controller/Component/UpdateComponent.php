@@ -236,7 +236,7 @@ WCqkx22behAGZq6rhwIDAQAB
 				}
 				$updateThis = '';
 				
-				if($thisFileName == $plugin_name.'_update.php') {
+				if($thisFileName == $plugin_name.'/'.$plugin_name.'_update.php') {
 					$upgradeExec = fopen(ROOT.'/temp/'.$plugin_name.'_update.php','w');
 					fwrite($upgradeExec, $contents);
 					fclose($upgradeExec);

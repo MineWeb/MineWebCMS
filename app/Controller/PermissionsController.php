@@ -53,7 +53,7 @@ class PermissionsController extends AppController {
 
 					// Le rank_id | L'id du rank utilisé dans le composant des permissions & dans la colonne rank des utilisateurs
 					// Le rank_id de base pour les rangs personnalisés commence à partir de 10
-					$rank_id = $this->Rank->find('first', array('limit' => '1'));
+					$rank_id = $this->Rank->find('first', array('limit' => '1', 'order' => 'rank_id desc'));
 					if(!empty($rank_id)) {
 						$rank_id = $rank_id['Rank']['rank_id'] + 1;
 					} else {
@@ -77,6 +77,34 @@ class PermissionsController extends AppController {
 			} else {
 				echo $this->Lang->get('NOT_POST').'|false';
 			}
+		} else {
+			$this->redirect('/');
+		}
+	}
+
+	function admin_delete_rank($id = false) {
+		if($this->Connect->connect() && $this->Connect->if_admin()) {
+			$this->autoRender = false;
+
+			$this->loadModel('Rank');
+			$search = $this->Rank->find('first', array('conditions' => array('rank_id' => $id)));
+			if(!empty($search)) {
+
+				$this->Rank->delete($search['Rank']['id']);
+
+				$this->loadModel('Permission');
+				$search_perm = $this->Permission->find('first', array('conditions' => array('id' => $id)));
+				if(!empty($search_perm)) {
+					$this->Permission->delete($search_perm['Permission']['id']);
+				}
+
+				$this->Session->setFlash($this->Lang->get('SUCCESS_DELETE_RANK'), 'default.success');
+				$this->redirect(array('controller' => 'permissions', 'action' => 'index', 'admin' => true));
+
+			} else {
+				$this->redirect(array('controller' => 'permissions', 'action' => 'index', 'admin' => true));
+			}
+
 		} else {
 			$this->redirect('/');
 		}

@@ -47,6 +47,19 @@
 			            <?php } ?>
                 	</tr>
 				<?php } ?>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<?php 
+                  	if(!empty($custom_ranks)) {
+                  		foreach ($custom_ranks as $k => $data) {
+                  			echo '<td><a class="btn btn-danger" href="'.$this->Html->url(array('controller' => 'permissions', 'action' => 'delete_rank', 'admin' => true, $data['Rank']['rank_id'])).'">'.$Lang->get('DELETE').'</a></td>';
+                  		}
+                  	} 
+                  ?>
+				</tr>
 
 				    </tbody>
             	</table>
