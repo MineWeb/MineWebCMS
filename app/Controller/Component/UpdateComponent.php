@@ -24,22 +24,32 @@ class UpdateComponent extends Object {
 	function startup(&$controller) {}
 
 	public function available() {
-		App::import('Component', 'LangComponent');
-    	$this->Lang = new LangComponent();
-    	App::import('Component', 'ConfigurationComponent');
-    	$this->Configuration = new ConfigurationComponent();
-		$last_version = $this->get_version();
-		$cms_version = $this->Configuration->get('version');
-		if($cms_version != $last_version) {
-			$type = $this->get_type();
-			$visible = $this->get_visible();
-			if($visible AND $type == "choice") { // choice -> l'utilisateur choisis ou pas, forced -> la màj est faite automatiquement
-				return '<div class="alert alert-info">'.$this->Lang->get('UPDATE_AVAILABLE').' '.$this->Lang->get('YOUR_VERSION').' : '.$cms_version.', '.$this->Lang->get('UPDATE_VERSION').' : '.$last_version.' <a href="'.Router::url(array('controller' => 'update', 'action' => 'index', 'admin' => true)).'" style="margin-top: -6px;" class="btn btn-info pull-right">'.$this->Lang->get('UPDATE').'</a></div>';
+		if(!file_exists(ROOT.'/config/update') OR strtotime('+5 hours', filemtime(ROOT.'/config/update')) < time()) {
+			App::import('Component', 'LangComponent');
+	    	$this->Lang = new LangComponent();
+	    	App::import('Component', 'ConfigurationComponent');
+	    	$this->Configuration = new ConfigurationComponent();
+			$last_version = $this->get_version();
+			$cms_version = $this->Configuration->get('version');
+			if($cms_version != $last_version) {
+				$type = $this->get_type();
+				$visible = $this->get_visible();
+				if($visible AND $type == "choice") { // choice -> l'utilisateur choisis ou pas, forced -> la màj est faite automatiquement
+					file_put_contents(ROOT.'/config/update', '<div class="alert alert-info">'.$this->Lang->get('UPDATE_AVAILABLE').' '.$this->Lang->get('YOUR_VERSION').' : '.$cms_version.', '.$this->Lang->get('UPDATE_VERSION').' : '.$last_version.' <a href="'.Router::url(array('controller' => 'update', 'action' => 'index', 'admin' => true)).'" style="margin-top: -6px;" class="btn btn-info pull-right">'.$this->Lang->get('UPDATE').'</a></div>');
+					return '<div class="alert alert-info">'.$this->Lang->get('UPDATE_AVAILABLE').' '.$this->Lang->get('YOUR_VERSION').' : '.$cms_version.', '.$this->Lang->get('UPDATE_VERSION').' : '.$last_version.' <a href="'.Router::url(array('controller' => 'update', 'action' => 'index', 'admin' => true)).'" style="margin-top: -6px;" class="btn btn-info pull-right">'.$this->Lang->get('UPDATE').'</a></div>';
+				} else {
+					file_put_contents(ROOT.'/config/update', 1);
+					return false;
+				}
 			} else {
+				file_put_contents(ROOT.'/config/update', 1);
 				return false;
 			}
 		} else {
-			return false;
+			$content = file_get_contents(ROOT.'/config/update');
+			if($content != 1) {
+				return $content;
+			}
 		}
 	}
 

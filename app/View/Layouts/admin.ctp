@@ -193,9 +193,7 @@ $this->EyPlugin = new EyPluginComponent;
 			</div>
 		</div>
 		<?php } ?>
-		<?php if($this->params['controller'] == "update") { ?>
-			<?= $Update->available() ?>
-		<?php } ?>
+		<?= $Update->available() ?>
 		<div id="content">
 
 			<?php echo $this->Session->flash(); ?>
