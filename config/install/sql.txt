@@ -177,7 +177,7 @@ INSERT INTO `permissions` (`id`, `rank`, `permissions`) VALUES
 (2, 2, 'a:3:{i:0;s:12:"COMMENT_NEWS";i:1;s:9:"LIKE_NEWS";i:2;s:18:"DELETE_HIS_COMMENT";}');
 |
 INSERT INTO `api_configurations` (`id`, `skins`, `skin_filename`, `skin_free`, `capes`, `cape_filename`, `cape_free`) VALUES
-(1, 1, 'skins/{PLAYER}_skin', 1, 1, 'skins/capes/{PLAYER}_cape', 0);
+(0, 1, 'skins/{PLAYER}_skin', 0, 1, 'skins/capes/{PLAYER}_cape', 0);
 |
 INSERT INTO `configurations` (`id`, `name`, `email`, `lang`, `theme`, `layout`, `maintenance`, `money_name_singular`, `money_name_plural`, `server_state`, `server_secretkey`, `server_timeout`, `version`, `skype`, `youtube`, `twitter`, `facebook`, `mineguard`) VALUES
-(1, 'MineWeb', 'dev@mineweb.org', 'fr', 'Mineweb', 'default', '0', 'point', 'points', 0, '', '', '0.3.1', 'http://mineweb.org', 'http://mineweb.org', 'http://mineweb.org', 'http://mineweb.org', 'false');
+(1, 'MineWeb', 'dev@mineweb.org', 'fr', 'Mineweb', 'default', '0', 'point', 'points', 0, '', '', '0.4', 'http://mineweb.org', 'http://mineweb.org', 'http://mineweb.org', 'http://mineweb.org', 'false');
