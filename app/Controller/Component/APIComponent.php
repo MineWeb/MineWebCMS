@@ -244,8 +244,8 @@ SUVORK5CYII='));
 		/* API Launcher (connexion) */
 
 	public function get($username, $password, array $args = null) {
-		if(!empty($username) && !empty($password)) {
-			$search_user = $this->User->find('all', array('conditions' => array('pseudo' => $username, 'password' => password($password))));
+		if(!empty($username) && !empty($password)) { // password must be a password encrypted by sha256
+			$search_user = $this->User->find('all', array('conditions' => array('pseudo' => $username, 'password' => $password)));
 			if(!empty($search_user)) {
 				if(is_array($args)) {
 					$return = array('status' => true);
