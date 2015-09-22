@@ -14,6 +14,7 @@ class ThemeController extends AppController{
     		$themes = array_delete_value($themes, '.');
     		$themes = array_delete_value($themes, '..');
     		$themes = array_delete_value($themes, '.DS_Store');
+    		$themes = array_delete_value($themes, 'AdminTheme');
 			foreach ($themes as $key => $value) {
 		      $list_themes[] = ucfirst(strtolower($value));
 		    }

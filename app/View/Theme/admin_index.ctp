@@ -57,7 +57,9 @@ $this->Configuration = new ConfigurationComponent;
                        <?php if($key != $this->Configuration->get('theme')) { ?>
                         <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable/'.$key, 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('ENABLED') ?></a>
                        <?php } ?>
-                    	<a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'theme', 'action' => 'delete/'.$key, 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>
+                       <?php if($key != "Mineweb") { ?>
+                    	   <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'theme', 'action' => 'delete/'.$key, 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>
+                        <?php } ?>
                       <?php if(file_exists(ROOT.'/app/View/Themed/'.$key.'/config/config.json')) { ?>
                         <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom/'.$key, 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('CUSTOMIZATION') ?></a>
                       <?php } ?>
