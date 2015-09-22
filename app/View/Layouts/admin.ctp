@@ -64,6 +64,9 @@ $this->EyPlugin = new EyPluginComponent;
 
 				</ul>
 				<ul class="pull-right">
+					<li>
+						<a href="#" onClick="document.cookie='admin_layout=AdminTheme; expires=Sun, 01 Feb 2020 00:00:00 UTC; path=/';location.reload();"><?= $Lang->get('SWITCH_ADMIN_THEME') ?></a>
+					</li>
 					<li><a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'logout', 'admin' => false)); ?>"><i class="icon-off"></i><?= $Lang->get('LOGOUT') ?></a></li>
 				</ul>
 			</div>
