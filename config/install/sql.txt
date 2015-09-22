@@ -1,4 +1,4 @@
-CREATE TABLE `ranks` (
+CREATE TABLE IF NOT EXISTS `ranks` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `rank_id` int(11) NOT NULL,
   `name` varchar(20) NOT NULL DEFAULT '',

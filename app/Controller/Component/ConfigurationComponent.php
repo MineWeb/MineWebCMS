@@ -16,6 +16,9 @@ class ConfigurationComponent extends Object {
           App::import('Model', 'ConnectionManager');
           $con = new ConnectionManager;
           $cn = $con->getDataSource('default');
+          if(!$cn->isConnected()) {
+              exit('Could not connect to database. Please check the settings in app/config/database.php and try again');
+          }
           $data = "CREATED AT ".date('H:i:s d/m/Y')."\n";
           foreach ($tables as $do) {
             $cn->query($do);
