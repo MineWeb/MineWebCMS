@@ -16,6 +16,11 @@ $this->EyPlugin = new EyPluginComponent;
     <?= $this->Html->css('jquery-jvectormap-1.2.2.css'); ?>
     <?= $this->Html->css('AdminLTE.min.css'); ?>
     <?= $this->Html->css('skin-blue.min.css'); ?>
+
+    <!-- jQuery 2.1.4 -->
+    <?= $this->Html->script('jQuery-2.1.4.min.js') ?>
+    <!-- ChartJS 1.0.1 -->
+    <?= $this->Html->script('Chart.min.js') ?>
   </head>
   <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
@@ -149,9 +154,10 @@ $this->EyPlugin = new EyPluginComponent;
       </aside>
 
       <div class="content-wrapper">
-        <?= $Update->available() ?>
-
-        <?php echo $this->Session->flash(); ?>
+        <div style="padding: 15px;">
+          <?= $Update->available() ?>
+          <?php echo $this->Session->flash(); ?>
+        </div>
 
         <?php echo $this->fetch('content'); ?>
       </div>
@@ -169,9 +175,6 @@ $this->EyPlugin = new EyPluginComponent;
 
     </div>
 
-    
-    <!-- jQuery 2.1.4 -->
-    <?= $this->Html->script('jQuery-2.1.4.min.js') ?>
     <!-- Bootstrap 3.3.5 -->
     <?= $this->Html->script('bootstrap.min.js') ?>
     <!-- FastClick -->
@@ -185,10 +188,6 @@ $this->EyPlugin = new EyPluginComponent;
     <?= $this->Html->script('jquery-jvectormap-world-mill-en.js') ?>
     <!-- SlimScroll 1.3.0 -->
     <?= $this->Html->script('jquery.slimscroll.min.js') ?>
-    <!-- ChartJS 1.0.1 -->
-    <?= $this->Html->script('Chart.min.js') ?>
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <?= $this->Html->script('dashboard2.js') ?>
 
     <?php echo $this->fetch('script'); ?>
   </body>
