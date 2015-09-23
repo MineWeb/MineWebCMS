@@ -17,6 +17,8 @@ $this->EyPlugin = new EyPluginComponent;
     <?= $this->Html->css('AdminLTE.min.css'); ?>
     <?= $this->Html->css('skin-blue.min.css'); ?>
 
+    <?= $this->Html->css('dataTables.bootstrap.css'); ?>
+
     <!-- jQuery 2.1.4 -->
     <?= $this->Html->script('jQuery-2.1.4.min.js') ?>
     <!-- ChartJS 1.0.1 -->
@@ -182,6 +184,9 @@ $this->EyPlugin = new EyPluginComponent;
 
     <!-- Bootstrap 3.3.5 -->
     <?= $this->Html->script('bootstrap.min.js') ?>
+
+    <?= $this->Html->script('jquery.dataTables.min.js') ?>
+    <?= $this->Html->script('dataTables.bootstrap.min.js') ?>
     <!-- FastClick -->
     <?= $this->Html->script('fastclick.min.js') ?>
     <!-- AdminLTE App -->

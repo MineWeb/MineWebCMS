@@ -23,3 +23,15 @@ $("#generate_slug").click(function( event ) {
 	$('#slug').val(string_to_slug(title));
     return false;
 });
+
+$(function () {
+  $('table.dataTable').DataTable({
+    "paging": true,
+    "lengthChange": false,
+    "searching": false,
+    "ordering": false,
+    "info": false,
+    "autoWidth": false,
+    'searching': true
+  });
+});
