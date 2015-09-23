@@ -1,0 +1,73 @@
+<script type="text/javascript">
+	function confirmDel(url) {
+	  if (confirm("<?= $Lang->get('CONFIRM_WANT_DELETE') ?>"))
+	    window.location.href=''+url+'';
+	  else
+	    return false;
+	}
+
+	$("form").on("submit", function(e) {
+		form = $(this);
+
+		form_infos = form.find('#form_infos');
+
+		if(form_infos.attr('data-ajax') == "false") {
+			return false;
+		}
+
+		e.preventDefault();
+
+		var submit = form.find("input[type='submit']");
+
+		form.find('.ajax-msg').empty().html('<div class="alert alert-info"><a class="close" data-dismiss="alert">×</a><?= $Lang->get('LOADING') ?> ...</div>').fadeIn(500);
+
+	    var submit_btn_content = form.find('button[type=submit]').html();
+	    form.find('button[type=submit]').html('<?= $Lang->get('LOADING') ?>...').attr('disabled', 'disabled').fadeIn(500);
+
+	    // Data
+	    var array = form.serialize();
+	    array = array.split('&');
+
+	    var inputs = {};
+
+	    var i = 0;
+	    for (var key in args = array)
+	    { 
+	    	input = args[i];
+	    	input = input.split('=');
+	    	input_name = input[0];
+
+	    	if(form.find('input[name="'+input_name+'"]').attr('type') == "text" || form.find('input[name="'+input_name+'"]').attr('type') == "hidden" || form.find('input[name="'+input_name+'"]').attr('type') == "select" || form.find('input[name="'+input_name+'"]').attr('type') == "textarea") {
+	    		inputs[input_name] = form.find('input[name="'+input_name+'"]').val(); // je récup la valeur comme ça pour éviter la sérialization
+	    	} else if(form.find('input[name="'+input_name+'"]').attr('type') == "radio") {
+	    		inputs[input_name] = form.find('input[name="'+input_name+'"][type="radio"]:checked').val();
+	    	} else if(form.find('input[name="'+input_name+'"]').attr('type') == "checkbox") {
+	    		if(form.find('input[name="'+input_name+'"]').val() == "on") {
+	    			inputs[input_name] = 1;
+	    		} else {
+	    			inputs[input_name] = 0;
+	    		}
+	    	} else if(form.find('textarea[name="'+input_name+'"]').attr('id') == "editor") {
+	          	inputs[input_name] = tinymce.get('editor').getContent();
+	    	}
+	      
+	      i++;
+	    }
+
+	    //
+
+		$.post(form.attr('action'), inputs, function(data) {
+          	data2 = data.split("|");
+		  	if(data.indexOf('true') != -1) {
+          		$('.ajax-msg').html('<div class="alert alert-success" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+          		if(form_infos.attr('data-redirect-url') !== undefined) {
+          			document.location.href=form_infos.attr('data-redirect-url');
+          		}
+          	} else if(data.indexOf('false') != -1) {
+            	$('.ajax-msg').html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+	        } else {
+		    	$('.ajax-msg').html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+		    }
+        });
+	});
+</script>

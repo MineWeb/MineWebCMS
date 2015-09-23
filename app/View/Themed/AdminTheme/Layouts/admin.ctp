@@ -12,7 +12,7 @@ $this->EyPlugin = new EyPluginComponent;
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
     <?= $this->Html->css('bootstrap.min.css'); ?>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <?= $this->Html->css('font-awesome.min.css') ?>
     <?= $this->Html->css('jquery-jvectormap-1.2.2.css'); ?>
     <?= $this->Html->css('AdminLTE.min.css'); ?>
     <?= $this->Html->css('skin-blue.min.css'); ?>
@@ -26,7 +26,7 @@ $this->EyPlugin = new EyPluginComponent;
     <div class="wrapper">
 
       <header class="main-header">
-        <a href="<?= $this->Html->url(array('controller' => 'admin', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>" class="logo">
+        <a href="<?= $this->Html->url('/') ?>" class="logo">
           <span class="logo-mini">DB</span>
           <span class="logo-lg">Dashboard</span>
         </a>
@@ -57,10 +57,15 @@ $this->EyPlugin = new EyPluginComponent;
         <section class="sidebar">
           <ul class="sidebar-menu">
 
+            <li>
+              <a href="<?= $this->Html->url(array('controller' => 'admin', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>">
+                <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+              </a>
+            </li>
 
             <li class="treeview">
               <a href="#">
-                <i class="fa fa-dashboard"></i> <span><?= $Lang->get('GENERAL') ?></span> <i class="fa fa-angle-left pull-right"></i>
+                <i class="fa fa-files-o"></i> <span><?= $Lang->get('GENERAL') ?></span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
                 <li><a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('NEWS') ?></a></li>
@@ -189,6 +194,9 @@ $this->EyPlugin = new EyPluginComponent;
     <!-- SlimScroll 1.3.0 -->
     <?= $this->Html->script('jquery.slimscroll.min.js') ?>
 
-    <?php echo $this->fetch('script'); ?>
+     <?= $this->Html->script('mineweb_admin.js') ?>
+
+    <?= $this->element('mineweb_admin_js'); ?>
+
   </body>
 </html>

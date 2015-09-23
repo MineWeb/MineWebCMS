@@ -260,6 +260,7 @@ class NewsController extends AppController {
 			$this->layout = null;
 			 
 			if($this->request->is('post')) {
+
 				if(!empty($this->request->data['title']) AND !empty($this->request->data['content']) AND !empty($this->request->data['id']) AND !empty($this->request->data['slug'])) {
 					$this->loadModel('News');
 					$this->News->read(null, $this->request->data['id']);
