@@ -34,7 +34,7 @@ $this->EyPlugin = new EyPluginComponent;
             <div class="form-group">
               <label><?= $Lang->get('RANK') ?></label>
               <select class="form-control" name="rank">
-                  <option value="" selected><?= $user['rank'] ?></option>
+                <option value="" selected><?= $user['rank'] ?></option>
                 <?php foreach ($options_ranks as $key => $value) { ?>
                     <option value="<?= $key ?>"><?= $value ?></option>
                 <?php } ?>
