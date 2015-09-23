@@ -12,7 +12,7 @@
 		form_infos = form.find('#form_infos');
 
 		if(form_infos.attr('data-ajax') == "false") {
-			return false;
+			return;
 		}
 
 		e.preventDefault();

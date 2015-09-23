@@ -358,7 +358,7 @@
     "ADD_SERVER":"Ajouter un serveur",
     "INVALID_TIMEOUT":"Timeout invalide",
     "SUCCESS_SAVE_TIMEOUT":"Le timeout c'est bien enregistré !",
-    "BANNER_SERVER_CHOOSE":"Quels serveurs<br> souhaitez-vous<br> afficher sur <br>la bannière ?",
+    "BANNER_SERVER_CHOOSE":"Quels serveurs souhaitez-vous afficher sur la bannière ?",
     "SUCCESS_ENABLE_MINEGUARD":"Vous avez bien activé MineGuard",
     "SUCCESS_DISABLE_MINEGUARD":"Vous avez bien désactivé MineGuard",
     "ADD_RANK":"Ajouter un rang",
