@@ -25,8 +25,15 @@
 	    form.find('button[type=submit]').html('<?= $Lang->get('LOADING') ?>...').attr('disabled', 'disabled').fadeIn(500);
 
 	    // Data
+
 	    var array = form.serialize();
 	    array = array.split('&');
+
+	   	form.find('input[type="checkbox"]').each(function(){
+	   		if(!$(this).is(':checked')) {
+	   			array.push($(this).attr('name')+'=off');
+	   		}
+        });
 
 	    var inputs = {};
 
@@ -42,7 +49,7 @@
 	    	} else if(form.find('input[name="'+input_name+'"]').attr('type') == "radio") {
 	    		inputs[input_name] = form.find('input[name="'+input_name+'"][type="radio"]:checked').val();
 	    	} else if(form.find('input[name="'+input_name+'"]').attr('type') == "checkbox") {
-	    		if(form.find('input[name="'+input_name+'"]').val() == "on") {
+	    		if(form.find('input[name="'+input_name+'"]:checked').val() !== undefined) {
 	    			inputs[input_name] = 1;
 	    		} else {
 	    			inputs[input_name] = 0;
@@ -63,10 +70,13 @@
           		if(form_infos.attr('data-redirect-url') !== undefined) {
           			document.location.href=form_infos.attr('data-redirect-url');
           		}
+          		form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
           	} else if(data.indexOf('false') != -1) {
             	$('.ajax-msg').html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+            	form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
 	        } else {
 		    	$('.ajax-msg').html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+		    	form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
 		    }
         });
 	});
