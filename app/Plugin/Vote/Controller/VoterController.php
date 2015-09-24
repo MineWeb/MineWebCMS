@@ -198,9 +198,9 @@ class VoterController extends VoteAppController {
                                                         $this->Server->send_command('broadcast '.$msg);
                                                     } else {
                                                         foreach ($config['0']['VoteConfiguration']['servers'] as $key => $value) {
-                                                            $cmd = str_replace('{PSEUDO}', $this->request->data['pseudo'], $rewards[$random]['command']);
+                                                            $cmd = str_replace('{PLAYER}', $this->request->data['pseudo'], $rewards[$random]['command']);
                                                             $this->Server->send_command($cmd, $value); // on envoie la commande puis enregistre le vote
-                                                            $msg = str_replace('{PSEUDO}', $this->request->data['pseudo'], $this->Lang->get('VOTE_SUCCESS_SERVER'));
+                                                            $msg = str_replace('{PLAYER}', $this->request->data['pseudo'], $this->Lang->get('VOTE_SUCCESS_SERVER'));
                                                             $this->Server->send_command('broadcast '.$msg, $value);
                                                         }
                                                     }
@@ -239,15 +239,15 @@ class VoterController extends VoteAppController {
                                                     }
                                                     if(!in_array(false, $servers_online)) {
                                                         if(empty($config['0']['VoteConfiguration']['servers'])) {
-                                                            $cmd = str_replace('{PSEUDO}', $this->request->data['pseudo'], $value['command']);
+                                                            $cmd = str_replace('{PLAYER}', $this->request->data['pseudo'], $value['command']);
                                                             $this->Server->send_command($cmd); // on envoie la commande puis enregistre le vote
-                                                            $msg = str_replace('{PSEUDO}', $this->request->data['pseudo'], $this->Lang->get('VOTE_SUCCESS_SERVER'));
+                                                            $msg = str_replace('{PLAYER}', $this->request->data['pseudo'], $this->Lang->get('VOTE_SUCCESS_SERVER'));
                                                             $this->Server->send_command('broadcast '.$msg);
                                                         } else {
                                                             foreach ($config['0']['VoteConfiguration']['servers'] as $key => $value) {
-                                                                $cmd = str_replace('{PSEUDO}', $this->request->data['pseudo'], $value['command']);
+                                                                $cmd = str_replace('{PLAYER}', $this->request->data['pseudo'], $value['command']);
                                                                 $this->Server->send_command($cmd, $value); // on envoie la commande puis enregistre le vote
-                                                                $msg = str_replace('{PSEUDO}', $this->request->data['pseudo'], $this->Lang->get('VOTE_SUCCESS_SERVER'));
+                                                                $msg = str_replace('{PLAYER}', $this->request->data['pseudo'], $this->Lang->get('VOTE_SUCCESS_SERVER'));
                                                                 $this->Server->send_command('broadcast '.$msg, $value);
                                                             }
                                                         }
