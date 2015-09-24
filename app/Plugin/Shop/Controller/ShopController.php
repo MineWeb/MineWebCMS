@@ -66,7 +66,7 @@ class ShopController extends AppController {
 		<div class="modal-body">
 			<div id="msg_buy"></div>
 			<p><b>'.$this->Lang->get('NAME_OF_ITEM').' :</b> '.$search_item['0']['Item']['name'].'</p>
-			<p><b>'.$this->Lang->get('DESCRIPTION').' :</b> '.$search_item['0']['Item']['description'].'</p>';
+			<p><b>'.$this->Lang->get('DESCRIPTION').' :</b> '.nl2br($search_item['0']['Item']['description']).'</p>';
 			if(!empty($search_item[0]['Item']['servers'])) {
 				echo '<p><b>'.$this->Lang->get('SERVER').' :</b> '.$servers . '</p>';
 			}

@@ -19,19 +19,19 @@ $theme_config = json_decode($theme_config, true);
                     <?php $i++; } ?>
                 <?php } else { ?>
                     <div class="item active">
-                        <div class="fill" style="background-image:url('http://placehold.it/1900x1080&text=1900x1080');"></div>
+                        <div class="fill" style="background-image:url('http://placehold.it/1905x420&text=1905x420');"></div>
                         <div class="carousel-caption">
                             <h2>Caption 1</h2>
                         </div>
                     </div>
                     <div class="item">
-                        <div class="fill" style="background-image:url('http://placehold.it/1900x1080&text=1900x1080');"></div>
+                        <div class="fill" style="background-image:url('http://placehold.it/1905x420&text=1905x420');"></div>
                         <div class="carousel-caption">
                             <h2>Caption 2</h2>
                         </div>
                     </div>
                     <div class="item">
-                        <div class="fill" style="background-image:url('http://placehold.it/1900x1080&text=1900x1080');"></div>
+                        <div class="fill" style="background-image:url('http://placehold.it/1905x420&text=1905x420');"></div>
                         <div class="carousel-caption">
                             <h2>Caption 3</h2>
                         </div>
