@@ -823,7 +823,7 @@ class ShopController extends AppController {
 			 
 			$this->layout = null;
 			if($this->request->is('post')) {
-				if(!empty($this->request->data['code']) AND !empty($this->request->data['effective_on']) AND !empty($this->request->data['type']) AND !empty($this->request->data['reduction'])) {
+				if(!empty($this->request->data['code']) AND !empty($this->request->data['effective_on']) AND !empty($this->request->data['type']) AND !empty($this->request->data['reduction']) AND !empty($this->request->data['end_date'])) {
 					if($this->request->data['effective_on'] == "categories") {
 						$effective_on_value = array('type' => 'categories', 'value' => $this->request->data['effective_on_categorie']);
 					}

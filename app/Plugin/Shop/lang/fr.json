@@ -59,7 +59,7 @@
     "CHOOSE_ITEM": "Choisissez un\/des article(s)",
     "CHOOSE_CATEGORY": "Choisissez une\/des cat\u00e9gorie(s)",
     "PERCENTAGE": "Pourcentage",
-    "AFFICH_ON_SHOP": "En cochant cette case, la promotion se sera pas afficher sur la boutique",
+    "AFFICH_ON_SHOP": "En cochant cette case, la promotion sera afficher sur la boutique",
     "VOUCHER_SUCCESS_ADD": "La promotion \u00e8 bien \u00e9t\u00e9 ajout\u00e9e !",
     "DELETE_SUCCESS_ADD": "La promotion \u00e8 bien \u00e9t\u00e9 supprim\u00e9e !",
     "SEND_POINTS": "Envoyer de l'argent",
