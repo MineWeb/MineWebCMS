@@ -6,7 +6,7 @@
     "STEP_3_DESC_VOTE": "Si votre vote est correct, il ne vous reste plus qu'\u00e0 copier-coller le nombre de OUT (ou Clics Sortants) correspondant au serveur.\t\t\t\t<b>Obtenir le nombre de OUT :<\/b> Une fois avoir vot\u00e9 vous \u00eates redirig\u00e9 sur la liste des serveurs inscrits au classement, trouvez y le serveur, le nombre de OUT est affich\u00e9 sur sa droite.",
     "TAKE_OUT": "R\u00e9cup\u00e9rer les OUT",
     "NUMBER_OF_OUT": "Nombre d'OUT",
-    "STEP_4_DESC_VOTE": "Maintenant que vous avez proc\u00e9dé au vote, vous pouvez r\u00e9cup\u00e9rer votre r\u00e9compense.",
+    "STEP_4_DESC_VOTE": "Maintenant que vous avez proc\u00e9d\u00e9 au vote, vous pouvez r\u00e9cup\u00e9rer votre r\u00e9compense.",
     "GET_REWARDS": "R\u00e9cup\u00e9rer vos r\u00e9compenses",
     "REWARDS": "R\u00e9compenses",
     "NUMBER_OF_VOTES": "Nombres de votes",
@@ -25,7 +25,7 @@
     "VOTE": "Vote",
     "NBR_OF_VOTE": "Nombre de votes",
     "RANKING": "Classement",
-    "CONFIGURATION_SAVE": "Votre configuration à bien \u00e9t\u00e9 enregistr\u00e9e",
+    "CONFIGURATION_SAVE": "Votre configuration \u00e0 bien \u00e9t\u00e9 enregistr\u00e9e",
     "TIME_VOTE": "Temps d'\u00e9cart entre les votes",
     "PAGE_VOTE": "Page de vote",
     "ID_VOTE": "ID RPG-Paradize",
@@ -35,8 +35,7 @@
     "ADD_REWARD": "Ajouter une r\u00e9compense",
     "RESET_VOTE_SUCCESS": "Les votes ont bien \u00e9t\u00e9 r\u00e9initialis\u00e9s !",
     "VOTE_LOGIN_SUCCESS": "Vous vous \u00eates bien connect\u00e9 pour voter !",
-
-    "PERMISSIONS__VOTE_SHOW_REWARDS": "Voir les récompenses disponibles",
+    "PERMISSIONS__VOTE_SHOW_REWARDS": "Voir les r\u00e9compenses disponibles",
     "PERMISSIONS__VOTE_SHOW_RANKING": "Voir le classement des voteurs",
     "PERMISSIONS__VOTE": "Voter"
 }
