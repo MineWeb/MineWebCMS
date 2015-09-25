@@ -23,6 +23,8 @@ $this->EyPlugin = new EyPluginComponent;
     <?= $this->Html->script('jQuery-2.1.4.min.js') ?>
     <!-- ChartJS 1.0.1 -->
     <?= $this->Html->script('Chart.min.js') ?>
+
+  <?= $this->Html->script('jquery-ui.min.js') ?>
   </head>
   <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
