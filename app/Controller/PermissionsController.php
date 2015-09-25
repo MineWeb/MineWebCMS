@@ -35,6 +35,8 @@ class PermissionsController extends AppController {
 					$this->Permissions->save();
 				}
 
+				$this->Session->setFlash($this->Lang->get('PERMISSIONS_SUCCESS_SAVE'), 'default.success');
+
 			}
 
 		} else {

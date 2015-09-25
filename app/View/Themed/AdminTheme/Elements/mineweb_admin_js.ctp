@@ -9,7 +9,12 @@
 	$("form").on("submit", function(e) {
 		form = $(this);
 
-		form_infos = form.find('#form_infos');
+		form_infos = form.find('input[type="hidden"][data-ajax="true"]');
+		console.log(form_infos);
+		if(form_infos.length <= 0) {
+			form_infos = form.find('input[type="hidden"][data-ajax="false"]');
+			console.log(form_infos);
+		}
 
 		if(form_infos.attr('data-ajax') == "false") {
 			return;
