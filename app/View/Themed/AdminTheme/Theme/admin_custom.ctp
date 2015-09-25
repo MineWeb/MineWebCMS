@@ -30,19 +30,9 @@
             </script>
 
             <div class="form-group">
-				<label><?= $Lang->get('NAVBAR') ?></label>
-				<div class="radio">
-					<label>
-						<input type="radio" name="navbar" value="navbar2"<?php if($config['navbar'] == "navbar2") { echo ' checked'; } ?>>
-					  <img src="http://eywek.fr/i/4600.png" width="450" alt="">
-					</label>
-					<br>
-					<label>
-						<input type="radio" name="navbar" value="navbar"<?php if($config['navbar'] == "navbar") { echo ' checked'; } ?>>
-					 	<img src="http://eywek.fr/i/3314.png" width="450" alt="">
-					</label>
-				</div>
-			</div>
+              <label><?= $Lang->get('BACKGROUND_URL') ?></label>
+              <input type="text" class="form-control" name="background_url" value="<?= $config['background_url'] ?>" placeholder="<?= $Lang->get('DEFAULT').' : http://subtlepatterns.com/patterns/geometry2.png' ?>">
+            </div>
 
             <div class="form-group">
               <label><?= $Lang->get('FAVICON_URL') ?></label>
