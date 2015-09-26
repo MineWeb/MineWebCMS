@@ -7,7 +7,7 @@ class ConfigurationComponent extends Object {
   	
   public $components = array('Session');
 
-  private $data;
+  static private $data;
 
   function __construct() {
     if(!file_exists(ROOT.'/config/install.txt')) {
@@ -44,10 +44,10 @@ class ConfigurationComponent extends Object {
     function startup(&$controller) {}
 
     public function get_all() {
-      if(empty($this->data)) {
-        $this->data = ClassRegistry::init('Configuration')->find('first');
+      if(empty(self::$data)) {
+        self::$data = ClassRegistry::init('Configuration')->find('first');
       }
-      return $this->data;
+      return self::$data;
     }
 
     public function get_layout() {

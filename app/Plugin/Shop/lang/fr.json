@@ -45,6 +45,7 @@
     "VALID": "Valider",
     "INVALID": "Refuser",
     "PAYSAFECARD_VALID_SUCCESS": "La PaySafeCard a bien \u00e9t\u00e9 valid\u00e9 !",
+    "SUCCESS_ADD_PSC":"La PaySafeCard à bien été ajoutée ! Vous recevrez une réponse sous 48h",
     "PAYSAFECARD_INVALID_SUCCESS": "La PaySafeCard a bien \u00e9t\u00e9 refus\u00e9e !",
     "HOW_MUCH_MONEY_GIVE": "Combien de points boutique voulez-vous donner pour cette PaySafeCard ?",
     "TYPE": "Type",

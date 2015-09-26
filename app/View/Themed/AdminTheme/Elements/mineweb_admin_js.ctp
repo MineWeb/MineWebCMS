@@ -47,7 +47,7 @@
 	    	input = input.split('=');
 	    	input_name = input[0];
 
-	    	if(form.find('input[name="'+input_name+'"]').attr('type') == "text" || form.find('input[name="'+input_name+'"]').attr('type') == "hidden" || form.find('input[name="'+input_name+'"]').attr('type') == "textarea" || form.find('input[name="'+input_name+'"]').attr('type') == "email" || form.find('input[name="'+input_name+'"]').attr('type') == "password") {
+	    	if(form.find('input[name="'+input_name+'"]').attr('type') == "text" || form.find('input[name="'+input_name+'"]').attr('type') == "hidden" || form.find('input[name="'+input_name+'"]').attr('type') == "email" || form.find('input[name="'+input_name+'"]').attr('type') == "password") {
 	    		inputs[input_name] = form.find('input[name="'+input_name+'"]').val(); // je récup la valeur comme ça pour éviter la sérialization
 	    	} else if(form.find('input[name="'+input_name+'"]').attr('type') == "radio") {
 	    		inputs[input_name] = form.find('input[name="'+input_name+'"][type="radio"]:checked').val();
@@ -59,6 +59,8 @@
 	    		}
 	    	} else if(form.find('textarea[name="'+input_name+'"]').attr('id') == "editor") {
 	          	inputs[input_name] = tinymce.get('editor').getContent();
+	        } else if(form.find('textarea[name="'+input_name+'"]').length > 0) {
+	        	inputs[input_name] = form.find('textarea[name="'+input_name+'"]').val();
 	    	} else if(form.find('select[name="'+input_name+'"]').val() !== undefined) {
 	    		inputs[input_name] = form.find('select[name="'+input_name+'"]').val();
 	    	}

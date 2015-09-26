@@ -287,6 +287,7 @@ class ShopController extends AppController {
 					echo $this->Lang->get('ITEM_SUCCESS_EDIT').'|true';
 				} else {
 					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					debug($this->request->data);
 				}
 			} else {
 				echo $this->Lang->get('NOT_POST' ,$language).'|false';
