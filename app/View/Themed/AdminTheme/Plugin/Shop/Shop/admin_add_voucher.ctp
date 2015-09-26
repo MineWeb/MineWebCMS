@@ -1,130 +1,243 @@
-<section class="content">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('ADD_VOUCHER') ?></h3>
-        </div>
-        <div class="box-body">
-        
-          <form action="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'admin_add_voucher_ajax', 'admin' => true)) ?>" method="post">
-            <input type="hidden" id="form_infos" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true, 'plugin' => 'shop')) ?>">
+<?php 
+ 
+?>
+<div class="row-fluid">
 
-            <div class="ajax-msg"></div>
+	<div class="span12">
 
-            <div class="form-group">
-              <label><?= $Lang->get('CODE') ?></label>
-              <div class="input-group">
-                <input name="code" id="random" class="form-control" placeholder="<?= $Lang->get('CODE') ?>" type="text">
-                <span class="input-group-btn">
-                  <button class="btn btn-info" type="button" onClick="$('#random').val(random_code(10))"><?= $Lang->get('GENERATE_CODE') ?></button>
-                </span>
-              </div>
-            </div>
+		<div class="top-bar">
+			<h3><i class="icon-cog"></i> <?= $Lang->get('ADD_VOUCHER') ?></h3>
+		</div>
 
-            <div class="form-group">
-              <label><?= $Lang->get('EFFECTIVE_ON') ?></label>
-              <select onChange="hide_or_not(this.value)" class="form-control" name="effective_on">
-                <option value="" selected><?= $Lang->get('CHOOSE_OPTION') ?></option>
-                <option value="categories"><?= $Lang->get('CATEGORIES') ?></option>
-                <option value="items"><?= $Lang->get('ITEMS') ?></option>
-                <option value="all"><?= $Lang->get('ALL') ?></option>
-              </select>
-            </div>
+		<div class="well no-padding">
 
-            <div id="hidden_items" style="display:none;">
-              <div class="form-group">
-                <label><?= $Lang->get('CHOOSE_ITEM') ?></label>
-                <select class="form-control" name="effective_on_item" multiple>
-                  <?php foreach ($items as $key => $value) { ?>
-                    <option value="<?= $key ?>"><?= $value ?></option>
-                  <?php } ?>
-                </select>
-              </div>
-            </div>
-            <div id="hidden_categories" style="display:none;">
-              <div class="form-group">
-                <label><?= $Lang->get('CHOOSE_CATEGORY') ?></label>
-                <select class="form-control" name="effective_on_categorie" multiple>
-                  <?php foreach ($categories as $key => $value) { ?>
-                    <option value="<?= $key ?>"><?= $value ?></option>
-                  <?php } ?>
-                </select>
-              </div>
-            </div>
+			<?php 
+			echo $this->Form->create('Coupon', array(
+				'class' => 'form-horizontal',
+				'id' => 'add_voucher'
+			)); 
+			?>
 
-            <div class="form-group">
-              <label><?= $Lang->get('TYPE') ?></label>
-              <select class="form-control" name="type">
-                <option value="" selected><?= $Lang->get('CHOOSE_TYPE') ?></option>
-                <option value="2"><?= $Configuration->get_money_name(false, true) ?></option>
-                <option value="1"><?= $Lang->get('PERCENTAGE') ?></option>
-              </select>
-            </div>
+			<div class="ajax-msg"></div>
+				
+				<div class="control-group">
+					<label class="control-label"><?= $Lang->get('CODE') ?></label>
+					<div class="controls">
+						<div class="input-append">
+							<?php 
+								echo $this->Form->input('', array(
+									'div' => false,
+									'label' => false,
+							   		'type' => 'text',
+							   		'name' => 'code',
+							   		'id' => 'random',
+							    	'class' => 'no-margin span6 m-wrap',
+							    	'placeholder' => $Lang->get('CODE'),
+							    	'maxlength' => '20',
+							    	'style' => 'width: 470px;'
+								));
+							?>
+							<button class="btn btn-info" type="button" onClick="$('#random').val(random_code(10))"><?= $Lang->get('GENERATE_CODE') ?></button>
+							<script type="text/javascript">
+								function random_code(nbcar) {
+								  var ListeCar = new Array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","0","1","2","3","4","5","6","7","8","9");
+								  var Chaine ='';
+								  for(i = 0; i < nbcar; i++)
+								  {
+								    Chaine = Chaine + ListeCar[Math.floor(Math.random()*ListeCar.length)];
+								  }
+								  return Chaine;
+								}
+							</script>
+						</div>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label"><?= $Lang->get('EFFECTIVE_ON') ?></label>
+					<div class="controls">
+						<?php
+							echo $this->Form->input('field', array(
+								  'label' => false,
+								  'div' => false,
+								  'name' => 'effective_on',
+							      'options' => array('categories' => $Lang->get('CATEGORIES'), 'items' => $Lang->get('ITEMS'), 'all' => $Lang->get('ALL')),
+							      'empty' => $Lang->get('CHOOSE_OPTION'),
+							      'onChange' => 'hide_or_not(this.value)',
+							  	));
+						?>
+					</div>
+				</div>
+				<div id="hidden_items" style="display:none;">
+					<div class="control-group">
+						<label class="control-label"><?= $Lang->get('CHOOSE_ITEM') ?></label>
+						<div class="controls">
+							<?php
+								echo $this->Form->input('field', array(
+									  'label' => false,
+									  'div' => false,
+									  'id' => 'effective_on_item',
+								      'options' => $items,
+								      'data-placeholder' => $Lang->get('CHOOSE_ITEM'),
+								      'multiple' => 'multiple'
+								  	));
+							?>
+						</div>
+					</div>
+				</div>
+				<div id="hidden_categories" style="display:none;">
+					<div class="control-group">
+						<label class="control-label"><?= $Lang->get('CHOOSE_CATEGORY') ?></label>
+						<div class="controls">
+							<?php
+								echo $this->Form->input('field', array(
+									  'label' => false,
+									  'div' => false,
+									  'id' => 'effective_on_categorie',
+								      'options' => $categories,
+								      'data-placeholder' => $Lang->get('CHOOSE_CATEGORY'),
+								      'multiple' => 'multiple'
+								  	));
+							?>
+						</div>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label"><?= $Lang->get('TYPE') ?></label>
+					<div class="controls">
+						<?php
+							echo $this->Form->input('field', array(
+								  'label' => false,
+								  'div' => false,
+								  'name' => 'type',
+							      'options' => array(2 => $Configuration->get_money_name(false, true), 1 => $Lang->get('PERCENTAGE')),
+							      'empty' => $Lang->get('CHOOSE_TYPE')
+							  	));
+						?>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label"><?= $Lang->get('REDUCTION') ?></label>
+					<div class="controls">
+						<?php 
+							echo $this->Form->input('', array(
+								'div' => false,
+								'label' => false,
+						   		'type' => 'text',
+						   		'name' => 'reduction',
+						    	'class' => 'span6 m-wrap',
+						    	'placeholder' => $Lang->get('IN').' '.$Configuration->get_money_name(false, true).' '.$Lang->get('OR_PERCENTAGE')
+							));
+						?>
+						<span class="help-inline">Ex: 10</span>
+					</div>
+				</div>
+				<?php /* Pour une prochaine version :) ?>
+				<div class="control-group">
+					<label class="control-label">Limite</label>
+					<div class="controls">
+						<?php 
+							echo $this->Form->input('', array(
+								'div' => false,
+								'label' => false,
+						   		'type' => 'text',
+						   		'name' => 'limit_per_ip',
+						    	'class' => 'span6 m-wrap',
+						    	'placeholder' => 'Limite d\'utilisation par IP'
+							));
+						?>
+						<span class="help-inline">Mettre 0 pour que il n'y est pas de restriction</span>
+					</div>
+				</div><?php */ ?>
+				<div class="control-group">
+					<label class="control-label"><?= $Lang->get('END_DATE') ?></label>
+					<div class="controls">
+						<?php 
+							echo $this->Form->input('', array(
+								'div' => false,
+								'label' => false,
+						   		'type' => 'text',
+						   		'name' => 'end_date',
+						    	'class' => 'span6 m-wrap',
+						    	'placeholder' => 'Format : '.$Lang->get('YEAR').'-'.$Lang->get('MONTH').'-'.$Lang->get('DAY').' '.$Lang->get('HOUR').':'.$Lang->get('MINUTES').':'.$Lang->get('SECONDS')
+							));
+						?>
+						<span class="help-inline">Ex: 10</span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label"><?= $Lang->get('AFFICH') ?></label>
+					<div class="controls">
+						<?= $this->Form->checkbox(false, array(
+								'div' => false,
+								'value' => '1',
+								'id' => 'affich'
+							)) ?>
+						<span class="help-inline"><?= $Lang->get('AFFICH_ON_SHOP') ?></span>
+					</div>
+				</div>
 
-            <div class="form-group">
-              <label><?= $Lang->get('REDUCTION') ?></label>
-              <input class="form-control" placeholder="<?= $Lang->get('IN').' '.$Configuration->get_money_name(false, true).' '.$Lang->get('OR_PERCENTAGE') ?>" type="text" name="reduction">
-              <small>Ex: 10</small>
-            </div>
+				<div class="form-actions">
+					<?php
+					echo $this->Form->button($Lang->get('SUBMIT'), array(
+						'type' => 'submit',
+						'class' => 'btn btn-primary'
+					));
+					?>
+					<a href="../../" class="btn"><?= $Lang->get('CANCEL') ?></a>  
+				</div>        
 
-            <div class="form-group">
-              <label><?= $Lang->get('END_DATE') ?></label>
-              <input type="text" class="form-control" name="end_date" placeholder="<?= 'Format : '.$Lang->get('YEAR').'-'.$Lang->get('MONTH').'-'.$Lang->get('DAY').' '.$Lang->get('HOUR').':'.$Lang->get('MINUTES').':'.$Lang->get('SECONDS') ?>">
-            </div>
+		</div>
 
-            <div class="form-group">
-              <div class="checkbox">
-                <label>
-                  <input name="affich" type="checkbox"> <?= $Lang->get('AFFICH') ?>
-                </label>
-                <br><small><?= $Lang->get('AFFICH_ON_SHOP') ?></small>
-              </div>
-            </div>
+	</div>
 
-            <div class="pull-right">
-              <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true, 'plugin' => 'shop')) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>  
-              <button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
-            </div>
-          </form>      
-
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+</div>
 <script type="text/javascript">
-  $('#affich').change(function(){
-    if($('#affich').is(':checked')) {
-      $('#affich').attr('value', '0');
-    } else {
-      $('#affich').attr('value', '1');
-    }
-  });
-  function hide_or_not(val) {
-    $("#hidden_categories").css("display", "none");
-      $("#hidden_items").css("display", "block");
-    if(val=="categories") {
-      $("#hidden_items").css("display", "none");
-      $("#hidden_categories").css("display", "block");
-    }
-    if(val=="items") {
-      $("#hidden_categories").css("display", "none");
-      $("#hidden_items").css("display", "block");
-    } 
-    if(val=="all") {
-      $("#hidden_categories").css("display", "none");
-      $("#hidden_items").css("display", "none");
-    } 
-  }
+	$('#affich').change(function(){
+		if($('#affich').is(':checked')) {
+			$('#affich').attr('value', '0');
+		} else {
+			$('#affich').attr('value', '1');
+		}
+	});
+	function hide_or_not(val) {
+		$("#hidden_categories").css("display", "none");
+			$("#hidden_items").css("display", "block");
+		if(val=="categories") {
+			$("#hidden_items").css("display", "none");
+			$("#hidden_categories").css("display", "block");
+		}
+		if(val=="items") {
+			$("#hidden_categories").css("display", "none");
+			$("#hidden_items").css("display", "block");
+		} 
+		if(val=="all") {
+			$("#hidden_categories").css("display", "none");
+			$("#hidden_items").css("display", "none");
+		} 
+	}
 
-  function random_code(nbcar) {
-    var ListeCar = new Array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","0","1","2","3","4","5","6","7","8","9");
-    var Chaine ='';
-    for(i = 0; i < nbcar; i++)
-    {
-      Chaine = Chaine + ListeCar[Math.floor(Math.random()*ListeCar.length)];
-    }
-    return Chaine;
-  }
+	$("#add_voucher").submit(function( event ) {
+    	event.preventDefault();
+        var $form = $( this );
+        var code = $form.find("input[name='code']").val();
+        var effective_on = $form.find("select[name='effective_on']").val();
+        var effective_on_item = $form.find("#effective_on_item").val();
+        var effective_on_categorie = $form.find("#effective_on_categorie").val();
+        var type = $form.find("select[name='type']").val();
+        var reduction = $form.find("input[name='reduction']").val();
+        var end_date = $form.find("input[name='end_date']").val();
+        var affich = $form.find("#affich").val();
+        $.post("<?= $this->Html->url(array('controller' => 'shop', 'action' => 'admin_add_voucher_ajax', 'admin' => true)) ?>", { code : code, effective_on : effective_on, effective_on_item : effective_on_item, effective_on_categorie : effective_on_categorie, type : type, reduction : reduction, end_date : end_date, affich : affich }, function(data) {
+          	data2 = data.split("|");
+		  	if(data.indexOf('true') != -1) {
+          		$('.ajax-msg').empty().html('<div class="alert alert-success" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+          		 document.location.href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'admin_index', 'admin' => 'true')) ?>";
+          	} else if(data.indexOf('false') != -1) {
+            	$('.ajax-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+	        } else {
+		    	$('.ajax-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+		    }
+        });
+        return false;
+    });
 </script>

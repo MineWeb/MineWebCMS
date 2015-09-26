@@ -1,17 +1,20 @@
 <?php 
+  
 $this->Configuration = new ConfigurationComponent;
 ?>
-<section class="content">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('THEME_LIST') ?></h3>
-        </div>
-        <div class="box-body">
-        
-          <table class="table table-bordered">
-            <thead>
+<div class="row-fluid">
+
+	<div class="span12">
+
+		<div class="top-bar">
+			<h3><i class="icon-calendar"></i> <?= $Lang->get('THEME_LIST') ?></h3>
+		</div>
+
+		<div class="well">
+			<?= $this->Session->flash(); ?>
+
+			<table class="table table-bordered">
+              <thead>
                 <tr>
                   <th><?= $Lang->get('NAME') ?></th>
                   <th><?= $Lang->get('STATE') ?></th>
@@ -38,7 +41,7 @@ $this->Configuration = new ConfigurationComponent;
                   </td>
                 </tr>
                 <?php if(!empty($themes)) { ?>
-                  <?php foreach ($themes as $key => $value) { ?>
+                	<?php foreach ($themes as $key => $value) { ?>
                   <tr>
                     <td><?= $key ?></td>
                     <td>
@@ -55,7 +58,7 @@ $this->Configuration = new ConfigurationComponent;
                         <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable/'.$key, 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('ENABLED') ?></a>
                        <?php } ?>
                        <?php if($key != "Mineweb") { ?>
-                         <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'theme', 'action' => 'delete/'.$key, 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>
+                    	   <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'theme', 'action' => 'delete/'.$key, 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>
                         <?php } ?>
                       <?php if(file_exists(ROOT.'/app/View/Themed/'.$key.'/config/config.json')) { ?>
                         <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom/'.$key, 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('CUSTOMIZATION') ?></a>
@@ -70,21 +73,26 @@ $this->Configuration = new ConfigurationComponent;
                   <?php } ?>
                 <?php } ?>
               </tbody>
-          </table>
+            </table>
 
-        </div>
+		</div>
+
+	</div>
+
+</div>
+
+<div class="row-fluid">
+
+    <div class="span12">
+
+      <div class="top-bar">
+        <h3><i class="icon-calendar"></i> <?= $Lang->get('FREE_THEMES_AVAILABLE') ?></h3>
       </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('FREE_THEMES_AVAILABLE') ?></h3>
-        </div>
-        <div class="box-body">
+
+      <div class="well">
+        <?= $this->Session->flash(); ?>
         
-          <?php if(!empty($free_themes_available)) { ?>
+        <?php if(!empty($free_themes_available)) { ?>
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -111,8 +119,16 @@ $this->Configuration = new ConfigurationComponent;
           <div class="alert alert-danger"><b><?= $Lang->get('ERROR') ?> : </b><?= $Lang->get('NONE_THEME_AVAILABLE') ?></div>
         <?php } ?>
 
-        </div>
       </div>
+
     </div>
-  </div>
-</section>
+
+</div>
+<script>
+function confirmDel(url) {
+  if (confirm("<?= $Lang->get('CONFIRM_WANT_DELETE') ?>"))
+    window.location.href=''+url+'';
+  else
+    return false;
+}
+</script>

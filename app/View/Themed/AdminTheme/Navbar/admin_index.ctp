@@ -1,52 +1,60 @@
-<section class="content">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('NAVBAR') ?></h3>
-        </div>
-        <div class="box-body">
-        
-          <a class="btn btn-large btn-block btn-primary" href="<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'add', 'admin' => true)) ?>"><?= $Lang->get('ADD_NAV') ?></a>
-          
-          <hr>
+<?php   ?>
 
-          
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th><?= $Lang->get('NAME') ?></th>
-                <th><?= $Lang->get('URL') ?></th>
-                <th><?= $Lang->get('ACTION') ?></th>
-              </tr>
-            </thead>
-            <tbody id="sortable">
-              <?php $i=0; foreach ($navbars as $key => $value) { $i++; ?>
-              <li id="<?= $value['Navbar']['name'] ?>-<?= $i ?>">
-                <tr style="cursor:move;" id="<?= $value['Navbar']['name'] ?>-<?= $i ?>">
-                  <td><?= $value['Navbar']['name'] ?></td>
-                  <?php if($value['Navbar']['url'] != '#') { ?>
-                    <td><a href="<?= $value['Navbar']['url'] ?>"><?= $value['Navbar']['url'] ?></a></td>
-                  <?php } else { ?>
-                    <td><a href="#"><?= $Lang->get('DROPDOWN') ?></a></td>
-                  <?php } ?>
-                  <td>
-                    <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'delete/'.$value['Navbar']['id'], 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>
-                  </td>
-                </tr>
-              </li>
+<div class="row-fluid">
+
+	<div class="span12">
+
+		<div class="top-bar">
+			<h3><i class="icon-calendar"></i> <?= $Lang->get('NAVBAR') ?></h3>
+		</div>
+
+		<div class="well">
+			<?= $this->Session->flash(); ?>
+      <a class="btn btn-large btn-block btn-primary" href="<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'add', 'admin' => true)) ?>"><?= $Lang->get('ADD_NAV') ?></a>
+      <br><br>
+
+			<table class="table table-bordered">
+        <thead>
+          <tr>
+            <th><?= $Lang->get('NAME') ?></th>
+            <th><?= $Lang->get('URL') ?></th>
+            <th><?= $Lang->get('ACTION') ?></th>
+          </tr>
+        </thead>
+        <tbody id="sortable">
+        	<?php $i=0; foreach ($navbars as $key => $value) { $i++; ?>
+          <li id="<?= $value['Navbar']['name'] ?>-<?= $i ?>">
+            <tr style="cursor:move;" id="<?= $value['Navbar']['name'] ?>-<?= $i ?>">
+              <td><?= $value['Navbar']['name'] ?></td>
+              <?php if($value['Navbar']['url'] != '#') { ?>
+                <td><a href="<?= $value['Navbar']['url'] ?>"><?= $value['Navbar']['url'] ?></a></td>
+              <?php } else { ?>
+                <td><a href="#"><?= $Lang->get('DROPDOWN') ?></a></td>
               <?php } ?>
-            </tbody>
-          </table>
-          <br>
-          <div class="ajax-msg"></div>
-          <button id="save" class="btn btn-success pull-right active" disabled="disabled"><?= $Lang->get('NAV_SAVED') ?></button>
+              <td>
+              	<a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'delete/'.$value['Navbar']['id'], 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>
+              </td>
+            </tr>
+          </li>
+          <?php } ?>
+        </tbody>
+      </table>
+      <br>
+      <div class="ajax-msg"></div>
+      <button id="save" class="btn btn-success pull-right active" disabled="disabled"><?= $Lang->get('NAV_SAVED') ?></button>
+		</div>
 
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+		</div>
+
+</div>
+<script>
+function confirmDel(url) {
+  if (confirm("<?= $Lang->get('CONFIRM_WANT_DELETE') ?>"))
+    window.location.href=''+url+'';
+  else
+    return false;
+}
+</script>
 <style>
   li {
     list-style-type: none;
@@ -72,6 +80,6 @@ $(function() {
         });
       }
   });
-  //$( "#sortable" ).disableSelection();
+  $( "#sortable" ).disableSelection();
 });
 </script>

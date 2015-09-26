@@ -1,18 +1,16 @@
-<?php   ?>
-<div class="row-fluid">
+<section class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+        <div class="box-header with-border">
+          <h3 class="box-title"><?= $Lang->get('NEWS_LIST') ?></h3>
+        </div>
+        <div class="box-body">
+          <a class="btn btn-large btn-block btn-primary" href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'add', 'admin' => true)) ?>"><?= $Lang->get('ADD_NEWS') ?></a>
 
-	<div class="span12">
+            <hr>
 
-		<div class="top-bar">
-			<h3><i class="icon-calendar"></i> <?= $Lang->get('NEWS_LIST') ?></h3>
-		</div>
-
-		<div class="well">
-			<?= $this->Session->flash(); ?>
-			<a class="btn btn-large btn-block btn-primary" href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'add', 'admin' => true)) ?>"><?= $Lang->get('ADD_NEWS') ?></a>
-			<br><br>
-
-			<table class="table table-bordered">
+            <table class="table table-bordered">
               <thead>
                 <tr>
                   <th><?= $Lang->get('TITLE') ?></th>
@@ -25,7 +23,7 @@
                 </tr>
               </thead>
               <tbody>
-              	<?php foreach ($view_news as $news => $v) { ?>
+                <?php foreach ($view_news as $news => $v) { ?>
                 <tr>
                   <td><?= $v['News']['title'] ?></td>
                   <td><?= $v['News']['author'] ?></td>
@@ -34,24 +32,15 @@
                   <td><?= $v['News']['comments'] ?> <?= $Lang->get('COMMENTS') ?></td>
                   <td><?= $v['News']['like'] ?> <?= $Lang->get('LIKES') ?></td>
                   <td>
-                  	<a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'edit/'.$v['News']['id'], 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('EDIT') ?></a>
-                  	<a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'news', 'action' => 'delete/'.$v['News']['id'], 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>
+                    <a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'edit/'.$v['News']['id'], 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('EDIT') ?></a>
+                    <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'news', 'action' => 'delete/'.$v['News']['id'], 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>
                   </td>
                 </tr>
                 <?php } ?>
               </tbody>
             </table>
-
-		</div>
-
-		</div>
-
-</div>
-<script>
-function confirmDel(url) {
-  if (confirm("<?= $Lang->get('CONFIRM_WANT_DELETE') ?>"))
-    window.location.href=''+url+'';
-  else
-    return false;
-}
-</script>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

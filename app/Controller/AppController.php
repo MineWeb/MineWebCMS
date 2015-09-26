@@ -184,7 +184,7 @@ WCqkx22behAGZq6rhwIDAQAB
         	if(isset($_COOKIE['admin_layout'])) {
         		$this->theme = $_COOKIE['admin_layout'];
         	} else {
-        		$this->theme = 'AdminTheme';
+        		$this->theme = 'default';
         	}
         }
     }

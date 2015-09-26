@@ -1,28 +1,45 @@
-<section class="content">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('ADD_CATEGORY') ?></h3>
-        </div>
-        <div class="box-body">
-          <form action="" method="post">
-            <input type="hidden" id="form_infos" data-ajax="false">
+<div class="row-fluid">
 
-            <div class="ajax-msg"></div>
-      
-            <div class="form-group">
-              <label><?= $Lang->get('NAME') ?></label>
-              <input name="name" class="form-control"type="text">
-            </div>
+	<div class="span12">
 
-            <div class="pull-right">
-              <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>  
-              <button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
-            </div>
-          </form>      
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+		<div class="top-bar">
+			<h3><i class="icon-cog"></i> <?= $Lang->get('ADD_CATEGORY') ?></h3>
+		</div>
+
+		<div class="well no-padding">
+
+			<?php 
+			echo $this->Form->create('Category', array(
+				'class' => 'form-horizontal'
+			)); 
+			?>
+				
+				<div class="control-group">
+					<label class="control-label"><?= $Lang->get('NAME') ?></label>
+					<div class="controls">
+						<?php 
+							echo $this->Form->input('', array(
+						   		'type' => 'text',
+						   		'name' => 'name',
+						    	'class' => 'span6 m-wrap',
+						    	'maxlength' => '50'
+							));
+						?>
+					</div>
+				</div>
+
+				<div class="form-actions">
+					<?php
+					echo $this->Form->button($Lang->get('SUBMIT'), array(
+						'type' => 'submit',
+						'class' => 'btn btn-primary'
+					));
+					?>
+					<a href="../../" class="btn"><?= $Lang->get('CANCEL') ?></a>  
+				</div>        
+
+		</div>
+
+	</div>
+
+</div>

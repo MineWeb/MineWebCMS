@@ -1,78 +1,153 @@
 <?php 
 $this->EyPlugin = new EyPluginComponent;
 ?>
-<section class="content">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('EDIT_USER') ?></h3>
-        </div>
-        <div class="box-body">
-          <form action="<?= $this->Html->url(array('controller' => 'user', 'action' => 'edit_ajax')) ?>" method="post">
-            <input type="hidden" id="form_infos" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'user', 'action' => 'index', 'admin' => 'true')) ?>">
+<div class="row-fluid">
 
-            <div class="ajax-msg"></div>
+	<div class="span12">
 
-            <input type="hidden" value="<?= $user['pseudo'] ?>" name="pseudo">
-      
-            <div class="form-group">
-              <label><?= $Lang->get('PSEUDO') ?></label>
-              <input class="form-control" value="<?= $user['pseudo'] ?>" type="text" disabled="">
-            </div>
+		<div class="top-bar">
+			<h3><i class="icon-cog"></i> <?= $Lang->get('EDIT_USER') ?></h3>
+		</div>
 
-            <div class="form-group">
-              <label><?= $Lang->get('EMAIL') ?></label>
-              <input name="email" class="form-control" value="<?= $user['email'] ?>" type="email">
-            </div>
+		<div class="well no-padding">
+			<div class="ajax-msg"></div>
 
-            <div class="form-group">
-              <label><?= $Lang->get('PASSWORD') ?></label>
-              <input name="password" class="form-control" type="password">
-            </div>
+			<?php 
+			echo $this->Form->create('User', array(
+				'class' => 'form-horizontal',
+				'id' => 'edit_user'
+			)); 
+			?>
+				<div class="control-group">
+					<label class="control-label"><?= $Lang->get('PSEUDO') ?></label>
+					<div class="controls">
+						<input class="span6 m-wrap" type="text" name="pseudo" value="<?= $user['pseudo'] ?>" disabled="">
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<label class="control-label"><?= $Lang->get('EMAIL') ?></label>
+					<div class="controls">
+						<?php 
+							echo $this->Form->input('', array(
+						   		'type' => 'email',
+						   		'name' => 'mail',
+						    	'class' => 'span6 m-wrap',
+						    	'value' => $user['email'],
+							));
+						?>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label"><?= $Lang->get('PASSWORD') ?></label>
+					<div class="controls">
+						<?php 
+							echo $this->Form->input('', array(
+						   		'type' => 'password',
+						   		'name' => 'password',
+						    	'class' => 'span6 m-wrap',
+						    	'value' => '',
+							));
+						?>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label"><?= $Lang->get('RANK') ?></label>
+					<div class="controls">
+				<?php 
+					echo $this->Form->input('field', array(
+					  'label' => false,
+					  'div' => false,
+					  'name' => 'rank',
+				      'options' => $options_ranks,
+				      'empty' => $user['rank']
+				  	));
+				?>
+					</div>
+				</div>
+				<?php if($this->EyPlugin->is_installed('Shop')) { ?>
+					<div class="control-group">
+						<label class="control-label"><?= $Lang->get('MONEY') ?></label>
+						<div class="controls">
+							<?php 
+								echo $this->Form->input('', array(
+							   		'type' => 'text',
+							   		'name' => 'money',
+							    	'class' => 'span6 m-wrap',
+							    	'value' => $user['money'],
+								));
+							?>
+						</div>
+					</div>
+				<?php } ?>
+				<?php if($this->EyPlugin->is_installed('Vote')) { ?>
+					<div class="control-group">
+						<label class="control-label"><?= $Lang->get('NBR_OF_VOTE') ?></label>
+						<div class="controls">
+							<?php 
+								echo $this->Form->input('', array(
+							   		'type' => 'text',
+							   		'name' => 'nbr_vote',
+							    	'class' => 'span6 m-wrap',
+							    	'value' => $user['vote'],
+								));
+							?>
+						</div>
+					</div>
+				<?php } ?>
 
-            <div class="form-group">
-              <label><?= $Lang->get('RANK') ?></label>
-              <select class="form-control" name="rank">
-                <option value="" selected><?= $user['rank'] ?></option>
-                <?php foreach ($options_ranks as $key => $value) { ?>
-                    <option value="<?= $key ?>"><?= $value ?></option>
-                <?php } ?>
-              </select>
-            </div>
-            
-            <?php if($this->EyPlugin->is_installed('Shop')) { ?>
-              <div class="form-group">
-                <label><?= $Lang->get('MONEY') ?></label>
-                <input name="money" class="form-control" value="<?= $user['money'] ?>" type="text">
-              </div>
-            <?php } ?>
+				<div class="control-group">
+					<label class="control-label">IP</label>
+					<div class="controls">
+						<input class="span6 m-wrap" type="text" placeholder="<?= $user['ip'] ?>" disabled="">
+					</div>
+				</div>
 
-            <?php if($this->EyPlugin->is_installed('Vote')) { ?>
-              <div class="form-group">
-                <label><?= $Lang->get('VOTE') ?></label>
-                <input name="vote" class="form-control" value="<?= $user['vote'] ?>" type="text">
-              </div>
-            <?php } ?>
+				<div class="control-group">
+					<label class="control-label"><?= $Lang->get('CREATED_SIGNIN') ?></label>
+					<div class="controls">
+						<input class="span6 m-wrap" type="text" placeholder="<?= $user['created'] ?>" disabled="">
+					</div>
+				</div>
 
-            <div class="form-group">
-              <label>IP</label>
-              <input class="form-control" value="<?= $user['ip'] ?>" type="text" disabled="">
-            </div>
+				<div class="form-actions">
+					<?php
+					echo $this->Form->button($Lang->get('SUBMIT'), array(
+						'type' => 'submit',
+						'class' => 'btn btn-primary'
+					));
+					?>
+					<a href="../../" class="btn"><?= $Lang->get('CANCEL') ?></a>  
+				</div>
 
-            <div class="form-group">
-              <label><?= $Lang->get('CREATED_SIGNIN') ?></label>
-              <input class="form-control" value="<?= $user['created'] ?>" type="text" disabled="">
-            </div>
+			<?php echo $this->Form->end(); ?>        
 
+		</div>
 
-            <div class="pull-right">
-              <a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>  
-              <button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
-            </div>
-          </form>      
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+	</div>
+
+</div>
+<script type="text/javascript">
+    $("#edit_user").submit(function( event ) {
+    	event.preventDefault();
+        var $form = $( this );
+        var pseudo = $form.find("input[name='pseudo']").val();
+        var mail = $form.find("input[name='mail']").val();
+		var password = $form.find("input[name='password']").val();
+		var rank = $form.find("select[name='rank']").val();
+		var money = $form.find("input[name='money']").val();
+		var nbr_vote = $form.find("input[name='nbr_vote']").val();
+        $.post("<?= $this->Html->url(array('controller' => 'user', 'action' => 'edit_ajax', 'admin' => true)) ?>", { pseudo : pseudo, email : mail, password : password, rank : rank, money : money, vote : nbr_vote }, function(data) {
+          	data2 = data.split("|");
+		  	if(data.indexOf('true') != -1) {
+          		$('.ajax-msg').empty().html('<div class="alert alert-success" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+          		 document.location.href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'admin_index', 'admin' => 'true')) ?>";
+          	} else if(data.indexOf('false') != -1) {
+            	$('.ajax-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+	        } else {
+		    	$('.ajax-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+		    }
+        });
+        return false;
+    });
+</script>

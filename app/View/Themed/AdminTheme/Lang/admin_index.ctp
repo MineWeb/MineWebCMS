@@ -1,49 +1,68 @@
-<section class="content">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('LANG') ?></h3>
-        </div>
-        <div class="box-body">
-          <form action="" method="post">
-            <input type="hidden" id="form_infos" data-ajax="false">
+<div class="row-fluid">
 
-            <div class="ajax-msg"></div>
-            
-            <?php 
-            $lang = $Lang->getall();
-            foreach ($lang as $key => $value) { ?>
-              <?php if($key != 'FOOTER_ADMIN' AND $key != 'COPYRIGHT') { ?>
-                <div class="form-group">
-                  <label><?= explode('-', $key)[0] ?></label>
-                  <?php if($key != "RESET_PASSWORD_MAIL") { ?>
-                    <input type="text" name="<?= $key ?>" class="form-control" value="<?= $value ?>">
-                  <?php } else { ?>
-                    <textarea name="<?= $key ?>" class="form-control" cols="30" rows="10"><?= $value ?></textarea>
-                  <?php } ?>
-                  <?php if($key == "FORMATE_DATE") { ?>
-                    <small><?= $Lang->get('AVAILABLE_VARIABLES') ?> : {%day}, {%month}, {%year}, {%hour|24}, {%hour|12}, {%minutes}</small>
-                  <?php } ?>
-                  <?php if($key == "BANNER_SERVER") { ?>
-                    <small><?= $Lang->get('AVAILABLE_VARIABLES') ?> : {MOTD}, {VERSION}, {ONLINE}, {ONLINE_LIMIT}</small>
-                  <?php } ?>
-                  <?php if($key == "VOTE_SUCCESS_SERVER") { ?>
-                    <small><?= $Lang->get('AVAILABLE_VARIABLES') ?> : {PLAYER}.</small>
-                  <?php } ?>
-                  <?php if($key == "RESET_PASSWORD_MAIL") { ?>
-                    <small><?= $Lang->get('AVAILABLE_VARIABLES') ?> : {EMAIL}, {PSEUDO}, {LINK}.</small>
-                  <?php } ?>
-                </div>
-              <?php } ?>
-            <?php } ?>
+	<div class="span12">
 
-            <div class="pull-right">
-              <button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
-            </div>
-          </form>      
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+		<div class="top-bar">
+			<h3><i class="icon-cog"></i> <?= $Lang->get('LANG') ?></h3>
+		</div>
+
+		<div class="well no-padding">
+			<?= $this->Form->create(false, array(
+				'class' => 'form-horizontal'
+			)); ?>
+				<?php 
+				$lang = $Lang->getall();
+				foreach ($lang as $key => $value) { ?>
+					<?php if($key != 'FOOTER_ADMIN' AND $key != 'COPYRIGHT') { ?>
+						<div class="control-group">
+							<label class="control-label"><?= explode('-', $key)[0] ?></label>
+							<div class="controls" style="margin-left:300px">
+								<?php if($key != "RESET_PASSWORD_MAIL") { 
+									echo $this->Form->input(false, array(
+										'div' => false,
+									    'type' => 'text',
+					    				'name' => $key,
+					    				'class' => 'span6 m-wrap',
+					    				'value' => $value
+									)); 
+								} else {
+									echo $this->Form->textarea(false, array(
+										'div' => false,
+									    'type' => 'text',
+					    				'name' => $key,
+					    				'class' => 'span6 m-wrap',
+					    				'value' => $value
+									));
+								} ?>
+								<?php if($key == "FORMATE_DATE") { ?>
+									<span class="help-inline"><?= $Lang->get('AVAILABLE_VARIABLES') ?> : {%day}, {%month}, {%year}, {%hour|24}, {%hour|12}, {%minutes}</span>
+								<?php } ?>
+								<?php if($key == "BANNER_SERVER") { ?>
+									<span class="help-inline"><?= $Lang->get('AVAILABLE_VARIABLES') ?> : {MOTD}, {VERSION}, {ONLINE}, {ONLINE_LIMIT}</span>
+								<?php } ?>
+								<?php if($key == "VOTE_SUCCESS_SERVER") { ?>
+									<span class="help-inline"><?= $Lang->get('AVAILABLE_VARIABLES') ?> : {PLAYER}.</span>
+								<?php } ?>
+								<?php if($key == "RESET_PASSWORD_MAIL") { ?>
+									<span class="help-inline"><?= $Lang->get('AVAILABLE_VARIABLES') ?> : {EMAIL}, {PSEUDO}, {LINK}.</span>
+								<?php } ?>
+							</div>
+						</div>
+					<?php } ?>
+				<?php } ?>
+
+				<div class="form-actions">
+					<?= $this->Form->button($Lang->get('SUBMIT'), array(
+						'type' => 'submit',
+						'class' => 'btn btn-primary'
+					)); ?>
+					<a href="<?= $this->Html->url(array('controller' => '', 'action' => '', 'admin' => true)) ?>" type="button" class="btn"><?= $Lang->get('CANCEL') ?></a>     
+				</div>
+
+			</form>          
+
+		</div>
+
+	</div>
+
+</div>
