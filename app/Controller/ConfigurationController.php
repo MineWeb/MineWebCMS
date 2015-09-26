@@ -22,8 +22,12 @@ class ConfigurationController extends AppController {
 			$this->set(compact('selected_server'));
 
 			$search_servers = $this->Server->find('all');
-			foreach ($search_servers as $v) {
-				$servers[$v['Server']['id']] = $v['Server']['name'];
+			if(!empty($search_servers)) {
+				foreach ($search_servers as $v) {
+					$servers[$v['Server']['id']] = $v['Server']['name'];
+				}
+			} else {
+				$servers = array();
 			}
 			$this->set(compact('servers'));
 
