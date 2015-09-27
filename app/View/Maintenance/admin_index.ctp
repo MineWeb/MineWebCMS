@@ -40,8 +40,8 @@ $this->Configuration = new ConfigurationComponent();
                     height : 300,
                     width : '100%',
                     language : 'fr_FR',
-                    plugins: "textcolor code",
-                    toolbar: "fontselect fontsizeselect bold italic underline strikethrough forecolor backcolor alignleft aligncenter alignright alignjustify cut copy paste bullist numlist outdent indent blockquote code"
+                    plugins: "textcolor code image",
+                    toolbar: "fontselect fontsizeselect bold italic underline strikethrough image forecolor backcolor alignleft aligncenter alignright alignjustify cut copy paste bullist numlist outdent indent blockquote code"
                  });
                 </script>
                 <textarea class="form-control" id="editor" name="reason" cols="30" rows="10"><?= ($this->Configuration->get('maintenance') == '0') ? '' : $this->Configuration->get('maintenance') ?></textarea>
