@@ -74,6 +74,11 @@
             </div>
 
             <div class="form-group">
+              <label><?= $Lang->get('LIMIT_BY_USER') ?></label>
+              <input type="text" class="form-control" name="limit_per_user" placeholder="<?= $Lang->get('VOUCHER_0_FOR_NO_LIMIT') ?>">
+            </div>
+
+            <div class="form-group">
               <div class="checkbox">
                 <label>
                   <input name="affich" type="checkbox"> <?= $Lang->get('AFFICH') ?>

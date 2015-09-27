@@ -364,6 +364,7 @@ function confirmDel(url) {
               <th><?= $Lang->get('CODE') ?></th>
               <th><?= $Lang->get('END_DATE') ?></th>
               <th><?= $Lang->get('START_DATE') ?></th>
+              <th><?= $Lang->get('LIMIT') ?></th>
               <th><?= $Lang->get('AFFICH') ?></th>
               <th><?= $Lang->get('ACTION') ?></th>
             </tr>
@@ -374,6 +375,7 @@ function confirmDel(url) {
                 <td><?= $value['Voucher']['code'] ?></td>
                 <td><?= $Lang->date($value['Voucher']['end_date']) ?></td>
                 <td><?= $Lang->date($value['Voucher']['created']) ?></td>
+                <td><?= $value['Voucher']['limit_per_user'] ?></td>
                 <td>
                   <?php 
                     if($value['Voucher']['affich'] == 1) {

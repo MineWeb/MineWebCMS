@@ -111,37 +111,73 @@ class DiscountVoucherComponent extends Object {
     $this->Voucher = ClassRegistry::init('Voucher');
     $search_vouchers = $this->Voucher->find('all', array('conditions' => array('code' => $code)));
     if(!empty($search_vouchers)) { // si il y a une promo en cours
-      $this->Category = ClassRegistry::init('Category');
-      $search_category = $this->Category->find('all', array('conditions' => array('id' => $category)));
-      $category = $search_category['0']['Category']['name'];
-      foreach ($search_vouchers as $k) { // une boucle de tout les promos
-        $voucher = $k['Voucher'];
-        $voucher['effective_on'] = unserialize($voucher['effective_on']); // j'unserilise le effective_on qui est un array
-        if($voucher['effective_on']['type'] == 'categories' OR $voucher['effective_on']['type'] == 'items') {
-          // si une catégorie/item ou plusieurs sont concernés par la promo
-          foreach ($voucher['effective_on']['value'] as $key => $value) { // boule des catégories/items ou la promo est effective
-            if($category == $value OR $item == $value) { // si une des catégories/item en promo correspond à la catégorie de l'item ou à l'item même
-              if($voucher['type'] == 1) { // si c'est -x%
-                $reduction = 1 - $voucher['reduction'] / 100;
-                $price = $price * $reduction;
-              } elseif ($voucher['type'] == 2) { // si c'est -x€
-                $price = $price - $voucher['reduction'];
-              }
-            }
-          }
-        } elseif ($voucher['effective_on']['type'] == 'all') {
-          // si toute la boutique est concernée
-          if($voucher['type'] == 1) { // si c'est -x%
-            $reduction = 1 - $voucher['reduction'] / 100;
-            $price = $price * $reduction;
-          } elseif ($voucher['type'] == 2) { // si c'est -x€
-            $price = $price - $voucher['reduction'];
-          }
+        
+      // SI y'a pas déjà une limite et il a utilisé
+      if($search_vouchers[0]['Voucher']['limit_per_user'] == 0) {
+        $can_use = true;
+      } else {
+        App::import('Component', 'ConnectComponent'); // le component
+        $this->Connect = new ConnectComponent; // connect pour le pseudo
+        $how_used = array_count_values(unserialize($search_vouchers[0]['Voucher']['used']))[$this->Connect->get_pseudo()];
+        if($how_used <= $search_vouchers[0]['Voucher']['limit_per_user']) {
+          $can_use = true;
+        } else {
+          $can_use = false;
         }
       }
-      return $price;
+      if($can_use) {
+
+        $this->Category = ClassRegistry::init('Category');
+        $search_category = $this->Category->find('all', array('conditions' => array('id' => $category)));
+        $category = $search_category['0']['Category']['name'];
+        foreach ($search_vouchers as $k) { // une boucle de tout les promos
+          $voucher = $k['Voucher'];
+          $voucher['effective_on'] = unserialize($voucher['effective_on']); // j'unserilise le effective_on qui est un array
+          if($voucher['effective_on']['type'] == 'categories' OR $voucher['effective_on']['type'] == 'items') {
+            // si une catégorie/item ou plusieurs sont concernés par la promo
+            foreach ($voucher['effective_on']['value'] as $key => $value) { // boule des catégories/items ou la promo est effective
+              if($category == $value OR $item == $value) { // si une des catégories/item en promo correspond à la catégorie de l'item ou à l'item même
+                if($voucher['type'] == 1) { // si c'est -x%
+                  $reduction = 1 - $voucher['reduction'] / 100;
+                  $price = $price * $reduction;
+                } elseif ($voucher['type'] == 2) { // si c'est -x€
+                  $price = $price - $voucher['reduction'];
+                }
+              }
+            }
+          } elseif ($voucher['effective_on']['type'] == 'all') {
+            // si toute la boutique est concernée
+            if($voucher['type'] == 1) { // si c'est -x%
+              $reduction = 1 - $voucher['reduction'] / 100;
+              $price = $price * $reduction;
+            } elseif ($voucher['type'] == 2) { // si c'est -x€
+              $price = $price - $voucher['reduction'];
+            }
+          }
+        }
+        return $price;
+      } else {
+        return $price;
+      }
     } else {
       return $price;
+    }
+  }
+
+  function set_used($pseudo, $code) {
+    $this->Voucher = ClassRegistry::init('Voucher');
+    $search_vouchers = $this->Voucher->find('all', array('conditions' => array('code' => $code)));
+    if(!empty($search_vouchers)) {
+
+      $used = unserialize($search_vouchers[0]['Voucher']['used']);
+      $used[] = $pseudo;
+      $used = serialize($used);
+
+      $this->Voucher->read(null, $search_vouchers[0]['Voucher']['id']);
+      $this->Voucher->set(array('used' => $used));
+      return $this->Voucher->save();
+    } else {
+      return false;
     }
   }
 }

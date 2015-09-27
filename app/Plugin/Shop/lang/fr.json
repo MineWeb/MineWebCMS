@@ -86,5 +86,8 @@
     "TIMED_COMMAND_EXPLAIN": "C'est une commande qui s'effectuera apr\u00e8s un certains temps (pour des grades par exemple)",
     "TIME": "Temps",
     "PERMISSIONS__CREDIT_ACCOUNT": "Cr\u00e9diter son compte",
-    "PERMISSIONS__CAN_BUY": "Acheter"
+    "PERMISSIONS__CAN_BUY": "Acheter",
+    "LIMIT_BY_USER":"Limite d'utilisation par utilisateur",
+    "VOUCHER_0_FOR_NO_LIMIT":"Mettez 0 pour aucune limite",
+    "LIMIT":"Limite"
 }
