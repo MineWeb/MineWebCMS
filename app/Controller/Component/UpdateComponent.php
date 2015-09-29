@@ -150,8 +150,11 @@ WCqkx22behAGZq6rhwIDAQAB
 				if(substr($thisFileName,-1,1) == '/') continue;
 				if(!is_dir (ROOT.'/'.$thisFileDir)) {
 					if(strstr($thisFileDir, '__MACOSX') === false) {
-						mkdir (ROOT.'/'.$thisFileDir);
-						$this->set_log('CREATE_FOLDER', 'success', $thisFileDir, $rand);
+						if(mkdir (ROOT.'/'.$thisFileDir, 0755, true)) {
+							$this->set_log('CREATE_FOLDER', 'success', $thisFileDir, $rand);
+						} else {
+							$this->set_log('CREATE_FOLDER', 'error', $thisFileDir, $rand);
+						}
 					}
 				}
 				if (!is_dir(ROOT.'/'.$thisFileName)) {
@@ -233,7 +236,9 @@ WCqkx22behAGZq6rhwIDAQAB
 			if(substr($thisFileName,-1,1) == '/') continue;
 			if(!is_dir (ROOT.'/app/Plugin/'.$thisFileDir)) {
 				if(strstr($thisFileDir, '__MACOSX') === false) {
-					mkdir (ROOT.'/app/Plugin/'.$thisFileDir);
+					if(!mkdir (ROOT.'/app/Plugin/'.$thisFileDir, 0755, true)) {
+						return false;
+					}
 				}
 			}
 			if (!is_dir(ROOT.'/app/Plugin/'.$thisFileName)) {
@@ -314,7 +319,20 @@ WCqkx22behAGZq6rhwIDAQAB
 		}
 		$content = file_get_contents($filename);
 		$content = json_decode($content, true);
-		if(!in_array('error', $content)) {
+		$error = false;
+		foreach ($content as $key => $value) {
+			if($key == "update") {
+				foreach ($value as $k => $v) {
+					foreach ($v as $k2 => $v2) {
+						if($v2['statut'] == "error") {
+							$error = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+		if(!$error) {
 			App::import('Component', 'Configuration');
 			$this->Configuration = new ConfigurationComponent();
 			$this->Configuration->set('version', $this->get_version());
