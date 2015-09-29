@@ -174,83 +174,91 @@ $this->EyPlugin = new EyPluginComponent;
           </div>
         </div>
         <div class="box-body">
-          <div class="alert alert-warning"><b><?= $Lang->get('INFORMATION') ?> :</b> <?= $Lang->get('BIGGEST_SELLERS') ?></div>
-          <div class="row">
-            <div class="col-md-8">
-              <div class="chart-responsive">
-                <canvas id="pieChart" height="150"></canvas>
-                <script>
-                var pieChartCanvas = $("#pieChart").get(0).getContext("2d");
-                var pieChart = new Chart(pieChartCanvas);
-                var PieData = [
-                  {
-                    value: <?= $how['0'] ?>,
-                    color:"#1abc9c",
-                    label : '<?= addslashes($items_solded[0]['History']['other']) ?>'
-                  },
-                  {
-                    value : <?= $how['1'] ?>,
-                    color : "#2ecc71",
-                    label : '<?= addslashes($items_solded[1]['History']['other']) ?>'
-                  },
-                  {
-                    value : <?= $how['2'] ?>,
-                    color : "#3498db",
-                    label : '<?= addslashes($items_solded[2]['History']['other']) ?>'
-                  },
-                  {
-                    value : <?= $how['3'] ?>,
-                    color : "#e67e22",
-                    label : '<?= addslashes($items_solded[3]['History']['other']) ?>'
-                  },
-                  {
-                    value : <?= $how['4'] ?>,
-                    color : "#e74c3c",
-                    label : '<?= addslashes($items_solded[4]['History']['other']) ?>'
-                  }
-                ];
-                var pieOptions = {
-                  //Boolean - Whether we should show a stroke on each segment
-                  segmentShowStroke: true,
-                  //String - The colour of each segment stroke
-                  segmentStrokeColor: "#fff",
-                  //Number - The width of each segment stroke
-                  segmentStrokeWidth: 1,
-                  //Number - The percentage of the chart that we cut out of the middle
-                  percentageInnerCutout: 50, // This is 0 for Pie charts
-                  //Number - Amount of animation steps
-                  animationSteps: 100,
-                  //String - Animation easing effect
-                  animationEasing: "easeOutBounce",
-                  //Boolean - Whether we animate the rotation of the Doughnut
-                  animateRotate: true,
-                  //Boolean - Whether we animate scaling the Doughnut from the centre
-                  animateScale: false,
-                  //Boolean - whether to make the chart responsive to window resizing
-                  responsive: true,
-                  // Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
-                  maintainAspectRatio: false,
-                  //String - A legend template
-                  legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>",
-                  //String - A tooltip template
-                  tooltipTemplate: "<%=label%> (<%=value %>)"
-                };
-                //Create pie or douhnut chart
-                // You can switch between pie and douhnut using the method below.
-                pieChart.Doughnut(PieData, pieOptions);
-                </script>
+          <?php if($this->EyPlugin->is_installed('Shop')) { ?>
+            <?php if($counts_items >= 5) { ?>
+              <div class="alert alert-warning"><b><?= $Lang->get('INFORMATION') ?> :</b> <?= $Lang->get('BIGGEST_SELLERS') ?></div>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="chart-responsive">
+                    <canvas id="pieChart" height="150"></canvas>
+                    <script>
+                    var pieChartCanvas = $("#pieChart").get(0).getContext("2d");
+                    var pieChart = new Chart(pieChartCanvas);
+                    var PieData = [
+                      {
+                        value: <?= $how['0'] ?>,
+                        color:"#1abc9c",
+                        label : '<?= addslashes($items_solded[0]['History']['other']) ?>'
+                      },
+                      {
+                        value : <?= $how['1'] ?>,
+                        color : "#2ecc71",
+                        label : '<?= addslashes($items_solded[1]['History']['other']) ?>'
+                      },
+                      {
+                        value : <?= $how['2'] ?>,
+                        color : "#3498db",
+                        label : '<?= addslashes($items_solded[2]['History']['other']) ?>'
+                      },
+                      {
+                        value : <?= $how['3'] ?>,
+                        color : "#e67e22",
+                        label : '<?= addslashes($items_solded[3]['History']['other']) ?>'
+                      },
+                      {
+                        value : <?= $how['4'] ?>,
+                        color : "#e74c3c",
+                        label : '<?= addslashes($items_solded[4]['History']['other']) ?>'
+                      }
+                    ];
+                    var pieOptions = {
+                      //Boolean - Whether we should show a stroke on each segment
+                      segmentShowStroke: true,
+                      //String - The colour of each segment stroke
+                      segmentStrokeColor: "#fff",
+                      //Number - The width of each segment stroke
+                      segmentStrokeWidth: 1,
+                      //Number - The percentage of the chart that we cut out of the middle
+                      percentageInnerCutout: 50, // This is 0 for Pie charts
+                      //Number - Amount of animation steps
+                      animationSteps: 100,
+                      //String - Animation easing effect
+                      animationEasing: "easeOutBounce",
+                      //Boolean - Whether we animate the rotation of the Doughnut
+                      animateRotate: true,
+                      //Boolean - Whether we animate scaling the Doughnut from the centre
+                      animateScale: false,
+                      //Boolean - whether to make the chart responsive to window resizing
+                      responsive: true,
+                      // Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
+                      maintainAspectRatio: false,
+                      //String - A legend template
+                      legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>",
+                      //String - A tooltip template
+                      tooltipTemplate: "<%=label%> (<%=value %>)"
+                    };
+                    //Create pie or douhnut chart
+                    // You can switch between pie and douhnut using the method below.
+                    pieChart.Doughnut(PieData, pieOptions);
+                    </script>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <ul class="chart-legend clearfix">
+                    <li><i class="fa fa-circle-o" style="color:#1abc9c;"></i> <?= $items_solded['0']['History']['other'] ?> (<?= $how['0'] ?> <?= $Lang->get('SALES') ?>)</li>
+                    <li><i class="fa fa-circle-o" style="color:#2ecc71;"></i> <?= $items_solded['1']['History']['other'] ?> (<?= $how['1'] ?> <?= $Lang->get('SALES') ?>)</li>
+                    <li><i class="fa fa-circle-o" style="color:#3498db;"></i> <?= $items_solded['2']['History']['other'] ?> (<?= $how['2'] ?> <?= $Lang->get('SALES') ?>)</li>
+                    <li><i class="fa fa-circle-o" style="color:#e67e22;"></i> <?= $items_solded['3']['History']['other'] ?> (<?= $how['3'] ?> <?= $Lang->get('SALES') ?>)</li>
+                    <li><i class="fa fa-circle-o" style="color:#e74c3c;"></i> <?= $items_solded['4']['History']['other'] ?> (<?= $how['4'] ?> <?= $Lang->get('SALES') ?>)</li>
+                  </ul>
+                </div>
               </div>
-            </div>
-            <div class="col-md-4">
-              <ul class="chart-legend clearfix">
-                <li><i class="fa fa-circle-o" style="color:#1abc9c;"></i> <?= $items_solded['0']['History']['other'] ?> (<?= $how['0'] ?> <?= $Lang->get('SALES') ?>)</li>
-                <li><i class="fa fa-circle-o" style="color:#2ecc71;"></i> <?= $items_solded['1']['History']['other'] ?> (<?= $how['1'] ?> <?= $Lang->get('SALES') ?>)</li>
-                <li><i class="fa fa-circle-o" style="color:#3498db;"></i> <?= $items_solded['2']['History']['other'] ?> (<?= $how['2'] ?> <?= $Lang->get('SALES') ?>)</li>
-                <li><i class="fa fa-circle-o" style="color:#e67e22;"></i> <?= $items_solded['3']['History']['other'] ?> (<?= $how['3'] ?> <?= $Lang->get('SALES') ?>)</li>
-                <li><i class="fa fa-circle-o" style="color:#e74c3c;"></i> <?= $items_solded['4']['History']['other'] ?> (<?= $how['4'] ?> <?= $Lang->get('SALES') ?>)</li>
-              </ul>
-            </div>
-          </div>
+            <?php } else { ?>
+              <div class="alert alert-danger"><i class="icon-shopping-cart"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('NEED_MORE_5_ITEMS') ?></div>
+            <?php } ?>
+          <?php } else {
+            echo $Lang->get('PLUGIN_SHOP_NOT_INSTALLED');
+          } ?>
         </div>
       </div>
     </div>
