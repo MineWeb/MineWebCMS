@@ -3,7 +3,7 @@
     "STEP": "\u00c9tape",
     "MC_USERNAME": "Votre pseudo minecraft",
     "STEP_2_DESC_VOTE": "Cliquez sur le bouton ci-dessous pour acc\u00e8der \u00e0 la page de vote. Une fois que vous avez voter revenez sur le site et passez \u00e0 l'\u00e9tape 3.",
-    "STEP_3_DESC_VOTE": "Si votre vote est correct, il ne vous reste plus qu'\u00e0 copier-coller le nombre de OUT (ou Clics Sortants) correspondant au serveur.\t\t\t\t<b>Obtenir le nombre de OUT :<\/b> Une fois avoir vot\u00e9 vous \u00eates redirig\u00e9 sur la liste des serveurs inscrits au classement, trouvez y le serveur, le nombre de OUT est affich\u00e9 sur sa droite.",
+    "STEP_3_DESC_VOTE": "Si votre vote est correct, il ne vous reste plus qu'\u00e0 copier-coller le nombre de OUT (ou Clics Sortants) correspondant au serveur.<br><b>Obtenir le nombre de OUT :<\/b> Une fois avoir vot\u00e9 vous \u00eates redirig\u00e9 sur la liste des serveurs inscrits au classement, trouvez y le serveur, le nombre de OUT est affich\u00e9 sur sa droite.",
     "TAKE_OUT": "R\u00e9cup\u00e9rer les OUT",
     "NUMBER_OF_OUT": "Nombre d'OUT",
     "STEP_4_DESC_VOTE": "Maintenant que vous avez proc\u00e9d\u00e9 au vote, vous pouvez r\u00e9cup\u00e9rer votre r\u00e9compense.",
@@ -11,7 +11,7 @@
     "REWARDS": "R\u00e9compenses",
     "NUMBER_OF_VOTES": "Nombres de votes",
     "POSITION": "Position",
-    "VOTE_SUCCESS": "Vous avez bien vot\u00e9 !",
+    "VOTE_SUCCESS": "Vous avez bien vot\u00e9",
     "ALREADY_VOTED": "Vous avez d\u00e9j\u00e0 vot\u00e9 !",
     "UNKNOWN_USERNAME": "Utilisateur inconnu",
     "OUT_SUCCESS": "Nombre d'OUT correct !",
@@ -44,5 +44,7 @@
     "WEBSITE_TYPE_OTHER":"Autre",
     "CMD_OR_MONEY":"Commande ou argent (point boutique)",
     "REWARD_PROBABILITY":"Probabilité",
-    "REWARD_PERCENTAGE":"Pourcentage d'obtention"
+    "REWARD_PERCENTAGE":"Pourcentage d'obtention",
+    "CHOOSE_WEBSITE":"Choissisez le site de vote",
+    "WEBSITE_NBR":"Site"
 }

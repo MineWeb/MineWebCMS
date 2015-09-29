@@ -7,6 +7,8 @@ $this->Configuration = new ConfigurationComponent;
 	<h1><?= $Lang->get('VOTE_TITLE') ?></h1><br>
 	<div class="row">
 		<div class="col-md-9">
+				
+
 			<div class="panel panel-default step1">
 			  <div class="panel-heading">
 			    <h3 class="panel-title"><b><?= $Lang->get('STEP') ?> 1 :</b> <?= $Lang->get('LOGIN') ?> <i style="display:none" id="icon_step1" class="glyphicon glyphicon-ok"></i></h3>

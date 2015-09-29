@@ -79,7 +79,7 @@ if (!defined('WWW_ROOT')) {
 
 if(!file_exists(ROOT.DS.'config'.DS.'install.txt')) {
 	$cURL = extension_loaded('cURL');
-	$phpversion = version_compare(PHP_VERSION, '5.4', '>=');
+	$phpversion = version_compare(PHP_VERSION, '5.3', '>=');
 	$pdo = in_array('pdo_mysql', get_loaded_extensions());
 
 	if(!function_exists('apache_get_modules')) {
@@ -192,7 +192,7 @@ if(!file_exists(ROOT.DS.'config'.DS.'install.txt')) {
 	                      </thead>
 	                      <tbody>
 	                        <tr>
-	                          <td>Version de PHP >= 5.4 </td>
+	                          <td>Version de PHP >= 5.3 </td>
 	                          <td>".affich_img($phpversion)."</td>
 	                        </tr>
 	                        <tr>

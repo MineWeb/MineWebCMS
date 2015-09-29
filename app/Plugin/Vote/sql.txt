@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS `votes` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `username` varchar(32) NOT NULL,
   `ip` int(16) NOT NULL,
+  `website` int(11) NOT NULL,
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
