@@ -346,6 +346,7 @@ class VoterController extends VoteAppController {
             if(!empty($vote)) {
                 $vote = $vote['VoteConfiguration'];
                 $vote['rewards'] = unserialize($vote['rewards']);
+                $vote['websites'] = unserialize($vote['websites']);
             } else {
                 $vote = array();
             }
@@ -399,8 +400,8 @@ class VoterController extends VoteAppController {
             $this->layout = null;
              
             if($this->request->is('post')) {
-                if(!empty($this->request->data['time_vote']) AND !empty($this->request->data['page_vote']) AND !empty($this->request->data['servers']) AND /*!empty($this->request->data['id_vote']) AND*/ $this->request->data['rewards_type'] == '0' OR $this->request->data['rewards_type'] == '1') {
-                    if(!empty($this->request->data['reward_type']) AND $this->request->data['reward_type'] != 'undefined' AND !empty($this->request->data['reward_value']) AND $this->request->data['reward_value'] != 'undefined') {
+                if(!empty($this->request->data['servers']) AND !empty($this->request->data['website'][0]['page_vote']) AND !empty($this->request->data['website'][0]['time_vote']) AND !empty($this->request->data['website'][0]['website_type']) AND $this->request->data['rewards_type'] == '0' OR $this->request->data['rewards_type'] == '1') {
+                    if(!empty($this->request->data['rewards'][0]['name']) && $this->request->data['rewards'][0]['name'] != "undefined" && !empty($this->request->data['rewards'][0]['type']) && $this->request->data['rewards'][0]['type'] != "undefined") {
                         $this->loadModel('VoteConfiguration');
                         /*
                         REWARDS -> serialize();
@@ -415,43 +416,8 @@ class VoterController extends VoteAppController {
                         )
 
                         */
-                        foreach ($this->request->data['reward_type'] as $key => $value) {
-                            $k = explode('=', $value);
-                            $k = $k[1];
-                            $v = explode('=', $this->request->data['reward_value'][$key]);
-                            $v = $v[1];
-                            $rewards_array[][$k] = $v;
-                        }
 
-                        foreach ($this->request->data['reward_name'] as $key => $value) {
-                            $k2 = explode('=', $value);
-                            $k2 = $k2[1];
-                            $v2 = explode('=', $this->request->data['reward_type'][$key]);
-                            $v2 = $v2[1];
-                            $rewards_name_array[] = $k2;
-                        }
-
-                        $i = 0;
-                        foreach ($rewards_array as $k => $v) {
-                            foreach ($v as $key => $value) {
-                                $value = str_replace('+', ' ', $value);
-                                $value = urldecode($value);
-                                if($key == 'server') {
-                                    $rewards_name_array[$i] = str_replace('+', ' ', $rewards_name_array[$i]);
-                                    $rewards_name_array[$i] = urldecode($rewards_name_array[$i]);
-                                    $rewards[] = array('type' => $key, 'name' => $rewards_name_array[$i], 'command' => $value);
-                                } elseif($key == 'money') {
-                                    $rewards_name_array[$i] = str_replace('+', ' ', $rewards_name_array[$i]);
-                                    $rewards_name_array[$i] = urldecode($rewards_name_array[$i]);
-                                    $rewards[] = array('type' => $key, 'name' => $rewards_name_array[$i], 'how' => $value);
-                                } else {
-                                    $rewards[] = null;
-                                }
-                            }
-                            $i++;
-                        }
-
-                        $rewards = serialize($rewards);
+                        $rewards = serialize($this->request->data['rewards']);
 
                         $vote = $this->VoteConfiguration->find('first');
                         if(!empty($vote)) {
@@ -460,11 +426,9 @@ class VoterController extends VoteAppController {
                             $this->VoteConfiguration->create();
                         }
                         $this->VoteConfiguration->set(array(
-                            'time_vote' => $this->request->data['time_vote'],
-                            'page_vote' => $this->request->data['page_vote'],
-                            'id_vote' => /*$this->request->data['id_vote']*/0,
                             'rewards_type' => $this->request->data['rewards_type'],
                             'rewards' => $rewards,
+                            'websites' => serialize($this->request->data['website']),
                             'servers' => serialize($this->request->data['servers'])
                         ));
                         $this->VoteConfiguration->save();
@@ -476,6 +440,7 @@ class VoterController extends VoteAppController {
                     }
                 } else {
                     echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+                    debug($this->request->data);
                 }
             } else {
                 echo $this->Lang->get('NOT_POST').'|false';

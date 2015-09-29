@@ -108,7 +108,7 @@ $this->EyPlugin = new EyPluginComponent;
 						<ul class="dropdown-menu">
 							<li><a href="<?= $this->Html->url(array('controller' => 'configuration', 'admin' => true, 'plugin' => false)) ?>"><i class="icon-info-sign"></i> <?= $Lang->get('SETTINGS') ?></a></li>
 							<?php if($this->EyPlugin->is_installed('Vote')) { ?>
-								<li><a href="<?= $this->Html->url(array('controller' => 'voter', 'plugin' => 'vote', 'admin' => true, 'plugin' => 'vote')) ?>"><i class="icon-share"></i> <?= $Lang->get('VOTE') ?></a></li>
+								<li><a onClick="document.cookie='admin_layout=default; expires=Sun, 01 Feb 2020 00:00:00 UTC; path=/';" href="<?= $this->Html->url(array('controller' => 'voter', 'plugin' => 'vote', 'admin' => true, 'plugin' => 'vote')) ?>"><i class="icon-share"></i> <?= $Lang->get('VOTE') ?></a></li>
 							<?php } ?>
 							<li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'link', 'admin' => true, 'plugin' => false)) ?>"><i class="icon-th-large"></i> <?= $Lang->get('LINK_SERVER') ?></a></li>
 						</ul>

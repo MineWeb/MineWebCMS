@@ -323,6 +323,7 @@ $this->EyPlugin = new EyPluginComponent;
       </div>
       <div class="modal-body">
         <form action="" method="post">
+          <input type="hidden" id="form_infos" data-ajax="false">
           <input type="hidden" id="server_id" name="server_id">
           <div class="col-md-8">
               <input class="form-control col-md-4" name="cmd" type="text"></input>
