@@ -30,7 +30,7 @@ $this->Configuration = new ConfigurationComponent;
 			  <div class="panel-body">
 			  	<?php foreach ($websites as $key => $value) { ?>
 			  		<div class="col-md-4">
-						<button class="btn btn-success choose_website btn-block" id="<?= $key ?>"><?= $Lang->get('WEBSITE_NBR') ?> <?= $key ?></button>
+						<button class="btn btn-success choose_website btn-block" id="<?= $key ?>"><?= $Lang->get('WEBSITE_NBR') ?> <?= $key+1 ?></button>
 					</div>
 				<?php } ?>
 			  </div>

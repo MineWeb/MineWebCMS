@@ -7,54 +7,180 @@ $this->Configuration = new ConfigurationComponent;
 	<h1><?= $Lang->get('VOTE_TITLE') ?></h1><br>
 	<div class="row">
 		<div class="col-md-9">
-				
 
-			<div class="panel panel-default step1">
-			  <div class="panel-heading">
-			    <h3 class="panel-title"><b><?= $Lang->get('STEP') ?> 1 :</b> <?= $Lang->get('LOGIN') ?> <i style="display:none" id="icon_step1" class="glyphicon glyphicon-ok"></i></h3>
-			  </div>
-			  <div class="panel-body">
-			    <form class="form-inline" id="step1">
-				  <div class="form-group">
-				    <label class="sr-only">Pseudo</label>
-				    <input type="text" class="form-control input-step1" name="pseudo" placeholder="<?= $Lang->get('MC_USERNAME') ?>">
+			<div id="website_infos"></div>
+
+			<!-- Choose website -->
+				<div class="panel panel-default panel-step step0">
+				  <div class="panel-heading">
+				    <h3 class="panel-title"><?= $Lang->get('STEP') ?> 0 : <?= $Lang->get('CHOOSE_WEBSITE') ?> <i style="display:none" class="glyphicon glyphicon-ok"></i></h3>
 				  </div>
-				  <button type="submit" class="btn btn-info btn-step1"><?= $Lang->get('LOGIN') ?></button>
-				</form>
-			  </div>
-			  	<div class="response_step1"></div>
-			</div>
-
-			<div class="panel panel-default step2" style="opacity : 0.5;">
-			  <div class="panel-heading">
-			    <h3 class="panel-title"><b><?= $Lang->get('STEP') ?> 2 :</b> <?= $Lang->get('DO_THE_VOTE') ?> <i style="display:none" id="icon_step2" class="glyphicon glyphicon-ok"></i></h3>
-			  </div>
-			  <div class="panel-body">
-			  	<p><?= $Lang->get('STEP_2_DESC_VOTE') ?></p>
-			  	<a class="btn btn-info btn-block btn-step2 disabled" href="<?= $vote_page ?>" target="_blank">Voter</a>
-			  </div>
-			</div>
-
-			<?php /*<div class="panel panel-default step3" style="opacity : 0.5;">
-			  <div class="panel-heading">
-			    <h3 class="panel-title"><b><?= $Lang->get('STEP') ?> 3 :</b> <?= $Lang->get('TAKE_OUT') ?> <span id="sec"></span><i style="display:none" id="icon_step3" class="glyphicon glyphicon-ok"></i></h3>
-			  </div>
-			  <div class="panel-body">
-			  	<p><?= $Lang->get('STEP_3_DESC_VOTE') ?></p>
-				<form class="form-inline" id="step3">
-				  <div class="form-group">
-				    <label class="sr-only">OUT</label>
-				    <input type="text" class="form-control input-step3" name="out" placeholder="<?= $Lang->get('NUMBER_OF_OUT') ?>" disabled="">
+				  <div class="panel-body">
+				  	<?php foreach ($websites as $key => $value) { ?>
+				  		<div class="col-md-4">
+							<button class="btn btn-success choose_website btn-block" id="<?= $key ?>"><?= $Lang->get('WEBSITE_NBR') ?> <?= $key+1 ?></button>
+						</div>
+					<?php } ?>
 				  </div>
-				  <button type="submit" class="btn btn-info btn-step3 disabled"><?= $Lang->get('SUBMIT') ?></button>
-				</form>
-			  </div>
-			  	<div class="response_step3"></div>
-			</div> */ ?>
+				</div>
+				<script step-id="0">
+					$('.choose_website').click(function(e) {
+						$('.step0').css('opacity', '0.7');
+						$('.step0').find('i').css('display', 'inline-block');
+						$('.step0 button').each(function(e) {
+							$(this).attr('disabled');
+							$(this).addClass('disabled');
+						});
+						$('.step1').css('opacity', '');
+						$.post("<?= $this->Html->url(array('plugin' => 'vote', 'controller' => 'voter', 'action' => 'setWebsite')) ?>", { website : $(this).attr('id')}, function(data) {
+							data = JSON.parse(data);
+							$('.btn-step2').attr('href', data.page);
+							var website_type = data['website_type'];
+							if(website_type == 'rpg') { // si rpg
+								$('#step4_title').html('4');
+								$('.step3').show();
+								$('.sec')[1].remove();
+							}
+							$('#website_infos').attr('data-type', website_type);
+						});
+					});
+				</script>
+			<!-- _____________ -->
 
-			<div class="panel panel-default step4" style="opacity : 0.5;">
+			<!-- Choose username -->
+				<div class="panel panel-default panel-step step1" style="opacity : 0.5;">
+				  <div class="panel-heading">
+				    <h3 class="panel-title"><?= $Lang->get('STEP') ?> 1 : <?= $Lang->get('LOGIN') ?> <i style="display:none" id="icon_step1" class="glyphicon glyphicon-ok"></i></h3>
+				  </div>
+				  <div class="panel-body">
+				    <form class="form-inline" id="step1">
+					  <div class="form-group">
+					    <label class="sr-only">Pseudo</label>
+					    <input type="text" class="form-control input-lg input-step1" name="pseudo" placeholder="<?= $Lang->get('MC_USERNAME') ?>">
+					  </div>
+					  <button type="submit" class="btn btn-info btn-lg btn-step1"><?= $Lang->get('LOGIN') ?></button>
+					</form>
+				  </div>
+				  	<div class="response_step1"></div>
+				</div>
+				<script type="text/javascript" step-id="1">
+					$('#step1').submit(function(e) {
+						e.preventDefault();
+						$('.response_step1').html('<div class="panel-footer"><div class="alert alert-info" style="margin-bottom:0px;"><?= $this->Html->image('ajax-loader.gif') ?> <?= $Lang->get('LOADING') ?> ...</div></div>');
+						var $form = $(this);
+				        var pseudo = $form.find("input[name='pseudo']").val();
+						$.post("<?= $this->Html->url(array('plugin' => 'vote', 'controller' => 'voter', 'action' => 'setPseudo')) ?>", { pseudo : pseudo}, function(data) {
+							data2 = data.split("|");
+						    if(data.indexOf('true') != -1) {
+						    	$('#icon_step1').css("display", "");
+						    	$('.step1').css("opacity", "0.7");
+						    	$('.step2').css("opacity", "");
+						    	$('.btn-step1').addClass('disabled');
+						    	$('.btn-step2').removeClass('disabled');
+						    	$('.input-step1').prop('disabled', true);
+						        $('.response_step1').html('<div class="panel-footer"><div class="alert alert-success" style="margin-bottom:0px;"><b><?= $Lang->get('SUCCESS') ?> : </b>'+data2[0]+'</div></div>');
+						        $('#script_step1').remove();
+						    } else if(data.indexOf('false') != -1) {
+						    	$('.response_step1').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('ERROR') ?> : </b>'+data2[0]+'</div></div>');
+						    } else {
+						    	$('.response_step1').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('ERROR') ?> : </b><?= $Lang->get('ERROR_WHEN_AJAX') ?></div></div>');
+						    }
+						});
+					});
+				</script>
+			<!-- _______________ -->
+
+			<!-- Vote -->
+				<div class="panel panel-default panel-step step2" style="opacity : 0.5;">
+				  <div class="panel-heading">
+				    <h3 class="panel-title"><?= $Lang->get('STEP') ?> 2 : <?= $Lang->get('DO_THE_VOTE') ?> <i style="display:none" id="icon_step2" class="glyphicon glyphicon-ok"></i></h3>
+				  </div>
+				  <div class="panel-body">
+				  	<p><?= $Lang->get('STEP_2_DESC_VOTE') ?></p>
+				  	<a class="btn btn-info btn-block btn-step2 disabled" href="#" target="_blank">Voter</a>
+				  </div>
+				</div>
+				<script type="text/javascript" step-id="2">
+					$(".btn-step2").click( function() {
+				      	var i = 15;
+				      	function compteur() {
+				        	$(".sec").html(" : "+i);
+				        	i = i - 1;
+				        	if(i>-1) {
+				          		timer = setTimeout(function() {
+				            		compteur();
+				          		}, 1000);
+				        	} else {
+				          		$(".sec").css("display", "none");
+				          		$(".step2").css("opacity", "0.7");
+				          		$(".step3").css("opacity", "");
+				          		$('.btn-step2').addClass('disabled');
+				          		$('#icon_step2').css("display", "");
+				          		$('#script_step2').remove();
+
+				          		if($('#website_infos').attr('data-type') == "rpg") {
+						    		$('.btn-step3').removeClass('disabled');
+						    		$('.input-step3').prop('disabled', false);
+						    	} else {
+						    		$('.step4').css("opacity", "");
+						    		$('#step4').removeClass('disabled');
+						    		$('.btn-step4').removeClass('disabled');
+						    	}
+				        	}
+				      	}
+				        compteur();
+				    });
+				</script>
+			<!-- _____ -->
+
+			<!-- Verification of OUT -->
+				<div class="panel panel-default panel-step step3" style="display:none;opacity : 0.5;">
+				  <div class="panel-heading">
+				    <h3 class="panel-title"><?= $Lang->get('STEP') ?> 3 : <?= $Lang->get('TAKE_OUT') ?> <span class="sec"></span><i style="display:none" id="icon_step3" class="glyphicon glyphicon-ok"></i></h3>
+				  </div>
+				  <div class="panel-body">
+				  	<p><?= $Lang->get('STEP_3_DESC_VOTE') ?></p>
+					<form class="form-inline" id="step3">
+					  <div class="form-group">
+					    <label class="sr-only">OUT</label>
+					    <input type="text" class="form-control input-step3" name="out" placeholder="<?= $Lang->get('NUMBER_OF_OUT') ?>" disabled="">
+					  </div>
+					  <button type="submit" class="btn btn-info btn-step3 disabled"><?= $Lang->get('SUBMIT') ?></button>
+					</form>
+				  </div>
+				  	<div class="response_step3"></div>
+				</div>
+				<script type="text/javascript" step-id="3">
+				    $('#step3').submit(function(e) {
+						e.preventDefault();
+						$('.response_step3').html('<div class="panel-footer"><div class="alert alert-info" style="margin-bottom:0px;"><?= $this->Html->image('ajax-loader.gif') ?> <?= $Lang->get('LOADING') ?> ...</div></div>');
+						var $form = $( this );
+				        var out = $form.find("input[name='out']").val();
+						$.post("<?= $this->Html->url(array('plugin' => 'vote', 'controller' => 'voter', 'action' => 'checkOut')) ?>", { out : out }, function(data) {
+							data2 = data.split("|");
+						    if(data.indexOf('true') != -1) {
+						    	$('#icon_step3').css("display", "");
+						    	$('.step3').css("opacity", "0.7");
+						    	$('.step4').css("opacity", "");
+						    	$('.btn-step3').addClass('disabled');
+						    	$('#step4').removeClass('disabled');
+						    	$('.btn-step4').removeClass('disabled');
+						    	$('.input-step3').prop('disabled', true);
+						        $('.response_step3').html('<div class="panel-footer"><div class="alert alert-success" style="margin-bottom:0px;"><b><?= $Lang->get('SUCCESS') ?> : </b>'+data2[0]+'</div></div>');
+						        $('#script_step3').remove();
+						    } else if(data.indexOf('false') != -1) {
+						    	$('.response_step3').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('ERROR') ?> : </b>'+data2[0]+'</div></div>');
+						    } else {
+						    	$('.response_step3').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('ERROR') ?> : </b><?= $Lang->get('ERROR_WHEN_AJAX') ?></div></div>');
+						    }
+						});
+					});
+				</script>
+			<!-- ________________ --> 
+
+			<div class="panel panel-default panel-step step4" style="opacity : 0.5;">
 			  <div class="panel-heading">
-			    <h3 class="panel-title"><b><?= $Lang->get('STEP') ?> 3 :</b> <?= $Lang->get('REWARDS') ?> <span id="sec"></span><i style="display:none" id="icon_step4" class="glyphicon glyphicon-ok"></i></h3>
+			    <h3 class="panel-title"><?= $Lang->get('STEP') ?> <span id="step4_title">3</span> : <?= $Lang->get('REWARDS') ?> <span class="sec"></span><i style="display:none" id="icon_step4" class="glyphicon glyphicon-ok"></i></h3>
 			  </div>
 			  <div class="panel-body">
 			  	<p><?= $Lang->get('STEP_4_DESC_VOTE') ?></p>
@@ -63,19 +189,6 @@ $this->Configuration = new ConfigurationComponent;
 			  	<div class="response_step4"></div>
 			</div>
 		</div>
-		<?php /* ?><div class="col-md-3 hidden-xs hidden-sm">
-            <div class="well">
-                <h4><?= $Lang->get('STATS') ?></h4>
-                <p><b><?= $Lang->get('NUMBER_OF_VOTES') ?> : </b><span id="nbr-ticket"><?= $votes ?></span></p>
-                <p><b><?= $Lang->get('POSITION') ?> : </b><span id="nbr-ticket-resolved"><?= $position ?></span></p>
-            </div>
-            <?php if($Permissions->can('VOTE_SHOW_REWARDS')) { ?>
-            	<button data-toggle="modal" data-target="#rewards" class="btn btn-primary btn-block"><?= $Lang->get('REWARDS') ?></button>
-            <?php } ?>
-            <?php if($Permissions->can('VOTE_SHOW_RANKING')) { ?>
-				<button data-toggle="modal" data-target="#ranking" class="btn btn-primary btn-block"><?= $Lang->get('RANKING') ?></button>
-			<?php } ?>
-        </div> <?php */ ?>
 	</div>
 	<?php if($Permissions->can('VOTE_SHOW_REWARDS')) { ?>
 		<div class="modal fade" id="rewards" tabindex="-1" role="dialog" aria-labelledby="rewardsLabel" aria-hidden="false">
@@ -154,113 +267,27 @@ $this->Configuration = new ConfigurationComponent;
 
 	<script type="text/javascript" id="script_step1">
 
-	$('#step1').submit(function(e) {
-		e.preventDefault();
-		$('.response_step1').html('<div class="panel-footer"><div class="alert alert-info" style="margin-bottom:0px;"><?= $this->Html->image('ajax-loader.gif') ?> <?= $Lang->get('LOADING') ?> ...</div></div>');
-		var $form = $( this );
-        var pseudo = $form.find("input[name='pseudo']").val();
-		$.post("<?= $this->Html->url(array('plugin' => 'vote', 'controller' => 'voter', 'action' => 'ajax')) ?>", { pseudo : pseudo, step : '1' }, function(data) {
-			data2 = data.split("|");
-		    if(data.indexOf('true') != -1) {
-		    	$('#icon_step1').css("display", "");
-		    	$('.step1').css("opacity", "0.7");
-		    	$('.step2').css("opacity", "");
-		    	$('.btn-step1').addClass('disabled');
-		    	$('.btn-step2').removeClass('disabled');
-		    	$('.input-step1').prop('disabled', true);
-		        $('.response_step1').html('<div class="panel-footer"><div class="alert alert-success" style="margin-bottom:0px;"><b><?= $Lang->get('SUCCESS') ?> : </b>'+data2[0]+'</div></div>');
-		        $('#script_step1').remove();
-		    } else if(data.indexOf('false') != -1) {
-		    	$('.response_step1').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('ERROR') ?> : </b>'+data2[0]+'</div></div>');
-		    } else {
-		    	$('.response_step1').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('ERROR') ?> : </b><?= $Lang->get('ERROR_WHEN_AJAX') ?></div></div>');
-		    }
-		});
-	});
-
-	</script>
-
-	<script type="text/javascript" id="script_step2">
-
-	$(".btn-step2").click( function() {
-      	var i = 15;
-      	function compteur() {
-        	$("#sec").html("<span class='label label-success'>"+i+"</span>");
-        	i = i - 1;
-        	if(i>-1) {
-          		timer = setTimeout(function() {
-            		compteur();
-          		}, 1000);
-        	} else {
-          		$("#sec").css("display", "none");
-          		$(".step2").css("opacity", "0.7");
-          		$(".step3").css("opacity", "");
-          		$('.btn-step2').addClass('disabled');
-          		$('#icon_step2').css("display", "");
-          		$('#script_step2').remove();
-		    	//$('.btn-step3').removeClass('disabled');
-		    	//$('.input-step3').prop('disabled', false);
-
-		    	$('#step4').removeClass('disabled');
-		    	$('.btn-step4').removeClass('disabled');
-		    	$('.step4').css("opacity", "");
-        	}
-      	}
-        compteur();
-    });
-
-    </script><?php /* ?>
-    <script type="text/javascript" id="script_step3">
-
-    $('#step3').submit(function(e) {
-		e.preventDefault();
-		$('.response_step3').html('<div class="panel-footer"><div class="alert alert-info" style="margin-bottom:0px;"><?= $this->Html->image('ajax-loader.gif') ?> <?= $Lang->get('LOADING') ?> ...</div></div>');
-		var $form = $( this );
-        var out = $form.find("input[name='out']").val();
-		$.post("<?= $this->Html->url(array('plugin' => 'vote', 'controller' => 'voter', 'action' => 'ajax')) ?>", { out : out, step : '3' }, function(data) {
-			data2 = data.split("|");
-		    if(data.indexOf('true') != -1) {
-		    	$('#icon_step3').css("display", "");
-		    	$('.step3').css("opacity", "0.7");
-		    	$('.step4').css("opacity", "");
-		    	$('.btn-step3').addClass('disabled');
-		    	$('#step4').removeClass('disabled');
-		    	$('.btn-step4').removeClass('disabled');
-		    	$('.input-step3').prop('disabled', true);
-		        $('.response_step3').html('<div class="panel-footer"><div class="alert alert-success" style="margin-bottom:0px;"><b><?= $Lang->get('SUCCESS') ?> : </b>'+data2[0]+'</div></div>');
-		        $('#script_step3').remove();
-		    } else if(data.indexOf('false') != -1) {
-		    	$('.response_step3').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('ERROR') ?> : </b>'+data2[0]+'</div></div>');
-		    } else {
-		    	$('.response_step3').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('ERROR') ?> : </b><?= $Lang->get('ERROR_WHEN_AJAX') ?></div></div>');
-		    }
-		});
-	});
-
-	</script><?php */ ?>
-	<script type="text/javascript" id="script_step4">
-
-	$(".btn-step4").click( function(e) {
-      	e.preventDefault();
-		$('.response_step4').html('<div class="panel-footer"><div class="alert alert-info" style="margin-bottom:0px;"><?= $this->Html->image('ajax-loader.gif') ?> <?= $Lang->get('LOADING') ?> ...</div></div>');
-		var out = $('.vote').find("input[name='out']").val();
-		var pseudo = $('.vote').find("input[name='pseudo']").val();
-		$.post("<?= $this->Html->url(array('plugin' => 'vote', 'controller' => 'voter', 'action' => 'ajax')) ?>", { out : out, pseudo : pseudo, step : '4' }, function(data) {
-			data2 = data.split("|");
-		    if(data.indexOf('true') != -1) {
-		    	$('#icon_step4').css("display", "");
-		    	$('.step4').css("opacity", "0.7");
-		    	$('.step4 .response_step4').css("opacity", "");
-		    	$('.btn-step4').addClass('disabled');
-		        $('.response_step4').html('<div class="panel-footer"><div class="alert alert-success" style="margin-bottom:0px;"><b><?= $Lang->get('SUCCESS') ?> : </b>'+data2[0]+'</div></div>');
-		        $('#script_step4').remove();
-		    } else if(data.indexOf('false') != -1) {
-		    	$('.response_step4').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('ERROR') ?> : </b>'+data2[0]+'</div></div>');
-		    } else {
-		    	$('.response_step4').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('ERROR') ?> : </b><?= $Lang->get('ERROR_WHEN_AJAX') ?></div></div>');
-		    }
-		});
-    });
+		$(".btn-step4").click( function(e) {
+	      	e.preventDefault();
+			$('.response_step4').html('<div class="panel-footer"><div class="alert alert-info" style="margin-bottom:0px;"><?= $this->Html->image('ajax-loader.gif') ?> <?= $Lang->get('LOADING') ?> ...</div></div>');
+			var out = $('.vote').find("input[name='out']").val();
+			var pseudo = $('.vote').find("input[name='pseudo']").val();
+			$.post("<?= $this->Html->url(array('plugin' => 'vote', 'controller' => 'voter', 'action' => 'getRewards')) ?>", {}, function(data) {
+				data2 = data.split("|");
+			    if(data.indexOf('true') != -1) {
+			    	$('#icon_step4').css("display", "");
+			    	$('.step4').css("opacity", "0.7");
+			    	$('.step4 .response_step4').css("opacity", "");
+			    	$('.btn-step4').addClass('disabled');
+			        $('.response_step4').html('<div class="panel-footer"><div class="alert alert-success" style="margin-bottom:0px;"><b><?= $Lang->get('SUCCESS') ?> : </b>'+data2[0]+'</div></div>');
+			        $('#script_step4').remove();
+			    } else if(data.indexOf('false') != -1) {
+			    	$('.response_step4').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('ERROR') ?> : </b>'+data2[0]+'</div></div>');
+			    } else {
+			    	$('.response_step4').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('ERROR') ?> : </b><?= $Lang->get('ERROR_WHEN_AJAX') ?></div></div>');
+			    }
+			});
+	    });
 
 	</script>
 </div>
