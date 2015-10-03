@@ -217,9 +217,8 @@
   $('#add_website').click(function(e) {
     e.preventDefault();
     var how = parseInt($(this).attr('data-count')) + 1;
-    var before = $('#website_content').html();
-    var add = before+'<div class="box box-success websites"><div class="box-body"><div class="form-group"><label><?= addslashes($Lang->get('TIME_VOTE')) ?></label><input name="time_vote" class="form-control" placeholder="minutes" type="text"></div><div class="form-group"><label><?= addslashes($Lang->get('PAGE_VOTE')) ?></label><input name="page_vote" class="form-control" placeholder="Ex: http://google.fr" type="text"></div><div class="form-group"><label><?= addslashes($Lang->get('WEBSITE_TYPE')) ?></label><select name="website_type" data-id="'+how+'" class="form-control website_type"><option value="rpg"><?= addslashes($Lang->get('WEBSITE_TYPE_RPG')) ?></option><option value="other"><?= addslashes($Lang->get('WEBSITE_TYPE_OTHER')) ?></option></select></div><div id="rpg-'+how+'"><div class="form-group"><label><?= addslashes($Lang->get('ID_VOTE')) ?></label><input name="rpg_id" class="form-control" placeholder="Ex: 44835 (http://www.rpg-paradize.com/site-[...]-44835)" type="text"></div></div></div></div>';
-    $('#website_content').html(add);
+    var add = '<div class="box box-success websites"><div class="box-body"><div class="form-group"><label><?= addslashes($Lang->get('TIME_VOTE')) ?></label><input name="time_vote" class="form-control" placeholder="minutes" type="text"></div><div class="form-group"><label><?= addslashes($Lang->get('PAGE_VOTE')) ?></label><input name="page_vote" class="form-control" placeholder="Ex: http://google.fr" type="text"></div><div class="form-group"><label><?= addslashes($Lang->get('WEBSITE_TYPE')) ?></label><select name="website_type" data-id="'+how+'" class="form-control website_type"><option value="rpg"><?= addslashes($Lang->get('WEBSITE_TYPE_RPG')) ?></option><option value="other"><?= addslashes($Lang->get('WEBSITE_TYPE_OTHER')) ?></option></select></div><div id="rpg-'+how+'"><div class="form-group"><label><?= addslashes($Lang->get('ID_VOTE')) ?></label><input name="rpg_id" class="form-control" placeholder="Ex: 44835 (http://www.rpg-paradize.com/site-[...]-44835)" type="text"></div></div></div></div>';
+    $('#website_content').append(add);
     $(this).attr('data-count', how);
 
     $('.website_type').change(function(e) {
@@ -248,7 +247,6 @@
     e.preventDefault();
     var how = $('#add-js').attr('data-number');
     how = parseInt(how) + 1;
-    var before = $('#add-js').html();
 
     if($('#rewards_type').val() == "0") {
       var display_proba = 'block';
@@ -256,8 +254,8 @@
       var display_proba = 'none';
     }
 
-    var add = before+'<div class="box box-info reward_list" id="reward-'+how+'"><div class="box-body"><div class="form-group"><label><?= $Lang->get('REWARD_TYPE') ?></label><select name="type_reward" class="form-control reward_type"><option value="money"><?= $Lang->get('MONEY') ?></option><option value="server"><?= $Lang->get('SERVER') ?></option></select></div><div class="form-group"><label><?= $Lang->get('NAME') ?></label><input type="text" class="form-control reward_name" name="reward_name"></div><div class="form-group"><label><?= $Lang->get('REWARD_VALUE') ?></label><input type="text" name="reward_value" class="form-control reward_value" placeholder="<?= $Lang->get('CMD_OR_MONEY') ?>"></div><div class="form-group reward_proba_container" style="display:'+display_proba+';"><label><?= $Lang->get('REWARD_PROBABILITY') ?></label><input type="text" name="reward_proba" class="form-control reward_proba" placeholder="<?= addslashes($Lang->get('REWARD_PERCENTAGE')) ?>"></div></div></div>';
-    $('#add-js').html(add);
+    var add = '<div class="box box-info reward_list" id="reward-'+how+'"><div class="box-body"><div class="form-group"><label><?= $Lang->get('REWARD_TYPE') ?></label><select name="type_reward" class="form-control reward_type"><option value="money"><?= $Lang->get('MONEY') ?></option><option value="server"><?= $Lang->get('SERVER') ?></option></select></div><div class="form-group"><label><?= $Lang->get('NAME') ?></label><input type="text" class="form-control reward_name" name="reward_name"></div><div class="form-group"><label><?= $Lang->get('REWARD_VALUE') ?></label><input type="text" name="reward_value" class="form-control reward_value" placeholder="<?= $Lang->get('CMD_OR_MONEY') ?>"></div><div class="form-group reward_proba_container" style="display:'+display_proba+';"><label><?= $Lang->get('REWARD_PROBABILITY') ?></label><input type="text" name="reward_proba" class="form-control reward_proba" placeholder="<?= addslashes($Lang->get('REWARD_PERCENTAGE')) ?>"></div></div></div>';
+    $('#add-js').append(add);
     $('#add-js').attr('data-number', how);
   });
 </script>
