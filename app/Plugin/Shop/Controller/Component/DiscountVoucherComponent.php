@@ -20,6 +20,8 @@
 **/
 
 class DiscountVoucherComponent extends Object {
+
+  static private $items;
   
   function shutdown(&$controller) {
   }
@@ -45,6 +47,17 @@ class DiscountVoucherComponent extends Object {
   }
 
   function startup(&$controller) {
+  }
+
+  function getItemNameById($id) {
+    if(empty(self::$items)) {
+      $this->Item = ClassRegistry::init('Item');
+      $items = $this->Item->find('all');
+      foreach ($items as $key => $value) {
+        self::$items[$value['Item']['id']] = $value['Item']['name'];
+      }
+    }
+    return self::$items[$id];
   }
 
   function get_vouchers() { // affiche dans une alert info les promotions en cours si elle doivent être affichées
@@ -80,12 +93,12 @@ class DiscountVoucherComponent extends Object {
             } else {
               echo $this->Lang->get('THE_ITEM'); // 1 seul
             }
-            foreach ($voucher['effective_on']['value'] as $key => $value) { // j'affiche la/les catégories
+            foreach ($voucher['effective_on']['value'] as $key => $value) { // j'affiche l'/les article(s)
               $last_key = end($voucher['effective_on']['value']);
               if($last_key == $value) {
-                echo '"'.$value.'" ';
+                echo '"'.$this->getItemNameById($value).'" ';
               } else {
-                echo '"'.$value.'", ';
+                echo '"'.$this->getItemNameById($value).'", ';
               }
             }
           } elseif ($voucher['effective_on']['type'] == 'all') { // si cela concerne toute la boutique
@@ -119,7 +132,7 @@ class DiscountVoucherComponent extends Object {
         App::import('Component', 'ConnectComponent'); // le component
         $this->Connect = new ConnectComponent; // connect pour le pseudo
         $how_used = array_count_values(unserialize($search_vouchers[0]['Voucher']['used']))[$this->Connect->get_pseudo()];
-        if($how_used <= $search_vouchers[0]['Voucher']['limit_per_user']) {
+        if($how_used < $search_vouchers[0]['Voucher']['limit_per_user']) {
           $can_use = true;
         } else {
           $can_use = false;

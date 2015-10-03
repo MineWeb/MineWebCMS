@@ -105,7 +105,7 @@ class ShopController extends AppController {
 			if(!in_array(false, $servers_online)) {
 				$item_price = $search_item['0']['Item']['price'];
 				if(!empty($_GET['code'])) {
-					$voucher_reduc = $this->DiscountVoucher->get_new_price($item_price, $search_item['0']['Item']['category'], $search_item['0']['Item']['name'], $_GET['code']);
+					$voucher_reduc = $this->DiscountVoucher->get_new_price($item_price, $search_item['0']['Item']['category'], $search_item['0']['Item']['id'], $_GET['code']);
 					$item_price = $voucher_reduc; // j'obtient le nouveau prix si une promotion est en cours sur cet article ou sa catégorie
 				}
 				if($item_price <= $this->Connect->get('money')) {
@@ -825,7 +825,7 @@ class ShopController extends AppController {
 			$this->loadModel('Item');
 			$search_items = $this->Item->find('all', array('fields' => array('name', 'id')));
 			foreach ($search_items as $v) {
-				$items[$v['Item']['name']] = $v['Item']['name'];
+				$items[$v['Item']['id']] = $v['Item']['name'];
 			}
 			$this->set(compact('items'));
 
