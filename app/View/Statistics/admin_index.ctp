@@ -157,7 +157,7 @@
               <?php 
               foreach ($language as $key => $value) {
                 if(empty($key)) {
-                  echo '"undefined"';
+                  echo '"undefined",';
                 } else {
                   echo '"'.$key.'",';
                 }

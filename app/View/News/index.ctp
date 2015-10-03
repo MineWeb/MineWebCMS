@@ -40,7 +40,7 @@ $this->Connect = new ConnectComponent;
                 <?php foreach ($search_comments as $k => $v) { ?>
                     <div class="media" id="comment-<?= $v['Comment']['id'] ?>">
                         <a class="pull-left" href="#">
-                            <img class="media-object" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/  <?= $v['Comment']['author'] ?>/64" alt="">
+                            <img class="media-object" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/<?= $v['Comment']['author'] ?>/64" alt="">
                         </a>
                         <div class="media-body">
                             <h4 class="media-heading"><?= $v['Comment']['author'] ?>

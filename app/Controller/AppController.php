@@ -105,7 +105,7 @@ WCqkx22behAGZq6rhwIDAQAB
 
 
 		/* Charger les components des plugins si ils s'appellent "EventsConpoment.php" */
-		$plugins = $this->EyPlugin->get_list();
+		$plugins = $this->EyPlugin->get_list(false);
 		foreach ($plugins as $key => $value) {
 			$useEvents = $this->EyPlugin->get('useEvents', $value['plugins']['name']);
 			if($useEvents) {

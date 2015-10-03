@@ -262,9 +262,14 @@ class EyPluginComponent extends Object {
     return $plugins;
   }
 
-  function get_list() {
+  function get_list($all = true) {
     $this->plugins = ClassRegistry::init('plugins');
-    return $this->plugins->find('all');
+    if($all) {
+      $search = $this->plugins->find('all');
+    } else {
+      $search = $this->plugins->find('all', array('conditions' => array('state' => 1)));
+    }
+    return $search;
   }
 
   function get($key, $plugin_name) {

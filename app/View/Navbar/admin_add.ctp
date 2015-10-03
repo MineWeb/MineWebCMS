@@ -101,9 +101,8 @@
     e.preventDefault();
     var how = $('#add-js').attr('data-number');
     how = parseInt(how) + 1;
-    var before = $('#add-js').html();
-    var add = before+'<div class="form-group"><div class="well" id="nav-'+how+'"><div class="form-group"><label><?= addslashes($Lang->get('NAME_OF_NAV')) ?></label><input type="text" class="form-control name_of_nav" name="name_of_nav"></div><div class="form-group"><label><?= $Lang->get('URL') ?></label><input type="text" class="form-control url_of_nav" placeholder="<?= $Lang->get('YOUR_URL') ?>" name="url"></div></div></div>'
-    $('#add-js').html(add);
+    var add = '<div class="form-group"><div class="well" id="nav-'+how+'"><div class="form-group"><label><?= addslashes($Lang->get('NAME_OF_NAV')) ?></label><input type="text" class="form-control name_of_nav" name="name_of_nav"></div><div class="form-group"><label><?= $Lang->get('URL') ?></label><input type="text" class="form-control url_of_nav" placeholder="<?= $Lang->get('YOUR_URL') ?>" name="url"></div></div></div>'
+    $('#add-js').append(add);
     $('#add-js').attr('data-number', how);
   });
 </script>

@@ -31,7 +31,7 @@
 
             <div class="form-group">
               <label><?= $Lang->get('BACKGROUND_URL') ?></label>
-              <input type="text" class="form-control" name="background_url" value="<?= $config['background_url'] ?>" placeholder="<?= $Lang->get('DEFAULT').' : http://subtlepatterns.com/patterns/geometry2.png' ?>">
+              <input type="text" class="form-control" name="background_url" value="<?= $config['background_url'] ?>" placeholder="<?= $Lang->get('DEFAULT').' : http://subtlepatterns2015.subtlepatterns.netdna-cdn.com/patterns/geometry2.png' ?>">
             </div>
 
             <div class="form-group">

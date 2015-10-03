@@ -159,7 +159,7 @@ WCqkx22behAGZq6rhwIDAQAB
 				echo $this->Lang->get('ERROR_CHMOD');
 			}
 			$this->layout = null;
-			$this->redirect(array('controller' => 'pages', 'action' => 'home'));
+			$this->redirect('/');
 		} else {
 			$this->redirect(array('controller' => 'install', 'action' => 'index'));
 		}

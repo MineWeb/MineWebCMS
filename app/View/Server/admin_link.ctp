@@ -77,9 +77,8 @@
   var i = 0;
   $("#add_server").click(function() {
     i++;
-    var before = $('#add_server_content').html();
     var new_server = '<div class="row"><div class="col-md-12"><div class="box"><div class="box-header with-border"><h3 class="box-title"><?= $Lang->get('LINK_SERVER') ?></h3></div><div class="box-body"><form id="'+i+'" action="<?= $this->Html->url(array('controller' => 'server', 'action' => 'link_ajax', 'admin' => true)) ?>" method="post"><input type="hidden" id="form_infos" data-ajax="true"><div class="ajax-msg"></div><div class="form-group"><label><?= $Lang->get('NAME') ?></label><input type="text" class="form-control" name="name" placeholder="Ex: MineWeb"></div><div class="form-group"><label><?= $Lang->get('SERVER_HOST') ?></label><input type="text" class="form-control" name="host" placeholder="Ex: 127.0.0.1"></div><div class="form-group"><label><?= $Lang->get('PORT') ?></label><input type="text" class="form-control" name="port" placeholder="Ex: 8080"></div><button  type="submit" class="btn btn-success"><?= $Lang->get('SUBMIT') ?></button></form></div></div></div></div>'+"\n";
-      $('#add_server_content').html(before+new_server);
+      $('#add_server_content').append(new_server);
 
       $("form").on("submit", function(e) {
         form = $(this);
