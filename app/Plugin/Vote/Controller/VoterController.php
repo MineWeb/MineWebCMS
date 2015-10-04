@@ -32,7 +32,11 @@ class VoterController extends VoteAppController {
                 $config = $this->VoteConfiguration->find('first');
                 $websites = unserialize($config['VoteConfiguration']['websites']);
 
-                echo json_encode(array('page' => 'http://rpg-paradize.com/?page=vote&vote='.@$websites[$this->request->data['website']]['rpg_id'], 'website_type' => @$websites[$this->request->data['website']]['website_type']));
+                if($websites[$this->request->data['website']]['website_type'] == 'rpg') {
+                    echo json_encode(array('page' => 'http://rpg-paradize.com/?page=vote&vote='.@$websites[$this->request->data['website']]['rpg_id'], 'website_type' => @$websites[$this->request->data['website']]['website_type']));
+                } else {
+                    echo json_encode(array('page' => @$websites[$this->request->data['website']]['page_vote'], 'website_type' => @$websites[$this->request->data['website']]['website_type']));
+                }
             }
         }
     }
@@ -397,11 +401,14 @@ class VoterController extends VoteAppController {
             $this->set(compact('vote'));
 
             $this->loadModel('Server');
+            $vote['servers'] = unserialize($vote['servers']);
             if(!empty($vote['servers'])) {
-                $vote['servers'] = unserialize($vote['servers']);
+                $selected_server = array();
                 foreach ($vote['servers'] as $key => $value) {
                     $d = $this->Server->find('first', array('conditions' => array('id' => $value)));
-                    $selected_server[] = $d['Server']['id'];
+                    if(!empty($d)) {
+                        $selected_server[] = $d['Server']['id'];
+                    }
                 }
             } else {
                 $selected_server = array();

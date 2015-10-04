@@ -10,8 +10,8 @@ class ConfigurationController extends AppController {
 
 			$config = $this->Configuration->get_all()['Configuration'];
 			$this->loadModel('Server');
+			$config['banner_server'] = unserialize($config['banner_server']);
 			if(!empty($config['banner_server'])) {
-				$config['banner_server'] = unserialize($config['banner_server']);
 				foreach ($config['banner_server'] as $key => $value) {
 					$d = $this->Server->find('first', array('conditions' => array('id' => $value)));
 					$selected_server[] = $d['Server']['id'];

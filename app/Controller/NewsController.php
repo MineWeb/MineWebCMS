@@ -43,7 +43,7 @@ class NewsController extends AppController {
 				}
 
 				// on chercher les 4 dernières news pour la sidebar
-				$search_news = $this->News->find('all', array('limit' => '4', 'order' => 'id desc', 'published' => 1)); // on cherche les 3 dernières news (les plus veille)
+				$search_news = $this->News->find('all', array('limit' => '4', 'order' => 'id desc', 'conditions' => array('published' => 1))); // on cherche les 3 dernières news (les plus veille)
 				$this->set(compact('search_news')); // on envoie les données à la vue
 			} else {
 				// si la news n'existe pas, msg d'erreur + redirection

@@ -82,7 +82,7 @@ if(!file_exists(ROOT.DS.'config'.DS.'install.txt')) {
 	$phpversion = version_compare(PHP_VERSION, '5.3', '>=');
 	$pdo = in_array('pdo_mysql', get_loaded_extensions());
 
-	if(!function_exists('apache_get_modules')) {
+	if(function_exists('apache_get_modules')) {
 	    $rewrite_url = in_array('mod_rewrite', @apache_get_modules());
 	} else {
 
