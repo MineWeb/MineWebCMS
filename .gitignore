@@ -11,6 +11,7 @@ app/Plugin/FactionRanking/
 app/tmp/
 
 app/Config/database.php
+app/Config/core.php
 
 config/secure
 
