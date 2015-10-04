@@ -129,7 +129,7 @@ WCqkx22behAGZq6rhwIDAQAB
 			$plugins_need_admin = $this->EyPlugin->get_list();
 			foreach ($plugins_need_admin as $key => $value) {
 				if($this->EyPlugin->get('admin', $value['plugins']['name'])) {
-					$plugins_admin[] = array('name' => $value['plugins']['name'], 'slug' => $this->EyPlugin->get('slug', $value['plugins']['name'])); 
+					$plugins_admin[] = array('name' => $this->EyPlugin->get('name', $value['plugins']['name']), 'slug' => $this->EyPlugin->get('slug', $value['plugins']['name'])); 
 				}
 			}
 			if(!empty($plugins_admin)) {

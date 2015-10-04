@@ -94,7 +94,7 @@ class NavbarController extends AppController {
 			$url_plugins = $this->EyPlugin->get_list();
 			foreach ($url_plugins as $key => $value) {
 				$slug = $this->EyPlugin->get('slug', $value['plugins']['name']);
-				$url_plugins2[$slug] = $value['plugins']['name'];
+				$url_plugins2[$slug] = $this->EyPlugin->get('name', $value['plugins']['name']);
 			}
 			if(!empty($url_plugins2)) {
 				$url_plugins = $url_plugins2;
