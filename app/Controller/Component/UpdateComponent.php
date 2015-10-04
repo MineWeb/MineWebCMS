@@ -18,7 +18,6 @@ class UpdateComponent extends Object {
 					$this->update($this->get_version());
 				}
 			}
-			file_put_contents(ROOT.'/config/update', 1);
 		}
 	}
 	function startup(&$controller) {}
