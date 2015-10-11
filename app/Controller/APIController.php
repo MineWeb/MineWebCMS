@@ -123,6 +123,7 @@ class APIController extends AppController {
 	}
 
 	public function get_skin($name) {
+		$this->response->type('png');
 		$this->autoRender = false;
 		$this->loadModel('ApiConfiguration');
 		$config = $this->ApiConfiguration->find('first');
@@ -138,6 +139,7 @@ class APIController extends AppController {
 	}
 
 	public function get_head_skin($name, $size = 50) {
+		$this->response->type('png');
 		$this->autoRender = false;
 		$this->loadModel('ApiConfiguration');
 		$config = $this->ApiConfiguration->find('first');
