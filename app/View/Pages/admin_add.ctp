@@ -34,8 +34,8 @@
                   height : 300,
                   width : '100%',
                   language : 'fr_FR',
-                  plugins: "textcolor code image",
-                  toolbar: "fontselect fontsizeselect bold italic underline strikethrough image forecolor backcolor alignleft aligncenter alignright alignjustify cut copy paste bullist numlist outdent indent blockquote code"
+                  plugins: "textcolor code image link",
+                  toolbar: "fontselect fontsizeselect bold italic underline strikethrough image link forecolor backcolor alignleft aligncenter alignright alignjustify cut copy paste bullist numlist outdent indent blockquote code"
                });
               </script>
               <textarea id="editor" name="content" cols="30" rows="10"></textarea>

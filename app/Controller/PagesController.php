@@ -141,6 +141,11 @@ class PagesController extends AppController {
 		$this->render('home');
 	}
 
+	public function robot() {
+		$this->autoRender = false;
+		echo file_get_contents(ROOT.DS.'robot.txt');
+	}
+
 	public function debug($key = false, $args = false) {
 		$secure = file_get_contents(ROOT.'/config/secure');
 		$secure = json_decode($secure, true);
