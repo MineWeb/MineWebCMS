@@ -46,6 +46,9 @@ class ModuleComponent extends Object {
         App::import('Component', 'LangComponent'); // on charge le composant de langue
         $Lang = new LangComponent;
 
+        App::uses('HtmlHelper', 'View/Helper');
+        $this->Html = new HtmlHelper(new View());
+
         foreach (self::$vars as $key => $value) {
             eval('$'.$key.' = '.$value.';');
         }
