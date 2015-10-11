@@ -153,7 +153,7 @@ class NewsController extends AppController {
     }
 
 	function admin_index() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_NEWS')) {
 			 
 			$this->set('title_for_layout',$this->Lang->get('NEWS_LIST'));
 			$this->layout = 'admin';

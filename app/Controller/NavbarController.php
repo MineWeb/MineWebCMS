@@ -5,7 +5,7 @@ class NavbarController extends AppController {
 	public $components = array('Session');
 
 	public function admin_index() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_NAV')) {
 			 
 			$this->set('title_for_layout',$this->Lang->get('NAVBAR'));
 			$this->layout = 'admin';
