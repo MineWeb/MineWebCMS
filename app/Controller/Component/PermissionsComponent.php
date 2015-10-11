@@ -67,9 +67,11 @@ class PermissionsComponent extends Object {
 
     foreach ($this->EyPlugin->get_list() as $key => $value) {
       $plugins_perm = $this->EyPlugin->get('permissions', $value['plugins']['name']);
-      $plugins_perm = $plugins_perm['available'];
-      foreach ($plugins_perm as $k => $v) {
-        array_push($return, $v);
+      if(isset($plugins_perm['available'])) {
+        $plugins_perm = $plugins_perm['available'];
+        foreach ($plugins_perm as $k => $v) {
+          array_push($return, $v);
+        }
       }
     }
     $this->Rank = ClassRegistry::init('Rank');
