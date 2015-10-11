@@ -13,7 +13,7 @@
             <div class="form-group">
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" name="slider" id="slider"<?= ($config['slider'] == 'true') ? ' checked' : '' ?>>
+                  <input type="checkbox" name="slider" id="slider"<?= (isset($config['slider']) && $config['slider'] == 'true') ? ' checked' : '' ?>>
                   <?= $Lang->get('SLIDER') ?>
                 </label>
               </div>

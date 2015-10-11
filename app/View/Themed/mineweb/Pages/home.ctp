@@ -4,7 +4,7 @@ $this->Connect = new ConnectComponent;
 $theme_config = file_get_contents(ROOT.'/app/View/Themed/Mineweb/config/config.json');
 $theme_config = json_decode($theme_config, true);
 ?>
-    <?php if($theme_config['slider'] == "true") { ?>
+    <?php if(!isset($theme_config['slider']) || $theme_config['slider'] == "true") { ?>
         <header id="myCarousel" class="carousel slide transition-timer-carousel">
             <div class="carousel-inner">
                 <?php if(!empty($search_slider)) { ?>
