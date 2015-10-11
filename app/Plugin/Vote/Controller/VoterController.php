@@ -389,6 +389,167 @@ class VoterController extends VoteAppController {
         return $reward;
     }
 
+    public function get_reward() {
+        $this->autoRender = false;
+        if($this->Connect->connect() && $this->Connect->get('rewards_waited') > 0) {
+            $this->loadModel('VoteConfiguration');
+            $config = $this->VoteConfiguration->find('first');
+
+            // on lui donne ses récompenses
+            if($config['VoteConfiguration']['rewards_type'] == 1) { // toutes les récompenses
+
+                $rewards = unserialize($config['VoteConfiguration']['rewards']);
+
+                $this->getEventManager()->dispatch(new CakeEvent('beforeRecieveRewards', $this, $rewards));
+
+                foreach ($rewards as $key => $value) { // on le fais pour toute les commandes
+
+                    if($value['type'] == 'server') { // si c'est une commande serveur
+
+                        $config['0']['VoteConfiguration']['servers'] = unserialize($config['VoteConfiguration']['servers']);
+                        if(!empty($config['0']['VoteConfiguration']['servers'])) {
+                            foreach ($config['0']['VoteConfiguration']['servers'] as $k => $v) {
+                                $servers_online[] = $this->Server->online($v);
+                            }
+                        } else {
+                            $servers_online = array($this->Server->online());
+                        }
+                        if(!in_array(false, $servers_online)) {
+                            if(empty($config['0']['VoteConfiguration']['servers'])) {
+                                $cmd = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $value['command']);
+                                $this->Server->send_command($cmd); // on envoie la commande puis enregistre le vote
+                                $msg = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $this->Lang->get('VOTE_SUCCESS_SERVER'));
+                                $this->Server->send_command('broadcast '.$msg);
+                            } else {
+                                foreach ($config['0']['VoteConfiguration']['servers'] as $k2 => $v2) {
+                                    $cmd = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $value['command']);
+                                    $this->Server->send_command($cmd, $v2); // on envoie la commande puis enregistre le vote
+                                    $msg = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $this->Lang->get('VOTE_SUCCESS_SERVER'));
+                                    $this->Server->send_command('broadcast '.$msg, $v2);
+                                }
+                            }
+
+                            $success_msg[] = $value['name'];
+
+                        } else {
+
+                            $success_msg[] = 'server_error';
+                        }
+
+                    } elseif($value['type'] == 'money') { // si c'est des points boutique
+
+                        $money = $this->Connect->get_to_user('money', $this->Session->read('vote.pseudo'));
+                        $money = $money + intval($value['how']);
+                        $this->Connect->set_to_user('money', $money, $this->Session->read('vote.pseudo'));
+
+                        $success_msg[] = $value['how'].' '.$this->Configuration->get_money_name();
+
+                    } else {
+                        $success_msg[] = 'internal_error';
+                    }
+
+                }
+
+                if(in_array('server_error', $success_msg)) {
+                    $this->Session->setFlash($this->Lang->get('NEED_SERVER_ON'), 'default.error');
+                    $this->redirect(array('controller' => 'user', 'action' => 'profile'));
+                } elseif (in_array('internal_error', $success_msg)) {
+                    $this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
+                    $this->redirect(array('controller' => 'user', 'action' => 'profile'));
+                } else {
+                    $flash = $this->Lang->get('VOTE_SUCCESS').' ! ';
+                    if(!empty($success_msg)) {
+                        $flash = $this->Lang->get('REWARDS').' : ';
+
+                        $i = 0;
+                        $count = count($success_msg);
+                        foreach ($success_msg as $k => $v) {
+                            $i++;
+                            $flash = '<b>'.$v.'</b>';
+                            if($i < $count) {
+                                $flash = ', ';
+                            } else {
+                                $flash = '.|true';
+                            }
+                        }
+                    }
+
+                    // on lui enlève la récompense en attente
+                    $this->Connect->set('rewards_waited', ($this->Connect->get('rewards_waited') - 1));
+                    // puis on redirige
+                    $this->Session->setFlash($flash, 'default.success');
+                    $this->redirect(array('controller' => 'user', 'action' => 'profile', 'plugin' => false));
+                }
+
+            } else { // récompenses aléatoire selon probabilité
+                $rewards = unserialize($config['VoteConfiguration']['rewards']);
+                $probability_all = 0;
+                foreach ($rewards as $key => $value) {
+                    $probability_all = $probability_all + $value['proba'];
+                    $rewards_rand[$key] = $value['proba'];
+                }
+
+                $reward = $this->random($rewards_rand, $probability_all);
+
+                $this->getEventManager()->dispatch(new CakeEvent('beforeRecieveRewards', $this, $reward));
+
+                if($rewards[$reward]['type'] == 'server') { // si c'est une commande serveur
+                    $config['0']['VoteConfiguration']['servers'] = unserialize($config['VoteConfiguration']['servers']);
+                    if(!empty($config['0']['VoteConfiguration']['servers'])) {
+                        foreach ($config['0']['VoteConfiguration']['servers'] as $key => $value) {
+                            $servers_online[] = $this->Server->online($value);
+                        }
+                    } else {
+                        $servers_online = array($this->Server->online());
+                    }
+                    if(!in_array(false, $servers_online)) {
+
+                        if(empty($config['0']['VoteConfiguration']['servers'])) {
+                            $cmd = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $rewards[$random]['command']);
+                            $this->Server->send_command($cmd); // on envoie la commande puis enregistre le vote
+                            $msg = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $this->Lang->get('VOTE_SUCCESS_SERVER'));
+                            $this->Server->send_command('broadcast '.$msg);
+                        } else {
+                            foreach ($config['0']['VoteConfiguration']['servers'] as $key => $value) {
+                                $cmd = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $rewards[$reward]['command']);
+                                $this->Server->send_command($cmd, $value); // on envoie la commande puis enregistre le vote
+                                $msg = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $this->Lang->get('VOTE_SUCCESS_SERVER'));
+                                $this->Server->send_command('broadcast '.$msg, $value);
+                            }
+                        }
+
+                        $this->Connect->set('rewards_waited', ($this->Connect->get('rewards_waited') - 1));
+
+                        $this->Session->setFlash($this->Lang->get('VOTE_SUCCESS').' '.$this->Lang->get('REWARD').' : <b>'.$rewards[$reward]['name'].'</b>.', 'default.success');
+                        $this->redirect(array('controller' => 'user', 'action' => 'profile', 'plugin' => false));
+
+                    } else {
+                        $this->Session->setFlash($this->Lang->get('NEED_SERVER_ON'), 'default.error');
+                        $this->redirect(array('controller' => 'user', 'action' => 'profile', 'plugin' => false));
+                    }
+
+                } elseif($rewards[$reward]['type'] == 'money') { // si c'est des points boutique
+
+                    $money = $this->Connect->get_to_user('money', $this->Session->read('vote.pseudo'));
+                    $money = $money + intval($rewards[$reward]['how']);
+                    $this->Connect->set_to_user('money', $money, $this->Session->read('vote.pseudo'));
+
+                    $this->Connect->set('rewards_waited', ($this->Connect->get('rewards_waited') - 1));
+
+                    $this->Session->setFlash($this->Lang->get('VOTE_SUCCESS').' '.$this->Lang->get('REWARDS').' : <b>'.$rewards[$reward]['how'].' '.$this->Configuration->get_money_name().'</b>.', 'default.success');
+                    $this->redirect(array('controller' => 'user', 'action' => 'profile'));
+
+                } else {
+                    $this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
+                    $this->redirect(array('controller' => 'user', 'action' => 'profile', 'plugin' => false));
+                }
+
+            }
+        } else {
+            $this->redirect('/');
+        }
+    }
+
     public function admin_index() {
         if($this->Connect->connect() AND $this->Connect->if_admin()) {
             $this->layout = "admin";

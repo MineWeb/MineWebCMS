@@ -49,8 +49,13 @@ class ModuleComponent extends Object {
         App::uses('HtmlHelper', 'View/Helper');
         $this->Html = new HtmlHelper(new View());
 
-        foreach (self::$vars as $key => $value) {
-            eval('$'.$key.' = '.$value.';');
+        if(!empty(self::$vars) && is_array(self::$vars)) {
+            foreach (self::$vars as $key => $value) {
+                if(is_bool($value)) {
+                    $value = ($value) ? 'true' : 'false';
+                }
+                eval('$'.$key.' = '.$value.';');
+            }
         }
 
     	if(isset($list[$name])) {

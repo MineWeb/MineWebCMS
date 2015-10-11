@@ -145,7 +145,7 @@ $theme_config = json_decode($theme_config, true);
             $flash = $this->Session->flash();
             if(!empty($flash)) { ?><br>
               <div class="container">
-                <?= $flash ?>
+                <?= html_entity_decode($flash) ?>
               </div>
             <?php } ?>
 
