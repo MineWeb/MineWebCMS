@@ -6,7 +6,7 @@
 	"author":"Eywek",
 	"version":"0.1",
 	"plugin_id":"3",
-	"useEvents":false,
+	"useEvents":true,
 	"permissions" : {
 		"available" : ["VOTE_SHOW_REWARDS", "VOTE_SHOW_RANKING", "VOTE"],
 		"default" : {

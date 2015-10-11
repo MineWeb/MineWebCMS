@@ -3,6 +3,7 @@
 class ModuleComponent extends Object {
 
 	protected $controller;
+    static public $vars;
 
 	function shutdown(&$controller) {}
 	function beforeRender(&$controller) {}
@@ -42,13 +43,18 @@ class ModuleComponent extends Object {
     public function loadModules($name) { // affiche le model demandé 
     	$HTML = '';
     	$list = $this->listModules();
+        App::import('Component', 'LangComponent'); // on charge le composant de langue
+        $Lang = new LangComponent;
+
+        foreach (self::$vars as $key => $value) {
+            eval('$'.$key.' = '.$value.';');
+        }
+
     	if(isset($list[$name])) {
-    		foreach ($list as $key => $value) {
-    			foreach ($value as $k => $v) {
-    				ob_start();
-					include ROOT.'/app/Plugin/'.$v.'/Modules/'.$key.'.ctp';
-    				$HTML = $HTML."\n".ob_get_clean();
-    			}
+    		foreach ($list[$name] as $key => $value) {
+				ob_start();
+				include ROOT.'/app/Plugin/'.$value.'/Modules/'.$name.'.ctp';
+				$HTML = $HTML."\n".ob_get_clean();
     		}
     		return $HTML;
     	} else {

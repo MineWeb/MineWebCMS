@@ -7,18 +7,38 @@ class MainComponent extends Object {
 
     	App::import('Model', 'ConnectionManager');
 	    $con = new ConnectionManager;
-	    $cn = $con->getDataSource('default');
-	    $cn->query('ALTER TABLE `users` ADD  `rewards_waited` int NULL DEFAULT NULL ;');
+	    $db = $con->getDataSource('default');
+	    $verif = $db->query('SHOW COLUMNS FROM users;');
+		$execute = true;
+		foreach ($verif as $k => $v) {
+		  	if($v['COLUMNS']['Field'] == 'rewards_waited') {
+				$execute = false;
+				break;
+			}
+		}
+		if($execute) {
+	    	$db->query('ALTER TABLE `users` ADD  `rewards_waited` int NULL DEFAULT NULL ;');
+	    }
     }
 
     public function onDisable() {
 
     	/* Suppression de la colonne */ 
-    	
     	App::import('Model', 'ConnectionManager');
 	    $con = new ConnectionManager;
-	    $cn = $con->getDataSource('default');
-	    $cn->query('ALTER TABLE `users` DROP `rewards_waited`;');
+	    $db = $con->getDataSource('default');
+
+    	$verif = $db->query('SHOW COLUMNS FROM users;');
+		$execute = false;
+		foreach ($verif as $k => $v) {
+		  	if($v['COLUMNS']['Field'] == 'rewards_waited') {
+				$execute = true;
+				break;
+			}
+		}
+		if($execute) {
+	   		$db->query('ALTER TABLE `users` DROP `rewards_waited`;');
+	   	}
 
     }
 

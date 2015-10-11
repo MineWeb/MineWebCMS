@@ -184,7 +184,8 @@ $this->Configuration = new ConfigurationComponent;
 			  </div>
 			  <div class="panel-body">
 			  	<p><?= $Lang->get('STEP_4_DESC_VOTE') ?></p>
-			  	<button class="btn btn-success btn-block btn-step4 disabled"><?= $Lang->get('GET_REWARDS') ?></button>
+			  	<button class="btn btn-success btn-block btn-step4 disabled" id="now"><?= $Lang->get('GET_REWARDS_NOW') ?></button>
+			  	<button class="btn btn-success btn-block btn-step4 disabled" id="later"><?= $Lang->get('GET_REWARDS_LATER') ?></button>
 			  </div>
 			  	<div class="response_step4"></div>
 			</div>
@@ -270,9 +271,8 @@ $this->Configuration = new ConfigurationComponent;
 		$(".btn-step4").click( function(e) {
 	      	e.preventDefault();
 			$('.response_step4').html('<div class="panel-footer"><div class="alert alert-info" style="margin-bottom:0px;"><?= $this->Html->image('ajax-loader.gif') ?> <?= $Lang->get('LOADING') ?> ...</div></div>');
-			var out = $('.vote').find("input[name='out']").val();
-			var pseudo = $('.vote').find("input[name='pseudo']").val();
-			$.post("<?= $this->Html->url(array('plugin' => 'vote', 'controller' => 'voter', 'action' => 'getRewards')) ?>", {}, function(data) {
+			var when = $(this).attr('id');
+			$.post("<?= $this->Html->url(array('plugin' => 'vote', 'controller' => 'voter', 'action' => 'getRewards')) ?>", {when:when}, function(data) {
 				data2 = data.split("|");
 			    if(data.indexOf('true') != -1) {
 			    	$('#icon_step4').css("display", "");
