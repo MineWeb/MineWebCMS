@@ -114,7 +114,7 @@ class VoterController extends VoteAppController {
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $url); // l'url visité
                 curl_setopt($ch, CURLOPT_FAILONERROR, 1);// Gestion d'erreur
-                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1); // autorise la redirection
+                //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1); // autorise la redirection
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER,1); // stock la response dans une variable 
                 curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
                 curl_setopt($ch, CURLOPT_PORT, 80); // set port 80
