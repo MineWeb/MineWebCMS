@@ -452,10 +452,10 @@ class VoterController extends VoteAppController {
 
                 if(in_array('server_error', $success_msg)) {
                     $this->Session->setFlash($this->Lang->get('NEED_SERVER_ON'), 'default.error');
-                    $this->redirect(array('controller' => 'user', 'action' => 'profile'));
+                    $this->redirect(array('controller' => 'user', 'action' => 'profile', 'plugin' => false));
                 } elseif (in_array('internal_error', $success_msg)) {
                     $this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
-                    $this->redirect(array('controller' => 'user', 'action' => 'profile'));
+                    $this->redirect(array('controller' => 'user', 'action' => 'profile', 'plugin' => false));
                 } else {
                     $flash = $this->Lang->get('VOTE_SUCCESS').' ! ';
                     if(!empty($success_msg)) {

@@ -40,6 +40,9 @@ class MainComponent extends Object {
 	   		$db->query('ALTER TABLE `users` DROP `rewards_waited`;');
 	   	}
 
+	   	clearFolder(ROOT.'/app/tmp/cache/models/');
+      	clearFolder(ROOT.'/app/tmp/cache/persistent/');
+
     }
 
 }

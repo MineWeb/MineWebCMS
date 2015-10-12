@@ -179,17 +179,17 @@ class EyPluginComponent extends Object {
     }
     // une fois que on a mis les tables, on s'occupe des permissions
     $this->Permission = ClassRegistry::init('Permission');
-    if(isset($config['permissions']['default']) AND !empty($config['permissions']['default'])) {
-      foreach ($config['permissions']['default'] as $key => $value) {
-        $where = $this->Permission->find('all', array('conditions' => array('rank' => $key))); // je cherche les perms du rank 
-        if(!empty($where)) {
-          $addperm = unserialize($where['0']['Permission']['permissions']);
+    if(isset($config['permissions']['available']) AND !empty($config['permissions']['available'])) {
+      $where = $this->Permission->find('all'); // je cherche les perms 
+      if(!empty($where)) {
+        foreach ($where as $key => $value) {
+          $addperm = unserialize($value['Permission']['permissions']);
           foreach ($addperm as $k2 => $v2) {
-            foreach ($value as $kp => $perm) {
-              array_delete_value($addperm, $perm); // on supprime les perms
+            if(in_array($v2, $config['permissions']['available'])) {
+              $addperm = array_delete_value($addperm, $perm); // on supprime les perms
             }
           }
-          $this->Permission->read(null, $where['0']['Permission']['id']);
+          $this->Permission->read(null, $value['Permission']['id']);
           $this->Permission->set(array('permissions' => serialize($addperm)));
           $this->Permission->save();
         }
