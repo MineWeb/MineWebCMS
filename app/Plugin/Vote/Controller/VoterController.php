@@ -633,6 +633,15 @@ class VoterController extends VoteAppController {
 
                         */
 
+                        if($this->request->data['rewards_type'] == 0) {
+                            foreach ($this->request->data['rewards'] as $key => $value) {
+                                if(!isset($value['proba']) || empty($value['proba'])) {
+                                    echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+                                    die();
+                                }
+                            }
+                        }
+
                         $rewards = serialize($this->request->data['rewards']);
 
                         $vote = $this->VoteConfiguration->find('first');
@@ -656,7 +665,6 @@ class VoterController extends VoteAppController {
                     }
                 } else {
                     echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
-                    debug($this->request->data);
                 }
             } else {
                 echo $this->Lang->get('NOT_POST').'|false';
