@@ -28,14 +28,14 @@ class ServerController extends AppController {
 				$this->loadModel('Server');
 				if($this->Server->delete($id)) {
 					$this->Session->setFlash($this->Lang->get('SUCCESS_DELETE_SERVER'), 'default.success');
-					$this->redirect(array('controller' => 'server', 'action' => 'index', 'admin' => true));
+					$this->redirect(array('controller' => 'server', 'action' => 'link', 'admin' => true));
 				} else {
 					$this->Session->setFlash($this->Lang->get('ERROR_WHEN_AJAX'), 'default.error');
-					$this->redirect(array('controller' => 'server', 'action' => 'index', 'admin' => true));
+					$this->redirect(array('controller' => 'server', 'action' => 'link', 'admin' => true));
 				}
 			} else {
 				$this->Session->setFlash($this->Lang->get('ERROR_WHEN_AJAX'), 'default.error');
-				$this->redirect(array('controller' => 'server', 'action' => 'index', 'admin' => true));
+				$this->redirect(array('controller' => 'server', 'action' => 'link', 'admin' => true));
 			}
 		} else {
 			$this->redirect('/');
