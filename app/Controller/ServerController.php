@@ -21,6 +21,27 @@ class ServerController extends AppController {
 		}
 	}
 
+	public function admin_delete($id = false) {
+		$this->autoRender = false;
+		if($this->Connect->connect() && $this->Connect->if_admin()) {
+			if($id) {
+				$this->loadModel('Server');
+				if($this->Server->delete($id)) {
+					$this->Session->setFlash($this->Lang->get('SUCCESS_DELETE_SERVER'), 'default.success');
+					$this->redirect(array('controller' => 'server', 'action' => 'index', 'admin' => true));
+				} else {
+					$this->Session->setFlash($this->Lang->get('ERROR_WHEN_AJAX'), 'default.error');
+					$this->redirect(array('controller' => 'server', 'action' => 'index', 'admin' => true));
+				}
+			} else {
+				$this->Session->setFlash($this->Lang->get('ERROR_WHEN_AJAX'), 'default.error');
+				$this->redirect(array('controller' => 'server', 'action' => 'index', 'admin' => true));
+			}
+		} else {
+			$this->redirect('/');
+		}
+	}
+
 	public function admin_config() {
 		$this->autoRender = false;
 		if($this->Connect->connect() AND $this->Connect->if_admin()) {

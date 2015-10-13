@@ -53,6 +53,7 @@
     "NEED_CONNECT": "Vous devez \u00eatre connect\u00e9 pour effectuer cette action",
     "NEED_SERVER_ON": "Le serveur doit \u00eatre allum\u00e9 pour effectuer cette action.",
     "SERVER_OFF": "Le serveur est \u00e9teint",
+    "SUCCESS_DELETE_SERVER":"Le serveur à bien été supprimé !",
     "BANNER_SERVER": "{MOTD} - {VERSION}. Il y a {ONLINE} connect\u00e9s sur {ONLINE_LIMIT}.",
     "DELETE_MEMBER": "Suppression d'un membre",
     "TODAY": "Aujourd'hui",

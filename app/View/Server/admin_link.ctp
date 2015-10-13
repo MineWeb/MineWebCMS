@@ -59,6 +59,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-success"><?= $Lang->get('SUBMIT') ?></button>
+                <a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'delete', 'admin' => true, $value['Server']['id'])) ?>" type="submit" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>
 
               </form>
 
