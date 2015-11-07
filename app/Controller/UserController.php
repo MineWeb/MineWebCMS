@@ -83,7 +83,7 @@ class UserController extends AppController {
 				} else {
 					echo $this->Lang->get($login);
 				}
-				
+
 			} else {
 				echo $this->Lang->get('COMPLETE_ALL_FIELDS');
 			}
@@ -139,40 +139,17 @@ class UserController extends AppController {
 		$this->autoRender = false;
 		if($this->request->is('ajax')) {
 			if(!empty($this->request->data['password']) AND !empty($this->request->data['password2']) AND !empty($this->request->data['email'])) {
-				$this->request->data['password'] = password($this->request->data['password']);
-				$this->request->data['password2'] =password($this->request->data['password2']);
-				if($this->request->data['password'] == $this->request->data['password2']) {
-					unset($this->request->data['password2']);
-					$this->loadModel('User');
-					$search = $this->User->find('all', array('conditions' => array('email' => $this->request->data['email'])));
-					if(!empty($search)) {
+				$this->loadModel('User');
+				$session = md5(rand());
+				$reset = $this->User->resetPass($this->request->data, $session);
+				if($reset === true) {
+					$this->Session->write('user', $session);
 
-						$this->loadModel('Lostpassword');
-						$Lostpassword = $this->Lostpassword->find('all', array('conditions' => array('email' => $this->request->data['email'])));
-						if(!empty($Lostpassword)) {
+					$this->History->set('RESET_PASSWORD', 'user');
 
-							$this->Lostpassword->delete($Lostpassword[0]['Lostpassword']['id']);
-
-							$session = md5(rand());
-							$this->request->data['session'] = $session; // on connecte l'utilisateur
-							$this->Session->write('user', $session);
-
-							$this->User->read(null, $search['0']['User']['id']);
-							$this->User->set($this->request->data);
-							$this->User->save();
-
-							$this->History->set('RESET_PASSWORD', 'user');
-
-							echo 'true';
-
-						} else {
-							echo $this->Lang->get('INVALID_KEY_FOR_RESET');
-						}
-					} else {
-						echo $this->Lang->get('INTERNAL_ERROR');
-					}
+					echo 'true';
 				} else {
-					echo $this->Lang->get('PASSWORD_NOT_SAME');
+					echo $this->Lang->get($reset);
 				}
 			} else {
 				echo $this->Lang->get('COMPLETE_ALL_FIELDS');
@@ -183,7 +160,7 @@ class UserController extends AppController {
 	}
 
 	function logout() {
-		$this->layout = null;
+		$this->autoRender = false;
 		$this->Session->delete('user');
      	$this->redirect($this->referer());
 	}
@@ -337,9 +314,8 @@ class UserController extends AppController {
 	}
 
 	function change_pw() {
+		$this->autoRender = false;
 		if($this->Connect->connect()) {
-			 
-			$this->layout = null;
 			if($this->request->is('ajax')) {
 				if(!empty($this->request->data['password']) AND !empty($this->request->data['password_confirmation'])) {
 					$password = password($this->request->data['password']);
@@ -362,9 +338,8 @@ class UserController extends AppController {
 	}
 
 	function change_email() {
+		$this->autoRender = false;
 		if($this->Connect->connect()) {
-			 
-			$this->layout = null;
 			if($this->request->is('ajax')) {
 				if(!empty($this->request->data['email']) AND !empty($this->request->data['email_confirmation'])) {
 					if($this->request->data['email'] == $this->request->data['email_confirmation']) {
@@ -389,9 +364,8 @@ class UserController extends AppController {
 	}
 
 	function send_points() {
+		$this->autoRender = false;
 		if($this->Connect->connect()) {
-			 
-			$this->layout = null;
 			if($this->request->is('ajax')) {
 				if(!empty($this->request->data['to']) AND !empty($this->request->data['how'])) {
 					if($this->Connect->user_exist($this->request->data['to'])) {
@@ -422,11 +396,6 @@ class UserController extends AppController {
 		} else {
 			$this->redirect(array('controller' => 'pages', 'action' => 'home'));
 		}
-	}
-
-	function modify_profile() {
-		 
-		$this->layout= $this->Configuration->get_layout();
 	}
 
 	function admin_index() {
@@ -491,9 +460,8 @@ class UserController extends AppController {
 	}
 
 	function admin_edit_ajax() {
+		$this->autoRender = false;
 		if($this->Connect->connect() AND $this->Connect->if_admin()) {
-			 
-			$this->layout = null;
 			if($this->request->is('post')) {
 				$this->loadModel('User');
 				if(!empty($this->request->data['pseudo']) AND !empty($this->request->data['email'])) {
@@ -526,10 +494,9 @@ class UserController extends AppController {
 	}
 
 	function admin_delete($id = false) {
+		$this->autoRender = false;
 		if($this->Connect->connect() AND $this->Connect->if_admin()) {
 			if($id != false) {
-				 
-				$this->layout = null;
 				$this->loadModel('User');
 				$find = $this->User->find('all', array('conditions' => array('id' => $id)));
 				if(!empty($find)) {

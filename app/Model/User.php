@@ -57,6 +57,39 @@ class User extends AppModel {
 		}
 	}
 
+	public function resetPass($data, $session) {
+		$data['password'] = password($data['password']);
+		$data['password2'] = password($data['password2']);
+		if($data['password'] == $data['password2']) {
+			unset($data['password2']);
+			$search = $this->find('all', array('conditions' => array('email' => $data['email'])));
+			if(!empty($search)) {
+
+				$this->Lostpassword = ClassRegistry::init('Lostpassword');
+				$Lostpassword = $this->Lostpassword->find('all', array('conditions' => array('email' => $data['email'])));
+				if(!empty($Lostpassword)) {
+
+					$this->Lostpassword->delete($Lostpassword[0]['Lostpassword']['id']);
+
+					$data['session'] = $session; // on connecte l'utilisateur
+
+					$this->read(null, $search['0']['User']['id']);
+					$this->set($data);
+					$this->save();
+
+					return true;
+
+				} else {
+					return 'INVALID_KEY_FOR_RESET';
+				}
+			} else {
+				return 'INTERNAL_ERROR';
+			}
+		} else {
+			return 'PASSWORD_NOT_SAME';
+		}
+	}
+
 	public function afterSave($created, $options = array()) {
 		if($created) {
 			// nouvel enregistrement
