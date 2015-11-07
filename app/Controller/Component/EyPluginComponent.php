@@ -238,6 +238,9 @@ class EyPluginComponent extends Object {
         $this->Main = new MainComponent();
         $this->Main->onDisable();
       }
+      @clearFolder(ROOT.'/app/tmp/cache/models/');
+      @clearFolder(ROOT.'/app/tmp/cache/persistent/');
+      Cache::clear(false, '_cake_core_');
       return true;
     } else {
       return false;

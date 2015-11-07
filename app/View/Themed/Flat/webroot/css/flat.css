@@ -1,0 +1,142 @@
+/*
+Général
+*/
+
+body {
+	background: #F7F7F7;
+}
+
+/*
+Navbar
+*/
+.nav-hop {
+	margin-top: 120px;
+}
+
+nav .mini-navbar {
+	background-color: #8cc474;
+	color:white;
+	text-transform: uppercase;
+}
+
+.nav-content {
+	font-family: 'Open Sans';
+	font-size: 14px;
+}
+
+div.navbar-header {
+	padding-top: 20px;
+	text-transform:uppercase;
+}
+
+a.navbar-brand {
+	font-size: 25px;
+	font-weight: normal;
+	color: #323a45!important;
+}
+
+ul.nav {
+	padding-bottom: 10px;
+	padding-top: 10px;
+}
+
+ul.nav li.button {
+	padding-bottom: 10px;
+	padding-top: 10px;
+	margin-left: 10px;
+}
+
+ul.nav li a {
+	padding-right: 20px;
+	padding-left:20px;
+}
+
+ul.nav li.li-nav {
+	padding-bottom: 10px;
+	padding-top: 10px;
+}
+
+ul.nav li a.active {
+	background-color: #8cc474;
+	border-radius:5px;
+	color: white;
+}
+
+.navbar-default .navbar-nav > .open > a {
+	border-radius:5px;
+}
+
+ul.nav li.dropdown {
+	padding-bottom: 10px;
+	padding-top: 10px;
+}
+
+ul.nav li.dropdown ul.dropdown-menu {
+	border-top: solid 3px #8cc474;
+}
+
+/*
+Footer
+*/
+
+footer {
+	background: #272e36;
+	color: white;
+	font-family: Open Sans;
+	padding-top:10px;
+	padding-bottom:10px;
+}
+
+/*
+Home
+*/
+h1.home {
+	font-family: 'Open Sans';
+	font-weight: 200;
+	text-align: center;
+}
+
+ul#items {
+	height: 260px;
+}
+
+header.carousel {
+	margin-top: -40px;
+}
+
+/*
+News
+*/
+
+.container .row .col-lg-8 h1 {
+	font-size: 35px;
+	border-bottom: 2px solid #8cc474;
+	text-transform: uppercase;
+	font-family: 'Open Sans';
+	font-weight: 200;
+	display: inline-block;
+}
+
+/*
+Pages
+*/
+.container.vote h1,
+.container .row .col-md-6 h1 {
+	font-size: 35px;
+	border-bottom: 2px solid #8cc474;
+	text-transform: uppercase;
+	font-family: 'Open Sans';
+	font-weight: 200;
+	display: inline-block;
+}
+
+.panel.panel-default {
+	border:none;
+}
+
+.panel .panel-body {
+	background: white;
+	padding: 30px;
+	border: 1px solid #EEE;
+	margin: 10px 0;
+}
