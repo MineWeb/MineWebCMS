@@ -5,7 +5,7 @@ class User extends AppModel {
 
 	public function validRegister($data) {
 		$data['password'] = password($data['password']);
-		$data['password_confirmation'] =password($data['password_confirmation']);
+		$data['password_confirmation'] = password($data['password_confirmation']);
 		if($data['password'] == $data['password_confirmation']) {
 			if(filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
 				$search_member_by_pseudo = $this->find('all', array('conditions' => array('pseudo' => $data['pseudo'])));
@@ -39,6 +39,22 @@ class User extends AppModel {
 		$this->create();
 		$this->set($data);
 		return $this->save();
+	}
+
+	public function login($data, $session) {
+		$search_user = $this->find('first', array('conditions' => array('pseudo' => $data['pseudo'], 'password' => password($data['password']))));
+		if(!empty($search_user)) {
+
+			$this->getEventManager()->dispatch(new CakeEvent('onLogin', $data));
+
+			$this->read(null, $search_user['User']['id']);
+			$this->set(array('session' => $session));
+			$this->save();
+			
+			return true;
+		} else {
+			return 'BAD_PSEUDO_OR_PASSWORD';
+		}
 	}
 
 	public function afterSave($created, $options = array()) {

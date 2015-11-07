@@ -67,24 +67,23 @@ class UserController extends AppController {
 	}
 
 	function ajax_login() {
-		 
-		$this->layout=null;
+		$this->autoRender = false;
 		if($this->request->is('Post')) {
 			if(!empty($this->request->data['pseudo']) && !empty($this->request->data['password'])) {
-				$search_user = $this->User->find('all', array('conditions' => array('pseudo' => $this->request->data['pseudo'], 'password' => password($this->request->data['password']))));
-				if(!empty($search_user)) {
 
-					$this->getEventManager()->dispatch(new CakeEvent('onLogin', $this, $this->request->data));
+				$this->loadModel('User');
+				$session = md5(rand());
+				$login = $this->User->login($this->request->data, $session);
+				if($login) {
 
-					$session = md5(rand());
-					$this->User->read(null, $search_user['0']['User']['id']);
-					$this->User->set(array('session' => $session));
-					$this->User->save();
 					$this->Session->write('user', $session);
+
 					echo 'true';
+
 				} else {
-					echo $this->Lang->get('BAD_PSEUDO_OR_PASSWORD');
+					echo $this->Lang->get($login);
 				}
+				
 			} else {
 				echo $this->Lang->get('COMPLETE_ALL_FIELDS');
 			}
