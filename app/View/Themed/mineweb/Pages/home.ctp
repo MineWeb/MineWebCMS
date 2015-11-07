@@ -62,7 +62,11 @@ $theme_config = json_decode($theme_config, true);
             }
           } else {
             $banner_server = unserialize($banner_server);
-            $server_infos = $Server->banner_infos($banner_server);
+            if(count($banner_server) == 1) {
+              $server_infos = $Server->banner_infos($banner_server[0]);
+            } else {
+              $server_infos = $Server->banner_infos($banner_server);
+            }
             if(!empty($server_infos['getPlayerMax'])) {
               echo '<p class="text-center">'.$Lang->banner_server($server_infos).'</p>';
             } else {

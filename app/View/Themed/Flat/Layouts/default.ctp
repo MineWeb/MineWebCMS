@@ -44,7 +44,7 @@ $theme_config = json_decode($theme_config, true);
       <div class="mini-navbar mini-navbar-default hidden-xs">
       <div class="container">
         <div class="col-sm-12">
-          <?php 
+          <?php
           $banner_server = $this->Configuration->get('banner_server');
           if(empty($banner_server)) {
             if($Server->online()) {
@@ -54,8 +54,12 @@ $theme_config = json_decode($theme_config, true);
             }
           } else {
             $banner_server = unserialize($banner_server);
-            $server_infos = $Server->banner_infos($banner_server);
-            if(!empty($server_infos['getPlayerMax']) && !empty($server_infos['getPlayerCount'])) {
+            if(count($banner_server) == 1) {
+              $server_infos = $Server->banner_infos($banner_server[0]);
+            } else {
+              $server_infos = $Server->banner_infos($banner_server);
+            }
+            if(isset($server_infos['getPlayerMax']) && isset($server_infos['getPlayerCount'])) {
               echo '<p>'.$Lang->banner_server($server_infos).'</p>';
             } else {
               echo '<p class="text-center">'.$Lang->get('SERVER_OFF').'</p>';

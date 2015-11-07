@@ -124,7 +124,7 @@ class ServerComponent extends Object {
 		    if(!empty($server_id)) {
 		        $config = $this->getConfig();
 		        if($config) {
-		            $url = $this->getUrl($server_id).'getPlayerLimit=server';
+		            $url = $this->getUrl($server_id).'getPlayerMax=server';
 		            $opts = array('http' => array('timeout' => $this->getTimeout()));
 		            @$get = file_get_contents($url, false, stream_context_create($opts));
 		            if($get != false) {
