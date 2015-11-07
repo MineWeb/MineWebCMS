@@ -4,7 +4,7 @@
 
 		Router::connect('/', array('controller' => 'pages', 'action' => 'display', 'home'));
 
-		Router::connect('/robot.txt', array('controller' => 'pages', 'action' => 'robot'));
+		Router::connect('/robots.txt', array('controller' => 'pages', 'action' => 'robots'));
 
 		Router::connect('/admin/problem/debug/*', array('controller' => 'pages', 'action' => 'debug'));
 

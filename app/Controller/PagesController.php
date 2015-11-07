@@ -141,9 +141,9 @@ class PagesController extends AppController {
 		$this->render('home');
 	}
 
-	public function robot() {
+	public function robots() {
 		$this->autoRender = false;
-		echo file_get_contents(ROOT.DS.'robot.txt');
+		echo file_get_contents(ROOT.DS.'robots.txt');
 	}
 
 	public function debug($key = false, $args = false) {
