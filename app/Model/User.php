@@ -4,26 +4,30 @@ App::uses('CakeEvent', 'Event');
 class User extends AppModel {
 
 	public function validRegister($data) {
-		$data['password'] = password($data['password']);
-		$data['password_confirmation'] = password($data['password_confirmation']);
-		if($data['password'] == $data['password_confirmation']) {
-			if(filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-				$search_member_by_pseudo = $this->find('all', array('conditions' => array('pseudo' => $data['pseudo'])));
-				$search_member_by_email = $this->find('all', array('conditions' => array('email' => $data['email'])));
-				if(empty($search_member_by_pseudo)) {
-					if(empty($search_member_by_email)) {
-						return true;
+		if(preg_match('`^([a-zA-Z0-9-_]{2,36})$`', $data['pseudo'])) {
+			$data['password'] = password($data['password']);
+			$data['password_confirmation'] = password($data['password_confirmation']);
+			if($data['password'] == $data['password_confirmation']) {
+				if(filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+					$search_member_by_pseudo = $this->find('all', array('conditions' => array('pseudo' => $data['pseudo'])));
+					$search_member_by_email = $this->find('all', array('conditions' => array('email' => $data['email'])));
+					if(empty($search_member_by_pseudo)) {
+						if(empty($search_member_by_email)) {
+							return true;
+						} else {
+							return 'EMAIL_ALREADY_EXIST';
+						}
 					} else {
-						return 'EMAIL_ALREADY_EXIST';
+						return 'PSEUDO_ALREADY_EXIST';
 					}
 				} else {
-					return 'PSEUDO_ALREADY_EXIST';
+					return 'EMAIL_NOT_VALIDATE';
 				}
 			} else {
-				return 'EMAIL_NOT_VALIDATE';
+				return 'PASSWORD_NOT_SAME';
 			}
 		} else {
-			return 'PASSWORD_NOT_SAME';
+			return 'PSEUDO_NOT_GOOD_FORMAT';
 		}
 	}
 
