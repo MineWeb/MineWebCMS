@@ -31,47 +31,32 @@ class UserController extends AppController {
 	}
 
 	function ajax_register() {
-		 
-		$this->layout = null;
+		$this->autoRender = false;
 		if($this->request->is('Post')) { // si la requête est bien un post
 			if(!empty($this->request->data['pseudo']) && !empty($this->request->data['password']) && !empty($this->request->data['password_confirmation']) && !empty($this->request->data['email']) && !empty($this->request->data['captcha'])) { // si tout les champs sont bien remplis
-				$this->request->data['password'] = password($this->request->data['password']);
-				$this->request->data['password_confirmation'] =password($this->request->data['password_confirmation']);
-				if($this->request->data['password'] == $this->request->data['password_confirmation']) {
-					if(filter_var($this->request->data['email'], FILTER_VALIDATE_EMAIL)) {
-						$search_member_by_pseudo = $this->User->find('all', array('conditions' => array('pseudo' => $this->request->data['pseudo'])));
-						$search_member_by_email = $this->User->find('all', array('conditions' => array('email' => $this->request->data['email'])));
-						if(empty($search_member_by_pseudo)) {
-							if(empty($search_member_by_email)) {
-								$captcha = $this->Session->read('captcha_code');
-								if($captcha == $this->request->data['captcha']) {
+				$captcha = $this->Session->read('captcha_code');
+				if($captcha == $this->request->data['captcha']) { // on check le captcha déjà
+					$this->loadModel('User');
+					$isValid = $this->User->validRegister($this->request->data);
+					if($isValid === true) { // on vérifie si y'a aucune erreur
 
-									$this->getEventManager()->dispatch(new CakeEvent('onRegister', $this, $this->request->data));
+						// on prépare la connexion
+						$session = md5(rand());
+						$this->Session->write('user', $session);
 
-									$this->request->data['pseudo'] = before_display($this->request->data['pseudo']);
-									$this->request->data['email'] = before_display($this->request->data['email']);
-									$session = md5(rand());
-									$this->request->data['session'] = $session;
-									$this->Session->write('user', $session);
-									$this->request->data['ip'] = $_SERVER["REMOTE_ADDR"];
-									$this->request->data['rank'] = 0;
-									$this->User->set($this->request->data);
-									$this->User->save();
-									echo 'true';
-								} else {
-									echo $this->Lang->get('INVALID_CAPTCHA');
-								}
-							} else {
-								echo $this->Lang->get('EMAIL_ALREADY_EXIST');
-							}
-						} else {
-							echo $this->Lang->get('PSEUDO_ALREADY_EXIST');
-						}
-					} else {
-						echo $this->Lang->get('EMAIL_NOT_VALIDATE');
+						$this->request->data['session'] = $session;
+
+						// on enregistre
+						$this->User->register($this->request->data, $session);
+
+						// on dis que c'est bon
+						echo 'true';
+
+					} else { // si c'est pas bon, on envoie le message d'erreur retourné par l'étape de validation
+						echo $this->Lang->get($isValid);
 					}
 				} else {
-					echo $this->Lang->get('PASSWORD_NOT_SAME');
+					echo $this->Lang->get('INVALID_CAPTCHA');
 				}
 			} else {
 				echo $this->Lang->get('COMPLETE_ALL_FIELDS');
