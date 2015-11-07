@@ -74,21 +74,21 @@ class UserController extends AppController {
 				$this->loadModel('User');
 				$session = md5(rand());
 				$login = $this->User->login($this->request->data, $session);
-				if($login) {
+				if($login === true) {
 
 					$this->Session->write('user', $session);
 
-					echo 'true';
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_LOGIN')));
 
 				} else {
-					echo $this->Lang->get($login);
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get($login)));
 				}
 
 			} else {
-				echo $this->Lang->get('COMPLETE_ALL_FIELDS');
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 			}
 		} else {
-			echo $this->Lang->get('PAGE_BAD_EXECUTED');
+			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('PAGE_BAD_EXECUTED')));
 		}
 	}
 

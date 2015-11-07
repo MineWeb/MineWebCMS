@@ -171,6 +171,8 @@ $theme_config = json_decode($theme_config, true);
     <?= $this->element('login_register') ?>
     <?= $this->element('script') ?>
 
+    <?= $this->element('ajax') ?>
+
     <?= $this->Html->script('jquery-1.11.0.js') ?>
     <?= $this->Html->script('bootstrap.js') ?>
 

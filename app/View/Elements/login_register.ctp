@@ -8,8 +8,7 @@
             <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('LOGIN_ACTION') ?></h4>
           </div>
           <div class="modal-body">
-            <div id="msg-on-login"></div>
-            <form class="form-horizontal" role="form" method="POST" id="login_form">
+            <form class="form-horizontal" method="POST" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'ajax_login')) ?>" data-redirect-url="?">
               <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label"><?= $Lang->get('PSEUDO') ?></label>
                 <div class="col-sm-10">
