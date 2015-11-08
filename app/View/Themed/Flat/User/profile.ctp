@@ -60,8 +60,7 @@ if($this->Connect->connect()) {
 
 				<h3><?= $Lang->get('CHANGE_PASSWORD') ?></h3>
 
-				<form class="form-inline" id="change_pw">
-					<div class="ajax-msg-pw"></div>
+				<form method="post" class="form-inline" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'change_pw')) ?>">
 					 <div class="form-group">
 						<input type="password" class="form-control" name="password" placeholder="<?= $Lang->get('PASSWORD_CONFIRMATION') ?>">
 					</div>
@@ -70,7 +69,7 @@ if($this->Connect->connect()) {
 					</div>
 
 					 <div class="form-group">
-					 	<button class="btn btn-primary"><?= $Lang->get('SUBMIT') ?></button>
+					 	<button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
 					 </div>
 				</form>
 
@@ -78,8 +77,7 @@ if($this->Connect->connect()) {
 
 				<h3><?= $Lang->get('CHANGE_EMAIL') ?></h3>
 
-				<form class="form-inline" id="change_email">
-					<div class="ajax-msg-mail"></div>
+				<form method="post" class="form-inline" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'change_email')) ?>">
 					<div class="form-group">
 						<input type="email" class="form-control" name="email" placeholder="<?= $Lang->get('EMAIL_CONFIRMATION') ?>">
 					</div>
@@ -88,7 +86,7 @@ if($this->Connect->connect()) {
 					</div>
 
 					<div class="form-group">
-						<button class="btn btn-primary"><?= $Lang->get('SUBMIT') ?></button>
+						<button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
 					</div>
 				</form>
 
@@ -98,8 +96,7 @@ if($this->Connect->connect()) {
 
 					<h3><?= $Lang->get('SEND_POINTS') ?></h3>
 
-					<form class="form-inline" id="send_points">
-						<div class="ajax-msg-points"></div>
+					<form method="post" class="form-inline" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'send_points')) ?>">
 						<div class="form-group">
 							<input type="text" class="form-control" name="to" placeholder="<?= $Lang->get('TO') ?>">
 						</div>
@@ -108,7 +105,7 @@ if($this->Connect->connect()) {
 						</div>
 
 						<div class="form-group">
-							<button class="btn btn-primary"><?= $Lang->get('SUBMIT') ?></button>
+							<button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
 						</div>
 					</form>
 
@@ -289,64 +286,6 @@ if($this->Connect->connect()) {
 	        return false;
 	    });
 	<?php } ?>
-
-	$("#change_pw").submit(function( event ) {
-		$('.ajax-msg-pw').empty().html('<div class="alert alert-info"><a class="close" data-dismiss="alert">×</a><?= $Lang->get('LOADING') ?>...</div>').fadeIn(500);
-    	event.preventDefault();
-        var $form = $( this );
-        var password = $form.find("input[name='password']").val();
-        var password_confirmation = $form.find("input[name='password_confirmation']").val();
-        $.post("<?= $this->Html->url(array('controller' => 'user', 'action' => 'change_pw', 'admin' => false)) ?>", { password : password, password_confirmation : password_confirmation }, function(data) {
-          	data2 = data.split("|");
-		  	if(data.indexOf('true') != -1) {
-          		$('.ajax-msg-pw').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-          	} else if(data.indexOf('false') != -1) {
-            	$('.ajax-msg-pw').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-	        } else {
-		    	$('.ajax-msg-pw').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
-		    }
-        });
-        return false;
-    });
-    $("#change_email").submit(function( event ) {
-    	$('.ajax-msg-mail').empty().html('<div class="alert alert-info"><a class="close" data-dismiss="alert">×</a><?= $Lang->get('LOADING') ?>...</div>').fadeIn(500);
-    	event.preventDefault();
-        var $form = $( this );
-        var email = $form.find("input[name='email']").val();
-        var email_confirmation = $form.find("input[name='email_confirmation']").val();
-        $.post("<?= $this->Html->url(array('controller' => 'user', 'action' => 'change_email', 'admin' => false)) ?>", { email : email, email_confirmation : email_confirmation }, function(data) {
-          	data2 = data.split("|");
-		  	if(data.indexOf('true') != -1) {
-          		$('.ajax-msg-mail').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-          		$('#email').empty().html(email).fadeIn(500);
-          	} else if(data.indexOf('false') != -1) {
-            	$('.ajax-msg-mail').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-	        } else {
-		    	$('.ajax-msg-mail').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
-		    }
-        });
-        return false;
-    });
-	$("#send_points").submit(function( event ) {
-		$('.ajax-msg-points').empty().html('<div class="alert alert-info"><a class="close" data-dismiss="alert">×</a><?= $Lang->get('LOADING') ?>...</div>').fadeIn(500);
-    	event.preventDefault();
-        var $form = $( this );
-        var to = $form.find("input[name='to']").val();
-        var how = $form.find("input[name='how']").val();
-        $.post("<?= $this->Html->url(array('controller' => 'user', 'action' => 'send_points', 'admin' => false)) ?>", { to : to, how : how }, function(data) {
-          	data2 = data.split("|");
-		  	if(data.indexOf('true') != -1) {
-          		$('.ajax-msg-points').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-          		var money = $('.money').html();
-          		$('.money').html(parseInt(money) - parseInt(how));
-          	} else if(data.indexOf('false') != -1) {
-            	$('.ajax-msg-points').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-	        } else {
-		    	$('.ajax-msg-points').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
-		    }
-        });
-        return false;
-    });
 </script>
 <?php } else { 
 	echo $Lang->get('NEED_TO_BE_CONNECT');

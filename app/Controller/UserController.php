@@ -309,7 +309,7 @@ class UserController extends AppController {
 				}
 			}
 		} else {
-			$this->redirect(array('controller' => 'pages', 'action' => 'home'));
+			$this->redirect('/');
 		}
 	}
 
@@ -322,18 +322,18 @@ class UserController extends AppController {
 					$password_confirmation = password($this->request->data['password_confirmation']);
 					if($password == $password_confirmation) {
 						$this->Connect->set('password', $password);
-						echo $this->Lang->get('PASSWORD_CHANGE_SUCCESS').'|true';
+						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('PASSWORD_CHANGE_SUCCESS')));
 					} else {
-						echo $this->Lang->get('PASSWORD_NOT_SAME').'|false';
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('PASSWORD_NOT_SAME')));
 					}
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST').'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
 			}
 		} else {
-			$this->redirect(array('controller' => 'pages', 'action' => 'home'));
+			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NEED_CONNECT')));
 		}
 	}
 
@@ -345,21 +345,21 @@ class UserController extends AppController {
 					if($this->request->data['email'] == $this->request->data['email_confirmation']) {
 						if(filter_var($this->request->data['email'], FILTER_VALIDATE_EMAIL)) {
 							$this->Connect->set('email', $this->request->data['email']);
-							echo $this->Lang->get('EMAIL_CHANGE_SUCCESS').'|true';
+							echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('EMAIL_CHANGE_SUCCESS')));
 						} else {
-							echo $this->Lang->get('EMAIL_NOT_VALIDATE').'|false';
+							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('EMAIL_NOT_VALIDATE')));
 						}
 					} else {
-						echo $this->Lang->get('EMAIL_NOT_SAME').'|false';
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('EMAIL_NOT_SAME')));
 					}
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST').'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
 			}
 		} else {
-			$this->redirect(array('controller' => 'pages', 'action' => 'home'));
+			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NEED_CONNECT')));
 		}
 	}
 
@@ -377,24 +377,24 @@ class UserController extends AppController {
 								$to_money = $this->Connect->get_to_user('money', $this->request->data['to']) + $how;
 								$this->Connect->set_to_user('money', $to_money, $this->request->data['to']);
 								$this->History->set('SEND_MONEY', 'shop', $this->request->data['to'].'|'.$how);
-								echo $this->Lang->get('POINTS_SUCCESS_SEND').'|true';
+								echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('POINTS_SUCCESS_SEND')));
 							} else {
-								echo $this->Lang->get('NO_ENOUGH_MONEY').'|false';
+								echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NO_ENOUGH_MONEY')));
 							}
 						} else {
-							echo $this->Lang->get('CANT_SEND_EMPTY_POINTS').'|false';
+							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('CANT_SEND_EMPTY_POINTS')));
 						}
 					} else {
-						echo $this->Lang->get('USER_NOT_EXIST').'|false';
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER_NOT_EXIST')));
 					}
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST').'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
 			}
 		} else {
-			$this->redirect(array('controller' => 'pages', 'action' => 'home'));
+			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NEED_CONNECT')));
 		}
 	}
 
