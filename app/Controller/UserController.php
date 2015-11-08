@@ -50,19 +50,19 @@ class UserController extends AppController {
 						$this->User->register($this->request->data, $session);
 
 						// on dis que c'est bon
-						echo 'true';
+						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_REGISTER')));
 
 					} else { // si c'est pas bon, on envoie le message d'erreur retourné par l'étape de validation
-						echo $this->Lang->get($isValid);
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get($isValid)));
 					}
 				} else {
-					echo $this->Lang->get('INVALID_CAPTCHA');
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('INVALID_CAPTCHA')));
 				}
 			} else {
-				echo $this->Lang->get('COMPLETE_ALL_FIELDS');
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 			}
 		} else {
-			echo $this->Lang->get('PAGE_BAD_EXECUTED');
+			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('PAGE_BAD_EXECUTED')));
 		}
 	}
 
@@ -117,21 +117,21 @@ class UserController extends AppController {
 								'key' => $key
 							));
 							$this->Lostpassword->save();
-							echo 'true';
+							echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_SEND_RESET_MAIL')));
 						} else {
-							echo $this->Lang->get('INTERNAL_ERROR');
+							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('INTERNAL_ERROR')));
 						}
 					} else {
-						echo $this->Lang->get('UNKNONWN_USER');
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('UNKNONWN_USER')));
 					}
 				} else {
-					echo $this->Lang->get('EMAIL_NOT_VALIDATE');
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('EMAIL_NOT_VALIDATE')));
 				}
 			} else {
-				echo $this->Lang->get('COMPLETE_ALL_FIELDS');
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 			}
 		} else {
-			echo $this->Lang->get('PAGE_BAD_EXECUTED');
+			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('PAGE_BAD_EXECUTED')));
 		}
 	}
 
@@ -147,15 +147,15 @@ class UserController extends AppController {
 
 					$this->History->set('RESET_PASSWORD', 'user');
 
-					echo 'true';
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_RESET_PASSWORD')));
 				} else {
-					echo $this->Lang->get($reset);
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get($reset)));
 				}
 			} else {
-				echo $this->Lang->get('COMPLETE_ALL_FIELDS');
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 			}
 		} else {
-			echo $this->Lang->get('PAGE_BAD_EXECUTED');
+			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('PAGE_BAD_EXECUTED')));
 		}
 	}
 

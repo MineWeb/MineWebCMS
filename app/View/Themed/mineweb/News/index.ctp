@@ -120,4 +120,26 @@ $this->Connect = new ConnectComponent;
         });
         return false;
     });
+
+$(".like").click(function() {
+      if($(this).hasClass("active")) {
+          $(this).removeClass("active");
+          var nbr = $(this).html();
+          nbr = nbr.split('<');
+          nbr = nbr['0'];
+          nbr = parseInt(nbr) - 1;
+          $(this).html(nbr+' <i class="fa fa-thumbs-up"></i>');
+          var id = $(this).attr("id");
+          $.post("<?= $this->Html->url(array('controller' => 'news', 'action' => 'dislike')) ?>", { id : id }, function(data) { $('#debug').html(data); });
+      } else {
+          $(this).addClass("active");
+          var nbr = $(this).html();
+          nbr = nbr.split('<');
+          nbr = nbr['0'];
+          nbr = parseInt(nbr) + 1;
+          $(this).html(nbr + ' <i class="fa fa-thumbs-up"></i>');
+          var id = $(this).attr("id");
+          $.post("<?= $this->Html->url(array('controller' => 'news', 'action' => 'like')) ?>", { id : id });
+      }
+    });
 </script>

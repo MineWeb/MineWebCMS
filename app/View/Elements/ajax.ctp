@@ -8,7 +8,11 @@
 
 		e.preventDefault();
 
-		var submit = form.find("input[type='submit']");
+		if(form.find("input[type='submit']").length == 0) {
+			var submit = form.find("button[type='submit']");
+		} else {
+			var submit = form.find("input[type='submit']");
+		}
 
 		if(form.find('.ajax-msg') === undefined || form.find('.ajax-msg').length == 0) {
 			form.prepend('<div class="ajax-msg"></div>');
@@ -17,7 +21,7 @@
 		form.find('.ajax-msg').empty().html('<div class="alert alert-info"><a class="close" data-dismiss="alert">×</a><?= $Lang->get('LOADING') ?> ...</div>').fadeIn(500);
 
 	    var submit_btn_content = form.find('button[type=submit]').html();
-	    form.find('button[type=submit]').html('<?= $Lang->get('LOADING') ?>...').attr('disabled', 'disabled').fadeIn(500);
+	    submit.html('<?= $Lang->get('LOADING') ?>...').attr('disabled', 'disabled').fadeIn(500);
 
 	    // Data
 
@@ -69,13 +73,13 @@
           		if(form.attr('data-redirect-url') !== undefined) {
           			document.location.href=form.attr('data-redirect-url');
           		}
-          		form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
+				submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
           	} else if(json.statut === false) {
             	form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+json.msg+'</i></div>').fadeIn(500);
-            	form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
+				submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
 	        } else {
 		    	form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
-		    	form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
+				submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
 		    }
         });
 	});

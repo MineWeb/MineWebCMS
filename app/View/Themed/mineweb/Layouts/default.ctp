@@ -55,61 +55,14 @@ $theme_config = json_decode($theme_config, true);
             </div>
         </footer>
     
-    <?= $this->element('login_register') ?>
-    <?= $this->element('script') ?>
-
-
-    <script>
-    $("#ticket-form_post_m").submit(function( event ) {
-        event.preventDefault();
-        $('#msg-on-post').hide().html('<div class="alert alert-success" role="alert"><p><?= $Lang->get('IN_PROGRESS') ?></p></div>').fadeIn(1500);
-        var $form = $( this );
-        var title = $form.find("input[name='title']").val();
-        var content = $form.find("textarea[name='content']").val();
-        if($form.find("input[name='private']").is(':checked')) {
-          var ticket_private = '1';
-        } else {
-          var ticket_private = '0';
-        }
-        $.post("<?= $this->Html->url(array('plugin' => 'support', 'controller' => 'home', 'action' => 'ajax_post')) ?>", { title : title, content : content, ticket_private : ticket_private }, function(data) {
-          if(!isNaN(data) == true) {
-            $('#post_ticket').modal('hide');
-            // ajout du post js
-            var content_tickets = $("#content-tickets").html();
-            var new_ticket = '<div class="col-md-12" id="ticket-'+data+'"><div class="panel panel-default panel-ticket"><div class="panel-body"><div class="head"><img class="support" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/<?= $this->Connect->get_pseudo() ?>/135" title="<?= $this->Connect->get_pseudo() ?>"><div class="clearfix"></div><p class="author"><?php if(strlen($this->Connect->get_pseudo()) > "8") { echo '<abbr title="'.$this->Connect->get_pseudo().'">'.substr($this->Connect->get_pseudo(), 0, 8).'...</abbr>'; } else { echo $this->Connect->get_pseudo(); } ?></p></div><h3 class="support">'+title+' <div style="display:inline-block;" id="ticket-state-'+data+'"><icon class="fa fa-times" style="color:red;" title="<?= $Lang->get('UNRESOLVED') ?>"></icon></div></h3><div class="pull-right support"><p><a id="'+data+'" title="<?= $Lang->get('DELETE') ?>" class="ticket-delete btn btn-danger btn-sm"><icon class="fa fa-times"></icon></a></p></div><p class="support">'+content+'</p><div class="clearfix"></div></div></div></div>';
-            $("#content-tickets").hide().html(new_ticket+content_tickets).fadeIn(1500);
-            // fin ajout
-            // stats
-            var nbr_ticket = $('#nbr-ticket').html();
-            nbr_ticket = parseInt(nbr_ticket);
-            nbr_ticket = nbr_ticket + 1;
-            $('#nbr-ticket').html(nbr_ticket);
-            var nbr_ticket_unresolved = $('#nbr-ticket-unresolved').html();
-            nbr_ticket_unresolved = parseInt(nbr_ticket_unresolved);
-            nbr_ticket_unresolved = nbr_ticket_unresolved + 1;
-            $('#nbr-ticket-unresolved').html(nbr_ticket_unresolved);
-            // fin stast
-          } else {
-            $('#msg-on-post').hide().html('<div class="alert alert-danger" role="alert"><p><b><?= $Lang->get('ERROR') ?> : </b>'+data+'</p></div>').fadeIn(1500);
-          }
-        });
-        return false;
-    });
-
-$('html').height($(document).height());
-$('body').height($(document).height());
-    </script>
-     
+    <?= $this->element('modals') ?>
 
     <?= $this->Html->script('jquery-1.11.0.js') ?>
     <?= $this->Html->script('bootstrap.js') ?>
+    <?= $this->Html->script('app.js') ?>
 
     <?= $this->element('ajax') ?>
 
 </body>
 
 </html>
-<?php 
-$timestamp_fin = microtime(true);
-$difference_ms = $timestamp_fin - TIMESTAMP_DEBUT;
-echo '<!-- Exécution du script : ' . $difference_ms . ' secondes. -->'; ?>

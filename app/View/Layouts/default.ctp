@@ -168,18 +168,15 @@ $theme_config = json_decode($theme_config, true);
 
     </div>
     
-    <?= $this->element('login_register') ?>
-    <?= $this->element('script') ?>
+    <?= $this->element('modals') ?>
 
     <?= $this->element('ajax') ?>
 
     <?= $this->Html->script('jquery-1.11.0.js') ?>
     <?= $this->Html->script('bootstrap.js') ?>
 
+    <?= $this->Html->script('app.js') ?>
+
 </body>
 
 </html>
-<?php 
-$timestamp_fin = microtime(true);
-$difference_ms = $timestamp_fin - TIMESTAMP_DEBUT;
-echo '<!-- Exécution du script : ' . $difference_ms . ' secondes. -->'; ?>
