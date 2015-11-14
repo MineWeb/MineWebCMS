@@ -28,7 +28,7 @@ class NewsController extends AppController {
 				$this->loadModel('Comment');
 				$search_comments = $this->Comment->find('all', array('conditions' => array('news_id' => $id), 'order' => 'id desc')); $this->set(compact('search_comments'));
 
-				if($this->Connect->connect()) {
+				if($this->isConnected) {
 					$this->loadModel('Like');
 					$likes = $this->Like->find('all', array('conditions' => array('author' => $this->Connect->get_pseudo())));
 					if(!empty($likes)) {
@@ -153,7 +153,7 @@ class NewsController extends AppController {
     }
 
 	function admin_index() {
-		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_NEWS')) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_NEWS')) {
 			 
 			$this->set('title_for_layout',$this->Lang->get('NEWS_LIST'));
 			$this->layout = 'admin';
@@ -166,7 +166,7 @@ class NewsController extends AppController {
 	}
 
 	function admin_delete($id = false) {
-		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_NEWS')) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_NEWS')) {
 			if($id != false) {
 				 
 				$this->loadModel('News');
@@ -190,7 +190,7 @@ class NewsController extends AppController {
 	}
 
 	function admin_add() {
-		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_NEWS')) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_NEWS')) {
 			$this->layout = 'admin';
 			 
 			$this->set('title_for_layout', $this->Lang->get('ADD_NEWS'));
@@ -200,7 +200,7 @@ class NewsController extends AppController {
 	}
 
 	function admin_add_ajax() {
-		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_NEWS')) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_NEWS')) {
 			$this->layout = null;
 
 			if($this->request->is('post')) {
@@ -234,7 +234,7 @@ class NewsController extends AppController {
 	}
 
 	function admin_edit($id = false) {
-		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_NEWS')) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_NEWS')) {
 			$this->layout = 'admin';
 			 
 			if($id != false) {
@@ -256,7 +256,7 @@ class NewsController extends AppController {
 	}
 
 	function admin_edit_ajax() {
-		if($this->Connect->connect() AND $this->Permissions->can('MANAGE_NEWS')) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_NEWS')) {
 			$this->layout = null;
 			 
 			if($this->request->is('post')) {

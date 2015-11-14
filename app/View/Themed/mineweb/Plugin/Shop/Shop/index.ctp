@@ -14,12 +14,12 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
         	<div class="ribbon">
         		<div class="ribbon-stitches-top"></div>
         		<div class="ribbon-content"><p>
-        			<?php if($this->Connect->connect()) { ?>
+        			<?php if($isConnected) { ?>
         				<span class="pull-left hidden-xs"><?= $Lang->get('HAVE_CURRENTLY') ?> : <span class="info"><?= $this->Connect->get('money') ?><?php if($this->Connect->get('money') == 1) { echo  ' '.$this->Configuration->get_money_name(false, true); } else { echo  ' '.$this->Configuration->get_money_name(); } ?></span></span> 
         			<?php } else { ?>
 						<span class="text-center"><?= $Lang->get('NEED_CONNECT_FOR_BUY') ?></span>
         			<?php } ?>
-					<?php if($this->Connect->connect() AND $Permissions->can('CREDIT_ACCOUNT')) { ?>
+					<?php if($isConnected AND $Permissions->can('CREDIT_ACCOUNT')) { ?>
 	        			<a href="#" data-toggle="modal" data-target="#addmoney" class="btn btn-primary pull-right"><?= $Lang->get('ADD_MONEY') ?></a>
 					<?php } ?>
         		</p></div>
@@ -51,7 +51,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                         	<?php if(isset($value['Item']['img_url'])) { ?><img src="<?= $value['Item']['img_url'] ?>" alt=""><?php } ?>
                         </div>
                         <span class="info pull-left"><?= $value['Item']['price'] ?><?php if($value['Item']['price'] == 1) { echo  ' '.$this->Configuration->get_money_name(false, true); } else { echo  ' '.$this->Configuration->get_money_name(); } ?></span>
-                        <?php if($this->Connect->connect() AND $Permissions->can('CAN_BUY')) { ?><button class="btn btn-primary btn-clear pull-right" onClick="affich_item('<?= $value['Item']['id'] ?>')"><?= $Lang->get('BUY') ?></button> <?php } ?>
+                        <?php if($isConnected AND $Permissions->can('CAN_BUY')) { ?><button class="btn btn-primary btn-clear pull-right" onClick="affich_item('<?= $value['Item']['id'] ?>')"><?= $Lang->get('BUY') ?></button> <?php } ?>
                         <div class="clearfix"></div>
                     </div>
                 </div>
@@ -129,7 +129,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
       </div>
       <div class="modal-body">
     
-        <?php if($this->Connect->connect() AND $Permissions->can('CREDIT_ACCOUNT')) { ?>
+        <?php if($isConnected AND $Permissions->can('CREDIT_ACCOUNT')) { ?>
           <?php if(!empty($starpass_offers)) { ?>
               <a class="btn btn-info btn-block" data-toggle="collapse" href="#starpass" aria-expanded="false" aria-controls="starpass">StarPass</a>
               <br>

@@ -1,5 +1,4 @@
 <?php 
-$this->Connect = new ConnectComponent;
 $this->EyPlugin = new EyPluginComponent;
 $this->History = new HistoryComponent;
 $this->Configuration = new ConfigurationComponent;
@@ -111,7 +110,7 @@ $theme_config = json_decode($theme_config, true);
                       } ?>
                     <li class="button">
                         <div class="btn-group">
-                          <?php if($this->Connect->connect()) { ?>
+                          <?php if($isConnected) { ?>
                             <button type="button" class="btn btn-success"><?= $this->Connect->get_pseudo() ?></button>
                           <?php } else { ?>
                             <button type="button" class="btn btn-success"><i class="fa fa-user"></i></button>
@@ -121,7 +120,7 @@ $theme_config = json_decode($theme_config, true);
                             <span class="sr-only">Toggle Dropdown</span>
                           </button>
                           <ul class="dropdown-menu" role="menu">
-                            <?php if($this->Connect->connect()) { ?>
+                            <?php if($isConnected) { ?>
                               <li><a href="<?= $this->Html->url(array('controller' => 'profile', 'action' => 'index', 'plugin' => null)) ?>"><?= $Lang->get('PROFILE') ?></a></li>
                               <?php if($Permissions->can('ACCESS_DASHBOARD')) { ?>
                                 <li class="divider"></li>

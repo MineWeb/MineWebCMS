@@ -38,6 +38,8 @@ class AppController extends Controller {
 
 	var $view = 'Theme';
 
+	protected $isConnected = false;
+
 	public function beforeFilter() {
 
 	/* VERIFICATION API-CMS */
@@ -119,7 +121,11 @@ WCqkx22behAGZq6rhwIDAQAB
 
 		/* ---- */
 
-		if($this->Connect->connect()) {
+		$this->loadModel('User');
+		$this->isConnected = $this->User->isConnected();
+		$this->set('isConnected', $this->isConnected);
+
+		if($this->isConnected) {
 			if($this->Connect->get('rank') == 5 AND $this->params['controller'] != "maintenance") {
 				$this->redirect(array('controller' => 'maintenance', 'action' => 'index/banned', 'plugin' => false, 'admin' => false));
 			}
@@ -149,7 +155,7 @@ WCqkx22behAGZq6rhwIDAQAB
 		}
 		$this->set(compact('nav'));
 
-		if($this->params['controller'] == "user" OR $this->params['controller'] == "maintenance" OR $this->Configuration->get('maintenance') == '0' OR $this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->params['controller'] == "user" OR $this->params['controller'] == "maintenance" OR $this->Configuration->get('maintenance') == '0' OR $this->isConnected AND $this->Connect->if_admin()) {
 		} else {
 			$this->redirect(array('controller' => 'maintenance', 'action' => 'index', 'plugin' => false, 'admin' => false));
 		}

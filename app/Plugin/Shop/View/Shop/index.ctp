@@ -14,7 +14,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
             <div class="col-md-3">
                 <p class="lead">
                     <?php
-                    if($this->Connect->connect()) { 
+                    if($this->isConnected) { 
                         echo $this->Connect->get('money') . ' ';
                         if($this->Connect->get('money') == 1 OR $this->Connect->get('money') == 0) { echo  $this->Configuration->get_money_name(false, true); } else { echo  $this->Configuration->get_money_name(); }
                     } else {
@@ -27,7 +27,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                         <a href="<?= $this->Html->url(array('controller' => 'c/'.$v['Category']['id'], 'plugin' => 'shop')) ?>" class="list-group-item<?php if(isset($category) AND $v['Category']['id'] == $category OR !isset($category) AND $i == 1) { echo ' active'; } ?>"><?= before_display($v['Category']['name']) ?></a>
                     <?php } ?>
                 </div>
-                <?php if($this->Connect->connect() AND $Permissions->can('CREDIT_ACCOUNT')) { ?>
+                <?php if($this->isConnected AND $Permissions->can('CREDIT_ACCOUNT')) { ?>
                     <a href="#" data-toggle="modal" data-target="#addmoney" class="btn btn-success btn-block pull-right"><?= $Lang->get('ADD_MONEY') ?></a>
                 <?php } ?>
             </div>
@@ -48,7 +48,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                                         <h4><a href="#"><?= before_display($v['Item']['name']) ?></a>
                                         </h4>
                                         <p><?= substr(before_display($v['Item']['description']), 0, 140); ?><?php if(strlen($v['Item']['description']) > "140") { echo '...'; } ?></p>
-                                        <?php if($this->Connect->connect() AND $Permissions->can('CAN_BUY')) { ?><button class="btn btn-success pull-right" onClick="affich_item('<?= $v['Item']['id'] ?>')"><?= $Lang->get('BUY') ?></button> <?php } ?>
+                                        <?php if($this->isConnected AND $Permissions->can('CAN_BUY')) { ?><button class="btn btn-success pull-right" onClick="affich_item('<?= $v['Item']['id'] ?>')"><?= $Lang->get('BUY') ?></button> <?php } ?>
                                     </div>
                                 </div>
                             </div>
@@ -117,7 +117,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
       </div>
       <div class="modal-body">
     
-        <?php if($this->Connect->connect() AND $Permissions->can('CREDIT_ACCOUNT')) { ?>
+        <?php if($this->isConnected AND $Permissions->can('CREDIT_ACCOUNT')) { ?>
           <?php if(!empty($starpass_offers)) { ?>
             <a class="btn btn-info btn-block" data-toggle="collapse" href="#starpass" aria-expanded="false" aria-controls="starpass">StarPass</a>
             <br>

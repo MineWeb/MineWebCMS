@@ -45,7 +45,7 @@ $this->EyPlugin = new EyPluginComponent;
                       } ?>
                     <li class="li-nav">
                         <div class="btn-group">
-                          <?php if($this->Connect->connect()) { ?>
+                          <?php if($isConnected) { ?>
                             <a style="padding-top:6px;" href="<?= $this->Html->url(array('controller' => 'profile', 'action' => 'index', 'plugin' => null)) ?>" class="btn btn-primary"><?= $this->Connect->get_pseudo() ?></a>
                           <?php } else { ?>
                             <a style="padding-top:6px;" href="#login" href="#" data-toggle="modal" data-target="#login" class="btn btn-primary"><i class="fa fa-user"></i></a>
@@ -55,7 +55,7 @@ $this->EyPlugin = new EyPluginComponent;
                             <span class="sr-only">Toggle Dropdown</span>
                           </button>
                         <ul class="dropdown-menu" role="menu">
-                          <?php if($this->Connect->connect()) { ?>
+                          <?php if($isConnected) { ?>
                             
                             <img class="img-rounded" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/', 'plugin' => false)) ?>/<?= $this->Connect->get_pseudo() ?>/60" title="<?= $this->Connect->get_pseudo() ?>">
 

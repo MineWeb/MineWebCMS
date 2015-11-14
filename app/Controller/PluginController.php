@@ -2,7 +2,7 @@
 class PluginController extends AppController{
 	
 	function admin_index() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 			 
 			$this->set('title_for_layout',$this->Lang->get('PLUGINS_LIST'));
 			$this->layout = 'admin';
@@ -12,7 +12,7 @@ class PluginController extends AppController{
 	}
 
 	function admin_delete($id = false) {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 			if($id != false) {
 				 
 				if($this->EyPlugin->delete($id)) {
@@ -32,7 +32,7 @@ class PluginController extends AppController{
 	}
 
 	function admin_enable($id = false) {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 			if($id != false) {
 				 
 				if($this->EyPlugin->enable($id)) {
@@ -52,7 +52,7 @@ class PluginController extends AppController{
 	}
 
 	function admin_disable($id = false) {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 			if($id != false) {
 				 
 				if($this->EyPlugin->disable($id)) {
@@ -72,7 +72,7 @@ class PluginController extends AppController{
 	}
 
 	function admin_install($plugin_id = false, $plugin_name = false) {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 			if($plugin_id != false AND $plugin_name != false) {
 				 
 				if($this->EyPlugin->install($plugin_id, $plugin_name)) {
@@ -92,7 +92,7 @@ class PluginController extends AppController{
 	}
 
 	function admin_update($plugin_id, $plugin_name) {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 			if($plugin_id != false AND $plugin_name != false) {
 				 
 				if($this->EyPlugin->update($plugin_id, $plugin_name)) {

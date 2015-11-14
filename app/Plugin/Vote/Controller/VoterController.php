@@ -391,7 +391,7 @@ class VoterController extends VoteAppController {
 
     public function get_reward() {
         $this->autoRender = false;
-        if($this->Connect->connect() && $this->Connect->get('rewards_waited') > 0) {
+        if($this->isConnected && $this->Connect->get('rewards_waited') > 0) {
             $this->loadModel('VoteConfiguration');
             $config = $this->VoteConfiguration->find('first');
 
@@ -551,7 +551,7 @@ class VoterController extends VoteAppController {
     }
 
     public function admin_index() {
-        if($this->Connect->connect() AND $this->Connect->if_admin()) {
+        if($this->isConnected AND $this->Connect->if_admin()) {
             $this->layout = "admin";
              
             $this->loadModel('VoteConfiguration');
@@ -598,7 +598,7 @@ class VoterController extends VoteAppController {
     }
 
     public function admin_reset() {
-        if($this->Connect->connect() AND $this->Connect->if_admin()) {
+        if($this->isConnected AND $this->Connect->if_admin()) {
             $this->layout = null;
              
             $this->loadModel('Vote');
@@ -612,7 +612,7 @@ class VoterController extends VoteAppController {
     }
 
     public function admin_add_ajax() {
-        if($this->Connect->connect() AND $this->Connect->if_admin()) {
+        if($this->isConnected AND $this->Connect->if_admin()) {
             $this->layout = null;
              
             if($this->request->is('post')) {

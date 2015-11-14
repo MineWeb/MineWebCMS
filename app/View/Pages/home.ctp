@@ -1,7 +1,4 @@
 <?php 
-  
-App::import('Component', 'ConnectComponent');
-$this->Connect = new ConnectComponent;
 $this->Configuration = new ConfigurationComponent;
 $theme_config = file_get_contents(ROOT.'/config/theme.default.json');
 $theme_config = json_decode($theme_config, true);
@@ -67,7 +64,7 @@ $theme_config = json_decode($theme_config, true);
                         <h2><?= substr($v['News']['title'], 0, 15); ?><?php if(strlen($v['News']['title']) > "15") { echo '...'; } ?></h2>
                         <p><?= substr($v['News']['content'], 0, 220); ?><?php if(strlen($v['News']['content']) > "220") { echo '...'; } ?></p>
                         <div class="btn-group">
-                          <button id="<?= $v['News']['id'] ?>" type="button" class="btn btn-primary like<?php if(!empty($likes)) { foreach ($likes as $t) { if($t == $v['News']['id']) { echo ' active'; } } } ?>"<?php if(!$this->Connect->connect() AND $Permissions->can('LIKE_NEWS')) { echo ' disabled'; } ?>><?= $v['News']['like'] ?> <i class="fa fa-thumbs-up"></i></button>
+                          <button id="<?= $v['News']['id'] ?>" type="button" class="btn btn-primary like<?php if(!empty($likes)) { foreach ($likes as $t) { if($t == $v['News']['id']) { echo ' active'; } } } ?>"<?php if(!$isConnected AND $Permissions->can('LIKE_NEWS')) { echo ' disabled'; } ?>><?= $v['News']['like'] ?> <i class="fa fa-thumbs-up"></i></button>
                           <button type="button" class="btn btn-primary"><?= $v['News']['comments'] ?> <i class="fa fa-comments"></i></button>
                         </div>
                         <a href="<?= $this->Html->url(array('controller' => 'blog', 'action' => $v['News']['slug'])) ?>" class="btn btn-success pull-right"><?= $Lang->get('READ_MORE') ?> »</a>

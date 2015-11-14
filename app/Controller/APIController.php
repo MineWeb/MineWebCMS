@@ -19,7 +19,7 @@ class APIController extends AppController {
 
 	public function delete_ip() {
 		$this->autoRender = false;
-        if($this->Connect->connect()) {
+        if($this->isConnected) {
     		if($this->request->is('post')) {
     			if(isset($this->request->data['ip'])) {
     				if($this->API->removeIp($this->Connect->get_pseudo(), $this->request->data['ip'])) {
@@ -40,7 +40,7 @@ class APIController extends AppController {
 
 	public function add_ip() {
 		$this->autoRender = false;
-        if($this->Connect->connect()) {
+        if($this->isConnected) {
     		if($this->request->is('post')) {
     			if(!empty($this->request->data['ip'])) {
     				if(filter_var($this->request->data['ip'], FILTER_VALIDATE_IP)) {
@@ -65,7 +65,7 @@ class APIController extends AppController {
 
 	public function disable_mineguard() {
 		$this->autoRender = false;
-        if($this->Connect->connect()) {
+        if($this->isConnected) {
     		if($this->request->is('post')) {
     			
     			$this->Connect->set('allowed_ip', '0');
@@ -82,7 +82,7 @@ class APIController extends AppController {
 
 	public function enable_mineguard() {
 		$this->autoRender = false;
-        if($this->Connect->connect()) {
+        if($this->isConnected) {
     		if($this->request->is('post')) {
     			
     			$this->Connect->set('allowed_ip', serialize(array()));
@@ -98,7 +98,7 @@ class APIController extends AppController {
 	}
 
 	public function admin_index() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($$this->isConnected AND $this->Connect->if_admin()) {
 			$this->set('title_for_layout',$this->Lang->get('API'));
 			$this->layout = 'admin';
 

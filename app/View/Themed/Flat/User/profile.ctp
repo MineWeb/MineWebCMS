@@ -3,7 +3,6 @@ App::import('Component', 'ConnectComponent');
 $this->Connect = new ConnectComponent;
 $this->EyPlugin = new EyPluginComponent;
 $this->Configuration = new ConfigurationComponent;
-if($this->Connect->connect()) {
 ?>
 	<div class="container">
 		<div class="row">
@@ -287,6 +286,3 @@ if($this->Connect->connect()) {
 	    });
 	<?php } ?>
 </script>
-<?php } else { 
-	echo $Lang->get('NEED_TO_BE_CONNECT');
-} ?>

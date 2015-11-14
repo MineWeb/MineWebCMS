@@ -166,7 +166,7 @@ class UserController extends AppController {
 	}
 
 	function profile() {
-		if($this->Connect->connect()) {
+		if($this->isConnected) {
 			 
 			$this->set('title_for_layout', $this->Connect->get_pseudo());
 			$this->layout= $this->Configuration->get_layout();
@@ -315,7 +315,7 @@ class UserController extends AppController {
 
 	function change_pw() {
 		$this->autoRender = false;
-		if($this->Connect->connect()) {
+		if($this->isConnected) {
 			if($this->request->is('ajax')) {
 				if(!empty($this->request->data['password']) AND !empty($this->request->data['password_confirmation'])) {
 					$password = password($this->request->data['password']);
@@ -339,7 +339,7 @@ class UserController extends AppController {
 
 	function change_email() {
 		$this->autoRender = false;
-		if($this->Connect->connect()) {
+		if($this->isConnected) {
 			if($this->request->is('ajax')) {
 				if(!empty($this->request->data['email']) AND !empty($this->request->data['email_confirmation'])) {
 					if($this->request->data['email'] == $this->request->data['email_confirmation']) {
@@ -365,7 +365,7 @@ class UserController extends AppController {
 
 	function send_points() {
 		$this->autoRender = false;
-		if($this->Connect->connect()) {
+		if($this->isConnected) {
 			if($this->request->is('ajax')) {
 				if(!empty($this->request->data['to']) AND !empty($this->request->data['how'])) {
 					if($this->Connect->user_exist($this->request->data['to'])) {
@@ -399,7 +399,7 @@ class UserController extends AppController {
 	}
 
 	function admin_index() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 			 
 			$this->set('title_for_layout',$this->Lang->get('USER'));
 			$this->layout = 'admin';
@@ -420,7 +420,7 @@ class UserController extends AppController {
 	}
 
 	function admin_edit($id = false) {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 			if($id != false) {
 				 
 				$this->layout = 'admin';
@@ -461,7 +461,7 @@ class UserController extends AppController {
 
 	function admin_edit_ajax() {
 		$this->autoRender = false;
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 			if($this->request->is('post')) {
 				$this->loadModel('User');
 				if(!empty($this->request->data['pseudo']) AND !empty($this->request->data['email'])) {
@@ -495,7 +495,7 @@ class UserController extends AppController {
 
 	function admin_delete($id = false) {
 		$this->autoRender = false;
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 			if($id != false) {
 				$this->loadModel('User');
 				$find = $this->User->find('all', array('conditions' => array('id' => $id)));

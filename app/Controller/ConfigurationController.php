@@ -5,7 +5,7 @@ class ConfigurationController extends AppController {
 	public $components = array('Session', 'RequestHandler');
 
 	public function admin_index() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 			$this->layout = "admin";
 
 			$config = $this->Configuration->get_all()['Configuration'];

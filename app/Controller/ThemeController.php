@@ -5,7 +5,7 @@
 class ThemeController extends AppController{
 	
 	function admin_index() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 			 
 			$this->set('title_for_layout',$this->Lang->get('THEME_LIST'));
 			$this->layout = 'admin';
@@ -81,7 +81,7 @@ class ThemeController extends AppController{
 	}
 
 	function admin_enable($name = false) {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 			if($name != false) {
 				 
 				$this->layout = null;
@@ -98,7 +98,7 @@ class ThemeController extends AppController{
 	}
 
 	function admin_delete($name = false) {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 			if($name != false) {
 				 
 				$this->layout = null;
@@ -121,7 +121,7 @@ class ThemeController extends AppController{
 
 	function admin_install($theme_id = false, $theme_name = false) {
 		$this->autoRender = false;
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 			if($theme_id != false AND $theme_name != false) {
 
 				// get du zip sur mineweb.org
@@ -185,7 +185,7 @@ WCqkx22behAGZq6rhwIDAQAB
 
 	function admin_update($theme_id = false, $theme_name = false) {
 		$this->autoRender = false;
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 			if($theme_id != false AND $theme_name != false) {
 
 				// get du zip sur mineweb.org
@@ -248,7 +248,7 @@ WCqkx22behAGZq6rhwIDAQAB
 	}
 
 	function admin_custom($theme_name = false) {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 			if($theme_name != false) {
 				$this->set('title_for_layout',$this->Lang->get('CUSTOMIZATION'));
 				$this->layout = 'admin';

@@ -22,7 +22,7 @@ class HomeController extends AppController {
     	$this->loadModel('Ticket');
         $pseudo = $this->Ticket->find('all', array('conditions' => array('id' => $this->request->data['id'])));
         $pseudo = $pseudo['0']['Ticket']['author'];
-        if($this->Connect->connect() AND $this->Connect->if_admin() OR $this->Connect->connect() AND $this->Connect->get_pseudo() == $pseudo AND $this->Permissions->can('DELETE_HIS_TICKET') OR $this->Permissions->can('DELETE_ALL_TICKETS')) {
+        if($this->isConnected AND $this->Connect->if_admin() OR $this->isConnected AND $this->Connect->get_pseudo() == $pseudo AND $this->Permissions->can('DELETE_HIS_TICKET') OR $this->Permissions->can('DELETE_ALL_TICKETS')) {
     		$this->loadModel('Ticket');
     		if($this->request->is('post')) {
     			$this->Ticket->delete($this->request->data['id']);
@@ -39,7 +39,7 @@ class HomeController extends AppController {
 
     public function ajax_reply_delete() {
         $this->layout = null;
-        if($this->Connect->connect() AND $this->Connect->if_admin()) {
+        if($this->isConnected AND $this->Connect->if_admin()) {
             $this->loadModel('ReplyTicket');
             if($this->request->is('post')) {
                 $this->ReplyTicket->delete($this->request->data['id']);
@@ -58,7 +58,7 @@ class HomeController extends AppController {
     			$this->loadModel('Ticket');
 		    	$pseudo = $this->Ticket->find('all', array('conditions' => array('id' => $this->request->data['id'])));
 		    	$pseudo = $pseudo['0']['Ticket']['author'];
-		    	if($this->Connect->connect() AND $this->Connect->if_admin() OR $this->Connect->connect() AND $this->Connect->get_pseudo() == $pseudo AND $this->Permissions->can('RESOLVE_HIS_TICKET') OR $this->Permissions->can('RESOLVE_ALL_TICKETS')) {
+		    	if($this->isConnected AND $this->Connect->if_admin() OR $this->isConnected AND $this->Connect->get_pseudo() == $pseudo AND $this->Permissions->can('RESOLVE_HIS_TICKET') OR $this->Permissions->can('RESOLVE_ALL_TICKETS')) {
 					$this->Ticket->read(null, $this->request->data['id']);
 					$this->Ticket->set(array('state' => 1));
 					$this->Ticket->save();
@@ -79,7 +79,7 @@ class HomeController extends AppController {
                     $this->loadModel('Ticket');
                     $pseudo = $this->Ticket->find('all', array('conditions' => array('id' => $this->request->data['id'])));
                     $pseudo = $pseudo['0']['Ticket']['author'];
-                    if($this->Connect->connect() AND $this->Connect->if_admin() OR $this->Connect->connect() AND $this->Connect->get_pseudo() == $pseudo AND $this->Permissions->can('REPLY_TO_HIS_TICKETS') OR $this->Permissions->can('REPLY_TO_ALL_TICKETS')) {
+                    if($this->isConnected AND $this->Connect->if_admin() OR $this->isConnected AND $this->Connect->get_pseudo() == $pseudo AND $this->Permissions->can('REPLY_TO_HIS_TICKETS') OR $this->Permissions->can('REPLY_TO_ALL_TICKETS')) {
                         $this->loadModel('ReplyTicket');
                         $this->ReplyTicket->create();
                         $this->ReplyTicket->set(array('ticket_id' => $this->request->data['id'], 'reply' => $this->request->data['message'], 'author' => $this->Connect->get_pseudo()));
@@ -101,7 +101,7 @@ class HomeController extends AppController {
           
         if($this->request->is('post')) {
             if(!empty($this->request->data['title']) AND !empty($this->request->data['content'])) {
-                if($this->Connect->connect() AND $this->Permissions->can('POST_TICKET')) {
+                if($this->isConnected AND $this->Permissions->can('POST_TICKET')) {
                     $this->loadModel('Ticket');
                     $this->request->data['author'] = $this->Connect->get_pseudo();
                     $this->request->data['private'] = $this->request->data['ticket_private'];

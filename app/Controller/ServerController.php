@@ -6,7 +6,7 @@ class ServerController extends AppController {
 
 
 	public function admin_link() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 			$this->layout = "admin";
 			 
 			$this->set('title_for_layout',$this->Lang->get('LINK_SERVER'));
@@ -23,7 +23,7 @@ class ServerController extends AppController {
 
 	public function admin_delete($id = false) {
 		$this->autoRender = false;
-		if($this->Connect->connect() && $this->Connect->if_admin()) {
+		if($this->isConnected && $this->Connect->if_admin()) {
 			if($id) {
 				$this->loadModel('Server');
 				if($this->Server->delete($id)) {
@@ -44,7 +44,7 @@ class ServerController extends AppController {
 
 	public function admin_config() {
 		$this->autoRender = false;
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 			 
 			$this->layout = null;
 			if($this->request->is('ajax')) {
@@ -68,7 +68,7 @@ class ServerController extends AppController {
 	}
 
 	public function admin_link_ajax() {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 			 
 			$this->layout = null;
 			if($this->request->is('ajax')) {
@@ -116,7 +116,7 @@ class ServerController extends AppController {
 	}
 
 	public function admin_banlist($server_id = 1) {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 
 			$this->loadModel('Server');
 			$servers = $this->Server->find('all');
@@ -141,7 +141,7 @@ class ServerController extends AppController {
 	}
 
 	public function admin_whitelist($server_id = 1) {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 
 			$this->loadModel('Server');
 			$servers = $this->Server->find('all');
@@ -166,7 +166,7 @@ class ServerController extends AppController {
 	}
 
 	public function admin_online($server_id = 1) {
-		if($this->Connect->connect() AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->if_admin()) {
 
 			$this->loadModel('Server');
 			$servers = $this->Server->find('all');

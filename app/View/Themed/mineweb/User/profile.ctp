@@ -4,7 +4,7 @@ App::import('Component', 'ConnectComponent');
 $this->Connect = new ConnectComponent;
 $this->Configuration = new ConfigurationComponent;
 $this->EyPlugin = new EyPluginComponent;
-if($this->Connect->connect()) {
+if($isConnected) {
 ?>
 	<div class="push-nav"></div>
 	<div class="container bg profile">

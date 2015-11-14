@@ -3,6 +3,8 @@ App::uses('CakeEvent', 'Event');
 
 class User extends AppModel {
 
+	private $data;
+
 	public function validRegister($data) {
 		if(preg_match('`^([a-zA-Z0-9-_]{2,36})$`', $data['pseudo'])) {
 			$data['password'] = password($data['password']);
@@ -93,6 +95,91 @@ class User extends AppModel {
 			return 'PASSWORD_NOT_SAME';
 		}
 	}
+
+	private function getDataBySession($session) {
+    	if(empty($this->data)) {
+      		$this->data = $this->find('first', array('conditions' => array('session' => $session)));
+    	}
+    	return $this->data;
+  	}
+
+	public function isConnected() {
+		if(CakeSession::check('user') == false) {
+      		return false;
+  	  	} else {
+        	// Je cherche si il la session est pas vide et si elle est dans la bdd
+        	$user = $this->find('all', array(
+            	'conditions' => array(
+                	'session' => CakeSession::read('user'),
+            	)
+        	));
+       	 	return (isset($user['0']['User']['session']));
+    	}
+	}
+
+	public function isAdmin() {
+		if(CakeSession::check('user') == false) {
+          return false;
+      	} else {
+        	// Je cherche si il la session est pas vide et si elle est dans la bdd
+        	$user = $this->getDataBySession(CakeSession::read('user'));
+        	return (isset($user['User']['session']) AND $user['User']['rank'] == 3 OR $user['User']['rank'] == 4);
+      }
+	}
+
+	public function exist($username) {
+    	$search_user = $this->find('all', array(
+        	'conditions' => array(
+            	'pseudo' => $username,
+        	)
+    	));
+    	return (!empty($search_user));
+  	}
+
+  	public function get($key) {
+    	if(CakeSession::check('user')) {
+      		$search_user = $this->getDataBySession(CakeSession::read('user'));
+      		return ($search_user) ? $search_user['User'][$key] : '';
+    	}
+  	}
+
+  	public function set($key, $value) {
+    	if(CakeSession::check('user')) {
+      		$search_user = $this->getDataBySession(CakeSession::read('user'));
+      		if($search_user) {
+        		$this->read(null, $search_user['User']['id']);
+        		$this->set(array($key => $value));
+        		return $this->save();
+      		}
+    	}
+  	}
+
+  	public function getUsernameByID($id) {
+    	$search_user = $this->getDataBySession(CakeSession::read('user'));
+      	return ($search_user) ? $search_user['0']['User']['pseudo'] : '';
+    }
+
+  	public function getFromUser($key, $username) {
+    	$search_user = $this->User->find('all', array(
+      		'conditions' => array(
+          		'pseudo' => $username,
+        	)
+    	));
+    	return ($search_user) ? $search_user['User'][$key] : '';
+  	}
+
+  	public function setFromUser($key, $value, $username) {
+    	$search_user = $this->find('all', array(
+      		'conditions' => array(
+          		'pseudo' => $username,
+        	)
+    	));
+    	if($search_user) {
+      		$this->read(null, $search_user['0']['User']['id']);
+      		$this->set(array($key => $value));
+      		return $this->save();
+    	}
+  	}
 
 	public function afterSave($created, $options = array()) {
 		if($created) {

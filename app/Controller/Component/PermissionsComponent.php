@@ -18,7 +18,7 @@ class PermissionsComponent extends Object {
     App::import('Component', 'Connect');
     $this->Connect = new ConnectComponent();
     $this->Perm = ClassRegistry::init('Permission');
-    if($this->Connect->connect()) {
+    if($this->isConnected) {
       if($this->Connect->if_admin()) {
         return true;
       } else {
