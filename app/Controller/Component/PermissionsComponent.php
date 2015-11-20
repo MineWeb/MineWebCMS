@@ -15,29 +15,21 @@ class PermissionsComponent extends Object {
   function __construct() {}
   
   public function can($perm) {
-    App::import('Component', 'Connect');
-    $this->Connect = new ConnectComponent();
-    $this->Perm = ClassRegistry::init('Permission');
-    if($this->isConnected) {
-      if($this->Connect->if_admin()) {
+    $this->User = ClassRegistry::init('User');
+    if($this->User->isConnected()) {
+      if($this->User->isAdmin()) {
         return true;
       } else {
+        $this->Perm = ClassRegistry::init('Permission');
         $search_perm = $this->Perm->find('all', array('conditions' => array('rank' => $this->Connect->get('rank'))));
         $search_perm = unserialize($search_perm[0]['Permission']['permissions']);
-        if(in_array($perm, $search_perm)) {
-          return true;
-        } else {
-          return false;
-        }
+        return in_array($perm, $search_perm);
       }
-    } else {
-      return false;
     }
+    return false;
   }
 
   public function have($rank, $perm) {
-    App::import('Component', 'Connect');
-    $this->Connect = new ConnectComponent();
     if($rank == 3 OR $rank == 4) {
       return 'true';
     } else {
@@ -45,21 +37,13 @@ class PermissionsComponent extends Object {
       $search_perm = $this->Perm->find('all', array('conditions' => array('rank' => $rank)));
       if(!empty($search_perm)) {
         $search_perm = unserialize($search_perm[0]['Permission']['permissions']);
-        if(in_array($perm, $search_perm)) {
-          return 'true';
-        } else {
-          return 'false';
-        }
-      } else {
-        return 'false';
+        return (in_array($perm, $search_perm)) ? 'true' : 'false';
       }
     }
+    return 'false';
   }
 
   public function get_all() {
-    App::import('Component', 'Connect');
-    $this->Connect = new ConnectComponent();
-    $this->Perm = ClassRegistry::init('Permission');
     $return = $this->permissions;
     // on récupére les perms des plugins
     App::import('Component', 'EyPlugin');

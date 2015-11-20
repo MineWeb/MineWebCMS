@@ -1,13 +1,8 @@
-<?php 
-$this->Configuration = new ConfigurationComponent;
-$theme_config = file_get_contents(ROOT.'/config/theme.default.json');
-$theme_config = json_decode($theme_config, true);
-?>
-    <?php if(!isset($theme_config['slider']) || $theme_config['slider'] == "true") { ?>
-        <header id="myCarousel" class="carousel slide transition-timer-carousel">
-            <div class="carousel-inner">
-                <?php if(!empty($search_slider)) { ?>
-                    <?php $i = 0; foreach ($search_slider as $k => $v) { ?>
+<?php if(!isset($theme_config['slider']) || $theme_config['slider'] == "true") { ?>
+    <header id="myCarousel" class="carousel slide transition-timer-carousel">
+        <div class="carousel-inner">
+            <?php if(!empty($search_slider)) { ?>
+                <?php $i = 0; foreach ($search_slider as $k => $v) { ?>
                     <div class="item<?php if($i == 0) { echo ' active'; } ?>">
                         <div class="fill" style="background-image:url('<?= $v['Slider']['url_img'] ?>');"></div>
                         <div class="carousel-caption">
@@ -15,48 +10,47 @@ $theme_config = json_decode($theme_config, true);
                         </div>
                     </div>
                     <?php $i++; } ?>
-                <?php } else { ?>
-                    <div class="item active">
-                        <div class="fill" style="background-image:url('http://placehold.it/1905x420&text=1905x420');"></div>
-                        <div class="carousel-caption">
-                            <h2>Caption 1</h2>
-                        </div>
+            <?php } else { ?>
+                <div class="item active">
+                    <div class="fill" style="background-image:url('http://placehold.it/1905x420&text=1905x420');"></div>
+                    <div class="carousel-caption">
+                        <h2>Caption 1</h2>
                     </div>
-                    <div class="item">
-                        <div class="fill" style="background-image:url('http://placehold.it/1905x420&text=1905x420');"></div>
-                        <div class="carousel-caption">
-                            <h2>Caption 2</h2>
-                        </div>
+                </div>
+                <div class="item">
+                    <div class="fill" style="background-image:url('http://placehold.it/1905x420&text=1905x420');"></div>
+                    <div class="carousel-caption">
+                        <h2>Caption 2</h2>
                     </div>
-                    <div class="item">
-                        <div class="fill" style="background-image:url('http://placehold.it/1905x420&text=1905x420');"></div>
-                        <div class="carousel-caption">
-                            <h2>Caption 3</h2>
-                        </div>
+                </div>
+                <div class="item">
+                    <div class="fill" style="background-image:url('http://placehold.it/1905x420&text=1905x420');"></div>
+                    <div class="carousel-caption">
+                        <h2>Caption 3</h2>
                     </div>
-                <?php } ?>
-            </div>
+                </div>
+            <?php } ?>
+        </div>
 
-            <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-                <span class="icon-prev"></span>
-            </a>
-            <a class="right carousel-control" href="#myCarousel" data-slide="next">
-                <span class="icon-next"></span>
-            </a>
-             <!-- Timer "progress bar" -->
-            <hr class="transition-timer-carousel-progress-bar animate" />
-        </header>
-    <?php } ?>
+        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+            <span class="icon-prev"></span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+            <span class="icon-next"></span>
+        </a>
+         <!-- Timer "progress bar" -->
+        <hr class="transition-timer-carousel-progress-bar animate" />
+    </header>
+<?php } ?>
 
-    <div class="container">
-        <div id="debug"></div>
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header animated fadeInRight">
-                    <?= $Lang->get('LAST_NEWS') ?>
-                </h1>
-            </div>
-            <?php if(!empty($search_news)) { ?>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header animated fadeInRight">
+                <?= $Lang->get('LAST_NEWS') ?>
+            </h1>
+        </div>
+        <?php if(!empty($search_news)) { ?>
             <ul id="items">
             <?php foreach ($search_news as $k => $v) { ?>
                 <li class="col-md-4 animated fadeInUp">
@@ -76,104 +70,19 @@ $theme_config = json_decode($theme_config, true);
             <?php } else { echo '<center><h3>'.$Lang->get('NO_NEWS').'</h3></center>'; } ?>
         </div>
 
-        <script type="text/javascript">
-        $(document).ready(function() {
-    
-            $(window).scroll( function(){
-            
-                $('.hideme').each( function(i){
-                    
-                    var bottom_of_object = $(this).position().top + $(this).outerHeight();
-                    var bottom_of_window = $(window).scrollTop() + $(window).height();
-                    
-                    if( bottom_of_window > bottom_of_object ){
-                        
-                        if($(this).hasClass('fade-in-left')) {
-                            $(this).addClass('animated fadeInLeft');
-                        }
-                        if($(this).hasClass('fade-in-right')) {
-                            $(this).addClass('animated fadeInRight');
-                        }
-                            
-                    }
-                    
-                }); 
-            
-            });
-            
-        });
-        </script>
-
         <hr>
 
         <div class="well">
             <div class="row">
                 <center>
                     <p>
-                        <a href="<?= $this->Configuration->get('facebook') ?>" class="btn btn-lg btn-facebook"><i class="fa fa-facebook-square"></i> <?= $Lang->get('JOIN_US_ON') ?> Facebook</a>
-                        <a href="<?= $this->Configuration->get('twitter') ?>" class="btn btn-lg btn-twitter"><i class="fa fa-twitter"></i> <?= $Lang->get('JOIN_US_ON') ?> Twitter</a>
-                        <a href="<?= $this->Configuration->get('youtube') ?>" class="btn btn-lg btn-youtube"><i class="fa fa-youtube"></i> <?= $Lang->get('JOIN_US_ON') ?> YouTube</a>
-                        <a href="<?= $this->Configuration->get('skype') ?>" class="btn btn-lg btn-skype"><i class="fa fa-skype"></i> <?= $Lang->get('CONTACT_US_ON') ?> Skype</a>
+                        <a href="<?= $Configuration->get('facebook') ?>" class="btn btn-lg btn-facebook"><i class="fa fa-facebook-square"></i> <?= $Lang->get('JOIN_US_ON') ?> Facebook</a>
+                        <a href="<?= $Configuration->get('twitter') ?>" class="btn btn-lg btn-twitter"><i class="fa fa-twitter"></i> <?= $Lang->get('JOIN_US_ON') ?> Twitter</a>
+                        <a href="<?= $Configuration->get('youtube') ?>" class="btn btn-lg btn-youtube"><i class="fa fa-youtube"></i> <?= $Lang->get('JOIN_US_ON') ?> YouTube</a>
+                        <a href="<?= $Configuration->get('skype') ?>" class="btn btn-lg btn-skype"><i class="fa fa-skype"></i> <?= $Lang->get('CONTACT_US_ON') ?> Skype</a>
                     </p>
                 </center>
             </div>
         </div>
 
         <?= $Module->loadModules('home') ?>
-
-        <script>
-        $(document).ready(function() {
-            $('.carousel').carousel({
-                interval: 5000 //changer la vitesse
-            })
-        });
-        </script>
-        <script type="text/javascript">
-        $(document).ready(function() {    
-        //Events that reset and restart the timer animation when the slides change
-        $("#myCarousel").on("slide.bs.carousel", function(event) {
-            //The animate class gets removed so that it jumps straight back to 0%
-            $(".transition-timer-carousel-progress-bar", this)
-                .removeClass("animate").css("width", "0%");
-        }).on("slid.bs.carousel", function(event) {
-            //The slide transition finished, so re-add the animate class so that
-            //the timer bar takes time to fill up
-            $(".transition-timer-carousel-progress-bar", this)
-                .addClass("animate").css("width", "100%");
-        });
-        
-        //Kick off the initial slide animation when the document is ready
-        $(".transition-timer-carousel-progress-bar", "#myCarousel")
-            .css("width", "100%");
-        });
-
-        jQuery(function($){
-            
-            $('ul#items').easyPaginate({
-                step:3
-            });
-            
-        });
-
-        $(".like").click(function() {
-      if($(this).hasClass("active")) {
-          $(this).removeClass("active");
-          var nbr = $(this).html();
-          nbr = nbr.split('<');
-          nbr = nbr['0'];
-          nbr = parseInt(nbr) - 1;
-          $(this).html(nbr+' <i class="fa fa-thumbs-up"></i>');
-          var id = $(this).attr("id");
-          $.post("<?= $this->Html->url(array('controller' => 'news', 'action' => 'dislike')) ?>", { id : id }, function(data) { $('#debug').html(data); });
-      } else {
-          $(this).addClass("active");
-          var nbr = $(this).html();
-          nbr = nbr.split('<');
-          nbr = nbr['0'];
-          nbr = parseInt(nbr) + 1;
-          $(this).html(nbr + ' <i class="fa fa-thumbs-up"></i>');
-          var id = $(this).attr("id");
-          $.post("<?= $this->Html->url(array('controller' => 'news', 'action' => 'like')) ?>", { id : id });
-      }
-    });
-        </script>

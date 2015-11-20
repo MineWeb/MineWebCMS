@@ -1,8 +1,3 @@
-<?php 
-$this->Connect = new ConnectComponent;
-$theme_config = file_get_contents(ROOT.'/app/View/Themed/Mineweb/config/config.json');
-$theme_config = json_decode($theme_config, true);
-?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -14,7 +9,7 @@ $theme_config = json_decode($theme_config, true);
     <meta name="description" content="">
     <meta name="author" content="Eywek">
 
-    <title><?= $title_for_layout; ?> - <?= $Configuration->get('name') ?></title>
+    <title><?= $title_for_layout; ?> - <?= $website_name ?></title>
 
     <?= $this->Html->css('bootstrap.css') ?>
     <?= $this->Html->css('modern-business.css') ?>
@@ -36,24 +31,22 @@ $theme_config = json_decode($theme_config, true);
 
 </head>
 
-<body><!-- grey.png -->
+<body>
+
+    <!-- Navbar -->
     <?= $this->element($theme_config['navbar']) ?>
 
-            <?php 
-            $flash = $this->Session->flash();
-            if(!empty($flash)) { ?><br><br><br>
-              <div class="container">
-                <?= html_entity_decode($flash) ?>
-              </div>
-            <?php } ?>
-            <?= $this->fetch('content'); ?>
-        <!-- Footer -->
+    <?= $flash_messages ?>
+    <?= $this->fetch('content'); ?>
     </div>
-        <footer>
-            <div class="container">
-                <p><?= $Lang->get('COPYRIGHT') ?></p>
-            </div>
-        </footer>
+    
+    <!-- Footer -->
+        
+    <footer>
+        <div class="container">
+            <p><?= $Lang->get('COPYRIGHT') ?></p>
+        </div>
+    </footer>
     
     <?= $this->element('modals') ?>
 

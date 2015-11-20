@@ -3,7 +3,7 @@ App::uses('CakeEvent', 'Event');
 
 class User extends AppModel {
 
-	private $data;
+	private $userData;
 
 	public function validRegister($data) {
 		if(preg_match('`^([a-zA-Z0-9-_]{2,36})$`', $data['pseudo'])) {
@@ -97,10 +97,10 @@ class User extends AppModel {
 	}
 
 	private function getDataBySession($session) {
-    	if(empty($this->data)) {
-      		$this->data = $this->find('first', array('conditions' => array('session' => $session)));
+    	if(empty($this->userData)) {
+      		$this->userData = $this->find('first', array('conditions' => array('session' => $session)));
     	}
-    	return $this->data;
+    	return $this->userData;
   	}
 
 	public function isConnected() {
@@ -136,14 +136,14 @@ class User extends AppModel {
     	return (!empty($search_user));
   	}
 
-  	public function get($key) {
+  	public function getKey($key) {
     	if(CakeSession::check('user')) {
       		$search_user = $this->getDataBySession(CakeSession::read('user'));
       		return ($search_user) ? $search_user['User'][$key] : '';
     	}
   	}
 
-  	public function set($key, $value) {
+  	public function setKey($key, $value) {
     	if(CakeSession::check('user')) {
       		$search_user = $this->getDataBySession(CakeSession::read('user'));
       		if($search_user) {
@@ -166,6 +166,13 @@ class User extends AppModel {
         	)
     	));
     	return ($search_user) ? $search_user['User'][$key] : '';
+  	}
+
+  	public function getAllFromCurrentUser() {
+    	if(CakeSession::check('user')) {
+      		$search_user = $this->getDataBySession(CakeSession::read('user'));
+      		return ($search_user) ? $search_user['User'] : '';
+    	}
   	}
 
   	public function setFromUser($key, $value, $username) {

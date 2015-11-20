@@ -146,20 +146,94 @@ WCqkx22behAGZq6rhwIDAQAB
 			$this->set(compact('plugins_need_admin'));
 		}
 
-		$this->loadModel('Navbar');
-		$nav = $this->Navbar->find('all', array('order' => 'order'));
-		if(!empty($nav)) {
-			$nav = $nav;
-		} else {
-			$nav = false;
-		}
-		$this->set(compact('nav'));
+		/* === Variables === */
+
+			// Navbar
+			$this->loadModel('Navbar');
+			$nav = $this->Navbar->find('all', array('order' => 'order'));
+			if(!empty($nav)) {
+				$nav = $nav;
+			} else {
+				$nav = false;
+			}
+			
+			/*$navbar = '';
+            if(!empty($nav)) {
+              	$i = 0;
+              	foreach ($nav as $key => $value) {
+                	if(empty($value['Navbar']['submenu'])) {
+                  		$navbar += '<li class="li-nav';
+                  		$navbar += ($this->params['controller'] == $value['Navbar']['name']) ? ' actived' : '';
+                  		$navbar += '">';
+                  		$navbar += '<a href="'.$value['Navbar']['url'].'">'.$value['Navbar']['name'].'</a>';
+                  		$navbar += '</li>';
+                	} else {
+                		$navbar += '<li class="dropdown">';
+						$navbar += '<li class="dropdown">'
+                    	$navbar += '<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">'.$value['Navbar']['name'].' <span class="caret"></span></a>';
+                    	$navbar += '<ul class="dropdown-menu" role="menu">'; 
+
+                    	$submenu = json_decode($value['Navbar']['submenu']);
+                    	foreach ($submenu as $k => $v) {
+                      		$navbar += '<li><a href="'.rawurldecode($v).'">'.rawurldecode(str_replace('+', ' ', $k)).'</a></li>';
+                    	}
+                    	$navbar += '</ul>';
+                  		$navbar += '</li>';
+                	}
+              	$i++; 
+            	}  
+          	}*/
+
+			// Configuration Thème/Générale
+			$website_name = $this->Configuration->get('name');
+
+			$theme_name = $this->Configuration->get('theme');
+
+			if($theme_name == "default") {
+				$theme_config = file_get_contents(ROOT.'/config/theme.default.json');
+			} elseif(file_exists(ROOT.'/app/View/Themed/'.$theme_name.'/config.json')) {
+				$theme_config = file_get_contents(ROOT.'/app/View/Themed/'.$theme_name.'/config/config.json');
+			}
+			$theme_config = json_decode($theme_config, true);
+
+			// Info serveur
+			$banner_server = $this->Configuration->get('banner_server');
+          	if(empty($banner_server)) {
+            	if($this->Server->online()) {
+              		$banner_server = $this->Lang->banner_server($this->Server->banner_infos());
+            	} else { 
+              		$banner_server = false;
+            	}
+          	} else {
+            	$banner_server = unserialize($banner_server);
+            	if(count($banner_server) == 1) {
+              		$server_infos = $this->Server->banner_infos($banner_server[0]);
+            	} else {
+              	$server_infos = $this->Server->banner_infos($banner_server);
+            	}
+            	if(!empty($server_infos['getPlayerMax']) && !empty($server_infos['getPlayerCount'])) {
+            		$banner_server = $this->Lang->banner_server($this->Server->banner_infos($server_infos));
+            	} else {
+              		$banner_server = false;
+            	}
+          	} 
+
+          	// Message flash
+          	$flash = $this->Session->read('Message.flash');;
+        	$flash_messages = (!empty($flash)) ? '<div class="container">'.html_entity_decode($flash).'</div>' : '';
+
+        	// infos user
+        	$user = ($this->isConnected) ? $this->User->getAllFromCurrentUser() : array();
+
+
+			// on set tout
+			$this->set(compact('nav', 'website_name', 'theme_config', 'banner_server', 'flash_messages', 'user'));
 
 		if($this->params['controller'] == "user" OR $this->params['controller'] == "maintenance" OR $this->Configuration->get('maintenance') == '0' OR $this->isConnected AND $this->Connect->if_admin()) {
 		} else {
 			$this->redirect(array('controller' => 'maintenance', 'action' => 'index', 'plugin' => false, 'admin' => false));
 		}
-		Configure::write('theme', $this->Configuration->get('theme'));
+		Configure::write('theme', $theme_name);
 		$this->__setTheme();
 	}
 

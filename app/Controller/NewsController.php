@@ -85,12 +85,11 @@ class NewsController extends AppController {
 	}
 
 	function like() {
-		$this->layout = null;
-		 
+		$this->autoRender = false;
 		if($this->request->is('post')) {
 			if($this->Permissions->can('LIKE_NEWS')) {
 				$this->loadModel('Like');
-				$already = $this->Like->find('all', array('conditions' => array('news_id' => $this->request->data['id'], 'author' => $this->Connect->get_pseudo())));
+				$already = $this->Like->find('all', array('conditions' => array('news_id' => $this->request->data['id'], 'author' => $this->User->getKey('pseudo'))));
 				if(empty($already)) {
 					$this->loadModel('News');
 					$like = $this->News->find('all', array('conditions' => array('id' => $this->request->data['id'])));
@@ -101,7 +100,7 @@ class NewsController extends AppController {
 					$this->News->save();
 
 					$this->Like->read(null, null);
-					$this->Like->set(array('news_id' => $this->request->data['id'], 'author' => $this->Connect->get_pseudo()));
+					$this->Like->set(array('news_id' => $this->request->data['id'], 'author' => $this->User->getKey('pseudo')));
 					$this->Like->save();
 				}
 			}
@@ -109,12 +108,11 @@ class NewsController extends AppController {
 	}
 
 	function dislike() {
-		$this->layout = null;
-		 
+		$this->autoRender = false;
 		if($this->request->is('post')) {
 			if($this->Permissions->can('LIKE_NEWS')) {
 				$this->loadModel('Like');
-				$already = $this->Like->find('all', array('conditions' => array('news_id' => $this->request->data['id'], 'author' => $this->Connect->get_pseudo())));
+				$already = $this->Like->find('all', array('conditions' => array('news_id' => $this->request->data['id'], 'author' => $this->User->getKey('pseudo'))));
 				if(!empty($already)) {
 					$this->loadModel('News');
 					$like = $this->News->find('all', array('conditions' => array('id' => $this->request->data['id'])));
@@ -124,7 +122,7 @@ class NewsController extends AppController {
 					$this->News->set(array('like' => $like));
 					$this->News->save();
 
-					$this->Like->deleteAll(array('news_id' => $this->request->data['id'], 'author' => $this->Connect->get_pseudo()));
+					$this->Like->deleteAll(array('news_id' => $this->request->data['id'], 'author' => $this->User->getKey('pseudo')));
 				}
 			}
 		}

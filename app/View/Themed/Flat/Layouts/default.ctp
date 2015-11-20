@@ -1,11 +1,3 @@
-<?php 
-$this->EyPlugin = new EyPluginComponent;
-$this->History = new HistoryComponent;
-$this->Configuration = new ConfigurationComponent;
-
-$theme_config = file_get_contents(ROOT.'/config/theme.default.json');
-$theme_config = json_decode($theme_config, true);
-?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -17,7 +9,7 @@ $theme_config = json_decode($theme_config, true);
     <meta name="description" content="">
     <meta name="author" content="Eywek">
 
-    <title><?= $title_for_layout; ?> - <?= $this->Configuration->get('name') ?></title>
+    <title><?= $title_for_layout; ?> - <?= $website_name ?></title>
     
     <?= $this->Html->css('bootstrap.css') ?>
     <?= $this->Html->css('modern-business.css') ?>
@@ -43,28 +35,7 @@ $theme_config = json_decode($theme_config, true);
       <div class="mini-navbar mini-navbar-default hidden-xs">
       <div class="container">
         <div class="col-sm-12">
-          <?php
-          $banner_server = $this->Configuration->get('banner_server');
-          if(empty($banner_server)) {
-            if($Server->online()) {
-              echo '<p>'.$Lang->banner_server($Server->banner_infos()).'</p>';
-            } else { 
-              echo '<p class="text-center">'.$Lang->get('SERVER_OFF').'</p>';
-            }
-          } else {
-            $banner_server = unserialize($banner_server);
-            if(count($banner_server) == 1) {
-              $server_infos = $Server->banner_infos($banner_server[0]);
-            } else {
-              $server_infos = $Server->banner_infos($banner_server);
-            }
-            if(isset($server_infos['getPlayerMax']) && isset($server_infos['getPlayerCount'])) {
-              echo '<p>'.$Lang->banner_server($server_infos).'</p>';
-            } else {
-              echo '<p class="text-center">'.$Lang->get('SERVER_OFF').'</p>';
-            }
-          } 
-          ?>
+          <?= ($banner_server) ? '<p>'.$banner_server.'</p>' : '<p class="text-center">'.$Lang->get('SERVER_OFF').'</p>' ?>
         </div>
       </div>
     </div>
@@ -140,28 +111,19 @@ $theme_config = json_decode($theme_config, true);
         </div>
     </nav>
     <div class="nav-hop"></div>
-
-            <?php 
-            $flash = $this->Session->flash();
-            if(!empty($flash)) { ?><br>
-              <div class="container">
-                <?= html_entity_decode($flash) ?>
-              </div>
-            <?php } ?>
-
-            <?= $this->fetch('content'); ?>
+      <?= $flash_messages ?>
+      <?= $this->fetch('content'); ?>
 
     <!-- Footer -->
-    </div>
-        <footer>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                    <p><?= $Lang->get('COPYRIGHT') ?></p>
-                    </div>
-                </div>
-            </div>
-        </footer>
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <p><?= $Lang->get('COPYRIGHT') ?></p>
+          </div>
+        </div>
+      </div>
+    </footer>
 
     
     <?= $this->element('modals') ?>

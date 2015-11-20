@@ -1,9 +1,3 @@
-<?php 
-$this->Configuration = new ConfigurationComponent;
-$this->Connect = new ConnectComponent;
-$theme_config = file_get_contents(ROOT.'/app/View/Themed/Mineweb/config/config.json');
-$theme_config = json_decode($theme_config, true);
-?>
     <?php if(!isset($theme_config['slider']) || $theme_config['slider'] == "true") { ?>
         <header id="myCarousel" class="carousel slide transition-timer-carousel">
             <div class="carousel-inner">
@@ -52,28 +46,7 @@ $theme_config = json_decode($theme_config, true);
     <div class="mini-navbar mini-navbar-dark hidden-xs">
       <div class="container">
         <div class="col-sm-12">
-          <?php 
-          $banner_server = $this->Configuration->get('banner_server');
-          if(empty($banner_server)) {
-            if($Server->online()) {
-              echo '<p class="text-center">'.$Lang->banner_server($Server->banner_infos()).'</p>';
-            } else { 
-              echo '<p class="text-center">'.$Lang->get('SERVER_OFF').'</p>';
-            }
-          } else {
-            $banner_server = unserialize($banner_server);
-            if(count($banner_server) == 1) {
-              $server_infos = $Server->banner_infos($banner_server[0]);
-            } else {
-              $server_infos = $Server->banner_infos($banner_server);
-            }
-            if(!empty($server_infos['getPlayerMax'])) {
-              echo '<p class="text-center">'.$Lang->banner_server($server_infos).'</p>';
-            } else {
-              echo '<p class="text-center">'.$Lang->get('SERVER_OFF').'</p>';
-            }
-          } 
-          ?>
+          <?= ($banner_server) ? '<p>'.$banner_server.'</p>' : '<p class="text-center">'.$Lang->get('SERVER_OFF').'</p>' ?>
         </div>
       </div>
     </div>
