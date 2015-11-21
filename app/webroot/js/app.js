@@ -37,28 +37,26 @@ $(document).ready(function(){
 
 	// Like des news 
 	$(".like").click(function() {
-      	if($(this).hasClass("active")) {
-          	$(this).removeClass("active");
-          	var nbr = $(this).html();
-          	nbr = nbr.split('<');
-          	nbr = nbr['0'];
-          	nbr = parseInt(nbr) - 1;
-          	$(this).html(nbr+' <i class="fa fa-thumbs-up"></i>');
-          	var id = $(this).attr("id");
-          	$.post(dislike_url, { id : id }, function(data) { $('#debug').html(data); });
-      	} else {
-        	$(this).addClass("active");
-          	var nbr = $(this).html();
-          	nbr = nbr.split('<');
-          	nbr = nbr['0'];
-          	nbr = parseInt(nbr) + 1;
-          	$(this).html(nbr + ' <i class="fa fa-thumbs-up"></i>');
-          	var id = $(this).attr("id");
-          	$.post(like_url, { id : id });
-      }
-    });
+  	if($(this).hasClass("active")) {
+    	$(this).removeClass("active");
+    	var nbr = $(this).html();
+    	nbr = nbr.split('<');
+    	nbr = nbr['0'];
+    	nbr = parseInt(nbr) - 1;
+    	$(this).html(nbr+' <i class="fa fa-thumbs-up"></i>');
+    	var id = $(this).attr("id");
+    	$.post(dislike_url, { id : id });
+  	} else {
+    	$(this).addClass("active");
+    	var nbr = $(this).html();
+    	nbr = nbr.split('<');
+    	nbr = nbr['0'];
+    	nbr = parseInt(nbr) + 1;
+    	$(this).html(nbr + ' <i class="fa fa-thumbs-up"></i>');
+    	var id = $(this).attr("id");
+    	$.post(like_url, { id : id });
+    }
+  });
             
-
-    
 
 });

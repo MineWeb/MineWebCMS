@@ -11,7 +11,7 @@ $this->EyPlugin = new EyPluginComponent;
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="<?= $this->Html->url('/') ?>"><?= $this->Configuration->get('name') ?></a>
+                <a class="navbar-brand" href="<?= $this->Html->url('/') ?>"><?= $website_name ?></a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
@@ -46,7 +46,7 @@ $this->EyPlugin = new EyPluginComponent;
                     <li class="li-nav">
                         <div class="btn-group">
                           <?php if($isConnected) { ?>
-                            <a style="padding-top:6px;" href="<?= $this->Html->url(array('controller' => 'profile', 'action' => 'index', 'plugin' => null)) ?>" class="btn btn-primary"><?= $this->Connect->get_pseudo() ?></a>
+                            <a style="padding-top:6px;" href="<?= $this->Html->url(array('controller' => 'profile', 'action' => 'index', 'plugin' => null)) ?>" class="btn btn-primary"><?= $user['pseudo'] ?></a>
                           <?php } else { ?>
                             <a style="padding-top:6px;" href="#login" href="#" data-toggle="modal" data-target="#login" class="btn btn-primary"><i class="fa fa-user"></i></a>
                           <?php } ?>
@@ -57,12 +57,12 @@ $this->EyPlugin = new EyPluginComponent;
                         <ul class="dropdown-menu" role="menu">
                           <?php if($isConnected) { ?>
                             
-                            <img class="img-rounded" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/', 'plugin' => false)) ?>/<?= $this->Connect->get_pseudo() ?>/60" title="<?= $this->Connect->get_pseudo() ?>">
+                            <img class="img-rounded" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/', 'plugin' => false)) ?>/<?= $user['pseudo'] ?>/60" title="<?= $user['pseudo'] ?>">
 
                             <span class="info pull-right">
                               <?php 
-                              echo $this->Connect->get('money') . ' ';
-                              if($this->Connect->get('money') == 1 OR $this->Connect->get('money') == 0) {
+                              echo $user['money'] . ' ';
+                              if($user['money'] == 1 OR $user['money'] == 0) {
                                 echo  $this->Configuration->get_money_name(false, true); 
                               } else { 
                                 echo  $this->Configuration->get_money_name(); 

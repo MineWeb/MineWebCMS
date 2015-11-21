@@ -19,6 +19,11 @@ function password($password) {
 	return hash('sha256', $password);
 }
 
+function cut($data, $how) {
+	$return = substr($data, 0, $how); 
+	return (strlen($data) > $how) ? $return.'...' : $return;
+}
+
 // Fonction qui génére une classe parmis toute celle disponible pour les news. Permet une couleur aléatoire.
 function rand_color_news() {
 	$colors = array('border-top-color-dark-blue', 'border-top-color-dark-blue-2', 'border-top-color-yellow', 'border-top-color-dark-yellow', 'border-top-color-blue', 'border-top-color-magenta', 'border-top-color-green'); // toute les class disponible

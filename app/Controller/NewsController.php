@@ -58,8 +58,7 @@ class NewsController extends AppController {
 	} 
 
 	function add_comment() {
-		$this->layout = null;
-		 
+		$this->autoRender = false;
 		if($this->request->is('post')) {
 			if($this->Permissions->can('COMMENT_NEWS')) {
 				if(!empty($this->request->data['content']) && !empty($this->request->data['news_id']) && !empty($this->request->data['author'])) {
@@ -72,15 +71,15 @@ class NewsController extends AppController {
 					$this->News->read(null, $this->request->data['news_id']);
 					$this->News->set(array('comments' => $comments));
 					$this->News->save();
-					echo 'true';
+					echo json_encode(array('statut' => true, 'msg' => 'success'));
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS');
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('NEED_CONNECT');
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NEED_CONNECT')));
 			}
 		} else {
-			echo $this->Lang->get('PAGE_BAD_EXECUTED');
+			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('PAGE_BAD_EXECUTED')));
 		}
 	}
 

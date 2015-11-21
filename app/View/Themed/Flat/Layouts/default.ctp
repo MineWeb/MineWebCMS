@@ -47,7 +47,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="<?= $this->Html->url('/') ?>"><?= $this->Configuration->get('name') ?></a>
+                <a class="navbar-brand" href="<?= $this->Html->url('/') ?>"><?= $website_name ?></a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
@@ -82,7 +82,7 @@
                     <li class="button">
                         <div class="btn-group">
                           <?php if($isConnected) { ?>
-                            <button type="button" class="btn btn-success"><?= $this->Connect->get_pseudo() ?></button>
+                            <button type="button" class="btn btn-success"><?= $user['pseudo'] ?></button>
                           <?php } else { ?>
                             <button type="button" class="btn btn-success"><i class="fa fa-user"></i></button>
                           <?php } ?>
@@ -113,7 +113,7 @@
     <div class="nav-hop"></div>
       <?= $flash_messages ?>
       <?= $this->fetch('content'); ?>
-
+    </div>
     <!-- Footer -->
     <footer>
       <div class="container">

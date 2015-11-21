@@ -69,7 +69,12 @@
 		$.post(form.attr('action'), inputs, function(data) {
           	var json = JSON.parse(data);
 		  	if(json.statut === true) {
-          		form.find('.ajax-msg').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+json.msg+'</i></div>').fadeIn(500);
+		  		if(form.attr('data-success-msg') === undefined || form.attr('data-success-msg') == "true") {
+          			form.find('.ajax-msg').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+json.msg+'</i></div>').fadeIn(500);
+          		}
+          		if(form.attr('data-callback-function') !== undefined) {
+          			window[form.attr('data-callback-function')](inputs);
+          		}
           		if(form.attr('data-redirect-url') !== undefined) {
           			document.location.href=form.attr('data-redirect-url');
           		}

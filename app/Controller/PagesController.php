@@ -115,22 +115,35 @@ class PagesController extends AppController {
 		// récupérage des news
 		$this->loadModel('News'); // on charge le model
 		$search_news = $this->News->find('all', array('limit' => '6', 'order' => 'id desc', 'conditions' => array('published' => 1))); // on cherche les 3 dernières news (les plus veille)
-		$this->set(compact('search_news')); // on envoie les données à la vue
 
 		// je cherche toutes les news que l'utilisateur connecté a aimé
 		if($this->isConnected) {
 			$this->loadModel('Like');
-			$likes = $this->Like->find('all', array('conditions' => array('author' => $this->Connect->get_pseudo())));
+			$likes = $this->Like->find('all', array('conditions' => array('author' => $this->User->getKey('pseudo'))));
 			if(!empty($likes)) {
 				foreach ($likes as $key => $value) {
-					$likes_list[] = $value['Like']['news_id'];
+					foreach ($search_news as $k => $v) {
+                		if($value['Like']['news_id'] == $v['News']['id']) { 
+                    		$search_news[$k]['News']['liked'] = true;
+                		} else {
+                			$search_news[$k]['News']['liked'] = false;
+                		}
+                	}
 				}
-				$likes = $likes_list;
 			} else {
-				$likes = array('929302');
+				foreach ($search_news as $k => $v) {
+            		$search_news[$k]['News']['liked'] = false;
+                }
 			}
-			$this->set(compact('likes'));
+		} else {
+			foreach ($search_news as $k => $v) {
+            	$search_news[$k]['News']['liked'] = false;
+            }
 		}
+
+		$can_like = ($this->Permissions->can('LIKE_NEWS')) ? true : false;
+
+		$this->set(compact('search_news', 'likes', 'can_like')); // on envoie les données à la vue
 
 		//récupération des slides
 		$this->loadModel('Slider');

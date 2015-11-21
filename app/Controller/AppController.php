@@ -191,7 +191,7 @@ WCqkx22behAGZq6rhwIDAQAB
 
 			if($theme_name == "default") {
 				$theme_config = file_get_contents(ROOT.'/config/theme.default.json');
-			} elseif(file_exists(ROOT.'/app/View/Themed/'.$theme_name.'/config.json')) {
+			} elseif(file_exists(ROOT.'/app/View/Themed/'.$theme_name.'/config/config.json')) {
 				$theme_config = file_get_contents(ROOT.'/app/View/Themed/'.$theme_name.'/config/config.json');
 			}
 			$theme_config = json_decode($theme_config, true);
@@ -225,9 +225,15 @@ WCqkx22behAGZq6rhwIDAQAB
         	// infos user
         	$user = ($this->isConnected) ? $this->User->getAllFromCurrentUser() : array();
 
+        	// socials links
+        	$facebook_link = $this->Configuration->get('facebook');
+        	$skype_link = $this->Configuration->get('skype');
+        	$youtube_link = $this->Configuration->get('youtube');
+        	$twitter_link = $this->Configuration->get('twitter');
+
 
 			// on set tout
-			$this->set(compact('nav', 'website_name', 'theme_config', 'banner_server', 'flash_messages', 'user'));
+			$this->set(compact('nav', 'website_name', 'theme_config', 'banner_server', 'flash_messages', 'user', 'facebook_link', 'skype_link', 'youtube_link', 'twitter_link'));
 
 		if($this->params['controller'] == "user" OR $this->params['controller'] == "maintenance" OR $this->Configuration->get('maintenance') == '0' OR $this->isConnected AND $this->Connect->if_admin()) {
 		} else {

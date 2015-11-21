@@ -3,7 +3,7 @@
         <div class="carousel-inner">
             <?php if(!empty($search_slider)) { ?>
                 <?php $i = 0; foreach ($search_slider as $k => $v) { ?>
-                    <div class="item<?php if($i == 0) { echo ' active'; } ?>">
+                    <div class="item<?= ($i == 0) ? ' active' : '' ?>">
                         <div class="fill" style="background-image:url('<?= $v['Slider']['url_img'] ?>');"></div>
                         <div class="carousel-caption">
                             <h2><?= before_display($v['Slider']['title']) ?></h2>
@@ -54,11 +54,11 @@
             <ul id="items">
             <?php foreach ($search_news as $k => $v) { ?>
                 <li class="col-md-4 animated fadeInUp">
-                    <div class="bloc <?= rand_color_news() ?>">
-                        <h2><?= substr($v['News']['title'], 0, 15); ?><?php if(strlen($v['News']['title']) > "15") { echo '...'; } ?></h2>
-                        <p><?= substr($v['News']['content'], 0, 220); ?><?php if(strlen($v['News']['content']) > "220") { echo '...'; } ?></p>
+                    <div class="bloc <?= rand_color_news() ?>" style="width:100%;">
+                        <h2><?= cut($v['News']['title'], 15) ?></h2>
+                        <p><?= cut($v['News']['content'], 220) ?></p>
                         <div class="btn-group">
-                          <button id="<?= $v['News']['id'] ?>" type="button" class="btn btn-primary like<?php if(!empty($likes)) { foreach ($likes as $t) { if($t == $v['News']['id']) { echo ' active'; } } } ?>"<?php if(!$isConnected AND $Permissions->can('LIKE_NEWS')) { echo ' disabled'; } ?>><?= $v['News']['like'] ?> <i class="fa fa-thumbs-up"></i></button>
+                          <button id="<?= $v['News']['id'] ?>" type="button" class="btn btn-primary like<?= ($v['News']['liked']) ? ' active' : ''; ?>"<?= ($can_like) ? '' : ' disabled' ?>><?= $v['News']['like'] ?> <i class="fa fa-thumbs-up"></i></button>
                           <button type="button" class="btn btn-primary"><?= $v['News']['comments'] ?> <i class="fa fa-comments"></i></button>
                         </div>
                         <a href="<?= $this->Html->url(array('controller' => 'blog', 'action' => $v['News']['slug'])) ?>" class="btn btn-success pull-right"><?= $Lang->get('READ_MORE') ?> »</a>
@@ -76,10 +76,10 @@
             <div class="row">
                 <center>
                     <p>
-                        <a href="<?= $Configuration->get('facebook') ?>" class="btn btn-lg btn-facebook"><i class="fa fa-facebook-square"></i> <?= $Lang->get('JOIN_US_ON') ?> Facebook</a>
-                        <a href="<?= $Configuration->get('twitter') ?>" class="btn btn-lg btn-twitter"><i class="fa fa-twitter"></i> <?= $Lang->get('JOIN_US_ON') ?> Twitter</a>
-                        <a href="<?= $Configuration->get('youtube') ?>" class="btn btn-lg btn-youtube"><i class="fa fa-youtube"></i> <?= $Lang->get('JOIN_US_ON') ?> YouTube</a>
-                        <a href="<?= $Configuration->get('skype') ?>" class="btn btn-lg btn-skype"><i class="fa fa-skype"></i> <?= $Lang->get('CONTACT_US_ON') ?> Skype</a>
+                        <a href="<?= $facebook_link ?>" class="btn btn-lg btn-facebook"><i class="fa fa-facebook-square"></i> <?= $Lang->get('JOIN_US_ON') ?> Facebook</a>
+                        <a href="<?= $twitter_link ?>" class="btn btn-lg btn-twitter"><i class="fa fa-twitter"></i> <?= $Lang->get('JOIN_US_ON') ?> Twitter</a>
+                        <a href="<?= $youtube_link ?>" class="btn btn-lg btn-youtube"><i class="fa fa-youtube"></i> <?= $Lang->get('JOIN_US_ON') ?> YouTube</a>
+                        <a href="<?= $skype_link ?>" class="btn btn-lg btn-skype"><i class="fa fa-skype"></i> <?= $Lang->get('CONTACT_US_ON') ?> Skype</a>
                     </p>
                 </center>
             </div>
