@@ -53,8 +53,19 @@
     <?= $this->Html->script('jquery-1.11.0.js') ?>
     <?= $this->Html->script('bootstrap.js') ?>
     <?= $this->Html->script('app.js') ?>
+    <script>
+    // Config APP.JS
 
-    <?= $this->element('ajax') ?>
+    var LIKE_URL = "<?= $this->Html->url(array('controller' => 'news', 'action' => 'like')) ?>";
+    var DISLIKE_URL = "<?= $this->Html->url(array('controller' => 'news', 'action' => 'dislike')) ?>";
+
+    var LOADING_MSG = "<?= $Lang->get('LOADING') ?>";
+    var ERROR_MSG = "<?= $Lang->get('ERROR') ?>";
+    var INTERNAL_ERROR_MSG = "<?= $Lang->get('ERROR_WHEN_AJAX') ?>";
+    var SUCCESS_MSG = "<?= $Lang->get('SUCCESS') ?>";
+
+    var CSRF_TOKEN = "<?= $csrfToken ?>";
+    </script>
 
 </body>
 

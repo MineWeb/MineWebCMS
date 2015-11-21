@@ -1263,7 +1263,7 @@ class FormHelper extends AppHelper {
 			return false;
 		}
 
-		$label = null;
+		$label = false;
 		if (isset($options['label'])) {
 			$label = $options['label'];
 		}

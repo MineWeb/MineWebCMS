@@ -11,14 +11,33 @@
             <p><span class="glyphicon glyphicon-time"></span> <?= $Lang->get('POSTED_ON') . ' ' . $Lang->date($created); ?></p>
 
             <hr>
-            <p class="lead"><?= /*before_display($content)*/ $content ?></p>
+            <p class="lead"><?= $content ?></p>
             <button id="<?= $id ?>" type="button" class="btn btn-primary pull-right like<?php if(!empty($likes)) { foreach ($likes as $t) { if($t == $id) { echo ' active'; } } } ?>"<?php if(!$Permissions->can('LIKE_NEWS')) { echo ' disabled'; } ?>><?= $like ?> <i class="fa fa-thumbs-up"></i></button><br>
             <?php if($Permissions->can('COMMENT_NEWS')) { ?>
                 <div id="form-comment-fade-out">
                     <hr>
                     <div class="well">
                         <h4><?= $Lang->get('LEAVE_COMMENT') ?> :</h4>
-                        <div id="error-on-post"></div>
+                        <?php /*
+                        // Formulaire d'ajout de commentaire
+
+                        echo $this->Form->create(null, array(
+                            'url' => array('controller' => 'news', 'action' => 'add_comment'),
+                            'data-ajax' => 'true',
+                            'data-callback-function' => 'addcomment',
+                            'data-success-msg' => 'false'
+                        ));
+                        echo $this->Form->input('author', array('name' => 'author', 'type' => 'hidden', 'value' => $user['pseudo']));
+                        echo $this->Form->input('news_id', array('name' => 'news_id', 'type' => 'hidden', 'value' => $id));
+
+                        echo '<div class="form-group">';
+                        echo $this->Form->input('content', array('name' => 'content', 'label' => false, 'type' => 'textarea', 'class' => 'form-control', 'rows' => '3'));
+                        echo '</div>';
+
+                        echo '<button type="submit" class="btn btn-primary">'.$Lang->get('SUBMIT').'</button>';
+
+                        echo $this->Form->end();*/
+                        ?>
                         <form method="POST" data-ajax="true" action="<?= $this->Html->url(array('controller' => 'news', 'action' => 'add_comment')) ?>" data-callback-function="addcomment" data-success-msg="false">
                             <input name="author" value="<?= $user['pseudo'] ?>" type="hidden">
                             <input name="news_id" value="<?= $id ?>" type="hidden">
@@ -86,8 +105,11 @@
     });
 
     function comment_delete(e) {
+        var inputs = {};
         var id = $(e).attr("id");
-        $.post("<?= $this->Html->url(array('controller' => 'news', 'action' => 'ajax_comment_delete')) ?>", { id : id }, function(data) {
+        inputs["id"] = id;
+        inputs["data[_Token][key]"] = '<?= $csrfToken ?>';
+        $.post("<?= $this->Html->url(array('controller' => 'news', 'action' => 'ajax_comment_delete')) ?>", inputs, function(data) {
           if(data == 'true') {
             $('#comment-'+id).slideUp(500);
           } else {

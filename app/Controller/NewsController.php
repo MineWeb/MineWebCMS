@@ -12,15 +12,14 @@ class NewsController extends AppController {
 			if($search_news) { // si le slug existe
 				// récupération du titre la news ...
 				$id = $search_news['0']['News']['id'];
-				$this->set(compact('id'));
-				$title = $search_news['0']['News']['title']; $this->set(compact('title'));
-				$content = $search_news['0']['News']['content']; $this->set(compact('content'));
-				$author = $search_news['0']['News']['author']; $this->set(compact('author'));
-				$created = $search_news['0']['News']['created']; $this->set(compact('created'));
-				$updated = $search_news['0']['News']['updated']; $this->set(compact('updated'));
-				$comments = $search_news['0']['News']['comments']; $this->set(compact('comments'));
-				$like = $search_news['0']['News']['like']; $this->set(compact('like'));
-				$img = $search_news['0']['News']['img']; $this->set(compact('img'));
+				$title = $search_news['0']['News']['title'];
+				$content = $search_news['0']['News']['content'];
+				$author = $search_news['0']['News']['author'];
+				$created = $search_news['0']['News']['created'];
+				$updated = $search_news['0']['News']['updated'];
+				$comments = $search_news['0']['News']['comments'];
+				$like = $search_news['0']['News']['like'];
+				$img = $search_news['0']['News']['img'];
 
 				$this->set('title_for_layout',$title);
 
@@ -37,14 +36,13 @@ class NewsController extends AppController {
 						}
 						$likes = $likes_list;
 					} else {
-						$likes = array('929302');
+						$likes = array('-1');
 					}
-					$this->set(compact('likes'));
 				}
 
 				// on chercher les 4 dernières news pour la sidebar
 				$search_news = $this->News->find('all', array('limit' => '4', 'order' => 'id desc', 'conditions' => array('published' => 1))); // on cherche les 3 dernières news (les plus veille)
-				$this->set(compact('search_news')); // on envoie les données à la vue
+				$this->set(compact('search_news', 'likes', 'title', 'content', 'author', 'created', 'updated', 'id', 'comments', 'like', 'likes', 'img')); // on envoie les données à la vue
 			} else {
 				// si la news n'existe pas, msg d'erreur + redirection
 				$this->Session->setFlash($this->Lang->get('NEWS_DOESNT_EXIST'), "Default.error");

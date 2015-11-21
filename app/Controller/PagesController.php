@@ -121,12 +121,14 @@ class PagesController extends AppController {
 			$this->loadModel('Like');
 			$likes = $this->Like->find('all', array('conditions' => array('author' => $this->User->getKey('pseudo'))));
 			if(!empty($likes)) {
+				$i = 0;
 				foreach ($likes as $key => $value) {
+					$i++;
 					foreach ($search_news as $k => $v) {
                 		if($value['Like']['news_id'] == $v['News']['id']) { 
                     		$search_news[$k]['News']['liked'] = true;
-                		} else {
-                			$search_news[$k]['News']['liked'] = false;
+                		} elseif(count($likes) == $i && !isset($search_news[$k]['News']['liked'])) {
+                			$search_news[$k]['News']['liked'] = false; // si c'est le dernier like et que y'a toujours pas de like sur cette news on dis false
                 		}
                 	}
 				}

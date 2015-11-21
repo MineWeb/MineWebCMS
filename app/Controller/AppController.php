@@ -33,7 +33,7 @@ require ROOT.'/config/function.php';
  */
 class AppController extends Controller {
 	
-	var $components = array('Module', 'Session', 'Connect', 'Configuration', 'EyPlugin', 'History', 'Statistics', 'Permissions', 'Lang', 'Update', 'Server');
+	var $components = array('Module', 'Session', 'Security', 'Connect', 'Configuration', 'EyPlugin', 'History', 'Statistics', 'Permissions', 'Lang', 'Update', 'Server');
 	var $helpers = array('Session');
 
 	var $view = 'Theme';
@@ -41,6 +41,10 @@ class AppController extends Controller {
 	protected $isConnected = false;
 
 	public function beforeFilter() {
+
+		$this->Security->blackHoleCallback = 'blackhole';
+		$this->Security->validatePost = false;
+		$this->Security->csrfUseOnce = false;
 
 	/* VERIFICATION API-CMS */
 	if($this->params['controller'] != "install") {
@@ -225,6 +229,8 @@ WCqkx22behAGZq6rhwIDAQAB
         	// infos user
         	$user = ($this->isConnected) ? $this->User->getAllFromCurrentUser() : array();
 
+        	$csrfToken = $this->Session->read('_Token')['key'];
+
         	// socials links
         	$facebook_link = $this->Configuration->get('facebook');
         	$skype_link = $this->Configuration->get('skype');
@@ -233,7 +239,7 @@ WCqkx22behAGZq6rhwIDAQAB
 
 
 			// on set tout
-			$this->set(compact('nav', 'website_name', 'theme_config', 'banner_server', 'flash_messages', 'user', 'facebook_link', 'skype_link', 'youtube_link', 'twitter_link'));
+			$this->set(compact('nav', 'website_name', 'theme_config', 'banner_server', 'flash_messages', 'user', 'csrfToken', 'facebook_link', 'skype_link', 'youtube_link', 'twitter_link'));
 
 		if($this->params['controller'] == "user" OR $this->params['controller'] == "maintenance" OR $this->Configuration->get('maintenance') == '0' OR $this->isConnected AND $this->Connect->if_admin()) {
 		} else {
@@ -274,4 +280,18 @@ WCqkx22behAGZq6rhwIDAQAB
         	}
         }
     }
+
+	public function blackhole($type) {
+		if($type == "csrf") {
+			$this->autoRender = false;
+			if($this->request->is('ajax')) {
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR_CSRF')));
+				die();
+			} else {
+				$this->Session->setFlash($this->Lang->get('ERROR_CSRF'), 'default.error');
+				$this->redirect($this->referer());
+			}
+		}
+	}
+
 }
