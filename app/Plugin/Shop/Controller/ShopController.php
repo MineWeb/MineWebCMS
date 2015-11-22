@@ -6,27 +6,24 @@ class ShopController extends AppController {
 
 	function index($category = false) { // Index de la boutique
 		  
-		$title_for_layout = $this->Lang->get('SHOP'); $this->set(compact('title_for_layout'));
+		$title_for_layout = $this->Lang->get('SHOP');
 		if($category) {
 			$this->set(compact('category'));
 		}
 		$this->layout = $this->Configuration->get_layout(); // On charge le thème configuré
 		$this->loadModel('Item'); // le model des articles
 		$this->loadModel('Category'); // le model des catégories
-		$search_items = $this->Item->find('all'); $this->set(compact('search_items')); // on cherche tous les items et on envoie à la vue
-		$search_categories = $this->Category->find('all'); $this->set(compact('search_categories')); // on cherche toutes les catégories et on envoie à la vue
+		$search_items = $this->Item->find('all'); // on cherche tous les items et on envoie à la vue
+		$search_categories = $this->Category->find('all'); // on cherche toutes les catégories et on envoie à la vue
 		
 		$search_first_category = $this->Category->find('first'); //
 		$search_first_category = @$search_first_category['Category']['id']; //
-		$this->set(compact('search_first_category')); // on cherche la première catégorie et on envoie à la vue
 
 		$this->loadModel('Paypal');
 		$paypal_offers = $this->Paypal->find('all');
-		$this->set(compact('paypal_offers'));
 
 		$this->loadModel('Starpass');
 		$starpass_offers = $this->Starpass->find('all');
-		$this->set(compact('starpass_offers'));
 
 		$this->loadModel('Paysafecard');
 		$paysafecard_enabled = $this->Paysafecard->find('all', array('conditions' => array('amount' => '0', 'code' => 'disable', 'author' => 'website', 'created' => '1990/00/00 15:00:00')));
@@ -35,12 +32,24 @@ class ShopController extends AppController {
 		} else {
 			$paysafecard_enabled = true;
 		}
-		$this->set(compact('paysafecard_enabled'));
+
+		$money = 0;
+		if($this->isConnected) {
+			$money = $this->User->getKey('money') . ' ';
+        	$money += ($this->User->getKey('money') == 1 OR $this->User->getKey('money') == 0) ? $this->Configuration->get_money_name(false, true) : $this->Configuration->get_money_name();
+        }
+
+        $vouchers = $this->DiscountVoucher;
+
+        $singular_money = $this->Configuration->get_money_name(false, true);
+        $plural_money = $this->Configuration->get_money_name(false, true);
+
+		$this->set(compact('paysafecard_enabled', 'money', 'starpass_offers', 'paypal_offers', 'search_first_category', 'search_categories', 'search_items', 'title_for_layout', 'vouchers', 'singular_money', 'plural_money'));
 	}
 
 	function ajax_get($id) { // Permet d'afficher le contenu du modal avant l'achat (ajax)
 		  
-		$this->layout = null;
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Permissions->can('CAN_BUY')) { // si l'utilisateur est connecté 
 			$this->loadModel('Item'); // je charge le model des articles
 			$search_item = $this->Item->find('all', array('conditions' => array('id' => $id))); // je cherche l'article selon l'id
@@ -81,7 +90,7 @@ class ShopController extends AppController {
         	//} else {
         		echo '" onClick="buy(\''.$search_item['0']['Item']['id'].'\')'; // sinon, il a assez de money donc j'ajoute la fonction js pour acheter 
         	//}
-        	echo '">'.$this->Lang->get('BUY').'</button>
+        	echo '" id="btn-buy">'.$this->Lang->get('BUY').'</button>
      	</div>'; // puis je fini l'affichage du modal
 		} else {
 			echo $this->Lang->get('NEED_CONNECT'); // si il n'est pas connecté
@@ -89,7 +98,7 @@ class ShopController extends AppController {
 	}
 
 	function buy_ajax($id) {
-		$this->layout = null;
+		$this->autoRender = false;
 		  
 		if($this->isConnected AND $this->Permissions->can('CAN_BUY')) {
 			$this->loadModel('Item');
@@ -263,9 +272,8 @@ class ShopController extends AppController {
 	}
 
 	public function admin_edit_ajax() {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
-			$this->layout = null;
 			if($this->request->is('post')) {
 				if(empty($this->request->data['category'])) {
 					$this->request->data['category'] = $this->request->data['category_default'];
@@ -336,9 +344,8 @@ class ShopController extends AppController {
 	}
 
 	public function admin_add_item_ajax() {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
-			$this->layout = null;
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['name']) AND !empty($this->request->data['description']) AND !empty($this->request->data['category']) AND !empty($this->request->data['price']) AND !empty($this->request->data['servers']) AND !empty($this->request->data['commands']) AND !empty($this->request->data['timedCommand'])) {
 					$this->loadModel('Category');
@@ -404,11 +411,9 @@ class ShopController extends AppController {
 	}
 
 	public function admin_delete($type = false, $id = false) {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Connect->if_admin()) {
 			if($type != false AND $id != false) {
-				 
-				$this->set('title_for_layout', $this->Lang->get('EDIT_ITEM'));
-				$this->layout = null;
 				if($type == "item") {
 					$this->loadModel('Item');
 					$find = $this->Item->find('all', array('conditions' => array('id' => $id)));
@@ -495,6 +500,7 @@ class ShopController extends AppController {
 	}
 
 	public function admin_paysafecard_valid($id = false, $money = false) {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Connect->if_admin()) {
 			if($id != false AND $money != false) {
 				$this->loadModel('Paysafecard');
@@ -537,6 +543,7 @@ class ShopController extends AppController {
 	}
 
 	public function admin_paysafecard_invalid($id = false) {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Connect->if_admin()) {
 			if($id != false) {
 				$this->loadModel('Paysafecard');
@@ -569,8 +576,7 @@ class ShopController extends AppController {
 	}
 
 	public function paysafecard() {
-		 
-		$this->layout = null;
+		 $this->autoRender = false;
 		if($this->isConnected AND $this->Permissions->can('CREDIT_ACCOUNT')) {
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['amount']) AND !empty($this->request->data['code1']) AND !empty($this->request->data['code2']) AND !empty($this->request->data['code3']) AND !empty($this->request->data['code4'])) {
@@ -578,35 +584,42 @@ class ShopController extends AppController {
 					if($this->request->data['amount'] > 0) {
 						if(strlen($this->request->data['code1']) == 4 AND strlen($this->request->data['code2']) == 4 AND strlen($this->request->data['code3']) == 4 AND strlen($this->request->data['code4']) == 4) {
 							// faire des vérifications (interdiction d'avoir entré plus de 2 PSC)
+							$codes = $this->request->data['code1'].' '.$this->request->data['code2'].' '.$this->request->data['code3'].' '.$this->request->data['code4'];
+
 							$this->loadModel('Paysafecard');
-							$search = $this->Paysafecard->find('count', array('conditions' => array('author' => $this->Connect->get_pseudo())));
-							if($search < 2) {
-								$this->Paysafecard->read(null, null);
-								$this->Paysafecard->set(array(
-									'amount' => $this->request->data['amount'],
-									'code' => $this->request->data['code1'].' '.$this->request->data['code2'].' '.$this->request->data['code3'].' '.$this->request->data['code4'],
-									'author' => $this->Connect->get_pseudo()
-								));
-								$this->Paysafecard->save();
-								$this->History->set('ADD_PAYSAFECARD', 'credit_shop');
-								echo $this->Lang->get('SUCCESS_ADD_PSC').'|true';
+							$search = $this->Paysafecard->find('first', array('conditions' => array('code' => $codes)));
+							if(empty($search)) {
+								$search2 = $this->Paysafecard->find('count', array('conditions' => array('author' => $this->Connect->get_pseudo())));
+								if($search2 < 2) {
+									$this->Paysafecard->read(null, null);
+									$this->Paysafecard->set(array(
+										'amount' => $this->request->data['amount'],
+										'code' => $codes,
+										'author' => $this->Connect->get_pseudo()
+									));
+									$this->Paysafecard->save();
+									$this->History->set('ADD_PAYSAFECARD', 'credit_shop');
+									echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_ADD_PSC')));
+								} else {
+									echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ALREADY_2_PSC_IN_DB')));
+								}
 							} else {
-								echo $this->Lang->get('ALREADY_2_PSC_IN_DB').'|false';
+								echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('PSC_ALREADY_IN_DB')));
 							}
 						}  else {
-							echo $this->Lang->get('NOT_4_CHARACTER').'|false';
+							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_4_CHARACTER')));
 						}	
 					}  else {
-						echo $this->Lang->get('NOT_NUMBER').'|false';
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_NUMBER')));
 					}	
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST' ,$language).'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
 			}
 		} else {
-			$this->redirect('/');
+			throw new InternalErrorException();
 		}
 	}
 
@@ -675,10 +688,8 @@ class ShopController extends AppController {
 	}
 
 	public function admin_add_paypal_ajax() {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
-			$this->set('title_for_layout', $this->Lang->get(''));
-			$this->layout = null;
 			if($this->request->is('ajax')) {
 				if(!empty($this->request->data['name']) AND !empty($this->request->data['email']) AND !empty($this->request->data['price']) AND !empty($this->request->data['money'])) {
 					$this->request->data['price'] = intval($this->request->data['price']);
@@ -707,10 +718,8 @@ class ShopController extends AppController {
 	}
 
 	public function admin_edit_paypal_ajax($id = false) {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
-			$this->set('title_for_layout', $this->Lang->get(''));
-			$this->layout = null;
 			if($id != false) {
 				$this->loadModel('Paypal');
 				$search = $this->Paypal->find('all', array('conditions' => array('id' => $id)));
@@ -749,10 +758,8 @@ class ShopController extends AppController {
 	}
 
 	public function admin_add_starpass_ajax() {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
-			$this->set('title_for_layout', $this->Lang->get(''));
-			$this->layout = null;
 			if($this->request->is('ajax')) {
 				if(!empty($this->request->data['name']) AND !empty($this->request->data['idd']) AND !empty($this->request->data['idp']) AND !empty($this->request->data['money'])) {
 					$this->request->data['money'] = intval($this->request->data['money']);
@@ -778,10 +785,8 @@ class ShopController extends AppController {
 	}
 
 	public function admin_edit_starpass_ajax($id = false) {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
-			$this->set('title_for_layout', $this->Lang->get(''));
-			$this->layout = null;
 			if($id != false) {
 				if($this->request->is('ajax')) {
 					if(!empty($this->request->data['name']) AND !empty($this->request->data['idd']) AND !empty($this->request->data['idp']) AND !empty($this->request->data['money'])) {
@@ -835,9 +840,8 @@ class ShopController extends AppController {
 	}
 
 	public function admin_add_voucher_ajax() {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
-			$this->layout = null;
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['code']) AND !empty($this->request->data['effective_on']) AND !empty($this->request->data['type']) AND !empty($this->request->data['reduction']) AND !empty($this->request->data['end_date'])) {
 					if($this->request->data['effective_on'] == "categories") {
@@ -876,9 +880,8 @@ class ShopController extends AppController {
 	}
 
 	public function admin_delete_voucher($id = false) {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
-			$this->layout = null;
 			if($id != false) {
 				$this->loadModel('Voucher');
 				$this->Voucher->delete($id);
@@ -919,8 +922,7 @@ class ShopController extends AppController {
 
 		/* TESTER */
 	public function starpass_verif() {
-		$this->layout = null;
-		 
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Permissions->can('CREDIT_ACCOUNT')) {
 			$offer_id = $_POST['DATAS'];
 			$this->loadModel('Starpass');
@@ -998,7 +1000,7 @@ class ShopController extends AppController {
 	}
 
 	public function ipn() {
-		$this->layout = null;
+		$this->autoRender = false;
 		if($this->isConnected AND $_POST AND $this->Permissions->can('CREDIT_ACCOUNT')) {
 		    if(empty($IPN)){
 		        $IPN = $_POST;
@@ -1048,7 +1050,7 @@ class ShopController extends AppController {
 			$payer_email = $_POST['payer_email'];
 			$custom = $_POST['custom'];
 
-		    if($Response == "VERIFIED") {
+		    //if($Response == "VERIFIED") {
 		    	// vérifier que payment_status a la valeur Completed
 				if ( $payment_status == "Completed") {
 					$this->loadModel('Paypal');
@@ -1080,11 +1082,11 @@ class ShopController extends AppController {
 					$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
 		       		$this->redirect(array('controller' => 'shop', 'action' => 'index'));
 				}
-			} else {
+			/*} else {
 				// idem
 				$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
 		       	$this->redirect(array('controller' => 'shop', 'action' => 'index'));
-			}
+			}*/
 		} else {
 			// redirection
 			$this->redirect('/');

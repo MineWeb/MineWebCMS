@@ -1,32 +1,23 @@
-<?php 
-  
-App::import('Component', 'ConnectComponent');
-$this->Connect = new ConnectComponent;
-App::import('Component', 'ConfigurationComponent');
-$this->Configuration = new ConfigurationComponent;
-App::import('Component', 'Shop.DiscountVoucherComponent');
-$this->DiscountVoucher = new DiscountVoucherComponent;
-?>    
-    <?= $this->Html->css('shop-homepage.css') ?>
-    <div class="push-nav"></div>
-    <div class="container shop">
-        <div class="row">
-        	<div class="ribbon">
-        		<div class="ribbon-stitches-top"></div>
-        		<div class="ribbon-content"><p>
-        			<?php if($isConnected) { ?>
-        				<span class="pull-left hidden-xs"><?= $Lang->get('HAVE_CURRENTLY') ?> : <span class="info"><?= $this->Connect->get('money') ?><?php if($this->Connect->get('money') == 1) { echo  ' '.$this->Configuration->get_money_name(false, true); } else { echo  ' '.$this->Configuration->get_money_name(); } ?></span></span> 
-        			<?php } else { ?>
-						<span class="text-center"><?= $Lang->get('NEED_CONNECT_FOR_BUY') ?></span>
-        			<?php } ?>
-					<?php if($isConnected AND $Permissions->can('CREDIT_ACCOUNT')) { ?>
-	        			<a href="#" data-toggle="modal" data-target="#addmoney" class="btn btn-primary pull-right"><?= $Lang->get('ADD_MONEY') ?></a>
-					<?php } ?>
-        		</p></div>
-        		<div class="ribbon-stitches-bottom"></div>
-        	</div>
+<?= $this->Html->css('shop-homepage.css') ?>
+<div class="push-nav"></div>
+<div class="container shop">
+    <div class="row">
+    	<div class="ribbon">
+    		<div class="ribbon-stitches-top"></div>
+    		<div class="ribbon-content"><p>
+    			<?php if($isConnected) { ?>
+    				<span class="pull-left hidden-xs"><?= $Lang->get('HAVE_CURRENTLY') ?> : <span class="info"><?= $money ?></span></span> 
+    			<?php } else { ?>
+				    <span class="text-center"><?= $Lang->get('NEED_CONNECT_FOR_BUY') ?></span>
+    			<?php } ?>
+			     <?php if($isConnected AND $Permissions->can('CREDIT_ACCOUNT')) { ?>
+      			<a href="#" data-toggle="modal" data-target="#addmoney" class="btn btn-primary pull-right"><?= $Lang->get('ADD_MONEY') ?></a>
+			     <?php } ?>
+    		</p></div>
+    		<div class="ribbon-stitches-bottom"></div>
+    	</div>
 			<div class="shop-content">
-				<?= $this->DiscountVoucher->get_vouchers() // Les promotions en cours ?>
+				<?= $vouchers->get_vouchers() // Les promotions en cours ?>
 				<div role="tabpanel">
 
 				  <ul class="nav nav-tabs" role="tablist">
@@ -50,7 +41,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                     	<div class="caption">
                         	<?php if(isset($value['Item']['img_url'])) { ?><img src="<?= $value['Item']['img_url'] ?>" alt=""><?php } ?>
                         </div>
-                        <span class="info pull-left"><?= $value['Item']['price'] ?><?php if($value['Item']['price'] == 1) { echo  ' '.$this->Configuration->get_money_name(false, true); } else { echo  ' '.$this->Configuration->get_money_name(); } ?></span>
+                        <span class="info pull-left"><?= $value['Item']['price'] ?><?php if($value['Item']['price'] == 1) { echo  ' '.$singular_money; } else { echo  ' '.$plural_money; } ?></span>
                         <?php if($isConnected AND $Permissions->can('CAN_BUY')) { ?><button class="btn btn-primary btn-clear pull-right" onClick="affich_item('<?= $value['Item']['id'] ?>')"><?= $Lang->get('BUY') ?></button> <?php } ?>
                         <div class="clearfix"></div>
                     </div>
@@ -76,12 +67,13 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
     <script type="text/javascript">
         function affich_item(id) {
           $('#buy').modal();
+          $("#content_buy").hide().html('<div class="alert alert-info"><?= $Lang->get('LOADING') ?>...</div>').fadeIn('250');
           $.ajax({
             url: '<?= $this->Html->url(array('controller' => 'shop/ajax_get', 'plugin' => 'shop')); ?>/'+id,
             type : 'GET',
             dataType : 'html',
             success: function(response) {
-                $("#content_buy").html(response);
+                $("#content_buy").hide().html(response).fadeIn('250');
             },
             error: function(xhr) {
                 alert('ERROR');
@@ -91,16 +83,22 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
         function buy(id) {
           $('#buy').modal();
           var code = $('#code-voucher').val();
+          $('#btn-buy').attr('disabled', true);
+          $('#btn-buy').addClass('disabled');
           $.ajax({
             url: '<?= $this->Html->url(array('controller' => 'shop/buy_ajax', 'plugin' => 'shop')); ?>/'+id,
             data : { code : code },
             type : 'GET',
             dataType : 'html',
             success: function(response) {
-                $("#msg_buy").hide().html(response).fadeIn('1500');
+              $('#btn-buy').attr('disabled', false);
+              $('#btn-buy').removeClass('disabled');
+              $("#msg_buy").hide().html(response).fadeIn('1500');
             },
             error: function(xhr) {
-                alert('ERROR');
+              $('#btn-buy').attr('disabled', false);
+              $('#btn-buy').removeClass('disabled');
+              alert('ERROR');
             }
           });
         }
@@ -138,7 +136,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                     <div class="form-group col-md-8">
                       <select class="form-control" name="offer">
                         <?php foreach ($starpass_offers as $key => $value) { ?>
-                          <option value="<?= $value['Starpass']['id'] ?>"><?= $value['Starpass']['money'] ?> <?= $this->Configuration->get_money_name() ?></option>
+                          <option value="<?= $value['Starpass']['id'] ?>"><?= $value['Starpass']['money'] ?> <?= $plural_money ?></option>
                         <?php } ?>
                       </select>
                     </div>
@@ -163,15 +161,15 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                   
                   <input name="business" id="mail_paypal" type="hidden" value="<?= $paypal_offers[0]['Paypal']['email'] ?>" />
                   
-                  <input name="item_name" type="hidden" value="Des <?= $this->Configuration->get_money_name() ?> sur <?= $this->Configuration->get('name') ?>" />
+                  <input name="item_name" type="hidden" value="Des <?= $plural_money ?> sur <?= $website_name ?>" />
                   <input name="no_note" type="hidden" value="1" />
                   <input name="lc" type="hidden" value="FR" />
-                  <input name="custom" type="hidden" value="<?= $this->Connect->get_pseudo() ?>">
+                  <input name="custom" type="hidden" value="<?= $user['pseudo'] ?>">
                   <input name="bn" type="hidden" value="PP-BuyNowBF" />
                   <div class="form-group col-md-8">
                     <select class="form-control" onchange="{if(this.options[this.selectedIndex].onclick != null){this.options[this.selectedIndex].onclick(this);}}" name="amount" id="amount">
                       <?php foreach ($paypal_offers as $key => $value) { ?>
-                        <option onClick="$('#mail_paypal').val('<?= $value['Paypal']['email'] ?>')" value="<?= $value['Paypal']['price'] ?>"><?= $value['Paypal']['money'] ?> <?= $this->Configuration->get_money_name() ?></option>
+                        <option onClick="$('#mail_paypal').val('<?= $value['Paypal']['email'] ?>')" value="<?= $value['Paypal']['price'] ?>"><?= $value['Paypal']['money'] ?> <?= $plural_money ?></option>
                       <?php } ?>
                     </select>
                   </div>
@@ -184,29 +182,29 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
             <a class="btn btn-info btn-block" data-toggle="collapse" href="#PaySafeCard" aria-expanded="false" aria-controls="PaySafeCard">PaySafeCard</a>
             <br>
             <div class="collapse" id="PaySafeCard">
-              <form class="form-inline" id="add-psc">
+              <form class="form-inline" data-ajax="true" action="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'paysafecard')) ?>">
                 <div class="ajax-msg"></div>
                 <div class="form-group" style="margin-right:20px;">
                   <label class="sr-only"><?= $Lang->get('AMOUNT') ?></label>
                   <div class="input-group">
-                    <input type="text" class="form-control" name="amount" placeholder="100" maxlength="3" tabindex="1" onkeyup="Autotab(2, this.size, this.value)" style="width:60px;">
+                    <input type="text" class="form-control" name="amount" placeholder="XXX" data-type="numbers" maxlength="3" tabindex="1" style="width:60px;">
                     <div class="input-group-addon">€</div>
                   </div>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control" name="code1" placeholder="XXXX" tabindex="2" onkeyup="Autotab(3, this.size, this.value)" maxlength="4" style="width:60px;">
+                  <input type="text" class="form-control" name="code1" placeholder="XXXX" data-type="numbers" tabindex="2" maxlength="4" style="width:60px;">
                 </div>
                 -
                 <div class="form-group">
-                  <input type="text" class="form-control" name="code2" placeholder="XXXX" tabindex="3" onkeyup="Autotab(4, this.size, this.value)" maxlength="4" style="width:60px;">
+                  <input type="text" class="form-control" name="code2" placeholder="XXXX" data-type="numbers" tabindex="3" maxlength="4" style="width:60px;">
                 </div>
                 -
                 <div class="form-group">
-                  <input type="text" class="form-control" name="code3" placeholder="XXXX" tabindex="4" onkeyup="Autotab(5, this.size, this.value)" maxlength="4" style="width:60px;">
+                  <input type="text" class="form-control" name="code3" placeholder="XXXX" data-type="numbers" tabindex="4" maxlength="4" style="width:60px;">
                 </div>
                 -
                 <div class="form-group">
-                  <input type="text" class="form-control" name="code4" placeholder="XXXX" maxlength="4" tabindex="5" style="width:60px;">
+                  <input type="text" class="form-control" name="code4" placeholder="XXXX" data-type="numbers" maxlength="4" tabindex="5" style="width:60px;">
                 </div>
                 <button type="submit" class="btn btn-default pull-right"><?= $Lang->get('SUBMIT') ?></button>
               </form>
@@ -223,32 +221,3 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
     </div>
   </div>
 </div>
-<script>
-$("#add-psc").submit(function( event ) {
-    var $form = $( this );
-    var amount = $form.find("input[name='amount']").val();
-    var code1 = $form.find("input[name='code1']").val();
-    var code2 = $form.find("input[name='code2']").val();
-    var code3 = $form.find("input[name='code3']").val();
-    var code4 = $form.find("input[name='code4']").val();
-    $.post("<?= $this->Html->url(array('controller' => 'shop', 'action' => 'paysafecard')) ?>", { amount : amount, code1 : code1, code2 : code2, code3 : code3, code4 : code4 }, function(data) {
-        data2 = data.split("|");
-        if(data.indexOf('true') != -1) {
-              $('.ajax-msg').empty().html('<div class="alert alert-success" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-            } else if(data.indexOf('false') != -1) {
-              $('.ajax-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-          } else {
-          $('.ajax-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
-        }
-    });
-    return false;
-});
-
-function Autotab(box, longueur, texte)
-{
-    if (texte.length > longueur-1) 
-    {
-        document.getElementById('TB'+box).focus();
-    }
-}
-</script>

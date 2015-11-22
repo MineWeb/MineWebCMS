@@ -1,4 +1,6 @@
 {
+    "ALREADY_2_PSC_IN_DB":"Vous avez déjà 2 PaySafeCard en attente",
+    "PSC_ALREADY_IN_DB":"Vous avez déjà cette PaySafeCard en attente",
     "SHOP": "Boutique",
     "MANAGE_VOUCHERS": "G\u00e9rer les codes promotionnels",
     "BUY": "Acheter",

@@ -156,10 +156,41 @@ $(document).ready(function(){
         form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b>'+ERROR_MSG+' :</b> '+json.msg+'</i></div>').fadeIn(500);
         submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
       } else {
-        form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b>'+ERROR_MSG+'> :</b> '+INTERNAL_ERROR_MSG+'</i></div>');
+        form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b>'+ERROR_MSG+' :</b> '+INTERNAL_ERROR_MSG+'</i></div>');
         submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
       }
     });
+  });
+
+  function isNumber(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+  }
+
+  // type (numbers)
+  $('body').find('input[data-type]').each(function(e) {
+    var element = $(this);
+    element.on('keyup', function(e) {
+      var last_char = element.val().substr(element.val().length - 1);
+      var val_without_last = element.val().substr(0, element.val().length - 1);
+      if(element.attr('data-type') == "numbers") {
+        if(!isNumber(element.val())) {
+          element.val(val_without_last);
+        }
+      }
+    });
+  });
+
+  // Autotab 
+
+  $('body').find('input[maxlength]').each(function(e) {
+    var all_inputs = $('body').find('input[maxlength]');
+    var element = $(this);
+    element.on('keyup', function(e) {
+      if(element.attr('maxlength') <= element.val().length) {
+        var next_tab_index = parseInt(element.attr('tabindex'))+1;
+        $('body').find('input[maxlength][tabindex="'+next_tab_index+'"]').focus();
+      }
+    })
   });
             
 
