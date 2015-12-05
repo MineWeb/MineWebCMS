@@ -54,7 +54,7 @@ class UpdateComponent extends Object {
 
 	public function get_version() {
 		// va check la dernière version sur mineweb.org
-		$get = @file_get_contents('http://mineweb.org/api/get_update');
+		$get = @file_get_contents('http://mineweb.org/api/v1/get_update');
 		$get = json_decode($get, true);
 		return $get['last_version'];
 	}
@@ -63,7 +63,7 @@ class UpdateComponent extends Object {
 
 		// récupérer les fichiers mis à jour sur mineweb.org (le zip dans un dossier temp)
 
-		$url = 'http://mineweb.org/api/update/';
+		$url = 'http://mineweb.org/api/v1/update/';
 		$secure = file_get_contents(ROOT.'/config/secure');
 		$secure = json_decode($secure, true);
 		$postfields = array(
@@ -114,14 +114,14 @@ WCqkx22behAGZq6rhwIDAQAB
 
 	public function get_type() {
 		// récupére le type de la dernière màj (forcé ou pas)
-		$get = @file_get_contents('http://mineweb.org/api/get_update');
+		$get = @file_get_contents('http://mineweb.org/api/v1/get_update');
 		$get = json_decode($get, true);
 		return $get['type'];
 	}
 
 	public function get_visible() {
 		// récupére si la màj est signaler à l'utilisateur ou pas
-		$get = @file_get_contents('http://mineweb.org/api/get_update');
+		$get = @file_get_contents('http://mineweb.org/api/v1/get_update');
 		$get = json_decode($get, true);
 		return $get['visible'];
 	}

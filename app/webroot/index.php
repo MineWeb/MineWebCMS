@@ -93,7 +93,7 @@ if(!file_exists(ROOT.DS.'config'.DS.'install.txt')) {
 	$GD2 = function_exists('imagettftext');
 	$zip = function_exists('zip_open');
 	$openssl = function_exists('openssl_pkey_new');
-	$allow_url_fopen = @file_get_contents('http://mineweb.org/api/getFreeThemes');
+	$allow_url_fopen = @file_get_contents('http://mineweb.org/api/v1/getFreeThemes');
 	if($allow_url_fopen) {
 	    $allow_url_fopen = true;
 	}

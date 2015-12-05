@@ -84,7 +84,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 				$plugins[$value]['version'] = $this->EyPlugin->get('version', $value['plugins']['name']);
 			}*/
 
-			$url = 'http://mineweb.org/api/key_verif/';
+			$url = 'http://mineweb.org/api/v1/key_verif/';
 			$secure = file_get_contents(ROOT.'/config/secure');
 			$secure = json_decode($secure, true);
 			$postfields = array(

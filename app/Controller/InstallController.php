@@ -37,7 +37,7 @@ class InstallController extends AppController {
 			 
 			$this->set('title_for_layout',$this->Lang->get('INSTALL'));
 
-			$url = 'http://mineweb.org/api/key_verif/';
+			$url = 'http://mineweb.org/api/v1/key_verif/';
 			$secure = file_get_contents(ROOT.'/config/secure');
 			$secure = @json_decode($secure, true);
 			if($secure['key'] != "NOT_INSTALL") {
@@ -66,7 +66,7 @@ class InstallController extends AppController {
 				 
 				if(!empty($this->request->data['key'])) {
 					
-					$url = 'http://mineweb.org/api/key_verif/';
+					$url = 'http://mineweb.org/api/v1/key_verif/';
 					$secure = file_get_contents(ROOT.'/config/secure');
 					$secure = json_decode($secure, true);
 					$postfields = array(

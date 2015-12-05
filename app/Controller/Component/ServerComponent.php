@@ -170,7 +170,7 @@ class ServerComponent extends Object {
 
 	function get($type) {
 		if($type == "secret_key") {
-			$url = 'http://mineweb.org/api/get_secret_key/';
+			$url = 'http://mineweb.org/api/v1/get_secret_key/';
 			$secure = file_get_contents(ROOT.'/config/secure');
 		    $secure = json_decode($secure, true);
 		    $postfields = array(

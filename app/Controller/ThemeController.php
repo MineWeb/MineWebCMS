@@ -27,7 +27,7 @@ class ThemeController extends AppController{
 			    	$themes[$value]['version'] = $config['version'];
 			    }
 
-			    $free_themes_available = file_get_contents('http://mineweb.org/api/getFreeThemes');
+			    $free_themes_available = file_get_contents('http://mineweb.org/api/v1/getFreeThemes');
 			    $free_themes_available = json_decode($free_themes_available, true);
 			    foreach ($free_themes_available as $key => $value) {
 			      if(!in_array(ucfirst(strtolower($value['name'])), $list_themes)) {
@@ -38,7 +38,7 @@ class ThemeController extends AppController{
 			    // themes payés
 			    $secure = file_get_contents(ROOT.'/config/secure');
     			$secure = json_decode($secure, true);
-			    $purchased_themes = @file_get_contents('http://mineweb.org/api/getPurchasedThemes/'.$secure['id']);
+			    $purchased_themes = @file_get_contents('http://mineweb.org/api/v1/getPurchasedThemes/'.$secure['id']);
 			    $purchased_themes = json_decode($purchased_themes, true);
 			    if(@$purchased_themes['status'] == "success") {
 				    foreach ($purchased_themes['success'] as $key => $value) {
@@ -48,7 +48,7 @@ class ThemeController extends AppController{
 				    }
 				}
 
-			    $getAllThemes = file_get_contents('http://mineweb.org/api/getAllThemes');
+			    $getAllThemes = file_get_contents('http://mineweb.org/api/v1/getAllThemes');
 			    $getAllThemes = json_decode($getAllThemes, true);
 
 			    foreach ($getAllThemes as $key => $value) {
@@ -125,7 +125,7 @@ class ThemeController extends AppController{
 			if($theme_id != false AND $theme_name != false) {
 
 				// get du zip sur mineweb.org
-			    $url = 'http://mineweb.org/api/get_theme/'.$theme_id;
+			    $url = 'http://mineweb.org/api/v1/get_theme/'.$theme_id;
 			    $secure = file_get_contents(ROOT.'/config/secure');
 			    $secure = json_decode($secure, true);
 			    $postfields = array(
@@ -189,7 +189,7 @@ WCqkx22behAGZq6rhwIDAQAB
 			if($theme_id != false AND $theme_name != false) {
 
 				// get du zip sur mineweb.org
-			    $url = 'http://mineweb.org/api/get_theme/'.$theme_id;
+			    $url = 'http://mineweb.org/api/v1/get_theme/'.$theme_id;
 			    $secure = file_get_contents(ROOT.'/config/secure');
 			    $secure = json_decode($secure, true);
 			    $postfields = array(
