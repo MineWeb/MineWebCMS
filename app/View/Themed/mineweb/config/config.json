@@ -1,5 +1,7 @@
 {
     "navbar": "navbar2",
     "favicon_url": "",
-    "version": "0.1"
+    "version": "0.1",
+    "author":"Eywek",
+    "apiID":1
 }

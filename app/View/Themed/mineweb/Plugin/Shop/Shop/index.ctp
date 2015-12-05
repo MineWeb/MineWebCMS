@@ -67,7 +67,7 @@
     <script type="text/javascript">
         function affich_item(id) {
           $('#buy').modal();
-          $("#content_buy").hide().html('<div class="alert alert-info"><?= $Lang->get('LOADING') ?>...</div>').fadeIn('250');
+          $("#content_buy").hide().html('<div class="modal-body"><div class="alert alert-info"><?= $Lang->get('LOADING') ?>...</div></div>').fadeIn('250');
           $.ajax({
             url: '<?= $this->Html->url(array('controller' => 'shop/ajax_get', 'plugin' => 'shop')); ?>/'+id,
             type : 'GET',
