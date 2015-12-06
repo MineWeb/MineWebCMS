@@ -17,19 +17,19 @@ class ModuleComponent extends Object {
     private function loadPlugins() { // on donne une liste des plugins
     	App::import('Component', 'EyPluginComponent'); // on charge le composant des plugins
     	$this->EyPlugin = new EyPluginComponent;
-    	return $this->EyPlugin->get_list(); // et on retourne la liste
+    	return $this->EyPlugin->getPluginsActive(); // et on retourne la liste
     }
 
     private function listModules() { // on fais une liste des modules disponibles parmis les plugins
     	$plugins = $this->loadPlugins();
     	foreach ($plugins as $key => $value) {
-    		$folder = @scandir(ROOT.'/app/Plugin/'.$value['plugins']['name'].'/Modules');
+    		$folder = @scandir(ROOT.'/app/Plugin/'.$value->slug.'/Modules');
     		if($folder) {
 			    $folder = array_delete_value($folder, '.');
 			    $folder = array_delete_value($folder, '..');
 			    $folder = array_delete_value($folder, '.DS_Store');
 			    foreach ($folder as $k => $v) {
-			    	$modules[explode('.', $v)[0]][] = $value['plugins']['name'];
+			    	$modules[explode('.', $v)[0]][] = $value->slug;
 			    }
 			}
     	}

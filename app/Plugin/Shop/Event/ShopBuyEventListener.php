@@ -1,7 +1,7 @@
 <?php
 App::uses('CakeEventListener', 'Event');
 
-class BuyEventListener implements CakeEventListener {
+class ShopBuyEventListener implements CakeEventListener {
     public function implementedEvents() {
         return array(
             'afterBuy' => 'afterBuy',

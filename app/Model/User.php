@@ -165,17 +165,17 @@ class User extends AppModel {
           		'pseudo' => $username,
         	)
     	));
-    	return ($search_user) ? $search_user['User'][$key] : '';
+    	return ($search_user) ? $search_user['User'][$key] : NULL;
   	}
 
   	public function getAllFromCurrentUser() {
     	if(CakeSession::check('user')) {
       		$search_user = $this->getDataBySession(CakeSession::read('user'));
-      		return ($search_user) ? $search_user['User'] : '';
+      		return ($search_user) ? $search_user['User'] : NULL;
     	}
   	}
 
-  	public function setFromUser($key, $value, $username) {
+  	public function setToUser($key, $value, $username) {
     	$search_user = $this->find('all', array(
       		'conditions' => array(
           		'pseudo' => $username,

@@ -1,10 +1,10 @@
-CREATE TABLE IF NOT EXISTS `categories` (
+CREATE TABLE IF NOT EXISTS `shop__categories` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
-CREATE TABLE IF NOT EXISTS `items` (
+
+CREATE TABLE IF NOT EXISTS `shop__items` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `description` text NOT NULL,
@@ -20,8 +20,8 @@ CREATE TABLE IF NOT EXISTS `items` (
   `timedCommand_time` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
-CREATE TABLE IF NOT EXISTS `paypals` (
+
+CREATE TABLE IF NOT EXISTS `shop__paypals` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `email` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -30,8 +30,8 @@ CREATE TABLE IF NOT EXISTS `paypals` (
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
-CREATE TABLE IF NOT EXISTS `paysafecards` (
+
+CREATE TABLE IF NOT EXISTS `shop__paysafecards` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `amount` varchar(3) NOT NULL,
   `code` varchar(20) NOT NULL,
@@ -39,8 +39,8 @@ CREATE TABLE IF NOT EXISTS `paysafecards` (
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
-CREATE TABLE IF NOT EXISTS `paysafecard_messages` (
+
+CREATE TABLE IF NOT EXISTS `shop__paysafecard_messages` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `to` varchar(50) NOT NULL,
   `type` int(1) NOT NULL,
@@ -48,8 +48,8 @@ CREATE TABLE IF NOT EXISTS `paysafecard_messages` (
   `added_points` int(5) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
-CREATE TABLE IF NOT EXISTS `starpasses` (
+
+CREATE TABLE IF NOT EXISTS `shop__starpasses` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `money` int(20) NOT NULL,
@@ -58,8 +58,8 @@ CREATE TABLE IF NOT EXISTS `starpasses` (
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
-CREATE TABLE IF NOT EXISTS `vouchers` (
+
+CREATE TABLE IF NOT EXISTS `shop__vouchers` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `code` varchar(20) NOT NULL,
   `type` int(1) NOT NULL DEFAULT '1',

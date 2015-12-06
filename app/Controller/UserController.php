@@ -167,18 +167,20 @@ class UserController extends AppController {
 
 	function profile() {
 		if($this->isConnected) {
+
+			$this->loadModel('User');
 			 
-			$this->set('title_for_layout', $this->Connect->get_pseudo());
+			$this->set('title_for_layout', $this->User->getKey('pseudo'));
 			$this->layout= $this->Configuration->get_layout();
-			if($this->EyPlugin->is_installed('Shop')) {
+			if($this->EyPlugin->isInstalled('Shop')) {
 
 				$this->set('shop_active', true);
 
 				$this->loadModel('PaysafecardMessage');
-				$search_psc_msg = $this->PaysafecardMessage->find('all', array('conditions' => array('to' => $this->Connect->get_pseudo())));
+				$search_psc_msg = $this->PaysafecardMessage->find('all', array('conditions' => array('to' =>  $this->User->getKey('pseudo'))));
 				if(!empty($search_psc_msg)) {
 					$this->set(compact('search_psc_msg'));
-					$this->PaysafecardMessage->deleteAll(array('to' => $this->Connect->get_pseudo()));
+					$this->PaysafecardMessage->deleteAll(array('to' =>  $this->User->getKey('pseudo')));
 				} else {
 					$this->set('search_psc_msg', false);
 				}
@@ -196,7 +198,7 @@ class UserController extends AppController {
 			}
 			$this->set(compact('available_ranks'));
 
-			$api = $this->API->getIp($this->Connect->get('pseudo'));
+			$api = $this->API->getIp($this->User->getKey('pseudo'));
 			$this->set(compact('api'));
 
 			$this->set('can_cape', $this->API->can_cape());
@@ -321,7 +323,7 @@ class UserController extends AppController {
 					$password = password($this->request->data['password']);
 					$password_confirmation = password($this->request->data['password_confirmation']);
 					if($password == $password_confirmation) {
-						$this->Connect->set('password', $password);
+						$this->User->setKey('password', $password);
 						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('PASSWORD_CHANGE_SUCCESS')));
 					} else {
 						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('PASSWORD_NOT_SAME')));
@@ -344,7 +346,7 @@ class UserController extends AppController {
 				if(!empty($this->request->data['email']) AND !empty($this->request->data['email_confirmation'])) {
 					if($this->request->data['email'] == $this->request->data['email_confirmation']) {
 						if(filter_var($this->request->data['email'], FILTER_VALIDATE_EMAIL)) {
-							$this->Connect->set('email', $this->request->data['email']);
+							$this->User->setKey('email', $this->request->data['email']);
 							echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('EMAIL_CHANGE_SUCCESS')));
 						} else {
 							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('EMAIL_NOT_VALIDATE')));
@@ -368,14 +370,14 @@ class UserController extends AppController {
 		if($this->isConnected) {
 			if($this->request->is('ajax')) {
 				if(!empty($this->request->data['to']) AND !empty($this->request->data['how'])) {
-					if($this->Connect->user_exist($this->request->data['to'])) {
+					if($this->User->exist($this->request->data['to'])) {
 						$how = intval($this->request->data['how']);
 						if($how > 0) {
-							$money_user = $this->Connect->get('money') - $how;
+							$money_user = $this->User->getKey('money') - $how;
 							if($money_user >= 0) {
-								$this->Connect->set('money', $money_user);
-								$to_money = $this->Connect->get_to_user('money', $this->request->data['to']) + $how;
-								$this->Connect->set_to_user('money', $to_money, $this->request->data['to']);
+								$this->User->setKey('money', $money_user);
+								$to_money = $this->User->getFromUser('money', $this->request->data['to']) + $how;
+								$this->User->setToUser('money', $to_money, $this->request->data['to']);
 								$this->History->set('SEND_MONEY', 'shop', $this->request->data['to'].'|'.$how);
 								echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('POINTS_SUCCESS_SEND')));
 							} else {
@@ -399,7 +401,7 @@ class UserController extends AppController {
 	}
 
 	function admin_index() {
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			 
 			$this->set('title_for_layout',$this->Lang->get('USER'));
 			$this->layout = 'admin';
@@ -420,7 +422,7 @@ class UserController extends AppController {
 	}
 
 	function admin_edit($id = false) {
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($id != false) {
 				 
 				$this->layout = 'admin';
@@ -461,7 +463,7 @@ class UserController extends AppController {
 
 	function admin_edit_ajax() {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($this->request->is('post')) {
 				$this->loadModel('User');
 				if(!empty($this->request->data['pseudo']) AND !empty($this->request->data['email'])) {
@@ -477,7 +479,7 @@ class UserController extends AppController {
 						if($key == "rank" AND $value == "member") {
 							$value = 0;
 						}
-						$this->Connect->set_to_user($key, $value, $this->request->data['pseudo']);
+						$this->User->setToUser($key, $value, $this->request->data['pseudo']);
 					}
 					$this->History->set('EDIT_USER', 'user');
 					$this->Session->setFlash($this->Lang->get('USER_SUCCESS_EDIT'), 'default.success');
@@ -495,7 +497,7 @@ class UserController extends AppController {
 
 	function admin_delete($id = false) {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->Connect->isAdmin()) {
 			if($id != false) {
 				$this->loadModel('User');
 				$find = $this->User->find('all', array('conditions' => array('id' => $id)));

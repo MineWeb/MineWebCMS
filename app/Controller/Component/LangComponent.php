@@ -54,8 +54,8 @@ class LangComponent extends Object {
 
 		App::import('Component', 'EyPlugin');
 		$this->EyPlugin = new EyPluginComponent();
-		foreach ($this->EyPlugin->get_list() as $key => $value) {
-			$name = $value['plugins']['name'];
+		foreach ($this->EyPlugin->getPluginsActive() as $key => $value) {
+			$name = $value->slug;
 			if(file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/'.$language.'.json')) {
 				$pl_language_file = file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/'.$language.'.json');
 				$pl_language_file = json_decode($pl_language_file, true);
@@ -154,8 +154,8 @@ class LangComponent extends Object {
 		} else { // sinon je vérifie si c'est un msg de plugin
 		 	App::import('Component', 'EyPlugin');
     		$this->EyPlugin = new EyPluginComponent();
-			foreach ($this->EyPlugin->get_list() as $key => $value) {
-				$name = $value['plugins']['name'];
+			foreach ($this->EyPlugin->getPluginsActive() as $key => $value) {
+				$name = $value->slug;
 				if(file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/'.$language.'.json')) {
 					$language_file = file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/'.$language.'.json');
 					$language_file = json_decode($language_file, true);

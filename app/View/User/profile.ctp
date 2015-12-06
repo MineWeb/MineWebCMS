@@ -1,5 +1,4 @@
 <?php 
-$this->Connect = new ConnectComponent;
 $this->EyPlugin = new EyPluginComponent;
 $this->Configuration = new ConfigurationComponent;
 ?>
@@ -21,33 +20,33 @@ $this->Configuration = new ConfigurationComponent;
 			  	?>
 
 			  	<div class="section">
-					<p><b><?= $Lang->get('PSEUDO') ?> :</b> <?= $this->Connect->get('pseudo'); ?></p>
+					<p><b><?= $Lang->get('PSEUDO') ?> :</b> <?= $user['pseudo'] ?></p>
 				</div>
 				<div class="section">
-					<p><b><?= $Lang->get('EMAIL') ?> :</b> <span id="email"><?= $this->Connect->get('email'); ?></span></p>
+					<p><b><?= $Lang->get('EMAIL') ?> :</b> <span id="email"><?= $user['email'] ?></span></p>
 				</div>
 				<div class="section">
 					<p>
 						<b><?= $Lang->get('RANK') ?> :</b> 
 						<?php foreach ($available_ranks as $key => $value) {
-							if($this->Connect->get('rank') == $key) {
+							if($user['rank'] == $key) {
 								echo $value;
 							}
 						} ?>
 					</p>
 				</div>
-				<?php if($this->EyPlugin->is_installed('Shop')) { ?>
+				<?php if($this->EyPlugin->isInstalled('Shop')) { ?>
 					<div class="section">
-						<p><b><?= $Lang->get('MONEY') ?> :</b> <span class="money"><?= $this->Connect->get('money'); ?></span></p>
+						<p><b><?= $Lang->get('MONEY') ?> :</b> <span class="money"><?= $user['money'] ?></span></p>
 					</div>
 				<?php } ?>
 
 				<div class="section">
-					<p><b><?= $Lang->get('IP') ?> :</b> <?= $this->Connect->get('ip'); ?></p>
+					<p><b><?= $Lang->get('IP') ?> :</b> <?= $user['ip'] ?></p>
 				</div>
 
 				<div class="section">
-					<p><b><?= $Lang->get('CREATED') ?> :</b> <?= $Lang->date($this->Connect->get('created')) ?></p>
+					<p><b><?= $Lang->get('CREATED') ?> :</b> <?= $Lang->date($user['created']) ?></p>
 				</div>
 
 				<hr>
@@ -150,7 +149,7 @@ $this->Configuration = new ConfigurationComponent;
 					<div class="row">
 						
 						<div class="ajax-msg-mineguard"></div>
-						<?php if($this->Connect->get('allowed_ip') == '0') { ?>
+						<?php if($user['allowed_ip'] == '0') { ?>
 							<button onClick="enableMineGuard();" class="btn btn-block btn-success"><?= $Lang->get('ENABLE') ?></button>
 						<?php } else { ?>
 							<button onClick="disableMineGuard();" class="btn btn-block btn-danger"><?= $Lang->get('DISABLE') ?></button>

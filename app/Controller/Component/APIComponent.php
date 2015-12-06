@@ -16,8 +16,6 @@ class APIComponent extends Object {
     	$this->Lang = new LangComponent();
     	App::import('Component', 'ConfigurationComponent');
     	$this->Configuration = new ConfigurationComponent();
-    	App::import('Component', 'ConnectComponent');
-    	$this->Connect = new ConnectComponent();
 
     	$this->User = ClassRegistry::init('User');
 
@@ -67,7 +65,7 @@ class APIComponent extends Object {
     		if($skin_search['ApiConfiguration']['skin_free'] == 1) {
     			return true;
     		} else {
-    			$skin = $this->Connect->get('skin');
+    			$skin = $this->User->getKey('skin');
     			if($skin == 1) {
     				return true;
     			} else {
@@ -85,7 +83,7 @@ class APIComponent extends Object {
     		if($cape_search['ApiConfiguration']['skin_free'] == 1) {
     			return true;
     		} else {
-    			$cape = $this->Connect->get('cape');
+    			$cape = $this->User->getKey('cape');
     			if($cape == 1) {
     				return true;
     			} else {
@@ -341,9 +339,9 @@ SUVORK5CYII='));
 	public function setIp($username, $ip) {
 		if($this->mineguard_active) {
 			if(!empty($username) AND !empty($ip)) {
-	 			$ip_list = unserialize($this->Connect->get_to_user('allowed_ip', $username));
+	 			$ip_list = unserialize($this->User->getFromUser('allowed_ip', $username));
 	 			$ip_list[] = $ip;
-		 		$this->Connect->set_to_user('allowed_ip', serialize($ip_list), $username);
+		 		$this->User->setToUser('allowed_ip', serialize($ip_list), $username);
 		 		return true;
 			} else {
 				return false;
@@ -356,10 +354,10 @@ SUVORK5CYII='));
 	public function removeIp($username, $ip) {
 		if($this->mineguard_active) {
 			if(!empty($username) AND isset($ip)) {
-	 			$ip_list = unserialize($this->Connect->get_to_user('allowed_ip', $username));
+	 			$ip_list = unserialize($this->User->getFromUser('allowed_ip', $username));
 	 			if(!empty($ip_list)) {
 		 			unset($ip_list[$ip]);
-		 			$this->Connect->set_to_user('allowed_ip', serialize($ip_list), $username);
+		 			$this->User->setToUser('allowed_ip', serialize($ip_list), $username);
 		 		}
 		 		return true;
 			} else {

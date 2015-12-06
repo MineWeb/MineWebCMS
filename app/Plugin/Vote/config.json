@@ -4,8 +4,8 @@
 	"nav":true,
 	"admin":false,
 	"author":"Eywek",
-	"version":"0.1",
-	"plugin_id":"3",
+	"version":"0.1.0",
+	"apiID":3,
 	"useEvents":true,
 	"permissions" : {
 		"available" : ["VOTE_SHOW_REWARDS", "VOTE_SHOW_RANKING", "VOTE"],

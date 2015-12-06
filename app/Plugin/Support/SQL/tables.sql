@@ -1,4 +1,4 @@
-CREATE TABLE `tickets` (
+CREATE TABLE `support__tickets` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `title` varchar(50) NOT NULL,
   `content` text NOT NULL,
@@ -8,8 +8,8 @@ CREATE TABLE `tickets` (
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
-CREATE TABLE `reply_tickets` (
+
+CREATE TABLE `support__reply_tickets` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `ticket_id` int(20) NOT NULL,
   `reply` text NOT NULL,
