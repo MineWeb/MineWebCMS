@@ -9,53 +9,50 @@ $this->EyPlugin = new EyPluginComponent;
           <h3 class="box-title"><?= $Lang->get('PLUGINS_LIST') ?></h3>
         </div>
         <div class="box-body">
-        
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th><?= $Lang->get('NAME') ?></th>
-                <th><?= $Lang->get('AUTHOR') ?></th>
-                <th><?= $Lang->get('CREATED') ?></th>
-                <th><?= $Lang->get('VERSION') ?></th>
-                <th><?= $Lang->get('STATE') ?></th>
-                <th><?= $Lang->get('ACTION') ?></th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php 
-              $plugin_list = $this->EyPlugin->get_list();
-              if($plugin_list != false) {
-                foreach ($plugin_list as $key => $value) { ?>
+          <?php
+          $pluginList = $this->EyPlugin->loadPlugins();
+            if(!empty($pluginList)) {
+          ?>
+            <table class="table table-bordered">
+              <thead>
                 <tr>
-                  <td><?= $value['plugins']['name'] ?></td>
-                  <td><?= $value['plugins']['author'] ?></td>
-                  <td><?= $Lang->date($value['plugins']['created']) ?></td>
-                  <td><?= $value['plugins']['version'] ?></td>
-                  <td>
-                    <?php
-                    if($value['plugins']['state'] == 1) {
-                      echo '<span class="label label-success">'.$Lang->get('ENABLED').'</span>';
-                    } else {
-                      echo '<span class="label label-danger">'.$Lang->get('DISABLED').'</span>';
-                    }
-                    ?>
-                  </td>
-                  <td>
-                    <?php if($value['plugins']['state'] == 1) { ?>
-                      <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'disable/'.$value['plugins']['id'], 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('DISABLED') ?></a>
-                     <?php } else { ?>
-                      <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'enable/'.$value['plugins']['id'], 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('ENABLED') ?></a>
-                     <?php } ?>
-                    <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete/'.$value['plugins']['id'], 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>
-                    <?php if($value['plugins']['version'] != $this->EyPlugin->get_last_version($value['plugins']['plugin_id'])) { ?>
-                      <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'update/'.$value['plugins']['plugin_id'].'/'.$value['plugins']['name'], 'admin' => true)) ?>" class="btn btn-warning"><?= $Lang->get('UPDATE') ?></a>
-                    <?php } ?>
-                  </td>
+                  <th><?= $Lang->get('NAME') ?></th>
+                  <th><?= $Lang->get('AUTHOR') ?></th>
+                  <th><?= $Lang->get('CREATED') ?></th>
+                  <th><?= $Lang->get('VERSION') ?></th>
+                  <th><?= $Lang->get('STATE') ?></th>
+                  <th><?= $Lang->get('ACTION') ?></th>
                 </tr>
-                <?php } } else { echo 'Aucun plugin installé'; } ?>
-            </tbody>
-          </table>
-
+              </thead>
+              <tbody>
+                <?php 
+                  foreach ($pluginList as $key => $value) { ?>
+                  <tr>
+                    <td><?= $value->name ?></td>
+                    <td><?= $value->author ?></td>
+                    <td><?= $Lang->date($value->DBinstall) ?></td>
+                    <td><?= $value->version ?></td>
+                    <td>
+                      <?= ($value->active) ? '<span class="label label-success">'.$Lang->get('ENABLED').'</span>' : '<span class="label label-danger">'.$Lang->get('DISABLED').'</span>' ?>
+                    </td>
+                    <td>
+                      <?php if($value->active) { ?>
+                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'disable/'.$value->DBid, 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('DISABLED') ?></a>
+                       <?php } else { ?>
+                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'enable/'.$value->DBid, 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('ENABLED') ?></a>
+                       <?php } ?>
+                      <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete/'.$value->DBid, 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>
+                      <?php if($value->version != $this->EyPlugin->getPluginLastVersion($value->apiID)) { ?>
+                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'update/'.$value->apiID.'/'.$value->slug, 'admin' => true)) ?>" class="btn btn-warning"><?= $Lang->get('UPDATE') ?></a>
+                      <?php } ?>
+                    </td>
+                  </tr>
+                  <?php } ?>
+              </tbody>
+            </table>
+          <?php } else { 
+            echo '<div class="alert alert-danger">Aucun plugin installé</div>'; 
+          } ?>
         </div>
       </div>
     </div>
@@ -69,7 +66,7 @@ $this->EyPlugin = new EyPluginComponent;
         <div class="box-body">
         
           <?php 
-          $free_plugins = $this->EyPlugin->get_free_plugins();
+          $free_plugins = $this->EyPlugin->getFreePlugins();
           if(!empty($free_plugins)) { ?>
             <table class="table table-bordered">
               <thead>
@@ -87,7 +84,7 @@ $this->EyPlugin = new EyPluginComponent;
                   <td><?= $value['author'] ?></td>
                   <td><?= $value['version'] ?></td>
                   <td>
-                    <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'install/'.$value['plugin_id'].'/'.$value['name'], 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('INSTALL') ?></a>
+                    <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'install/'.$value['apiID'].'/'.$value['name'], 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('INSTALL') ?></a>
                   </td>
                 </tr>
                 <?php } ?>

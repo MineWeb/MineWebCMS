@@ -173,7 +173,7 @@ class PagesController extends AppController {
 				$return['version'] = $this->Configuration->get('version');
 				$return['layout'] = $this->Configuration->get_layout();
 				$return['theme'] = $this->Configuration->get('theme');
-				$return['plugins'] = $this->EyPlugin->get_plugins();
+				$return['plugins'] = $this->EyPlugin->loadPlugins();
 				$return['today'] = date('d/m/Y H:i:s');
 				$return['server_state'] = $this->Configuration->get('server_state');
 
@@ -219,8 +219,10 @@ class PagesController extends AppController {
 				$page = $search[0]['Page'];
 
 				// Parser variables
+				$this->loadModel('User');
 
-				$page['content'] = str_replace('{username}', $this->Connect->get_pseudo(), $page['content']);
+
+				$page['content'] = str_replace('{username}', $this->User->getKey('pseudo'), $page['content']);
 
 				// Parser les conditions
 
@@ -310,11 +312,12 @@ class PagesController extends AppController {
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['title']) AND !empty($this->request->data['slug']) AND !empty($this->request->data['content'])) {
 					$this->loadModel('Page');
+					$this->loadModel('User');
 					$this->Page->read(null, null);
 					$this->Page->set(array(
 						'title' => $this->request->data['title'],
 						'content' => $this->request->data['content'],
-						'author' => $this->Connect->get_pseudo(),
+						'author' => $this->User->getKey('pseudo'),
 						'slug' => $this->request->data['slug'],
 						'updated' => date('Y-m-d H:i:s'),
 					));

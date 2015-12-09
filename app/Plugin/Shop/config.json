@@ -13,5 +13,8 @@
 			"0" : ["CREDIT_ACCOUNT", "CAN_BUY"],
 			"2" : ["CREDIT_ACCOUNT", "CAN_BUY"]
 		} 
+	},
+	"requirements" : {
+		"CMS" : ">= 1.0.0"
 	}
 }

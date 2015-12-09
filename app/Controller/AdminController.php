@@ -62,7 +62,7 @@ class AdminController extends AppController {
 
 			$this->set(compact('items_solded')); 
 
-			if($this->EyPlugin->is_installed('Shop')) {
+			if($this->EyPlugin->isInstalled('eywek.shop.1')) {
 				$this->loadModel('Item');
 				$counts_items = $this->Item->find('count'); 
 

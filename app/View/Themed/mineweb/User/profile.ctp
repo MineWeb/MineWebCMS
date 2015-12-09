@@ -8,13 +8,13 @@ $this->EyPlugin = new EyPluginComponent;
         	<div class="ribbon">
         		<div class="ribbon-stitches-top"></div>
         		<div class="ribbon-content"><p>
-        				<?php if($this->EyPlugin->isInstalled('Shop')) { ?>
+        				<?php if($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
         					<span class="pull-left hidden-xs"><span class="info"><span class="money"><?= $user['money'] ?></span><?php if($user['money'] == 1) { echo  ' '.$this->Configuration->get_money_name(false, true); } else { echo  ' '.$this->Configuration->get_money_name(); } ?></span></span> 
         				<?php } ?>
 						<span class="text-center"><?= $user['pseudo'] ?></span>
-						<?php if($this->EyPlugin->isInstalled('Vote')) { ?>
+						<?php if($this->EyPlugin->isInstalled('eywek.vote.2')) { ?>
 	        				<span class="pull-right hidden-xs"><span class="info"><?= $user['vote'] ?> <?= $Lang->get('VOTE') ?></span></span> 
-	        			<?php } elseif($this->EyPlugin->isInstalled('Shop')) { ?>
+	        			<?php } elseif($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
 							<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index')) ?>" class="btn btn-primary pull-right"><?= $Lang->get('SHOP') ?></a>
 	        			<?php } ?>
         		</p></div>
@@ -48,7 +48,7 @@ $this->EyPlugin = new EyPluginComponent;
 						} ?>
 					</p>
 				</div>
-				<?php if($this->EyPlugin->isInstalled('Shop')) { ?>
+				<?php if($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
 					<div class="section">
 						<p><b><?= $Lang->get('MONEY') ?> :</b> <span class="money"><?= $user['money'] ?></span></p>
 					</div>

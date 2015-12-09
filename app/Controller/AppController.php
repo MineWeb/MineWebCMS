@@ -180,10 +180,10 @@ WCqkx22behAGZq6rhwIDAQAB
 		}
 
 		if($this->params['prefix'] == "admin") {
-			$plugins_need_admin = $this->EyPlugin->get_list();
+			$plugins_need_admin = $this->EyPlugin->getPluginsActive();
 			foreach ($plugins_need_admin as $key => $value) {
-				if($this->EyPlugin->get('admin', $value['plugins']['name'])) {
-					$plugins_admin[] = array('name' => $this->EyPlugin->get('name', $value['plugins']['name']), 'slug' => $this->EyPlugin->get('slug', $value['plugins']['name'])); 
+				if($value->admin) {
+					$plugins_admin[] = array('name' => $value->name, 'slug' => $value->slug); 
 				}
 			}
 			if(!empty($plugins_admin)) {
@@ -280,7 +280,6 @@ WCqkx22behAGZq6rhwIDAQAB
         	$skype_link = $this->Configuration->get('skype');
         	$youtube_link = $this->Configuration->get('youtube');
         	$twitter_link = $this->Configuration->get('twitter');
-
 
 			// on set tout
 			$this->set(compact('nav', 'website_name', 'theme_config', 'banner_server', 'flash_messages', 'user', 'csrfToken', 'facebook_link', 'skype_link', 'youtube_link', 'twitter_link'));

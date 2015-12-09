@@ -39,7 +39,7 @@ $this->Configuration = new ConfigurationComponent;
 						} ?>
 					</p>
 				</div>
-				<?php if($this->EyPlugin->isInstalled('Shop')) { ?>
+				<?php if($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
 					<div class="section">
 						<p><b><?= $Lang->get('MONEY') ?> :</b> <span class="money"><?= $user['money'] ?></span></p>
 					</div>

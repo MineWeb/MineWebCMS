@@ -1,5 +1,4 @@
 <?php 
-$this->Connect = new ConnectComponent;
 $this->EyPlugin = new EyPluginComponent;
 ?>
 <!DOCTYPE html>
@@ -46,7 +45,7 @@ $this->EyPlugin = new EyPluginComponent;
               </li>
               <li class="user user-menu">
                 <a href="#">
-                  <span class="hidden-xs"><?= $this->Connect->get_pseudo() ?></span>
+                  <span class="hidden-xs"><?= $user['pseudo'] ?></span>
                 </a>
               </li>
               <li>
@@ -73,7 +72,7 @@ $this->EyPlugin = new EyPluginComponent;
               </a>
               <ul class="treeview-menu">
                 <li><a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('NEWS') ?></a></li>
-                <?php if($this->EyPlugin->is_installed('Shop')) { ?>
+                <?php if($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
                   <li><a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true, 'plugin' => 'shop')) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('SHOP') ?></a></li>
                 <?php } ?>
                 <li><a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('MEMBERS') ?></a></li>
@@ -100,7 +99,7 @@ $this->EyPlugin = new EyPluginComponent;
               </a>
               <ul class="treeview-menu">
                 <li><a href="<?= $this->Html->url(array('controller' => 'configuration', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('SETTINGS') ?></a></li>
-                <?php if($this->EyPlugin->is_installed('Vote')) { ?>
+                <?php if($this->EyPlugin->isInstalled('eywek.vote.2')) { ?>
                   <li><a href="<?= $this->Html->url(array('controller' => 'voter', 'plugin' => 'vote', 'admin' => true, 'plugin' => 'vote')) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('VOTE') ?></a></li>
                 <?php } ?>
                 <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'link', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('LINK_SERVER') ?></a></li>

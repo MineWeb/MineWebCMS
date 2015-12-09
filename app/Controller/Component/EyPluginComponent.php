@@ -61,7 +61,7 @@ class EyPluginComponent extends Object {
 
   // Chargement des plugins installés et de leurs configuration - Retourne un objet
 
-    private function loadPlugins() {
+    public function loadPlugins() {
 
       // On récupére le modal
       $PluginModel = ClassRegistry::init('Plugin');
@@ -81,6 +81,8 @@ class EyPluginComponent extends Object {
 
         $pluginList->$id = (object) array(); // on initialize les données
         $pluginList->$id = $config; // On met l'object config dedans
+        $pluginList->$id->DBid = $v['id']; // on met l'id de la base de donnée
+        $pluginList->$id->DBinstall = $v['created']; // on met quand on l'a installé sur la bdd
         $pluginList->$id->active = ($v['state']) ? true : false; // On met l'object config dedans
         $pluginList->$id->tables = unserialize($v['tables']);
 
@@ -184,7 +186,7 @@ class EyPluginComponent extends Object {
 
             // Que la configuration soit valide avec tout les key necessaires et leur type de value
             $config = json_decode(file_get_contents($file.DS.'config.json'), true);
-            $needConfigKey = array('name' => 'string', 'slug' => 'string', 'nav' => 'bool', 'admin' => 'bool', 'author' => 'string', 'version' => 'string', 'apiID' => 'int', 'useEvents' => 'bool', 'permissions' => 'array', 'permissions-available' => 'array', 'permissions-default' => 'array');
+            $needConfigKey = array('name' => 'string', 'slug' => 'string', 'nav' => 'bool', 'admin' => 'bool', 'author' => 'string', 'version' => 'string', 'apiID' => 'int', 'useEvents' => 'bool', 'permissions' => 'array', 'permissions-available' => 'array', 'permissions-default' => 'array', 'requirements' => 'array');
             foreach ($needConfigKey as $key => $value) {
 
               $key = (is_array(explode('-', $key))) ? explode('-', $key) : $key; // si c'est une key multi-dimensionnel
@@ -421,9 +423,17 @@ WCqkx22behAGZq6rhwIDAQAB
         if(!$return_json) {
           $zip = $return;
         } elseif($return_json['status'] == "error") {
+
+          $LangComponent = new LangComponent();
+          SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_CANT_BE_DOWNLOADED'), 'default.error');
+
           return false;
         }
       } else {
+
+        $LangComponent = new LangComponent();
+        SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_CANT_BE_DOWNLOADED'), 'default.error');
+
         return false;
       }
 
@@ -434,6 +444,10 @@ WCqkx22behAGZq6rhwIDAQAB
       } else {
         return $zip;
       }
+
+      $LangComponent = new LangComponent();
+      SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_CANT_BE_DOWNLOADED'), 'default.error');
+
       return false;
     }
 
@@ -477,8 +491,14 @@ WCqkx22behAGZq6rhwIDAQAB
 
             CakePlugin::load(array($slug => array('routes' => true, 'bootstrap' => true))); // On load sur cake
 
+        } else {
+          $LangComponent = new LangComponent();
+          SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_REQUIREMENTS'), 'default.error');
         }
 
+      } else {
+        $LangComponent = new LangComponent();
+        SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_NOT_VALID'), 'default.error');
       }
     }
 
@@ -598,8 +618,8 @@ WCqkx22behAGZq6rhwIDAQAB
     }
 
     public function findPluginByID($id) {
-      $$this->pluginsLoaded = $this->loadPlugins();
-      return (isset($this->pluginsLoaded[$id])) ? $this->pluginsLoaded[$id] : (object) array();
+      $this->pluginsLoaded = $this->loadPlugins();
+      return (isset($this->pluginsLoaded->$id)) ? $this->pluginsLoaded->$id : (object) array();
     }
 
     public function findPluginsByAuthor($author) {
@@ -616,7 +636,7 @@ WCqkx22behAGZq6rhwIDAQAB
   // Vérifier si un plguin est installé
 
     public function isInstalled($id) { // on le recherche avec son ID (auteur.name.apiid)
-      return !empty($this->findPluginBySlug($id));
+      return !empty($this->findPluginByID($id));
     }
 
   // Récupérer les plugins ou la navbar est activé (pour la nav)
@@ -877,6 +897,7 @@ WCqkx22behAGZq6rhwIDAQAB
       // On gère les plugins gratuits de base
         $pluginList = array(); // Pour ne pas rien retourner au cas où
         $url = @file_get_contents('http://mineweb.org/api/v'.$this->apiVersion.'/getFreePlugins'); // On get tout les plugins
+        var_dump($url);
         if($url !== false) {
           $JSON = json_decode($url, true);
           $pluginList = ($JSON !== false) ? $JSON : array();
@@ -897,6 +918,16 @@ WCqkx22behAGZq6rhwIDAQAB
                 }
               }
 
+            }
+          }
+        }
+
+      // on supprime les plugins qu'on a déjà
+        if(!empty($pluginList)) {
+          $dbPlugins = $this->getPluginsInDB();
+          foreach ($pluginList as $key => $value) {
+            if(in_array($value['name'], $dbPlugins)) {
+              unset($pluginList[$key]);
             }
           }
         }

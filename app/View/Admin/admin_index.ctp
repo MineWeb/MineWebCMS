@@ -46,7 +46,7 @@ $this->EyPlugin = new EyPluginComponent;
 
     <div class="clearfix visible-sm-block"></div>
 
-    <?php if($this->EyPlugin->is_installed('Shop')) { ?>
+    <?php if($this->EyPlugin->isInstalled('eywek.shop1')) { ?>
       <div class="col-md-3 col-sm-6 col-xs-12">
         <div class="small-box bg-green">
           <div class="inner">
@@ -174,7 +174,7 @@ $this->EyPlugin = new EyPluginComponent;
           </div>
         </div>
         <div class="box-body">
-          <?php if($this->EyPlugin->is_installed('Shop')) { ?>
+          <?php if($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
             <?php if($counts_items >= 5) { ?>
               <div class="alert alert-warning"><b><?= $Lang->get('INFORMATION') ?> :</b> <?= $Lang->get('BIGGEST_SELLERS') ?></div>
               <div class="row">

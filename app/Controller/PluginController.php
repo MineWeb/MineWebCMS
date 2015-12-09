@@ -2,7 +2,7 @@
 class PluginController extends AppController{
 	
 	function admin_index() {
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			 
 			$this->set('title_for_layout',$this->Lang->get('PLUGINS_LIST'));
 			$this->layout = 'admin';
@@ -12,7 +12,7 @@ class PluginController extends AppController{
 	}
 
 	function admin_delete($id = false) {
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($id != false) {
 				 
 				if($this->EyPlugin->delete($id)) {
@@ -32,7 +32,7 @@ class PluginController extends AppController{
 	}
 
 	function admin_enable($id = false) {
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($id != false) {
 				 
 				if($this->EyPlugin->enable($id)) {
@@ -52,7 +52,7 @@ class PluginController extends AppController{
 	}
 
 	function admin_disable($id = false) {
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($id != false) {
 				 
 				if($this->EyPlugin->disable($id)) {
@@ -71,11 +71,11 @@ class PluginController extends AppController{
 		}
 	}
 
-	function admin_install($plugin_id = false, $plugin_name = false) {
-		if($this->isConnected AND $this->Connect->if_admin()) {
-			if($plugin_id != false AND $plugin_name != false) {
+	function admin_install($apiID = false, $slug = false) {
+		if($this->isConnected AND $this->User->isAdmin()) {
+			if($apiID != false AND $slug != false) {
 				 
-				if($this->EyPlugin->install($plugin_id, $plugin_name)) {
+				if($this->EyPlugin->download($apiID, $slug)) {
 					$this->History->set('INSTALL_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN_INSTALL_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
@@ -92,7 +92,7 @@ class PluginController extends AppController{
 	}
 
 	function admin_update($plugin_id, $plugin_name) {
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($plugin_id != false AND $plugin_name != false) {
 				 
 				if($this->EyPlugin->update($plugin_id, $plugin_name)) {
