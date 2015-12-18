@@ -43,6 +43,9 @@ class EyPluginComponent extends Object {
 
       $this->pluginsLoaded = $this->loadPlugins();
 
+      // Déchargeons de CakePHP tout les plugins désactivés
+      $this->unloadPlugins();
+
     }
 
   // Retourne la config JSON d'un plugin
@@ -91,6 +94,28 @@ class EyPluginComponent extends Object {
       return $pluginList;
 
     }
+
+  // Décharge de CakePHP les plugins désactivés
+
+   private function unloadPlugins() {
+
+     // On récupére le modal
+     $PluginModel = ClassRegistry::init('Plugin');
+
+     // On cherche tout les plugins installés en db & désactivé
+     $dbPlugins = $PluginModel->find('all', array('conditions' => array('state' => 0)));
+
+     if(!empty($dbPlugins)) {
+
+       foreach ($dbPlugins as $key => $value) { // on les parcours
+
+         CakePlugin::unload($value['Plugin']['name']); // on le décharge
+
+       }
+
+     }
+
+   }
 
   // Retourner les plugins chargés/installés & activés
 

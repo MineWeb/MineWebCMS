@@ -292,7 +292,8 @@ class ExceptionRenderer {
 			if (isset($attributes['plugin']) && $attributes['plugin'] === $this->controller->plugin) {
 				$this->controller->plugin = null;
 			}
-			$this->_outputMessageSafe('error500');
+			//$this->_outputMessageSafe('error500');
+			$this->_outputMessageSafe('error400');
 		} catch (Exception $e) {
 			$this->_outputMessageSafe('error500');
 		}
