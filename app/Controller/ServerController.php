@@ -8,7 +8,7 @@ class ServerController extends AppController {
 	public function admin_link() {
 		if($this->isConnected AND $this->Connect->if_admin()) {
 			$this->layout = "admin";
-			 
+
 			$this->set('title_for_layout',$this->Lang->get('LINK_SERVER'));
 
 			$this->loadModel('Server');
@@ -45,7 +45,7 @@ class ServerController extends AppController {
 	public function admin_config() {
 		$this->autoRender = false;
 		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+
 			$this->layout = null;
 			if($this->request->is('ajax')) {
 				if(!empty($this->request->data['timeout'])) {
@@ -69,10 +69,10 @@ class ServerController extends AppController {
 
 	public function admin_link_ajax() {
 		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+
 			$this->layout = null;
 			if($this->request->is('ajax')) {
-				 
+
 				if(!empty($this->request->data['host']) AND !empty($this->request->data['port']) AND !empty($this->request->data['name'])) {
 					$secret_key = $this->Server->get('secret_key');
 					if($secret_key !== false) {
@@ -95,7 +95,6 @@ class ServerController extends AppController {
 								$this->Configuration->set('server_secretkey', $secret_key);
 								echo $this->Lang->get('SUCCESS_CONNECTION_SERVER').'|true';
 							} else {
-								$this->Configuration->set('server_state', 0);
 								echo $this->Lang->get('SERVER_CONNECTION_FAILED').'|false';
 							}
 						} else {

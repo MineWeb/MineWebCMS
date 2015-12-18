@@ -5,10 +5,10 @@ class ServerComponent extends Object {
 	private $config = NULL;
 	private $online = NULL;
 
-  	public $components = array('Session', 'Configuration');
+  public $components = array('Session', 'Configuration');
 
 	function initialize(&$controller) {
-	    $this->controller =& $controller;
+	  $this->controller =& $controller;
 		$this->controller->set('Server', new ServerComponent());
 	}
 
@@ -54,6 +54,7 @@ class ServerComponent extends Object {
             }
             $opts = array('http' => array('timeout' => $this->getTimeout()));
             $get = @file_get_contents($url, false, stream_context_create($opts));
+						debug($url);
             if($get) {
 	            $result = json_decode($get, true);
 	            return $result;
