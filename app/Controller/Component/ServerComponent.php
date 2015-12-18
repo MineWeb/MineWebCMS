@@ -54,7 +54,6 @@ class ServerComponent extends Object {
             }
             $opts = array('http' => array('timeout' => $this->getTimeout()));
             $get = @file_get_contents($url, false, stream_context_create($opts));
-						debug($url);
             if($get) {
 	            $result = json_decode($get, true);
 	            return $result;

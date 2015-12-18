@@ -6,13 +6,26 @@ class ServerController extends AppController {
 
 
 	public function admin_link() {
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			$this->layout = "admin";
 
 			$this->set('title_for_layout',$this->Lang->get('LINK_SERVER'));
 
 			$this->loadModel('Server');
 			$servers = $this->Server->find('all');
+
+			$banner_server = unserialize($this->Configuration->get('banner_server'));
+
+			if($banner_server) {
+				foreach ($servers as $key => $value) {
+					if(in_array($value['Server']['id'], $banner_server)) {
+						$servers[$key]['Server']['activeInBanner'] = true;
+					} else {
+						$servers[$key]['Server']['activeInBanner'] = false;
+					}
+				}
+			}
+
 			$this->set(compact('servers'));
 
 			$this->set('timeout', $this->Configuration->get('server_timeout'));
@@ -21,9 +34,35 @@ class ServerController extends AppController {
 		}
 	}
 
+	public function admin_switchBanner($id = false) {
+		$this->autoRender = false;
+		if($this->isConnected && $this->User->isAdmin()) {
+			if($id) {
+
+				$banner = unserialize($this->Configuration->get('banner_server'));
+
+				if($banner) {
+
+					if(in_array($id, $banner)) {
+						unset($banner[array_search($id, $banner)]);
+					} else {
+						$banner[] = $id;
+					}
+
+					$this->Configuration->set('banner_server', serialize($banner));
+
+				}
+			}
+
+		} else {
+			throw new ForbiddenException();
+		}
+	}
+
+
 	public function admin_delete($id = false) {
 		$this->autoRender = false;
-		if($this->isConnected && $this->Connect->if_admin()) {
+		if($this->isConnected && $this->User->isAdmin()) {
 			if($id) {
 				$this->loadModel('Server');
 				if($this->Server->delete($id)) {
@@ -44,7 +83,7 @@ class ServerController extends AppController {
 
 	public function admin_config() {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 
 			$this->layout = null;
 			if($this->request->is('ajax')) {
@@ -68,7 +107,7 @@ class ServerController extends AppController {
 	}
 
 	public function admin_link_ajax() {
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 
 			$this->layout = null;
 			if($this->request->is('ajax')) {
@@ -115,7 +154,7 @@ class ServerController extends AppController {
 	}
 
 	public function admin_banlist($server_id = 1) {
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 
 			$this->loadModel('Server');
 			$servers = $this->Server->find('all');
@@ -140,7 +179,7 @@ class ServerController extends AppController {
 	}
 
 	public function admin_whitelist($server_id = 1) {
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 
 			$this->loadModel('Server');
 			$servers = $this->Server->find('all');
@@ -165,7 +204,7 @@ class ServerController extends AppController {
 	}
 
 	public function admin_online($server_id = 1) {
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 
 			$this->loadModel('Server');
 			$servers = $this->Server->find('all');

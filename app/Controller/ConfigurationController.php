@@ -5,7 +5,7 @@ class ConfigurationController extends AppController {
 	public $components = array('Session', 'RequestHandler');
 
 	public function admin_index() {
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			$this->layout = "admin";
 
 			$config = $this->Configuration->get_all()['Configuration'];
@@ -50,7 +50,7 @@ class ConfigurationController extends AppController {
 					}
 				}
 				$this->History->set('EDIT_CONFIGURATION', 'configuration');
-				 
+
 				$this->Session->setFlash($this->Lang->get('EDIT_CONFIGURATION_SUCCESS'), 'default.success');
 			}
 		} else {

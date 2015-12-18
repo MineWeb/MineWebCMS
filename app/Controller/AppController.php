@@ -245,26 +245,28 @@ WCqkx22behAGZq6rhwIDAQAB
 			$theme_config = json_decode($theme_config, true);
 
 			// Info serveur
-			$banner_server = $this->Configuration->get('banner_server');
-    	if(empty($banner_server)) {
-      	if($this->Server->online()) {
-        		$banner_server = $this->Lang->banner_server($this->Server->banner_infos());
-      	} else {
-        		$banner_server = false;
-      	}
-    	} else {
-      	$banner_server = unserialize($banner_server);
-      	if(count($banner_server) == 1) {
-        		$server_infos = $this->Server->banner_infos($banner_server[0]);
-      	} else {
-        	$server_infos = $this->Server->banner_infos($banner_server);
-      	}
-      	if(!empty($server_infos['getPlayerMax']) && !empty($server_infos['getPlayerCount'])) {
-      		$banner_server = $this->Lang->banner_server($this->Server->banner_infos($server_infos));
-      	} else {
-        		$banner_server = false;
-      	}
-    	}
+			if($this->params['prefix'] !== "admin") {
+				$banner_server = $this->Configuration->get('banner_server');
+	    	if(empty($banner_server)) {
+	      	if($this->Server->online()) {
+	        		$banner_server = $this->Lang->banner_server($this->Server->banner_infos());
+	      	} else {
+	        		$banner_server = false;
+	      	}
+	    	} else {
+	      	$banner_server = unserialize($banner_server);
+	      	if(count($banner_server) == 1) {
+	        		$server_infos = $this->Server->banner_infos($banner_server[0]);
+	      	} else {
+	        	$server_infos = $this->Server->banner_infos($banner_server);
+	      	}
+	      	if(!empty($server_infos['getPlayerMax']) && !empty($server_infos['getPlayerCount'])) {
+	      		$banner_server = $this->Lang->banner_server($this->Server->banner_infos($server_infos));
+	      	} else {
+	        		$banner_server = false;
+	      	}
+	    	}
+			}
 
     	// Message flash
     if($this->params['prefix'] != "admin") {
