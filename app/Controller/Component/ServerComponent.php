@@ -4,7 +4,7 @@ class ServerComponent extends Object {
 	private $timeout = NULL;
 	private $config = NULL;
 	private $online = NULL;
-  	
+
   	public $components = array('Session', 'Configuration');
 
 	function initialize(&$controller) {
@@ -13,54 +13,63 @@ class ServerComponent extends Object {
 	}
 
 	function startup(&$controller) {}
- 
+
 	function beforeRender(&$controller) {}
 
 	function shutdown(&$controller) {}
 
 	function beforeRedirect() {}
 
-	function call($method = false, $needsecretkey = false, $server_id = 1) {
-	    if($this->online($server_id)) {
-	        // method example : $method = array('getPlayerLimit' => 'server', 'getPlayer' => 'Eywek');
-	        // or $method = 'getPlayerLimit';
-	        if($method != false) {
-	            if(is_array($method)) {
-	                foreach ($method as $key => $value) {
-	                    if(is_array($value)) {
-	                        $value = implode('|', $value);
-	                    }
-	                    $list_method[$key] = $value;
-	                }
-	                $list_method = implode('&', array_map(
-	                    function ($v, $k) { 
-	                        return sprintf("%s=%s", $k, rawurlencode($v)); 
-	                    }, 
-	                    $list_method, array_keys($list_method)
-	                ));
-	            } else {
-	                $list_method = $method.'=server';
-	            }
-	            $method = $list_method;
-	            if(!$needsecretkey) {
-	                $url = $this->getUrl($server_id).$method;
-	            } else {
-	                $url = $this->getUrl($server_id, true).'&'.$method;
-	            }
-	            $opts = array('http' => array('timeout' => $this->getTimeout()));
-	            $get = @file_get_contents($url, false, stream_context_create($opts));
-	            if($get) {
-		            $result = json_decode($get, true);
-		            return $result;
-		        } else {
-		        	return array('status' => 'error', 'code' => '3', 'msg' => 'Request timeout');
-		        }
+	function call($method = false, $needsecretkey = false, $server_id = false) {
+
+		if(!$server_id) {
+			$server_id = $this->getFirstServerID();
+		}
+
+    if($this->online($server_id)) {
+        // method example : $method = array('getPlayerLimit' => 'server', 'getPlayer' => 'Eywek');
+        // or $method = 'getPlayerLimit';
+        if($method != false) {
+            if(is_array($method)) {
+                foreach ($method as $key => $value) {
+                    if(is_array($value)) {
+                        $value = implode('|', $value);
+                    }
+                    $list_method[$key] = $value;
+                }
+                $list_method = implode('&', array_map(
+                    function ($v, $k) {
+                        return sprintf("%s=%s", $k, rawurlencode($v));
+                    },
+                    $list_method, array_keys($list_method)
+                ));
+            } else {
+                $list_method = $method.'=server';
+            }
+            $method = $list_method;
+            if(!$needsecretkey) {
+                $url = $this->getUrl($server_id).$method;
+            } else {
+                $url = $this->getUrl($server_id, true).'&'.$method;
+            }
+            $opts = array('http' => array('timeout' => $this->getTimeout()));
+            $get = @file_get_contents($url, false, stream_context_create($opts));
+            if($get) {
+	            $result = json_decode($get, true);
+	            return $result;
 	        } else {
-	            return array('status' => 'error', 'code' => '2', 'msg' => 'This method doesn\'t exist');
+	        	return array('status' => 'error', 'code' => '3', 'msg' => 'Request timeout');
 	        }
-	    } else {
-	        return array('status' => 'error', 'code' => '1', 'msg' => 'This server is not online');
-	    }
+        } else {
+            return array('status' => 'error', 'code' => '2', 'msg' => 'This method doesn\'t exist');
+        }
+    } else {
+        return array('status' => 'error', 'code' => '1', 'msg' => 'This server is not online');
+    }
+	}
+
+	private function getFirstServerID() {
+		return ClassRegistry::init('Server')->find('first')['Server']['id'];
 	}
 
 	private function getTimeout() {
@@ -71,7 +80,12 @@ class ServerComponent extends Object {
     	}
 	}
 
-	private function getConfig($server_id = 1) {
+	private function getConfig($server_id = false) {
+
+		if(!$server_id) {
+			$server_id = $this->getFirstServerID();
+		}
+
 		if(empty($this->config[$server_id])) {
 		    if(!empty($server_id)) {
 		        $this->Configuration = ClassRegistry::init('Configuration');
@@ -119,7 +133,12 @@ class ServerComponent extends Object {
 	    }
 	}
 
-	function online($server_id = 1) {
+	function online($server_id = false) {
+
+		if(!$server_id) {
+			$server_id = $this->getFirstServerID();
+		}
+
 		if(empty($this->online[$server_id])) {
 		    if(!empty($server_id)) {
 		        $config = $this->getConfig();
@@ -240,7 +259,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 						return false;
 					}
 				} else {
-					return false; // timeout 
+					return false; // timeout
 				}
 			}
 		} else {
@@ -248,53 +267,68 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 		}
 	}
 
-	function banner_infos($server_id = 1) { // On précise l'ID du serveur ou vont veux les infos, ou alors on envoie "all" qui va aller chercher les infos sur tout les serveurs
-	    if(!is_array($server_id)) {
-	        if($this->online($server_id)) {
-	            $search = $this->call(array('getMOTD' => 'server', 'getVersion' => 'server', 'getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $server_id);
-	            if($search['getPlayerCount'] == "null") {
-	                $search['getPlayerCount'] = 0;
-	            }
-	            return $search;
-	        } else {
-	          return false;
-	        }
-	    } else {
-	        $servers = $server_id;
-	        $return['getPlayerMax'] = 0;
-	        $return['getPlayerCount'] = 0;
-	        foreach ($servers as $key => $value) {
-	            if($this->online($value)) {
-	                $search = $this->call(array('getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $value);
-	                if($search['getPlayerCount'] == "null") {
-	                    $search['getPlayerCount'] = 0;
-	                }
-	                $return['getPlayerMax'] = $return['getPlayerMax'] + $search['getPlayerMax'];
-	                $return['getPlayerCount'] = $return['getPlayerCount'] + $search['getPlayerCount'];
-	            }
-	        }
-	        return $return;
-	    }
+	function banner_infos($server_id = false) { // On précise l'ID du serveur ou vont veux les infos, ou alors on envoie "all" qui va aller chercher les infos sur tout les serveurs
+
+		if(!$server_id) {
+			$server_id = $this->getFirstServerID();
+		}
+
+    if(!is_array($server_id)) {
+        if($this->online($server_id)) {
+            $search = $this->call(array('getMOTD' => 'server', 'getVersion' => 'server', 'getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $server_id);
+            if($search['getPlayerCount'] == "null") {
+                $search['getPlayerCount'] = 0;
+            }
+            return $search;
+        } else {
+          return false;
+        }
+    } else {
+        $servers = $server_id;
+        $return['getPlayerMax'] = 0;
+        $return['getPlayerCount'] = 0;
+        foreach ($servers as $key => $value) {
+            if($this->online($value)) {
+                $search = $this->call(array('getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $value);
+                if($search['getPlayerCount'] == "null") {
+                    $search['getPlayerCount'] = 0;
+                }
+                $return['getPlayerMax'] = $return['getPlayerMax'] + $search['getPlayerMax'];
+                $return['getPlayerCount'] = $return['getPlayerCount'] + $search['getPlayerCount'];
+            }
+        }
+        return $return;
+    }
 	}
 
-	function send_command($cmd, $server_id = 1) {
-   		if($this->online($server_id)) {
-	      	$this->call(array('performCommand' => $cmd), true, $server_id);
-	    }
-	  }
+	function send_command($cmd, $server_id = false) {
 
-	function commands($commands, $server_id = 1) {
-	    if($this->online($server_id)) {
-	      App::import('Component', 'ConnectComponent');
-	      $this->Connect = new ConnectComponent;
-	      $commands = str_replace('{PLAYER}', $this->Connect->get_pseudo(), $commands);
-	      $commands = explode('[{+}]', $commands);
-	      $performCommands = array();
-	      foreach ($commands as $key => $value) {
-	        $result[] = $this->call(array('performCommand' => $value), true, $server_id);
-	      }
-	      return $result;
-	    }
+		if(!$server_id) {
+			$server_id = $this->getFirstServerID();
+		}
+
+ 		if($this->online($server_id)) {
+      	$this->call(array('performCommand' => $cmd), true, $server_id);
+    }
+  }
+
+	function commands($commands, $server_id = false) {
+
+		if(!$server_id) {
+			$server_id = $this->getFirstServerID();
+		}
+
+    if($this->online($server_id)) {
+      App::import('Component', 'ConnectComponent');
+      $this->Connect = new ConnectComponent;
+      $commands = str_replace('{PLAYER}', $this->Connect->get_pseudo(), $commands);
+      $commands = explode('[{+}]', $commands);
+      $performCommands = array();
+      foreach ($commands as $key => $value) {
+        $result[] = $this->call(array('performCommand' => $value), true, $server_id);
+      }
+      return $result;
+    }
 	}
 
 }
