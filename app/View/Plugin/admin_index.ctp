@@ -1,19 +1,24 @@
-<?php 
+<?php
 $this->EyPlugin = new EyPluginComponent;
 ?>
 <section class="content">
   <div class="row">
     <div class="col-md-12">
+
+      <div class="ajax"></div>
+
       <div class="box">
         <div class="box-header with-border">
           <h3 class="box-title"><?= $Lang->get('PLUGINS_LIST') ?></h3>
         </div>
+
         <div class="box-body">
+
           <?php
           $pluginList = $this->EyPlugin->loadPlugins();
             if(!empty($pluginList)) {
           ?>
-            <table class="table table-bordered">
+            <table class="table table-bordered" id="plugin-installed">
               <thead>
                 <tr>
                   <th><?= $Lang->get('NAME') ?></th>
@@ -25,7 +30,7 @@ $this->EyPlugin = new EyPluginComponent;
                 </tr>
               </thead>
               <tbody>
-                <?php 
+                <?php
                   foreach ($pluginList as $key => $value) { ?>
                   <tr>
                     <td><?= $value->name ?></td>
@@ -37,21 +42,21 @@ $this->EyPlugin = new EyPluginComponent;
                     </td>
                     <td>
                       <?php if($value->active) { ?>
-                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'disable/'.$value->DBid, 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('DISABLED') ?></a>
+                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'disable/'.$value->DBid, 'admin' => true)) ?>" class="btn btn-info disable"><?= $Lang->get('DISABLED') ?></a>
                        <?php } else { ?>
-                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'enable/'.$value->DBid, 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('ENABLED') ?></a>
+                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'enable/'.$value->DBid, 'admin' => true)) ?>" class="btn btn-info enable"><?= $Lang->get('ENABLED') ?></a>
                        <?php } ?>
-                      <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete/'.$value->DBid, 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>
+                      <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete/'.$value->DBid, 'admin' => true)) ?>')" class="btn btn-danger delete"><?= $Lang->get('DELETE') ?></a>
                       <?php if($value->version != $this->EyPlugin->getPluginLastVersion($value->apiID)) { ?>
-                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'update/'.$value->apiID.'/'.$value->slug, 'admin' => true)) ?>" class="btn btn-warning"><?= $Lang->get('UPDATE') ?></a>
+                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'update/'.$value->apiID.'/'.$value->slug, 'admin' => true)) ?>" class="btn btn-warning update"><?= $Lang->get('UPDATE') ?></a>
                       <?php } ?>
                     </td>
                   </tr>
                   <?php } ?>
               </tbody>
             </table>
-          <?php } else { 
-            echo '<div class="alert alert-danger">'.$Lang->get('NONE_PLUGIN_INSTALLED').'</div>'; 
+          <?php } else {
+            echo '<div class="alert alert-danger">'.$Lang->get('NONE_PLUGIN_INSTALLED').'</div>';
           } ?>
         </div>
       </div>
@@ -64,10 +69,10 @@ $this->EyPlugin = new EyPluginComponent;
           <h3 class="box-title"><?= $Lang->get('FREE_PLUGINS_AVAILABLE') ?></h3>
         </div>
         <div class="box-body">
-          <?php 
+          <?php
           $free_plugins = $this->EyPlugin->getFreePlugins();
           if(!empty($free_plugins)) { ?>
-            <table class="table table-bordered">
+            <table class="table table-bordered" id="plugin-not-installed">
               <thead>
                 <tr>
                   <th><?= $Lang->get('NAME') ?></th>
@@ -78,12 +83,12 @@ $this->EyPlugin = new EyPluginComponent;
               </thead>
               <tbody>
                 <?php foreach ($free_plugins as $key => $value) { ?>
-                <tr>
+                <tr plugin-apiID="<?= $value['apiID'] ?>">
                   <td><?= $value['name'] ?></td>
                   <td><?= $value['author'] ?></td>
                   <td><?= $value['version'] ?></td>
                   <td>
-                    <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'install/'.$value['apiID'].'/'.$value['name'], 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('INSTALL') ?></a>
+                    <btn class="btn btn-success install" apiID="<?= $value['apiID'] ?>" slug="<?= $value['slug'] ?>"><?= $Lang->get('PLUGIN__INSTALL') ?></btn>
                   </td>
                 </tr>
                 <?php } ?>
@@ -98,3 +103,88 @@ $this->EyPlugin = new EyPluginComponent;
     </div>
   </div>
 </section>
+<script type="text/javascript">
+  $('.install').click(function(e) {
+    e.preventDefault();
+
+    var apiID = $(this).attr('apiID');
+    var slug = $(this).attr('slug');
+
+    var btn = $(this);
+
+    if(apiID !== undefined) {
+
+      // Désactivation de toute action
+      $('.install').each(function(e) {
+        $(this).addClass('disabled');
+      });
+      $('.update').each(function(e) {
+        $(this).addClass('disabled');
+      });
+      $('.delete').each(function(e) {
+        $(this).addClass('disabled');
+      });
+      $('.enable').each(function(e) {
+        $(this).addClass('disabled');
+      });
+      $('.disable').each(function(e) {
+        $(this).addClass('disabled');
+      });
+
+      // Mise à jour du texte sur le bouton
+      $(this).html('<?= $Lang->get('PLUGIN__INSTALL_LOADING') ?>...');
+
+      // On préviens l'utilisateur avec un message plus clair
+      $('.ajax').empty().html('<div class="alert alert-info"><?= $Lang->get('PLUGIN__INSTALL_LOADING') ?>...</b></div>').fadeIn(500);
+
+      // On lance la requête
+      $.get('<?= $this->Html->url(array('action' => 'install')) ?>/'+apiID+'/'+slug, function(data) {
+        data = JSON.parse(data);
+        if(data !== false) {
+
+          if(data.statut == "success") {
+            // on met le message
+            $('.ajax').empty().html('<div class="alert alert-success"><b><?= $Lang->get('SUCCESS') ?> : <?= $Lang->get('PLUGIN_INSTALL_SUCCESS') ?></b></div>').fadeIn(500);
+
+            // on bouge le plugin dans le tableau dans les plugins installés
+            $('table#plugin-not-installed').find('tr[plugin-apiID="'+apiID+'"]').slideUp(250);
+            $('table#plugin-installed tr:last').after('<tr><td>'+data.plugin.name+'</td><td>'+data.plugin.author+'</td><td>'+data.plugin.dateformatted+'</td><td>'+data.plugin.version+'</td><td><span class="label label-success"><?= $Lang->get('ENABLED') ?></span></td><td><a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'disable', 'admin' => true)) ?>'+data.plugin.DBid+'" class="btn btn-info"><?= $Lang->get('DISABLED') ?></a><a onClick="confirmDel(\'<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete', 'admin' => true)) ?>'+data.plugin.DBid+'\')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a></td></tr>');
+
+          } else if(data.statut == "error") {
+            $('.ajax').empty().html('<div class="alert alert-error"><b><?= $Lang->get('ERROR') ?> : '+data.msg+'</b></div>').fadeIn(500);
+          } else {
+            $('.ajax').empty().html('<div class="alert alert-error"><b><?= $Lang->get('ERROR') ?> : <?= addslashes($Lang->get('INTERNAL_ERROR')) ?></b></div>').fadeIn(500);
+          }
+
+        }
+
+        // On annule les désactivations
+        $('.install').each(function(e) {
+          $(this).removeClass('disabled');
+        });
+        $('.update').each(function(e) {
+          $(this).removeClass('disabled');
+        });
+        $('.delete').each(function(e) {
+          $(this).removeClass('disabled');
+        });
+        $('.enable').each(function(e) {
+          $(this).removeClass('disabled');
+        });
+        $('.disable').each(function(e) {
+          $(this).removeClass('disabled');
+        });
+
+        // On remet le texte par défaut
+        btn.html('<?= $Lang->get('PLUGIN__INSTALL') ?>');
+
+        return;
+      });
+
+
+    }
+
+    return;
+
+  });
+</script>

@@ -586,25 +586,27 @@ WCqkx22behAGZq6rhwIDAQAB
     }
 
     public function findPluginBySlug($slug) {
-      $plugins = array();
+      $plugin = NULL;
       $pluginsLoaded = $this->loadPlugins();
       foreach ($pluginsLoaded as $id => $data) {
         if($data->slug == $slug) {
-          $plugins[$id] = $data;
+          $plugin = $data;
+          $plugin->id = $id;
         }
       }
-      return $plugins;
+      return $plugin;
     }
 
     public function findPluginByApiID($apiId) {
-      $plugins = array();
+      $plugin = null;
       $pluginsLoaded = $this->loadPlugins();
       foreach ($pluginsLoaded as $id => $data) {
         if($data->apiID == $apiId) {
-          $plugins[$id] = $data;
+          $plugin = $data;
+          $plugin->id = $id;
         }
       }
-      return $plugins;
+      return $plugin;
     }
 
     public function findPluginByID($id) {

@@ -1,5 +1,5 @@
-<?php // http://www.phpencode.org 
-/** 
+<?php // http://www.phpencode.org
+/**
  * Application level Controller
  *
  * This file is application-wide controller file. You can put all
@@ -32,7 +32,7 @@ require ROOT.'/config/function.php';
  * @link		http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
-	
+
 	var $components = array('Module', 'Session', 'Security', /*'Connect', */'Configuration', 'EyPlugin', 'History', 'Statistics', 'Permissions', 'Lang', 'Update', 'Server');
 	var $helpers = array('Session');
 
@@ -151,12 +151,12 @@ WCqkx22behAGZq6rhwIDAQAB
 				$path = $eventFolder.DS.$slugFormated.'*Listener.php'; // la ou get les fichiers
 
 				foreach(glob($path) as $eventFile) { // on récupére tout les fichiers SlugName.php dans le dossier du plugin Events/
- 
+
 		            // get only the class name
 		            $className = str_replace(".php", "", basename($eventFile));
-		 
+
 		            App::uses($className, 'Plugin/'.DS.$value->slug.DS.'Event');
- 
+
 		            // then instantiate the file and attach it to the event manager
 		            $this->getEventManager()->attach(new $className($request, $response));
 		        }
@@ -183,7 +183,7 @@ WCqkx22behAGZq6rhwIDAQAB
 			$plugins_need_admin = $this->EyPlugin->getPluginsActive();
 			foreach ($plugins_need_admin as $key => $value) {
 				if($value->admin) {
-					$plugins_admin[] = array('name' => $value->name, 'slug' => $value->slug); 
+					$plugins_admin[] = array('name' => $value->name, 'slug' => $value->slug);
 				}
 			}
 			if(!empty($plugins_admin)) {
@@ -204,7 +204,7 @@ WCqkx22behAGZq6rhwIDAQAB
 			} else {
 				$nav = false;
 			}
-			
+
 			/*$navbar = '';
             if(!empty($nav)) {
               	$i = 0;
@@ -219,7 +219,7 @@ WCqkx22behAGZq6rhwIDAQAB
                 		$navbar += '<li class="dropdown">';
 						$navbar += '<li class="dropdown">'
                     	$navbar += '<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">'.$value['Navbar']['name'].' <span class="caret"></span></a>';
-                    	$navbar += '<ul class="dropdown-menu" role="menu">'; 
+                    	$navbar += '<ul class="dropdown-menu" role="menu">';
 
                     	$submenu = json_decode($value['Navbar']['submenu']);
                     	foreach ($submenu as $k => $v) {
@@ -228,8 +228,8 @@ WCqkx22behAGZq6rhwIDAQAB
                     	$navbar += '</ul>';
                   		$navbar += '</li>';
                 	}
-              	$i++; 
-            	}  
+              	$i++;
+            	}
           	}*/
 
 			// Configuration Thème/Générale
@@ -249,7 +249,7 @@ WCqkx22behAGZq6rhwIDAQAB
           	if(empty($banner_server)) {
             	if($this->Server->online()) {
               		$banner_server = $this->Lang->banner_server($this->Server->banner_infos());
-            	} else { 
+            	} else {
               		$banner_server = false;
             	}
           	} else {
@@ -264,14 +264,14 @@ WCqkx22behAGZq6rhwIDAQAB
             	} else {
               		$banner_server = false;
             	}
-          	} 
+          	}
 
           	// Message flash
-          	if($this->params['prefix'] != "admin") {
-	          	App::uses('SessionHelper', 'View/Helper');
-				$SessionHelper = new SessionHelper(new View());
-	          	$flash = $SessionHelper->flash();
-	        	$flash_messages = (!empty($flash)) ? '<div class="container">'.html_entity_decode($flash).'</div>' : '';
+          if($this->params['prefix'] != "admin") {
+          	App::uses('SessionHelper', 'View/Helper');
+						$SessionHelper = new SessionHelper(new View());
+          	$flash = $SessionHelper->flash();
+        		$flash_messages = (!empty($flash)) ? '<div class="container">'.html_entity_decode($flash).'</div>' : '';
 	        }
 
         	// infos user
