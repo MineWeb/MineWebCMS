@@ -75,12 +75,11 @@ class PluginController extends AppController{
 		if($this->isConnected AND $this->User->isAdmin()) {
 			if($apiID != false AND $slug != false) {
 				 
-				if($this->EyPlugin->download($apiID, $slug)) {
+				if($this->EyPlugin->download($apiID, $slug, true)) {
 					$this->History->set('INSTALL_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN_INSTALL_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				} else {
-					$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				}
 			} else {
@@ -100,7 +99,6 @@ class PluginController extends AppController{
 					$this->Session->setFlash($this->Lang->get('PLUGIN_UPDATE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				} else {
-					$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				}
 			} else {

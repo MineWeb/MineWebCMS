@@ -73,22 +73,24 @@ function unzip($file, $path, $name = 'install-zip', $No_file_get_contents = fals
 }
 
 function clearDir($dossier) {
-	$ouverture=opendir($dossier);
-	if (!$ouverture) return false;
-	while($fichier=readdir($ouverture)) {
-		if ($fichier == '.' || $fichier == '..') continue;
-			if (is_dir($dossier."/".$fichier)) {
-				$r=clearDir($dossier."/".$fichier);
-				if (!$r) return false;
-			}
-			else {
-				$r=unlink($dossier."/".$fichier);
-				if (!$r) return false;
-			}
+	if(file_exists($dossier)) {
+		$ouverture=opendir($dossier);
+		if (!$ouverture) return false;
+		while($fichier=readdir($ouverture)) {
+			if ($fichier == '.' || $fichier == '..') continue;
+				if (is_dir($dossier."/".$fichier)) {
+					$r=clearDir($dossier."/".$fichier);
+					if (!$r) return false;
+				}
+				else {
+					$r=unlink($dossier."/".$fichier);
+					if (!$r) return false;
+				}
+		}
+		closedir($ouverture);
+		$r=rmdir($dossier);
+		return true;
 	}
-closedir($ouverture);
-$r=rmdir($dossier);
-return true;
 }
 
 function clearFolder($folder)

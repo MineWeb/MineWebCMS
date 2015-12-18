@@ -267,8 +267,12 @@ WCqkx22behAGZq6rhwIDAQAB
           	} 
 
           	// Message flash
-          	$flash = $this->Session->read('Message.flash');;
-        	$flash_messages = (!empty($flash)) ? '<div class="container">'.html_entity_decode($flash).'</div>' : '';
+          	if($this->params['prefix'] != "admin") {
+	          	App::uses('SessionHelper', 'View/Helper');
+				$SessionHelper = new SessionHelper(new View());
+	          	$flash = $SessionHelper->flash();
+	        	$flash_messages = (!empty($flash)) ? '<div class="container">'.html_entity_decode($flash).'</div>' : '';
+	        }
 
         	// infos user
         	$user = ($this->isConnected) ? $this->User->getAllFromCurrentUser() : array();

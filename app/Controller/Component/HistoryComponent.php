@@ -23,14 +23,14 @@ class HistoryComponent extends Object {
 
   function set($action, $category, $optionnal = null) { // Ajoute une entrée dans l'historique général
       // j'inclue le fichier lang
-    App::import('Component', 'ConnectComponent'); // le component
-    $this->Connect = new ConnectComponent; // connect pour le pseudo
+    $this->User = ClassRegistry::init('User');
+
     $this->History = ClassRegistry::init('History'); // le model history 
     $this->History->read(null, null);
     $this->History->set(array(
       'action' => $action,
       'category' => $category,
-      'author' => $this->Connect->get_pseudo(),
+      'author' => $this->User->getKey('pseudo'),
       'other' => $optionnal
       ));
     if($this->History->save()) {

@@ -202,11 +202,11 @@ class EyPluginComponent extends Object {
                   }
                 }
               } else {
-                $configKey = $config[$key[0]]; // c'est pas multi-dimensionnel donc on met juste la clé
+                $configKey = @$config[$key[0]]; // c'est pas multi-dimensionnel donc on met juste la clé
                 $key = $key[0];
               }
 
-              if((isset($multi) && $multi === true) || (!isset($multi) && array_key_exists($key, $config))) { // si le multi-dimensionnel est validé OU que c'est pas le multi-dimensionnel ET que la clé existe
+              if((isset($multi) && $multi === true) || (!is_null($config) && !isset($multi) && array_key_exists($key, $config))) { // si le multi-dimensionnel est validé OU que c'est pas le multi-dimensionnel ET que la clé existe
 
                 // on check le type de la clé
                 $function = 'is_'.$value;
@@ -271,13 +271,14 @@ class EyPluginComponent extends Object {
 
     private function checkIfNeedToBeInstalled($pluginsInFolder, $pluginsInDB) {
 
-      if(!empty($pluginsFolder)) { // Si y'a des plugins dans le dossier (prêt à être éventuellement installé)
+      if(!empty($pluginsInFolder)) { // Si y'a des plugins dans le dossier (prêt à être éventuellement installé)
 
-        $diff = array_diff($pluginsFolder, $pluginsInDB); // On calcule la différence entre les plugins dans le dossier et les plugins installés
+        $diff = array_diff($pluginsInFolder, $pluginsInDB); // On calcule la différence entre les plugins dans le dossier et les plugins installés
 
         if(!empty($diff)) { // si y'a une différence
 
           foreach ($diff as $key => $value) { // on parcours les différences
+
 
             // Fonction d'installation
             $this->install($value);
@@ -378,8 +379,8 @@ class EyPluginComponent extends Object {
 
           }
 
-          clearDir($this->pluginsFolder.$slug);
-          CakePlugin::unload($pluginName); // On unload sur cake
+          clearDir($this->pluginsFolder.DS.$slug);
+          CakePlugin::unload($slug); // On unload sur cake
           Cache::clear(false, '_cake_core_'); // On clear le cache
         }
 
@@ -439,7 +440,8 @@ WCqkx22behAGZq6rhwIDAQAB
 
       if($install) {
         if(unzip($zip, $this->pluginsFolder, 'install-zip', true)) { // on dé-zip tout
-          $this->install($slug);
+          $this->install($slug, true);
+          return;
         }
       } else {
         return $zip;
@@ -453,7 +455,7 @@ WCqkx22behAGZq6rhwIDAQAB
 
   // Fonction d'installation
 
-    public function install($slug) {
+    public function install($slug, $downloaded = false) {
       if($this->isValid($slug)) { // Si le plugin est valide
 
         if($this->requirements($slug)) { // Si tout les pré-requis sont réunis pour le plugins
@@ -466,7 +468,7 @@ WCqkx22behAGZq6rhwIDAQAB
             $tablesName = json_decode(file_get_contents($this->pluginsFolder.DS.$slug.DS.'SQL/tables.json'), true)['list']; // on décode le JSON et on prend l'array dans list
 
             // On ajoute les permissions
-            $this->addPermissions($config->Permissions); // On ajoute les permissions
+            $this->addPermissions($config->permissions); // On ajoute les permissions
 
             // On récupére le modal
             $PluginModel = ClassRegistry::init('Plugins');
@@ -492,13 +494,27 @@ WCqkx22behAGZq6rhwIDAQAB
             CakePlugin::load(array($slug => array('routes' => true, 'bootstrap' => true))); // On load sur cake
 
         } else {
-          $LangComponent = new LangComponent();
-          SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_REQUIREMENTS'), 'default.error');
+          if($downloaded) {
+            clearDir($this->pluginsFolder.DS.$slug); // On supprime ce qu'on a dl
+
+            CakePlugin::unload($slug); // On unload sur cake
+            Cache::clear(false, '_cake_core_'); // On clear le cache
+
+            $LangComponent = new LangComponent();
+            SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_REQUIREMENTS'), 'default.error');
+          }
         }
 
       } else {
-        $LangComponent = new LangComponent();
-        SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_NOT_VALID'), 'default.error');
+        if($downloaded) {
+          clearDir($this->pluginsFolder.DS.$slug); // On supprime ce qu'on a dl
+
+          CakePlugin::unload($slug); // On unload sur cake
+          Cache::clear(false, '_cake_core_'); // On clear le cache
+
+          $LangComponent = new LangComponent();
+          SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_NOT_VALID'), 'default.error');
+        }
       }
     }
 
@@ -557,6 +573,9 @@ WCqkx22behAGZq6rhwIDAQAB
           }
         }
         return false;
+      } else {
+        $LangComponent = new LangComponent();
+        SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_REQUIREMENTS'), 'default.error');
       }
     }
 
@@ -705,18 +724,28 @@ WCqkx22behAGZq6rhwIDAQAB
         $config = $this->getPluginConfig($name); // on récup la config
       }
 
-      foreach ($config['requirements'] as $type => $version) { // on parcours tout les pré-requis
+      if(isset($config->requirements) && !empty($config->requirements)) {
+        return false;
+      }
+
+      if(is_object($config)) {
+        $requirements = $config->requirements;
+      } else {
+        $requirements = $config['requirements'];
+      }
+
+      foreach ($requirements as $type => $version) { // on parcours tout les pré-requis
 
         if($type == "CMS") { // Si c'est sur le cms
 
-          App::import('Component', 'UpdateComponent'); // On charge le component d'update
-          $this->Update = new UpdateComponent();
+          App::import('Component', 'ConfigurationComponent'); // On charge le component d'update
+          $this->Configuration = new ConfigurationComponent();
 
           $versionExploded = explode(' ', $version);
           $operator = $versionExploded[0]; // On récupére l'opérateur et la version qui sont définis
           $versionNeeded = $versionExploded[1];
 
-          if(!version_compare($this->Update->get_version(), $versionNeeded, $operator)) { // Si la version du CMS ne correspond pas à ce qui est demandé
+          if(!version_compare($this->Configuration->get('version'), $versionNeeded, $operator)) { // Si la version du CMS ne correspond pas à ce qui est demandé
             $this->log('Plugin : '.$name.' can\'t be installed, CMS version need to be '.$operator.' '.$versionNeeded.' !');
             return false; // On arrête tout
           }
@@ -731,15 +760,15 @@ WCqkx22behAGZq6rhwIDAQAB
           $type = $typeExploded[0];             // On veux savoir le type + l'id de ce qui est concerné
           $id = $typeExploded[1];
 
-          if($type == "Plugin") {
+          if($type == "plugin") {
 
             // C'est un plugin donc il nous faut sa version
             $search = $this->findPluginByID($id);
             if(!empty($search)) { // si on a trouvé quelque chose
 
-              $pluginVersion = $this->getPluginConfig($search[$id]['slug'])['version'];
-              if(!version_compare($this->Update->get_version(), $versionNeeded, $operator)) { // Si la version du CMS ne correspond pas à ce qui est demandé
-                $this->log('Plugin : '.$name.' can\'t be installed, '.$search[$id]['slug'].' (plugin) version need to be '.$operator.' '.$versionNeeded.' !');
+              $pluginVersion = $this->getPluginConfig($search->slug);
+              if(!version_compare($pluginVersion->version, $versionNeeded, $operator)) { // Si la version du CMS ne correspond pas à ce qui est demandé
+                $this->log('Plugin : '.$name.' can\'t be installed, '.$search->slug.' (plugin) version need to be '.$operator.' '.$versionNeeded.' !');
                 return false; // On arrête tout
               }
 
@@ -748,7 +777,7 @@ WCqkx22behAGZq6rhwIDAQAB
               return false; // On arrête tout
             }
 
-          } elseif($type == "Theme") {
+          } elseif($type == "theme") {
 
             $themeFinded = false;
 
@@ -897,7 +926,6 @@ WCqkx22behAGZq6rhwIDAQAB
       // On gère les plugins gratuits de base
         $pluginList = array(); // Pour ne pas rien retourner au cas où
         $url = @file_get_contents('http://mineweb.org/api/v'.$this->apiVersion.'/getFreePlugins'); // On get tout les plugins
-        var_dump($url);
         if($url !== false) {
           $JSON = json_decode($url, true);
           $pluginList = ($JSON !== false) ? $JSON : array();
@@ -940,7 +968,7 @@ WCqkx22behAGZq6rhwIDAQAB
       $url = @file_get_contents('http://mineweb.org/api/v'.$this->apiVersion.'/getAllPlugins'); // On get tout les plugins
       if($url !== false) {
         $JSON = json_decode($url, true);
-        $pluginInfo = ($JSON !== false && isset($JSON[$apiID])) ? $JSON : array();
+        $pluginInfo = ($JSON !== false && isset($JSON[$apiID])) ? $JSON[$apiID] : array();
       }
       return $pluginInfo;
     }

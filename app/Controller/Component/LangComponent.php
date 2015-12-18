@@ -55,17 +55,17 @@ class LangComponent extends Object {
 		App::import('Component', 'EyPlugin');
 		$this->EyPlugin = new EyPluginComponent();
 		foreach ($this->EyPlugin->getPluginsActive() as $key => $value) {
-			$name = $value->slug;
-			if(file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/'.$language.'.json')) {
-				$pl_language_file = file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/'.$language.'.json');
+			$slug = $value->slug;
+			if(file_get_contents(ROOT.'/app/Plugin/'.$slug.'/lang/'.$language.'.json')) {
+				$pl_language_file = file_get_contents(ROOT.'/app/Plugin/'.$slug.'/lang/'.$language.'.json');
 				$pl_language_file = json_decode($pl_language_file, true);
-			} elseif(file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/fr.json')) {
-				$pl_language_file = file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/fr.json');
+			} elseif(file_get_contents(ROOT.'/app/Plugin/'.$slug.'/lang/fr.json')) {
+				$pl_language_file = file_get_contents(ROOT.'/app/Plugin/'.$slug.'/lang/fr.json');
 				$pl_language_file = json_decode($pl_language_file, true);
 			}
 			if(!empty($pl_language_file)) {
 				foreach ($pl_language_file as $k => $v) {
-					$language_file[$k.'-'.$name] = $v;
+					$language_file[$k.'-'.$slug] = $v;
 				}
 			}
 			unset($pl_language_file);

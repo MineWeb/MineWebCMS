@@ -51,7 +51,7 @@ $this->EyPlugin = new EyPluginComponent;
               </tbody>
             </table>
           <?php } else { 
-            echo '<div class="alert alert-danger">Aucun plugin installé</div>'; 
+            echo '<div class="alert alert-danger">'.$Lang->get('NONE_PLUGIN_INSTALLED').'</div>'; 
           } ?>
         </div>
       </div>
@@ -64,7 +64,6 @@ $this->EyPlugin = new EyPluginComponent;
           <h3 class="box-title"><?= $Lang->get('FREE_PLUGINS_AVAILABLE') ?></h3>
         </div>
         <div class="box-body">
-        
           <?php 
           $free_plugins = $this->EyPlugin->getFreePlugins();
           if(!empty($free_plugins)) { ?>
