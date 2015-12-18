@@ -20,14 +20,14 @@ class EyPluginComponent extends Object {
   function __construct() {
     $this->pluginsFolder = ROOT.DS.'app'.DS.'Plugin';
   }
-  
+
   function shutdown(&$controller) {}
   function beforeRender(&$controller) {}
   function beforeRedirect() {}
   function startup(&$controller) {}
 
   // Initialisation du composant
-   
+
 
     function initialize(&$controller) {
 
@@ -49,7 +49,7 @@ class EyPluginComponent extends Object {
 
     public function getPluginConfig($slug) {
       $config = @file_get_contents($this->pluginsFolder.DS.$slug.DS.'config.json'); // On récup la config JSON
-      
+
       if($config !== false) { // Si c'est pas false
 
         return json_decode($config); // On retourne ou le JSON décodé ou false (pour un pb)
@@ -129,7 +129,7 @@ class EyPluginComponent extends Object {
         return $pluginsList;
 
       } else {
-        $this->log('Unable to scan plugins folder.'); // on log ça 
+        $this->log('Unable to scan plugins folder.'); // on log ça
         return array(); // Impossible de scanner le dossier
       }
     }
@@ -143,7 +143,7 @@ class EyPluginComponent extends Object {
       // On cherche tout
       $search = $PluginModel->find('all');
 
-      // De base la liste est vide 
+      // De base la liste est vide
       $pluginsList = array();
 
       if(!empty($search)) { // si c'est pas vide (pour éviter l'erreur)
@@ -151,7 +151,7 @@ class EyPluginComponent extends Object {
           $pluginsList[] = $value['Plugin']['name'];
         }
       }
-      
+
       return $pluginsList;
     }
 
@@ -267,7 +267,7 @@ class EyPluginComponent extends Object {
 
     }
 
-  // Installation des plugins non installés 
+  // Installation des plugins non installés
 
     private function checkIfNeedToBeInstalled($pluginsInFolder, $pluginsInDB) {
 
@@ -289,14 +289,14 @@ class EyPluginComponent extends Object {
 
       }
 
-      return false; // on a rien à faire. 
+      return false; // on a rien à faire.
     }
 
-  // Suppression des plugins non installés 
+  // Suppression des plugins non installés
 
     private function checkIfNeedToBeDeleted($pluginsInFolder, $pluginsInDB) {
 
-      if(!empty($pluginsFolder)) { // Si y'a des plugins dans le dossier (prêt à être éventuellement installé)
+      if(!empty($pluginsInFolder)) { // Si y'a des plugins dans le dossier (prêt à être éventuellement installé)
 
         $diff = array_diff($pluginsInDB, $pluginsInFolder); // On calcule la différence entre les plugins dans le dossier et les plugins installés
 
@@ -317,7 +317,7 @@ class EyPluginComponent extends Object {
 
       }
 
-      return false; // on a rien à faire. 
+      return false; // on a rien à faire.
     }
 
   // Fonction de suppression
@@ -328,7 +328,7 @@ class EyPluginComponent extends Object {
         App::uses('MainComponent', 'Plugin'.DS.$slug.DS.'Controller'.DS.'Component');
         $this->Main = new MainComponent();
         $this->Main->onDisable(); // on le lance
-      } 
+      }
 
       // On récupére le modal
       $PluginModel = ClassRegistry::init('Plugin');
@@ -351,40 +351,11 @@ class EyPluginComponent extends Object {
 
         $PluginModel->delete($search['Plugin']['id']); // On supprime le plugin de la db
 
-        if($isForced) { // si c'est une suppression anormale (automatique)
-          
-          $pluginConfig = $this->getPluginConfig($slug);
-          $pluginPermissions = $pluginConfig->permissions->available; // on récupére les permissions du plugin
-
-          $PermissionsModel = ClassRegistry::init('Permission'); // On charge le model
-          $searchPermissions = $PermissionsModel->find('all'); // on récupére tout
-
-          foreach ($searchPermissions as $k => $value) { // on parcours tout
-
-            $permissions = unserialize($value['Permission']['permissions']);
-            $permissionsBeforeCheck = $permissions;
-            foreach ($permissions as $k2 => $perm) { // on parcours toutes les permissions
-              if(in_array($perm, $pluginPermissions)) { // si la perm est dans celle du plugin
-                unset($permissions[$k2]); // elle n'a rien à faire ici alors on la supprime
-              }
-            }
-
-            if(count($permissions) != count($permissionsBeforeCheck)) { // si les permissions ont changé entre temps (certaines supprimé), on update
-
-              $PermissionsModel->read(null, $value['Permission']['id']);
-              $PermissionsModel->set(array('permissions' => serialize($permissions))); // On re-sérialize les permissions et on set
-              $PermissionsModel->save(); // On enregistre le tout
-
-            }
-
-          }
-
-          clearDir($this->pluginsFolder.DS.$slug);
-          CakePlugin::unload($slug); // On unload sur cake
-          Cache::clear(false, '_cake_core_'); // On clear le cache
-        }
-
+        clearDir($this->pluginsFolder.DS.$slug);
+        CakePlugin::unload($slug); // On unload sur cake
+        Cache::clear(false, '_cake_core_'); // On clear le cache
       }
+
     }
 
   // Fonction de download (pré-installation)
@@ -489,7 +460,7 @@ WCqkx22behAGZq6rhwIDAQAB
               App::uses('MainComponent', 'Plugin'.DS.$slug.DS.'Controller'.DS.'Component');
               $this->Main = new MainComponent();
               $this->Main->onEnable(); // on le lance
-            } 
+            }
 
             CakePlugin::load(array($slug => array('routes' => true, 'bootstrap' => true))); // On load sur cake
 
@@ -535,7 +506,7 @@ WCqkx22behAGZq6rhwIDAQAB
 
           App::import('Component', 'UpdateComponent');
           $this->Update = new UpdateComponent();         // On importe le composant Update
-          if($this->Update->plugin($download, $slug, $apiID)) { 
+          if($this->Update->plugin($download, $slug, $apiID)) {
 
             $pluginConfig = json_decode(file_get_contents($this->pluginsFolder.DS.$slug.DS.'config.json'), true);
 
@@ -795,7 +766,7 @@ WCqkx22behAGZq6rhwIDAQAB
                   $themeId = $themeConfig['author'].'.'.$value.'.'.$themeConfig['apiID']; // on fais l'id
                   if($themeId == $id) {// si on trouve une correspondance
                     if(version_compare($themeConfig['version'], $versionNeeded, $operator)) { // on compare les versions
-                      $themeFinded = true; // on dis que c'est bon pour ça 
+                      $themeFinded = true; // on dis que c'est bon pour ça
                       break; // et on arrête cette boucle pour voir les autres pré-requis
                     } else {
                       $this->log('Plugin : '.$name.' can\'t be installed, '.$search[$id]['slug'].' (theme) version need to be '.$operator.' '.$versionNeeded.' !');
@@ -806,7 +777,7 @@ WCqkx22behAGZq6rhwIDAQAB
               }
             }
 
-            if(!$themeFinded) { // y'a pas eu de theme trouvé 
+            if(!$themeFinded) { // y'a pas eu de theme trouvé
               $this->log('Plugin : '.$name.' can\'t be installed, '.$search[$id]['slug'].' (theme) is not installed !');
               return false; // On arrête tout
             }
@@ -817,7 +788,7 @@ WCqkx22behAGZq6rhwIDAQAB
 
       }
 
-      return true; // De base c'est bon 
+      return true; // De base c'est bon
 
     }
 
@@ -825,7 +796,7 @@ WCqkx22behAGZq6rhwIDAQAB
   // Rafraichi les permssions (ne laisse que celle de base + celles des plugins installés)
 
     private function refreshPermissions() {
-      
+
       // Chargons le component
       App::import('Component', 'Permissions');
       $PermissionsComponent = new PermissionsComponent();
@@ -877,13 +848,13 @@ WCqkx22behAGZq6rhwIDAQAB
 
       $this->Permission = ClassRegistry::init('Permission'); // On charge le model
 
-      if(isset($config->default) AND !empty($config->default)) { // On vérifie que ca existe bien & si c'est pas vide 
+      if(isset($config->default) AND !empty($config->default)) { // On vérifie que ca existe bien & si c'est pas vide
 
         foreach ($config->default as $key => $value) { // On parcours les permissions par défaut du plugin
 
-          $searchRank = $this->Permission->find('first', array('conditions' => array('rank' => $key))); // je cherche les perms du rank 
+          $searchRank = $this->Permission->find('first', array('conditions' => array('rank' => $key))); // je cherche les perms du rank
 
-          if(!empty($searchRank)) { // si on trouve un rank avec cet ID 
+          if(!empty($searchRank)) { // si on trouve un rank avec cet ID
 
             $rankPermissions = unserialize($searchRank['Permission']['permissions']); // On récupére ses permissions déjà configurées
 
@@ -912,7 +883,7 @@ WCqkx22behAGZq6rhwIDAQAB
 
           foreach ($JSON as $key => $value) { // On parcours les plugins
             if($value['apiID'] == $apiID) { // si le plugin est celui qu'on recherche
-              $pluginVersion = $value['version']; // on set la version 
+              $pluginVersion = $value['version']; // on set la version
               break; // on arrête la boucle
             }
           }
@@ -983,14 +954,14 @@ WCqkx22behAGZq6rhwIDAQAB
 // **/
 
 // class EyPluginComponent extends Object {
-  
+
 //   function shutdown(&$controller) {
 //   }
 
 //   function beforeRender(&$controller) {
 //   }
-  
-//   function beforeRedirect() { 
+
+//   function beforeRedirect() {
 //   }
 
 // /**
@@ -1002,13 +973,13 @@ WCqkx22behAGZq6rhwIDAQAB
 // **/
 
 //   function initialize(&$controller) {
-//     $this->plugins = ClassRegistry::init('plugins'); // le model plugins 
+//     $this->plugins = ClassRegistry::init('plugins'); // le model plugins
 
 //     $plugins_list = $this->getPluginsInFolder(); // on récupére tout les plugins dans le dossier
 
 //     if($plugins_list != false) {
 
-//       foreach ($plugins_list as $k => $v) { // on les passes touts 1 à 1 
+//       foreach ($plugins_list as $k => $v) { // on les passes touts 1 à 1
 
 //         $search = $this->plugins->find('all', array('conditions' => array('name' => $v))); // je cherche tout les plugins du dossier dans la bdd
 
@@ -1023,14 +994,14 @@ WCqkx22behAGZq6rhwIDAQAB
 //           $this->plugins->create();
 //           $this->plugins->set(array('plugin_id' => $config['plugin_id'], 'name' => $v, 'author' => $config['author'], 'version' => $config['version'], 'tables' => serialize($p_tables)));
 //           $this->plugins->save(); // on save le plugin dans la base de données
-          
+
 //           $this->addTables($v); // on ajoute les tables nécessaires
 
 //           if(file_exists(ROOT.'/app/Plugin/'.$v.'/Controller/Component/MainComponent.php')) { // On fais le onEnable si il existe
 //             App::uses('MainComponent', 'Plugin/'.$v.'/Controller/Component');
 //             $this->Main = new MainComponent();
 //             $this->Main->onEnable();
-//           } 
+//           }
 
 //           // une fois que on a mis les tables, on s'occupe des permissions
 //           $this->addPermissions($config); // on ajoute les perms par défaut
@@ -1122,7 +1093,7 @@ WCqkx22behAGZq6rhwIDAQAB
 //     $this->Permission = ClassRegistry::init('Permission');
 //     if(isset($config['permissions']['default']) AND !empty($config['permissions']['default'])) {
 //       foreach ($config['permissions']['default'] as $key => $value) {
-//         $where = $this->Permission->find('all', array('conditions' => array('rank' => $key))); // je cherche les perms du rank 
+//         $where = $this->Permission->find('all', array('conditions' => array('rank' => $key))); // je cherche les perms du rank
 //         if(!empty($where)) {
 //           $addperm = unserialize($where['0']['Permission']['permissions']);
 //           foreach ($addperm as $k2 => $v2) {
@@ -1155,7 +1126,7 @@ WCqkx22behAGZq6rhwIDAQAB
 //     // une fois que on a mis les tables, on s'occupe des permissions
 //     $this->Permission = ClassRegistry::init('Permission');
 //     if(isset($config['permissions']['available']) AND !empty($config['permissions']['available'])) {
-//       $where = $this->Permission->find('all'); // je cherche les perms 
+//       $where = $this->Permission->find('all'); // je cherche les perms
 //       if(!empty($where)) {
 //         foreach ($where as $key => $value) {
 //           $addperm = unserialize($value['Permission']['permissions']);
@@ -1231,7 +1202,7 @@ WCqkx22behAGZq6rhwIDAQAB
 //     }
 //     if(!empty($plugins)) {
 //       foreach ($plugins as $key => $value) {
-//         $plugins_list[] = $value['plugins']['name']; 
+//         $plugins_list[] = $value['plugins']['name'];
 //       }
 //       $plugins = $plugins_list;
 //     } else {
@@ -1406,7 +1377,7 @@ WCqkx22behAGZq6rhwIDAQAB
 //       $this->plugins->create();
 //       $this->plugins->set(array('plugin_id' => $plugin_id, 'name' => $plugin_name, 'author' => $config['author'], 'version' => $config['version'], 'tables' => serialize($p_tables)));
 //       $this->plugins->save();
-      
+
 //       $this->addTables($plugin_name);
 
 //       if(file_exists(ROOT.'/app/Plugin/'.$plugin_name.'/Controller/Component/MainComponent.php')) {
