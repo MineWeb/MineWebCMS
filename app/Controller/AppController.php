@@ -156,6 +156,9 @@ WCqkx22behAGZq6rhwIDAQAB
 		/* ---- */
 
 		$event = $this->getEventManager()->dispatch(new CakeEvent('requestPage', $this, $this->request->data));
+		if($this->request->is('post')) {
+			$this->getEventManager()->dispatch(new CakeEvent('onPostRequest', $this, $this->request->data));
+		}
 
 		$this->loadModel('User');
 		$this->isConnected = $this->User->isConnected();
@@ -285,20 +288,8 @@ WCqkx22behAGZq6rhwIDAQAB
 	}
 
 	function beforeRender() {
-		/*
-		$return['status'] = 'error';
-        $return['msg'] = 'Un problème d\'évent est survenu !';
-        return $return;
-		*/
 		$event = $this->getEventManager()->dispatch(new CakeEvent('onLoadPage', $this, $this->request->data));
-		//if(!empty($event['result']) && $event['result']['status'] == "error") {
-		//	return throw new InternalException($event['result']['msg']);
-		//}
 
-
-		if($this->request->is('post')) {
-			$this->getEventManager()->dispatch(new CakeEvent('onRequest', $this, $this->request->data));
-		}
 		if($this->params['prefix'] == "admin") {
 			$this->getEventManager()->dispatch(new CakeEvent('onLoadAdminPanel', $this, $this->request->data));
 		}
