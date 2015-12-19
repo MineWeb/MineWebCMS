@@ -4,9 +4,82 @@ class NewsController extends AppController {
 
 	public $components = array('Session');
 
+	function blog() {
+		$this->loadModel('News');
+		$search_news = $this->News->find('all', array('order' => array('id DESC'), 'conditions' => array('published' => 1)));
+
+		// Je met tout les commentaires à chaque news
+		$this->loadModel('Comment');
+		$comments = $this->Comment->find('all');
+
+		foreach ($comments as $key => $value) {
+
+			foreach ($search_news as $k => $v) {
+
+				if($value['Comment']['news_id'] == $v['News']['id']) {
+
+					$search_news[$k]['News']['comment'][] = $value['Comment'];
+
+					break;
+				}
+
+			}
+
+		}
+
+		// Je met tout les likes à chaque news
+		$this->loadModel('Like');
+		$comments = $this->Like->find('all');
+
+		foreach ($comments as $key => $value) {
+
+			foreach ($search_news as $k => $v) {
+
+				if($value['Like']['news_id'] == $v['News']['id']) {
+
+					$search_news[$k]['News']['likes'][] = $value['Like'];
+
+					break;
+				}
+
+			}
+
+		}
+
+		// je cherche toutes les news que l'utilisateur connecté a aimé
+		if($this->isConnected) {
+			$user_likes = $this->Like->find('all', array('conditions' => array('author' => $this->User->getKey('pseudo'))));
+			if(!empty($user_likes)) {
+				$i = 0;
+				foreach ($user_likes as $key => $value) {
+					$i++;
+					foreach ($search_news as $k => $v) {
+						if($value['Like']['news_id'] == $v['News']['id']) {
+								$search_news[$k]['News']['liked'] = true;
+						} elseif(count($user_likes) == $i && !isset($search_news[$k]['News']['liked'])) {
+							$search_news[$k]['News']['liked'] = false; // si c'est le dernier like et que y'a toujours pas de like sur cette news on dis false
+						}
+					}
+				}
+			} else {
+				foreach ($search_news as $k => $v) {
+					$search_news[$k]['News']['liked'] = false;
+				}
+			}
+		} else {
+			foreach ($search_news as $k => $v) {
+				$search_news[$k]['News']['liked'] = false;
+			}
+		}
+
+		$can_like = ($this->Permissions->can('LIKE_NEWS')) ? true : false;
+
+		$this->set(compact('search_news', 'can_like'));
+	}
+
 	function index($slug) {
 		$this->layout= $this->Configuration->get_layout();
-		 
+
 		if(isset($slug)) { // si le slug est présent
 			$search_news = $this->News->find('all', array('conditions' => array('slug' => $slug)));
 			if($search_news) { // si le slug existe
@@ -44,16 +117,12 @@ class NewsController extends AppController {
 				$search_news = $this->News->find('all', array('limit' => '4', 'order' => 'id desc', 'conditions' => array('published' => 1))); // on cherche les 3 dernières news (les plus veille)
 				$this->set(compact('search_news', 'likes', 'title', 'content', 'author', 'created', 'updated', 'id', 'comments', 'like', 'likes', 'img')); // on envoie les données à la vue
 			} else {
-				// si la news n'existe pas, msg d'erreur + redirection
-				$this->Session->setFlash($this->Lang->get('NEWS_DOESNT_EXIST'), "Default.error");
-				$this->redirect('/', null, true);
+				throw new NotFoundException();
 			}
 		} else {
-			// si il manque un argument, msg d'erreur + redirection
-			$this->Session->setFlash($this->Lang->get('NEWS_DOESNT_EXIST'), "Default.error");
-			$this->redirect('/', null, true);
+			throw new NotFoundException();
 		}
-	} 
+	}
 
 	function add_comment() {
 		$this->autoRender = false;
@@ -149,7 +218,7 @@ class NewsController extends AppController {
 
 	function admin_index() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NEWS')) {
-			 
+
 			$this->set('title_for_layout',$this->Lang->get('NEWS_LIST'));
 			$this->layout = 'admin';
 			$this->loadModel('News');
@@ -163,7 +232,7 @@ class NewsController extends AppController {
 	function admin_delete($id = false) {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NEWS')) {
 			if($id != false) {
-				 
+
 				$this->loadModel('News');
 				if($this->News->delete($id)) {
 					$this->loadModel('Like');
@@ -187,7 +256,7 @@ class NewsController extends AppController {
 	function admin_add() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NEWS')) {
 			$this->layout = 'admin';
-			 
+
 			$this->set('title_for_layout', $this->Lang->get('ADD_NEWS'));
 		} else {
 			$this->redirect('/');
@@ -231,7 +300,7 @@ class NewsController extends AppController {
 	function admin_edit($id = false) {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NEWS')) {
 			$this->layout = 'admin';
-			 
+
 			if($id != false) {
 				$this->loadModel('News');
 				$search = $this->News->find('all', array('conditions' => array('id' => $id)));
@@ -253,7 +322,7 @@ class NewsController extends AppController {
 	function admin_edit_ajax() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NEWS')) {
 			$this->layout = null;
-			 
+
 			if($this->request->is('post')) {
 
 				if(!empty($this->request->data['title']) AND !empty($this->request->data['content']) AND !empty($this->request->data['id']) AND !empty($this->request->data['slug'])) {

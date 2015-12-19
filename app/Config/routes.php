@@ -10,7 +10,9 @@
 
 		Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
 
+		Router::connect('/blog', array('controller' => 'news', 'action' => 'blog'));
 		Router::connect('/blog/*', array('controller' => 'news', 'action' => 'index'));
+		Router::connect('/blog/', array('controller' => 'news', 'action' => 'blog'));
 
 		Router::connect('/p/*', array('controller' => 'pages', 'action' => 'index'));
 
