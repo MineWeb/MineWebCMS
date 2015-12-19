@@ -1,11 +1,11 @@
-<?php 
+<?php
 
 class ShopController extends AppController {
 
 	public $components = array('Session', 'Shop.DiscountVoucher', 'History');
 
 	function index($category = false) { // Index de la boutique
-		  
+
 		$title_for_layout = $this->Lang->get('SHOP');
 		if($category) {
 			$this->set(compact('category'));
@@ -15,7 +15,7 @@ class ShopController extends AppController {
 		$this->loadModel('Category'); // le model des catégories
 		$search_items = $this->Item->find('all'); // on cherche tous les items et on envoie à la vue
 		$search_categories = $this->Category->find('all'); // on cherche toutes les catégories et on envoie à la vue
-		
+
 		$search_first_category = $this->Category->find('first'); //
 		$search_first_category = @$search_first_category['Category']['id']; //
 
@@ -48,9 +48,9 @@ class ShopController extends AppController {
 	}
 
 	function ajax_get($id) { // Permet d'afficher le contenu du modal avant l'achat (ajax)
-		  
+
 		$this->autoRender = false;
-		if($this->isConnected AND $this->Permissions->can('CAN_BUY')) { // si l'utilisateur est connecté 
+		if($this->isConnected AND $this->Permissions->can('CAN_BUY')) { // si l'utilisateur est connecté
 			$this->loadModel('Item'); // je charge le model des articles
 			$search_item = $this->Item->find('all', array('conditions' => array('id' => $id))); // je cherche l'article selon l'id
 			if($search_item['0']['Item']['price'] == 1) { $money = $this->Configuration->get_money_name(false, true); } else { $money = $this->Configuration->get_money_name(); } // je dis que la variable $money = le nom de la money au pluriel ou singulier selon le prix
@@ -65,33 +65,57 @@ class ShopController extends AppController {
 				$i = 0;
 				foreach ($search_item[0]['Item']['servers'] as $key => $value) {
 					$i++;
-					$servers = $servers.$servers_list[$value]; 
+					$servers = $servers.$servers_list[$value];
 					if($i < count($search_item[0]['Item']['servers'])) {
 						$servers = $servers.', ';
 					}
 				}
 			}
-			echo '
-		<div class="modal-body">
-			<div id="msg_buy"></div>
-			<p><b>'.$this->Lang->get('NAME_OF_ITEM').' :</b> '.$search_item['0']['Item']['name'].'</p>
-			<p><b>'.$this->Lang->get('DESCRIPTION').' :</b> '.nl2br($search_item['0']['Item']['description']).'</p>';
-			if(!empty($search_item[0]['Item']['servers'])) {
-				echo '<p><b>'.$this->Lang->get('SERVER').' :</b> '.$servers . '</p>';
+
+			$affich_server = (!empty($search_item[0]['Item']['servers'])) ? true : false;
+
+
+			//On récupére l'element
+			if(file_exists(APP.DS.'View'.DS.'Themed'.DS.$this->Configuration->get('theme').DS.'Element'.DS.'modal_buy.ctp')) {
+				$element_content = file_get_contents(APP.DS.'View'.DS.'Themed'.DS.$this->Configuration->get('theme').DS.'Element'.DS.'modal_buy.ctp');
+			} else {
+				$element_content = file_get_contents($this->EyPlugin->pluginsFolder.DS.'Shop'.DS.'View'.DS.'Element'.DS.'modal_buy.ctp');
 			}
-			echo '<p><b>'.$this->Lang->get('PRICE').' :</b> '.$search_item['0']['Item']['price'] . ' ' . $money .'</p>
-			<p><input name="code" type="text" class="form-control" id="code-voucher" style="width:245px;" placeholder="'.$this->Lang->get('HAVE_YOU_VOUCHER').'"></p>
-		</div>
-      	<div class="modal-footer">
-        	<button type="button" class="btn btn-default" data-dismiss="modal">'.$this->Lang->get('CLOSE').'</button>
-        	<button type="button" class="btn btn-primary'; // j'affiche le contenu du modal
-        	//if($search_item['0']['Item']['price'] > $this->Connect->get('money')) { // si il a pas assez de money 
-        	//	echo ' disabled" title="'.$this->Lang->get('NO_ENOUGH_MONEY'); // je met le bouton en disable
-        	//} else {
-        		echo '" onClick="buy(\''.$search_item['0']['Item']['id'].'\')'; // sinon, il a assez de money donc j'ajoute la fonction js pour acheter 
-        	//}
-        	echo '" id="btn-buy">'.$this->Lang->get('BUY').'</button>
-     	</div>'; // puis je fini l'affichage du modal
+
+			// On remplace les messages de langues
+
+			$i = 0;
+			$count = substr_count($element_content, '{LANG-');
+			while ($i < $count) {
+				$i++;
+
+				$element_explode_for_lang = explode('{LANG-', $element_content);
+				$element_explode_for_lang = explode('}', $element_explode_for_lang[1])[0];
+
+				$element_content = str_replace('{LANG-'.$element_explode_for_lang.'}', $this->Lang->get($element_explode_for_lang), $element_content);
+
+			}
+
+			// On remplace les variables
+			$vars = array(
+				'{ITEM_NAME}' => $search_item['0']['Item']['name'],
+				'{ITEM_DESCRIPTION}' => nl2br($search_item['0']['Item']['description']),
+				'{ITEM_SERVERS}' => $servers,
+				'{ITEM_PRICE}' => $search_item['0']['Item']['price'],
+				'{SITE_MONEY}' => $money,
+				'{ITEM_ID}' => $search_item['0']['Item']['id']
+			);
+			$element_content = strtr($element_content, $vars);
+
+			// La condition d'affichage de serveur
+			$element_explode_for_server = explode('[IF AFFICH_SERVER]', $element_content);
+			$element_explode_for_server = explode('[/IF AFFICH_SERVER]', $element_explode_for_server[1])[0];
+
+			$search_server = '[IF AFFICH_SERVER]'.$element_explode_for_server.'[/IF AFFICH_SERVER]';
+			$element_content = ($affich_server) ? str_replace($search_server, $element_explode_for_server, $element_content) : str_replace($search_server, '', $element_content);
+
+			echo $element_content;
+
 		} else {
 			echo $this->Lang->get('NEED_CONNECT'); // si il n'est pas connecté
 		}
@@ -99,7 +123,7 @@ class ShopController extends AppController {
 
 	function buy_ajax($id) {
 		$this->autoRender = false;
-		  
+
 		if($this->isConnected AND $this->Permissions->can('CAN_BUY')) {
 			$this->loadModel('Item');
 			$search_item = $this->Item->find('all', array('conditions' => array('id' => $id)));
@@ -172,7 +196,7 @@ class ShopController extends AppController {
 
 	public function admin_index() {
 		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+
 			$this->set('title_for_layout',$this->Lang->get('SHOP'));
 			$this->layout = 'admin';
 			$this->loadModel('Item');
@@ -217,7 +241,7 @@ class ShopController extends AppController {
 	public function admin_edit($id = false) {
 		if($this->isConnected AND $this->Connect->if_admin()) {
 			if($id != false) {
-				 
+
 				$this->set('title_for_layout', $this->Lang->get('EDIT_ITEM'));
 				$this->layout = 'admin';
 				$this->loadModel('Item');
@@ -318,7 +342,7 @@ class ShopController extends AppController {
 
 	public function admin_add_item() {
 		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+
 			$this->set('title_for_layout', $this->Lang->get('ADD_ITEM'));
 			$this->layout = 'admin';
 			$this->loadModel('Category');
@@ -387,7 +411,7 @@ class ShopController extends AppController {
 
 	public function admin_add_category() {
 		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+
 			$this->layout = 'admin';
 			$this->set('title_for_layout', $this->Lang->get('ADD_CATEGORY'));
 			if($this->request->is('post')) {
@@ -470,7 +494,7 @@ class ShopController extends AppController {
 			$this->redirect('/');
 		}
 	}
-	
+
 	public function admin_toggle_paysafecard() {
 		$this->autoRender = false;
 		if($this->isConnected AND $this->Connect->if_admin()) {
@@ -480,7 +504,7 @@ class ShopController extends AppController {
 				$this->Paysafecard->delete($paysafecard_enabled[0]['Paysafecard']['id']);
 
 				$this->History->set('ENABLE_PAYSAFECARD', 'shop');
-					 
+
 				$this->Session->setFlash($this->Lang->get('PAYSAFECARD_ENABLE_SUCCESS'), 'default.success');
 				$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 			} else {
@@ -489,7 +513,7 @@ class ShopController extends AppController {
 				$this->Paysafecard->save();
 
 				$this->History->set('DISABLE_PAYSAFECARD', 'shop');
-					 
+
 				$this->Session->setFlash($this->Lang->get('PAYSAFECARD_DISABLE_SUCCESS'), 'default.success');
 				$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 			}
@@ -528,7 +552,7 @@ class ShopController extends AppController {
 					$this->PaysafecardMessage->save();
 
 					$this->History->set('VALID_PAYSAFECARD', 'shop');
-					 
+
 					$this->Session->setFlash($this->Lang->get('PAYSAFECARD_VALID_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 				} else {
@@ -561,7 +585,7 @@ class ShopController extends AppController {
 					$this->PaysafecardMessage->save();
 
 					$this->History->set('INVALID_PAYSAFECARD', 'shop');
-					 
+
 					$this->Session->setFlash($this->Lang->get('PAYSAFECARD_INVALID_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 				} else {
@@ -572,7 +596,7 @@ class ShopController extends AppController {
 			}
 		} else {
 			$this->redirect('/');
-		}	
+		}
 	}
 
 	public function paysafecard() {
@@ -608,10 +632,10 @@ class ShopController extends AppController {
 							}
 						}  else {
 							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_4_CHARACTER')));
-						}	
+						}
 					}  else {
 						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_NUMBER')));
-					}	
+					}
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
@@ -625,7 +649,7 @@ class ShopController extends AppController {
 
 	public function admin_add_paypal() {
 		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+
 			$this->set('title_for_layout', $this->Lang->get('ADD_OFFER_PAYPAL'));
 			$this->layout = 'admin';
 		} else {
@@ -635,7 +659,7 @@ class ShopController extends AppController {
 
 	public function admin_edit_paypal($id = false) {
 		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+
 			$this->set('title_for_layout', $this->Lang->get('EDIT_OFFER_PAYPAL'));
 			$this->layout = 'admin';
 			if($id != false) {
@@ -657,7 +681,7 @@ class ShopController extends AppController {
 
 	public function admin_add_starpass() {
 		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+
 			$this->set('title_for_layout', $this->Lang->get('ADD_OFFER_STARPASS'));
 			$this->layout = 'admin';
 		} else {
@@ -667,7 +691,7 @@ class ShopController extends AppController {
 
 	public function admin_edit_starpass($id = false) {
 		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+
 			$this->set('title_for_layout', $this->Lang->get('EDIT_OFFER_STARPASS'));
 			$this->layout = 'admin';
 			if($id != false) {
@@ -817,7 +841,7 @@ class ShopController extends AppController {
 
 	public function admin_add_voucher() {
 		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+
 			$this->set('title_for_layout', $this->Lang->get('ADD_VOUCHER'));
 			$this->layout = 'admin';
 
@@ -897,7 +921,7 @@ class ShopController extends AppController {
 	}
 
 	public function starpass() {
-		 
+
 		if($this->isConnected AND $this->Permissions->can('CREDIT_ACCOUNT')) {
 			if($this->request->is('post') AND !empty($this->request->data['offer'])) {
 				$this->loadModel('Starpass');
@@ -929,20 +953,20 @@ class ShopController extends AppController {
 			$search_starpass = $this->Starpass->find('all', array('conditions' => array('id' => $offer_id)));
 			if(!empty($search_starpass)) {
 				// Déclaration des variables
-				$ident=$idp=$ids=$idd=$codes=$code1=$code2=$code3=$code4=$code5=$datas=''; 
-				
+				$ident=$idp=$ids=$idd=$codes=$code1=$code2=$code3=$code4=$code5=$datas='';
+
 				$idd = $search_starpass[0]['Starpass']['idd'];
 				$idp = $search_starpass[0]['Starpass']['idp'];
 				$ident=$idp.";".$ids.";".$idd;
 				// On récupère le(s) code(s) sous la forme 'xxxxxxxx;xxxxxxxx'
-				if(isset($_POST['code1'])) $code1 = $_POST['code1']; 
-				if(isset($_POST['code2'])) $code2 = ";".$_POST['code2']; 
-				if(isset($_POST['code3'])) $code3 = ";".$_POST['code3']; 
-				if(isset($_POST['code4'])) $code4 = ";".$_POST['code4']; 
-				if(isset($_POST['code5'])) $code5 = ";".$_POST['code5']; 
-				$codes=$code1.$code2.$code3.$code4.$code5; 
+				if(isset($_POST['code1'])) $code1 = $_POST['code1'];
+				if(isset($_POST['code2'])) $code2 = ";".$_POST['code2'];
+				if(isset($_POST['code3'])) $code3 = ";".$_POST['code3'];
+				if(isset($_POST['code4'])) $code4 = ";".$_POST['code4'];
+				if(isset($_POST['code5'])) $code5 = ";".$_POST['code5'];
+				$codes=$code1.$code2.$code3.$code4.$code5;
 				// On récupère le champ DATAS
-				if(isset($_POST['DATAS'])) $datas = $_POST['DATAS']; 
+				if(isset($_POST['DATAS'])) $datas = $_POST['DATAS'];
 				// On encode les trois chaines en URL
 				$ident=urlencode($ident);
 				$codes=urlencode($codes);
@@ -951,35 +975,35 @@ class ShopController extends AppController {
 				/* Envoi de la requête vers le serveur StarPass
 				Dans la variable tab[0] on récupère la réponse du serveur
 				Dans la variable tab[1] on récupère l'URL d'accès ou d'erreur suivant la réponse du serveur */
-				$get_f=@file( "http://script.starpass.fr/check_php.php?ident=$ident&codes=$codes&DATAS=$datas" ); 
-				if(!$get_f) 
-				{ 
-				exit( "Votre serveur n'a pas accès au serveur de StarPass, merci de contacter votre hébergeur. " ); 
-				} 
+				$get_f=@file( "http://script.starpass.fr/check_php.php?ident=$ident&codes=$codes&DATAS=$datas" );
+				if(!$get_f)
+				{
+				exit( "Votre serveur n'a pas accès au serveur de StarPass, merci de contacter votre hébergeur. " );
+				}
 				$tab = explode("|",$get_f[0]);
-				if(!$tab[1]) $url = "http://script.starpass.fr/error.php"; 
-				else $url = $tab[1]; 
+				if(!$tab[1]) $url = "http://script.starpass.fr/error.php";
+				else $url = $tab[1];
 
 				// dans $pays on a le pays de l'offre. exemple "fr"
-				$pays = $tab[2]; 
+				$pays = $tab[2];
 				// dans $palier on a le palier de l'offre. exemple "Plus A"
-				$palier = urldecode($tab[3]); 
+				$palier = urldecode($tab[3]);
 				// dans $id_palier on a l'identifiant de l'offre
-				$id_palier = urldecode($tab[4]); 
+				$id_palier = urldecode($tab[4]);
 				// dans $type on a le type de l'offre. exemple "sms", "audiotel, "cb", etc.
-				$type = urldecode($tab[5]); 
+				$type = urldecode($tab[5]);
 				// vous pouvez à tout moment consulter la liste des paliers à l'adresse : http://script.starpass.fr/palier.php
 
 				// Si $tab[0] ne répond pas "OUI" l'accès est refusé
 				// On redirige sur l'URL d'erreur
-				if( substr($tab[0],0,3) != "OUI" ) 
-				{ 
+				if( substr($tab[0],0,3) != "OUI" )
+				{
 			       /* erreur */
 			       $this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
 			       $this->redirect(array('controller' => 'shop', 'action' => 'index'));
-				} 
-				else 
-				{ 
+				}
+				else
+				{
 			       /* Le serveur a répondu "OUI" */
 					$user_money = $this->Connect->get('money');
 					$new_money = intval($user_money) + intval($search_starpass[0]['Starpass']['money']);
@@ -990,7 +1014,7 @@ class ShopController extends AppController {
 
 					$this->Session->setFlash($this->Lang->get('SUCCESS_STARPASS'), 'default.success');
 					$this->redirect(array('controller' => 'shop', 'action' => 'index'));
-				} 
+				}
 			} else {
 				$this->redirect(array('controller' => 'shop', 'action' => 'index'));
 			}
