@@ -4,7 +4,7 @@
 // la config est dans la bdd
 
 class ConfigurationComponent extends Object {
-  	
+
   public $components = array('Session');
 
   static private $data;
@@ -20,15 +20,23 @@ class ConfigurationComponent extends Object {
               exit('Could not connect to database. Please check the settings in app/config/database.php and try again');
           }
           $data = "CREATED AT ".date('H:i:s d/m/Y')."\n";
-          foreach ($tables as $do) {
-            $cn->query($do);
+
+          $verif = $cn->query('SELECT * FROM configurations');
+          if(!$verif || empty($verif)) {
+            try {
+              foreach ($tables as $do) {
+                $cn->query($do);
+              }
+            } catch (Exception $e) {
+              $this->log($e->getMessage());
+            }
           }
       $fp = fopen(ROOT."/config/install.txt","w+");
       fwrite($fp, $data);
       fclose($fp);
     }
   }
-  
+
 	function shutdown(&$controller) {}
 	function beforeRender(&$controller) {}
   function beforeRedirect() {}
