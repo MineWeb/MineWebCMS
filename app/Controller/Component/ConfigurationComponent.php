@@ -72,7 +72,7 @@ class ConfigurationComponent extends Object {
     }
 
     public function get($key) {
-      return $this->get_all()['Configuration'][$key];
+      return (isset($this->get_all()['Configuration'][$key])) ? $this->get_all()['Configuration'][$key] : false;
     }
 
     public function set($key, $value) {
