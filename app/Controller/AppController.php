@@ -129,15 +129,6 @@ WCqkx22behAGZq6rhwIDAQAB
 
 		/* Charger les components des plugins si ils s'appellent "EventsConpoment.php" */
 		$plugins = $this->EyPlugin->getPluginsActive();
-		/*foreach ($plugins as $key => $value) {
-			if($value->useEvents) {
-				$component = $this->Components->load($value->slug.'.Events');
-				$component->startup($this);
-				$this->getEventManager()->attach($component);
-			}
-		}
-
-		$event = $this->getEventManager()->dispatch(new CakeEvent('requestPage', $this, $this->request->data));*/
 
 		// Chargement de tout les fichiers Events des plugins
 
