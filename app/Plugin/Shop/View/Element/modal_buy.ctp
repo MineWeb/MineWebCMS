@@ -10,5 +10,5 @@
 </div>
   <div class="modal-footer">
   <button type="button" class="btn btn-default" data-dismiss="modal">{LANG-CLOSE}</button>
-  <button type="button" class="btn btn-primary'" onClick="buy('{ITEM_ID}')" id="btn-buy">{LANG-BUY}</button>
+  <button type="button" class="btn btn-primary" onClick="buy('{ITEM_ID}')" id="btn-buy">{LANG-BUY}</button>
 </div>

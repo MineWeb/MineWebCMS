@@ -97,6 +97,8 @@ class ShopController extends AppController {
 			}
 
 			// On remplace les variables
+			$servers = (!isset($servers)) ? null : $servers;
+
 			$vars = array(
 				'{ITEM_NAME}' => $search_item['0']['Item']['name'],
 				'{ITEM_DESCRIPTION}' => nl2br($search_item['0']['Item']['description']),
@@ -141,19 +143,19 @@ class ShopController extends AppController {
 					$voucher_reduc = $this->DiscountVoucher->get_new_price($item_price, $search_item['0']['Item']['category'], $search_item['0']['Item']['id'], $_GET['code']);
 					$item_price = $voucher_reduc; // j'obtient le nouveau prix si une promotion est en cours sur cet article ou sa catégorie
 				}
-				if($item_price <= $this->Connect->get('money')) {
+				if($item_price <= $this->User->getKey('money')) {
 
 					$this->getEventManager()->dispatch(new CakeEvent('onBuy', $this));
 
 					// Ajouter au champ used si il a utiliser un voucher
 					if(!empty($_GET['code']) && $voucher_reduc != $search_item['0']['Item']['price']) {
-						$this->DiscountVoucher->set_used($this->Connect->get_pseudo(), $_GET['code']);
+						$this->DiscountVoucher->set_used($this->User->getKey('pseudo'), $_GET['code']);
 					}
 					//
 
-					$new_sold = $this->Connect->get('money') - $item_price;
+					$new_sold = $this->User->getKey('money') - $item_price;
 					$this->loadModel('User');
-					$this->User->read(null, $this->Connect->get_id());
+					$this->User->read(null, $this->User->getKey('id'));
 					$this->User->set(array('money' => $new_sold));
 					$this->User->save();
 					$this->History->set('BUY_ITEM', 'shop', $search_item['0']['Item']['name']);
@@ -173,8 +175,13 @@ class ShopController extends AppController {
 
 					// si y'a une timed command à faire
 					if($search_item[0]['Item']['timedCommand']) {
-						$time = strtotime('+ '.$search_item[0]['Item']['timedCommand_time'].' minutes');
-						$commands = str_replace('{PLAYER}', $this->Connect->get_pseudo(), $search_item[0]['Item']['timedCommand_cmd']);
+
+						// Get le timestamp du server
+						$serverTimestamp = $this->Server->call('getServerTimestamp')['getServerTimestamp'];
+
+						$time = ($search_item[0]['Item']['timedCommand_time'] * 60000) + $serverTimestamp; // minutes*60000 = miliseconds + timestamp de base
+
+						$commands = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $search_item[0]['Item']['timedCommand_cmd']);
 					    $commands = explode('[{+}]', $commands);
 					    $performCommands = array();
 					    foreach ($commands as $key => $value) {
