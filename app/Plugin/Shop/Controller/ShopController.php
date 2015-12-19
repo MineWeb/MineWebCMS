@@ -723,8 +723,8 @@ class ShopController extends AppController {
 		if($this->isConnected AND $this->User->isAdmin()) {
 			if($this->request->is('ajax')) {
 				if(!empty($this->request->data['name']) AND !empty($this->request->data['email']) AND !empty($this->request->data['price']) AND !empty($this->request->data['money'])) {
-					$this->request->data['price'] = intval($this->request->data['price']);
-					$this->request->data['money'] = intval($this->request->data['money']);
+					$this->request->data['price'] = number_format($this->request->data['price'], 2, '.', '');
+					$this->request->data['money'] = number_format($this->request->data['money'], 2, '.', '');
 					if(filter_var($this->request->data['email'], FILTER_VALIDATE_EMAIL)) {
 						$this->loadModel('Paypal');
 						$this->Paypal->read(null, null);
@@ -742,7 +742,6 @@ class ShopController extends AppController {
 			} else {
 				echo $this->Lang->get('NOT_POST').'|false';
 			}
-			$this->render('ajax_get');
 		} else {
 			$this->redirect('/');
 		}
@@ -757,8 +756,8 @@ class ShopController extends AppController {
 				if(!empty($search)) {
 					if($this->request->is('ajax')) {
 						if(!empty($this->request->data['name']) AND !empty($this->request->data['email']) AND !empty($this->request->data['price']) AND !empty($this->request->data['money'])) {
-							$this->request->data['price'] = intval($this->request->data['price']);
-							$this->request->data['money'] = intval($this->request->data['money']);
+							$this->request->data['price'] = number_format($this->request->data['price'], 2, '.', '');
+							$this->request->data['money'] = number_format($this->request->data['money'], 2, '.', '');
 							if(filter_var($this->request->data['email'], FILTER_VALIDATE_EMAIL)) {
 								$this->loadModel('Paypal');
 								$this->Paypal->read(null, $id);
@@ -779,7 +778,6 @@ class ShopController extends AppController {
 				} else {
 					echo $this->Lang->get('UNKNONW_ID').'|false';
 				}
-				$this->render('ajax_get');
 			} else {
 				$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 			}
@@ -1094,7 +1092,7 @@ class ShopController extends AppController {
 								// il a bien payé
 
 								$this->loadModel('History');
-								$find_history = $this->History->find('first', array('conditions' => array('other LIKE' => '%|'.$txn_id))); 
+								$find_history = $this->History->find('first', array('conditions' => array('other LIKE' => '%|'.$txn_id)));
 
 								if($find_history) { // si la transaction n'est pas déjà dans la bdd
 

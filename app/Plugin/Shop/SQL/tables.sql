@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `shop__paypals` (
   `email` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
   `price` varchar(20) NOT NULL,
-  `money` int(20) NOT NULL,
+  `money` varchar(20) NOT NULL,
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
