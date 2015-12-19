@@ -34,16 +34,21 @@ class User extends AppModel {
 	}
 
 	public function register($data) {
-		$data['pseudo'] = before_display($data['pseudo']);
-		$data['email'] = before_display($data['email']);
 
-		$data['ip'] = $_SERVER["REMOTE_ADDR"];
-		$data['rank'] = 0;
+		$data_to_save = array();
 
-		$data['password'] = password($data['password']);
+		$data_to_save['pseudo'] = before_display($data['pseudo']);
+		$data_to_save['email'] = before_display($data['email']);
+
+		$data_to_save['ip'] = $_SERVER["REMOTE_ADDR"];
+		$data_to_save['rank'] = 0;
+
+		$data_to_save['password'] = password($data['password']);
+
+		$data_to_save['session'] = $data['session'];
 
 		$this->create();
-		$this->set($data);
+		$this->set($data_to_save);
 		return $this->save();
 	}
 
@@ -56,7 +61,7 @@ class User extends AppModel {
 			$this->read(null, $search_user['User']['id']);
 			$this->set(array('session' => $session));
 			$this->save();
-			
+
 			return true;
 		} else {
 			return 'BAD_PSEUDO_OR_PASSWORD';
@@ -77,10 +82,11 @@ class User extends AppModel {
 
 					$this->Lostpassword->delete($Lostpassword[0]['Lostpassword']['id']);
 
-					$data['session'] = $session; // on connecte l'utilisateur
+					$data_to_save['password'] = $data['password'];
+					$data_to_save['session'] = $session; // on connecte l'utilisateur
 
 					$this->read(null, $search['0']['User']['id']);
-					$this->set($data);
+					$this->set($data_to_save);
 					$this->save();
 
 					return true;
