@@ -6,13 +6,13 @@
 	"author":"Eywek",
 	"version":"0.1.0",
 	"apiID":1,
-	"useEvents":false,
+	"useEvents":true,
 	"permissions" : {
 		"available" : ["CREDIT_ACCOUNT", "CAN_BUY"],
 		"default" : {
 			"0" : ["CREDIT_ACCOUNT", "CAN_BUY"],
 			"2" : ["CREDIT_ACCOUNT", "CAN_BUY"]
-		} 
+		}
 	},
 	"requirements" : {
 		"CMS" : ">= 1.0.0"
