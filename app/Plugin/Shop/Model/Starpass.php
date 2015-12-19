@@ -1,3 +1,2 @@
 <?php
-class Starpass extends AppModel {
-}
+class Starpass extends ShopAppModel {}

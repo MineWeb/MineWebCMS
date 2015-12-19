@@ -1,3 +1,2 @@
 <?php
-class Paypal extends AppModel {
-}
+class Paypal extends ShopAppModel {}

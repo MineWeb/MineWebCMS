@@ -1,6 +1,6 @@
 <?php
 
-class ShopController extends AppController {
+class ShopController extends ShopAppController {
 
 	public $components = array('Session', 'Shop.DiscountVoucher', 'History');
 
@@ -11,21 +11,21 @@ class ShopController extends AppController {
 			$this->set(compact('category'));
 		}
 		$this->layout = $this->Configuration->get_layout(); // On charge le thème configuré
-		$this->loadModel('Item'); // le model des articles
-		$this->loadModel('Category'); // le model des catégories
+		$this->loadModel('Shop.Item'); // le model des articles
+		$this->loadModel('Shop.Category'); // le model des catégories
 		$search_items = $this->Item->find('all'); // on cherche tous les items et on envoie à la vue
 		$search_categories = $this->Category->find('all'); // on cherche toutes les catégories et on envoie à la vue
 
 		$search_first_category = $this->Category->find('first'); //
 		$search_first_category = @$search_first_category['Category']['id']; //
 
-		$this->loadModel('Paypal');
+		$this->loadModel('Shop.Paypal');
 		$paypal_offers = $this->Paypal->find('all');
 
-		$this->loadModel('Starpass');
+		$this->loadModel('Shop.Starpass');;
 		$starpass_offers = $this->Starpass->find('all');
 
-		$this->loadModel('Paysafecard');
+		$this->loadModel('Shop.Paysafecard');
 		$paysafecard_enabled = $this->Paysafecard->find('all', array('conditions' => array('amount' => '0', 'code' => 'disable', 'author' => 'website', 'created' => '1990/00/00 15:00:00')));
 		if(!empty($paysafecard_enabled)) {
 			$paysafecard_enabled = false;
@@ -51,7 +51,7 @@ class ShopController extends AppController {
 
 		$this->autoRender = false;
 		if($this->isConnected AND $this->Permissions->can('CAN_BUY')) { // si l'utilisateur est connecté
-			$this->loadModel('Item'); // je charge le model des articles
+			$this->loadModel('Shop.Item'); // je charge le model des articles
 			$search_item = $this->Item->find('all', array('conditions' => array('id' => $id))); // je cherche l'article selon l'id
 			if($search_item['0']['Item']['price'] == 1) { $money = $this->Configuration->get_money_name(false, true); } else { $money = $this->Configuration->get_money_name(); } // je dis que la variable $money = le nom de la money au pluriel ou singulier selon le prix
 			if(!empty($search_item[0]['Item']['servers'])) {
@@ -127,7 +127,7 @@ class ShopController extends AppController {
 		$this->autoRender = false;
 
 		if($this->isConnected AND $this->Permissions->can('CAN_BUY')) {
-			$this->loadModel('Item');
+			$this->loadModel('Shop.Item');
 			$search_item = $this->Item->find('all', array('conditions' => array('id' => $id)));
 			$search_item['0']['Item']['servers'] = unserialize($search_item['0']['Item']['servers']);
 			if(!empty($search_item['0']['Item']['servers'])) {
@@ -206,10 +206,10 @@ class ShopController extends AppController {
 
 			$this->set('title_for_layout',$this->Lang->get('SHOP'));
 			$this->layout = 'admin';
-			$this->loadModel('Item');
+			$this->loadModel('Shop.Item');
 			$search_items = $this->Item->find('all');
 			$this->set(compact('search_items'));
-			$this->loadModel('Category');
+			$this->loadModel('Shop.Category');
 			$search_categories = $this->Category->find('all');
 			foreach ($search_categories as $v) {
 				$categories[$v['Category']['id']]['name'] = $v['Category']['name'];
@@ -217,7 +217,7 @@ class ShopController extends AppController {
 			$this->set(compact('categories'));
 			$this->set(compact('search_categories'));
 
-			$this->loadModel('Paysafecard');
+			$this->loadModel('Shop.Paysafecard');
 			$psc = $this->Paysafecard->find('all', array('conditions' => array('amount !=' => '0', 'code !=' => 'disable', 'author !=' => 'website', 'created !=' => '1990/00/00 15:00:00')));
 			$this->set(compact('psc'));
 
@@ -229,15 +229,15 @@ class ShopController extends AppController {
 			}
 			$this->set(compact('paysafecard_enabled'));
 
-			$this->loadModel('Voucher');
+			$this->loadModel('Shop.Voucher');
 			$vouchers = $this->Voucher->find('all');
 			$this->set(compact('vouchers'));
 
-			$this->loadModel('Paypal');
+			$this->loadModel('Shop.Paypal');
 			$paypal_offers = $this->Paypal->find('all');
 			$this->set(compact('paypal_offers'));
 
-			$this->loadModel('Starpass');
+			$this->loadModel('Shop.Starpass');
 			$starpass_offers = $this->Starpass->find('all');
 			$this->set(compact('starpass_offers'));
 		} else {
@@ -251,11 +251,11 @@ class ShopController extends AppController {
 
 				$this->set('title_for_layout', $this->Lang->get('EDIT_ITEM'));
 				$this->layout = 'admin';
-				$this->loadModel('Item');
+				$this->loadModel('Shop.Item');
 				$item = $this->Item->find('all', array('conditions' => array('id' => $id)));
 				if(!empty($item)) {
 					$item = $item[0]['Item'];
-					$this->loadModel('Category');
+					$this->loadModel('Shop.Category');
 					$item['category'] = $this->Category->find('all', array('conditions' => array('id' => $item['category'])));
 					$item['category'] = $item['category'][0]['Category']['name'];
 					$this->set(compact('item'));
@@ -310,7 +310,7 @@ class ShopController extends AppController {
 					$this->request->data['category'] = $this->request->data['category_default'];
 				}
 				if(!empty($this->request->data['id']) AND !empty($this->request->data['name']) AND !empty($this->request->data['description']) AND !empty($this->request->data['category']) AND !empty($this->request->data['price']) AND !empty($this->request->data['servers']) AND !empty($this->request->data['commands']) AND !empty($this->request->data['timedCommand'])) {
-					$this->loadModel('Category');
+					$this->loadModel('Shop.Category');
 					$this->request->data['category'] = $this->Category->find('all', array('conditions' => array('name' => $this->request->data['category'])));
 					$this->request->data['category'] = $this->request->data['category'][0]['Category']['id'];
 					$this->request->data['timedCommand'] = ($this->request->data['timedCommand'] == 'true') ? 1 : 0;
@@ -318,7 +318,7 @@ class ShopController extends AppController {
 						$this->request->data['timedCommand_cmd'] = NULL;
 						$this->request->data['timedCommand_time'] = NULL;
 					}
-					$this->loadModel('Item');
+					$this->loadModel('Shop.Item');
 					$this->Item->read(null, $this->request->data['id']);
 					$this->Item->set(array(
 						'name' => $this->request->data['name'],
@@ -352,7 +352,7 @@ class ShopController extends AppController {
 
 			$this->set('title_for_layout', $this->Lang->get('ADD_ITEM'));
 			$this->layout = 'admin';
-			$this->loadModel('Category');
+			$this->loadModel('Shop.Category');
 			$search_categories = $this->Category->find('all', array('fields' => 'name'));
 			foreach ($search_categories as $v) {
 				$categories[$v['Category']['name']] = $v['Category']['name'];
@@ -379,7 +379,7 @@ class ShopController extends AppController {
 		if($this->isConnected AND $this->User->isAdmin()) {
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['name']) AND !empty($this->request->data['description']) AND !empty($this->request->data['category']) AND !empty($this->request->data['price']) AND !empty($this->request->data['servers']) AND !empty($this->request->data['commands']) AND !empty($this->request->data['timedCommand'])) {
-					$this->loadModel('Category');
+					$this->loadModel('Shop.Category');
 					$this->request->data['category'] = $this->Category->find('all', array('conditions' => array('name' => $this->request->data['category'])));
 					$this->request->data['category'] = $this->request->data['category'][0]['Category']['id'];
 					$this->request->data['timedCommand'] = ($this->request->data['timedCommand'] == 'true') ? 1 : 0;
@@ -387,7 +387,7 @@ class ShopController extends AppController {
 						$this->request->data['timedCommand_cmd'] = NULL;
 						$this->request->data['timedCommand_time'] = NULL;
 					}
-					$this->loadModel('Item');
+					$this->loadModel('Shop.Item');
 					$this->Item->read(null, null);
 					$this->Item->set(array(
 						'name' => $this->request->data['name'],
@@ -423,7 +423,7 @@ class ShopController extends AppController {
 			$this->set('title_for_layout', $this->Lang->get('ADD_CATEGORY'));
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['name'])) {
-					$this->loadModel('Category');
+					$this->loadModel('Shop.Category');
 					$this->Category->read(null, null);
 					$this->Category->set(array(
 						'name' => $this->request->data['name'],
@@ -446,7 +446,7 @@ class ShopController extends AppController {
 		if($this->isConnected AND $this->User->isAdmin()) {
 			if($type != false AND $id != false) {
 				if($type == "item") {
-					$this->loadModel('Item');
+					$this->loadModel('Shop.Item');
 					$find = $this->Item->find('all', array('conditions' => array('id' => $id)));
 					if(!empty($find)) {
 						$this->Item->delete($id);
@@ -458,7 +458,7 @@ class ShopController extends AppController {
 						$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 					}
 				} elseif($type == "category") {
-					$this->loadModel('Category');
+					$this->loadModel('Shop.Category');
 					$find = $this->Category->find('all', array('conditions' => array('id' => $id)));
 					if(!empty($find)) {
 						$this->Category->delete($id);
@@ -470,7 +470,7 @@ class ShopController extends AppController {
 						$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 					}
 				} elseif($type == "paypal") {
-					$this->loadModel('Paypal');
+					$this->loadModel('Shop.Paypal');
 					$find = $this->Paypal->find('all', array('conditions' => array('id' => $id)));
 					if(!empty($find)) {
 						$this->Paypal->delete($id);
@@ -482,7 +482,7 @@ class ShopController extends AppController {
 						$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 					}
 				} elseif($type == "starpass") {
-					$this->loadModel('Starpass');
+					$this->loadModel('Shop.Starpass');
 					$find = $this->Starpass->find('all', array('conditions' => array('id' => $id)));
 					if(!empty($find)) {
 						$this->Starpass->delete($id);
@@ -505,7 +505,7 @@ class ShopController extends AppController {
 	public function admin_toggle_paysafecard() {
 		$this->autoRender = false;
 		if($this->isConnected AND $this->User->isAdmin()) {
-			$this->loadModel('Paysafecard');
+			$this->loadModel('Shop.Paysafecard');
 			$paysafecard_enabled = $this->Paysafecard->find('all', array('conditions' => array('amount' => '0', 'code' => 'disable', 'author' => 'website', 'created' => '1990/00/00 15:00:00')));
 			if(!empty($paysafecard_enabled)) {
 				$this->Paysafecard->delete($paysafecard_enabled[0]['Paysafecard']['id']);
@@ -534,7 +534,7 @@ class ShopController extends AppController {
 		$this->autoRender = false;
 		if($this->isConnected AND $this->User->isAdmin()) {
 			if($id != false AND $money != false) {
-				$this->loadModel('Paysafecard');
+				$this->loadModel('Shop.Paysafecard');
 				$search = $this->Paysafecard->find('all', array('conditions' => array('id' => $id)));
 				if(!empty($search)) {
 					$this->History->set('BUY_MONEY', 'shop', 'paysafecard|'.$money.'|'.$search['0']['Paysafecard']['amount']);
@@ -548,7 +548,7 @@ class ShopController extends AppController {
 						'money' => $new_money
 					));
 					$this->User->save();
-					$this->loadModel('PaysafecardMessage');
+					$this->loadModel('Shop.PaysafecardMessage');
 					$this->PaysafecardMessage->read(null, null);
 					$this->PaysafecardMessage->set(array(
 						'to' => $search['0']['Paysafecard']['author'],
@@ -577,11 +577,11 @@ class ShopController extends AppController {
 		$this->autoRender = false;
 		if($this->isConnected AND $this->User->isAdmin()) {
 			if($id != false) {
-				$this->loadModel('Paysafecard');
+				$this->loadModel('Shop.Paysafecard');
 				$search = $this->Paysafecard->find('all', array('conditions' => array('id' => $id)));
 				if(!empty($search)) {
 					$this->Paysafecard->delete($id);
-					$this->loadModel('PaysafecardMessage');
+					$this->loadModel('Shop.PaysafecardMessage');
 					$this->PaysafecardMessage->read(null, null);
 					$this->PaysafecardMessage->set(array(
 						'to' => $search['0']['Paysafecard']['author'],
@@ -617,7 +617,7 @@ class ShopController extends AppController {
 							// faire des vérifications (interdiction d'avoir entré plus de 2 PSC)
 							$codes = $this->request->data['code1'].' '.$this->request->data['code2'].' '.$this->request->data['code3'].' '.$this->request->data['code4'];
 
-							$this->loadModel('Paysafecard');
+							$this->loadModel('Shop.Paysafecard');
 							$search = $this->Paysafecard->find('first', array('conditions' => array('code' => $codes)));
 							if(empty($search)) {
 								$search2 = $this->Paysafecard->find('count', array('conditions' => array('author' => $this->Connect->get_pseudo())));
@@ -670,7 +670,7 @@ class ShopController extends AppController {
 			$this->set('title_for_layout', $this->Lang->get('EDIT_OFFER_PAYPAL'));
 			$this->layout = 'admin';
 			if($id != false) {
-				$this->loadModel('Paypal');
+				$this->loadModel('Shop.Paypal');
 				$search = $this->Paypal->find('all', array('conditions' => array('id' => $id)));
 				if(!empty($search)) {
 					$this->set(compact('id'));
@@ -702,7 +702,7 @@ class ShopController extends AppController {
 			$this->set('title_for_layout', $this->Lang->get('EDIT_OFFER_STARPASS'));
 			$this->layout = 'admin';
 			if($id != false) {
-				$this->loadModel('Starpass');
+				$this->loadModel('Shop.Starpass');
 				$search = $this->Starpass->find('all', array('conditions' => array('id' => $id)));
 				if(!empty($search)) {
 					$this->set(compact('id'));
@@ -726,7 +726,7 @@ class ShopController extends AppController {
 					$this->request->data['price'] = number_format($this->request->data['price'], 2, '.', '');
 					$this->request->data['money'] = number_format($this->request->data['money'], 2, '.', '');
 					if(filter_var($this->request->data['email'], FILTER_VALIDATE_EMAIL)) {
-						$this->loadModel('Paypal');
+						$this->loadModel('Shop.Paypal');
 						$this->Paypal->read(null, null);
 						$this->Paypal->set($this->request->data);
 						$this->Paypal->save();
@@ -751,7 +751,7 @@ class ShopController extends AppController {
 		$this->autoRender = false;
 		if($this->isConnected AND $this->User->isAdmin()) {
 			if($id != false) {
-				$this->loadModel('Paypal');
+				$this->loadModel('Shop.Paypal');
 				$search = $this->Paypal->find('all', array('conditions' => array('id' => $id)));
 				if(!empty($search)) {
 					if($this->request->is('ajax')) {
@@ -759,7 +759,7 @@ class ShopController extends AppController {
 							$this->request->data['price'] = number_format($this->request->data['price'], 2, '.', '');
 							$this->request->data['money'] = number_format($this->request->data['money'], 2, '.', '');
 							if(filter_var($this->request->data['email'], FILTER_VALIDATE_EMAIL)) {
-								$this->loadModel('Paypal');
+								$this->loadModel('Shop.Paypal');
 								$this->Paypal->read(null, $id);
 								$this->Paypal->set($this->request->data);
 								$this->Paypal->save();
@@ -794,7 +794,7 @@ class ShopController extends AppController {
 					$this->request->data['money'] = intval($this->request->data['money']);
 					$this->request->data['idd'] = intval($this->request->data['idd']);
 					$this->request->data['idp'] = intval($this->request->data['idp']);
-					$this->loadModel('Starpass');
+					$this->loadModel('Shop.Starpass');
 					$this->Starpass->read(null, null);
 					$this->Starpass->set($this->request->data);
 					$this->Starpass->save();
@@ -822,7 +822,7 @@ class ShopController extends AppController {
 						$this->request->data['money'] = intval($this->request->data['money']);
 						$this->request->data['idd'] = intval($this->request->data['idd']);
 						$this->request->data['idp'] = intval($this->request->data['idp']);
-						$this->loadModel('Starpass');
+						$this->loadModel('Shop.Starpass');
 						$this->Starpass->read(null, $id);
 						$this->Starpass->set($this->request->data);
 						$this->Starpass->save();
@@ -850,13 +850,13 @@ class ShopController extends AppController {
 			$this->set('title_for_layout', $this->Lang->get('ADD_VOUCHER'));
 			$this->layout = 'admin';
 
-			$this->loadModel('Category');
+			$this->loadModel('Shop.Category');
 			$search_categories = $this->Category->find('all', array('fields' => array('name', 'id')));
 			foreach ($search_categories as $v) {
 				$categories[$v['Category']['name']] = $v['Category']['name'];
 			}
 			$this->set(compact('categories'));
-			$this->loadModel('Item');
+			$this->loadModel('Shop.Item');
 			$search_items = $this->Item->find('all', array('fields' => array('name', 'id')));
 			foreach ($search_items as $v) {
 				$items[$v['Item']['id']] = $v['Item']['name'];
@@ -882,7 +882,7 @@ class ShopController extends AppController {
 					if($this->request->data['effective_on'] == "all") {
 						$effective_on_value = array('type' => 'all');
 					}
-					$this->loadModel('Voucher');
+					$this->loadModel('Shop.Voucher');
 					$this->Voucher->read(null, null);
 					$this->Voucher->set(array(
 						'code' => $this->request->data['code'],
@@ -912,7 +912,7 @@ class ShopController extends AppController {
 		$this->autoRender = false;
 		if($this->isConnected AND $this->User->isAdmin()) {
 			if($id != false) {
-				$this->loadModel('Voucher');
+				$this->loadModel('Shop.Voucher');
 				$this->Voucher->delete($id);
 				$this->History->set('DELETE_VOUCHER', 'shop');
 				$this->Session->setFlash($this->Lang->get('DELETE_SUCCESS_ADD'), 'default.success');
@@ -929,7 +929,7 @@ class ShopController extends AppController {
 
 		if($this->isConnected AND $this->Permissions->can('CREDIT_ACCOUNT')) {
 			if($this->request->is('post') AND !empty($this->request->data['offer'])) {
-				$this->loadModel('Starpass');
+				$this->loadModel('Shop.Starpass');
 				$search = $this->Starpass->find('all', array('conditions' => array('id' => $this->request->data['offer'])));
 				if(!empty($search)) {
 					$this->set('id', $search[0]['Starpass']['id']);
@@ -954,7 +954,7 @@ class ShopController extends AppController {
 		$this->autoRender = false;
 		if($this->isConnected AND $this->Permissions->can('CREDIT_ACCOUNT')) {
 			$offer_id = $_POST['DATAS'];
-			$this->loadModel('Starpass');
+			$this->loadModel('Shop.Starpass');
 			$search_starpass = $this->Starpass->find('all', array('conditions' => array('id' => $offer_id)));
 			if(!empty($search_starpass)) {
 				// Déclaration des variables
@@ -1082,7 +1082,7 @@ class ShopController extends AppController {
 		    //if($Response == "VERIFIED") {
 		    	// vérifier que payment_status a la valeur Completed
 				if ( $payment_status == "Completed") {
-					$this->loadModel('Paypal');
+					$this->loadModel('Shop.Paypal');
 					$search_offer = $this->Paypal->find('all', array('conditions' => array('price' => $payment_amount))); // je cherche une offre avec ce montant là
 					if(!empty($search_offer)) {
 						$search_offer = $search_offer[0]['Paypal'];

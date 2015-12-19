@@ -1,3 +1,2 @@
 <?php
-class PaysafecardMessage extends AppModel{
-}
+class PaysafecardMessage extends ShopAppModel {}

@@ -7,27 +7,27 @@ class UserController extends AppController {
 	function get_captcha() {
 		$this->autoRender = false;
 		App::import('Component','Captcha');
-		
+
 		//generate random charcters for captcha
-		$random = mt_rand(100, 99999);	
-			
+		$random = mt_rand(100, 99999);
+
 		//save characters in session
-		$this->Session->write('captcha_code', $random);  
-		
+		$this->Session->write('captcha_code', $random);
+
 		$settings = array(
-			'characters' => $random,   
-			'winHeight' => 50,         // captcha image height 
+			'characters' => $random,
+			'winHeight' => 50,         // captcha image height
 			'winWidth' => 220,		   // captcha image width
-			'fontSize' => 25,          // captcha image characters fontsize 
+			'fontSize' => 25,          // captcha image characters fontsize
 			'fontPath' => WWW_ROOT.'tahomabd.ttf',    // captcha image font
 			'noiseColor' => '#ccc',
 			'bgColor' => '#fff',
 			'noiseLevel' => '100',
 			'textColor' => '#000'
 		);
-		
+
 		$img = $this->Captcha->ShowImage($settings);
-		echo $img; 
+		echo $img;
 	}
 
 	function ajax_register() {
@@ -169,14 +169,14 @@ class UserController extends AppController {
 		if($this->isConnected) {
 
 			$this->loadModel('User');
-			 
+
 			$this->set('title_for_layout', $this->User->getKey('pseudo'));
 			$this->layout= $this->Configuration->get_layout();
 			if($this->EyPlugin->isInstalled('Shop')) {
 
 				$this->set('shop_active', true);
 
-				$this->loadModel('PaysafecardMessage');
+				$this->loadModel('Shop.PaysafecardMessage');
 				$search_psc_msg = $this->PaysafecardMessage->find('all', array('conditions' => array('to' =>  $this->User->getKey('pseudo'))));
 				if(!empty($search_psc_msg)) {
 					$this->set(compact('search_psc_msg'));
@@ -224,9 +224,9 @@ class UserController extends AppController {
 			        $max_size = $skin_max_size; // en octet
 			        $width_max = 64; // pixel
 			        $height_max = 32; // pixel
-		               
+
 		            $extensions = array('png');    // Extensions autorisees
-		               
+
 			        if(!is_dir($target)) {
 						if(!mkdir($target, 0755)) {
 			            	$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR').' Code : 1');
@@ -272,9 +272,9 @@ class UserController extends AppController {
 			        $max_size = $cape_max_size; // en octet
 			        $width_max = 64; // pixel
 			        $height_max = 32; // pixel
-		               
+
 		            $extensions = array('png');    // Extensions autorisees
-		               
+
 			        if(!is_dir($target)) {
 						if(!mkdir($target, 0755)) {
 			            	$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR').' Code : 1');
@@ -402,7 +402,7 @@ class UserController extends AppController {
 
 	function admin_index() {
 		if($this->isConnected AND $this->User->isAdmin()) {
-			 
+
 			$this->set('title_for_layout',$this->Lang->get('USER'));
 			$this->layout = 'admin';
 			$this->loadModel('User');
@@ -424,7 +424,7 @@ class UserController extends AppController {
 	function admin_edit($id = false) {
 		if($this->isConnected AND $this->User->isAdmin()) {
 			if($id != false) {
-				 
+
 				$this->layout = 'admin';
 				$this->set('title_for_layout',$this->Lang->get('EDIT_USER'));
 				$this->loadModel('User');
