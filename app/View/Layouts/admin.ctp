@@ -1,4 +1,4 @@
-<?php 
+<?php
 $this->EyPlugin = new EyPluginComponent;
 ?>
 <!DOCTYPE html>
@@ -40,9 +40,6 @@ $this->EyPlugin = new EyPluginComponent;
 
           <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
-              <li>
-                <a href="#" onClick="document.cookie='admin_layout=AdminTheme; expires=Sun, 01 Feb 2020 00:00:00 UTC; path=/';location.reload();"><?= $Lang->get('SWITCH_ADMIN_THEME') ?></a>
-              </li>
               <li class="user user-menu">
                 <a href="#">
                   <span class="hidden-xs"><?= $user['pseudo'] ?></span>
@@ -91,7 +88,7 @@ $this->EyPlugin = new EyPluginComponent;
                 <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'online', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('ONLINE_PLAYERS') ?></a></li>
               </ul>
             </li>
-            
+
             <li class="treeview">
               <a href="#">
                 <i class="fa fa-files-o"></i>

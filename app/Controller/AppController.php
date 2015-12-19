@@ -311,12 +311,6 @@ WCqkx22behAGZq6rhwIDAQAB
 	function __setTheme() {
 		if(!isset($this->params['prefix']) OR $this->params['prefix'] != "admin") {
         	$this->theme = Configure::read('theme');
-        } else {
-        	if(isset($_COOKIE['admin_layout'])) {
-        		$this->theme = $_COOKIE['admin_layout'];
-        	} else {
-        		$this->theme = 'default';
-        	}
         }
     }
 

@@ -1,1 +1,0 @@
-<script>document.cookie='admin_layout=default; expires=Sun, 01 Feb 2020 00:00:00 UTC; path=/';location.reload();</script>
