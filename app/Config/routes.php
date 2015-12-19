@@ -18,6 +18,9 @@
 
 		Router::connect('/profile/modify', array('controller' => 'user', 'action' => 'modify_profile'));
 
+		Router::connect('/api/mineguard', array('controller' => 'API', 'action' => 'mineguard'));
+		Router::connect('/api/mineguard/*', array('controller' => 'API', 'action' => 'mineguard'));
+
 		// Admin
 		Configure::write('Routing.prefixes', array('admin'));
 		Router::connect(
