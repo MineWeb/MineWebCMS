@@ -70,19 +70,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 			$last_check = '0';
 		}
 		if($last_check < time()) {
-			$plugins = array();
-			/*$plugins_enabled = $this->EyPlugin->get_list();
-			$plugins_disabled = $this->EyPlugin->get_list();
-			foreach ($plugins_enabled as $key => $value) {
-				$plugins[$value]['statut'] = true;
-				$plugins[$value]['id'] = $this->EyPlugin->get('id', $value['plugins']['name']);
-				$plugins[$value]['version'] = $this->EyPlugin->get('version', $value['plugins']['name']);
-			}
-			foreach ($plugins_enabled as $key => $value) {
-				$plugins[$value]['statut'] = false;
-				$plugins[$value]['id'] = $this->EyPlugin->get('id', $value['plugins']['name']);
-				$plugins[$value]['version'] = $this->EyPlugin->get('version', $value['plugins']['name']);
-			}*/
+			$plugins = $this->EyPlugin->loadPlugins();
 
 			$url = 'http://mineweb.org/api/v1/key_verif/';
 			$secure = file_get_contents(ROOT.'/config/secure');

@@ -40,23 +40,29 @@ class ModuleComponent extends Object {
     	}
     }
 
-    public function loadModules($name) { // affiche le model demandé 
+    public function loadModules($name) { // affiche le model demandé
     	$HTML = '';
     	$list = $this->listModules();
-        App::import('Component', 'LangComponent'); // on charge le composant de langue
-        $Lang = new LangComponent;
 
-        App::uses('HtmlHelper', 'View/Helper');
-        $this->Html = new HtmlHelper(new View());
+      App::import('Component', 'LangComponent'); // on charge le composant de langue
+      $Lang = new LangComponent;
 
-        if(!empty(self::$vars) && is_array(self::$vars)) {
-            foreach (self::$vars as $key => $value) {
-                if(is_bool($value)) {
-                    $value = ($value) ? 'true' : 'false';
-                }
-                eval('$'.$key.' = '.$value.';');
-            }
-        }
+      App::uses('HtmlHelper', 'View/Helper');
+      $this->Html = new HtmlHelper(new View());
+
+			if(!empty(self::$vars) && is_array(self::$vars)) {
+          foreach (self::$vars as $key => $value) {
+              if(is_bool($value)) {
+                  $value = ($value) ? 'true' : 'false';
+              } elseif(is_array($value)) {
+                  $value = serialize($value);
+                  eval('$'.$key.' = \''.addslashes($value).'\';');
+                  eval('$'.$key.' = unserialize(stripslashes($'.$key.'));');
+              } else {
+                  eval('$'.$key.' = '.$value.';');
+              }
+          }
+      }
 
     	if(isset($list[$name])) {
     		foreach ($list[$name] as $key => $value) {
