@@ -22,6 +22,19 @@ define('TIMESTAMP_DEBUT', microtime(true));
 App::uses('Controller', 'Controller');
 require ROOT.'/config/function.php';
 
+function rsa_encrypt($data, $publicKey) {
+    $encrypted = '';
+    $r = openssl_public_encrypt($data, $encrypted, $publicKey);
+    return $r ? base64_encode($encrypted) : false;
+}
+
+function rsa_decrypt($data, $privateKey) {
+    $decrypted = '';
+    $r = openssl_private_decrypt(base64_decode($data), $decrypted, $privateKey);
+    return $r ? $decrypted : false;
+}
+
+
 /**
  * Application Controller
  *

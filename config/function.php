@@ -2,7 +2,7 @@
 /**
 * Fichier contenant toutes les fonctions
 * Nécessaire au fonctionnement du site
-* 
+*
 * @author Eywek
 **/
 
@@ -20,7 +20,7 @@ function password($password) {
 }
 
 function cut($data, $how) {
-	$return = substr($data, 0, $how); 
+	$return = substr($data, 0, $how);
 	return (strlen($data) > $how) ? $return.'...' : $return;
 }
 
@@ -28,7 +28,7 @@ function cut($data, $how) {
 function rand_color_news() {
 	$colors = array('border-top-color-dark-blue', 'border-top-color-dark-blue-2', 'border-top-color-yellow', 'border-top-color-dark-yellow', 'border-top-color-blue', 'border-top-color-magenta', 'border-top-color-green'); // toute les class disponible
 	$color = rand(0, count($colors)); // génére un chiffre aléatoire entre 0 et le nombre de class
-	if($color > 0) { // si le chiffre généré est supérier à 0 
+	if($color > 0) { // si le chiffre généré est supérier à 0
 		$color = $color - 1; // je lui enlève -1 pour bien sélectionner dans l'array après
 	}
 	return $colors[$color]; // et je retourne la class selon le chiffre aléatoire
@@ -50,8 +50,8 @@ function unzip($file, $path, $name = 'install-zip', $No_file_get_contents = fals
 			mkdir ($path.'/zip', 0777, true);
 		}
 		$dlHandler = fopen($path.'/zip/'.$name.'.zip', 'w+');
-		if ( !fwrite($dlHandler, $newUpdate) ) { 
-			return false; 
+		if ( !fwrite($dlHandler, $newUpdate) ) {
+			return false;
 		}
 		fclose($dlHandler);
 	}
@@ -110,18 +110,6 @@ function clearFolder($folder)
 	}
 	//Fermer le dossier vide
 	closedir($dossier);
-}
-
-function rsa_encrypt($data, $publicKey) {
-    $encrypted = '';
-    $r = openssl_public_encrypt($data, $encrypted, $publicKey);
-    return $r ? base64_encode($encrypted) : false;
-}
- 
-function rsa_decrypt($data, $privateKey) {
-    $decrypted = '';
-    $r = openssl_private_decrypt(base64_decode($data), $decrypted, $privateKey);
-    return $r ? $decrypted : false;
 }
 
 ?>
