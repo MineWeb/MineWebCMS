@@ -18,7 +18,7 @@
 *
 * -- Table rush_hours --
 *
-* created 
+* created
 * visits
 *
 * -- connected --
@@ -31,14 +31,14 @@
 App::uses('AppHelper', 'View/Helper');
 App::uses('CakeSession', 'Model/Datasource');
 class StatisticsComponent extends Object {
-  
+
   function shutdown(&$controller) {
   }
 
   function beforeRender(&$controller) {
   }
-  
-  function beforeRedirect() { 
+
+  function beforeRedirect() {
   }
 
   function initialize(&$controller) {
@@ -79,6 +79,7 @@ class StatisticsComponent extends Object {
   function get_all_referer() {
     $this->Visit = ClassRegistry::init('Visit');
     $referers = $this->Visit->find('all');
+    $referer = array();
     foreach ($referers as $key => $value) {
       $referer[] = $value['Visit']['referer'];
     }
@@ -89,6 +90,7 @@ class StatisticsComponent extends Object {
   function get_referers() {
     $this->Visit = ClassRegistry::init('Visit');
     $referers = $this->Visit->find('all', array('group' => 'referer'));
+    $result = array();
     foreach ($referers as $key => $value) {
       $nbr = $this->Visit->find('count', array('conditions' => array('referer' => $value['Visit']['referer'])));
       $result[$value['Visit']['referer']] = $nbr;
@@ -100,6 +102,7 @@ class StatisticsComponent extends Object {
   function get_pages() {
     $this->Visit = ClassRegistry::init('Visit');
     $pages = $this->Visit->find('all', array('group' => 'page'));
+    $result = array();
     foreach ($pages as $key => $value) {
       $nbr = $this->Visit->find('count', array('conditions' => array('page' => $value['Visit']['page'])));
       $result[$value['Visit']['page']] = $nbr;
@@ -111,6 +114,7 @@ class StatisticsComponent extends Object {
   function get_language() {
     $this->Visit = ClassRegistry::init('Visit');
     $pages = $this->Visit->find('all', array('group' => 'lang'));
+    $result = array();
     foreach ($pages as $key => $value) {
       $nbr = $this->Visit->find('count', array('conditions' => array('lang' => $value['Visit']['lang'])));
       $result[$value['Visit']['lang']] = $nbr;
@@ -122,6 +126,7 @@ class StatisticsComponent extends Object {
   function get_all_navigators() {
     $this->Visit = ClassRegistry::init('Visit');
     $navigators = $this->Visit->find('all');
+    $navigator = array();
     foreach ($navigators as $key => $value) {
       $navigator[] = $value['Visit']['navigator'];
     }

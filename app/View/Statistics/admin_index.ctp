@@ -1,12 +1,18 @@
 <section class="content">
   <div class="row">
+
+    <div class="col-md-12">
+      <a href="<?= $this->Html->url(array('action' => 'reset')) ?>" class="btn btn-info btn-block"><?= $Lang->get('RESET_STATS') ?></a>
+    </div>
+    <br><br>
+
     <div class="col-md-6">
       <div class="box">
         <div class="box-header with-border">
           <h3 class="box-title"><?= $Lang->get('REFERING_WEBSITE') ?></h3>
         </div>
         <div class="box-body">
-        
+
           <canvas id="pieChart_referers" height="150"></canvas>
           <script>
           var pieChartCanvas = $("#pieChart_referers").get(0).getContext("2d");
@@ -36,9 +42,9 @@
                   echo 'label : \'undefined\'';
                 }
                 echo '},';
-                $i++; 
+                $i++;
               }
-            } 
+            }
             ?>
           ];
           var pieOptions = {
@@ -80,7 +86,7 @@
           <h3 class="box-title"><?= $Lang->get('PAGE_MOST_VISITED') ?></h3>
         </div>
         <div class="box-body">
-        
+
           <canvas id="pieChart_pages" height="150"></canvas>
           <script>
           var pieChartCanvas = $("#pieChart_pages").get(0).getContext("2d");
@@ -102,8 +108,8 @@
                   echo 'label : \'undefined\'';
                 }
                 echo '},';
-                $i++; 
-            } 
+                $i++;
+            }
             ?>
           ];
           var pieOptions = {
@@ -147,14 +153,14 @@
           <h3 class="box-title"><?= $Lang->get('LANG') ?></h3>
         </div>
         <div class="box-body">
-        
+
           <canvas id="barChart" style="height:230px"></canvas>
           <script>
             var barChartCanvas = $("#barChart").get(0).getContext("2d");
             var barChart = new Chart(barChartCanvas);
             var areaChartData = {
             labels: [
-              <?php 
+              <?php
               foreach ($language as $key => $value) {
                 if(empty($key)) {
                   echo '"undefined",';
@@ -219,7 +225,7 @@
             barChartOptions.datasetFill = false;
             barChart.Bar(barChartData, barChartOptions);
           </script>
-          
+
         </div>
       </div>
     </div>
