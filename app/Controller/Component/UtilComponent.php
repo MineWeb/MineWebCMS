@@ -33,7 +33,18 @@ class UtilComponent extends Object {
 
     $this->from = $configuration->get('name').' <'.$configuration->get('email').'>';
 
-    $this->typeSend = (!$configuration->get('email_send_type') || $configuration->get('email_send_type') != "smtp") ? 'default' : 'smtp';
+    $this->typeSend = (!$configuration->get('email_send_type') || $configuration->get('email_send_type') != 2) ? 'default' : 'smtp';
+
+    if($this->typeSend == "smtp") {
+
+      $this->smtpOptions['host'] = $configuration->get('smtpHost'); // smtp.sendgrid.net - ssl://smtp.gmail.com
+      $this->smtpOptions['port'] = $configuration->get('smtpPort'); // 587 - 465
+      $this->smtpOptions['username'] = $configuration->get('smtpUsername'); // Eywek
+      $this->smtpOptions['password'] = $configuration->get('smtpPassword'); // motdepasse
+      $this->smtpOptions['timeout'] = '30';
+      //$this->smtpOptions['client'] = ''; // mineweb.org
+
+    }
 
     return $this;
   }

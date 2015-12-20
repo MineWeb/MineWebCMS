@@ -288,9 +288,6 @@ WCqkx22behAGZq6rhwIDAQAB
 			$this->redirect(array('controller' => 'maintenance', 'action' => 'index', 'plugin' => false, 'admin' => false));
 		}
 
-    debug($this->Util->prepareMail('mineconstruct@gmail.com', 'Test', 'yolo')->sendMail());
-
-
 		Configure::write('theme', $theme_name);
 		$this->__setTheme();
 	}
