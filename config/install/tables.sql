@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `configurations` (
   `facebook` text NOT NULL,
   `mineguard` varchar(5) NOT NULL,
   `banner_server` text DEFAULT NULL,
-  `smtp` int(1) DEFAULT '1' COMMENT '1 = default, 2 = smtp',
+  `email_send_type` int(1) DEFAULT '1' COMMENT '1 = default, 2 = smtp',
   `smtpHost` varchar(30) DEFAULT NULL,
   `smtpUsername` varchar(50) DEFAULT NULL,
   `smtpPort` int(5) DEFAULT NULL,
