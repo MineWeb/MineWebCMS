@@ -476,6 +476,8 @@ class UserController extends AppController {
 					if(empty($this->request->data['password'])) {
 						$password = $this->User->find('all', array('conditions' => array('pseudo' => $this->request->data['pseudo'])));
 						$this->request->data['password'] = $password[0]['User']['password'];
+					} else {
+						$this->request->data['password'] = password($this->request->data['password']);
 					}
 					foreach ($this->request->data as $key => $value) {
 						if($key == "rank" AND $value == "member") {
