@@ -11,8 +11,8 @@ class ConfigurationComponent extends Object {
 
   function __construct() {
     if(!file_exists(ROOT.'/config/install.txt')) {
-      $tables = file_get_contents(ROOT.'/config/install/sql.txt');
-          $tables = explode('|', $tables);
+      $tables = file_get_contents(ROOT.'/config/install/tables.sql');
+          $tables = explode("\n\n", $tables);
           App::import('Model', 'ConnectionManager');
           $con = new ConnectionManager;
           $cn = $con->getDataSource('default');

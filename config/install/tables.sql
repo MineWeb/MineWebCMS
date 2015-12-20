@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `ranks` (
   `name` varchar(20) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
+
 CREATE TABLE IF NOT EXISTS `servers` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL DEFAULT '',
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `servers` (
   `port` int(5) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
+
 CREATE TABLE IF NOT EXISTS `comments` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `content` text NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `news_id` int(20) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
+
 CREATE TABLE IF NOT EXISTS `configurations` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `configurations` (
   `banner_server` text DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
+
 CREATE TABLE IF NOT EXISTS `histories` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `action` varchar(255) NOT NULL,
@@ -54,14 +54,14 @@ CREATE TABLE IF NOT EXISTS `histories` (
   `other` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
+
 CREATE TABLE IF NOT EXISTS `likes` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `news_id` int(20) NOT NULL,
   `author` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
+
 CREATE TABLE IF NOT EXISTS `navbars` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `order` int(2) NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `navbars` (
   `submenu` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
+
 CREATE TABLE IF NOT EXISTS `news` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `title` varchar(50) NOT NULL,
@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `news` (
   `published` int(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
+
 CREATE TABLE IF NOT EXISTS `pages` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
@@ -97,14 +97,14 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `updated` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
+
 CREATE TABLE IF NOT EXISTS `permissions` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `rank` int(1) NOT NULL,
   `permissions` longtext NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
+
 CREATE TABLE IF NOT EXISTS `plugins` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `plugin_id` int(20) NOT NULL,
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `plugins` (
   `state` int(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
+
 CREATE TABLE IF NOT EXISTS `sliders` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `title` varchar(50) NOT NULL,
@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS `sliders` (
   `url_img` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
+
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `pseudo` varchar(255) NOT NULL,
@@ -141,18 +141,18 @@ CREATE TABLE IF NOT EXISTS `users` (
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
+
 CREATE TABLE IF NOT EXISTS `visits` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
-  `ip` varchar(20) NOT NULL,
-  `created` datetime NOT NULL,
-  `referer` text NOT NULL,
-  `lang` varchar(4) NOT NULL,
-  `navigator` varchar(255) NOT NULL,
-  `page` varchar(255) NOT NULL,
+  `ip` varchar(20) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `referer` text DEFAULT NULL,
+  `lang` varchar(4) DEFAULT NULL,
+  `navigator` varchar(255) DEFAULT NULL,
+  `page` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
+
 CREATE TABLE IF NOT EXISTS `lostpasswords` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `email` varchar(50) NOT NULL,
@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `lostpasswords` (
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
+
 CREATE TABLE IF NOT EXISTS `api_configurations` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `skins` int(1) NOT NULL DEFAULT '0',
@@ -171,13 +171,13 @@ CREATE TABLE IF NOT EXISTS `api_configurations` (
   `cape_free` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-|
+
 INSERT INTO `permissions` (`id`, `rank`, `permissions`) VALUES
 (1, 0, 'a:3:{i:0;s:12:"COMMENT_NEWS";i:1;s:9:"LIKE_NEWS";i:2;s:18:"DELETE_HIS_COMMENT";}'),
 (2, 2, 'a:3:{i:0;s:12:"COMMENT_NEWS";i:1;s:9:"LIKE_NEWS";i:2;s:18:"DELETE_HIS_COMMENT";}');
-|
+
 INSERT INTO `api_configurations` (`id`, `skins`, `skin_filename`, `skin_free`, `capes`, `cape_filename`, `cape_free`) VALUES
 (0, 0, 'skins/{PLAYER}_skin', 0, 0, 'skins/capes/{PLAYER}_cape', 0);
-|
+
 INSERT INTO `configurations` (`id`, `name`, `email`, `lang`, `theme`, `layout`, `maintenance`, `money_name_singular`, `money_name_plural`, `server_state`, `server_secretkey`, `server_timeout`, `version`, `skype`, `youtube`, `twitter`, `facebook`, `mineguard`) VALUES
 (1, 'MineWeb', 'dev@mineweb.org', 'fr', 'Mineweb', 'default', '0', 'point', 'points', 0, '', '', '0.5', 'http://mineweb.org', 'http://mineweb.org', 'http://mineweb.org', 'http://mineweb.org', 'false');
