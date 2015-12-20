@@ -110,7 +110,7 @@ class PagesController extends AppController {
 			throw new NotFoundException();
 		}
 
-		// Page principal 
+		// Page principal
 
 		// récupérage des news
 		$this->loadModel('News'); // on charge le model
@@ -125,7 +125,7 @@ class PagesController extends AppController {
 				foreach ($likes as $key => $value) {
 					$i++;
 					foreach ($search_news as $k => $v) {
-                		if($value['Like']['news_id'] == $v['News']['id']) { 
+                		if($value['Like']['news_id'] == $v['News']['id']) {
                     		$search_news[$k]['News']['liked'] = true;
                 		} elseif(count($likes) == $i && !isset($search_news[$k]['News']['liked'])) {
                 			$search_news[$k]['News']['liked'] = false; // si c'est le dernier like et que y'a toujours pas de like sur cette news on dis false
@@ -169,7 +169,7 @@ class PagesController extends AppController {
 				$this->layout = null;
 				$return['first_administrator'] = $this->Configuration->get_first_admin();
 				$return['created'] = $this->Configuration->get_created_date();
-				$return['url'] = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; 
+				$return['url'] = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 				$return['version'] = $this->Configuration->get('version');
 				$return['layout'] = $this->Configuration->get_layout();
 				$return['theme'] = $this->Configuration->get('theme');
@@ -284,7 +284,7 @@ class PagesController extends AppController {
 
 	public function admin_index() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_PAGE')) {
-			 
+
 			$this->set('title_for_layout',$this->Lang->get('PAGES_LIST'));
 			$this->layout = 'admin';
 			$this->loadModel('Page');
@@ -297,7 +297,7 @@ class PagesController extends AppController {
 
 	public function admin_add() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_PAGE')) {
-			 
+
 			$this->set('title_for_layout',$this->Lang->get('ADD_PAGE'));
 			$this->layout = 'admin';
 		} else {
@@ -307,7 +307,7 @@ class PagesController extends AppController {
 
 	public function admin_add_ajax() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_PAGE')) {
-			 
+
 			$this->layout = null;
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['title']) AND !empty($this->request->data['slug']) AND !empty($this->request->data['content'])) {
@@ -338,10 +338,10 @@ class PagesController extends AppController {
 
 	public function admin_delete($id = false) {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_PAGE')) {
-			 
+
 			$this->layout = null;
 			if($id != false) {
-				 
+
 				$this->loadModel('Page');
 				if($this->Page->delete($id)) {
 					$this->History->set('DELETE_PAGE', 'page');
@@ -361,7 +361,7 @@ class PagesController extends AppController {
 	public function admin_edit($id = false) {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_PAGE')) {
 			if($id != false) {
-				 
+
 				$this->set('title_for_layout',$this->Lang->get('EDIT_PAGE'));
 				$this->layout = 'admin';
 				$this->loadModel('Page');
@@ -377,12 +377,12 @@ class PagesController extends AppController {
 			}
 		} else {
 			$this->redirect('/');
-		}	
+		}
 	}
 
 	public function admin_edit_ajax() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_PAGE')) {
-			 
+
 			$this->layout = null;
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['id']) AND !empty($this->request->data['title']) AND !empty($this->request->data['slug']) AND !empty($this->request->data['content'])) {
@@ -409,27 +409,3 @@ class PagesController extends AppController {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

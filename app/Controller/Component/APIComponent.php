@@ -6,7 +6,7 @@ class APIComponent extends Object {
 	public $mineguard_active;
 	public $skin_active;
 	public $cape_active;
-  
+
 	function shutdown(&$controller) {}
 	function beforeRender(&$controller) {}
 	function beforeRedirect() {}
@@ -57,7 +57,7 @@ class APIComponent extends Object {
       }
     }
 
-		/* CAPE ET SKINS */ 
+		/* CAPE ET SKINS */
 
 	public function can_skin() {
 		if($this->skin_active) {
@@ -95,10 +95,8 @@ class APIComponent extends Object {
     	}
 	}
 
-	public function get_skin($name, $where) {
- 
-		$filename =  $where.$name.'.png';
-		 
+	public function get_skin($filename) {
+
 		header('Content-Type: image/png');
 		$rendered = imagecreatetruecolor(240, 480);
 		$source = @imagecreatefrompng($filename);
@@ -157,10 +155,10 @@ SUVORK5CYII='));
 		imagepng($rendered);
 	}
 
-	public function get_head_skin($name, $size = 50, $where, $cache = false) {
+	public function get_head_skin($name, $size = 50, $filename, $cache = false) {
 
 		header("Content-type: image/png");
-		
+
 		if($cache){
 			$cacheFolder = ROOT.'/app/tmp/cache/skins/';
 		  	if(!is_dir($cacheFolder)){
@@ -172,8 +170,8 @@ SUVORK5CYII='));
 	    		exit();
 		  	}
 		}
-		
-		$src = @imagecreatefrompng($where.$name.'.png');
+
+		$src = @imagecreatefrompng($filename);
 		if(!$src) {
 			$src = imagecreatefromstring(base64_decode('iVBORw0KGgoAAAANSUhEUgAAAEAAAAAgCAMAAACVQ462AAAABGdBTUEAALGPC/xhBQAAAwBQTFRF
 AAAAHxALIxcJJBgIJBgKJhgLJhoKJxsLJhoMKBsKKBsLKBoNKBwLKRwMKh0NKx4NKx4OLR0OLB4O
@@ -210,7 +208,7 @@ gBS2YdzjMJb4XHRDAPiQhSGjNOxKQIZTgC8BiMECgarxprjjO0OXiV4MAf4A/x0nbcyiS5EAAAAA
 SUVORK5CYII='));
 		}
 		$dest   = imagecreatetruecolor(8, 8);
-		imagecopy($dest, $src, 0, 0, 8, 8, 8, 8); 
+		imagecopy($dest, $src, 0, 0, 8, 8, 8, 8);
 		$bg_color = imagecolorat($src, 0, 0);
 		$no_helm  = true;
 		for ($i = 1; $i <= 8; $i++) {

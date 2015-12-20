@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class APIController extends AppController {
 
@@ -67,7 +67,7 @@ class APIController extends AppController {
 		$this->autoRender = false;
         if($this->isConnected) {
     		if($this->request->is('post')) {
-    			
+
     			$this->Connect->set('allowed_ip', '0');
 
     			echo $this->Lang->get('SUCCESS_DISABLE_MINEGUARD').'|true';
@@ -84,7 +84,7 @@ class APIController extends AppController {
 		$this->autoRender = false;
         if($this->isConnected) {
     		if($this->request->is('post')) {
-    			
+
     			$this->Connect->set('allowed_ip', serialize(array()));
 
     			echo $this->Lang->get('SUCCESS_ENABLE_MINEGUARD').'|true';
@@ -129,13 +129,13 @@ class APIController extends AppController {
 		$config = $this->ApiConfiguration->find('first');
 		$config = $config['ApiConfiguration'];
 		if($config['skins']) {
-			$target = substr($config['skin_filename'], 0, (strrpos($config['skin_filename'], '/') + 1));
-			$where = WWW_ROOT.$target;
+			$filename = str_replace('{PLAYER}', $name, $config['skin_filename']);
+			$filename = WWW_ROOT.$filename.'.png';
 		} else {
-			$where = 'https://skins.minecraft.net/MinecraftSkins/';
+			$filename = 'https://skins.minecraft.net/MinecraftSkins/'.$name.'.png';
 		}
 
-		echo $this->API->get_skin($name, $where);
+		echo $this->API->get_skin($filename);
 	}
 
 	public function get_head_skin($name, $size = 50) {
@@ -145,12 +145,12 @@ class APIController extends AppController {
 		$config = $this->ApiConfiguration->find('first');
 		$config = $config['ApiConfiguration'];
 		if($config['skins']) {
-			$target = substr($config['skin_filename'], 0, (strrpos($config['skin_filename'], '/') + 1));
-			$where = WWW_ROOT.$target;
+			$filename = str_replace('{PLAYER}', $name, $config['skin_filename']);
+			$filename = WWW_ROOT.$filename.'.png';
 		} else {
-			$where = 'https://skins.minecraft.net/MinecraftSkins/';
+			$filename = 'https://skins.minecraft.net/MinecraftSkins/'.$name.'.png';
 		}
-		echo $this->API->get_head_skin($name, $size, $where);
+		echo $this->API->get_head_skin($name, $size, $filename);
 	}
 
 }
