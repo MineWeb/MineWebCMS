@@ -13,12 +13,12 @@ $this->Configuration = new ConfigurationComponent();
 
           <form method="post">
             <input type="hidden" id="form_infos" data-ajax="false">
-            <?php 
+            <?php
             $config = $this->Configuration->get_all();
             $config = $config['Configuration'];
             foreach ($config as $key => $value) { ?>
               <?php if(strpos($key, 'maintenance') === false AND strpos($key, 'id') === false AND strpos($key, 'layout') === false AND strpos($key, 'theme') === false AND strpos($key, 'server_') === false) { ?>
-                <?php if(strpos($key, 'version') === false AND $key != 'mineguard' AND strpos($key, 'banner_server') === false) { ?>
+                <?php if(strpos($key, 'version') === false AND $key != 'mineguard' AND strpos($key, 'banner_server') === false && strpos($key, 'email_send_type') === false) { ?>
                   <div class="form-group">
                     <label><?= $Lang->get(strtoupper($key)) ?></label>
                       <?= $this->Form->input(false, array(
@@ -68,6 +68,15 @@ $this->Configuration = new ConfigurationComponent();
                         ?>
                       <?php } ?>
                   </div>
+                <?php } elseif($key == 'email_send_type') { ?>
+                  <div class="form-group">
+                    <label><?= $Lang->get('EMAIL_SEND_TYPE') ?></label>
+                    <br>
+                    <input type="radio" name="email_send_type" value="1" <?php if($value == '1') { echo 'checked=""'; } ?>>
+                    <?= $Lang->get('NORMAL') ?>
+                    <input type="radio" name="email_send_type" value="2" <?php if($value == '2') { echo 'checked=""'; } ?>>
+                    <?= $Lang->get('SMTP') ?>
+                  </div>
                 <?php } else { ?>
                   <div class="form-group">
                     <label><?= $Lang->get(strtoupper($key)) ?></label>
@@ -85,8 +94,8 @@ $this->Configuration = new ConfigurationComponent();
             <?php } ?>
 
             <button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
-            <a href="<?= $this->Html->url(array('controller' => '', 'action' => '', 'admin' => true)) ?>" type="button" class="btn"><?= $Lang->get('CANCEL') ?></a>    
-          </form> 
+            <a href="<?= $this->Html->url(array('controller' => '', 'action' => '', 'admin' => true)) ?>" type="button" class="btn"><?= $Lang->get('CANCEL') ?></a>
+          </form>
 
         </div>
       </div>
