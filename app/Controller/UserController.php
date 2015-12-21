@@ -109,10 +109,7 @@ class UserController extends AppController {
 						$to = $this->request->data['email'];
 						$subject = $this->Lang->get('RESET_PASSWORD').' | '.$this->Configuration->get('name').'';
 						$message = $this->Lang->email_reset($this->request->data['email'], $search['User']['pseudo'], $key);
-						$headers = 'From: '.$this->Configuration->get('name').' <'.$this->Configuration->get('email').'>' . "\r\n" .
-     						'Reply-To: '.$this->Configuration->get('email').'' . "\r\n" .
-     						'X-Mailer: PHP/' . phpversion();
-						if(mail($to, $subject, $message, $headers)) {
+						if($this->Util->prepareMail($to, $subject, $message)->sendMail()) {
 							$this->Lostpassword->create();
 							$this->Lostpassword->set(array(
 								'email' => $this->request->data['email'],

@@ -46,7 +46,7 @@ function rsa_decrypt($data, $privateKey) {
  */
 class AppController extends Controller {
 
-	var $components = array('Module', 'Session', 'Security', /*'Connect', */'Configuration', 'EyPlugin', 'History', 'Statistics', 'Permissions', 'Lang', 'Update', 'Server');
+	var $components = array('Module', 'Session', 'Security', /*'Connect', */'Configuration', 'EyPlugin', 'History', 'Statistics', 'Permissions', 'Lang', 'Update', 'Server', 'Util');
 	var $helpers = array('Session');
 
 	var $view = 'Theme';
@@ -292,6 +292,7 @@ WCqkx22behAGZq6rhwIDAQAB
 		} else {
 			$this->redirect(array('controller' => 'maintenance', 'action' => 'index', 'plugin' => false, 'admin' => false));
 		}
+
 		Configure::write('theme', $theme_name);
 		$this->__setTheme();
 	}
