@@ -7,6 +7,8 @@
     "PLUGIN__INSTALL":"Installer",
     "PLUGIN__INSTALL_LOADING":"Installation",
 
+    "SERVER__AFFICH_BANNER":"Afficher ce serveur sur la bannière du site",
+
     "NONE_PLUGIN_INSTALLED":"Aucun plugin n'est installé",
     "ERROR_CSRF":"Erreur de type CSRF est survenue, rafraichissez la page et réessayez.",
     "PROBLEM_DATABASE_NO_CONNECTION": "Une erreur avec la base de donn\u00e9es est survenue !",

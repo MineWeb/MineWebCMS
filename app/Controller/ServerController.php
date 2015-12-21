@@ -13,6 +13,19 @@ class ServerController extends AppController {
 
 			$this->loadModel('Server');
 			$servers = $this->Server->find('all');
+
+			$banner_server = unserialize($this->Configuration->get('banner_server'));
+
+			if($banner_server) {
+				foreach ($servers as $key => $value) {
+					if(in_array($value['Server']['id'], $banner_server)) {
+						$servers[$key]['Server']['activeInBanner'] = true;
+					} else {
+						$servers[$key]['Server']['activeInBanner'] = false;
+					}
+				}
+			}
+
 			$this->set(compact('servers'));
 
 			$this->set('timeout', $this->Configuration->get('server_timeout'));
@@ -20,6 +33,32 @@ class ServerController extends AppController {
 			$this->redirect('/');
 		}
 	}
+
+	public function admin_switchBanner($id = false) {
+		$this->autoRender = false;
+		if($this->isConnected && $this->User->isAdmin()) {
+			if($id) {
+
+				$banner = unserialize($this->Configuration->get('banner_server'));
+
+				if($banner) {
+
+					if(in_array($id, $banner)) {
+						unset($banner[array_search($id, $banner)]);
+					} else {
+						$banner[] = $id;
+					}
+
+					$this->Configuration->set('banner_server', serialize($banner));
+
+				}
+			}
+
+		} else {
+			throw new ForbiddenException();
+		}
+	}
+
 
 	public function admin_delete($id = false) {
 		$this->autoRender = false;
@@ -95,7 +134,6 @@ class ServerController extends AppController {
 								$this->Configuration->set('server_secretkey', $secret_key);
 								echo $this->Lang->get('SUCCESS_CONNECTION_SERVER').'|true';
 							} else {
-								$this->Configuration->set('server_state', 0);
 								echo $this->Lang->get('SERVER_CONNECTION_FAILED').'|false';
 							}
 						} else {
@@ -115,8 +153,12 @@ class ServerController extends AppController {
 		}
 	}
 
-	public function admin_banlist($server_id = 1) {
+	public function admin_banlist($server_id = false) {
 		if($this->isConnected AND $this->User->isAdmin()) {
+
+			if(!$server_id) {
+				$server_id = $this->Server->getFirstServerID();
+			}
 
 			$this->loadModel('Server');
 			$servers = $this->Server->find('all');
@@ -140,8 +182,12 @@ class ServerController extends AppController {
 		}
 	}
 
-	public function admin_whitelist($server_id = 1) {
+	public function admin_whitelist($server_id = false) {
 		if($this->isConnected AND $this->User->isAdmin()) {
+
+			if(!$server_id) {
+				$server_id = $this->Server->getFirstServerID();
+			}
 
 			$this->loadModel('Server');
 			$servers = $this->Server->find('all');
@@ -165,8 +211,12 @@ class ServerController extends AppController {
 		}
 	}
 
-	public function admin_online($server_id = 1) {
+	public function admin_online($server_id = false) {
 		if($this->isConnected AND $this->User->isAdmin()) {
+
+			if(!$server_id) {
+				$server_id = $this->Server->getFirstServerID();
+			}
 
 			$this->loadModel('Server');
 			$servers = $this->Server->find('all');

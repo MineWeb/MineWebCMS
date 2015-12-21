@@ -6,11 +6,11 @@
           <h3 class="box-title"><?= $Lang->get('WHITELIST') ?></h3>
         </div>
         <div class="box-body">
-        
+
           <?php foreach ($servers as $key => $value) { ?>
-            <a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'banlist', 'admin' => true, $value['Server']['id'])) ?>" class="btn btn-lg btn-success"><?= $value['Server']['name'] ?></a>
+            <a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'whitelist', 'admin' => true, $value['Server']['id'])) ?>" class="btn btn-lg btn-success"><?= $value['Server']['name'] ?></a>
           <?php } ?>
-          
+
           <hr>
 
           <?php if($list != "NEED_SERVER_ON") { ?>
