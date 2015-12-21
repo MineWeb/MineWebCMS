@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class AdminController extends AppController {
 
@@ -6,7 +6,7 @@ class AdminController extends AppController {
 
 	function admin_index() {
 		if($this->isConnected AND $this->Permissions->can('ACCESS_DASHBOARD')) {
-			 
+
 			$this->set('title_for_layout', $this->Lang->get('HOME'));
 			$this->layout = 'admin';
 			$this->loadModel('News');
@@ -53,18 +53,18 @@ class AdminController extends AppController {
 		    	'conditions' => array('action' => 'BUY_ITEM'),
 			    'limit' => '5',
 			    'group' => 'other',
-			)); 
+			));
 
 		    foreach ($items_solded as $key => $value) {
 		    	$how[$key] = $this->History->find('count', array('conditions' => array('other' => $value['History']['other'])));
 		    }
 		    $this->set(compact('how'));
 
-			$this->set(compact('items_solded')); 
+			$this->set(compact('items_solded'));
 
 			if($this->EyPlugin->isInstalled('eywek.shop.1')) {
-				$this->loadModel('Item');
-				$counts_items = $this->Item->find('count'); 
+				$this->loadModel('Shop.Item');
+				$counts_items = $this->Item->find('count');
 
 				if(count($items_solded) < 5) {
 					$counts_items = 0;
