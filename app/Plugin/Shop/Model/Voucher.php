@@ -1,3 +1,2 @@
 <?php
-class Voucher extends AppModel {
-}
+class Voucher extends ShopAppModel {}

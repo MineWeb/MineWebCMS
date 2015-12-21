@@ -42,7 +42,7 @@
 
 	    var i = 0;
 	    for (var key in args = array)
-	    { 
+	    {
 	    	input = args[i];
 	    	input = input.split('=');
 	    	input_name = input[0];
@@ -64,9 +64,11 @@
 	    	} else if(form.find('select[name="'+input_name+'"]').val() !== undefined) {
 	    		inputs[input_name] = form.find('select[name="'+input_name+'"]').val();
 	    	}
-	      
+
 	      i++;
 	    }
+
+			inputs["data[_Token][key]"] = '<?= $csrfToken ?>';
 
 	    //
 

@@ -36,7 +36,8 @@ class DiscountVoucherComponent extends Object {
     // Verification des réductions actuelles
     // suppression si la date de fin est passé
 
-    $this->Voucher = ClassRegistry::init('Voucher');
+    $this->Voucher = ClassRegistry::init('Shop.Voucher');
+
     $get_vouchers = $this->Voucher->find('all');
     foreach ($get_vouchers as $k) {
       $end = strtotime($k['Voucher']['end_date']);
@@ -51,7 +52,7 @@ class DiscountVoucherComponent extends Object {
 
   function getItemNameById($id) {
     if(empty(self::$items)) {
-      $this->Item = ClassRegistry::init('Item');
+      $this->Item = ClassRegistry::init('Shop.Item');
       $items = $this->Item->find('all');
       foreach ($items as $key => $value) {
         self::$items[$value['Item']['id']] = $value['Item']['name'];
@@ -64,7 +65,7 @@ class DiscountVoucherComponent extends Object {
     App::import('Component', 'Lang');
     $this->Lang = new LangComponent();
       // le fichier de langue
-    $this->Voucher = ClassRegistry::init('Voucher'); // le model principal
+    $this->Voucher = ClassRegistry::init('Shop.Voucher'); // le model principal
     $search_vouchers = $this->Voucher->find('all'); // le cherche les promos
     if(!empty($search_vouchers)) { // si il y a une promo en cours
       foreach ($search_vouchers as $k) { // un foreach si il y en a plusieurs
@@ -121,7 +122,7 @@ class DiscountVoucherComponent extends Object {
   }
 
   function get_new_price($price, $category, $item, $code) { // donne le nouveau prix de l'item si il est concerné par une réduction
-    $this->Voucher = ClassRegistry::init('Voucher');
+    $this->Voucher = ClassRegistry::init('Shop.Voucher');
     $search_vouchers = $this->Voucher->find('all', array('conditions' => array('code' => $code)));
     if(!empty($search_vouchers)) { // si il y a une promo en cours
 
@@ -130,7 +131,12 @@ class DiscountVoucherComponent extends Object {
         $can_use = true;
       } else {
         $this->User = ClassRegistry::init('User');
-        $how_used = array_count_values(unserialize($search_vouchers[0]['Voucher']['used']))[$this->User->getKey('pseudo')];
+        $how_used = array_count_values(unserialize($search_vouchers[0]['Voucher']['used']));
+        if(isset($how_used[$this->User->getKey('pseudo')])) {
+          $how_used = $how_used[$this->User->getKey('pseudo')];
+        } else {
+          $how_used = 0;
+        }
         if($how_used < $search_vouchers[0]['Voucher']['limit_per_user']) {
           $can_use = true;
         } else {
@@ -139,7 +145,7 @@ class DiscountVoucherComponent extends Object {
       }
       if($can_use) {
 
-        $this->Category = ClassRegistry::init('Category');
+        $this->Category = ClassRegistry::init('Shop.Category');
         $search_category = $this->Category->find('all', array('conditions' => array('id' => $category)));
         $category = $search_category['0']['Category']['name'];
         foreach ($search_vouchers as $k) { // une boucle de tout les promos
@@ -177,7 +183,7 @@ class DiscountVoucherComponent extends Object {
   }
 
   function set_used($pseudo, $code) {
-    $this->Voucher = ClassRegistry::init('Voucher');
+    $this->Voucher = ClassRegistry::init('Shop.Voucher');
     $search_vouchers = $this->Voucher->find('all', array('conditions' => array('code' => $code)));
     if(!empty($search_vouchers)) {
 

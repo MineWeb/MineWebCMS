@@ -6,7 +6,7 @@
           <h3 class="box-title"><?= $Lang->get('ADD_VOUCHER') ?></h3>
         </div>
         <div class="box-body">
-        
+
           <form action="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'admin_add_voucher_ajax', 'admin' => true)) ?>" method="post">
             <input type="hidden" id="form_infos" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true, 'plugin' => 'shop')) ?>">
 
@@ -36,9 +36,11 @@
               <div class="form-group">
                 <label><?= $Lang->get('CHOOSE_ITEM') ?></label>
                 <select class="form-control" name="effective_on_item" multiple>
-                  <?php foreach ($items as $key => $value) { ?>
-                    <option value="<?= $key ?>"><?= $value ?></option>
-                  <?php } ?>
+                  <?php if(!empty($items)) { ?>
+                    <?php foreach ($items as $key => $value) { ?>
+                      <option value="<?= $key ?>"><?= $value ?></option>
+                    <?php } ?>
+                  <?php } ?>
                 </select>
               </div>
             </div>
@@ -46,8 +48,10 @@
               <div class="form-group">
                 <label><?= $Lang->get('CHOOSE_CATEGORY') ?></label>
                 <select class="form-control" name="effective_on_categorie" multiple>
-                  <?php foreach ($categories as $key => $value) { ?>
-                    <option value="<?= $key ?>"><?= $value ?></option>
+                  <?php if(!empty($categories)) { ?>
+                    <?php foreach ($categories as $key => $value) { ?>
+                      <option value="<?= $key ?>"><?= $value ?></option>
+                    <?php } ?>
                   <?php } ?>
                 </select>
               </div>
@@ -88,10 +92,10 @@
             </div>
 
             <div class="pull-right">
-              <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true, 'plugin' => 'shop')) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>  
+              <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true, 'plugin' => 'shop')) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
               <button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
             </div>
-          </form>      
+          </form>
 
         </div>
       </div>
@@ -116,11 +120,11 @@
     if(val=="items") {
       $("#hidden_categories").css("display", "none");
       $("#hidden_items").css("display", "block");
-    } 
+    }
     if(val=="all") {
       $("#hidden_categories").css("display", "none");
       $("#hidden_items").css("display", "none");
-    } 
+    }
   }
 
   function random_code(nbcar) {

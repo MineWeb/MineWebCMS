@@ -1,7 +1,7 @@
 <?php
 App::uses('CakeEvent', 'Event');
 
-class Item extends AppModel {
+class Item extends ShopAppModel {
 
 	public function afterSave($created, $options = array()) {
 		if($created) {

@@ -1,3 +1,4 @@
 <?php
-class VoteAppModel extends AppModel {
+class ShopAppModel extends AppModel {
+  public $tablePrefix = 'shop__';
 }

@@ -175,7 +175,7 @@ class UserController extends AppController {
 
 				$this->set('shop_active', true);
 
-				$this->loadModel('PaysafecardMessage');
+				$this->loadModel('Shop.PaysafecardMessage');
 				$search_psc_msg = $this->PaysafecardMessage->find('all', array('conditions' => array('to' =>  $this->User->getKey('pseudo'))));
 				if(!empty($search_psc_msg)) {
 					$this->set(compact('search_psc_msg'));
