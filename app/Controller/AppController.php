@@ -274,7 +274,7 @@ WCqkx22behAGZq6rhwIDAQAB
   	// infos user
   	$user = ($this->isConnected) ? $this->User->getAllFromCurrentUser() : array();
     if(!empty($user)) {
-      $user->isAdmin = $this->User->isAdmin();
+      $user['isAdmin'] = $this->User->isAdmin();
     }
 
   	$csrfToken = $this->Session->read('_Token')['key'];
