@@ -1,8 +1,3 @@
-<?php 
-  
-App::import('Component', 'ConnectComponent');
-$this->Connect = new ConnectComponent;
-?>
     <div class="container">
         <div class="row">
 
@@ -18,7 +13,7 @@ $this->Connect = new ConnectComponent;
 			<div class="col-md-9" id="content-tickets">
 				<?php if(!empty($tickets)) { ?>
 					<?php foreach ($tickets as $key => $value) { ?>
-						<?php if($Permissions->can('VIEW_TICKETS') AND $value['Ticket']['private'] == 0 OR $isConnected AND $this->Connect->if_admin() OR $isConnected AND $this->Connect->get_pseudo() == $value['Ticket']['author'] OR $Permissions->can('VIEW_ALL_TICKETS')) { ?>
+						<?php if($Permissions->can('VIEW_TICKETS') AND $value['Ticket']['private'] == 0 OR $isConnected AND $user->isAdmin OR $isConnected AND $user['pseudo'] == $value['Ticket']['author'] OR $Permissions->can('VIEW_ALL_TICKETS')) { ?>
 							<!-- Un ticket -->
 							<div class="col-md-12" id="ticket-<?= $value['Ticket']['id'] ?>">
 								<div class="panel panel-default">
@@ -26,18 +21,18 @@ $this->Connect = new ConnectComponent;
 								  	<h3 class="support"><?= $value['Ticket']['title'] ?> <?php if($value['Ticket']['state'] == 1) { echo '<icon style="color: green;" class="fa fa-check" title="'.$Lang->get('RESOLVED').'"></icon>'; } else { echo '<div style="display:inline-block;" id="ticket-state-'.$value['Ticket']['id'].'"><icon class="fa fa-times" style="color:red;" title="'.$Lang->get('UNRESOLVED').'"></icon></div>'; } ?></h3>
 								    <img class="support" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/', 'plugin' => false)) ?>/<?= $value['Ticket']['author'] ?>/50" title="<?= $value['Ticket']['author'] ?>">
 								    <div class="pull-right support">
-								    	<?php if($isConnected AND $this->Connect->if_admin() OR $isConnected AND $this->Connect->get_pseudo() == $value['Ticket']['author'] AND $Permissions->can('DELETE_HIS_TICKET') OR $Permissions->can('DELETE_ALL_TICKETS')) { ?>
+								    	<?php if($isConnected AND $user->isAdmin OR $isConnected AND $user['pseudo'] == $value['Ticket']['author'] AND $Permissions->can('DELETE_HIS_TICKET') OR $Permissions->can('DELETE_ALL_TICKETS')) { ?>
 									    <p><a id="<?= $value['Ticket']['id'] ?>" title="<?= $Lang->get('DELETE') ?>" class="ticket-delete btn btn-danger btn-sm"><icon class="fa fa-times"></icon></a></p>
 									    <?php } ?>
 									    <?php if($value['Ticket']['state'] == 0) { ?>
-										    <?php if($isConnected AND $this->Connect->if_admin() OR $isConnected AND $this->Connect->get_pseudo() == $value['Ticket']['author'] AND $Permissions->can('RESOLVE_HIS_TICKET') OR $Permissions->can('RESOLVE_ALL_TICKETS')) { ?>
+										    <?php if($isConnected AND $user->isAdmin OR $isConnected AND $user['pseudo'] == $value['Ticket']['author'] AND $Permissions->can('RESOLVE_HIS_TICKET') OR $Permissions->can('RESOLVE_ALL_TICKETS')) { ?>
 										    <p class="div-ticket-resolved-<?= $value['Ticket']['id'] ?>"><a id="<?= $value['Ticket']['id'] ?>" title="<?= $Lang->get('RESOLVED') ?>" class="ticket-resolved btn btn-success btn-sm"><icon style="font-size: 10px;" class="fa fa-check"></icon></a></p>
 										    <?php } ?>
 										<?php } ?>
 										<?php if($Permissions->can('SHOW_TICKETS_ANWSERS')) { ?>
 									    	<p><button id="<?= $value['Ticket']['id'] ?>" title="<?= $Lang->get('SHOW_ANSWER') ?>" class="btn btn-info btn-sm dropdown_reply"><icon style="font-size: 10px;" class="fa fa-chevron-down"></icon></button></p>
 									    <?php } ?>
-									    <?php if($value['Ticket']['state'] == 0 AND $isConnected AND $this->Connect->if_admin() OR $isConnected AND $this->Connect->get_pseudo() == $value['Ticket']['author'] AND $value['Ticket']['state'] == 0 AND $Permissions->can('REPLY_TO_HIS_TICKETS') OR $Permissions->can('REPLY_TO_ALL_TICKETS')) { ?>
+									    <?php if($value['Ticket']['state'] == 0 AND $isConnected AND $user->isAdmin OR $isConnected AND $user['pseudo'] == $value['Ticket']['author'] AND $value['Ticket']['state'] == 0 AND $Permissions->can('REPLY_TO_HIS_TICKETS') OR $Permissions->can('REPLY_TO_ALL_TICKETS')) { ?>
 									    <p><button id="<?= $value['Ticket']['id'] ?>" title="<?= $Lang->get('REPLY') ?>" class="btn btn-warning btn-sm ticket-reply"><icon class="fa fa-mail-reply" style="font-size: 10px;"></icon></button></p>
 										<?php } ?>
 									</div>
@@ -45,7 +40,7 @@ $this->Connect = new ConnectComponent;
 								  </div>
 								</div>
 								<div class="reply reply_<?= $value['Ticket']['id'] ?>">
-									<!-- Une réponse --> 
+									<!-- Une réponse -->
 									<?php if($Permissions->can('SHOW_TICKETS_ANWSERS')) { ?>
 										<?php foreach ($reply_tickets as $k => $v) { ?>
 											<?php if($v['ReplyTicket']['ticket_id'] == $value['Ticket']['id']) { ?>
@@ -55,7 +50,7 @@ $this->Connect = new ConnectComponent;
 													<div class="panel panel-default">
 													  <div class="panel-body">
 													    <img class="support" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/', 'plugin' => false)) ?>/<?= $v['ReplyTicket']['author']; ?>/50" title="<?= $v['ReplyTicket']['author']; ?>">
-													    <?php if($isConnected AND $this->Connect->if_admin()) { ?>
+													    <?php if($isConnected AND $user->isAdmin) { ?>
 													    <div class="pull-right">
 														    <p><button id="<?= $v['ReplyTicket']['id'] ?>" title="<?= $Lang->get('DELETE') ?>" class="btn btn-danger btn-sm reply-delete"><icon class="fa fa-times"></icon></button></p>
 														</div>
@@ -86,7 +81,7 @@ $this->Connect = new ConnectComponent;
                 <?php if($isConnected AND $Permissions->can('POST_TICKET')) { ?>
                 	<a href="#" data-toggle="modal" data-target="#post_ticket" class="btn btn-success btn-lg btn-block"><icon class="fa fa-pencil-square-o"></icon> <?= $Lang->get('POST_A_TICKET') ?></a>
                 <?php } ?>
-            </div> 
+            </div>
 		</div>
     </div>
 
@@ -276,7 +271,7 @@ $this->Connect = new ConnectComponent;
                 * end dropdown
                 **/
                 var before = $('.reply.reply_'+id).html();
-                $('.reply.reply_'+id).hide().html(before+'<div class="line-support"></div><div class="col-md-11 reply-col"><div class="panel panel-default panel-support"><div class="panel-body"><img class="support" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/<?= $this->Connect->get_pseudo(); ?>/50" title="<?= $this->Connect->get_pseudo(); ?>"><p class="support">'+message+'</p></div></div></div>').slideDown(1000);
+                $('.reply.reply_'+id).hide().html(before+'<div class="line-support"></div><div class="col-md-11 reply-col"><div class="panel panel-default panel-support"><div class="panel-body"><img class="support" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/<?= $user['pseudo']; ?>/50" title="<?= $user['pseudo']; ?>"><p class="support">'+message+'</p></div></div></div>').slideDown(1000);
               } else if(data == 1) {
                 $('#msg-on-reply').hide().html('<div class="alert alert-danger" role="alert"><p><?= $Lang->get('CANT_BE_EMPTY') ?></p></div>').fadeIn(1500);
               } else {
@@ -285,7 +280,7 @@ $this->Connect = new ConnectComponent;
             });
             return false;
         });
-    
+
     $("#ticket-form_post").submit(function( event ) {
         event.preventDefault();
         $('#msg-on-post').hide().html('<div class="alert alert-success" role="alert"><p><?= $Lang->get('IN_PROGRESS') ?></p></div>').fadeIn(1500);
@@ -302,7 +297,7 @@ $this->Connect = new ConnectComponent;
             $('#post_ticket').modal('hide');
             // ajout du post js
             var content_tickets = $("#content-tickets").html();
-            var new_ticket = '<div class="col-md-12" id="ticket-'+data+'"><div class="panel panel-default panel-ticket"><div class="panel-body"><h3 class="support">'+title+' <div style="display:inline-block;" id="ticket-state-'+data+'"><icon class="fa fa-times" style="color:red;" title="<?= $Lang->get('UNRESOLVED') ?>"></icon></div></h3><img class="support" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/<?= $this->Connect->get_pseudo() ?>/50" title="<?= $this->Connect->get_pseudo() ?>"><p class="support">'+content+'</p></div></div></div>';
+            var new_ticket = '<div class="col-md-12" id="ticket-'+data+'"><div class="panel panel-default panel-ticket"><div class="panel-body"><h3 class="support">'+title+' <div style="display:inline-block;" id="ticket-state-'+data+'"><icon class="fa fa-times" style="color:red;" title="<?= $Lang->get('UNRESOLVED') ?>"></icon></div></h3><img class="support" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/<?= $user['pseudo'] ?>/50" title="<?= $user['pseudo'] ?>"><p class="support">'+content+'</p></div></div></div>';
             $("#content-tickets").hide().html(new_ticket+content_tickets).fadeIn(1500);
             // fin ajout
             // stats

@@ -48,10 +48,10 @@ class VoterController extends VoteAppController {
             $user_rank = $this->User->find('first', array('conditions' => array('pseudo' => $this->request->data['pseudo'])));
             if(!empty($user_rank) && $this->Permissions->have($user_rank['User']['rank'], 'VOTE') == "true") {
                 if(!empty($this->request->data['pseudo'])) {
-                    if($this->Connect->user_exist($this->request->data['pseudo'])) {
+                    if($this->User->exist($this->request->data['pseudo'])) {
                         $this->loadModel('Vote');
                         $get_last_vote = $this->Vote->find('first', array('conditions' => array('OR' => array('username' => $this->request->data['pseudo'], 'ip' => $_SERVER['REMOTE_ADDR']), 'website' => $this->Session->read('vote.website'))));
-                        
+
                         if(!empty($get_last_vote['Vote']['created'])) {
                             $now = time();
                             $last_vote = ($now - strtotime($get_last_vote['Vote']['created']))/60;
@@ -94,7 +94,7 @@ class VoterController extends VoteAppController {
         $this->autoRender = false;
         if($this->request->is('ajax')) {
             if(!empty($this->request->data['out']) && $this->Session->check('vote.website') && $this->Session->check('vote.pseudo')) {
-            
+
                 $this->loadModel('VoteConfiguration');
                 $config = $this->VoteConfiguration->find('first');
                 $websites = unserialize($config['VoteConfiguration']['websites']);
@@ -108,18 +108,18 @@ class VoterController extends VoteAppController {
                   $header[] = "Connection: keep-alive";
                   $header[] = "Keep-Alive: 300";
                   $header[] = "Accept-Charset: utf-8";
-                  $header[] = "Accept-Language: fr"; // langue fr. 
+                  $header[] = "Accept-Language: fr"; // langue fr.
                   $header[] = "Pragma: "; // Simule un navigateur
 
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $url); // l'url visité
                 curl_setopt($ch, CURLOPT_FAILONERROR, 1);// Gestion d'erreur
                 //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1); // autorise la redirection
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER,1); // stock la response dans une variable 
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER,1); // stock la response dans une variable
                 curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
                 curl_setopt($ch, CURLOPT_PORT, 80); // set port 80
                 curl_setopt($ch, CURLOPT_TIMEOUT, 15); //  timeout curl à 15 secondes.
-                 
+
                 curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
                 $result=curl_exec($ch);
 
@@ -156,7 +156,7 @@ class VoterController extends VoteAppController {
                     // check si il a pas déjà voté sur ce site
                     $this->loadModel('Vote');
                     $get_last_vote = $this->Vote->find('first', array('conditions' => array('OR' => array('username' => $this->Session->read('vote.pseudo'), 'ip' => $_SERVER['REMOTE_ADDR']), 'website' => $this->Session->read('vote.website'))));
-                    
+
                     if(!empty($get_last_vote['Vote']['created'])) {
                         $now = time();
                         $last_vote = ($now - strtotime($get_last_vote['Vote']['created']))/60;
@@ -248,9 +248,9 @@ class VoterController extends VoteAppController {
 
                                         } elseif($value['type'] == 'money') { // si c'est des points boutique
 
-                                            $money = $this->Connect->get_to_user('money', $this->Session->read('vote.pseudo'));
+                                            $money = $this->User->getFromUser('money', $this->Session->read('vote.pseudo'));
                                             $money = $money + intval($value['how']);
-                                            $this->Connect->set_to_user('money', $money, $this->Session->read('vote.pseudo'));
+                                            $this->User->setToUser('money', $money, $this->Session->read('vote.pseudo'));
 
                                             $success_msg[] = $value['how'].' '.$this->Configuration->get_money_name();
 
@@ -330,9 +330,9 @@ class VoterController extends VoteAppController {
 
                                     } elseif($rewards[$reward]['type'] == 'money') { // si c'est des points boutique
 
-                                        $money = $this->Connect->get_to_user('money', $this->Session->read('vote.pseudo'));
+                                        $money = $this->User->getFromUser('money', $this->Session->read('vote.pseudo'));
                                         $money = $money + intval($rewards[$reward]['how']);
-                                        $this->Connect->set_to_user('money', $money, $this->Session->read('vote.pseudo'));
+                                        $this->User->setToUser('money', $money, $this->Session->read('vote.pseudo'));
 
                                         echo $this->Lang->get('VOTE_SUCCESS').' '.$this->Lang->get('REWARDS').' : <b>'.$rewards[$reward]['how'].' '.$this->Configuration->get_money_name().'</b>.|true';
 
@@ -342,7 +342,7 @@ class VoterController extends VoteAppController {
 
                                 }
                             } else { // si c'est plus tard
-                                $this->Connect->set('rewards_waited', ($this->Connect->get('rewards_waited') + 1));
+                                $this->User->setKey('rewards_waited', ($this->User->getKey('rewards_waited') + 1));
                                  echo $this->Lang->get('REWARDS_SUCCESS_SET_WAITED').'|true';
                             }
 
@@ -372,7 +372,7 @@ class VoterController extends VoteAppController {
         $pct = 1000;
         $rand = mt_rand(0, $pct);
         $items = array();
-        
+
         foreach ($rewards as $key => $value) {
             $items[$key] = $value / $probability_all;
         }
@@ -391,7 +391,7 @@ class VoterController extends VoteAppController {
 
     public function get_reward() {
         $this->autoRender = false;
-        if($this->isConnected && $this->Connect->get('rewards_waited') > 0) {
+        if($this->isConnected && $this->User->getKey('rewards_waited') > 0) {
             $this->loadModel('VoteConfiguration');
             $config = $this->VoteConfiguration->find('first');
 
@@ -438,9 +438,9 @@ class VoterController extends VoteAppController {
 
                     } elseif($value['type'] == 'money') { // si c'est des points boutique
 
-                        $money = $this->Connect->get_to_user('money', $this->Session->read('vote.pseudo'));
+                        $money = $this->User->getFromUser('money', $this->Session->read('vote.pseudo'));
                         $money = $money + intval($value['how']);
-                        $this->Connect->set_to_user('money', $money, $this->Session->read('vote.pseudo'));
+                        $this->User->setToUser('money', $money, $this->Session->read('vote.pseudo'));
 
                         $success_msg[] = $value['how'].' '.$this->Configuration->get_money_name();
 
@@ -475,7 +475,7 @@ class VoterController extends VoteAppController {
                     }
 
                     // on lui enlève la récompense en attente
-                    $this->Connect->set('rewards_waited', ($this->Connect->get('rewards_waited') - 1));
+                    $this->User->setKey('rewards_waited', ($this->User->getKey('rewards_waited') - 1));
                     // puis on redirige
                     $this->Session->setFlash($flash, 'default.success');
                     $this->redirect(array('controller' => 'user', 'action' => 'profile', 'plugin' => false));
@@ -518,7 +518,7 @@ class VoterController extends VoteAppController {
                             }
                         }
 
-                        $this->Connect->set('rewards_waited', ($this->Connect->get('rewards_waited') - 1));
+                        $this->User->setKey('rewards_waited', ($this->User->getKey('rewards_waited') - 1));
 
                         $this->Session->setFlash($this->Lang->get('VOTE_SUCCESS').' '.$this->Lang->get('REWARD').' : <b>'.$rewards[$reward]['name'].'</b>.', 'default.success');
                         $this->redirect(array('controller' => 'user', 'action' => 'profile', 'plugin' => false));
@@ -530,11 +530,11 @@ class VoterController extends VoteAppController {
 
                 } elseif($rewards[$reward]['type'] == 'money') { // si c'est des points boutique
 
-                    $money = $this->Connect->get_to_user('money', $this->Session->read('vote.pseudo'));
+                    $money = $this->User->getFromUser('money', $this->Session->read('vote.pseudo'));
                     $money = $money + intval($rewards[$reward]['how']);
-                    $this->Connect->set_to_user('money', $money, $this->Session->read('vote.pseudo'));
+                    $this->User->setToUser('money', $money, $this->Session->read('vote.pseudo'));
 
-                    $this->Connect->set('rewards_waited', ($this->Connect->get('rewards_waited') - 1));
+                    $this->User->setKey('rewards_waited', ($this->User->getKey('rewards_waited') - 1));
 
                     $this->Session->setFlash($this->Lang->get('VOTE_SUCCESS').' '.$this->Lang->get('REWARDS').' : <b>'.$rewards[$reward]['how'].' '.$this->Configuration->get_money_name().'</b>.', 'default.success');
                     $this->redirect(array('controller' => 'user', 'action' => 'profile'));
@@ -551,9 +551,9 @@ class VoterController extends VoteAppController {
     }
 
     public function admin_index() {
-        if($this->isConnected AND $this->Connect->if_admin()) {
+        if($this->isConnected AND $this->User->isAdmin()) {
             $this->layout = "admin";
-             
+
             $this->loadModel('VoteConfiguration');
             $vote = $this->VoteConfiguration->find('first');
             if(!empty($vote)) {
@@ -598,9 +598,9 @@ class VoterController extends VoteAppController {
     }
 
     public function admin_reset() {
-        if($this->isConnected AND $this->Connect->if_admin()) {
+        if($this->isConnected AND $this->User->isAdmin()) {
             $this->layout = null;
-             
+
             $this->loadModel('Vote');
             $this->Vote->deleteAll(array('1' => '1'));
             $this->loadModel('User');
@@ -612,9 +612,9 @@ class VoterController extends VoteAppController {
     }
 
     public function admin_add_ajax() {
-        if($this->isConnected AND $this->Connect->if_admin()) {
+        if($this->isConnected AND $this->User->isAdmin()) {
             $this->layout = null;
-             
+
             if($this->request->is('post')) {
                 if(!empty($this->request->data['servers']) AND !empty($this->request->data['website'][0]['page_vote']) AND !empty($this->request->data['website'][0]['time_vote']) AND !empty($this->request->data['website'][0]['website_type']) AND $this->request->data['rewards_type'] == '0' OR $this->request->data['rewards_type'] == '1') {
                     if(!empty($this->request->data['rewards'][0]['name']) && $this->request->data['rewards'][0]['name'] != "undefined" && !empty($this->request->data['rewards'][0]['type']) && $this->request->data['rewards'][0]['type'] != "undefined") {
@@ -628,7 +628,7 @@ class VoterController extends VoteAppController {
                                 - 'how' => 10 - pour la money
                                 - 'command' => say e - pour le server
                             )
-                        
+
                         )
 
                         */

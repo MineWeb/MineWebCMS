@@ -5,14 +5,14 @@ class UpdateController extends AppController {
 	public $components = array('Session', 'Update');
 
 	public function admin_index() { // ajout d'un commentaire pour git
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			$this->set('title_for_layout',$this->Lang->get('UPDATE'));
 			$this->layout = 'admin';
 
             if(@$dir = opendir(ROOT.'/app/tmp/logs/update/')) {
                 while(($file = readdir($dir)) !== false) {
                   	if($file != ".." && $file != "." && $file != '.DS_Store' && $file != '__MACOSX') {
-                  		$files[$file] = filemtime(ROOT.'/app/tmp/logs/update/'.$file); 
+                  		$files[$file] = filemtime(ROOT.'/app/tmp/logs/update/'.$file);
                   	}
               	}
               	arsort($files);
@@ -30,7 +30,7 @@ class UpdateController extends AppController {
 	}
 
 	public function admin_update() {
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			$this->autoRender = false;
 			if($this->Update->update($this->Update->get_version())) {
 				echo $this->Lang->get('UPDATE_SUCCESS').'|true';

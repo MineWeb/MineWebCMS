@@ -241,7 +241,7 @@ class UserController extends AppController {
 	                  	if($infosImg[2] >= 1 && $infosImg[2] <= 14) {
 	                  		if(($infosImg[0] <= $width_max) && ($infosImg[1] <= $height_max) && (filesize($_FILES['skin']['tmp_name']) <= $max_size)) {
 	                    		if(isset($_FILES['skin']['error']) && UPLOAD_ERR_OK === $_FILES['skin']['error']) {
-	                    			$filename = str_replace('{PLAYER}', $this->Connect->get_pseudo(), $filename);
+	                    			$filename = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $filename);
 	                    			$filename = str_replace('php', '', $filename);
 	                    			$filename = str_replace('.', '', $filename);
 	                    			$filename = $filename.'.png';
@@ -289,7 +289,7 @@ class UserController extends AppController {
 	                  	if($infosImg[2] >= 1 && $infosImg[2] <= 14) {
 	                  		if(($infosImg[0] <= $width_max) && ($infosImg[1] <= $height_max) && (filesize($_FILES['cape']['tmp_name']) <= $max_size)) {
 	                    		if(isset($_FILES['cape']['error']) && UPLOAD_ERR_OK === $_FILES['cape']['error']) {
-	                    			$filename = str_replace('{PLAYER}', $this->Connect->get_pseudo(), $filename);
+	                    			$filename = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $filename);
 	                    			$filename = str_replace('php', '', $filename);
 	                    			$filename = str_replace('.', '', $filename);
 	                    			$filename = $filename.'.png';
@@ -501,7 +501,7 @@ class UserController extends AppController {
 
 	function admin_delete($id = false) {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->Connect->isAdmin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($id != false) {
 				$this->loadModel('User');
 				$find = $this->User->find('all', array('conditions' => array('id' => $id)));

@@ -4,7 +4,7 @@ class ServerComponent extends Object {
 	private $timeout = NULL;
 	private $config = NULL;
 	private $online = NULL;
-  	
+
   	public $components = array('Session', 'Configuration');
 
 	function initialize(&$controller) {
@@ -13,7 +13,7 @@ class ServerComponent extends Object {
 	}
 
 	function startup(&$controller) {}
- 
+
 	function beforeRender(&$controller) {}
 
 	function shutdown(&$controller) {}
@@ -33,9 +33,9 @@ class ServerComponent extends Object {
 	                    $list_method[$key] = $value;
 	                }
 	                $list_method = implode('&', array_map(
-	                    function ($v, $k) { 
-	                        return sprintf("%s=%s", $k, rawurlencode($v)); 
-	                    }, 
+	                    function ($v, $k) {
+	                        return sprintf("%s=%s", $k, rawurlencode($v));
+	                    },
 	                    $list_method, array_keys($list_method)
 	                ));
 	            } else {
@@ -240,7 +240,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 						return false;
 					}
 				} else {
-					return false; // timeout 
+					return false; // timeout
 				}
 			}
 		} else {
@@ -285,9 +285,10 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 
 	function commands($commands, $server_id = 1) {
 	    if($this->online($server_id)) {
-	      App::import('Component', 'ConnectComponent');
-	      $this->Connect = new ConnectComponent;
-	      $commands = str_replace('{PLAYER}', $this->Connect->get_pseudo(), $commands);
+
+				$this->User = ClassRegistry::init('User');
+
+	      $commands = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $commands);
 	      $commands = explode('[{+}]', $commands);
 	      $performCommands = array();
 	      foreach ($commands as $key => $value) {

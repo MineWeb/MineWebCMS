@@ -3,10 +3,10 @@
 @set_time_limit(0);
 
 class ThemeController extends AppController{
-	
+
 	function admin_index() {
-		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+		if($this->isConnected AND $this->User->isAdmin()) {
+
 			$this->set('title_for_layout',$this->Lang->get('THEME_LIST'));
 			$this->layout = 'admin';
 			$dir = ROOT.'/app/View/Themed';
@@ -81,9 +81,9 @@ class ThemeController extends AppController{
 	}
 
 	function admin_enable($name = false) {
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($name != false) {
-				 
+
 				$this->layout = null;
 				$this->Configuration->set('theme', $name);
 				$this->History->set('SET_THEME', 'theme');
@@ -98,9 +98,9 @@ class ThemeController extends AppController{
 	}
 
 	function admin_delete($name = false) {
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($name != false) {
-				 
+
 				$this->layout = null;
 				if($this->Configuration->get('theme') != $name) {
 					clearDir(ROOT.'/app/View/Themed/'.$name);
@@ -121,7 +121,7 @@ class ThemeController extends AppController{
 
 	function admin_install($theme_id = false, $theme_name = false) {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($theme_id != false AND $theme_name != false) {
 
 				// get du zip sur mineweb.org
@@ -165,7 +165,7 @@ WCqkx22behAGZq6rhwIDAQAB
 			      	$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
 					$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
 			    }
-				 
+
 				if(unzip($zip, '../View/Themed', 'install-zip', true)) {
 					@clearDir(ROOT.'/app/View/Themed/__MACOSX');
 					$this->History->set('INSTALL_THEME', 'theme');
@@ -185,7 +185,7 @@ WCqkx22behAGZq6rhwIDAQAB
 
 	function admin_update($theme_id = false, $theme_name = false) {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($theme_id != false AND $theme_name != false) {
 
 				// get du zip sur mineweb.org
@@ -229,7 +229,7 @@ WCqkx22behAGZq6rhwIDAQAB
 			    }
 
 			    clearDir(ROOT.'/app/View/Themed/'.$theme_name);
-				 
+
 				if(unzip($zip, '../View/Themed', 'install-zip', true)) {
 					@clearDir(ROOT.'/app/View/Themed/__MACOSX');
 					$this->History->set('UPDATE_THEME', 'theme');
@@ -248,7 +248,7 @@ WCqkx22behAGZq6rhwIDAQAB
 	}
 
 	function admin_custom($theme_name = false) {
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($theme_name != false) {
 				$this->set('title_for_layout',$this->Lang->get('CUSTOMIZATION'));
 				$this->layout = 'admin';

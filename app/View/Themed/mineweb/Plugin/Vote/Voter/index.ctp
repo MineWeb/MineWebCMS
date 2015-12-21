@@ -1,6 +1,4 @@
 <?php 
-  
-$this->Connect = new ConnectComponent;
 $this->Configuration = new ConfigurationComponent;
 ?>
 <div class="push-nav"></div>
@@ -19,7 +17,7 @@ $this->Configuration = new ConfigurationComponent;
 </div>
 <div class="container vote">
 	<div class="row">
-		
+
 		<div id="website_infos"></div>
 
 		<!-- Choose website -->
@@ -188,7 +186,7 @@ $this->Configuration = new ConfigurationComponent;
 					});
 				});
 			</script>
-		<!-- ________________ --> 
+		<!-- ________________ -->
 
 		<div class="panel panel-default panel-step step4" style="opacity : 0.5;">
 		  <div class="panel-heading">
@@ -262,7 +260,7 @@ $this->Configuration = new ConfigurationComponent;
 				          	<tbody>
 			                	<?php
 			                	$i = 0;
-			                	foreach ($ranking as $key => $value) { 
+			                	foreach ($ranking as $key => $value) {
 			                	$i++;
 			                	?>
 			                		<tr>

@@ -271,6 +271,9 @@ WCqkx22behAGZq6rhwIDAQAB
 
         	// infos user
         	$user = ($this->isConnected) ? $this->User->getAllFromCurrentUser() : array();
+          if(!empty($user)) {
+            $user->isAdmin = $this->User->isAdmin();
+          }
 
         	$csrfToken = $this->Session->read('_Token')['key'];
 
@@ -283,7 +286,7 @@ WCqkx22behAGZq6rhwIDAQAB
 			// on set tout
 			$this->set(compact('nav', 'website_name', 'theme_config', 'banner_server', 'flash_messages', 'user', 'csrfToken', 'facebook_link', 'skype_link', 'youtube_link', 'twitter_link'));
 
-		if($this->params['controller'] == "user" OR $this->params['controller'] == "maintenance" OR $this->Configuration->get('maintenance') == '0' OR $this->isConnected AND $this->Connect->if_admin()) {
+		if($this->params['controller'] == "user" OR $this->params['controller'] == "maintenance" OR $this->Configuration->get('maintenance') == '0' OR $this->isConnected AND $this->User->isAdmin()) {
 		} else {
 			$this->redirect(array('controller' => 'maintenance', 'action' => 'index', 'plugin' => false, 'admin' => false));
 		}

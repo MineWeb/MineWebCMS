@@ -155,6 +155,10 @@ class User extends AppModel {
       		if($search_user) {
         		$this->read(null, $search_user['User']['id']);
         		$this->set(array($key => $value));
+
+						// on reset les données
+						$userData = null;
+
         		return $this->save();
       		}
     	}

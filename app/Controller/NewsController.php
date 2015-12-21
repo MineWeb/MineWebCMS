@@ -102,7 +102,7 @@ class NewsController extends AppController {
 
 				if($this->isConnected) {
 					$this->loadModel('Like');
-					$likes = $this->Like->find('all', array('conditions' => array('author' => $this->Connect->get_pseudo())));
+					$likes = $this->Like->find('all', array('conditions' => array('author' => $this->User->getKey('pseudo'))));
 					if(!empty($likes)) {
 						foreach ($likes as $key => $value) {
 							$likes_list[] = $value['Like']['news_id'];
@@ -199,7 +199,7 @@ class NewsController extends AppController {
         $this->layout = null;
         $this->loadModel('Comment');
         $search = $this->Comment->find('all', array('conditions' => array('id' => $this->request->data['id'])));
-        if($this->Permissions->can('DELETE_COMMENT') OR $this->Permissions->can('DELETE_HIS_COMMENT') AND $this->Connect->get_pseudo() == $search[0]['Comment']['author']) {
+        if($this->Permissions->can('DELETE_COMMENT') OR $this->Permissions->can('DELETE_HIS_COMMENT') AND $this->User->getKey('pseudo') == $search[0]['Comment']['author']) {
             if($this->request->is('post')) {
             	$this->loadModel('News');
             	$news = $this->News->find('first', array('conditions' => $search[0]['Comment']['news_id']));
@@ -274,7 +274,7 @@ class NewsController extends AppController {
 					$this->News->set(array(
 						'title' => $this->request->data['title'],
 						'content' => $this->request->data['content'],
-						'author' => $this->Connect->get_pseudo(),
+						'author' => $this->User->getKey('pseudo'),
 						'updated' => date('Y-m-d H:i:s'),
 						'comments' => 0,
 						'likes' => 0,

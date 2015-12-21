@@ -22,14 +22,14 @@
 class DiscountVoucherComponent extends Object {
 
   static private $items;
-  
+
   function shutdown(&$controller) {
   }
 
   function beforeRender(&$controller) {
   }
-  
-  function beforeRedirect() { 
+
+  function beforeRedirect() {
   }
 
   function initialize(&$controller) {
@@ -72,7 +72,7 @@ class DiscountVoucherComponent extends Object {
         if($voucher['affich'] == 1) { // si on doit l'afficher, sinon je retourne rien
           $voucher['effective_on'] = unserialize($voucher['effective_on']); // j'unserilise le effective_on qui est un array
           echo '<div class="alert alert-info"><i class="fa fa-shopping-cart"></i> '; // début du message
-          echo $this->Lang->get('DISCOUNT_VOUCHER_ON'); 
+          echo $this->Lang->get('DISCOUNT_VOUCHER_ON');
           if($voucher['effective_on']['type'] == 'categories') { // si cela concerne une catégorie
             if(count($voucher['effective_on']['value']) > 1) { // combien de catégorie ?
               echo $this->Lang->get('THE_CATEGORIES'); // plusieurs
@@ -88,7 +88,7 @@ class DiscountVoucherComponent extends Object {
               }
             }
           } elseif ($voucher['effective_on']['type'] == 'items') { // si cela concerne un article
-            if(count($voucher['effective_on']['value']) > 1) { // combien d'article concerné ? 
+            if(count($voucher['effective_on']['value']) > 1) { // combien d'article concerné ?
               echo $this->Lang->get('THE_ITEMS'); // plusieurs
             } else {
               echo $this->Lang->get('THE_ITEM'); // 1 seul
@@ -124,14 +124,13 @@ class DiscountVoucherComponent extends Object {
     $this->Voucher = ClassRegistry::init('Voucher');
     $search_vouchers = $this->Voucher->find('all', array('conditions' => array('code' => $code)));
     if(!empty($search_vouchers)) { // si il y a une promo en cours
-        
+
       // SI y'a pas déjà une limite et il a utilisé
       if($search_vouchers[0]['Voucher']['limit_per_user'] == 0) {
         $can_use = true;
       } else {
-        App::import('Component', 'ConnectComponent'); // le component
-        $this->Connect = new ConnectComponent; // connect pour le pseudo
-        $how_used = array_count_values(unserialize($search_vouchers[0]['Voucher']['used']))[$this->Connect->get_pseudo()];
+        $this->User = ClassRegistry::init('User');
+        $how_used = array_count_values(unserialize($search_vouchers[0]['Voucher']['used']))[$this->User->getKey('pseudo')];
         if($how_used < $search_vouchers[0]['Voucher']['limit_per_user']) {
           $can_use = true;
         } else {

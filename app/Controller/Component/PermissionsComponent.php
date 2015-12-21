@@ -2,9 +2,9 @@
 class PermissionsComponent extends Object {
 
   public $permissions = array('COMMENT_NEWS', 'LIKE_NEWS', 'DELETE_HIS_COMMENT', 'DELETE_COMMENT', 'ACCESS_DASHBOARD', 'MANAGE_NEWS', 'MANAGE_SLIDER', 'MANAGE_PAGE', 'MANAGE_NAV');
-  	
+
   public $components = array('Session', 'Connect');
-  
+
 	function shutdown(&$controller) {}
 	function beforeRender(&$controller) {}
   function beforeRedirect() {}
@@ -13,7 +13,7 @@ class PermissionsComponent extends Object {
     $controller->set('Permissions', new PermissionsComponent());
   }
   function __construct() {}
-  
+
   public function can($perm) {
     $this->User = ClassRegistry::init('User');
     if($this->User->isConnected()) {
@@ -21,7 +21,7 @@ class PermissionsComponent extends Object {
         return true;
       } else {
         $this->Perm = ClassRegistry::init('Permission');
-        $search_perm = $this->Perm->find('all', array('conditions' => array('rank' => $this->Connect->get('rank'))));
+        $search_perm = $this->Perm->find('all', array('conditions' => array('rank' => $this->User->getKey('rank'))));
         $search_perm = unserialize($search_perm[0]['Permission']['permissions']);
         return in_array($perm, $search_perm);
       }

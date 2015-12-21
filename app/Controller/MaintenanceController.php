@@ -8,16 +8,16 @@ class MaintenanceController extends AppController {
 		if(!$banned) {
 			$msg = $this->Configuration->get('maintenance');
 		} else {
-			 
+
 			$msg = $this->Lang->get('YOUR_BANNED');
 		}
 		$this->set(compact('msg'));
 	}
 
 	public function admin_index() {
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			$this->layout = "admin";
-			 
+
 			$this->set('title_for_layout',$this->Lang->get('MAINTENANCE'));
 			if($this->request->is('post')) {
 				if($this->request->data['state'] == 'enabled') {

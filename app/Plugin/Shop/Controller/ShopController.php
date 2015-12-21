@@ -1,11 +1,11 @@
-<?php 
+<?php
 
 class ShopController extends AppController {
 
 	public $components = array('Session', 'Shop.DiscountVoucher', 'History');
 
 	function index($category = false) { // Index de la boutique
-		  
+
 		$title_for_layout = $this->Lang->get('SHOP');
 		if($category) {
 			$this->set(compact('category'));
@@ -15,7 +15,7 @@ class ShopController extends AppController {
 		$this->loadModel('Category'); // le model des catégories
 		$search_items = $this->Item->find('all'); // on cherche tous les items et on envoie à la vue
 		$search_categories = $this->Category->find('all'); // on cherche toutes les catégories et on envoie à la vue
-		
+
 		$search_first_category = $this->Category->find('first'); //
 		$search_first_category = @$search_first_category['Category']['id']; //
 
@@ -48,9 +48,9 @@ class ShopController extends AppController {
 	}
 
 	function ajax_get($id) { // Permet d'afficher le contenu du modal avant l'achat (ajax)
-		  
+
 		$this->autoRender = false;
-		if($this->isConnected AND $this->Permissions->can('CAN_BUY')) { // si l'utilisateur est connecté 
+		if($this->isConnected AND $this->Permissions->can('CAN_BUY')) { // si l'utilisateur est connecté
 			$this->loadModel('Item'); // je charge le model des articles
 			$search_item = $this->Item->find('all', array('conditions' => array('id' => $id))); // je cherche l'article selon l'id
 			if($search_item['0']['Item']['price'] == 1) { $money = $this->Configuration->get_money_name(false, true); } else { $money = $this->Configuration->get_money_name(); } // je dis que la variable $money = le nom de la money au pluriel ou singulier selon le prix
@@ -65,7 +65,7 @@ class ShopController extends AppController {
 				$i = 0;
 				foreach ($search_item[0]['Item']['servers'] as $key => $value) {
 					$i++;
-					$servers = $servers.$servers_list[$value]; 
+					$servers = $servers.$servers_list[$value];
 					if($i < count($search_item[0]['Item']['servers'])) {
 						$servers = $servers.', ';
 					}
@@ -85,10 +85,10 @@ class ShopController extends AppController {
       	<div class="modal-footer">
         	<button type="button" class="btn btn-default" data-dismiss="modal">'.$this->Lang->get('CLOSE').'</button>
         	<button type="button" class="btn btn-primary'; // j'affiche le contenu du modal
-        	//if($search_item['0']['Item']['price'] > $this->Connect->get('money')) { // si il a pas assez de money 
+        	//if($search_item['0']['Item']['price'] > $this->Connect->get('money')) { // si il a pas assez de money
         	//	echo ' disabled" title="'.$this->Lang->get('NO_ENOUGH_MONEY'); // je met le bouton en disable
         	//} else {
-        		echo '" onClick="buy(\''.$search_item['0']['Item']['id'].'\')'; // sinon, il a assez de money donc j'ajoute la fonction js pour acheter 
+        		echo '" onClick="buy(\''.$search_item['0']['Item']['id'].'\')'; // sinon, il a assez de money donc j'ajoute la fonction js pour acheter
         	//}
         	echo '" id="btn-buy">'.$this->Lang->get('BUY').'</button>
      	</div>'; // puis je fini l'affichage du modal
@@ -99,7 +99,7 @@ class ShopController extends AppController {
 
 	function buy_ajax($id) {
 		$this->autoRender = false;
-		  
+
 		if($this->isConnected AND $this->Permissions->can('CAN_BUY')) {
 			$this->loadModel('Item');
 			$search_item = $this->Item->find('all', array('conditions' => array('id' => $id)));
@@ -117,19 +117,19 @@ class ShopController extends AppController {
 					$voucher_reduc = $this->DiscountVoucher->get_new_price($item_price, $search_item['0']['Item']['category'], $search_item['0']['Item']['id'], $_GET['code']);
 					$item_price = $voucher_reduc; // j'obtient le nouveau prix si une promotion est en cours sur cet article ou sa catégorie
 				}
-				if($item_price <= $this->Connect->get('money')) {
+				if($item_price <= $this->User->getKey('money')) {
 
 					$this->getEventManager()->dispatch(new CakeEvent('onBuy', $this));
 
 					// Ajouter au champ used si il a utiliser un voucher
 					if(!empty($_GET['code']) && $voucher_reduc != $search_item['0']['Item']['price']) {
-						$this->DiscountVoucher->set_used($this->Connect->get_pseudo(), $_GET['code']);
+						$this->DiscountVoucher->set_used($this->User->getKey('pseudo'), $_GET['code']);
 					}
 					//
 
-					$new_sold = $this->Connect->get('money') - $item_price;
+					$new_sold = $this->User->getKey('money') - $item_price;
 					$this->loadModel('User');
-					$this->User->read(null, $this->Connect->get_id());
+					$this->User->read(null, $this->User->getKey('id'));
 					$this->User->set(array('money' => $new_sold));
 					$this->User->save();
 					$this->History->set('BUY_ITEM', 'shop', $search_item['0']['Item']['name']);
@@ -150,7 +150,7 @@ class ShopController extends AppController {
 					// si y'a une timed command à faire
 					if($search_item[0]['Item']['timedCommand']) {
 						$time = strtotime('+ '.$search_item[0]['Item']['timedCommand_time'].' minutes');
-						$commands = str_replace('{PLAYER}', $this->Connect->get_pseudo(), $search_item[0]['Item']['timedCommand_cmd']);
+						$commands = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $search_item[0]['Item']['timedCommand_cmd']);
 					    $commands = explode('[{+}]', $commands);
 					    $performCommands = array();
 					    foreach ($commands as $key => $value) {
@@ -171,8 +171,8 @@ class ShopController extends AppController {
 	}
 
 	public function admin_index() {
-		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+		if($this->isConnected AND $this->User->isAdmin()) {
+
 			$this->set('title_for_layout',$this->Lang->get('SHOP'));
 			$this->layout = 'admin';
 			$this->loadModel('Item');
@@ -215,9 +215,9 @@ class ShopController extends AppController {
 	}
 
 	public function admin_edit($id = false) {
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($id != false) {
-				 
+
 				$this->set('title_for_layout', $this->Lang->get('EDIT_ITEM'));
 				$this->layout = 'admin';
 				$this->loadModel('Item');
@@ -273,7 +273,7 @@ class ShopController extends AppController {
 
 	public function admin_edit_ajax() {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($this->request->is('post')) {
 				if(empty($this->request->data['category'])) {
 					$this->request->data['category'] = $this->request->data['category_default'];
@@ -317,8 +317,8 @@ class ShopController extends AppController {
 	}
 
 	public function admin_add_item() {
-		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+		if($this->isConnected AND $this->User->isAdmin()) {
+
 			$this->set('title_for_layout', $this->Lang->get('ADD_ITEM'));
 			$this->layout = 'admin';
 			$this->loadModel('Category');
@@ -345,7 +345,7 @@ class ShopController extends AppController {
 
 	public function admin_add_item_ajax() {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['name']) AND !empty($this->request->data['description']) AND !empty($this->request->data['category']) AND !empty($this->request->data['price']) AND !empty($this->request->data['servers']) AND !empty($this->request->data['commands']) AND !empty($this->request->data['timedCommand'])) {
 					$this->loadModel('Category');
@@ -386,8 +386,8 @@ class ShopController extends AppController {
 	}
 
 	public function admin_add_category() {
-		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+		if($this->isConnected AND $this->User->isAdmin()) {
+
 			$this->layout = 'admin';
 			$this->set('title_for_layout', $this->Lang->get('ADD_CATEGORY'));
 			if($this->request->is('post')) {
@@ -412,7 +412,7 @@ class ShopController extends AppController {
 
 	public function admin_delete($type = false, $id = false) {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($type != false AND $id != false) {
 				if($type == "item") {
 					$this->loadModel('Item');
@@ -470,17 +470,17 @@ class ShopController extends AppController {
 			$this->redirect('/');
 		}
 	}
-	
+
 	public function admin_toggle_paysafecard() {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			$this->loadModel('Paysafecard');
 			$paysafecard_enabled = $this->Paysafecard->find('all', array('conditions' => array('amount' => '0', 'code' => 'disable', 'author' => 'website', 'created' => '1990/00/00 15:00:00')));
 			if(!empty($paysafecard_enabled)) {
 				$this->Paysafecard->delete($paysafecard_enabled[0]['Paysafecard']['id']);
 
 				$this->History->set('ENABLE_PAYSAFECARD', 'shop');
-					 
+
 				$this->Session->setFlash($this->Lang->get('PAYSAFECARD_ENABLE_SUCCESS'), 'default.success');
 				$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 			} else {
@@ -489,7 +489,7 @@ class ShopController extends AppController {
 				$this->Paysafecard->save();
 
 				$this->History->set('DISABLE_PAYSAFECARD', 'shop');
-					 
+
 				$this->Session->setFlash($this->Lang->get('PAYSAFECARD_DISABLE_SUCCESS'), 'default.success');
 				$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 			}
@@ -501,7 +501,7 @@ class ShopController extends AppController {
 
 	public function admin_paysafecard_valid($id = false, $money = false) {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($id != false AND $money != false) {
 				$this->loadModel('Paysafecard');
 				$search = $this->Paysafecard->find('all', array('conditions' => array('id' => $id)));
@@ -528,7 +528,7 @@ class ShopController extends AppController {
 					$this->PaysafecardMessage->save();
 
 					$this->History->set('VALID_PAYSAFECARD', 'shop');
-					 
+
 					$this->Session->setFlash($this->Lang->get('PAYSAFECARD_VALID_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 				} else {
@@ -544,7 +544,7 @@ class ShopController extends AppController {
 
 	public function admin_paysafecard_invalid($id = false) {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($id != false) {
 				$this->loadModel('Paysafecard');
 				$search = $this->Paysafecard->find('all', array('conditions' => array('id' => $id)));
@@ -561,7 +561,7 @@ class ShopController extends AppController {
 					$this->PaysafecardMessage->save();
 
 					$this->History->set('INVALID_PAYSAFECARD', 'shop');
-					 
+
 					$this->Session->setFlash($this->Lang->get('PAYSAFECARD_INVALID_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 				} else {
@@ -572,7 +572,7 @@ class ShopController extends AppController {
 			}
 		} else {
 			$this->redirect('/');
-		}	
+		}
 	}
 
 	public function paysafecard() {
@@ -589,13 +589,13 @@ class ShopController extends AppController {
 							$this->loadModel('Paysafecard');
 							$search = $this->Paysafecard->find('first', array('conditions' => array('code' => $codes)));
 							if(empty($search)) {
-								$search2 = $this->Paysafecard->find('count', array('conditions' => array('author' => $this->Connect->get_pseudo())));
+								$search2 = $this->Paysafecard->find('count', array('conditions' => array('author' => $this->User->getKey('pseudo'))));
 								if($search2 < 2) {
 									$this->Paysafecard->read(null, null);
 									$this->Paysafecard->set(array(
 										'amount' => $this->request->data['amount'],
 										'code' => $codes,
-										'author' => $this->Connect->get_pseudo()
+										'author' => $this->User->getKey('pseudo')
 									));
 									$this->Paysafecard->save();
 									$this->History->set('ADD_PAYSAFECARD', 'credit_shop');
@@ -608,10 +608,10 @@ class ShopController extends AppController {
 							}
 						}  else {
 							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_4_CHARACTER')));
-						}	
+						}
 					}  else {
 						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_NUMBER')));
-					}	
+					}
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
@@ -624,8 +624,8 @@ class ShopController extends AppController {
 	}
 
 	public function admin_add_paypal() {
-		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+		if($this->isConnected AND $this->User->isAdmin()) {
+
 			$this->set('title_for_layout', $this->Lang->get('ADD_OFFER_PAYPAL'));
 			$this->layout = 'admin';
 		} else {
@@ -634,8 +634,8 @@ class ShopController extends AppController {
 	}
 
 	public function admin_edit_paypal($id = false) {
-		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+		if($this->isConnected AND $this->User->isAdmin()) {
+
 			$this->set('title_for_layout', $this->Lang->get('EDIT_OFFER_PAYPAL'));
 			$this->layout = 'admin';
 			if($id != false) {
@@ -656,8 +656,8 @@ class ShopController extends AppController {
 	}
 
 	public function admin_add_starpass() {
-		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+		if($this->isConnected AND $this->User->isAdmin()) {
+
 			$this->set('title_for_layout', $this->Lang->get('ADD_OFFER_STARPASS'));
 			$this->layout = 'admin';
 		} else {
@@ -666,8 +666,8 @@ class ShopController extends AppController {
 	}
 
 	public function admin_edit_starpass($id = false) {
-		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+		if($this->isConnected AND $this->User->isAdmin()) {
+
 			$this->set('title_for_layout', $this->Lang->get('EDIT_OFFER_STARPASS'));
 			$this->layout = 'admin';
 			if($id != false) {
@@ -689,7 +689,7 @@ class ShopController extends AppController {
 
 	public function admin_add_paypal_ajax() {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($this->request->is('ajax')) {
 				if(!empty($this->request->data['name']) AND !empty($this->request->data['email']) AND !empty($this->request->data['price']) AND !empty($this->request->data['money'])) {
 					$this->request->data['price'] = intval($this->request->data['price']);
@@ -719,7 +719,7 @@ class ShopController extends AppController {
 
 	public function admin_edit_paypal_ajax($id = false) {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($id != false) {
 				$this->loadModel('Paypal');
 				$search = $this->Paypal->find('all', array('conditions' => array('id' => $id)));
@@ -759,7 +759,7 @@ class ShopController extends AppController {
 
 	public function admin_add_starpass_ajax() {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($this->request->is('ajax')) {
 				if(!empty($this->request->data['name']) AND !empty($this->request->data['idd']) AND !empty($this->request->data['idp']) AND !empty($this->request->data['money'])) {
 					$this->request->data['money'] = intval($this->request->data['money']);
@@ -786,7 +786,7 @@ class ShopController extends AppController {
 
 	public function admin_edit_starpass_ajax($id = false) {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($id != false) {
 				if($this->request->is('ajax')) {
 					if(!empty($this->request->data['name']) AND !empty($this->request->data['idd']) AND !empty($this->request->data['idp']) AND !empty($this->request->data['money'])) {
@@ -816,8 +816,8 @@ class ShopController extends AppController {
 	}
 
 	public function admin_add_voucher() {
-		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+		if($this->isConnected AND $this->User->isAdmin()) {
+
 			$this->set('title_for_layout', $this->Lang->get('ADD_VOUCHER'));
 			$this->layout = 'admin';
 
@@ -841,7 +841,7 @@ class ShopController extends AppController {
 
 	public function admin_add_voucher_ajax() {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['code']) AND !empty($this->request->data['effective_on']) AND !empty($this->request->data['type']) AND !empty($this->request->data['reduction']) AND !empty($this->request->data['end_date'])) {
 					if($this->request->data['effective_on'] == "categories") {
@@ -881,7 +881,7 @@ class ShopController extends AppController {
 
 	public function admin_delete_voucher($id = false) {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->Connect->if_admin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			if($id != false) {
 				$this->loadModel('Voucher');
 				$this->Voucher->delete($id);
@@ -897,7 +897,7 @@ class ShopController extends AppController {
 	}
 
 	public function starpass() {
-		 
+
 		if($this->isConnected AND $this->Permissions->can('CREDIT_ACCOUNT')) {
 			if($this->request->is('post') AND !empty($this->request->data['offer'])) {
 				$this->loadModel('Starpass');
@@ -929,20 +929,20 @@ class ShopController extends AppController {
 			$search_starpass = $this->Starpass->find('all', array('conditions' => array('id' => $offer_id)));
 			if(!empty($search_starpass)) {
 				// Déclaration des variables
-				$ident=$idp=$ids=$idd=$codes=$code1=$code2=$code3=$code4=$code5=$datas=''; 
-				
+				$ident=$idp=$ids=$idd=$codes=$code1=$code2=$code3=$code4=$code5=$datas='';
+
 				$idd = $search_starpass[0]['Starpass']['idd'];
 				$idp = $search_starpass[0]['Starpass']['idp'];
 				$ident=$idp.";".$ids.";".$idd;
 				// On récupère le(s) code(s) sous la forme 'xxxxxxxx;xxxxxxxx'
-				if(isset($_POST['code1'])) $code1 = $_POST['code1']; 
-				if(isset($_POST['code2'])) $code2 = ";".$_POST['code2']; 
-				if(isset($_POST['code3'])) $code3 = ";".$_POST['code3']; 
-				if(isset($_POST['code4'])) $code4 = ";".$_POST['code4']; 
-				if(isset($_POST['code5'])) $code5 = ";".$_POST['code5']; 
-				$codes=$code1.$code2.$code3.$code4.$code5; 
+				if(isset($_POST['code1'])) $code1 = $_POST['code1'];
+				if(isset($_POST['code2'])) $code2 = ";".$_POST['code2'];
+				if(isset($_POST['code3'])) $code3 = ";".$_POST['code3'];
+				if(isset($_POST['code4'])) $code4 = ";".$_POST['code4'];
+				if(isset($_POST['code5'])) $code5 = ";".$_POST['code5'];
+				$codes=$code1.$code2.$code3.$code4.$code5;
 				// On récupère le champ DATAS
-				if(isset($_POST['DATAS'])) $datas = $_POST['DATAS']; 
+				if(isset($_POST['DATAS'])) $datas = $_POST['DATAS'];
 				// On encode les trois chaines en URL
 				$ident=urlencode($ident);
 				$codes=urlencode($codes);
@@ -951,46 +951,46 @@ class ShopController extends AppController {
 				/* Envoi de la requête vers le serveur StarPass
 				Dans la variable tab[0] on récupère la réponse du serveur
 				Dans la variable tab[1] on récupère l'URL d'accès ou d'erreur suivant la réponse du serveur */
-				$get_f=@file( "http://script.starpass.fr/check_php.php?ident=$ident&codes=$codes&DATAS=$datas" ); 
-				if(!$get_f) 
-				{ 
-				exit( "Votre serveur n'a pas accès au serveur de StarPass, merci de contacter votre hébergeur. " ); 
-				} 
+				$get_f=@file( "http://script.starpass.fr/check_php.php?ident=$ident&codes=$codes&DATAS=$datas" );
+				if(!$get_f)
+				{
+				exit( "Votre serveur n'a pas accès au serveur de StarPass, merci de contacter votre hébergeur. " );
+				}
 				$tab = explode("|",$get_f[0]);
-				if(!$tab[1]) $url = "http://script.starpass.fr/error.php"; 
-				else $url = $tab[1]; 
+				if(!$tab[1]) $url = "http://script.starpass.fr/error.php";
+				else $url = $tab[1];
 
 				// dans $pays on a le pays de l'offre. exemple "fr"
-				$pays = $tab[2]; 
+				$pays = $tab[2];
 				// dans $palier on a le palier de l'offre. exemple "Plus A"
-				$palier = urldecode($tab[3]); 
+				$palier = urldecode($tab[3]);
 				// dans $id_palier on a l'identifiant de l'offre
-				$id_palier = urldecode($tab[4]); 
+				$id_palier = urldecode($tab[4]);
 				// dans $type on a le type de l'offre. exemple "sms", "audiotel, "cb", etc.
-				$type = urldecode($tab[5]); 
+				$type = urldecode($tab[5]);
 				// vous pouvez à tout moment consulter la liste des paliers à l'adresse : http://script.starpass.fr/palier.php
 
 				// Si $tab[0] ne répond pas "OUI" l'accès est refusé
 				// On redirige sur l'URL d'erreur
-				if( substr($tab[0],0,3) != "OUI" ) 
-				{ 
+				if( substr($tab[0],0,3) != "OUI" )
+				{
 			       /* erreur */
 			       $this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
 			       $this->redirect(array('controller' => 'shop', 'action' => 'index'));
-				} 
-				else 
-				{ 
+				}
+				else
+				{
 			       /* Le serveur a répondu "OUI" */
-					$user_money = $this->Connect->get('money');
+					$user_money = $this->User->getKey('money');
 					$new_money = intval($user_money) + intval($search_starpass[0]['Starpass']['money']);
 
-					$this->Connect->set('money', $new_money);
+					$this->User->setKey('money', $new_money);
 
 					$this->History->set('BUY_MONEY', 'shop', 'starpass|'.$search_starpass[0]['Starpass']['money']);
 
 					$this->Session->setFlash($this->Lang->get('SUCCESS_STARPASS'), 'default.success');
 					$this->redirect(array('controller' => 'shop', 'action' => 'index'));
-				} 
+				}
 			} else {
 				$this->redirect(array('controller' => 'shop', 'action' => 'index'));
 			}
@@ -1061,10 +1061,10 @@ class ShopController extends AppController {
 						if ( $email_account == $receiver_email) {
 							if ($payment_currency=="EUR") {
 								// il a bien payé
-								$user_money = $this->Connect->get('money');
+								$user_money = $this->User->getKey('money');
 								$new_money = intval($user_money) + intval($search_offer['money']);
 
-								$this->Connect->set('money', $new_money);
+								$this->User->setKey('money', $new_money);
 
 								$this->History->set('BUY_MONEY', 'shop', 'paypal|'.$search_offer['money'].'|'.$txn_id);
 

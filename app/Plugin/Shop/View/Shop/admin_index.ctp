@@ -1,5 +1,4 @@
 <?php
-$this->Connect = new ConnectComponent;
 $this->Configuration = new ConfigurationComponent;
 $this->History = new HistoryComponent;
 App::import('Component', 'Shop.DiscountVoucherComponent');
@@ -30,7 +29,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
             <h3 class="box-title"><?= $Lang->get('ITEMS_ON_SALE') ?> &nbsp;&nbsp;<a href="<?php if(!empty($search_categories)) { ?><?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_item', 'admin' => true)) ?><?php } ?>" class="btn btn-success<?php if(empty($search_categories)) { echo ' disabled'; } ?>"><?= $Lang->get('ADD') ?></a></h3>
           </div>
           <div class="box-body">
-          
+
             <table class="table table-bordered dataTable">
               <thead>
                 <tr>
@@ -64,7 +63,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
             <h3 class="box-title"><?= $Lang->get('CATEGORIES') ?> &nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_category', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('ADD') ?></a></h3>
           </div>
           <div class="box-body">
-          
+
             <table class="table table-bordered dataTable">
               <thead>
                 <tr>
@@ -95,7 +94,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
             <h3 class="box-title"><?= $Lang->get('PURCHASE_HISTORY') ?></h3>
           </div>
           <div class="box-body">
-        
+
             <table class="table table-bordered dataTable">
               <thead>
                 <tr>
@@ -124,7 +123,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
             <h3 class="box-title"><?= $Lang->get('PURCHASE_HISTORY') ?> <?= $Lang->get('OF') ?> <?= $this->Configuration->get_money_name() ?></h3>
           </div>
           <div class="box-body">
-        
+
             <table class="table table-bordered dataTable">
               <thead>
                 <tr>
@@ -171,7 +170,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
             <h3 class="box-title"><?= $Lang->get('PAYSAFECARD') ?>&nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'toggle_paysafecard', 'admin' => true)) ?>" class="btn btn-success"><?php if($paysafecard_enabled) { echo $Lang->get('DISABLE'); } else { echo $Lang->get('ENABLE'); } ?></a></h3>
           </div>
           <div class="box-body">
-        
+
             <table class="table table-bordered dataTable">
               <thead>
                 <tr>
@@ -206,7 +205,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
       <script>
       function howmuch(id) {
           var money = prompt("<?= $Lang->get('HOW_MUCH_MONEY_GIVE') ?>");
-          
+
           if (money != null) {
               document.location = '<?= $this->Html->url(array('controller' => 'Shop', 'action' => 'paysafecard_valid/')) ?>/'+id+'/'+money;
           } else {
@@ -220,7 +219,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
             <h3 class="box-title"><?= $Lang->get('PAYPAL_OFFERS') ?> &nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_paypal', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('ADD') ?></a></h3>
           </div>
           <div class="box-body">
-        
+
             <table class="table table-bordered">
               <thead>
                 <tr>
@@ -262,7 +261,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
             <h3 class="box-title"><?= $Lang->get('SEND_MONEY_HISTORY') ?> <?= $Lang->get('OF') ?> <?= $this->Configuration->get_money_name() ?></h3>
           </div>
           <div class="box-body">
-        
+
             <table class="table table-bordered dataTable">
               <thead>
               <tr>
@@ -296,7 +295,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
             <h3 class="box-title"><?= $Lang->get('STARPASS_OFFERS') ?> &nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_starpass', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('ADD') ?></a></h3>
           </div>
           <div class="box-body">
-        
+
             <table class="table table-bordered">
               <thead>
                 <tr>
@@ -377,7 +376,7 @@ function confirmDel(url) {
                 <td><?= $Lang->date($value['Voucher']['created']) ?></td>
                 <td><?= $value['Voucher']['limit_per_user'] ?></td>
                 <td>
-                  <?php 
+                  <?php
                     if($value['Voucher']['affich'] == 1) {
                       echo $Lang->get('YES');
                     } else {

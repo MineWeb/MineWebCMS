@@ -1,12 +1,12 @@
-<?php 
+<?php
 
 class PermissionsController extends AppController {
 
-	public $components = array('Session', 'History', 'Connect');
+	public $components = array('Session', 'History');
 
 	function admin_index() {
-		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+		if($this->isConnected AND $this->User->isAdmin()) {
+
 			$this->set('title_for_layout', $this->Lang->get('PERMISSIONS'));
 			$this->layout = 'admin';
 
@@ -45,7 +45,7 @@ class PermissionsController extends AppController {
 	}
 
 	function admin_add_rank() {
-		if($this->isConnected && $this->Connect->if_admin()) {
+		if($this->isConnected && $this->User->isAdmin()) {
 			$this->autoRender = false;
 			if($this->request->is('ajax')) {
 
@@ -85,7 +85,7 @@ class PermissionsController extends AppController {
 	}
 
 	function admin_delete_rank($id = false) {
-		if($this->isConnected && $this->Connect->if_admin()) {
+		if($this->isConnected && $this->User->isAdmin()) {
 			$this->autoRender = false;
 
 			$this->loadModel('Rank');

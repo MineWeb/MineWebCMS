@@ -1,12 +1,12 @@
-<?php 
+<?php
 
 class LangController extends AppController {
 
-	public $components = array('Session', 'History', 'Connect');
+	public $components = array('Session', 'History');
 
 	function admin_index() {
-		if($this->isConnected AND $this->Connect->if_admin()) {
-			 
+		if($this->isConnected AND $this->User->isAdmin()) {
+
 			$this->set('title_for_layout', $this->Lang->get('LANG'));
 			$this->layout = 'admin';
 
@@ -21,7 +21,7 @@ class LangController extends AppController {
 				$this->Lang->setall($this->request->data);
 
 				$this->History->set('EDIT_LANG', 'lang');
-				 
+
 				$this->Session->setFlash($this->Lang->get('EDIT_LANG_SUCCESS'), 'default.success');
 			}
 

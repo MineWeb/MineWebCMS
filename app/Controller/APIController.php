@@ -22,7 +22,7 @@ class APIController extends AppController {
         if($this->isConnected) {
     		if($this->request->is('post')) {
     			if(isset($this->request->data['ip'])) {
-    				if($this->API->removeIp($this->Connect->get_pseudo(), $this->request->data['ip'])) {
+    				if($this->API->removeIp($this->User->getKey('pseudo'), $this->request->data['ip'])) {
     					echo 'true';
     				} else {
     					echo $this->Lang->get('INTERNAL_ERROR').'|false';
@@ -44,7 +44,7 @@ class APIController extends AppController {
     		if($this->request->is('post')) {
     			if(!empty($this->request->data['ip'])) {
     				if(filter_var($this->request->data['ip'], FILTER_VALIDATE_IP)) {
-	    				if($this->API->setIp($this->Connect->get_pseudo(), $this->request->data['ip'])) {
+	    				if($this->API->setIp($this->User->getKey('pseudo'), $this->request->data['ip'])) {
 	    					echo $this->Lang->get('SUCCESS_ADD_IP').'|true';
 	    				} else {
 	    					echo $this->Lang->get('INTERNAL_ERROR').'|false';
@@ -68,7 +68,7 @@ class APIController extends AppController {
         if($this->isConnected) {
     		if($this->request->is('post')) {
 
-    			$this->Connect->set('allowed_ip', '0');
+    			$this->User->setKey('allowed_ip', '0');
 
     			echo $this->Lang->get('SUCCESS_DISABLE_MINEGUARD').'|true';
 
@@ -85,7 +85,7 @@ class APIController extends AppController {
         if($this->isConnected) {
     		if($this->request->is('post')) {
 
-    			$this->Connect->set('allowed_ip', serialize(array()));
+    			$this->User->setKey('allowed_ip', serialize(array()));
 
     			echo $this->Lang->get('SUCCESS_ENABLE_MINEGUARD').'|true';
 
@@ -98,7 +98,7 @@ class APIController extends AppController {
 	}
 
 	public function admin_index() {
-		if($$this->isConnected AND $this->Connect->if_admin()) {
+		if($$this->isConnected AND $this->User->isAdmin()) {
 			$this->set('title_for_layout',$this->Lang->get('API'));
 			$this->layout = 'admin';
 
