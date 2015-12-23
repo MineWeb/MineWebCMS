@@ -10,6 +10,12 @@ html {
   -webkit-text-size-adjust: 100%;
       -ms-text-size-adjust: 100%;
   font-family: 'Roboto', sans-serif;
+
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  -o-hyphens: auto;
+  hyphens: auto;
 }
 body {
   margin: 0;
@@ -6300,8 +6306,8 @@ p.support {
   margin-left: 30px;
 }
 .line-support {
-  width: 4px; 
-  height: 41px; 
+  width: 4px;
+  height: 41px;
   background-color: rgb(22, 186, 234);
   margin-right: 650px;
   float: right;
@@ -6341,7 +6347,7 @@ h3.support {
   border-color: #285E8E;
 }
 
-ul#items{   
+ul#items{
   list-style: none;
   margin: 1em 0;
   width: auto;

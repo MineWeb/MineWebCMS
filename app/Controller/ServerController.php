@@ -28,7 +28,26 @@ class ServerController extends AppController {
 
 			$this->set(compact('servers'));
 
+			$this->set('isEnabled', $this->Configuration->get('server_state'));
+
 			$this->set('timeout', $this->Configuration->get('server_timeout'));
+		} else {
+			$this->redirect('/');
+		}
+	}
+
+	public function admin_switchState() {
+		if($this->isConnected AND $this->User->isAdmin()) {
+
+			$this->autoRender = false;
+
+			$value = ($this->Configuration->get('server_state')) ? 0 : 1;
+
+			$this->Configuration->set('server_state', $value);
+
+			$this->Session->setFlash($this->Lang->get('SERVER__SUCCESS_SWITCH'), 'default.success');
+			$this->redirect(array('action' => 'link'));
+
 		} else {
 			$this->redirect('/');
 		}

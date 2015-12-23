@@ -19,6 +19,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary"><?= $Lang->get('SUBMIT') ?></button>
+            <a href="<?= $this->Html->url(array('action' => 'switchState')) ?>" class="btn btn-<?= ($isEnabled) ? 'danger' : 'success' ?>"><?= ($isEnabled) ? $Lang->get('DISABLE') : $Lang->get('ENABLE') ?></a>
 
           </form>
 
