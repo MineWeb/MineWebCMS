@@ -171,9 +171,13 @@ CREATE TABLE IF NOT EXISTS `api_configurations` (
   `skins` int(1) NOT NULL DEFAULT '0',
   `skin_filename` varchar(150) NOT NULL,
   `skin_free` int(1) NOT NULL DEFAULT '0',
+  `skin_width` int(11) DEFAULT '64',
+  `skin_height` int(11) DEFAULT '32',
   `capes` int(1) NOT NULL DEFAULT '0',
   `cape_filename` varchar(150) NOT NULL,
   `cape_free` int(1) NOT NULL DEFAULT '0',
+  `cape_width` int(11) DEFAULT '64',
+  `cape_height` int(11) DEFAULT '32',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -182,7 +186,7 @@ INSERT INTO `permissions` (`id`, `rank`, `permissions`) VALUES
 (2, 2, 'a:3:{i:0;s:12:"COMMENT_NEWS";i:1;s:9:"LIKE_NEWS";i:2;s:18:"DELETE_HIS_COMMENT";}');
 
 INSERT INTO `api_configurations` (`id`, `skins`, `skin_filename`, `skin_free`, `capes`, `cape_filename`, `cape_free`) VALUES
-(0, 0, 'skins/{PLAYER}_skin', 0, 0, 'skins/capes/{PLAYER}_cape', 0);
+(0, 0, 'skins/{PLAYER}_skin', '64', '32', 0, 0, 'skins/capes/{PLAYER}_cape', '64', '32', 0);
 
 INSERT INTO `configurations` (`id`, `name`, `email`, `lang`, `theme`, `layout`, `maintenance`, `money_name_singular`, `money_name_plural`, `server_state`, `server_secretkey`, `server_timeout`, `version`, `skype`, `youtube`, `twitter`, `facebook`, `mineguard`) VALUES
 (1, 'MineWeb', 'dev@mineweb.org', 'fr', 'Mineweb', 'default', '0', 'point', 'points', 0, '', '', '0.5', 'http://mineweb.org', 'http://mineweb.org', 'http://mineweb.org', 'http://mineweb.org', 'false');

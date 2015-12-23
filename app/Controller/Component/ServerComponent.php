@@ -56,6 +56,9 @@ class ServerComponent extends Object {
             $get = @file_get_contents($url, false, stream_context_create($opts));
             if($get) {
 	            $result = json_decode($get, true);
+							if(isset($result['REQUEST']) && $result['REQUEST'] == "IP_NOT_ALLOWED") {
+								return array('status' => 'error', 'code' => '4', 'msg' => 'Request not allowed');
+							}
 	            return $result;
 	        } else {
 	        	return array('status' => 'error', 'code' => '3', 'msg' => 'Request timeout');
@@ -147,8 +150,12 @@ class ServerComponent extends Object {
 		            $opts = array('http' => array('timeout' => $this->getTimeout()));
 		            @$get = file_get_contents($url, false, stream_context_create($opts));
 		            if($get != false) {
+									if(isset($result['REQUEST']) && $result['REQUEST'] == "IP_NOT_ALLOWED") {
+										$this->online[$server_id] = false;
+			              return false;
+									}
 		            	$this->online[$server_id] = true;
-		                return true;
+		              return true;
 		            } else {
 		            	$this->online[$server_id] = false;
 		                return false;
@@ -276,6 +283,11 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
     if(!is_array($server_id)) {
         if($this->online($server_id)) {
             $search = $this->call(array('getMOTD' => 'server', 'getVersion' => 'server', 'getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $server_id);
+
+						if(isset($search['status']) && $search['status'] == "error") {
+							return false;
+						}
+
             if($search['getPlayerCount'] == "null") {
                 $search['getPlayerCount'] = 0;
             }

@@ -221,8 +221,8 @@ class UserController extends AppController {
 					$target = substr($target_config, 0, (strrpos($target_config, '/') + 1));
 			        $target = WWW_ROOT.'/'.$target;
 			        $max_size = $skin_max_size; // en octet
-			        $width_max = 64; // pixel
-			        $height_max = 32; // pixel
+			        $width_max = $ApiConfiguration['ApiConfiguration']['skin_width']; // pixel
+			        $height_max = $ApiConfiguration['ApiConfiguration']['skin_height']; // pixel
 
 		            $extensions = array('png');    // Extensions autorisees
 
@@ -269,8 +269,8 @@ class UserController extends AppController {
 					$target = substr($target_config, 0, (strrpos($target_config, '/') + 1));
 			        $target = WWW_ROOT.'/'.$target;
 			        $max_size = $cape_max_size; // en octet
-			        $width_max = 64; // pixel
-			        $height_max = 32; // pixel
+			        $width_max = $ApiConfiguration['ApiConfiguration']['cape_width']; // pixel
+			        $height_max = $ApiConfiguration['ApiConfiguration']['cape_height']; // pixel
 
 		            $extensions = array('png');    // Extensions autorisees
 

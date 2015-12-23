@@ -98,7 +98,7 @@ class APIController extends AppController {
 	}
 
 	public function admin_index() {
-		if($$this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->User->isAdmin()) {
 			$this->set('title_for_layout',$this->Lang->get('API'));
 			$this->layout = 'admin';
 
