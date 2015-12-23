@@ -10,9 +10,9 @@
             <input type="hidden" id="form_infos" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'news', 'action' => 'admin_index', 'admin' => 'true')) ?>">
 
             <div class="ajax-msg"></div>
-            
+
             <input type="hidden" name="id" value="<?= $news['id'] ?>">
-      
+
             <div class="form-group">
               <label><?= $Lang->get('TITLE') ?></label>
               <input name="title" class="form-control" value="<?= $news['title'] ?>" placeholder="<?= $Lang->get('TITLE') ?>" type="text">
@@ -21,6 +21,7 @@
             <div class="form-group">
               <label><?= $Lang->get('SLUG') ?></label>
               <div class="input-group">
+                <div class="input-group-addon"><?= $this->Html->url('/blog/', true) ?></div>
                 <input name="slug" id="slug" class="form-control" value="<?= $news['slug'] ?>" placeholder="<?= $Lang->get('SLUG') ?>" type="text">
                 <span class="input-group-btn">
                   <a href="#" id="generate_slug" class="btn btn-info"><?= $Lang->get('GENERATE') ?></a>
@@ -46,7 +47,7 @@
             <div class="form-group">
               <div class="checkbox">
                 <label>
-                  <?php 
+                  <?php
                     if($news['published']) {
                       $checked = true;
                     } else {
@@ -59,10 +60,10 @@
             </div>
 
             <div class="pull-right">
-              <a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'admin_index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>  
+              <a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'admin_index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
               <button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
             </div>
-          </form>      
+          </form>
         </div>
       </div>
     </div>
