@@ -181,6 +181,15 @@ CREATE TABLE IF NOT EXISTS `api_configurations` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE `social_buttons` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(20) DEFAULT NULL,
+  `img` varchar(120) DEFAULT NULL,
+  `color` varchar(30) DEFAULT NULL,
+  `url` varchar(120) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 INSERT INTO `permissions` (`id`, `rank`, `permissions`) VALUES
 (1, 0, 'a:3:{i:0;s:12:"COMMENT_NEWS";i:1;s:9:"LIKE_NEWS";i:2;s:18:"DELETE_HIS_COMMENT";}'),
 (2, 2, 'a:3:{i:0;s:12:"COMMENT_NEWS";i:1;s:9:"LIKE_NEWS";i:2;s:18:"DELETE_HIS_COMMENT";}');

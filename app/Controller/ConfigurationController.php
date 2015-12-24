@@ -2,11 +2,63 @@
 
 class ConfigurationController extends AppController {
 
-	public $components = array('Session', 'RequestHandler');
+	public $components = array('Session', 'RequestHandler', 'Util');
 
 	public function admin_index() {
 		if($this->isConnected AND $this->User->isAdmin()) {
 			$this->layout = "admin";
+
+			if($this->request->is('post')) {
+				foreach ($this->request->data as $key => $value) {
+					if($key != "version" && $key != "social_btn" && $key != "social_btn_edited") {
+						if($key == "banner_server") {
+							$value = serialize($value);
+						}
+						$this->Configuration->set($key, $value);
+						if($key == "mineguard") {
+							if($value == "true") {
+								$this->ServerComponent = $this->Components->load('Server');
+								$this->ServerComponent->call(array('setMineguard' => 'true'), true);
+							} else {
+								$this->ServerComponent = $this->Components->load('Server');
+								$this->ServerComponent->call(array('setMineguard' => 'false'), true);
+							}
+						}
+					} elseif($key == "social_btn") { // si c'est pour les boutons sociaux personnalisés
+
+						$this->loadModel('SocialButton');
+						foreach ($value as $k => $v) { // on enregistre le tout
+							$this->SocialButton->create();
+							$this->SocialButton->set(array(
+								'title' => $v['title'],
+								'img' => $v['img'],
+								'color' => $v['color'],
+								'url' => $v['url']
+							));
+							$this->SocialButton->save();
+						}
+
+					} elseif($key == "social_btn_edited") { // si c'est pour les boutons sociaux personnalisés
+
+						$this->loadModel('SocialButton');
+						foreach ($value as $k => $v) { // on enregistre le tout
+							$this->SocialButton->read(null, $v['id']);
+							$this->SocialButton->set(array(
+								'title' => $v['title'],
+								'img' => $v['img'],
+								'color' => $v['color'],
+								'url' => $v['url']
+							));
+							$this->SocialButton->save();
+						}
+
+					}
+				}
+
+				$this->History->set('EDIT_CONFIGURATION', 'configuration');
+
+				$this->Session->setFlash($this->Lang->get('EDIT_CONFIGURATION_SUCCESS'), 'default.success');
+			}
 
 			$config = $this->Configuration->get_all()['Configuration'];
 			$this->loadModel('Server');
@@ -31,28 +83,12 @@ class ConfigurationController extends AppController {
 			}
 			$this->set(compact('servers'));
 
-			if($this->request->is('post')) {
-				foreach ($this->request->data as $key => $value) {
-					if($key != "version") {
-						if($key == "banner_server") {
-							$value = serialize($value);
-						}
-						$this->Configuration->set($key, $value);
-						if($key == "mineguard") {
-							if($value == "true") {
-								$this->ServerComponent = $this->Components->load('Server');
-								$this->ServerComponent->call(array('setMineguard' => 'true'), true);
-							} else {
-								$this->ServerComponent = $this->Components->load('Server');
-								$this->ServerComponent->call(array('setMineguard' => 'false'), true);
-							}
-						}
-					}
-				}
-				$this->History->set('EDIT_CONFIGURATION', 'configuration');
+			$this->set('config', $this->Configuration->get_all()['Configuration']);
 
-				$this->Session->setFlash($this->Lang->get('EDIT_CONFIGURATION_SUCCESS'), 'default.success');
-			}
+			$this->set('shopIsInstalled', $this->EyPlugin->isInstalled('shop.1.eywek'));
+
+			$this->loadModel('SocialButton');
+			$this->set('social_buttons', $this->SocialButton->find('all'));
 		} else {
 			$this->redirect('/');
 		}

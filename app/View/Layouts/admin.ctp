@@ -18,6 +18,8 @@ $this->EyPlugin = new EyPluginComponent;
 
     <?= $this->Html->css('dataTables.bootstrap.css'); ?>
 
+    <?= $this->Html->css('admin.css'); ?>
+
     <!-- jQuery 2.1.4 -->
     <?= $this->Html->script('jQuery-2.1.4.min.js') ?>
     <!-- ChartJS 1.0.1 -->
