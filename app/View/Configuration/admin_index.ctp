@@ -135,6 +135,8 @@
                     foreach ($social_buttons as $key => $value) {
                       $i++;
 
+                      echo '<div id="btn-'.$i.'">';
+
                       echo '<hr>';
 
                       echo '<input type="hidden" value="'.$value['SocialButton']['id'].'" name="social_btn_edited['.$i.'][id]">';
@@ -160,7 +162,10 @@
                       echo '</div>';
                       echo '<script>$(\'#color_social_btn_'.$i.'\').colorPicker()</script>';
 
-                      echo '<button id="'+$i+'" class="btn btn-danger pull-right delete-social-btn-added">'.$Lang->get('DELETE').'</button>';
+                      echo '<button id="'.$i.'-'.$value['SocialButton']['id'].'" class="btn btn-danger pull-right delete-social-btn-added">'.$Lang->get('DELETE').'</button>';
+
+                      echo '</div>';
+                      echo '<div class="clearfix"></div>';
                     }
                   }
                   ?>
@@ -174,7 +179,9 @@
 
                     e.preventDefault();
 
-                    var html_content = '<hr>';
+                    var html_content = '<div id="btn-'+i+'">';
+
+                    html_content += '<hr>';
 
                     html_content += '<div class="form-group">';
                     html_content += '<label><?= $Lang->get('CONFIG__TITLE_SOCIAL_BTN') ?></label>';
@@ -196,27 +203,44 @@
                     html_content += '<input type="text" name="social_btn['+i+'][color]" class="form-control" id="color_social_btn_'+i+'">';
                     html_content += '</div>';
 
-                    html_content += '<button id="'.i.'" class="btn btn-danger pull-right delete-social-btn"><?= $Lang->get('DELETE') ?></button>';
+                    html_content += '<button id="'+i+'" class="btn btn-danger pull-right delete-social-btn"><?= $Lang->get('DELETE') ?></button>';
+
+                    html_content += '</div>';
+                    html_content += '<div class="clearfix"></div>';
 
                     $('.addBtnContainer').hide().prepend(html_content).fadeIn(250);
 
                     $('input[id="color_social_btn_'+i+'"]').colorPicker();
 
+                    $('.delete-social-btn').on('click', function(e) {
+                      e.preventDefault();
+                      deleteSocialBtn($(this).attr('id'), false);
+                    });
+
                     i++;
                   });
 
                   $('.delete-social-btn').on('click', function(e) {
-                    deleteSocialBtn($(this).attr('id'), 'social_btn');
+                    e.preventDefault();
+                    deleteSocialBtn($(this).attr('id'), false);
                   });
 
                   $('.delete-social-btn-added').on('click', function(e) {
+                    e.preventDefault();
                     deleteSocialBtn($(this).attr('id'), 'social_btn_added');
                   });
 
-                  function deleteSocialBtn(id, type) {
-                    $('.addBtnContainer').append('<input type="hidden" name="'+type+'['+id+'][deleted]" value="1">'); // pour que le php le delete
+                  function deleteSocialBtn(infos, type) {
+                    infos = infos.split('-');
+                    var i = infos[0];
+                    var id = infos[1];
+                    if(type !== false) {
+                      $('.addBtnContainer').append('<input type="hidden" name="'+type+'[deleted]['+i+']" value="'+id+'">'); // pour que le php le delete
+                    }
 
-                    
+                    $('#btn-'+i).slideUp(250, function(e) {
+                      $(this).remove();
+                    });
                   }
                 </script>
 

@@ -10,7 +10,7 @@ class ConfigurationController extends AppController {
 
 			if($this->request->is('post')) {
 				foreach ($this->request->data as $key => $value) {
-					if($key != "version" && $key != "social_btn" && $key != "social_btn_edited") {
+					if($key != "version" && $key != "social_btn" && $key != "social_btn_edited" && $key != "social_btn_added") {
 						if($key == "banner_server") {
 							$value = serialize($value);
 						}
@@ -28,30 +28,42 @@ class ConfigurationController extends AppController {
 
 						$this->loadModel('SocialButton');
 						foreach ($value as $k => $v) { // on enregistre le tout
-							$this->SocialButton->create();
-							$this->SocialButton->set(array(
-								'title' => $v['title'],
-								'img' => $v['img'],
-								'color' => $v['color'],
-								'url' => $v['url']
-							));
-							$this->SocialButton->save();
+							if(!empty($v['color']) && !empty($v['url']) && (!empty($v['title']) || !empty($v['img']))) {
+								$this->SocialButton->create();
+								$this->SocialButton->set(array(
+									'title' => $v['title'],
+									'img' => $v['img'],
+									'color' => $v['color'],
+									'url' => $v['url']
+								));
+								$this->SocialButton->save();
+							}
 						}
 
 					} elseif($key == "social_btn_edited") { // si c'est pour les boutons sociaux personnalisés
 
 						$this->loadModel('SocialButton');
 						foreach ($value as $k => $v) { // on enregistre le tout
-							$this->SocialButton->read(null, $v['id']);
-							$this->SocialButton->set(array(
-								'title' => $v['title'],
-								'img' => $v['img'],
-								'color' => $v['color'],
-								'url' => $v['url']
-							));
-							$this->SocialButton->save();
+							if(!empty($v['color']) && !empty($v['url']) && (!empty($v['title']) || !empty($v['img']))) {
+								$this->SocialButton->read(null, $v['id']);
+								$this->SocialButton->set(array(
+									'title' => $v['title'],
+									'img' => $v['img'],
+									'color' => $v['color'],
+									'url' => $v['url']
+								));
+								$this->SocialButton->save();
+							}
 						}
 
+					} elseif($key == "social_btn_added") {
+						$this->loadModel('SocialButton');
+						foreach ($value['deleted'] as $k => $v) { // on enregistre le tout
+							$find = $this->SocialButton->findById($v);
+							if(!empty($find)) {
+								$this->SocialButton->delete($v);
+							}
+						}
 					}
 				}
 
@@ -88,7 +100,7 @@ class ConfigurationController extends AppController {
 			$this->set('shopIsInstalled', $this->EyPlugin->isInstalled('shop.1.eywek'));
 
 			$this->loadModel('SocialButton');
-			$this->set('social_buttons', $this->SocialButton->find('all'));
+			$this->set('social_buttons', $this->SocialButton->find('all', array('order' => 'id desc')));
 		} else {
 			$this->redirect('/');
 		}

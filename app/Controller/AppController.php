@@ -85,7 +85,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 		if($last_check < time()) {
 			$plugins = $this->EyPlugin->loadPlugins();
 
-			$url = 'http://mineweb.org/api/v1/key_verif/';
+			$url = 'http://mineweb.org/api/v1/key_verif';
 			$secure = file_get_contents(ROOT.'/config/secure');
 			$secure = json_decode($secure, true);
 			$postfields = array(
@@ -93,7 +93,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 		    'key' => $secure['key'],
 		    'domain' => Router::url('/', true),
 		    'version' => $this->Configuration->get('version'),
-		    'plugins' => serialize($plugins)
+		    //'plugins' => serialize($plugins)
 			);
 
 			$postfields = json_encode($postfields);
