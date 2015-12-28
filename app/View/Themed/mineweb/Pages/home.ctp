@@ -73,18 +73,43 @@
         <ol id="pagination"></ol>
         <?php } else { echo '<center><h3>'.$Lang->get('NO_NEWS').'</h3></center>'; } ?>
     </div>
-    
-    
+
+
 </div>
     <div class="brand-social hidden-sm hidden-xs">
         <div class="row">
             <div class="container">
                 <center>
-                    <a class="btn-skype" target="_blank" href="<?= $skype_link ?>"><img src="theme/mineweb/img/skype.png"></a>
-                    <a class="btn-youtube" target="_blank" href="<?= $youtube_link ?>"><img src="theme/mineweb/img/yt.png"></a>
-                    <span><?= $Lang->get('JOIN_US') ?></span>
-                    <a class="btn-twitter" target="_blank" href="<?= $twitter_link ?>"><img src="theme/mineweb/img/twitter.png"></a>
-                    <a class="btn-facebook" target="_blank" href="<?= $facebook_link ?>"><img src="theme/mineweb/img/fb.png"></a>
+                  <?php
+                  if(!empty($skype_link)) {
+                    echo '<a href="'.$skype_link.'" target="_blank" class="btn btn-lg btn-skype"><img src="theme/mineweb/img/skype.png"></a>';
+                  }
+                  if(!empty($youtube_link)) {
+                    echo '<a href="'.$youtube_link.'" target="_blank" class="btn btn-lg btn-youtube"><img src="theme/mineweb/img/yt.png"></a>';
+                  }
+                  echo '<span>'.$Lang->get('JOIN_US').'</span>';
+                  if(!empty($twitter_link)) {
+                    echo '<a href="'.$twitter_link.'" target="_blank" class="btn btn-lg btn-twitter"><img src="theme/mineweb/img/twitter.png"></a>';
+                  }
+                  if(!empty($facebook_link)) {
+                    echo '<a href="'.$facebook_link.'" target="_blank" class="btn btn-lg btn-facebook"><img src="theme/mineweb/img/fb.png"></a>';
+                  }
+                  ?>
+                </center>
+                <br><br>
+                <center>
+                  <?php
+                  foreach ($findSocialButtons as $key => $value) {
+                    echo '<a target="_blank" class="btn btn-primary" style="background-color:'.$value['SocialButton']['color'].'!important;color:white;margin: 0 5px;" href="'.$value['SocialButton']['url'].'">';
+                    if(!empty($value['SocialButton']['img'])) {
+                      echo '<img src="'.$value['SocialButton']['img'].'">';
+                    }
+                    if(!empty($value['SocialButton']['title'])) {
+                      echo (!empty($value['SocialButton']['img'])) ? '<br>'.$value['SocialButton']['title'] : $value['SocialButton']['title'];
+                    }
+                    echo '</a>';
+                  }
+                  ?>
                 </center>
             </div>
         </div>

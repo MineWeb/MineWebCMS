@@ -76,10 +76,30 @@
             <div class="row">
                 <center>
                     <p>
-                        <a href="<?= $facebook_link ?>" class="btn btn-lg btn-facebook"><i class="fa fa-facebook-square"></i> <?= $Lang->get('JOIN_US_ON') ?> Facebook</a>
-                        <a href="<?= $twitter_link ?>" class="btn btn-lg btn-twitter"><i class="fa fa-twitter"></i> <?= $Lang->get('JOIN_US_ON') ?> Twitter</a>
-                        <a href="<?= $youtube_link ?>" class="btn btn-lg btn-youtube"><i class="fa fa-youtube"></i> <?= $Lang->get('JOIN_US_ON') ?> YouTube</a>
-                        <a href="<?= $skype_link ?>" class="btn btn-lg btn-skype"><i class="fa fa-skype"></i> <?= $Lang->get('CONTACT_US_ON') ?> Skype</a>
+                      <?php
+                        if(!empty($facebook_link)) {
+                          echo '<a href="'.$facebook_link.'" target="_blank" class="btn btn-lg btn-facebook"><i class="fa fa-facebook-square"></i> '.$Lang->get('JOIN_US_ON').' Facebook</a>';
+                        }
+                        if(!empty($twitter_link)) {
+                          echo '<a href="'.$twitter_link.'" target="_blank" class="btn btn-lg btn-twitter"><i class="fa fa-twitter"></i> '.$Lang->get('JOIN_US_ON').' Twitter</a>';
+                        }
+                        if(!empty($youtube_link)) {
+                          echo '<a href="'.$youtube_link.'" target="_blank" class="btn btn-lg btn-youtube"><i class="fa fa-youtube"></i> '.$Lang->get('JOIN_US_ON').' YouTube</a>';
+                        }
+                        if(!empty($skype_link)) {
+                          echo '<a href="'.$skype_link.'" target="_blank" class="btn btn-lg btn-skype"><i class="fa fa-skype"></i> '.$Lang->get('JOIN_US_ON').' Skype</a>';
+                        }
+                        foreach ($findSocialButtons as $key => $value) {
+                          echo '<a class="btn btn-default" style="background-color:'.$value['SocialButton']['color'].';color:white;color:white;margin: 0 5px;" target="_blank" href="'.$value['SocialButton']['url'].'">';
+                          if(!empty($value['SocialButton']['img'])) {
+                            echo '<img src="'.$value['SocialButton']['img'].'">';
+                          }
+                          if(!empty($value['SocialButton']['title'])) {
+                            echo (!empty($value['SocialButton']['img'])) ? '<br>'.$value['SocialButton']['title'] : $value['SocialButton']['title'];
+                          }
+                          echo '</a>';
+                        }
+                      ?>
                     </p>
                 </center>
             </div>

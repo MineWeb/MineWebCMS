@@ -285,8 +285,11 @@ WCqkx22behAGZq6rhwIDAQAB
   	$youtube_link = $this->Configuration->get('youtube');
   	$twitter_link = $this->Configuration->get('twitter');
 
+    $this->loadModel('SocialButton');
+    $findSocialButtons = $this->SocialButton->find('all');
+
 			// on set tout
-			$this->set(compact('nav', 'website_name', 'theme_config', 'banner_server', 'flash_messages', 'user', 'csrfToken', 'facebook_link', 'skype_link', 'youtube_link', 'twitter_link'));
+			$this->set(compact('nav', 'website_name', 'theme_config', 'banner_server', 'flash_messages', 'user', 'csrfToken', 'facebook_link', 'skype_link', 'youtube_link', 'twitter_link', 'findSocialButtons'));
 
 		if($this->params['controller'] == "user" OR $this->params['controller'] == "maintenance" OR $this->Configuration->get('maintenance') == '0' OR $this->isConnected AND $this->User->isAdmin()) {
 		} else {
