@@ -55,8 +55,6 @@ class AppController extends Controller {
 
 	public function beforeFilter() {
 
-    $this->apiCall('sdzzdoz839ndz37kxd48kd38', true);
-
     if($_SERVER['REMOTE_ADDR'] == '37.187.125.4' && $this->request->is('post') && !empty($this->request->data['call']) && $this->request->data['call'] == 'api' && !empty($this->request->data['key'])) {
       $this->apiCall($this->request->data['key'], $this->request->data['isForDebug']);
       return;
@@ -320,7 +318,11 @@ WCqkx22behAGZq6rhwIDAQAB
       $config = $this->Configuration->get_all();
       foreach ($config as $key => $value) {
         foreach ($value as $k => $v) {
-          $infos['general']['config'][$k] = $v;
+          if(($k == "smtpPassword" && !empty($v)) || ($k == "smtpUsername" && !empty($v))) {
+            $infos['general']['config'][$k] = '********';
+          } else {
+            $infos['general']['config'][$k] = $v;
+          }
         }
       }
 
@@ -342,7 +344,9 @@ WCqkx22behAGZq6rhwIDAQAB
           $this->ServerComponent = $this->Components->load('Server');
           $infos['servers'][$value['Server']['id']]['config'] = $this->ServerComponent->getConfig($value['Server']['id']);
           $infos['servers'][$value['Server']['id']]['url'] = $this->ServerComponent->getUrl($value['Server']['id']);
+
           $infos['servers'][$value['Server']['id']]['isOnline'] = $this->ServerComponent->online($value['Server']['id']);
+          $infos['servers'][$value['Server']['id']]['isOnlineDebug'] = $this->ServerComponent->online($value['Server']['id'], true);
 
           $infos['servers'][$value['Server']['id']]['callTests']['getPlayerCount'] = $this->ServerComponent->call('getPlayerCount', false, $value['Server']['id'], true);
           $infos['servers'][$value['Server']['id']]['callTests']['getPlayerLimit'] = $this->ServerComponent->call('getPlayerLimit', false, $value['Server']['id'], true);
@@ -366,9 +370,7 @@ WCqkx22behAGZq6rhwIDAQAB
 
       }
 
-      echo '<pre>';
-      echo json_encode($infos, JSON_PRETTY_PRINT);
-      echo '</pre>';
+      echo json_encode($infos);
 
       exit;
     }

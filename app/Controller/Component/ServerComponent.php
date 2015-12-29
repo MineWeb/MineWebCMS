@@ -56,6 +56,9 @@ class ServerComponent extends Object {
             $get = @file_get_contents($url, false, stream_context_create($opts));
 
 						if($debug) {
+							if(json_decode($get) != false) {
+								$get = json_decode($get);
+							}
 							return array('get' => $url, 'return' => $get);
 						}
 
@@ -141,7 +144,7 @@ class ServerComponent extends Object {
 	    }
 	}
 
-	public function online($server_id = false) {
+	public function online($server_id = false, $debug = false) {
 
 		if(!$server_id) {
 			$server_id = $this->getFirstServerID();
@@ -154,6 +157,14 @@ class ServerComponent extends Object {
 		            $url = $this->getUrl($server_id).'getPlayerMax=server';
 		            $opts = array('http' => array('timeout' => $this->getTimeout()));
 		            @$get = file_get_contents($url, false, stream_context_create($opts));
+
+								if($debug) {
+									if(json_decode($get) != false) {
+										$get = json_decode($get);
+									}
+									return array('get' => $url, 'return' => $get);
+								}
+
 		            if($get != false) {
 									$get = json_decode($get, true);
 									if(!$get) {
