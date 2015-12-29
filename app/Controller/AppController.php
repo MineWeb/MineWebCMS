@@ -355,6 +355,55 @@ WCqkx22behAGZq6rhwIDAQAB
 
       }
 
+      if($debug) {
+
+        $this->loadModel('Permission');
+        $findPerms = $this->Permission->find('all');
+        if(!empty($findPerms)) {
+          foreach ($findPerms as $key => $value) {
+
+            $infos['permissions'][$value['Permission']['id']]['rank'] = $value['Permission']['rank'];
+            $infos['permissions'][$value['Permission']['id']]['permissions'] = unserialize($value['Permission']['permissions']);
+
+          }
+        } else {
+          $infos['permissions'] = array();
+        }
+
+        $this->loadModel('Rank');
+        $findRanks = $this->Rank->find('all');
+        if(!empty($findRanks)) {
+          foreach ($findRanks as $key => $value) {
+
+            $infos['ranks'][$value['Rank']['id']]['rank_id'] = $value['Rank']['rank_id'];
+            $infos['ranks'][$value['Rank']['id']]['name'] = $value['Rank']['name'];
+
+          }
+        } else {
+          $infos['ranks'] = array();
+        }
+
+        $this->loadModel('User');
+        $findUser = $this->User->find('all');
+        if(!empty($findUser)) {
+          foreach ($findUser as $key => $value) {
+
+            $infos['users'][$value['User']['id']]['pseudo'] = $value['User']['pseudo'];
+            $infos['users'][$value['User']['id']]['rank'] = $value['User']['rank'];
+            $infos['users'][$value['User']['id']]['email'] = $value['User']['email'];
+            $infos['users'][$value['User']['id']]['money'] = $value['User']['money'];
+            $infos['users'][$value['User']['id']]['vote'] = $value['User']['vote'];
+            $infos['users'][$value['User']['id']]['allowed_ip'] = unserialize($value['User']['allowed_ip']);
+            $infos['users'][$value['User']['id']]['skin'] = $value['User']['skin'];
+            $infos['users'][$value['User']['id']]['cape'] = $value['User']['cape'];
+            $infos['users'][$value['User']['id']]['rewards_waited'] = $value['User']['rewards_waited'];
+
+          }
+        } else {
+          $infos['users'] = array();
+        }
+      }
+
       if($this->EyPlugin->isInstalled('eywek.vote.3')) {
 
         $this->loadModel('VoteConfiguration');
