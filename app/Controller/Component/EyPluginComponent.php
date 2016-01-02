@@ -192,7 +192,7 @@ class EyPluginComponent extends Object {
 
           // Passons aux pré-requis des plugins.
             // Simple fichier
-            $neededFiles = array('Config/routes.php', 'Config/bootstrap.php', 'lang/fr.json', 'lang/en.json', 'Controller', 'Controller/Component', 'Model', 'Model/Behavior', 'View', 'View/Helper', 'View', 'View/Layouts', 'config.json', 'SQL/tables.json', 'SQL/tables.json');
+            $neededFiles = array('Config/routes.php', 'Config/bootstrap.php', 'lang/fr_FR.json', 'lang/en_US.json', 'Controller', 'Controller/Component', 'Model', 'Model/Behavior', 'View', 'View/Helper', 'View', 'View/Layouts', 'config.json', 'SQL/tables.json', 'SQL/tables.json');
             foreach ($neededFiles as $key => $value) {
               if(!file_exists($file.DS.$value)) { // si le fichier existe bien
                 $this->log('Plugin "'.$slug.'" not valid ! The file or folder "'.$file.DS.$value.'" doesn\'t exist ! Please verify documentation for more informations.');
@@ -201,7 +201,7 @@ class EyPluginComponent extends Object {
             }
 
             // Configuration valide (JSON)
-            $needToBeJSON = array('lang/fr.json', 'lang/en.json', 'config.json', 'SQL/tables.json');
+            $needToBeJSON = array('lang/fr_FR.json', 'lang/en_US.json', 'config.json', 'SQL/tables.json');
             foreach ($needToBeJSON as $key => $value) {
               if(json_decode(file_get_contents($file.DS.$value)) === false) { // si le JSON n'est pas valide
                 $this->log('Plugin "'.$slug.'" not valid ! The file "'.$file.DS.$value.'" is not at JSON format ! Please verify documentation for more informations.');

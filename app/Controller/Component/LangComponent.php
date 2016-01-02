@@ -1,279 +1,306 @@
 <?php
 
 class LangComponent extends Object {
-  	
+
   	public $components = array('Cookie');
 
-	function shutdown(&$controller) {}
-	function beforeRender(&$controller) {}
+    public $langFolder;
+
+    public $languages;
+
+    public $lang;
+
+    public $mode = 'config'; // config ou cookie (pour choisir le language)
+
+    function __construct() {
+      // on set le dossier de langue
+      $this->langFolder = ROOT.DS.'lang';
+
+      // Maintenant on indexe tout les fichiers de langues
+      $this->languages = $this->getLanguages();
+
+      // on choisi le language et on indexe les messages
+      $this->lang = $this->getLang();
+    }
+
+	  function shutdown(&$controller) {}
+	  function beforeRender(&$controller) {}
   	function beforeRedirect() {}
-	function initialize(&$controller) {
-		$this->controller =& $controller;
-		$this->controller->set('Lang', new LangComponent());
-	}
+	  function initialize(&$controller) {
+		  $this->controller =& $controller;
+		  $this->controller->set('Lang', new LangComponent());
+	  }
     function startup(&$controller) {}
 
-    function get_lang() {
-    	/*if(isset($_COOKIE['language'])) {
-	    	$language = $_COOKIE['language'];
-		} elseif(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-			$language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-			$language = $language{0}.$language{1};
-			if($language == "en") {
-				$language = "en";
-			} elseif($language == "fr") {
-				$language = "fr";
-			} else {
-				$language = "en";
-			}
-		} else {
-			setcookie('language', 'fr');
-			$language = 'fr';
-		}
-		return $language;*/
-		App::import('Component', 'Configuration');
-		$this->Configuration = new ConfigurationComponent();
-		$lang = $this->Configuration->get('lang');
-		if(!empty($lang)) {
-			return $this->Configuration->get('lang');
-		} else {
-			return 'fr';
-		}
-    }
+    public function getLanguages() {
+      $languages_available = array();
 
-    function getall() {
-    	$language = $this->get_lang();
+      $dh  = opendir($this->langFolder);
+			while (false !== ($filename = readdir($dh))) {
+				if(explode('.', $filename)[1] == "json") {
 
-		if(file_get_contents(ROOT.'/lang/'.$language.'.json')) {
-			$language_file = file_get_contents(ROOT.'/lang/'.$language.'.json');
-			$language_file = json_decode($language_file, true);
-		} else {
-			$language_file = file_get_contents(ROOT.'/lang/fr.json');
-			$language_file = json_decode($language_file, true);
-		}
+          // on lis la config
+          $fileContent = file_get_contents($this->langFolder.DS.$filename);
+          $fileContent = json_decode($fileContent, true);
 
-		App::import('Component', 'EyPlugin');
-		$this->EyPlugin = new EyPluginComponent();
-		foreach ($this->EyPlugin->getPluginsActive() as $key => $value) {
-			$slug = $value->slug;
-			if(file_get_contents(ROOT.'/app/Plugin/'.$slug.'/lang/'.$language.'.json')) {
-				$pl_language_file = file_get_contents(ROOT.'/app/Plugin/'.$slug.'/lang/'.$language.'.json');
-				$pl_language_file = json_decode($pl_language_file, true);
-			} elseif(file_get_contents(ROOT.'/app/Plugin/'.$slug.'/lang/fr.json')) {
-				$pl_language_file = file_get_contents(ROOT.'/app/Plugin/'.$slug.'/lang/fr.json');
-				$pl_language_file = json_decode($pl_language_file, true);
-			}
-			if(!empty($pl_language_file)) {
-				foreach ($pl_language_file as $k => $v) {
-					$language_file[$k.'-'.$slug] = $v;
+          if(!empty($fileContent) && $fileContent !== false) {
+
+            if(isset($fileContent['INFORMATIONS']) && isset($fileContent['INFORMATIONS']['name']) && isset($fileContent['INFORMATIONS']['author']) && isset($fileContent['INFORMATIONS']['version']) && isset($fileContent['MESSAGES'])) {
+
+              // on met tout ça dans l'array
+              $languages_available[explode('.', $filename)[0]]['name'] = $fileContent['INFORMATIONS']['name'];
+              $languages_available[explode('.', $filename)[0]]['author'] = $fileContent['INFORMATIONS']['author'];
+              $languages_available[explode('.', $filename)[0]]['version'] = $fileContent['INFORMATIONS']['version'];
+              $languages_available[explode('.', $filename)[0]]['path'] = explode('.', $filename)[0];
+              $languages_available[explode('.', $filename)[0]]['fullpath'] = $this->langFolder.DS.$filename;
+
+            } else {
+              $this->log('Language file : '.$filename.' is not a valid lang format.');
+            }
+
+          } else {
+            $this->log('Language file : '.$filename.' is not a valid JSON format.');
+          }
+
 				}
 			}
-			unset($pl_language_file);
-		}
-		
-		return $language_file;
+
+      return $languages_available;
     }
 
-    function setall($data) {
-    	$language = $this->get_lang();
+    public function getLang($mode = false) {
 
-    	// on filtre la data (seulement le contenu du CMS dans le fichier de lang principal)
-    	foreach ($data as $key => $value) {
-    		$explode = explode('-', $key);
-    		if(!isset($explode[1])) {
-    			$data2[$key] = $value; 
-    		} else {
-    			$pl_data[$explode[1]][$explode[0]] = $value;
+      $mode = (!$mode) ? $this->mode : $mode;
+
+      // Si c'est config dans les cookies
+      if($mode == 'cookie') {
+        if(isset($_COOKIE['language'])) {
+  	    	$language = $_COOKIE['language'];
+  		  } elseif(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+  			  $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+  			  $language = $language{0}.$language{1};
     		}
-    	}
-    	$data = $data2;
+      } else { // config
+        App::import('Component', 'Configuration');
+    		$this->Configuration = new ConfigurationComponent();
+    		$language = $this->Configuration->get('lang');
+      }
 
-		if(file_get_contents(ROOT.'/lang/'.$language.'.json')) {
-			$data = json_encode($data, JSON_PRETTY_PRINT);
-			$fp = fopen(ROOT.'/lang/'.$language.'.json',"w+");
-			fwrite($fp, $data);
-			fclose($fp);
-		} else {
-			$data = json_encode($data, JSON_PRETTY_PRINT);
-			$fp = fopen(ROOT.'/lang/fr.json',"w+");
-			fwrite($fp, $data);
-			fclose($fp);
-		}
+      // Si la langue existe bien
 
-		foreach ($pl_data as $key => $value) { // on update la langue des plugins
-			if(file_get_contents(ROOT.'/app/Plugin/'.$key.'/lang/'.$language.'.json')) {
-				$value = json_encode($value, JSON_PRETTY_PRINT);
-				$fp = fopen(ROOT.'/app/Plugin/'.$key.'/lang/'.$language.'.json',"w+");
-				fwrite($fp, $value);
-				fclose($fp);
-			} else {
-				$value = json_encode($value, JSON_PRETTY_PRINT);
-				$fp = fopen(ROOT.'/app/Plugin/'.$key.'/lang/fr.json',"w+");
-				fwrite($fp, $value);
-				fclose($fp);
-			}
-		}
+      if(empty($language) || !isset($this->languages[$language])) {
+        $language = 'fr_FR'; // sinon on met en français de base
+      }
+
+      $language = $this->languages[$language];
+
+      $lang = file_get_contents($this->langFolder.DS.$language['path'].'.json');
+			$language['messages'] = json_decode($lang, true)['MESSAGES'];
+
+      App::import('Component', 'EyPlugin');
+      $this->EyPlugin = new EyPluginComponent();
+
+      $plugins = $this->EyPlugin->getPluginsActive();
+
+      if(!empty($plugins)) {
+
+        foreach ($plugins as $key => $value) {
+          $name = $value->slug;
+
+          if(file_exists($this->EyPlugin->pluginsFolder.DS.$name.DS.'lang'.DS.$language['path'].'.json')) {
+            $language_file = file_get_contents($this->EyPlugin->pluginsFolder.DS.$name.DS.'lang'.DS.$language['path'].'.json');
+            $language_file = json_decode($language_file, true);
+          } elseif(file_exists($this->EyPlugin->pluginsFolder.DS.$name.DS.'lang'.DS.'fr_FR.json')) {
+            $language_file = file_get_contents($this->EyPlugin->pluginsFolder.DS.$name.DS.'lang'.DS.'fr_FR.json');
+            $language_file = json_decode($language_file, true);
+          }
+
+          $language['messages'] = array_merge($language['messages'], $language_file); // on le rajoute aux messages
+        }
+
+      }
+
+      return $language;
+
     }
 
-    function email_reset($email, $pseudo, $key) {
-    	$msg = "RESET_PASSWORD_MAIL";
-    	$language = $this->get_lang();
+    public function get($msg) {
 
-		if(file_get_contents(ROOT.'/lang/'.$language.'.json')) {
-			$language_file = file_get_contents(ROOT.'/lang/'.$language.'.json');
-			$language_file = json_decode($language_file, true);
-		} else {
-			$language_file = file_get_contents(ROOT.'/lang/fr.json');
-			$language_file = json_decode($language_file, true);
+    	$language = $this->lang;
+
+	  	if(isset($language['messages'][$msg])) { // et si le msg existe
+			  return $language['messages'][$msg]; // je retourne le msg config
+		  }
+
+      return $msg; // le msg tel quel ou modifié
 		}
 
-		if(isset($language_file[$msg])) { // et si le msg existe
-			$msg = str_replace('{EMAIL}', $email, $language_file[$msg]);
-			$msg = str_replace('{PSEUDO}', $pseudo, $msg);
-			$msg = str_replace('{LINK}', Router::url('/?resetpasswd_'.$key, true), $msg);
-			return $msg;
-		} else { // sinon je vérifie si c'est un msg de plugin
-		 	return $msg;
+    public function getAll() {
+
+    	$language = $this->lang;
+
+      $lang = file_get_contents($this->langFolder.DS.$language['path'].'.json');
+			$messages['CMS'] = json_decode($lang, true)['MESSAGES'];
+
+      App::import('Component', 'EyPlugin');
+      $this->EyPlugin = new EyPluginComponent();
+
+      $plugins = $this->EyPlugin->getPluginsActive();
+
+      if(!empty($plugins)) {
+
+        foreach ($plugins as $key => $value) {
+          $name = $value->slug;
+
+          if(file_exists($this->EyPlugin->pluginsFolder.DS.$name.DS.'lang'.DS.$language['path'].'.json')) {
+            $language_file = file_get_contents($this->EyPlugin->pluginsFolder.DS.$name.DS.'lang'.DS.$language['path'].'.json');
+            $language_file = json_decode($language_file, true);
+          } elseif(file_exists($this->EyPlugin->pluginsFolder.DS.$name.DS.'lang'.DS.'fr_FR.json')) {
+            $language_file = file_get_contents($this->EyPlugin->pluginsFolder.DS.$name.DS.'lang'.DS.'fr_FR.json');
+            $language_file = json_decode($language_file, true);
+          }
+
+          $messages[$name] = $language_file; // on le rajoute aux messages
+        }
+
+      }
+
+      return $messages; // le msg tel quel ou modifié
 		}
+
+    public function setAll($data) {
+
+    	$language = $this->getAll();
+
+      $path = $this->lang['path'];
+
+      foreach ($data as $key => $value) { // on parcours les données
+
+        foreach ($language as $type => $messages) { // on parcours tout les types de messages par plugins/CMS.
+
+          if(isset($messages[$key])) { // si c'est dans cette catégorie
+
+            $language[$type][$key] = $value; // on set le message dans la variable
+
+          }
+
+        }
+
+      }
+
+
+      foreach ($language as $type => $messages) {
+
+        if($type == "CMS") {
+
+          $JSON['INFORMATIONS']['name'] = $this->lang['name'];
+          $JSON['INFORMATIONS']['version'] = $this->lang['version'];
+          $JSON['INFORMATIONS']['author'] = $this->lang['author'];
+
+          $JSON['MESSAGES'] = $messages;
+
+    			$fp = fopen($this->langFolder.DS.$path.'.json',"w+");
+    			fwrite($fp, json_encode($JSON, JSON_PRETTY_PRINT));
+    			fclose($fp);
+
+        } else { // plugin
+
+          if(file_exists($this->EyPlugin->pluginsFolder.DS.'lang'.DS.$path.'.json')) {
+
+    				$fp = fopen($this->EyPlugin->pluginsFolder.DS.'lang'.DS.$path.'.json',"w+");
+    				fwrite($fp, json_encode($messages, JSON_PRETTY_PRINT));
+    				fclose($fp);
+
+          }
+
+        }
+
+      }
+
     }
 
-    function get($msg) {
+  	function banner_server($jsonapi) {
+  		$language = $this->lang;
 
-    	$language = $this->get_lang();
+  		if(isset($language['messages']['BANNER_SERVER'])) {
+  			$return = str_replace('{MOTD}', @$jsonapi['getMOTD'], $language['messages']['BANNER_SERVER']);
+  			$return = str_replace('{VERSION}', @$jsonapi['getVersion'], $return);
+  			$return = str_replace('{ONLINE}', @$jsonapi['getPlayerCount'], $return);
+  			$return = str_replace('{ONLINE_LIMIT}', @$jsonapi['getPlayerMax'], $return);
+  			return $return;
+  		} else {
+  			return 'BANNER_SERVER';
+  		}
+  	}
 
-		if(file_get_contents(ROOT.'/lang/'.$language.'.json')) {
-			$language_file = file_get_contents(ROOT.'/lang/'.$language.'.json');
-			$language_file = json_decode($language_file, true);
-		} else {
-			$language_file = file_get_contents(ROOT.'/lang/fr.json');
-			$language_file = json_decode($language_file, true);
-		}
+	  function date($date) {
 
-		if(isset($language_file[$msg])) { // et si le msg existe
-			return $language_file[$msg]; // je retourne le msg config
-		} else { // sinon je vérifie si c'est un msg de plugin
-		 	App::import('Component', 'EyPlugin');
-    		$this->EyPlugin = new EyPluginComponent();
-			foreach ($this->EyPlugin->getPluginsActive() as $key => $value) {
-				$name = $value->slug;
-				if(file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/'.$language.'.json')) {
-					$language_file = file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/'.$language.'.json');
-					$language_file = json_decode($language_file, true);
-				} elseif(file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/fr.json')) {
-					$language_file = file_get_contents(ROOT.'/app/Plugin/'.$name.'/lang/fr.json');
-					$language_file = json_decode($language_file, true);
-				}
-				if(isset($language_file[$msg])) {
-					$msg = $language_file[$msg];
-				}
-			}
-			return $msg; // le msg tel quel ou modifié
-		}
-	}
+  		$language = $this->lang;
 
-	function banner_server($jsonapi) {
-		$language = $this->get_lang();
+  		if(isset($language['messages']['FORMAT_DATE'])) { // si le format de la date est configuré je fais les actions suivantes
+  			$date = explode(' ', $date); // j'explode les espaces pour séparé date & heure
+  			$time = explode(':', $date['1']); // ensuite je sépare tout les chiffre de la date
+  			$date = explode('-', $date['0']); // puis tout ceux de l'heure
+  			$return = str_replace('{%day}', $date['2'], $language['messages']['FORMAT_DATE']); // puis je remplace les variable de la config lang.php par les chiffres | Le jour
+  			$return = str_replace('{%month}', $date['1'], $return); // puis je remplace les variable de la config lang.php par les chiffres | Le mois
+  			$return = str_replace('{%year}', $date['0'], $return); // puis je remplace les variable de la config lang.php par les chiffres | L'année
+  			$return = str_replace('{%minutes}', $time['1'], $return); // puis je remplace les variable de la config lang.php par les chiffres | Les minutes
+  			$if = explode('|', $return); // ensuite j'explode pour savoir a quelle format je retourne l'heure
+  			$if = explode('}', $if['1']); // 24h ou 12h
+  			if($if['0'] == 12) { // donc si c'est 12h
+  				if($time['0'] > 12) { // et que c'est plus de 12h donc l'après midi
+  					if($time['0'] == 13) { // je remplace tout les chiffre par leur équivalent en 12h
+  						$hour = '01';
+  						$pm_or_am = 'PM'; // et je dis bien que c'est l'après-midi
+  					} elseif($time['0'] == 14) {
+  						$hour = '02';
+  						$pm_or_am = 'PM';
+  					} elseif($time['0'] == 15) {
+  						$hour = '03';
+  						$pm_or_am = 'PM';
+  					} elseif($time['0'] == 16) {
+  						$hour = '04';
+  						$pm_or_am = 'PM';
+  					} elseif($time['0'] == 17) {
+  						$hour = '05';
+  						$pm_or_am = 'PM';
+  					} elseif($time['0'] == 18) {
+  						$hour = '06';
+  						$pm_or_am = 'PM';
+  					} elseif($time['0'] == 19) {
+  						$hour = '07';
+  						$pm_or_am = 'PM';
+  					} elseif($time['0'] == 20) {
+  						$hour = '08';
+  						$pm_or_am = 'PM';
+  					} elseif($time['0'] == 21) {
+  						$hour = '09';
+  						$pm_or_am = 'PM';
+  					} elseif($time['0'] == 22) {
+  						$hour = '10';
+  						$pm_or_am = 'PM';
+  					} elseif($time['0'] == 23) {
+  						$hour = '11';
+  						$pm_or_am = 'PM';
+  					}
+  				} else { // sinon c'est que c'est le matin
+  					$hour = $time['0']; // donc je laisse tel quel
+  					$pm_or_am = 'AM';
+  				}
+  				$return = str_replace('{%hour|12}', $hour, $return); // je change donc les variables
+  				$return = str_replace('{%PM_OR_AM}', $pm_or_am, $return);
+  			} elseif($if['0'] == 24) { // et si c'est du 24h
+  				$hour = $time['0']; // je laisse comme c'est en bdd
+  				$return = str_replace('{%hour|24}', $hour, $return); // et je remplace
+        } else {
+          $return = 'ERROR'; // format inconnu
+        }
+  		} else { // sinon, si le message FORMAT_DATE n'est pas configuré
+  			$return = $date; // je laisse la date tel quel
+  		}
 
-		if(file_get_contents(ROOT.'/lang/'.$language.'.json')) {
-			$language_file = file_get_contents(ROOT.'/lang/'.$language.'.json');
-			$language_file = json_decode($language_file, true);
-		} else {
-			$language_file = file_get_contents(ROOT.'/lang/fr.json');
-			$language_file = json_decode($language_file, true);
-		}
+  		return $return; // puis je retourne la date & l'heure
+    }
 
-		if(isset($language_file['BANNER_SERVER'])) {
-			$return = str_replace('{MOTD}', @$jsonapi['getMOTD'], $language_file['BANNER_SERVER']);
-			$return = str_replace('{VERSION}', @$jsonapi['getVersion'], $return);
-			$return = str_replace('{ONLINE}', @$jsonapi['getPlayerCount'], $return);
-			$return = str_replace('{ONLINE_LIMIT}', @$jsonapi['getPlayerMax'], $return);
-			return $return;
-		} else {
-			return 'BANNER_SERVER';
-		}
-	}
-
-	function date($date) {
-
-		$language = $this->get_lang();
-
-		if(file_get_contents(ROOT.'/lang/'.$language.'.json')) {
-			$language_file = file_get_contents(ROOT.'/lang/'.$language.'.json');
-			$language_file = json_decode($language_file, true);
-		} else {
-			$language_file = file_get_contents(ROOT.'/lang/fr.json');
-			$language_file = json_decode($language_file, true);
-		}
-
-		if(isset($language_file['FORMAT_DATE'])) { // si le format de la date est configuré je fais les actions suivantes 
-			$date = explode(' ', $date); // j'explode les espaces pour séparé date & heure
-			$time = explode(':', $date['1']); // ensuite je sépare tout les chiffre de la date
-			$date = explode('-', $date['0']); // puis tout ceux de l'heure
-			$return = str_replace('{%day}', $date['2'], $language_file['FORMAT_DATE']); // puis je remplace les variable de la config lang.php par les chiffres | Le jour 
-			$return = str_replace('{%month}', $date['1'], $return); // puis je remplace les variable de la config lang.php par les chiffres | Le mois
-			$return = str_replace('{%year}', $date['0'], $return); // puis je remplace les variable de la config lang.php par les chiffres | L'année
-			$return = str_replace('{%minutes}', $time['1'], $return); // puis je remplace les variable de la config lang.php par les chiffres | Les minutes 
-			$if = explode('|', $return); // ensuite j'explode pour savoir a quelle format je retourne l'heure
-			$if = explode('}', $if['1']); // 24h ou 12h
-			if($if['0'] == 12) { // donc si c'est 12h
-				if($time['0'] > 12) { // et que c'est plus de 12h donc l'après midi
-					if($time['0'] == 13) { // je remplace tout les chiffre par leur équivalent en 12h
-						$hour = '01';
-						$pm_or_am = 'PM'; // et je dis bien que c'est l'après-midi
-					} elseif($time['0'] == 13) {
-						$hour = '01';
-						$pm_or_am = 'PM';
-					} elseif($time['0'] == 14) {
-						$hour = '02';
-						$pm_or_am = 'PM';
-					} elseif($time['0'] == 15) {
-						$hour = '03';
-						$pm_or_am = 'PM';
-					} elseif($time['0'] == 16) {
-						$hour = '04';
-						$pm_or_am = 'PM';
-					} elseif($time['0'] == 17) {
-						$hour = '05';
-						$pm_or_am = 'PM';
-					} elseif($time['0'] == 18) {
-						$hour = '06';
-						$pm_or_am = 'PM';
-					} elseif($time['0'] == 19) {
-						$hour = '07';
-						$pm_or_am = 'PM';
-					} elseif($time['0'] == 20) {
-						$hour = '08';
-						$pm_or_am = 'PM';
-					} elseif($time['0'] == 21) {
-						$hour = '09';
-						$pm_or_am = 'PM';
-					} elseif($time['0'] == 22) {
-						$hour = '10';
-						$pm_or_am = 'PM';
-					} elseif($time['0'] == 23) {
-						$hour = '11';
-						$pm_or_am = 'PM';
-					}
-				} else { // sinon c'est que c'est le matin
-					$hour = $time['0']; // donc je laisse tel quel
-					$pm_or_am = 'AM';
-				}
-				$return = str_replace('{%hour|12}', $hour, $return); // je change donc les variables
-				$return = str_replace('{%PM_OR_AM}', $pm_or_am, $return);
-			} elseif($if['0'] == 24) { // et si c'est du 24h
-				$hour = $time['0']; // je laisse comme c'est en bdd
-				$return = str_replace('{%hour|24}', $hour, $return); // et je remplace
-			} else {
-				return 'ERROR'; // si le format n'est pas reconnu
-			} 
-		} else { // sinon, si le message FORMAT_DATE n'est pas configuré
-			$return = $date; // je laisse la date tel quel
-		}
-
-		return $return; // puis je retourne la date & l'heure
-
-	}
-
- }
-
-  ?>
+}
+?>

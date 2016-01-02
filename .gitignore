@@ -10,6 +10,8 @@ Thumbs.db
 app/Plugin/FactionRanking/
 app/tmp/
 
+dev.json
+
 app/Config/database.php
 app/Config/core.php
 
@@ -19,4 +21,3 @@ config/last_check
 config/update
 config/install.txt
 config/installed.txt
-

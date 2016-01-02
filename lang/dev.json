@@ -1,3 +1,8 @@
 {
-	
+	"INFORMATIONS":{
+		"name":"Développement",
+		"author":"Eywek",
+		"version":"0.0.1"
+	},
+	"MESSAGES":{}
 }

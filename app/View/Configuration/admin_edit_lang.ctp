@@ -10,15 +10,14 @@
             <input type="hidden" id="form_infos" data-ajax="false">
 
             <div class="ajax-msg"></div>
-            
-            <?php 
-            $lang = $Lang->getall();
-            foreach ($lang as $key => $value) { ?>
-              <?php if($key != 'FOOTER_ADMIN' AND $key != 'COPYRIGHT') { ?>
+
+            <?php
+            foreach ($messages as $key => $value) { ?>
+              <?php if($key != 'FOOTER_ADMIN') { ?>
                 <div class="form-group">
                   <label><?= explode('-', $key)[0] ?></label>
                   <?php if($key != "RESET_PASSWORD_MAIL") { ?>
-                    <input type="text" name="<?= $key ?>" class="form-control" value="<?= $value ?>">
+                    <input type="text" name="<?= $key ?>" class="form-control" value="<?= htmlentities($value) ?>">
                   <?php } else { ?>
                     <textarea name="<?= $key ?>" class="form-control" cols="30" rows="10"><?= $value ?></textarea>
                   <?php } ?>
@@ -34,14 +33,19 @@
                   <?php if($key == "RESET_PASSWORD_MAIL") { ?>
                     <small><?= $Lang->get('AVAILABLE_VARIABLES') ?> : {EMAIL}, {PSEUDO}, {LINK}.</small>
                   <?php } ?>
+                  <?php if($key == "COPYRIGHT") { ?>
+                    <small><?= $Lang->get('CONFIG__INFO_LANG') ?></small>
+                  <?php } ?>
                 </div>
               <?php } ?>
             <?php } ?>
 
+            <input type="hidden" name="data[_Token][key]" value="<?= $csrfToken ?>">
+
             <div class="pull-right">
               <button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
             </div>
-          </form>      
+          </form>
         </div>
       </div>
     </div>

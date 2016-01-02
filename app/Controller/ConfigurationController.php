@@ -95,7 +95,15 @@ class ConfigurationController extends AppController {
 			}
 			$this->set(compact('servers'));
 
-			$this->set('config', $this->Configuration->get_all()['Configuration']);
+			$config = $this->Configuration->get_all()['Configuration'];
+
+			$config['lang'] = $this->Lang->getLang('config')['path'];
+
+			foreach ($this->Lang->languages as $key => $value) {
+				$config['languages_available'][$key] = $value['name'];
+			}
+
+			$this->set('config', $config);
 
 			$this->set('shopIsInstalled', $this->EyPlugin->isInstalled('shop.1.eywek'));
 
@@ -105,4 +113,33 @@ class ConfigurationController extends AppController {
 			$this->redirect('/');
 		}
 	}
+
+	public function admin_editLang() {
+		if($this->isConnected AND $this->User->isAdmin()) {
+
+			$this->layout = 'admin';
+
+			if($this->request->is('post')) {
+
+				if(!preg_match('#<a href="http://mineweb.org">mineweb.org</a>#', $this->request->data['COPYRIGHT'])) {
+					$this->Session->setFlash($this->Lang->get('CONFIG__ERROR_SAVE_LANG'), 'default.error');
+				} else {
+
+					$this->Lang->setAll($this->request->data);
+
+					$this->History->set('EDIT_LANG', 'lang');
+
+					$this->Session->setFlash($this->Lang->get('EDIT_LANG_SUCCESS'), 'default.success');
+
+				}
+			}
+
+			$this->set('messages', $this->Lang->lang['messages']);
+			$this->set('title_for_layout', $this->Lang->get('LANG'));
+
+		} else {
+			$this->redirect('/');
+		}
+	}
+
 }
