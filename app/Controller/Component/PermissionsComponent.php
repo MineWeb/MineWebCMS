@@ -49,10 +49,9 @@ class PermissionsComponent extends Object {
     App::import('Component', 'EyPlugin');
     $this->EyPlugin = new EyPluginComponent();
 
-    foreach ($this->EyPlugin->get_list() as $key => $value) {
-      $plugins_perm = $this->EyPlugin->get('permissions', $value['plugins']['name']);
-      if(isset($plugins_perm['available'])) {
-        $plugins_perm = $plugins_perm['available'];
+    foreach ($this->EyPlugin->getPluginsActive() as $key => $value) {
+      $plugins_perm = $value->permissions->available;
+      if(isset($plugins_perm)) {
         foreach ($plugins_perm as $k => $v) {
           array_push($return, $v);
         }
