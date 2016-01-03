@@ -72,6 +72,8 @@ class ConfigurationController extends AppController {
 				$this->Session->setFlash($this->Lang->get('EDIT_CONFIGURATION_SUCCESS'), 'default.success');
 			}
 
+			$this->Lang->lang = $this->Lang->getLang(); // on refresh les messages
+
 			$config = $this->Configuration->get_all(true)['Configuration'];
 			$this->loadModel('Server');
 			$config['banner_server'] = unserialize($config['banner_server']);

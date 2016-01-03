@@ -54,6 +54,8 @@
         "READ_MORE": "Lire la suite",
         "JOIN_US_ON": "Nous rejoindre sur",
         "CONTACT_US_ON": "Contactez nous sur",
+        "CHECK_UPDATE":"Vérifier si une mise à jour est disponible",
+        "VIEW_UPDATE":"Voir les modifications",
         "NO_NEWS": "Aucune nouveaut\u00e9e n'a \u00e9t\u00e9 post\u00e9",
         "FORMAT_DATE": "{%day}\/{%month}\/{%year} \u00e0 {%hour|24}h{%minutes}",
         "POSTED_ON": "Post\u00e9 le",

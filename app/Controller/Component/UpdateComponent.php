@@ -6,18 +6,16 @@ class UpdateComponent extends Object {
 
 	public $components = array('Session', 'Configuration', 'Lang');
 
-	private $update = array('status' => false, 'version' => NULL, 'type' => NULL, 'visible' => false);
-	private $cmsVersion = NULL;
+	public $update = array('status' => false, 'version' => NULL, 'type' => NULL, 'visible' => false);
+	public $cmsVersion = NULL;
 
-	function shutdown(&$controller) {}
-	function beforeRender(&$controller) {}
-	function beforeRedirect() {}
-	function initialize(&$controller) {
-		$controller->set('Update', new UpdateComponent());
+	public $lastVersion;
 
+	function __construct() {
 		$this->check();
 
 		if(!file_exists(ROOT.'/config/update') OR strtotime('+5 hours', filemtime(ROOT.'/config/update')) < time()) {
+
 			if($this->update['status']) {
 				if($this->update['type'] == "forced") {
 					$this->update($this->update['version']);
@@ -25,36 +23,29 @@ class UpdateComponent extends Object {
 			}
 		}
 	}
+
+	function shutdown(&$controller) {}
+	function beforeRender(&$controller) {}
+	function beforeRedirect() {}
+	function initialize(&$controller) {
+		$controller->set('Update', new UpdateComponent());
+	}
 	function startup(&$controller) {}
 
 	public function available() {
-		if(!file_exists(ROOT.'/config/update') OR strtotime('+5 hours', filemtime(ROOT.'/config/update')) < time()) {
+		if(version_compare($this->cmsVersion, $this->update['version'], '<')) {
 			App::import('Component', 'LangComponent');
 	    $this->Lang = new LangComponent();
 
 			if($this->update['status']) {
 				if($this->update['visible'] AND $this->update['type'] == "choice") { // choice -> l'utilisateur choisis ou pas, forced -> la màj est faite automatiquement
-					file_put_contents(ROOT.'/config/update', '<div class="alert alert-info">'.$this->Lang->get('UPDATE_AVAILABLE').' '.$this->Lang->get('YOUR_VERSION').' : '.$this->cmsVersion.', '.$this->Lang->get('UPDATE_VERSION').' : '.$this->update['version'].' <a href="'.Router::url(array('controller' => 'update', 'action' => 'index', 'admin' => true)).'" style="margin-top: -6px;" class="btn btn-info pull-right">'.$this->Lang->get('UPDATE').'</a></div>');
 					return '<div class="alert alert-info">'.$this->Lang->get('UPDATE_AVAILABLE').' '.$this->Lang->get('YOUR_VERSION').' : '.$this->cmsVersion.', '.$this->Lang->get('UPDATE_VERSION').' : '.$this->update['version'].' <a href="'.Router::url(array('controller' => 'update', 'action' => 'index', 'admin' => true)).'" style="margin-top: -6px;" class="btn btn-info pull-right">'.$this->Lang->get('UPDATE').'</a></div>';
-				} else {
-					file_put_contents(ROOT.'/config/update', 1);
-					return false;
 				}
-			} else {
-				file_put_contents(ROOT.'/config/update', 1);
-				return false;
-			}
-		} else {
-			$content = file_get_contents(ROOT.'/config/update');
-			if($content != 1) {
-				return $content;
 			}
 		}
 	}
 
 	private function check() {
-		$lastVersion = @file_get_contents('http://mineweb.org/api/v1/get_update');
-		$lastVersion = json_decode($lastVersion, true);
 
 		App::import('Component', 'ConfigurationComponent');
 		$this->Configuration = new ConfigurationComponent();
@@ -62,11 +53,18 @@ class UpdateComponent extends Object {
 
 		$this->cmsVersion = $cmsVersion;
 
-		if(version_compare($lastVersion['last_version'], $cmsVersion, '<')) {
+		if(!file_exists(ROOT.'/config/update') OR strtotime('+5 hours', filemtime(ROOT.'/config/update')) < time()) {
+			$lastVersion = @file_get_contents('http://mineweb.org/api/v1/get_update');
+			$lastVersion = json_decode($lastVersion, true);
+
 			$this->update['status'] = true;
 			$this->update['version'] = $lastVersion['last_version'];
 			$this->update['type'] = $lastVersion['type'];
 			$this->update['visible'] = $lastVersion['visible'];
+
+			file_put_contents(ROOT.DS.'config'.DS.'update', json_encode($this->update));
+		} else {
+			$this->update = json_decode(file_get_contents(ROOT.DS.'config'.DS.'update'), true);
 		}
 	}
 

@@ -6,10 +6,14 @@
           <h3 class="box-title"><?= $Lang->get('UPDATE') ?></h3>
         </div>
         <div class="box-body">
-        
+
            <center>
-            <p class="text-center"><?= $Lang->get('LAST_VERSION') ?> : <?= $Update->get_version() ?></p>
-            <button id="update" class="btn btn-large btn-lg btn-primary"><?= $Lang->get('UPDATE') ?></button>
+            <p class="text-center"><?= $Lang->get('LAST_VERSION') ?> : <?= $Update->update['version'] ?></p>
+            <div class="btn-group">
+              <button id="update" class="btn btn-large btn-primary"><?= $Lang->get('UPDATE') ?></button>
+              <a href="<?= $this->Html->url(array('action' => 'check')) ?>" class="btn btn-large btn-info"><?= $Lang->get('CHECK_UPDATE') ?></a>
+              <a href="http://mineweb.org/changelog" target="_blank" class="btn btn-large btn-default"><?= $Lang->get('VIEW_UPDATE') ?></a>
+            </div>
             <div id="update-msg"></div>
             <div class="progress progress-striped active" style="display:none;">
               <div class="bar" style="width: 40%;"></div>
@@ -66,10 +70,10 @@
                 }
             });
             return xhr;
-        }, 
-      type: 'POST', 
-      url: '<?= $this->Html->url(array('controller' => 'update', 'action' => 'update', 'admin' => true)) ?>', 
-      data: {}, 
+        },
+      type: 'POST',
+      url: '<?= $this->Html->url(array('controller' => 'update', 'action' => 'update', 'admin' => true)) ?>',
+      data: {},
       complete: function(response, status, xhr) {
         data2 = response['responseText'].split("|");
         if(data2.indexOf('true') != -1) {

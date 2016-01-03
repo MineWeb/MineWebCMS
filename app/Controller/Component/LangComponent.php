@@ -200,8 +200,8 @@ class LangComponent extends Object {
           foreach ($messages as $key => $value) {
             if($this->lang['messages'][$key] != $value) { // ca veut dire que on l'a update
 
-              if(file_exists(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang-'.$path.'.log.json')) {
-                $log = file_get_contents(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang-'.$path.'.log.json');
+              if(file_exists(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang'.DS.$path.'.log.json')) {
+                $log = file_get_contents(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang'.DS.$path.'.log.json');
                 $log = json_decode($log, true);
               } else {
                 $log['update'] = array();
@@ -209,7 +209,7 @@ class LangComponent extends Object {
 
               $log['update'][$key] = date('Y-m-d H:i:s');
 
-              file_put_contents(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang-'.$path.'.log.json', json_encode($log, JSON_PRETTY_PRINT));
+              file_put_contents(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang'.DS.$path.'.log.json', json_encode($log, JSON_PRETTY_PRINT));
 
             }
           }
@@ -266,8 +266,8 @@ class LangComponent extends Object {
 
         foreach ($fileContent['MESSAGES'] as $key => $value) { // on parcours les messages pour éventuellement les mettre à jours
 
-          if(file_exists(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang-'.$path.'.log.json')) {
-            $log = file_get_contents(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang-'.$path.'.log.json');
+          if(file_exists(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang'.DS.$path.'.log.json')) {
+            $log = file_get_contents(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang'.DS.$path.'.log.json');
             $log = json_decode($log, true);
           } else {
             $log['update'] = array();
