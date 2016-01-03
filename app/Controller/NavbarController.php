@@ -6,7 +6,7 @@ class NavbarController extends AppController {
 
 	public function admin_index() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NAV')) {
-			 
+
 			$this->set('title_for_layout',$this->Lang->get('NAVBAR'));
 			$this->layout = 'admin';
 			$this->loadModel('Navbar');
@@ -20,16 +20,16 @@ class NavbarController extends AppController {
 	public function admin_save_ajax() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NAV')) {
 			$this->layout = null;
-			 
+
 			if($this->request->is('post')) {
 				if(!empty($this->request->data)) {
-					$data = $this->request->data;
+					$data = $this->request->data['nav'];
 					$data = explode('&', $data);
 					$i = 1;
 					foreach ($data as $key => $value) {
 						$data2[] = explode('=', $value);
 						$data3 = substr($data2[0][0], 0, -2);
-						$data1[$data3] = $i; 
+						$data1[$data3] = $i;
 						unset($data3);
 						unset($data2);
 						$i++;
@@ -69,7 +69,7 @@ class NavbarController extends AppController {
 	public function admin_delete($id = false) {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NAV')) {
 			if($id != false) {
-				 
+
 				$this->loadModel('Navbar');
 				if($this->Navbar->delete($id)) {
 					$this->History->set('DELETE_NAV', 'navbar');
@@ -89,12 +89,12 @@ class NavbarController extends AppController {
 	public function admin_add() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NAV')) {
 			$this->layout = 'admin';
-			 
+
 			$this->set('title_for_layout', $this->Lang->get('ADD_NAV'));
-			$url_plugins = $this->EyPlugin->get_list();
+			$url_plugins = $this->EyPlugin->getPluginsActive();
 			foreach ($url_plugins as $key => $value) {
-				$slug = $this->EyPlugin->get('slug', $value['plugins']['name']);
-				$url_plugins2[$slug] = $this->EyPlugin->get('name', $value['plugins']['name']);
+				$slug = $value->slug;
+				$url_plugins2[$slug] = $value->name;
 			}
 			if(!empty($url_plugins2)) {
 				$url_plugins = $url_plugins2;
@@ -117,7 +117,7 @@ class NavbarController extends AppController {
 	public function admin_add_ajax() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NAV')) {
 			$this->layout = null;
-			 
+
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['name']) AND !empty($this->request->data['type'])) {
 					$this->loadModel('Navbar');
@@ -126,12 +126,14 @@ class NavbarController extends AppController {
 							$order = $this->Navbar->find('first', array('order' => array('order' => 'DESC')));
 							$order = $order['Navbar']['order'];
 							$order = intval($order) + 1;
+							$open_new_tab = ($this->request->data['open_new_tab']) ? 1 : 0;
 							$this->Navbar->read(null, null);
 							$this->Navbar->set(array(
 								'order' => $order,
 								'name' => $this->request->data['name'],
 								'type' => 1,
-								'url' => $this->request->data['url']
+								'url' => $this->request->data['url'],
+								'open_new_tab' => $open_new_tab
 							));
 							$this->Navbar->save();
 							$this->History->set('ADD_NAV', 'navbar');
@@ -145,13 +147,15 @@ class NavbarController extends AppController {
 							$order = $this->Navbar->find('first', array('order' => array('order' => 'DESC')));
 							$order = $order['Navbar']['order'];
 							$order = intval($order) + 1;
+							$open_new_tab = ($this->request->data['open_new_tab']) ? 1 : 0;
 							$this->Navbar->read(null, null);
 							$this->Navbar->set(array(
 								'order' => $order,
 								'name' => $this->request->data['name'],
 								'type' => 2,
 								'url' => '#',
-								'submenu' => json_encode($this->request->data['url'])
+								'submenu' => json_encode($this->request->data['url']),
+								'open_new_tab' => $open_new_tab
 							));
 							$this->Navbar->save();
 							$this->History->set('ADD_NAV', 'navbar');

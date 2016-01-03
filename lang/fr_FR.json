@@ -46,6 +46,8 @@
       "CONFIG__INFO_LANG":"Le footer (COPYRIGHT) doit contenir un lien vers mineweb.org ou la configuration n'a donc pas était enregistrée (<code>&lt;a href=&quot;http://mineweb.org&quot;&gt;mineweb.org&lt;/a&gt;</code>).",
       "CONFIG__ERROR_SAVE_LANG":"Le footer (COPYRIGHT) ne contient pas un lien vers mineweb.org, la configuration n'a donc pas était enregistrée.",
 
+      "NAV__OPEN_IN_NEW_TAB":"Ouvrir dans un nouvel onglet",
+
       "NONE_PLUGIN_INSTALLED":"Aucun plugin n'est installé",
       "ERROR_CSRF":"Erreur de type CSRF est survenue, rafraichissez la page et réessayez.",
       "PROBLEM_DATABASE_NO_CONNECTION": "Une erreur avec la base de donn\u00e9es est survenue !",

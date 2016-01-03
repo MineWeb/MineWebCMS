@@ -59,24 +59,24 @@
                       foreach ($nav as $key => $value) {
                         if(empty($value['Navbar']['submenu'])) { ?>
                           <li class="li-nav<?= ($this->params['controller'] == $value['Navbar']['name']) ? ' actived' : '' ?>">
-                            <a href="<?= $value['Navbar']['url'] ?>"><?= $value['Navbar']['name'] ?></a>
+                            <a href="<?= $value['Navbar']['url'] ?>"<?= ($value['Navbar']['open_new_tab']) ? ' target="_blank"' : '' ?>><?= $value['Navbar']['name'] ?></a>
                           </li>
                         <?php } else { ?>
                           <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?= $value['Navbar']['name'] ?> <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                              <?php 
+                              <?php
                               $submenu = json_decode($value['Navbar']['submenu']);
                               foreach ($submenu as $k => $v) { ?>
-                                <li><a href="<?= rawurldecode($v) ?>"><?= rawurldecode(str_replace('+', ' ', $k)) ?></a></li>
+                                <li><a href="<?= rawurldecode($v) ?>"<?= ($value['Navbar']['open_new_tab']) ? ' target="_blank"' : '' ?>><?= rawurldecode(str_replace('+', ' ', $k)) ?></a></li>
                               <?php } ?>
                             </ul>
                           </li>
                         <?php } ?>
-                      <?php 
-                        $i++; 
-                      }  
-                    } 
+                      <?php
+                        $i++;
+                      }
+                    }
                     ?>
                     <li>
                       <div class="btn-group">
@@ -123,7 +123,7 @@
         </div>
       </footer>
     </div>
-    
+
     <?= $this->element('modals') ?>
 
     <?= $this->Html->script('jquery-1.11.0.js') ?>

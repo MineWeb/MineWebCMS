@@ -1,4 +1,4 @@
-<?php 
+<?php
 $this->Configuration = new ConfigurationComponent;
 $this->EyPlugin = new EyPluginComponent;
 ?>
@@ -18,30 +18,30 @@ $this->EyPlugin = new EyPluginComponent;
                     <li class="li-nav<?php if($this->params['controller'] == 'pages') { ?> actived<?php } ?>">
                         <a href="<?= $this->Html->url('/') ?>"><i class="fa fa-home" title="<?= $Lang->get('HOME') ?>"></i></a>
                     </li>
-                    <?php 
+                    <?php
                         if(!empty($nav)) {
                           $i = 0;
                           foreach ($nav as $key => $value) { ?>
                             <?php if(empty($value['Navbar']['submenu'])) { ?>
                               <li class="li-nav<?php if($this->params['controller'] == $value['Navbar']['name']) { ?> actived<?php } ?>">
-                                  <a href="<?= $value['Navbar']['url'] ?>"><?= $value['Navbar']['name'] ?></a>
+                                  <a href="<?= $value['Navbar']['url'] ?>"<?= ($value['Navbar']['open_new_tab']) ? ' target="_blank"' : '' ?>><?= $value['Navbar']['name'] ?></a>
                               </li>
                             <?php } else { ?>
                               <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?= $value['Navbar']['name'] ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
-                                <?php 
+                                <?php
                                 $submenu = json_decode($value['Navbar']['submenu']);
                                 foreach ($submenu as $k => $v) {
                                 ?>
-                                  <li><a href="<?= rawurldecode($v) ?>"><?= rawurldecode(str_replace('+', ' ', $k)) ?></a></li>
+                                  <li><a href="<?= rawurldecode($v) ?>"<?= ($value['Navbar']['open_new_tab']) ? ' target="_blank"' : '' ?>><?= rawurldecode(str_replace('+', ' ', $k)) ?></a></li>
                                 <?php } ?>
                                 </ul>
                               </li>
                             <?php } ?>
-                    <?php 
-                          $i++; 
-                        }  
+                    <?php
+                          $i++;
+                        }
                       } ?>
                     <li class="li-nav">
                         <div class="btn-group">
@@ -56,30 +56,30 @@ $this->EyPlugin = new EyPluginComponent;
                           </button>
                         <ul class="dropdown-menu" role="menu">
                           <?php if($isConnected) { ?>
-                            
+
                             <img class="img-rounded" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/', 'plugin' => false)) ?>/<?= $user['pseudo'] ?>/60" title="<?= $user['pseudo'] ?>">
 
                             <span class="info pull-right">
-                              <?php 
+                              <?php
                               echo $user['money'] . ' ';
                               if($user['money'] == 1 OR $user['money'] == 0) {
-                                echo  $this->Configuration->get_money_name(false, true); 
-                              } else { 
-                                echo  $this->Configuration->get_money_name(); 
+                                echo  $this->Configuration->get_money_name(false, true);
+                              } else {
+                                echo  $this->Configuration->get_money_name();
                               } ?>
                             </span>
                             <div class="clearfix"></div>
 
                             <li class="divider"></li>
-                            
+
                             <a class="btn btn-primary btn-block" href="<?= $this->Html->url(array('controller' => 'profile', 'action' => 'index', 'plugin' => null)) ?>"><?= $Lang->get('PROFILE') ?></a>
-                            
+
                             <?php if($Permissions->can('ACCESS_DASHBOARD')) { ?>
                               <a style="color:red;" class="btn btn-primary btn-block" href="<?= $this->Html->url(array('controller' => '', 'action' => 'index', 'plugin' => 'admin')) ?>"><?= $Lang->get('ADMIN_PANEL') ?></a>
                             <?php } elseif($this->EyPlugin->is_installed('Shop')) { ?>
                               <a class="btn btn-primary btn-block" href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'plugin' => 'shop')) ?>"><?= $Lang->get('ADD_MONEY') ?></a>
                             <?php } ?>
-                            
+
                             <a class="btn btn-primary btn-block" href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'logout', 'plugin' => null)) ?>"><?= $Lang->get('LOGOUT') ?></a>
                           <?php } else { ?>
                             <a class="btn btn-primary btn-block" href="#" data-toggle="modal" data-target="#login"><?= $Lang->get('LOGIN') ?></a>

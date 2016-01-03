@@ -74,6 +74,7 @@ CREATE TABLE IF NOT EXISTS `navbars` (
   `type` int(1) NOT NULL DEFAULT '1',
   `url` varchar(250) NOT NULL,
   `submenu` text,
+  `open_new_tab` int(1) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

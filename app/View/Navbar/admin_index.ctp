@@ -6,12 +6,12 @@
           <h3 class="box-title"><?= $Lang->get('NAVBAR') ?></h3>
         </div>
         <div class="box-body">
-        
+
           <a class="btn btn-large btn-block btn-primary" href="<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'add', 'admin' => true)) ?>"><?= $Lang->get('ADD_NAV') ?></a>
-          
+
           <hr>
 
-          
+
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -58,9 +58,12 @@ $(function() {
     axis: 'y',
     stop: function (event, ui) {
         $('#save').empty().html('<?= $Lang->get('ON_SAVE') ?>');
-        var data = $(this).sortable('serialize');
-        $('#yolo').text(data);
-        $.post("<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'save_ajax', 'admin' => true)) ?>", { data : data }, function(data) {
+        var inputs = {};
+        var nav = $(this).sortable('serialize');
+        inputs['nav'] = nav;
+        $('#yolo').text(nav);
+        inputs['data[_Token][key]'] = '<?= $csrfToken ?>';
+        $.post("<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'save_ajax', 'admin' => true)) ?>", inputs, function(data) {
           data2 = data.split("|");
           if(data.indexOf('true') != -1) {
                 $('#save').empty().html('<?= $Lang->get('NAV_SAVED') ?>');

@@ -10,7 +10,7 @@
             <input type="hidden" id="form_infos" data-ajax="false">
 
             <div class="ajax-msg"></div>
-      
+
             <div class="form-group">
               <label><?= $Lang->get('NAME') ?></label>
               <input name="name" class="form-control" type="text">
@@ -19,26 +19,22 @@
             <div class="form-group">
               <label><?= $Lang->get('TYPE') ?></label>
               <div class="radio">
-                <label>
-                  <input type="radio" id="normal" name="type" value="normal">
-                  <?= $Lang->get('NORMAL') ?>
-                </label>
-                <br>
-                <label>
-                  <input type="radio" id="dropdown" name="type" value="dropdown">
-                  <?= $Lang->get('DROPDOWN') ?>
-                </label>
+                <input type="radio" id="normal" name="type" value="normal">
+                <label><?= $Lang->get('NORMAL') ?></label>
+              </div>
+              <div class="radio">
+                <input type="radio" id="dropdown" name="type" value="dropdown">
+                <label><?= $Lang->get('DROPDOWN') ?></label>
               </div>
             </div>
-        
+
             <div id="type-normal" class="hidden">
               <div class="form-group">
                 <label><?= $Lang->get('URL') ?></label>
                 <div class="radio">
-                  <label>
-                    <input type="radio" class="type_plugin" name="url_type" value="plugin">
-                    <?= $Lang->get('PLUGIN') ?>
-                  </label>
+                  <input type="radio" class="type_plugin" name="url_type" value="plugin">
+                  <label><?= $Lang->get('PLUGIN') ?></label>
+                </div>
                   <div class="hidden plugin">
                     <select class="form-control" name="url_plugin">
                       <?php foreach ($url_plugins as $key => $value) { ?>
@@ -46,11 +42,10 @@
                         <?php } ?>
                     </select>
                   </div>
-                  <br>
-                  <label>
-                    <input type="radio" class="type_page" name="url_type" value="page">
-                    <?= $Lang->get('PAGE') ?>
-                  </label>
+                <div class="radio">
+                  <input type="radio" class="type_page" name="url_type" value="page">
+                  <label><?= $Lang->get('PAGE') ?></label>
+                </div>
                   <div class="hidden page">
                     <select class="form-control" name="url_page">
                         <?php foreach ($url_pages as $key => $value) { ?>
@@ -58,14 +53,14 @@
                         <?php } ?>
                     </select>
                   </div>
-                  <label class="radio">
-                    <input type="radio" class="type_custom" name="url_type" value="custom">
-                    <?= $Lang->get('CUSTOM') ?>
+                <div class="radio">
+                  <input type="radio" class="type_custom" name="url_type" value="custom">
+                  <label><?= $Lang->get('CUSTOM') ?></label>
+                </div>
                   </label>
                   <input type="text" class="form-control hidden custom" placeholder="<?= $Lang->get('YOUR_URL') ?>" name="url_custom">
                 </div>
               </div>
-            </div>
 
             <div id="type-dropdown" class="hidden">
               <div class="form-group">
@@ -86,11 +81,18 @@
               </div>
             </div>
 
+            <div class="form-group">
+              <div class="checkbox">
+                <input type="checkbox" name="new_tab">
+                <label><?= $Lang->get('NAV__OPEN_IN_NEW_TAB') ?></label>
+              </div>
+            </div>
+
             <div class="pull-right">
-              <a href="<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'admin_index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>  
+              <a href="<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'admin_index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
               <button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
             </div>
-          </form>      
+          </form>
         </div>
       </div>
     </div>
@@ -158,7 +160,7 @@
 </script>
 <script type="text/javascript">
   $("#nav_add").submit(function( event ) {
-    
+
     $('.ajax-msg').html('<div class="alert alert-info"><a class="close" data-dismiss="alert">×</a><?= $Lang->get('LOADING') ?> ...</div>').fadeIn(500);
 
     var $form = $( this );
@@ -185,7 +187,7 @@
     var url = {};
     var test = "success"
     for (var key in test = names)
-    { 
+    {
       var l = test[key].split('=');
       l = l[1];
       console.log(l);
@@ -195,7 +197,17 @@
     }
     console.log(url);
   }
-    $.post("<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'add_ajax', 'admin' => true)) ?>", { name : name, type : type, url : url }, function(data) {
+
+  var inputs = {};
+  inputs['name'] = name;
+  inputs['type'] = type;
+  inputs['url'] = url;
+  inputs['open_new_tab'] = $('input[name="new_tab"]').is(':checked');
+  inputs['data[_Token][key]'] = '<?= $csrfToken ?>';
+
+  console.log(inputs);
+
+    $.post("<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'add_ajax', 'admin' => true)) ?>", inputs, function(data) {
         data2 = data.split("|");
     if(data.indexOf('true') != -1) {
           $('.ajax-msg').empty().html('<div class="alert alert-success" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
