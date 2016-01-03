@@ -94,7 +94,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
     $secure = file_get_contents(ROOT.'/config/secure');
     $secure = json_decode($secure, true);
 
-		if($last_check < time() || $last_check_domain != Router::url('/', true)) { // si le domain a changé entre temps
+		if($last_check < time() || $last_check_domain != Router::url('/', true)) { // si le domain a changé entre temps
 			$plugins = $this->EyPlugin->loadPlugins();
 
 			$url = 'http://mineweb.org/api/v1/key_verif';

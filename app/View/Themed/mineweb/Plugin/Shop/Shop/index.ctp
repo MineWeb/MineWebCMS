@@ -6,7 +6,7 @@
     		<div class="ribbon-stitches-top"></div>
     		<div class="ribbon-content"><p>
     			<?php if($isConnected) { ?>
-    				<span class="pull-left hidden-xs"><?= $Lang->get('HAVE_CURRENTLY') ?> : <span class="info"><?= $money ?></span></span> 
+    				<span class="pull-left hidden-xs"><?= $Lang->get('HAVE_CURRENTLY') ?> : <span class="info"><?= $money ?></span></span>
     			<?php } else { ?>
 				    <span class="text-center"><?= $Lang->get('NEED_CONNECT_FOR_BUY') ?></span>
     			<?php } ?>
@@ -30,11 +30,11 @@
 				  	<?php $i = 0; foreach ($search_categories as $k => $v) { $i++; ?>
 
 						<div role="tabpanel" class="tab-pane<?php if($i == 1) { echo ' active'; } ?>" id="<?= $v['Category']['id'] ?>">
-							
+
 							<?php foreach ($search_items as $key => $value) { ?>
 
 								<?php if($value['Item']['category'] == $v['Category']['id']) { ?>
-										
+
 									<div class="col-sm-3 col-lg-3 col-md-3">
                     <div class="thumbnail">
                     	<h4><?= before_display($value['Item']['name']) ?></h4>
@@ -52,7 +52,7 @@
 							<?php } ?>
 
 						</div>
-                    
+
                     <?php } ?>
 
 					<div class="clearfix"></div>
@@ -126,7 +126,7 @@
         <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('ADD_MONEY') ?></h4>
       </div>
       <div class="modal-body">
-    
+
         <?php if($isConnected AND $Permissions->can('CREDIT_ACCOUNT')) { ?>
           <?php if(!empty($starpass_offers)) { ?>
               <a class="btn btn-info btn-block" data-toggle="collapse" href="#starpass" aria-expanded="false" aria-controls="starpass">StarPass</a>
@@ -149,18 +149,18 @@
             <a class="btn btn-info btn-block" data-toggle="collapse" href="#PayPal" aria-expanded="false" aria-controls="PayPal">PayPal</a>
             <br>
             <div class="collapse" id="PayPal">
-                
+
                 <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
                   <input name="currency_code" type="hidden" value="EUR" />
                   <input name="shipping" type="hidden" value="0.00" />
                   <input name="tax" type="hidden" value="0.00" />
-                  <input name="return" type="hidden" value="<?= "http://".$_SERVER['HTTP_HOST'].$this->Html->url(array('controller' => 'shop', 'action' => 'ipn')) ?>" />
-                  <input name="cancel_return" type="hidden" value="<?= "http://".$_SERVER['HTTP_HOST'].$this->Html->url(array('controller' => 'shop', 'action' => 'index?error')) ?>" />
-                  <input name="notify_url" type="hidden" value="<?= "http://".$_SERVER['HTTP_HOST'].$this->Html->url(array('controller' => 'shop', 'action' => 'ipn')) ?>" />
+                  <input name="return" type="hidden" value="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'ipn'), true) ?>" />
+                  <input name="cancel_return" type="hidden" value="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index?error'), true) ?>" />
+                  <input name="notify_url" type="hidden" value="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'ipn'), true) ?>" />
                   <input name="cmd" type="hidden" value="_xclick" />
-                  
+
                   <input name="business" id="mail_paypal" type="hidden" value="<?= $paypal_offers[0]['Paypal']['email'] ?>" />
-                  
+
                   <input name="item_name" type="hidden" value="Des <?= $plural_money ?> sur <?= $website_name ?>" />
                   <input name="no_note" type="hidden" value="1" />
                   <input name="lc" type="hidden" value="FR" />
@@ -169,7 +169,7 @@
                   <div class="form-group col-md-8">
                     <select class="form-control" onchange="{if(this.options[this.selectedIndex].onclick != null){this.options[this.selectedIndex].onclick(this);}}" name="amount" id="amount">
                       <?php foreach ($paypal_offers as $key => $value) { ?>
-                        <option onClick="$('#mail_paypal').val('<?= $value['Paypal']['email'] ?>')" value="<?= $value['Paypal']['price'] ?>"><?= $value['Paypal']['money'] ?> <?= $plural_money ?></option>
+                        <option onClick="$('#mail_paypal').val('<?= $value['Paypal']['email'] ?>')" value="<?= $value['Paypal']['price'] ?>"><?= (isset(explode('.', $value['Paypal']['money'])[1]) && explode('.', $value['Paypal']['money'])[1] == '00') ? explode('.', $value['Paypal']['money'])[0] : $value['Paypal']['money'] ?> <?= $plural_money ?></option>
                       <?php } ?>
                     </select>
                   </div>

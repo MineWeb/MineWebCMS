@@ -4,10 +4,10 @@
     <div class="col-md-3">
       <p class="lead"><?= ($isConnected) ? $money : $Lang->get('SHOP'); ?></p>
         <div class="list-group">
-            <?php 
-            $i = 0; 
-            foreach ($search_categories as $k => $v) { 
-              $i++; 
+            <?php
+            $i = 0;
+            foreach ($search_categories as $k => $v) {
+              $i++;
             ?>
                 <a href="<?= $this->Html->url(array('controller' => 'c/'.$v['Category']['id'], 'plugin' => 'shop')) ?>" class="list-group-item<?= (isset($category) AND $v['Category']['id'] == $category OR !isset($category) AND $i == 1) ? ' active' : ''; ?>"><?= before_display($v['Category']['name']) ?></a>
             <?php } ?>
@@ -19,7 +19,7 @@
       <div class="col-md-9">
         <div class="row">
           <?= $vouchers->get_vouchers() // Les promotions en cours ?>
-            
+
           <?php foreach ($search_items as $k => $v) { ?>
               <?php if(!isset($category) AND $v['Item']['category'] == $search_first_category OR isset($category) AND $v['Item']['category'] == $category) { ?>
                   <div class="col-sm-4 col-lg-4 col-md-4">
@@ -124,18 +124,17 @@
           <a class="btn btn-info btn-block" data-toggle="collapse" href="#PayPal" aria-expanded="false" aria-controls="PayPal">PayPal</a>
           <br>
           <div class="collapse" id="PayPal">
-            
             <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
               <input name="currency_code" type="hidden" value="EUR" />
               <input name="shipping" type="hidden" value="0.00" />
               <input name="tax" type="hidden" value="0.00" />
-              <input name="return" type="hidden" value="<?= "http://".$_SERVER['HTTP_HOST'].$this->Html->url(array('controller' => 'shop', 'action' => 'ipn')) ?>" />
-              <input name="cancel_return" type="hidden" value="<?= "http://".$_SERVER['HTTP_HOST'].$this->Html->url(array('controller' => 'shop', 'action' => 'index?error')) ?>" />
-              <input name="notify_url" type="hidden" value="<?= "http://".$_SERVER['HTTP_HOST'].$this->Html->url(array('controller' => 'shop', 'action' => 'ipn')) ?>" />
+              <input name="return" type="hidden" value="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'ipn'), true) ?>" />
+              <input name="cancel_return" type="hidden" value="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index?error'), true) ?>" />
+              <input name="notify_url" type="hidden" value="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'ipn'), true) ?>" />
               <input name="cmd" type="hidden" value="_xclick" />
-              
+
               <input name="business" id="mail_paypal" type="hidden" value="<?= $paypal_offers[0]['Paypal']['email'] ?>" />
-              
+
               <input name="item_name" type="hidden" value="Des <?= $plural_money ?> sur <?= $website_name ?>" />
               <input name="no_note" type="hidden" value="1" />
               <input name="lc" type="hidden" value="FR" />
@@ -144,7 +143,7 @@
               <div class="form-group col-md-8">
                 <select class="form-control" onchange="{if(this.options[this.selectedIndex].onclick != null){this.options[this.selectedIndex].onclick(this);}}" name="amount" id="amount">
                   <?php foreach ($paypal_offers as $key => $value) { ?>
-                    <option onClick="$('#mail_paypal').val('<?= $value['Paypal']['email'] ?>')" value="<?= $value['Paypal']['price'] ?>"><?= $value['Paypal']['money'] ?> <?= $plural_money ?></option>
+                    <option onClick="$('#mail_paypal').val('<?= $value['Paypal']['email'] ?>')" value="<?= $value['Paypal']['price'] ?>"><?= (isset(explode('.', $value['Paypal']['money'])[1]) && explode('.', $value['Paypal']['money'])[1] == '00') ? explode('.', $value['Paypal']['money'])[0] : $value['Paypal']['money'] ?> <?= $plural_money ?></option>
                   <?php } ?>
                 </select>
               </div>
