@@ -72,7 +72,7 @@ class ConfigurationController extends AppController {
 				$this->Session->setFlash($this->Lang->get('EDIT_CONFIGURATION_SUCCESS'), 'default.success');
 			}
 
-			$config = $this->Configuration->get_all()['Configuration'];
+			$config = $this->Configuration->get_all(true)['Configuration'];
 			$this->loadModel('Server');
 			$config['banner_server'] = unserialize($config['banner_server']);
 			if(!empty($config['banner_server'])) {

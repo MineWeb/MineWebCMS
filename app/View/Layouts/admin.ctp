@@ -81,7 +81,7 @@ $this->EyPlugin = new EyPluginComponent;
             <li class="treeview">
               <a href="#">
                 <i class="fa fa-files-o"></i>
-                <span><?= $Lang->get('CONFIGURATION') ?></span> <i class="fa fa-angle-left pull-right"></i>
+                <span><?= $Lang->get('PERSONALISATION') ?></span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
                 <li><a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('NEWS') ?></a></li>

@@ -51,8 +51,8 @@ class ConfigurationComponent extends Object {
     /*function initialize(&$controller) {}*/
     function startup(&$controller) {}
 
-    public function get_all() {
-      if(empty(self::$data)) {
+    public function get_all($forced = false) {
+      if(empty(self::$data) || $forced) {
         self::$data = ClassRegistry::init('Configuration')->find('first');
       }
       return self::$data;

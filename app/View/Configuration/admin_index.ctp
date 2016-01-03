@@ -267,6 +267,30 @@
               <div class="tab-pane" id="tab_3">
 
                 <div class="form-group">
+                  <label><?= $Lang->get('CONFIG__KEY_GOOGLE_ANALYTICS') ?></label>
+                    <?= $this->Form->input(false, array(
+                      'div' => false,
+                      'type' => 'text',
+                      'name' => 'google_analytics',
+                      'class' => 'form-control',
+                      'value' => $config['google_analytics'],
+                      'maxlength' => '15'
+                    )); ?>
+                </div>
+
+                <div class="form-group">
+                  <label><?= $Lang->get('CONFIG__KEY_END_LAYOUT_COE') ?></label>
+                    <?= $this->Form->textarea(false, array(
+                      'div' => false,
+                      'rows' => '5',
+                      'type' => 'text',
+                      'name' => 'end_layout_code',
+                      'class' => 'form-control',
+                      'value' => $config['end_layout_code']
+                    )); ?>
+                </div>
+
+                <div class="form-group">
                   <label><?= $Lang->get('CONFIG__KEY_MINEGUARD') ?></label>
                   <div class="radio">
                     <input type="radio" name="mineguard" value="true" <?= ($config['mineguard'] == 'true') ? 'checked=""' : '' ?>>
