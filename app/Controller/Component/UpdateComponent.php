@@ -170,13 +170,13 @@ WCqkx22behAGZq6rhwIDAQAB
 						include 'modify.php';
 						unlink('modify.php');
 						$this->set_log('EXECUTE', 'success', $thisFileName, $rand);
-					} elseif($thisFileName != ".DS_Store" AND $thisFileName != "app/Config/database.php" AND $thisFileName != "config/secure") {
+					} elseif($thisFileName != ".DS_Store" AND $thisFileName != "app/Config/database.php" AND $thisFileName != "config/secure" AND stristr($thisFileName, "lang/") === FALSE) {
 						if(file_exists(ROOT.'/'.$thisFileName)) {
 							$exist = true;
 						} else {
 							$exist = false;
 						}
-						if(strstr($thisFileName, '__MACOSX') === false AND strstr($thisFileName, '.DS_Store') === false) {
+						if(strstr($thisFileName, '__MACOSX') === false AND strstr($thisFileName, '.DS_Store') === false AND strstr($thisFileName, 'config.json') === false) {
 							$aF_time = $zipTmp->statname($thisFileName)["mtime"];
 							$last_time = @filemtime(ROOT.'/'.$thisFileName);
 							$filezip_size = zip_entry_filesize($aF);
@@ -196,6 +196,13 @@ WCqkx22behAGZq6rhwIDAQAB
 								}
 							}
 						}
+					} elseif(stristr($thisFileName, "lang/") && json_decode($thisFileName)) {
+						App::import('Component', 'LangComponent');
+						$this->Lang = new LangComponent();
+
+						$this->Lang->update($contents, $thisFileName);
+
+						unset($contents);
 					}
 				}
 			}

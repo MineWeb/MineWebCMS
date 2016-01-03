@@ -134,6 +134,8 @@ class ConfigurationController extends AppController {
 				}
 			}
 
+			$this->Lang->lang = $this->Lang->getLang(); // on refresh les messages
+
 			$this->set('messages', $this->Lang->lang['messages']);
 			$this->set('title_for_layout', $this->Lang->get('LANG'));
 

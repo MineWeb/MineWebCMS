@@ -197,6 +197,23 @@ class LangComponent extends Object {
           $JSON['INFORMATIONS']['version'] = $this->lang['version'];
           $JSON['INFORMATIONS']['author'] = $this->lang['author'];
 
+          foreach ($messages as $key => $value) {
+            if($this->lang['messages'][$key] != $value) { // ca veut dire que on l'a update
+
+              if(file_exists(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang-'.$path.'.log.json')) {
+                $log = file_get_contents(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang-'.$path.'.log.json');
+                $log = json_decode($log, true);
+              } else {
+                $log['update'] = array();
+              }
+
+              $log['update'][$key] = date('Y-m-d H:i:s');
+
+              file_put_contents(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang-'.$path.'.log.json', json_encode($log, JSON_PRETTY_PRINT));
+
+            }
+          }
+
           $JSON['MESSAGES'] = $messages;
 
     			$fp = fopen($this->langFolder.DS.$path.'.json',"w+");
@@ -214,6 +231,65 @@ class LangComponent extends Object {
           }
 
         }
+
+      }
+
+    }
+
+    /*
+    Update le fichier de langue
+    */
+
+    public function update($JSON, $file) {
+
+      if(!file_exists($file)) {
+
+        $fileRessource = fopen(ROOT.DS.$file, 'w');
+        fwrite($fileRessource, $JSON);
+        fclose($fileRessource);
+
+        return;
+
+      } else {
+
+        $fileContent = file_get_contents($filename);
+        $fileContent = json_decode($fileContent, true);
+
+        $newContent = $fileContent;
+
+        $updatedContent = json_decode($JSON, true);
+
+        $newContent['INFORMATIONS']['VERSION'] = $updatedContent['INFORMATIONS']['VERSION']; // on change la version
+
+        $path = end(explode('/', $file));
+        $path = explode('.', $path)[0];
+
+        foreach ($fileContent['MESSAGES'] as $key => $value) { // on parcours les messages pour éventuellement les mettre à jours
+
+          if(file_exists(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang-'.$path.'.log.json')) {
+            $log = file_get_contents(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang-'.$path.'.log.json');
+            $log = json_decode($log, true);
+          } else {
+            $log['update'] = array();
+          }
+
+          if(!isset($log['update'][$key])) { // si ca a pas était modifié par l'utilisateur
+            $newContent['MESSAGES'][$key] = $updatedContent['MESSAGES'][$key]; // on met le nouveau pour cette clé
+          }
+
+        }
+
+        foreach ($updatedContent['MESSAGES'] as $key => $value) { // on parcours les nouveaux messages pour eventuellement en ajouter
+          if(!isset($fileContent['MESSAGES'][$key])) {
+            $newContent['MESSAGES'][$key] = $value;
+          }
+        }
+
+        $fileRessource = fopen(ROOT.DS.$file, 'w');
+        fwrite($fileRessource, json_encode($newContent));
+        fclose($fileRessource);
+
+        return;
 
       }
 
