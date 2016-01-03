@@ -59,7 +59,7 @@
             <li class="col-md-4 animated fadeInUp">
                 <div>
                     <h2><?= cut($v['News']['title'], 13) ?></h2>
-                    <p><?= cut($v['News']['content'], 170) ?></p>
+                    <div><p><?= cut($v['News']['content'], 170) ?></p></div>
                     <div class="btn-like">
                         <p><?= $v['News']['like'] ?> <i class="fa fa-thumbs-up"></i></p>
                     </div>
