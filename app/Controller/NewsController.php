@@ -77,6 +77,66 @@ class NewsController extends AppController {
 		$this->set(compact('search_news', 'can_like'));
 	}
 
+	function api() {
+
+		$this->autoRender = false;
+
+		$search_news = $this->News->find('all', array('order' => array('id DESC'), 'conditions' => array('published' => 1)));
+
+		foreach ($search_news as $key => $value) { // on ajoute le lien
+			$search_news[$key]['News']['link'] = Router::url('/blog/'.$value['News']['slug'], true);
+		}
+
+		// Je met tout les commentaires à chaque news
+		$this->loadModel('Comment');
+		$comments = $this->Comment->find('all');
+
+		foreach ($comments as $key => $value) {
+
+			foreach ($search_news as $k => $v) {
+
+				if($value['Comment']['news_id'] == $v['News']['id']) {
+
+					$search_news[$k]['News']['comments'] = $value['Comment'];
+
+					break;
+				}
+
+			}
+
+		}
+
+		foreach ($search_news as $key => $value) { // on ajoute les count
+			$search_news[$key]['News']['comments_count'] = count($search_news[$key]['News']['comments']);
+		}
+
+		// Je met tout les likes à chaque news
+		$this->loadModel('Like');
+		$comments = $this->Like->find('all');
+
+		foreach ($comments as $key => $value) {
+
+			foreach ($search_news as $k => $v) {
+
+				if($value['Like']['news_id'] == $v['News']['id']) {
+
+					$search_news[$k]['News']['likes'][] = $value['Like'];
+
+					break;
+				}
+
+			}
+
+		}
+
+		foreach ($search_news as $key => $value) { // on ajoute les count
+			$search_news[$key]['News']['likes_count'] = count($search_news[$key]['News']['likes']);
+			unset($search_news[$key]['News']['like']);
+		}
+
+		echo json_encode($search_news);
+	}
+
 	function index($slug) {
 		$this->layout= $this->Configuration->get_layout();
 
