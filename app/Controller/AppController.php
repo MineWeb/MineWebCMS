@@ -82,17 +82,22 @@ a74v71JjOJZznmWs9sC5DcrCoSgZTtJ+bHYijMmZcbZ7Pe/hFR/4SWsUU5UTG0Mh
 jP3lq81IDMx/Ui1ksQJBAO4hTKBstrDNlUPkUr0i/2Pb/edVSgZnJ9t3V94OAD+Z
 wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 -----END RSA PRIVATE KEY-----');
+    $last_check = unserialize($last_check);
+    $last_check_domain = $last_check['domain'];
+    $last_check = $last_check['time'];
 		if($last_check) {
 			$last_check = strtotime('+4 hours', $last_check);
 		} else {
 			$last_check = '0';
 		}
-		if($last_check < time()) {
+
+    $secure = file_get_contents(ROOT.'/config/secure');
+    $secure = json_decode($secure, true);
+
+		if($last_check < time() || $last_check_domain != Router::url('/', true)) { // si le domain a changé entre temps
 			$plugins = $this->EyPlugin->loadPlugins();
 
 			$url = 'http://mineweb.org/api/v1/key_verif';
-			$secure = file_get_contents(ROOT.'/config/secure');
-			$secure = json_decode($secure, true);
 			$postfields = array(
 				'id' => $secure['id'],
 		    'key' => $secure['key'],

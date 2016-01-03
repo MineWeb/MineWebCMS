@@ -6,7 +6,7 @@ class User extends AppModel {
 	private $userData;
 
 	public function validRegister($data) {
-		if(preg_match('`^([a-zA-Z0-9-_]{2,36})$`', $data['pseudo'])) {
+		if(preg_match('`^([a-zA-Z0-9-_]{2,16})$`', $data['pseudo'])) {
 			$data['password'] = password($data['password']);
 			$data['password_confirmation'] = password($data['password_confirmation']);
 			if($data['password'] == $data['password_confirmation']) {
