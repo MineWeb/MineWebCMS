@@ -374,12 +374,85 @@ class EyPluginComponent extends Object {
           }
         }
 
+        $this->updateDBSchema($slug); // pour supprimer les colonnes maintenant
+
         $PluginModel->delete($search['Plugin']['id']); // On supprime le plugin de la db
 
         clearDir($this->pluginsFolder.DS.$slug);
         CakePlugin::unload($slug); // On unload sur cake
         Cache::clear(false, '_cake_core_'); // On clear le cache
       }
+
+    }
+
+    private function updateDBSchema($slug) {
+      App::uses('CakeSchema', 'Model');
+      $this->Schema = new CakeSchema(array('name' => 'App', 'path' => ROOT.DS.'app'.DS.'Plugin'.DS.$slug.DS.'Schema', 'file' => 'schema.php', 'connection' => 'default', 'plugin' => null));
+
+      App::uses('SchemaShell', 'Console/Command');
+      $SchemaShell = new SchemaShell();
+
+      $db = ConnectionManager::getDataSource($this->Schema->connection);
+
+      $options = array(
+          'name' => $this->Schema->name,
+          'path' => $this->Schema->path,
+          'file' => $this->Schema->file,
+          'plugin' => null,
+          'connection' => $this->Schema->connection,
+      );
+      $Schema = $this->Schema->load($options);
+
+      $Old = $this->Schema->read($options);
+      $compare = $this->Schema->compare($Old, $Schema);
+
+      $contents = array();
+
+      // a la suppression d'un plugin - suppression des colonnes ajoutées par celui-ci
+      foreach ($compare as $table => $changes) {
+          if (!isset($compare[$table]['create'])) { // si c'est pas de la création
+
+              // on vérifie que ce soit le plugin dont on veux supprimer les modifications
+              if(isset($compare[$table]['drop'])) { // si ca concerne un drop de colonne
+
+                  foreach ($compare[$table]['drop'] as $column => $structure) {
+
+                      // si cela ne concerne pas notre plugin, on s'en fou
+                      if(explode('__', $column)[0] != $slug) {
+                          unset($compare[$table]['drop'][$column]);
+                      }
+                  }
+
+                  if(count($compare[$table]['drop']) <= 0) {
+                      unset($compare[$table]['drop']); // on supprime l'action si y'a plus rien à faire dessus
+                  }
+
+                  if(isset($compare[$table]['add'])) {
+                      unset($compare[$table]['add']); // on supprime l'action si y'a plus rien à faire dessus
+                  }
+
+                  if(count($compare[$table]) > 0) {
+                      $contents[$table] = $db->alterSchema(array($table => $compare[$table]), $table);
+                  }
+              }
+          }
+      }
+
+      $error = array();
+      if(!empty($contents)) {
+          foreach ($contents as $table => $query) {
+              if(!empty($query)) {
+                  try {
+                      $db->execute($query);
+                  } catch (PDOException $e) {
+                      $error[] = $table . ': ' . $e->getMessage();
+                      $this->log('MYSQL Schema update for "'.$slug.'" plugin (delete) : '.$e->getMessage());
+                  }
+              }
+          }
+      }
+
+      return (empty($error)) ? array('status' => true) : array('status' => false, 'error' => $error);
 
     }
 
@@ -457,11 +530,18 @@ WCqkx22behAGZq6rhwIDAQAB
         if($this->requirements($slug)) { // Si tout les pré-requis sont réunis pour le plugins
 
           // On peux l'installer du coup
-            $this->addTables($slug); // On ajoute les tables
+            $addTables = $this->addTables($slug); // On ajoute les tables
+
+            if($addTables['status']) {
+              $tablesName = $addTables['tables'];
+            } else {
+              $LangComponent = new LangComponent();
+              SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_SQL_INSTALLATION'), 'default.error');
+              return false;
+            }
 
             // On récupére la configuration & les noms des tables ajoutées
             $config = json_decode(file_get_contents($this->pluginsFolder.DS.$slug.DS.'config.json'));
-            $tablesName = json_decode(file_get_contents($this->pluginsFolder.DS.$slug.DS.'SQL/tables.json'), true)['list']; // on décode le JSON et on prend l'array dans list
 
             // On ajoute les permissions
             $this->addPermissions($config->permissions); // On ajoute les permissions
@@ -536,13 +616,25 @@ WCqkx22behAGZq6rhwIDAQAB
             $pluginConfig = json_decode(file_get_contents($this->pluginsFolder.DS.$slug.DS.'config.json'), true);
 
             $pluginVersion = $pluginConfig['version']; // récupére la nouvelle version
-            $pluginTables = json_decode(file_get_contents($this->pluginsFolder.DS.$slug.DS.'SQL/tables.json'), true)['list']; // on décode le JSON et on prend l'array dans list
 
             // On récupére le modal
             $PluginModel = ClassRegistry::init('Plugins');
 
             // On récup l'ID du plugin
-            $pluginDBID = $PluginModel->find('first', array('name' => $slug))['Plugin']['id'];
+            $searchPlugin = $PluginModel->find('first', array('name' => $slug))['Plugin'];
+            $$pluginDBID = $searchPlugin['id'];
+
+            // Etape base de données
+            $addTables = $this->addTables($slug); // On ajoute les tables
+
+            if($addTables['status']) {
+              $pluginTables = unserialize($searchPlugin['tables']);
+              $pluginTables = $addTables['tables']; // on ajoute si y'en a en plus
+            } else {
+              $LangComponent = new LangComponent();
+              SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_SQL_INSTALLATION'), 'default.error');
+              return false;
+            }
 
             // On update dans la base de donnée
             $PluginModel->read(null, $pluginDBID);
@@ -577,24 +669,90 @@ WCqkx22behAGZq6rhwIDAQAB
 
   // Ajouter les tables des plugins
 
-    private function addTables($name) {
-      $tables = file_get_contents($this->pluginsFolder.DS.$name.DS.'SQL/tables.sql'); // On récupérer les tables
+    private function addTables($slug) {
 
-      if(!empty($tables)) { // Si le fichier n'est pas vide
+      App::uses('CakeSchema', 'Model');
+      $this->Schema = new CakeSchema(array('name' => 'App', 'path' => ROOT.DS.'app'.DS.'Plugin'.DS.$slug.DS.'Schema', 'file' => 'schema.php', 'connection' => 'default', 'plugin' => null));
 
-        $tables = explode("\n\n", $tables); // On split toutes les requêtes
+      App::uses('SchemaShell', 'Console/Command');
+      $SchemaShell = new SchemaShell();
 
-        App::import('Model', 'ConnectionManager');
-        $con = new ConnectionManager;             // On récupére la bdd principale
-        $cn = $con->getDataSource('default');
+      $db = ConnectionManager::getDataSource($this->Schema->connection);
 
-        foreach ($tables as $do) { // On parcours les requêtes à faire
-          if(!empty($do)) {
-            $cn->query($do); // On les fais
+      $options = array(
+          'name' => $this->Schema->name,
+          'path' => $this->Schema->path,
+          'file' => $this->Schema->file,
+          'plugin' => null,
+          'connection' => $this->Schema->connection,
+      );
+      $Schema = $this->Schema->load($options);
+
+      $Old = $this->Schema->read($options);
+      $compare = $this->Schema->compare($Old, $Schema);
+
+      $contents = array();
+
+      // Ajout des colones
+
+      foreach ($compare as $table => $changes) {
+          if (!isset($compare[$table]['create'])) { // si c'est pas de la création
+
+              // on vérifie que ce soit le plugin dont on veux supprimer les modifications
+              if(isset($compare[$table]['add'])) { // si ca concerne un ajout de colonne
+
+                  foreach ($compare[$table]['add'] as $column => $structure) {
+
+                      // si cela ne concerne pas notre plugin, on s'en fou
+                      if(explode('__', $column)[0] != $slug) {
+                          unset($compare[$table]['add'][$column]);
+                      }
+                  }
+
+                  if(count($compare[$table]['add']) <= 0) {
+                      unset($compare[$table]['add']); // on supprime l'action si y'a plus rien à faire dessus
+                  }
+
+                  if(isset($compare[$table]['drop'])) {
+                      unset($compare[$table]['drop']); // on supprime l'action si y'a plus rien à faire dessus
+                  }
+
+                  if(count($compare[$table]) > 0) {
+                      $contents[$table] = $db->alterSchema(array($table => $compare[$table]), $table);
+                  }
+              }
           }
-        }
-
       }
+
+      // Ajout des tables
+
+      foreach ($compare as $table => $changes) {
+          if (isset($compare[$table]['create'])) {
+              $contents[$table] = $db->createSchema($Schema, $table);
+
+              // on enregistre les tables ajoutés par le plugin pour les supprimer plus tard
+              $pluginTables[] = $table;
+          }
+      }
+
+      // on execute le bordel
+
+      $error = array();
+      if(!empty($contents)) {
+          foreach ($contents as $table => $query) {
+              if(!empty($query)) {
+                  try {
+                      $db->execute($query);
+                  } catch (PDOException $e) {
+                      $error[] = $table . ': ' . $e->getMessage();
+                      $this->log('MYSQL Schema update for "'.$slug.'" plugin (install) : '.$e->getMessage());
+                  }
+              }
+          }
+      }
+
+      return (empty($error)) ? array('status' => true, 'tables' => $pluginTables) : array('status' => false, 'error' => $error);
+
     }
 
   // Fonctions de recherche parmis les plugins chargés

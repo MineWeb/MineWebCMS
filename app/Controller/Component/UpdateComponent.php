@@ -207,6 +207,7 @@ WCqkx22behAGZq6rhwIDAQAB
 			if($this->end_log($rand)) {
 				@unlink(ROOT.'/temp/'.$version.'.zip');
 				@unlink(ROOT.'/config/update');
+				$this->updateDb();
 				return true;
 			} else {
 				return false;
@@ -214,6 +215,74 @@ WCqkx22behAGZq6rhwIDAQAB
 		} else {
 			$this->set_log('GET_FILES', 'error', 'CANT_WRITE_IN_TEMP', $rand);
 		}
+	}
+
+	public function updateDb() {
+		App::uses('CakeSchema', 'Model');
+    $this->Schema = new CakeSchema(array('name' => 'App', 'path' => ROOT.DS.'app'.DS.'Config'.DS.'Schema', 'file' => 'schema.php', 'connection' => 'default', 'plugin' => null));
+
+    App::uses('SchemaShell', 'Console/Command');
+    $SchemaShell = new SchemaShell();
+
+    $db = ConnectionManager::getDataSource($this->Schema->connection);
+
+    $options = array(
+        'name' => $this->Schema->name,
+        'path' => $this->Schema->path,
+        'file' => $this->Schema->file,
+        'plugin' => null,
+        'connection' => $this->Schema->connection,
+    );
+    $Schema = $this->Schema->load($options);
+
+    $Old = $this->Schema->read($options);
+    $compare = $this->Schema->compare($Old, $Schema);
+
+    $contents = array();
+
+    foreach ($compare as $table => $changes) {
+        if (isset($compare[$table]['create'])) {
+            $contents[$table] = $db->createSchema($Schema, $table);
+        } else {
+
+            // on vérifie que ce soit pas un plugin (pour ne pas supprimer ses modifications sur la tables lors d'une MISE A JOUR)
+            if(isset($compare[$table]['drop'])) { // si ca concerne un drop de colonne
+
+                foreach ($compare[$table]['drop'] as $column => $structure) {
+
+                    // vérifions que cela ne correspond pas à une colonne de plugin
+                    if(count(explode('__', $column)) > 1) {
+                        unset($compare[$table]['drop'][$column]);
+                    }
+                }
+
+            }
+
+            if(isset($compare[$table]['drop']) && count($compare[$table]['drop']) <= 0) {
+                unset($compare[$table]['drop']); // on supprime l'action si y'a plus rien à faire dessus
+            }
+
+            if(count($compare[$table]) > 0) {
+                $contents[$table] = $db->alterSchema(array($table => $compare[$table]), $table);
+            }
+        }
+    }
+
+		$error = array();
+		if(!empty($contents)) {
+				foreach ($contents as $table => $query) {
+						if(!empty($query)) {
+								try {
+										$db->execute($query);
+								} catch (PDOException $e) {
+										$error[] = $table . ': ' . $e->getMessage();
+										$this->log('MYSQL Schema Update : '.$e->getMessage());
+								}
+						}
+				}
+		}
+
+		return (empty($error)) ? true : false;
 	}
 
 	public function plugin($zip, $plugin_name, $plugin_id) {
