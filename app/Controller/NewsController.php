@@ -84,7 +84,7 @@ class NewsController extends AppController {
 		$search_news = $this->News->find('all', array('order' => array('id DESC'), 'conditions' => array('published' => 1)));
 
 		foreach ($search_news as $key => $value) { // on ajoute le lien
-			$search_news[$key]['News']['link'] = Router::url('/blog/'.$value['News']['slug'], true);
+			$search_news[$key]['News']['absolute_url'] = Router::url('/blog/'.$value['News']['slug'], true);
 		}
 
 		// Je met tout les commentaires à chaque news

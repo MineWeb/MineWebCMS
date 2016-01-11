@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
 	// Captcha reload
-        
+
  	$('#reload').click(function() {
         var captcha = $("#captcha_image");
         captcha.attr('src', captcha.attr('src')+'?'+Math.random());
@@ -13,7 +13,7 @@ $(document).ready(function(){
 	    $('.carousel').carousel({
 	        interval: 5000 //changer la vitesse
 	    })
-	        
+
 	    //Events that reset and restart the timer animation when the slides change
 	    $("#myCarousel").on("slide.bs.carousel", function(event) {
 	        //The animate class gets removed so that it jumps straight back to 0%
@@ -24,10 +24,10 @@ $(document).ready(function(){
 	            $(".transition-timer-carousel-progress-bar", this).addClass("animate").css("width", "100%");
 	    });
 	}
-        
+
     //Kick off the initial slide animation when the document is ready
     $(".transition-timer-carousel-progress-bar", "#myCarousel").css("width", "100%");
-            
+
     // Home news
     if($('ul#items').length > 0) {
 	    $('ul#items').easyPaginate({
@@ -35,7 +35,7 @@ $(document).ready(function(){
 	    });
 	}
 
-	// Like des news 
+	// Like des news
 	$(".like").click(function() {
   	if($(this).hasClass("active")) {
     	$(this).removeClass("active");
@@ -104,7 +104,7 @@ $(document).ready(function(){
 
       var i = 0;
       for (var key in args = array)
-      { 
+      {
         input = args[i];
         input = input.split('=');
         input_name = decodeURI(input[0]);
@@ -130,11 +130,11 @@ $(document).ready(function(){
         } else if(form.find('select[name="'+input_name+'"]').val() !== undefined) {
           inputs[input_name] = form.find('select[name="'+input_name+'"]').val();
         }
-        
+
         i++;
       }
 
-      // CSRF 
+      // CSRF
       inputs["data[_Token][key]"] = CSRF_TOKEN;
 
       //
@@ -180,7 +180,7 @@ $(document).ready(function(){
     });
   });
 
-  // Autotab 
+  // Autotab
 
   $('body').find('input[maxlength]').each(function(e) {
     var all_inputs = $('body').find('input[maxlength]');
@@ -192,6 +192,4 @@ $(document).ready(function(){
       }
     })
   });
-            
-
 });

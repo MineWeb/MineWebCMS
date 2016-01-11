@@ -6,7 +6,7 @@ class SliderController extends AppController {
 
 	public function admin_index() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_SLIDER')) {
-			 
+
 			$this->set('title_for_layout',$this->Lang->get('ADD_SLIDER'));
 			$this->layout = 'admin';
 			$this->loadModel('Slider');
@@ -20,7 +20,7 @@ class SliderController extends AppController {
 	public function admin_delete($id = false) {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_SLIDER')) {
 			if($id != false) {
-				 
+
 				$this->layout = null;
 				$this->loadModel('Slider');
 				$find = $this->Slider->find('all', array('conditions' => array('id' => $id)));
@@ -44,7 +44,7 @@ class SliderController extends AppController {
 	public function admin_edit($id = false) {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_SLIDER')) {
 			$this->layout = 'admin';
-			 
+
 			if($id != false) {
 				$this->loadModel('Slider');
 				$search = $this->Slider->find('all', array('conditions' => array('id' => $id)));
@@ -66,7 +66,7 @@ class SliderController extends AppController {
 	public function admin_edit_ajax() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_SLIDER')) {
 			$this->layout = null;
-			 
+
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['title']) AND !empty($this->request->data['subtitle']) AND !empty($this->request->data['url_img']) AND !empty($this->request->data['id'])) {
 					$this->loadModel('Slider');
@@ -94,7 +94,7 @@ class SliderController extends AppController {
 	public function admin_add() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_SLIDER')) {
 			$this->layout = 'admin';
-			 
+
 			$this->set('title_for_layout', $this->Lang->get('ADD_SLIDER'));
 		} else {
 			$this->redirect('/');
@@ -104,15 +104,35 @@ class SliderController extends AppController {
 	public function admin_add_ajax() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_SLIDER')) {
 			$this->layout = null;
-			 
+
 			if($this->request->is('post')) {
-				if(!empty($this->request->data['title']) AND !empty($this->request->data['subtitle']) AND !empty($this->request->data['url_img'])) {
+
+				if(!empty($this->request->data['title']) AND !empty($this->request->data['subtitle'])) {
+
+					$isValidImg = $this->Util->isValidImage($this->request, array('png', 'jpg', 'jpeg'));
+
+					if(!$isValidImg['status']) {
+						echo $isValidImg['msg'].'|false';
+						exit;
+					} else {
+						$infos = $isValidImg['infos'];
+					}
+
+					$url_img = WWW_ROOT.'img'.DS.'uploads'.DS.'slider'.DS.date('Y-m-d_His').'.'.$infos['extension'];
+
+					if(!$this->Util->uploadImage($this->request, $url_img)) {
+						echo $this->Lang->get('FORM__ERROR_WHEN_UPLOAD').'|false';
+						exit;
+					}
+
+					$url_img = Router::url('/').'img'.DS.'uploads'.DS.'slider'.DS.date('Y-m-d_His').'.'.$infos['extension'];
+
 					$this->loadModel('Slider');
 					$this->Slider->read(null, null);
 					$this->Slider->set(array(
 						'title' => $this->request->data['title'],
 						'subtitle' => $this->request->data['subtitle'],
-						'url_img' => $this->request->data['url_img']
+						'url_img' => $url_img
 					));
 					$this->Slider->save();
 					$this->History->set('ADD_SLIDER', 'slider');

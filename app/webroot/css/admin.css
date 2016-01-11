@@ -200,3 +200,26 @@ input[type="radio"] .styled:checked + label::before {
 input[type="checkbox"] .styled:checked + label::after,
 input[type="radio"] .styled:checked + label::after {
   color: #fff; }
+
+.btn-file {
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  background: red;
+  cursor: inherit;
+  display: block;
+}
+input[readonly] {
+  background-color: white !important;
+  cursor: text !important;
+}

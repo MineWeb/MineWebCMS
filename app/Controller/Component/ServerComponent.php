@@ -67,6 +67,9 @@ class ServerComponent extends Object {
 							if(isset($result['REQUEST']) && $result['REQUEST'] == "IP_NOT_ALLOWED") {
 								return array('status' => 'error', 'code' => '4', 'msg' => 'Request not allowed');
 							}
+							if(isset($result['REQUEST']) && $result['REQUEST'] == "NEED_PARAMATER_FOR_INSTALLATION") {
+								return array('status' => 'error', 'code' => '5dddd', 'msg' => 'Plugin not installed');
+							}
 	            return $result;
 	        } else {
 	        	return array('status' => 'error', 'code' => '3', 'msg' => 'Request timeout');
@@ -308,6 +311,8 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 						if(isset($search['status']) && $search['status'] == "error") {
 							return false;
 						}
+
+						var_dump($search);
 
             if($search['getPlayerCount'] == "null") {
                 $search['getPlayerCount'] = 0;

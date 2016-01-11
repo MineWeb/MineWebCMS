@@ -68,25 +68,39 @@
 	      i++;
 	    }
 
+
 			inputs["data[_Token][key]"] = '<?= $csrfToken ?>';
 
 	    //
 
-		$.post(form.attr('action'), inputs, function(data) {
-          	data2 = data.split("|");
-		  	if(data.indexOf('true') != -1) {
-          		form.find('.ajax-msg').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-          		if(form_infos.attr('data-redirect-url') !== undefined) {
-          			document.location.href=form_infos.attr('data-redirect-url');
-          		}
-          		form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
-          	} else if(data.indexOf('false') != -1) {
-            	form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-            	form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
-	        } else {
-		    	form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
-		    	form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
-		    }
-        });
+			if(form_infos.attr('data-upload-image') == "true") {
+				var contentType = false;
+				var processData = false;
+				inputs = (window.FormData) ? new FormData(form[0]) : null;
+			}
+
+			$.ajax({
+				url: form.attr('action'),
+				data: inputs,
+				method: 'post',
+				contentType: (contentType === undefined) ? 'application/x-www-form-urlencoded; charset=UTF-8' : contentType,
+				processData: (processData === undefined) ? 'application/x-www-form-urlencoded; charset=UTF-8' : processData,
+				success: function(data) {
+	        data2 = data.split("|");
+			  	if(data.indexOf('true') != -1) {
+	          		form.find('.ajax-msg').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+	          		if(form_infos.attr('data-redirect-url') !== undefined) {
+	          			document.location.href=form_infos.attr('data-redirect-url');
+	          		}
+	          		form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
+	          	} else if(data.indexOf('false') != -1) {
+	            	form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+	            	form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
+		        } else {
+			    	form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+			    	form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
+			    }
+      	}
+		});
 	});
 </script>

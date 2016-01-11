@@ -453,7 +453,8 @@ WCqkx22behAGZq6rhwIDAQAB
 			$this->autoRender = false;
 			if($this->request->is('ajax')) {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR_CSRF')));
-				exit();
+        var_dump($this->request);
+				//exit();
 			} else {
 				$this->Session->setFlash($this->Lang->get('ERROR_CSRF'), 'default.error');
 				$this->redirect($this->referer());
