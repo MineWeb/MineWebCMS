@@ -1,4 +1,4 @@
 <?php
-class VoteConfigurationModel extends VoteAppModel {
+class VoteConfiguration extends VoteAppModel {
   public $useTable = 'configurations';
 }

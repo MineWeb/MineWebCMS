@@ -785,7 +785,7 @@ WCqkx22behAGZq6rhwIDAQAB
       }
 
       $updateEntries = array();
-      if(file_exists($this->pluginsFolder.DS.$slug.DS.'Schema'.DS.'update-entries.php'))
+      if(file_exists($this->pluginsFolder.DS.$slug.DS.'Schema'.DS.'update-entries.php')) {
         include $this->pluginsFolder.DS.$slug.DS.'Schema'.DS.'update-entries.php';
       }
 

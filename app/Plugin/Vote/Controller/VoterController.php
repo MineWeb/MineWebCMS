@@ -4,7 +4,7 @@ class VoterController extends VoteAppController {
 	public $components = array('Configuration', 'Configuration');
 
     public function index() {
-        $this->loadModel('VoteConfiguration');
+        $this->loadModel('Vote.VoteConfiguration');
         $search = $this->VoteConfiguration->find('all');
         if(!empty($search)) {
 
@@ -28,7 +28,7 @@ class VoterController extends VoteAppController {
             if(!empty($this->request->data['website']) OR $this->request->data['website'] == 0) {
                 $this->Session->write('vote.website', $this->request->data['website']);
 
-                $this->loadModel('VoteConfiguration');
+                $this->loadModel('Vote.VoteConfiguration');
                 $config = $this->VoteConfiguration->find('first');
                 $websites = unserialize($config['VoteConfiguration']['websites']);
 
@@ -49,7 +49,7 @@ class VoterController extends VoteAppController {
             if(!empty($user_rank) && $this->Permissions->have($user_rank['User']['rank'], 'VOTE') == "true") {
                 if(!empty($this->request->data['pseudo'])) {
                     if($this->User->exist($this->request->data['pseudo'])) {
-                        $this->loadModel('Vote');
+                        $this->loadModel('Vote.Vote');
                         $get_last_vote = $this->Vote->find('first', array('conditions' => array('OR' => array('username' => $this->request->data['pseudo'], 'ip' => $_SERVER['REMOTE_ADDR']), 'website' => $this->Session->read('vote.website'))));
 
                         if(!empty($get_last_vote['Vote']['created'])) {
@@ -59,7 +59,7 @@ class VoterController extends VoteAppController {
                             $last_vote = null;
                         }
 
-                        $this->loadModel('VoteConfiguration');
+                        $this->loadModel('Vote.VoteConfiguration');
                         $config = $this->VoteConfiguration->find('first');
 
 
@@ -95,7 +95,7 @@ class VoterController extends VoteAppController {
         if($this->request->is('ajax')) {
             if(!empty($this->request->data['out']) && $this->Session->check('vote.website') && $this->Session->check('vote.pseudo')) {
 
-                $this->loadModel('VoteConfiguration');
+                $this->loadModel('Vote.VoteConfiguration');
                 $config = $this->VoteConfiguration->find('first');
                 $websites = unserialize($config['VoteConfiguration']['websites']);
                 $url = $websites[$this->Session->read('vote.website')]['page_vote'];
@@ -147,14 +147,14 @@ class VoterController extends VoteAppController {
         $this->autoRender = false;
         if($this->request->is('ajax')) {
             if($this->Session->check('vote.website') && $this->Session->check('vote.pseudo')) {
-                $this->loadModel('VoteConfiguration');
+                $this->loadModel('Vote.VoteConfiguration');
                 $config = $this->VoteConfiguration->find('first');
                 $websites = unserialize($config['VoteConfiguration']['websites']);
                 $website = $websites[$this->Session->read('vote.website')];
                 if($this->Session->check('vote.out') || $website['website_type'] == "other") {
 
                     // check si il a pas déjà voté sur ce site
-                    $this->loadModel('Vote');
+                    $this->loadModel('Vote.Vote');
                     $get_last_vote = $this->Vote->find('first', array('conditions' => array('OR' => array('username' => $this->Session->read('vote.pseudo'), 'ip' => $_SERVER['REMOTE_ADDR']), 'website' => $this->Session->read('vote.website'))));
 
                     if(!empty($get_last_vote['Vote']['created'])) {
@@ -164,7 +164,7 @@ class VoterController extends VoteAppController {
                         $last_vote = null;
                     }
 
-                    $this->loadModel('VoteConfiguration');
+                    $this->loadModel('Vote.VoteConfiguration');
                     $config = $this->VoteConfiguration->find('first');
                     $websites = unserialize($config['VoteConfiguration']['websites']);
                     if(isset($websites[$this->Session->read('vote.website')])) {
@@ -392,7 +392,7 @@ class VoterController extends VoteAppController {
     public function get_reward() {
         $this->autoRender = false;
         if($this->isConnected && $this->User->getKey('rewards_waited') > 0) {
-            $this->loadModel('VoteConfiguration');
+            $this->loadModel('Vote.VoteConfiguration');
             $config = $this->VoteConfiguration->find('first');
 
             // on lui donne ses récompenses
@@ -554,7 +554,7 @@ class VoterController extends VoteAppController {
         if($this->isConnected AND $this->User->isAdmin()) {
             $this->layout = "admin";
 
-            $this->loadModel('VoteConfiguration');
+            $this->loadModel('Vote.VoteConfiguration');
             $vote = $this->VoteConfiguration->find('first');
             if(!empty($vote)) {
                 $vote = $vote['VoteConfiguration'];
@@ -601,7 +601,7 @@ class VoterController extends VoteAppController {
         if($this->isConnected AND $this->User->isAdmin()) {
             $this->layout = null;
 
-            $this->loadModel('Vote');
+            $this->loadModel('Vote.Vote');
             $this->Vote->deleteAll(array('1' => '1'));
             $this->loadModel('User');
             $this->User->updateAll(array('vote' => 0));
@@ -618,7 +618,7 @@ class VoterController extends VoteAppController {
             if($this->request->is('post')) {
                 if(!empty($this->request->data['servers']) AND !empty($this->request->data['website'][0]['page_vote']) AND !empty($this->request->data['website'][0]['time_vote']) AND !empty($this->request->data['website'][0]['website_type']) AND $this->request->data['rewards_type'] == '0' OR $this->request->data['rewards_type'] == '1') {
                     if(!empty($this->request->data['rewards'][0]['name']) && $this->request->data['rewards'][0]['name'] != "undefined" && !empty($this->request->data['rewards'][0]['type']) && $this->request->data['rewards'][0]['type'] != "undefined") {
-                        $this->loadModel('VoteConfiguration');
+                        $this->loadModel('Vote.VoteConfiguration');
                         /*
                         REWARDS -> serialize();
 
