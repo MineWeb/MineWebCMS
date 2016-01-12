@@ -162,12 +162,9 @@ WCqkx22behAGZq6rhwIDAQAB
 					$updateThis = '';
 
 					if($thisFileName == 'modify.php') {
-						$upgradeExec = fopen('modify.php','w');
+						$upgradeExec = fopen(ROOT.DS.'modify.php','w');
 						fwrite($upgradeExec, $contents);
 						fclose($upgradeExec);
-						include 'modify.php';
-						unlink('modify.php');
-						$this->set_log('EXECUTE', 'success', $thisFileName, $rand);
 					} elseif($thisFileName != ".DS_Store" AND $thisFileName != "app/Config/database.php" AND $thisFileName != "config/secure" AND stristr($thisFileName, "lang/") === FALSE) {
 						if(file_exists(ROOT.'/'.$thisFileName)) {
 							$exist = true;
@@ -208,6 +205,20 @@ WCqkx22behAGZq6rhwIDAQAB
 				@unlink(ROOT.'/temp/'.$version.'.zip');
 				@unlink(ROOT.'/config/update');
 				$this->updateDb();
+
+				// au cas ou des modifications non pas pu être faites
+
+				if(file_exists(ROOT.DS.'modify.php')) {
+					// on l'inclue pour l'exec
+					try {
+						include(ROOT.DS.'modify.php');
+					} catch(Exception $e) {
+						// y'a eu une erreur
+						$this->log('Error on update (execute modify.php) - '.$e->getMessage());
+					}
+					unlink(ROOT.DS.'modify.php'); // on le supprime
+				}
+
 				return true;
 			} else {
 				return false;
@@ -281,6 +292,11 @@ WCqkx22behAGZq6rhwIDAQAB
 						}
 				}
 		}
+
+		$updateEntries = array();
+		include ROOT.DS.'Config'.DS.'Schema'.DS.'update-entries.php';
+
+		$this->Schema->after(array(), false, $updateEntries);
 
 		return (empty($error)) ? true : false;
 	}

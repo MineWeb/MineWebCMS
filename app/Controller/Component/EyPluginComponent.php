@@ -192,19 +192,19 @@ class EyPluginComponent extends Object {
 
           // Passons aux pré-requis des plugins.
             // Simple fichier
-            $neededFiles = array('Config/routes.php', 'Config/bootstrap.php', 'lang/fr_FR.json', 'lang/en_US.json', 'Controller', 'Controller/Component', 'Model', 'Model/Behavior', 'View', 'View/Helper', 'View', 'View/Layouts', 'config.json', 'SQL/tables.json', 'SQL/tables.json');
+            $neededFiles = array('Config/routes.php', 'Config/bootstrap.php', 'lang/fr_FR.json', 'lang/en_US.json', 'Controller', 'Controller/Component', 'Model', 'Model/Behavior', 'View', 'View/Helper', 'View', 'View/Layouts', 'config.json', 'SQL/schema.php');
             foreach ($neededFiles as $key => $value) {
               if(!file_exists($file.DS.$value)) { // si le fichier existe bien
-                $this->log('Plugin "'.$slug.'" not valid ! The file or folder "'.$file.DS.$value.'" doesn\'t exist ! Please verify documentation for more informations.');
+                $this->log('Plugin "'.$slug.'" not valid! The file or folder "'.$file.DS.$value.'" doesn\'t exist! Please verify documentation for more informations.');
                 return false; // on retourne false, le plugin est invalide et on log
               }
             }
 
             // Configuration valide (JSON)
-            $needToBeJSON = array('lang/fr_FR.json', 'lang/en_US.json', 'config.json', 'SQL/tables.json');
+            $needToBeJSON = array('lang/fr_FR.json', 'lang/en_US.json', 'config.json');
             foreach ($needToBeJSON as $key => $value) {
               if(json_decode(file_get_contents($file.DS.$value)) === false) { // si le JSON n'est pas valide
-                $this->log('Plugin "'.$slug.'" not valid ! The file "'.$file.DS.$value.'" is not at JSON format ! Please verify documentation for more informations.');
+                $this->log('Plugin "'.$slug.'" not valid! The file "'.$file.DS.$value.'" is not at JSON format! Please verify documentation for more informations.');
                 return false; // on retourne false, le plugin est invalide et on log
               }
             }
@@ -241,7 +241,7 @@ class EyPluginComponent extends Object {
                     $key = '["'.implode('"]["', $key).'"]';
                   }
 
-                  $this->log('File : '.$slug.' is not a valid plugin ! The config is not complete ! '.$key.' is not a good type ('.$value.' required).'); // la clé n'existe pas
+                  $this->log('File : '.$slug.' is not a valid plugin! The config is not complete! '.$key.' is not a good type ('.$value.' required).'); // la clé n'existe pas
                   return false; // c'est pas le type demandé donc on retourne false et on log
                 }
 
@@ -251,7 +251,7 @@ class EyPluginComponent extends Object {
                   $key = '["'.implode('"]["', $key).'"]';
                 }
 
-                $this->log('File : '.$slug.' is not a valid plugin ! The config is not complete ! '.$key.' is not defined.'); // la clé n'existe pas
+                $this->log('File : '.$slug.' is not a valid plugin! The config is not complete! '.$key.' is not defined.'); // la clé n'existe pas
                 return false;
               }
 
@@ -260,33 +260,66 @@ class EyPluginComponent extends Object {
             // Valider la version (qu'elle soit correcte pour les prochaines comparaison)
             $testVersion = explode('.', $config['version']);
             if(count($testVersion) < 3 && count($testVersion) > 4) { // On autorise que du type 1.0.0 ou 1.0.0.0
-              $this->log('File : '.$slug.' is not a valid plugin ! The version configured is not at good format !'); // la clé n'existe pas
+              $this->log('File : '.$slug.' is not a valid plugin! The version configured is not at good format !'); // la clé n'existe pas
               return false;
             }
 
             // Vérifier que les tables sont bien préfixé par le slug
-            $tablesJSON = json_decode(file_get_contents($file.DS.'SQL'.DS.'tables.json'), true)['list']; // on récupére la liste des tables
-            if(!empty($tablesJSON)) {
-              foreach ($tablesJSON as $key => $value) { // on les parcours si elles sont pas vides
+            $filenameTables = $file.DS.'SQL'.DS.'schema.php'; // on récupére la liste des tables
+            if(file_exists($filenameTables)) {
 
-                $valueExploded = explode('__', $value); // on explode le nom
+              App::import('Model', 'CakeSchema');
 
-                if(count($valueExploded) <= 1 || $valueExploded[0] != strtolower($slug)) { // si c'est un array de moins d'une key (donc pas de prefix) OU que la première clé n'est pas le slug
-                  $this->log('File : '.$slug.' is not a valid plugin ! SQL tables need to be prefixed by slug.'); // ce n'est pas un dossier
+              require_once $filenameTables;
+              $nameClass = ucfirst(strtolower($slug)).'AppSchema';
+
+              if(class_exists($nameClass)) { // on peut load la class
+
+                $class = new $nameClass();
+
+                if(method_exists($class, 'before') && method_exists($class, 'after')) {
+
+                  $tables = get_class_vars(get_class($class));
+
+                  $ignoredVars = array('name', 'path', 'file', 'connection', 'plugin', 'tables');
+
+                  foreach ($tables as $key => $value) { // on les parcours si elles sont pas vides
+
+                    if(!in_array($key, $ignoredVars)) {
+
+                      $valueExploded = explode('__', $key); // on explode le nom
+
+                      if(count($valueExploded) <= 1 || $valueExploded[0] != strtolower($slug)) { // si c'est un array de moins d'une key (donc pas de prefix) OU que la première clé n'est pas le slug
+                        $this->log('File : '.$slug.' is not a valid plugin! SQL tables need to be prefixed by slug.'); // ce n'est pas un dossier
+                        return false;
+                      }
+
+                    }
+
+                  }
+
+                } else {
+                  $this->log('File : '.$slug.' is not a valid plugin! SQL Schema class is not valid!'); // ce n'est pas un dossier
                   return false;
                 }
 
+              } else {
+                $this->log('File : '.$slug.' is not a valid plugin! SQL Schema class is not valid!'); // ce n'est pas un dossier
+                return false;
               }
+            } else {
+              $this->log('File : '.$slug.' is not a valid plugin! SQL Schema is not created!'); // ce n'est pas un dossier
+              return false;
             }
 
             return true;  // ca s'est bien passé
         } else {
-          $this->log('File : '.$file.' is not a folder ! Plugin not valid ! Please remove this file from de plugin folder.'); // ce n'est pas un dossier
+          $this->log('File : '.$file.' is not a folder! Plugin not valid! Please remove this file from de plugin folder.'); // ce n'est pas un dossier
           return false;
         }
 
       } else {
-        $this->log('Plugins folder : '.$file.' doesn\'t exist ! Plugin not valid !'); // Le fichier n'existe pas
+        $this->log('Plugins folder : '.$file.' doesn\'t exist! Plugin not valid!'); // Le fichier n'existe pas
         return false;
       }
 
@@ -387,7 +420,7 @@ class EyPluginComponent extends Object {
 
     private function updateDBSchema($slug) {
       App::uses('CakeSchema', 'Model');
-      $this->Schema = new CakeSchema(array('name' => 'App', 'path' => ROOT.DS.'app'.DS.'Plugin'.DS.$slug.DS.'Schema', 'file' => 'schema.php', 'connection' => 'default', 'plugin' => null));
+      $this->Schema = new CakeSchema(array('name' => ucfirst(strtolower($slug)).'App', 'path' => ROOT.DS.'app'.DS.'Plugin'.DS.$slug.DS.'SQL', 'file' => 'schema.php', 'connection' => 'default', 'plugin' => null));
 
       App::uses('SchemaShell', 'Console/Command');
       $SchemaShell = new SchemaShell();
@@ -625,7 +658,7 @@ WCqkx22behAGZq6rhwIDAQAB
             $$pluginDBID = $searchPlugin['id'];
 
             // Etape base de données
-            $addTables = $this->addTables($slug); // On ajoute les tables
+            $addTables = $this->addTables($slug, true); // On ajoute les tables
 
             if($addTables['status']) {
               $pluginTables = unserialize($searchPlugin['tables']);
@@ -669,10 +702,10 @@ WCqkx22behAGZq6rhwIDAQAB
 
   // Ajouter les tables des plugins
 
-    private function addTables($slug) {
+    private function addTables($slug, $update = false) {
 
       App::uses('CakeSchema', 'Model');
-      $this->Schema = new CakeSchema(array('name' => 'App', 'path' => ROOT.DS.'app'.DS.'Plugin'.DS.$slug.DS.'Schema', 'file' => 'schema.php', 'connection' => 'default', 'plugin' => null));
+      $this->Schema = new CakeSchema(array('name' => ucfirst(strtolower($slug)).'App', 'path' => ROOT.DS.'app'.DS.'Plugin'.DS.$slug.DS.'SQL', 'file' => 'schema.php', 'connection' => 'default', 'plugin' => null));
 
       App::uses('SchemaShell', 'Console/Command');
       $SchemaShell = new SchemaShell();
@@ -750,6 +783,13 @@ WCqkx22behAGZq6rhwIDAQAB
               }
           }
       }
+
+      $updateEntries = array();
+      if(file_exists($this->pluginsFolder.DS.$slug.DS.'Schema'.DS.'update-entries.php'))
+        include $this->pluginsFolder.DS.$slug.DS.'Schema'.DS.'update-entries.php';
+      }
+
+      $this->Schema->after(array(), !$update, $updateEntries);
 
       return (empty($error)) ? array('status' => true, 'tables' => $pluginTables) : array('status' => false, 'error' => $error);
 
