@@ -31,6 +31,8 @@ App::uses('Model', 'Model');
  */
 class AppModel extends Model {
 
+  public $recursive = -1;
+
 	/*function find($conditions = null, $fields = array(), $order = null, $recursive = null) {
         $cacheConfig = 'short';
         $cacheName = md5(serialize(func_get_args()));

@@ -75,7 +75,7 @@ if (!defined('WWW_ROOT')) {
 	define('WWW_ROOT', dirname(__FILE__) . DS);
 }
 
-// MineWeb Compatiblite 
+// MineWeb Compatiblite
 
 if(!file_exists(ROOT.DS.'config'.DS.'install.txt')) {
 	$cURL = extension_loaded('cURL');
@@ -131,11 +131,11 @@ if(!file_exists(ROOT.DS.'config'.DS.'install.txt')) {
 		}
 
 		die("
-	<!DOCTYPE html> 
-	<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"fr\" lang=\"fr\"> 
-	    <head> 
-	        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/> 
-	        <title>MineWeb - Compatibilité</title> 
+	<!DOCTYPE html>
+	<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"fr\" lang=\"fr\">
+	    <head>
+	        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
+	        <title>MineWeb - Compatibilité</title>
 	        <!--[if lt IE 9]>
 	          <script src=\"http://html5shim.googlecode.com/svn/trunk/html5.js\"></script>
 	        <![endif]-->
@@ -176,7 +176,7 @@ if(!file_exists(ROOT.DS.'config'.DS.'install.txt')) {
 	                margin-top: 15%;
 	            }
 	        </style>
-	    </head> 
+	    </head>
 	    <body>
 	        <div class=\"container\" style=\"width: 700px;\">
 	            <div class=\"bloc center-top\">
@@ -233,9 +233,9 @@ if(!file_exists(ROOT.DS.'config'.DS.'install.txt')) {
 	                <p>
 	                   <div class=\"alert alert-danger\">Votre hébergeur est incompatible avec le CMS !</div>
 	                </p>
-	            </div>  
+	            </div>
 	        </div>
-	    </body> 
+	    </body>
 	</html>");
 	}
 }

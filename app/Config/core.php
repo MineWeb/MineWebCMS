@@ -362,7 +362,7 @@ if (Configure::read('debug') > 0) {
 }
 
 // Prefix each application on the same server with a different string, to avoid Memcache and APC conflicts.
-$prefix = 'myapp_';
+$prefix = 'mineweb_';
 
 /**
  * Configure the cache used for general framework caching. Path information,
@@ -376,10 +376,17 @@ Cache::config('short', array(
     'prefix' => 'cache_short_'
 ));
 
+Cache::config('data', array(
+    'engine' => 'File',
+    'duration'=> '+12 hours',
+    'probability'=> 100,
+    'path' => CACHE . 'data' . DS,
+    'prefix' => $prefix
+));
 
 Cache::config('_cake_core_', array(
 	'engine' => $engine,
-	'prefix' => $prefix . 'cake_core_',
+	'prefix' => $prefix . '_core_',
 	'path' => CACHE . 'persistent' . DS,
 	'serialize' => ($engine === 'File'),
 	'duration' => $duration
@@ -391,7 +398,7 @@ Cache::config('_cake_core_', array(
  */
 Cache::config('_cake_model_', array(
 	'engine' => $engine,
-	'prefix' => $prefix . 'cake_model_',
+	'prefix' => $prefix . '_model_',
 	'path' => CACHE . 'models' . DS,
 	'serialize' => ($engine === 'File'),
 	'duration' => $duration
