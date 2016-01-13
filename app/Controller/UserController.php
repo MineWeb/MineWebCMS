@@ -40,14 +40,11 @@ class UserController extends AppController {
 					$isValid = $this->User->validRegister($this->request->data);
 					if($isValid === true) { // on vérifie si y'a aucune erreur
 
-						// on prépare la connexion
-						$session = md5(rand());
-						$this->Session->write('user', $session);
-
-						$this->request->data['session'] = $session;
-
 						// on enregistre
-						$this->User->register($this->request->data, $session);
+						$userSession = $this->User->register($this->request->data);
+
+						// on prépare la connexion
+						$this->Session->write('user', $userSession);
 
 						// on dis que c'est bon
 						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_REGISTER')));
@@ -71,12 +68,10 @@ class UserController extends AppController {
 		if($this->request->is('Post')) {
 			if(!empty($this->request->data['pseudo']) && !empty($this->request->data['password'])) {
 
-				$this->loadModel('User');
-				$session = md5(rand());
-				$login = $this->User->login($this->request->data, $session);
-				if($login === true) {
+				$login = $this->User->login($this->request->data);
+				if(isset($login['status']) && $login['status'] === true) {
 
-					$this->Session->write('user', $session);
+					$this->Session->write('user', $login['session']);
 
 					$this->getEventManager()->dispatch(new CakeEvent('afterLogin', $this));
 
@@ -138,11 +133,10 @@ class UserController extends AppController {
 		$this->autoRender = false;
 		if($this->request->is('ajax')) {
 			if(!empty($this->request->data['password']) AND !empty($this->request->data['password2']) AND !empty($this->request->data['email'])) {
-				$this->loadModel('User');
-				$session = md5(rand());
-				$reset = $this->User->resetPass($this->request->data, $session);
-				if($reset === true) {
-					$this->Session->write('user', $session);
+
+				$reset = $this->User->resetPass($this->request->data);
+				if($reset['status'] && $reset['status'] === true) {
+					$this->Session->write('user', $reset['session']);
 
 					$this->History->set('RESET_PASSWORD', 'user');
 
@@ -449,7 +443,7 @@ class UserController extends AppController {
 
 					$this->set(compact('user'));
 				} else {
-					$this->Session->setFlash($this->Lang->get('UNKNONW_ID'), 'default.error');
+					$this->Session->setFlash($this->Lang->get('UNKNOWN_ID'), 'default.error');
 					$this->redirect(array('controller' => 'user', 'action' => 'index', 'admin' => true));
 				}
 			} else {
