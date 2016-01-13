@@ -114,38 +114,30 @@ class PagesController extends AppController {
 
 		// récupérage des news
 		$this->loadModel('News'); // on charge le model
-		$search_news = $this->News->find('all', array('limit' => '6', 'order' => 'id desc', 'conditions' => array('published' => 1))); // on cherche les 3 dernières news (les plus veille)
+		$search_news = $this->News->find('all', array('recursive' => 1, 'limit' => '6', 'order' => 'id desc', 'conditions' => array('published' => 1))); // on cherche les 3 dernières news (les plus veille)
 
 		// je cherche toutes les news que l'utilisateur connecté a aimé
-		if($this->isConnected) {
-			$this->loadModel('Like');
-			$likes = $this->Like->find('all', array('conditions' => array('author' => $this->User->getKey('pseudo'))));
-			if(!empty($likes)) {
-				$i = 0;
-				foreach ($likes as $key => $value) {
-					$i++;
-					foreach ($search_news as $k => $v) {
-                		if($value['Like']['news_id'] == $v['News']['id']) {
-                    		$search_news[$k]['News']['liked'] = true;
-                		} elseif(count($likes) == $i && !isset($search_news[$k]['News']['liked'])) {
-                			$search_news[$k]['News']['liked'] = false; // si c'est le dernier like et que y'a toujours pas de like sur cette news on dis false
-                		}
-                	}
+		foreach ($search_news as $key => $model) {
+			if($this->isConnected) {
+				foreach ($model['Like'] as $k => $value) {
+					foreach ($value as $column => $v) {
+						if($this->User->getKey('id') == $v) {
+							$search_news[$key]['News']['liked'] = true;
+						}
+					}
 				}
-			} else {
-				foreach ($search_news as $k => $v) {
-            		$search_news[$k]['News']['liked'] = false;
-                }
 			}
-		} else {
-			foreach ($search_news as $k => $v) {
-            	$search_news[$k]['News']['liked'] = false;
-            }
+			if(!isset($search_news[$key]['News']['liked'])) {
+				$search_news[$key]['News']['liked'] = false;
+			}
+
+			$search_news[$key]['News']['count_comments'] = count($search_news[$key]['Comment']);
+			$search_news[$key]['News']['count_likes'] = count($search_news[$key]['Like']);
 		}
 
 		$can_like = ($this->Permissions->can('LIKE_NEWS')) ? true : false;
 
-		$this->set(compact('search_news', 'likes', 'can_like')); // on envoie les données à la vue
+		$this->set(compact('search_news', 'can_like')); // on envoie les données à la vue
 
 		//récupération des slides
 		$this->loadModel('Slider');
@@ -159,55 +151,6 @@ class PagesController extends AppController {
 	public function robots() {
 		$this->autoRender = false;
 		echo file_get_contents(ROOT.DS.'robots.txt');
-	}
-
-	public function debug($key = false, $args = false) {
-		$secure = file_get_contents(ROOT.'/config/secure');
-		$secure = json_decode($secure, true);
-		if($key == $secure['key']) {
-			if(!$args) {
-				$this->layout = null;
-				$return['first_administrator'] = $this->Configuration->get_first_admin();
-				$return['created'] = $this->Configuration->get_created_date();
-				$return['url'] = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-				$return['version'] = $this->Configuration->get('version');
-				$return['layout'] = $this->Configuration->get_layout();
-				$return['theme'] = $this->Configuration->get('theme');
-				$return['plugins'] = $this->EyPlugin->loadPlugins();
-				$return['today'] = date('d/m/Y H:i:s');
-				$return['server_state'] = $this->Configuration->get('server_state');
-
-				$api_dev_key 			= '09ca1757ce4d128dc7601536a60f234d'; // your api_developer_key
-				$api_paste_code 		= file_get_contents(ROOT.'/app/tmp/logs/error.log'); // your paste text
-				$api_paste_private 		= '1'; // 0=public 1=unlisted 2=private
-				$api_paste_name			= 'error.log'; // name or title of your paste
-				$api_paste_expire_date 	= '10M';
-				$api_paste_format 		= 'php';
-				$api_user_key 			= ''; // if an invalid api_user_key or no key is used, the paste will be create as a guest
-				$api_paste_name			= urlencode($api_paste_name);
-				$api_paste_code			= urlencode($api_paste_code);
-
-				$url 				= 'http://pastebin.com/api/api_post.php';
-				$ch 				= curl_init($url);
-				curl_setopt($ch, CURLOPT_POST, true);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, 'api_option=paste&api_user_key='.$api_user_key.'&api_paste_private='.$api_paste_private.'&api_paste_name='.$api_paste_name.'&api_paste_expire_date='.$api_paste_expire_date.'&api_paste_format='.$api_paste_format.'&api_dev_key='.$api_dev_key.'&api_paste_code='.$api_paste_code.'');
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt($ch, CURLOPT_VERBOSE, 1);
-				curl_setopt($ch, CURLOPT_NOBODY, 0);
-				$response  			= curl_exec($ch);
-
-				echo '<h2><b>This page is only for debug if you have a problem. This string below must be give to Eywek for debug.</b></h2>';
-				echo '<center><div style="width:50%;word-wrap: break-word;">'.base64_encode(json_encode($return)).'</div></center>';
-				echo '<center><b><a target="_blank" href="'.$response.'">Pastebin link</a></b></center>';
-			} else {
-				$this->layout = null;
-				echo '<pre>';
-				var_dump(json_decode(base64_decode($args), true));
-				echo '</pre>';
-			}
-		} else {
-			$this->redirect('/');
-		}
 	}
 
 	public function index($slug = false) {

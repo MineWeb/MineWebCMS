@@ -3,13 +3,68 @@ App::uses('CakeEvent', 'Event');
 
 class News extends AppModel {
 
+	public $hasMany = array(
+		'Comment' => array(
+      'className' => 'Comment',
+      'foreignKey' => 'news_id',
+      'order' => 'Comment.created DESC',
+      'dependent' => true
+  	),
+		'Like' => array(
+      'className' => 'Like',
+      'foreignKey' => 'news_id',
+      'dependent' => true
+  	)
+	);
+
 	public function find($conditions = null, $fields = array(), $order = null, $recursive = null) {
 		$result = Cache::read('news', 'data');
-    if($result === false || !isset($result[md5(serialize(func_get_args()))])) {
-        $result[md5(serialize(func_get_args()))] = parent::find($conditions, $fields, $order, $recursive);
-        Cache::write('news', $result, 'data');
+		$index = md5(serialize(func_get_args()));
+    if($result === false || !isset($result[$index]) || Configure::read('debug') > 0) {
+        $result[$index] = parent::find($conditions, $fields, $order, $recursive);
+
+				if($recursive || (isset($fields['recursive']) && $fields['recursive'])) {
+					if(isset($result[$index][0]['Comment']) || isset($result[$index]['Comment'])) {
+						$users = ClassRegistry::init('User')->find('all', array('fields' => array('id', 'pseudo')));
+						foreach ($users as $key => $value) {
+							$users[$value['User']['id']] = $value['User']['pseudo'];
+						}
+					}
+					if(key($result[$index]) == '0') {
+						foreach ($result[$index] as $key => $value) {
+							if(isset($result[$index][$key]['Comment'])) {
+								$result[$index][$key]['News']['count_comments'] = count($result[$index][$key]['Comment']);
+							}
+							if(isset($result[$index][$key]['Like'])) {
+								$result[$index][$key]['News']['count_likes'] = count($result[$index][$key]['Like']);
+							}
+							if(isset($result[$index][$key]['Comment'])) {
+								foreach ($result[$index][$key]['Comment'] as $k => $v) {
+									$result[$index][$key]['Comment'][$k]['author'] = $users[$v['user_id']];
+								}
+							}
+						}
+					} else {
+						if(isset($result[$index]['Comment'])) {
+							$result[$index]['News']['count_comments'] = count($result[$index]['Comment']);
+						}
+						if(isset($result[$index]['Like'])) {
+							$result[$index]['News']['count_likes'] = count($result[$index]['Like']);
+						}
+						if(isset($result[$index]['Comment'])) {
+							foreach ($result[$index]['Comment'] as $k => $v) {
+								$result[$index]['Comment'][$k]['author'] = $users[$v['user_id']];
+							}
+						}
+					}
+				}
+
+				if(Configure::read('debug') <= 0) {
+					Cache::write('news', $result, 'data');
+				}
+
     }
-    return $result[md5(serialize(func_get_args()))];
+    return $result[$index];
 	}
 
 	public function afterSave($created, $options = array()) {

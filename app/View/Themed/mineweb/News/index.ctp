@@ -2,14 +2,14 @@
 <div class="container news">
     <div class="row">
         <div class="news-content">
-            <h1><?= $title ?></h1>
+            <h1><?= $news['News']['title'] ?></h1>
             <p class="author">
-                <?= $Lang->get('BY') ?> <?= $author ?>
+                <?= $Lang->get('BY') ?> <?= $news['News']['author'] ?>
             </p>
 
-            <?= $content ?>
+            <div><?= $news['News']['content'] ?></div>
             <br>
-            <p class="created">Le <?= $Lang->date($created); ?></p>
+            <p class="created">Le <?= $Lang->date($news['News']['created']); ?></p>
             <div class="clearfix"></div>
         </div>
     </div>
@@ -20,9 +20,9 @@
         <p>
             <?php if($Permissions->can('LIKE_NEWS')) { ?>
                 <?= $Lang->get('LIKE_THIS') ?>
-                <button id="<?= $id ?>" type="button" class="btn btn-primary btn-lg like<?php if(!empty($likes)) { foreach ($likes as $t) { if($t == $id) { echo ' active'; } } } ?>"<?php if(!$Permissions->can('LIKE_NEWS')) { echo ' disabled'; } ?>><?= $like ?> <i class="fa fa-thumbs-up"></i></button>
+                <button id="<?= $news['News']['id'] ?>" type="button" class="btn btn-primary btn-lg like<?= ($news['News']['liked']) ? ' active' : '' ?>"<?= (!$Permissions->can('LIKE_NEWS')) ? ' disabled' : '' ?>><?= $news['News']['count_likes'] ?> <i class="fa fa-thumbs-up"></i></button>
             <?php } else { ?>
-                <?= str_replace('%likes%', $like, $Lang->get('THEY_LIKE_THIS'))?>
+                <?= str_replace('%likes%', $news['News']['count_likes'], $Lang->get('THEY_LIKE_THIS'))?>
             <?php } ?>
         </p>
         </center>
@@ -31,17 +31,17 @@
 <div class="container news">
     <div class="row">
         <div class="add-comment"></div>
-        <?php foreach ($search_comments as $k => $v) { ?>
-            <div class="media" id="comment-<?= $v['Comment']['id'] ?>">
-                <img class="media-object" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/<?= $v['Comment']['author'] ?>/64" alt="">
+        <?php foreach ($news['Comment'] as $k => $v) { ?>
+            <div class="media" id="comment-<?= $v['id'] ?>">
+                <img class="media-object" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/<?= $v['author'] ?>/64" alt="">
                 <div class="media-body">
-                    <?= before_display($v['Comment']['content']) ?>
-                    <h4 class="author"><?= $Lang->get('BY') ?> <?= $v['Comment']['author'] ?></h4>
-                    <h4 class="created"><?= $Lang->date($v['Comment']['created']); ?></h4>
+                    <?= before_display($v['content']) ?>
+                    <h4 class="author"><?= $Lang->get('BY') ?> <?= $v['author'] ?></h4>
+                    <h4 class="created"><?= $Lang->date($v['created']); ?></h4>
                 </div>
                  <div class="pull-right">
                     <?php if($Permissions->can('DELETE_COMMENT') OR $Permissions->can('DELETE_HIS_COMMENT') AND $user['pseudo'] == $v['Comment']['author']) { ?>
-                        <p><a id="<?= $v['Comment']['id'] ?>" title="<?= $Lang->get('DELETE') ?>" class="comment-delete btn btn-danger btn-sm"><icon class="fa fa-times"></icon></a></p>
+                        <p><a id="<?= $v['id'] ?>" title="<?= $Lang->get('DELETE') ?>" class="comment-delete btn btn-danger btn-sm"><icon class="fa fa-times"></icon></a></p>
                     <?php } ?>
                 </div>
             </div>
@@ -53,35 +53,35 @@
         </div>
     </div>
 </div>
-    <?= $Module->loadModules('news') ?>
-<div class="modal fade" id="postcomment" tabindex="-1" role="dialog" aria-labelledby="postcommentLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="<?= $Lang->get('CLOSE') ?>"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('LEAVE_COMMENT') ?></h4>
-      </div>
-      <div class="modal-body">
-        <?php if($Permissions->can('COMMENT_NEWS')) { ?>
-            <div id="form-comment-fade-out">
-                <div id="error-on-post"></div>
-                <form method="POST" data-ajax="true" action="<?= $this->Html->url(array('controller' => 'news', 'action' => 'add_comment')) ?>" data-callback-function="addcomment" data-success-msg="false">
-                    <input name="author" value="<?= $user['pseudo'] ?>" type="hidden">
-                    <input name="news_id" value="<?= $id ?>" type="hidden">
-                    <div class="form-group">
-                        <textarea name="content" class="form-control" rows="3"></textarea>
-                    </div>
-            </div>
-        <?php } ?>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('CLOSE') ?></button>
-        <button type="submit" class="btn btn-primary pull-right"><?= $Lang->get('SUBMIT') ?></button>
-        </form>
+<?= $Module->loadModules('news') ?>
+
+<?php if($Permissions->can('COMMENT_NEWS')) { ?>
+  <div class="modal fade" id="postcomment" tabindex="-1" role="dialog" aria-labelledby="postcommentLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="<?= $Lang->get('CLOSE') ?>"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('LEAVE_COMMENT') ?></h4>
+        </div>
+        <div class="modal-body">
+          <div id="form-comment-fade-out">
+            <div id="error-on-post"></div>
+            <form method="POST" data-ajax="true" action="<?= $this->Html->url(array('controller' => 'news', 'action' => 'add_comment')) ?>" data-callback-function="addcomment" data-success-msg="false">
+              <input name="news_id" value="<?= $news['News']['id'] ?>" type="hidden">
+              <div class="form-group">
+                  <textarea name="content" class="form-control" rows="3"></textarea>
+              </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('CLOSE') ?></button>
+          <button type="submit" class="btn btn-primary pull-right"><?= $Lang->get('SUBMIT') ?></button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
+<?php } ?>
 <script type="text/javascript">
     $(".comment-delete").click(function() {
         comment_delete(this);

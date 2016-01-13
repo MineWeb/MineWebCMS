@@ -3,6 +3,8 @@ App::uses('CakeEvent', 'Event');
 
 class Lostpassword extends AppModel {
 
+	public $belongsTo = 'User';
+
 	public function afterSave($created, $options = array()) {
 		if($created) {
 			// nouvel enregistrement

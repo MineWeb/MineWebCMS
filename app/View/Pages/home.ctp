@@ -58,8 +58,8 @@
                         <h2><?= cut($v['News']['title'], 15) ?></h2>
                         <p><?= cut($v['News']['content'], 220) ?></p>
                         <div class="btn-group">
-                          <button id="<?= $v['News']['id'] ?>" type="button" class="btn btn-primary like<?= ($v['News']['liked']) ? ' active' : ''; ?>"<?= ($can_like) ? '' : ' disabled' ?>><?= $v['News']['like'] ?> <i class="fa fa-thumbs-up"></i></button>
-                          <button type="button" class="btn btn-primary"><?= $v['News']['comments'] ?> <i class="fa fa-comments"></i></button>
+                          <button id="<?= $v['News']['id'] ?>" type="button" class="btn btn-primary like<?= ($v['News']['liked']) ? ' active' : ''; ?>"<?= ($can_like) ? '' : ' disabled' ?>><?= $v['News']['count_likes'] ?> <i class="fa fa-thumbs-up"></i></button>
+                          <button type="button" class="btn btn-primary"><?= $v['News']['count_comments'] ?> <i class="fa fa-comments"></i></button>
                         </div>
                         <a href="<?= $this->Html->url(array('controller' => 'blog', 'action' => $v['News']['slug'])) ?>" class="btn btn-success pull-right"><?= $Lang->get('READ_MORE') ?> »</a>
                     </div>

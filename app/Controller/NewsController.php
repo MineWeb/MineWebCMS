@@ -5,71 +5,25 @@ class NewsController extends AppController {
 	public $components = array('Session');
 
 	function blog() {
-		$this->loadModel('News');
-		$search_news = $this->News->find('all', array('order' => array('id DESC'), 'conditions' => array('published' => 1)));
+		// récupérage des news
+		$this->loadModel('News'); // on charge le model
+		$search_news = $this->News->find('all', array('recursive' => 1, 'order' => 'id desc', 'conditions' => array('published' => 1))); // on cherche les 3 dernières news (les plus veille)
 
-		// Je met tout les commentaires à chaque news
-		$this->loadModel('Comment');
-		$comments = $this->Comment->find('all');
-
-		foreach ($comments as $key => $value) {
-
-			foreach ($search_news as $k => $v) {
-
-				if($value['Comment']['news_id'] == $v['News']['id']) {
-
-					$search_news[$k]['News']['comment'][] = $value['Comment'];
-
-					break;
-				}
-
-			}
-
+		foreach ($search_news as $key => $model) {
+			$search_news[$key]['News']['absolute_url'] = Router::url('/blog/'.$model['News']['slug'], true);
 		}
-
-		// Je met tout les likes à chaque news
-		$this->loadModel('Like');
-		$comments = $this->Like->find('all');
-
-		foreach ($comments as $key => $value) {
-
-			foreach ($search_news as $k => $v) {
-
-				if($value['Like']['news_id'] == $v['News']['id']) {
-
-					$search_news[$k]['News']['likes'][] = $value['Like'];
-
-					break;
-				}
-
-			}
-
-		}
-
-		// je cherche toutes les news que l'utilisateur connecté a aimé
+		
 		if($this->isConnected) {
-			$user_likes = $this->Like->find('all', array('conditions' => array('author' => $this->User->getKey('pseudo'))));
-			if(!empty($user_likes)) {
-				$i = 0;
-				foreach ($user_likes as $key => $value) {
-					$i++;
-					foreach ($search_news as $k => $v) {
-						if($value['Like']['news_id'] == $v['News']['id']) {
-								$search_news[$k]['News']['liked'] = true;
-						} elseif(count($user_likes) == $i && !isset($search_news[$k]['News']['liked'])) {
-							$search_news[$k]['News']['liked'] = false; // si c'est le dernier like et que y'a toujours pas de like sur cette news on dis false
-						}
+			foreach ($news['Like'] as $k => $value) {
+				foreach ($value as $column => $v) {
+					if($this->User->getKey('id') == $v) {
+						$news['News']['liked'] = true;
 					}
 				}
-			} else {
-				foreach ($search_news as $k => $v) {
-					$search_news[$k]['News']['liked'] = false;
-				}
 			}
-		} else {
-			foreach ($search_news as $k => $v) {
-				$search_news[$k]['News']['liked'] = false;
-			}
+		}
+		if(!isset($news['News']['liked'])) {
+			$news['News']['liked'] = false;
 		}
 
 		$can_like = ($this->Permissions->can('LIKE_NEWS')) ? true : false;
@@ -81,57 +35,12 @@ class NewsController extends AppController {
 
 		$this->autoRender = false;
 
-		$search_news = $this->News->find('all', array('order' => array('id DESC'), 'conditions' => array('published' => 1)));
+		// récupérage des news
+		$this->loadModel('News'); // on charge le model
+		$search_news = $this->News->find('all', array('recursive' => 1, 'order' => 'id desc', 'conditions' => array('published' => 1))); // on cherche les 3 dernières news (les plus veille)
 
-		foreach ($search_news as $key => $value) { // on ajoute le lien
-			$search_news[$key]['News']['absolute_url'] = Router::url('/blog/'.$value['News']['slug'], true);
-		}
-
-		// Je met tout les commentaires à chaque news
-		$this->loadModel('Comment');
-		$comments = $this->Comment->find('all');
-
-		foreach ($comments as $key => $value) {
-
-			foreach ($search_news as $k => $v) {
-
-				if($value['Comment']['news_id'] == $v['News']['id']) {
-
-					$search_news[$k]['News']['comments'] = $value['Comment'];
-
-					break;
-				}
-
-			}
-
-		}
-
-		foreach ($search_news as $key => $value) { // on ajoute les count
-			$search_news[$key]['News']['comments_count'] = count($search_news[$key]['News']['comments']);
-		}
-
-		// Je met tout les likes à chaque news
-		$this->loadModel('Like');
-		$comments = $this->Like->find('all');
-
-		foreach ($comments as $key => $value) {
-
-			foreach ($search_news as $k => $v) {
-
-				if($value['Like']['news_id'] == $v['News']['id']) {
-
-					$search_news[$k]['News']['likes'][] = $value['Like'];
-
-					break;
-				}
-
-			}
-
-		}
-
-		foreach ($search_news as $key => $value) { // on ajoute les count
-			$search_news[$key]['News']['likes_count'] = count($search_news[$key]['News']['likes']);
-			unset($search_news[$key]['News']['like']);
+		foreach ($search_news as $key => $model) {
+			$search_news[$key]['News']['absolute_url'] = Router::url('/blog/'.$model['News']['slug'], true);
 		}
 
 		echo json_encode($search_news);
@@ -141,41 +50,28 @@ class NewsController extends AppController {
 		$this->layout= $this->Configuration->get_layout();
 
 		if(isset($slug)) { // si le slug est présent
-			$search_news = $this->News->find('all', array('conditions' => array('slug' => $slug)));
-			if($search_news) { // si le slug existe
-				// récupération du titre la news ...
-				$id = $search_news['0']['News']['id'];
-				$title = $search_news['0']['News']['title'];
-				$content = $search_news['0']['News']['content'];
-				$author = $search_news['0']['News']['author'];
-				$created = $search_news['0']['News']['created'];
-				$updated = $search_news['0']['News']['updated'];
-				$comments = $search_news['0']['News']['comments'];
-				$like = $search_news['0']['News']['like'];
-				$img = $search_news['0']['News']['img'];
-
-				$this->set('title_for_layout',$title);
-
-				// on cherche les commentaires
-				$this->loadModel('Comment');
-				$search_comments = $this->Comment->find('all', array('conditions' => array('news_id' => $id), 'order' => 'id desc')); $this->set(compact('search_comments'));
+			$this->loadModel('News'); // on charge le model
+			$news = $this->News->find('first', array('recursive' => 1, 'order' => 'id desc', 'conditions' => array('slug' => $slug))); // on cherche les 3 dernières news (les plus veille)
+			if($news) { // si le slug existe
 
 				if($this->isConnected) {
-					$this->loadModel('Like');
-					$likes = $this->Like->find('all', array('conditions' => array('author' => $this->User->getKey('pseudo'))));
-					if(!empty($likes)) {
-						foreach ($likes as $key => $value) {
-							$likes_list[] = $value['Like']['news_id'];
+					foreach ($news['Like'] as $k => $value) {
+						foreach ($value as $column => $v) {
+							if($this->User->getKey('id') == $v) {
+								$news['News']['liked'] = true;
+							}
 						}
-						$likes = $likes_list;
-					} else {
-						$likes = array('-1');
 					}
 				}
+				if(!isset($news['News']['liked'])) {
+					$news['News']['liked'] = false;
+				}
+
+				$this->set('title_for_layout', $news['News']['title']);
 
 				// on chercher les 4 dernières news pour la sidebar
 				$search_news = $this->News->find('all', array('limit' => '4', 'order' => 'id desc', 'conditions' => array('published' => 1))); // on cherche les 3 dernières news (les plus veille)
-				$this->set(compact('search_news', 'likes', 'title', 'content', 'author', 'created', 'updated', 'id', 'comments', 'like', 'likes', 'img')); // on envoie les données à la vue
+				$this->set(compact('search_news', 'news')); // on envoie les données à la vue
 			} else {
 				throw new NotFoundException();
 			}
@@ -188,16 +84,17 @@ class NewsController extends AppController {
 		$this->autoRender = false;
 		if($this->request->is('post')) {
 			if($this->Permissions->can('COMMENT_NEWS')) {
-				if(!empty($this->request->data['content']) && !empty($this->request->data['news_id']) && !empty($this->request->data['author'])) {
+				if(!empty($this->request->data['content']) && !empty($this->request->data['news_id'])) {
+
 					$this->loadModel('Comment');
-					$this->request->data['content'] = $this->request->data['content'];
-					$this->Comment->save($this->request->data);
-					$comments = $this->News->find('all', array('conditions' => array('id' => $this->request->data['news_id'])));
-					$comments = $comments['0']['News']['comments'];
-					$comments = $comments + 1;
-					$this->News->read(null, $this->request->data['news_id']);
-					$this->News->set(array('comments' => $comments));
-					$this->News->save();
+					$this->Comment->create();
+					$this->Comment->set(array(
+						'content' => $this->request->data['content'],
+						'user_id' => $this->User->getKey('id'),
+						'news_id' => intval($this->request->data['news_id'])
+					));
+					$this->Comment->save();
+
 					echo json_encode(array('statut' => true, 'msg' => 'success'));
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));

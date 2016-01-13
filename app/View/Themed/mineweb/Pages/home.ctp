@@ -61,7 +61,7 @@
                     <h2><?= cut($v['News']['title'], 13) ?></h2>
                     <div><p><?= cut($v['News']['content'], 170) ?></p></div>
                     <div class="btn-like">
-                        <p><?= $v['News']['like'] ?> <i class="fa fa-thumbs-up"></i></p>
+                        <p><?= $v['News']['count_likes'] ?> <i class="fa fa-thumbs-up"></i></p>
                     </div>
                     <div class="a-like pull-right">
                         <p><a href="<?= $this->Html->url(array('controller' => 'blog', 'action' => $v['News']['slug'])) ?>"><?= $Lang->get('READ_MORE') ?> »</a></p>

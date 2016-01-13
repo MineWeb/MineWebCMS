@@ -2,45 +2,24 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-8">
-            <h1><?= before_display($title) ?></h1>
+            <h1><?= before_display($news['News']['title']) ?></h1>
             <p class="lead">
-                <?= $Lang->get('BY') ?> <a href="#"><?= $author ?></a>
+                <?= $Lang->get('BY') ?> <a href="#"><?= $news['News']['author'] ?></a>
             </p>
 
             <hr>
-            <p><span class="glyphicon glyphicon-time"></span> <?= $Lang->get('POSTED_ON') . ' ' . $Lang->date($created); ?></p>
+            <p><span class="glyphicon glyphicon-time"></span> <?= $Lang->get('POSTED_ON') . ' ' . $Lang->date($news['News']['created']); ?></p>
 
             <hr>
-            <p class="lead"><?= $content ?></p>
-            <button id="<?= $id ?>" type="button" class="btn btn-primary pull-right like<?php if(!empty($likes)) { foreach ($likes as $t) { if($t == $id) { echo ' active'; } } } ?>"<?php if(!$Permissions->can('LIKE_NEWS')) { echo ' disabled'; } ?>><?= $like ?> <i class="fa fa-thumbs-up"></i></button><br>
+            <p class="lead"><?= $news['News']['content'] ?></p>
+            <button id="<?= $news['News']['id'] ?>" type="button" class="btn btn-primary pull-right like<?= ($news['News']['liked']) ? ' active' : '' ?>"<?= (!$Permissions->can('LIKE_NEWS')) ? ' disabled' : '' ?>><?= $news['News']['count_likes'] ?> <i class="fa fa-thumbs-up"></i></button><br>
             <?php if($Permissions->can('COMMENT_NEWS')) { ?>
                 <div id="form-comment-fade-out">
                     <hr>
                     <div class="well">
                         <h4><?= $Lang->get('LEAVE_COMMENT') ?> :</h4>
-                        <?php /*
-                        // Formulaire d'ajout de commentaire
-
-                        echo $this->Form->create(null, array(
-                            'url' => array('controller' => 'news', 'action' => 'add_comment'),
-                            'data-ajax' => 'true',
-                            'data-callback-function' => 'addcomment',
-                            'data-success-msg' => 'false'
-                        ));
-                        echo $this->Form->input('author', array('name' => 'author', 'type' => 'hidden', 'value' => $user['pseudo']));
-                        echo $this->Form->input('news_id', array('name' => 'news_id', 'type' => 'hidden', 'value' => $id));
-
-                        echo '<div class="form-group">';
-                        echo $this->Form->input('content', array('name' => 'content', 'label' => false, 'type' => 'textarea', 'class' => 'form-control', 'rows' => '3'));
-                        echo '</div>';
-
-                        echo '<button type="submit" class="btn btn-primary">'.$Lang->get('SUBMIT').'</button>';
-
-                        echo $this->Form->end();*/
-                        ?>
                         <form method="POST" data-ajax="true" action="<?= $this->Html->url(array('controller' => 'news', 'action' => 'add_comment')) ?>" data-callback-function="addcomment" data-success-msg="false">
-                            <input name="author" value="<?= $user['pseudo'] ?>" type="hidden">
-                            <input name="news_id" value="<?= $id ?>" type="hidden">
+                            <input name="news_id" value="<?= $news['News']['id'] ?>" type="hidden">
                             <div class="form-group">
                                 <textarea name="content" class="form-control" rows="3"></textarea>
                             </div>
@@ -51,20 +30,20 @@
             <?php } ?>
             <hr>
             <div class="add-comment"></div>
-            <?php foreach ($search_comments as $k => $v) { ?>
-                <div class="media" id="comment-<?= $v['Comment']['id'] ?>">
+            <?php foreach ($news['Comment'] as $k => $v) { ?>
+                <div class="media" id="comment-<?= $v['id'] ?>">
                     <a class="pull-left" href="#">
-                        <img class="media-object" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/<?= $v['Comment']['author'] ?>/64" alt="">
+                        <img class="media-object" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/<?= $v['author'] ?>/64" alt="">
                     </a>
                     <div class="media-body">
-                        <h4 class="media-heading"><?= $v['Comment']['author'] ?>
-                            <small><?= $Lang->date($v['Comment']['created']); ?></small>
+                        <h4 class="media-heading"><?= $v['author'] ?>
+                            <small><?= $Lang->date($v['created']); ?></small>
                         </h4>
-                        <?= before_display($v['Comment']['content']) ?>
+                        <?= before_display($v['content']) ?>
                     </div>
                     <div class="pull-right">
-                        <?php if($Permissions->can('DELETE_COMMENT') OR $Permissions->can('DELETE_HIS_COMMENT') AND $user['pseudo'] == $v['Comment']['author']) { ?>
-                            <p><a id="<?= $v['Comment']['id'] ?>" title="<?= $Lang->get('DELETE') ?>" class="comment-delete btn btn-danger btn-sm"><icon class="fa fa-times"></icon></a></p>
+                        <?php if($Permissions->can('DELETE_COMMENT') OR $Permissions->can('DELETE_HIS_COMMENT') AND $user['pseudo'] == $v['author']) { ?>
+                            <p><a id="<?= $v['id'] ?>" title="<?= $Lang->get('DELETE') ?>" class="comment-delete btn btn-danger btn-sm"><icon class="fa fa-times"></icon></a></p>
                         <?php } ?>
                     </div>
                 </div>
@@ -85,11 +64,11 @@
             </div>
             <div class="well">
                 <h4><?= $Lang->get('INFORMATION') ?></h4>
-                <p><b><?= $Lang->get('LAST_UPDATE') ?> : </b><?= $Lang->date($updated) ?></p>
-                <p><b><?= $Lang->get('NUMBER_OF_COMMENTS') ?> : </b><?= $comments ?></p>
-                <p><b><?= $Lang->get('NUMBER_OF_LIKES') ?> : </b><?= $like ?></p>
+                <p><b><?= $Lang->get('LAST_UPDATE') ?> : </b><?= $Lang->date($news['News']['updated']) ?></p>
+                <p><b><?= $Lang->get('NUMBER_OF_COMMENTS') ?> : </b><?= $news['News']['count_comments'] ?></p>
+                <p><b><?= $Lang->get('NUMBER_OF_LIKES') ?> : </b><?= $news['News']['count_likes'] ?></p>
             </div>
-        </div> 
+        </div>
     </div>
 </div>
 <?= $Module->loadModules('news') ?>

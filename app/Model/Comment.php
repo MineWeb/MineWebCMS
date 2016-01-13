@@ -3,6 +3,8 @@ App::uses('CakeEvent', 'Event');
 
 class Comment extends AppModel {
 
+	public $belongsTo = 'News';
+
 	public function afterSave($created, $options = array()) {
 		if($created) {
 			// nouvel enregistrement

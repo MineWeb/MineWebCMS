@@ -242,7 +242,7 @@ WCqkx22behAGZq6rhwIDAQAB
 
 			$theme_name = $this->Configuration->get('theme');
 
-			if($theme_name == "default") {
+			if(strtolower($theme_name) == "default") {
 				$theme_config = file_get_contents(ROOT.'/config/theme.default.json');
 			} elseif(file_exists(ROOT.'/app/View/Themed/'.$theme_name.'/config/config.json')) {
 				$theme_config = file_get_contents(ROOT.'/app/View/Themed/'.$theme_name.'/config/config.json');
