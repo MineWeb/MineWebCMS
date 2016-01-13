@@ -77,7 +77,7 @@ nav .container {
 }
 
 .navbar.navbar-inverse.navbar-fixed-top {
-	border-bottom: 5px solid #2980b9; 
+	border-bottom: 5px solid #2980b9;
 }
 
 .nav li .fa-home {
@@ -130,7 +130,7 @@ nav .container {
 	-webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.2);
 	-moz-box-shadow: inset 0 0 4px rgba(0,0,0,.2);
 	box-shadow: inset 0 0 4px rgba(0,0,0,.2);
-	height: 95px;
+	min-height: 75px;
 	border-bottom: none;
 	font-family: Rambla;
 	font-size: 24px;
@@ -150,10 +150,10 @@ ul#items li {
 	-moz-box-shadow: 0 -1px 3px rgba(0,0,0,.3);
 	box-shadow: 0 -1px 3px rgba(0,0,0,.3);
 	display: inline-block;
-	
+
 	margin-right: 30px;
 	margin-left: 30px;
-	
+
 	margin-top: 10px;
 	position: relative;
 	float: left;
@@ -202,7 +202,7 @@ ul#items .btn-like {
 	color: #efefef;
 	padding-left: 20px;
 
-	position: absolute; 
+	position: absolute;
 	bottom: 20px;
 }
 
@@ -225,7 +225,7 @@ ul#items .a-like {
 	padding-right: 20px;
 	padding-bottom: 10px;
 
-	position: absolute; 
+	position: absolute;
 	bottom: 20px;
 	right: 15px;
 
@@ -313,7 +313,7 @@ ul#items .a-like p a {
 	font-family: 'ridgeregular';
 	/*margin-top:-50px;*/
 	position: absolute;
-	left: 50%; 
+	left: 50%;
 	margin-left: -115px;
 	top: 20px;
 	text-align: center;
@@ -321,7 +321,7 @@ ul#items .a-like p a {
 
 .nav-shape {
 	position: absolute;
-	left: 50%; 
+	left: 50%;
 	margin-left: -130px;
 }
 
@@ -358,11 +358,12 @@ ul#items .a-like p a {
 
 /* -- END NAVBAR -- */
 
-/* -- BRAND -- */ 
+/* -- BRAND -- */
 
 .brand-social {
 	background-color: #3498db;
 	padding: 10px;
+  margin-bottom: -50px;
 }
 
 .brand-social span {
@@ -388,9 +389,9 @@ ul#items .a-like p a {
 	margin-right: 95px;
 }
 
-/* -- END BRAND -- */ 
+/* -- END BRAND -- */
 
-/* -- END BUTTON -- */ 
+/* -- END BUTTON -- */
 
 .btn-skype {
     width: 70px;
@@ -438,7 +439,7 @@ ul#items .a-like p a {
 	background-color: #3b5998;
 	-webkit-box-shadow: inset 0 -6px rgba(0,0,0,.15);
 	-moz-box-shadow: inset 0 -6px rgba(0,0,0,.15);
-	box-shadow: inset 0 -6px rgba(0,0,0,.15);  
+	box-shadow: inset 0 -6px rgba(0,0,0,.15);
 }
 
 .btn-twitter {
@@ -474,7 +475,7 @@ ul#items .a-like p a {
 	box-shadow: 1px 1px 1px black inset, 0 1px 0 rgba( 255, 255, 255, 0.4);
 }
 
-/* -- END BUTTON -- */ 
+/* -- END BUTTON -- */
 
 footer {
 	background-color: #131313;
@@ -626,7 +627,7 @@ footer p {
 
 /* -- END PROFILE -- */
 
-/* -- SHOP -- */ 
+/* -- SHOP -- */
 
 .shop .row {
 	max-width: 1030px;
@@ -674,7 +675,7 @@ footer p {
 
 .shop .thumbnail {
 	padding-top: 5px;
-	padding-bottom: 5px; 
+	padding-bottom: 5px;
 	border: none;
 	margin-top: 10px;
 	max-height: 250px;
@@ -737,7 +738,7 @@ footer p {
 .shop .btn.btn-primary.btn-clear {
 	margin-top: 5px;
 	margin-right: 10px!important;
-} 
+}
 
 .shop .alert.alert-info {
 	text-shadow: 1px 2px #1856cc;
@@ -745,7 +746,7 @@ footer p {
 
 /* -- END SHOP -- */
 
-/* -- VOTE -- */ 
+/* -- VOTE -- */
 
 .brand-vote {
 	background-color: #3498db;
@@ -831,7 +832,7 @@ footer p {
 
 /* -- END VOTE -- */
 
-/* -- SUPPORT -- */ 
+/* -- SUPPORT -- */
 
 .brand-support {
 	background-color: #3498db;
@@ -935,7 +936,7 @@ footer p {
 	box-shadow: 0 0 6px rgba(0,0,0,.3);
 }
 
-/* -- END SUPPORT -- */ 
+/* -- END SUPPORT -- */
 
 /* -- ALERT -- */
 
