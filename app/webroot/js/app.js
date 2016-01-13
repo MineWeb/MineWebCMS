@@ -146,7 +146,7 @@ $(document).ready(function(){
           form.find('.ajax-msg').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b>'+SUCCESS_MSG+' :</b> '+json.msg+'</i></div>').fadeIn(500);
         }
         if(form.attr('data-callback-function') !== undefined) {
-          window[form.attr('data-callback-function')](inputs);
+          window[form.attr('data-callback-function')](inputs, json);
         }
         if(form.attr('data-redirect-url') !== undefined) {
           document.location.href=form.attr('data-redirect-url');
