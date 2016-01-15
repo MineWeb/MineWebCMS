@@ -436,7 +436,7 @@
         "PERMISSIONS__MANAGE_PAGE": "G\u00e9rer les pages (suppression, ajout, \u00e9dition)",
         "PERMISSIONS__MANAGE_NAV": "G\u00e9rer la barre de navigation (suppression, ajout, \u00e9dition)",
         "PERMISSIONS_SUCCESS_SAVE": "Les permissions ont \u00e9t\u00e9 sauvegard\u00e9e avec succ\u00e8s !",
-        "COPYRIGHT": "Tous droits r\u00e9serv\u00e9s - 2015 <span class=\"pull-right\">Propuls\u00e9 par <a href=\"http:\/\/mineweb.org\">mineweb.org<\/a><\/span>",
+        "COPYRIGHT": "Tous droits r\u00e9serv\u00e9s - 2016 <span class=\"pull-right\">Propuls\u00e9 par <a href=\"http:\/\/mineweb.org\">mineweb.org<\/a><\/span>",
         "FOOTER_ADMIN": "<p>D\u00e9velopp\u00e9 par <a href=\"http:\/\/eywek.fr\">Eywek<\/a> & Design\u00e9 par <a href=\"http:\/\/thisismac.fr\">Mac'<\/a>.<\/p><p>Site propos\u00e9 par <a href=\"http:\/\/mineweb.org\">MineWeb<\/a> - Tous droit r\u00e9serv\u00e9s.<\/p><p>Ce CMS doit \u00eatre utilis\u00e9 uniquement par une personne ayant achet\u00e9 la licence.<\/p><ul><li><a href=\"http:\/\/mineweb.org\">MineWeb<\/a><\/li><li class=\"muted\">\u00b7<\/li><li><a href=\"http:\/\/eywek.fr\">Eywek<\/a><\/li><li class=\"muted\">\u00b7<\/li><li><a href=\"http:\/\/thisismac.fr\">Mac'<\/a><\/li><\/ul>",
         "PSEUDO_NOT_GOOD_FORMAT": "Votre pseudo contient des caract\u00e8res sp\u00e9ciaux"
     }

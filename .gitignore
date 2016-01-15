@@ -10,6 +10,8 @@ Thumbs.db
 app/Plugin/FactionRanking/
 app/tmp/
 
+app/webroot/img/uploads/slider/*
+
 dev.json
 
 app/Config/database.php

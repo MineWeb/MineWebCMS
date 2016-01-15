@@ -18,10 +18,9 @@ class SliderController extends AppController {
 	}
 
 	public function admin_delete($id = false) {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Permissions->can('MANAGE_SLIDER')) {
 			if($id != false) {
-
-				$this->layout = null;
 				$this->loadModel('Slider');
 				$find = $this->Slider->find('all', array('conditions' => array('id' => $id)));
 				if(!empty($find)) {
@@ -50,6 +49,8 @@ class SliderController extends AppController {
 				$search = $this->Slider->find('all', array('conditions' => array('id' => $id)));
 				if(!empty($search)) {
 					$slider = $search['0']['Slider'];
+					$slider['filename'] = explode('/', $slider['url_img']);
+					$slider['filename'] = end($slider['filename']);
 					$this->set(compact('slider'));
 				} else {
 					$this->Session->setFlash($this->Lang->get('UKNOWN_ID'), 'default.error');
@@ -64,18 +65,50 @@ class SliderController extends AppController {
 	}
 
 	public function admin_edit_ajax() {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Permissions->can('MANAGE_SLIDER')) {
-			$this->layout = null;
 
 			if($this->request->is('post')) {
-				if(!empty($this->request->data['title']) AND !empty($this->request->data['subtitle']) AND !empty($this->request->data['url_img']) AND !empty($this->request->data['id'])) {
+				if(!empty($this->request->data['title']) AND !empty($this->request->data['subtitle']) AND !empty($this->request->data['id'])) {
+
+					if(!isset($this->request->data['img_edit'])) {
+
+						$isValidImg = $this->Util->isValidImage($this->request, array('png', 'jpg', 'jpeg'));
+
+						if(!$isValidImg['status']) {
+							echo $isValidImg['msg'].'|false';
+							exit;
+						} else {
+							$infos = $isValidImg['infos'];
+						}
+
+						$url_img = WWW_ROOT.'img'.DS.'uploads'.DS.'slider'.DS.date('Y-m-d_His').'.'.$infos['extension'];
+
+						if(!$this->Util->uploadImage($this->request, $url_img)) {
+							echo $this->Lang->get('FORM__ERROR_WHEN_UPLOAD').'|false';
+							exit;
+						}
+
+						$url_img = Router::url('/').'img'.DS.'uploads'.DS.'slider'.DS.date('Y-m-d_His').'.'.$infos['extension'];
+
+						$data = array(
+							'title' => $this->request->data['title'],
+							'subtitle' => $this->request->data['subtitle'],
+							'url_img' => $url_img
+						);
+
+					} else {
+
+						$data = array(
+							'title' => $this->request->data['title'],
+							'subtitle' => $this->request->data['subtitle'],
+						);
+
+					}
+
 					$this->loadModel('Slider');
 					$this->Slider->read(null, $this->request->data['id']);
-					$this->Slider->set(array(
-						'title' => $this->request->data['title'],
-						'subtitle' => $this->request->data['subtitle'],
-						'url_img' => $this->request->data['url_img']
-					));
+					$this->Slider->set($data);
 					$this->Slider->save();
 					$this->History->set('EDIT_SLIDER', 'slider');
 					echo $this->Lang->get('SUCCESS_SLIDER_EDIT').'|true';
@@ -102,8 +135,8 @@ class SliderController extends AppController {
 	}
 
 	public function admin_add_ajax() {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Permissions->can('MANAGE_SLIDER')) {
-			$this->layout = null;
 
 			if($this->request->is('post')) {
 
