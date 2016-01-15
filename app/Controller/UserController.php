@@ -158,6 +158,100 @@ class UserController extends AppController {
      	$this->redirect($this->referer());
 	}
 
+	function uploadSkin() {
+		$this->autoRender = false;
+
+		if($this->isConnected && $this->API->can_skin()) {
+			if($this->request->is('post')) {
+
+				$skin_max_size = 10000000; // octet
+
+				$this->loadModel('ApiConfiguration');
+				$ApiConfiguration = $this->ApiConfiguration->find('first');
+				$target_config = $ApiConfiguration['ApiConfiguration']['skin_filename'];
+
+				$filename = substr($target_config, (strrpos($target_config, '/') + 1));
+				$filename = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $filename);
+				$filename = str_replace('php', '', $filename);
+				$filename = str_replace('.', '', $filename);
+				$filename = $filename.'.png';
+
+				$target = substr($target_config, 0, (strrpos($target_config, '/') + 1));
+				$target = WWW_ROOT.'/'.$target;
+
+				$width_max = $ApiConfiguration['ApiConfiguration']['skin_width']; // pixel
+				$height_max = $ApiConfiguration['ApiConfiguration']['skin_height']; // pixel
+
+				$isValidImg = $this->Util->isValidImage($this->request, array('png'), $width_max, $height_max, $skin_max_size);
+
+				if(!$isValidImg['status']) {
+					echo json_encode(array('statut' => false, 'msg' => $isValidImg['msg']));
+					exit;
+				} else {
+					$infos = $isValidImg['infos'];
+				}
+
+				if(!$this->Util->uploadImage($this->request, $target.$filename)) {
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD')));
+					exit;
+				}
+
+	     echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SKIN_SUCCESS_UPLOAD')));
+
+			}
+
+		} else {
+			new ForbiddenException();
+		}
+	}
+
+	function uploadCape() {
+		$this->autoRender = false;
+
+		if($this->isConnected && $this->API->can_cape()) {
+			if($this->request->is('post')) {
+
+				$cape_max_size = 10000000; // octet
+
+				$this->loadModel('ApiConfiguration');
+				$ApiConfiguration = $this->ApiConfiguration->find('first');
+				$target_config = $ApiConfiguration['ApiConfiguration']['cape_filename'];
+
+				$filename = substr($target_config, (strrpos($target_config, '/') + 1));
+				$filename = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $filename);
+				$filename = str_replace('php', '', $filename);
+				$filename = str_replace('.', '', $filename);
+				$filename = $filename.'.png';
+
+				$target = substr($target_config, 0, (strrpos($target_config, '/') + 1));
+				$target = WWW_ROOT.'/'.$target;
+
+				$width_max = $ApiConfiguration['ApiConfiguration']['cape_width']; // pixel
+				$height_max = $ApiConfiguration['ApiConfiguration']['cape_height']; // pixel
+
+				$isValidImg = $this->Util->isValidImage($this->request, array('png'), $width_max, $height_max, $cape_max_size);
+
+				if(!$isValidImg['status']) {
+					echo json_encode(array('statut' => false, 'msg' => $isValidImg['msg']));
+					exit;
+				} else {
+					$infos = $isValidImg['infos'];
+				}
+
+				if(!$this->Util->uploadImage($this->request, $target.$filename)) {
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD')));
+					exit;
+				}
+
+	     echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('CAPE_SUCCESS_UPLOAD')));
+
+			}
+
+		} else {
+			new ForbiddenException();
+		}
+	}
+
 	function profile() {
 		if($this->isConnected) {
 
@@ -197,112 +291,6 @@ class UserController extends AppController {
 			$this->set('can_cape', $this->API->can_cape());
 			$this->set('can_skin', $this->API->can_skin());
 
-			$skin_max_size = 10000000; // en octet
-			$this->set(compact('skin_max_size'));
-			$cape_max_size = 10000000;
-			$this->set(compact('cape_max_size'));
-
-			/* SKIN & CAPE */
-
-			if($this->request->is('post')) {
-				/* SKIN */
-				if(!empty($this->request->data['skin_form']) AND $this->API->can_skin()) {
-
-					$this->loadModel('ApiConfiguration');
-					$ApiConfiguration = $this->ApiConfiguration->find('first');
-					$target_config = $ApiConfiguration['ApiConfiguration']['skin_filename'];
-					$filename = substr($target_config, (strrpos($target_config, '/') + 1));
-					$target = substr($target_config, 0, (strrpos($target_config, '/') + 1));
-			        $target = WWW_ROOT.'/'.$target;
-			        $max_size = $skin_max_size; // en octet
-			        $width_max = $ApiConfiguration['ApiConfiguration']['skin_width']; // pixel
-			        $height_max = $ApiConfiguration['ApiConfiguration']['skin_height']; // pixel
-
-		            $extensions = array('png');    // Extensions autorisees
-
-			        if(!is_dir($target)) {
-						if(!mkdir($target, 0755)) {
-			            	$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR').' Code : 1');
-			        	}
-			        }
-
-	                $extension  = pathinfo($_FILES['skin']['name'], PATHINFO_EXTENSION);
-	                if(in_array(strtolower($extension),$extensions)) {
-	                  	$infosImg = getimagesize($_FILES['skin']['tmp_name']);
-	                  	if($infosImg[2] >= 1 && $infosImg[2] <= 14) {
-	                  		if(($infosImg[0] <= $width_max) && ($infosImg[1] <= $height_max) && (filesize($_FILES['skin']['tmp_name']) <= $max_size)) {
-	                    		if(isset($_FILES['skin']['error']) && UPLOAD_ERR_OK === $_FILES['skin']['error']) {
-	                    			$filename = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $filename);
-	                    			$filename = str_replace('php', '', $filename);
-	                    			$filename = str_replace('.', '', $filename);
-	                    			$filename = $filename.'.png';
-	                    			if(move_uploaded_file($_FILES['skin']['tmp_name'], $target.$filename)) {
-	                      					$this->Session->setFlash($this->Lang->get('SKIN_SUCCESS_UPLOAD'), 'default.success');
-	                    			} else {
-	                      					$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR').' Code : 2', 'default.error');
-	                    			}
-	                    		} else {
-	                      			$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR').' Code : 3', 'default.error');
-	                    		}
-	                  		} else {
-	                    		$this->Session->setFlash($this->Lang->get('DIMENSION_OVERSIZE'), 'default.error');
-	                  		}
-	                  	} else {
-	                  		$this->Session->setFlash($this->Lang->get('INVALID_IMG'), 'default.error');
-	                  	}
-	                } else {
-	                  $this->Session->setFlash($this->Lang->get('INVALID_EXTENSION'), 'default.error');
-	                }
-				}
-				/* CAPE */
-				if(!empty($this->request->data['cape_form']) AND $this->API->can_cape()) {
-											$this->loadModel('ApiConfiguration');
-					$ApiConfiguration = $this->ApiConfiguration->find('first');
-					$target_config = $ApiConfiguration['ApiConfiguration']['cape_filename'];
-					$filename = substr($target_config, (strrpos($target_config, '/') + 1));
-					$target = substr($target_config, 0, (strrpos($target_config, '/') + 1));
-			        $target = WWW_ROOT.'/'.$target;
-			        $max_size = $cape_max_size; // en octet
-			        $width_max = $ApiConfiguration['ApiConfiguration']['cape_width']; // pixel
-			        $height_max = $ApiConfiguration['ApiConfiguration']['cape_height']; // pixel
-
-		            $extensions = array('png');    // Extensions autorisees
-
-			        if(!is_dir($target)) {
-						if(!mkdir($target, 0755)) {
-			            	$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR').' Code : 1');
-			        	}
-			        }
-
-	                $extension  = pathinfo($_FILES['cape']['name'], PATHINFO_EXTENSION);
-	                if(in_array(strtolower($extension),$extensions)) {
-	                  	$infosImg = getimagesize($_FILES['cape']['tmp_name']);
-	                  	if($infosImg[2] >= 1 && $infosImg[2] <= 14) {
-	                  		if(($infosImg[0] <= $width_max) && ($infosImg[1] <= $height_max) && (filesize($_FILES['cape']['tmp_name']) <= $max_size)) {
-	                    		if(isset($_FILES['cape']['error']) && UPLOAD_ERR_OK === $_FILES['cape']['error']) {
-	                    			$filename = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $filename);
-	                    			$filename = str_replace('php', '', $filename);
-	                    			$filename = str_replace('.', '', $filename);
-	                    			$filename = $filename.'.png';
-	                    			if(move_uploaded_file($_FILES['cape']['tmp_name'], $target.$filename)) {
-	                      					$this->Session->setFlash($this->Lang->get('CAPE_SUCCESS_UPLOAD'), 'default.success');
-	                    			} else {
-	                      					$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR').' Code : 2', 'default.error');
-	                    			}
-	                    		} else {
-	                      			$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR').' Code : 3', 'default.error');
-	                    		}
-	                  		} else {
-	                    		$this->Session->setFlash($this->Lang->get('DIMENSION_OVERSIZE'), 'default.error');
-	                  		}
-	                  	} else {
-	                  		$this->Session->setFlash($this->Lang->get('INVALID_IMG'), 'default.error');
-	                  	}
-	                } else {
-	                  $this->Session->setFlash($this->Lang->get('INVALID_EXTENSION'), 'default.error');
-	                }
-				}
-			}
 		} else {
 			$this->redirect('/');
 		}

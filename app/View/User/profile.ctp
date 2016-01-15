@@ -1,4 +1,4 @@
-<?php 
+<?php
 $this->EyPlugin = new EyPluginComponent;
 $this->Configuration = new ConfigurationComponent;
 ?>
@@ -6,8 +6,8 @@ $this->Configuration = new ConfigurationComponent;
 		<div class="panel panel-default">
 		  <div class="panel-heading"><?= $Lang->get('PROFILE') ?></div>
 		 	<div class="panel-body">
-			
-				<?php 
+
+				<?php
 			  	if($search_psc_msg != false AND !empty($search_psc_msg)) {
 			  		foreach ($search_psc_msg as $key => $value) {
 			  			if($value['PaysafecardMessage']['type'] == 1) {
@@ -27,7 +27,7 @@ $this->Configuration = new ConfigurationComponent;
 				</div>
 				<div class="section">
 					<p>
-						<b><?= $Lang->get('RANK') ?> :</b> 
+						<b><?= $Lang->get('RANK') ?> :</b>
 						<?php foreach ($available_ranks as $key => $value) {
 							if($user['rank'] == $key) {
 								echo $value;
@@ -121,7 +121,7 @@ $this->Configuration = new ConfigurationComponent;
 									</tr>
 								</thead>
 								<tbody id="table-ip">
-									<?php 
+									<?php
 									foreach ($api as $key => $value) { ?>
 										<tr id="<?= $key ?>">
 											<th><?= $value ?></th>
@@ -132,7 +132,7 @@ $this->Configuration = new ConfigurationComponent;
 
 							</table>
 						</div>
-			
+
 						<div class="col-md-4">
 							<form id="allowed_ip">
 								<div class="ajax-msg-ip"></div>
@@ -147,7 +147,7 @@ $this->Configuration = new ConfigurationComponent;
 						</div>
 					</div>
 					<div class="row">
-						
+
 						<div class="ajax-msg-mineguard"></div>
 						<?php if($user['allowed_ip'] == '0') { ?>
 							<button onClick="enableMineGuard();" class="btn btn-block btn-success"><?= $Lang->get('ENABLE') ?></button>
@@ -162,12 +162,10 @@ $this->Configuration = new ConfigurationComponent;
 
 					<h3><?= $Lang->get('SKIN') ?></h3>
 
-					<form class="form-inline" method="post" enctype="multipart/form-data">
-						<input type="hidden" name="MAX_FILE_SIZE" value="<?= $skin_max_size ?>" />
-						<input type="hidden" name="skin_form" value="1">
+					<form class="form-inline" method="post" id="skin" method="post" data-ajax="true" data-upload-image="true" action="<?= $this->Html->url(array('action' => 'uploadSkin')) ?>">
 					  <div class="form-group">
 					    <label><?= $Lang->get('CHOOSE_YOUR_FILE') ?></label>
-					    <input name="skin" type="file">
+					    <input name="image" type="file">
 					  </div>
 					  <button type="submit" class="btn btn-default"><?= $Lang->get('SUBMIT') ?></button>
 					  <div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;</div>
@@ -184,15 +182,14 @@ $this->Configuration = new ConfigurationComponent;
 				<?php if($can_cape) { ?>
 					<hr>
 
-					<h3><?= $Lang->get('CAPE') ?></h3>	
+					<h3><?= $Lang->get('CAPE') ?></h3>
 
-					<form class="form-inline" method="post" enctype="multipart/form-data">
-						<input type="hidden" name="MAX_FILE_SIZE" value="<?= $cape_max_size ?>" />
-						<input type="hidden" name="cape_form" value="1">
+					<form class="form-inline" method="post" id="cape" method="post" data-ajax="true" data-upload-image="true" action="<?= $this->Html->url(array('action' => 'uploadCape')) ?>">
 					  <div class="form-group">
 					    <label><?= $Lang->get('CHOOSE_YOUR_FILE') ?></label>
-					    <input name="cape" type="file">
+					    <input name="image" type="file">
 					  </div>
+						<input name="data[_Token][key]" value="<?= $csrfToken ?>" type="hidden">
 					  <button type="submit" class="btn btn-default"><?= $Lang->get('SUBMIT') ?></button>
 					  <div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;</div>
 					  <div class="form-group">
@@ -202,7 +199,7 @@ $this->Configuration = new ConfigurationComponent;
                 		- <?= $Lang->get('WIDTH_MAX') ?><br>
                 		- <?= $Lang->get('HEIGHT_MAX') ?><br>
 					  </div>
-					</form>	
+					</form>
 				<?php } ?>
 
 				<?= $Module->loadModules('user_profile') ?>
@@ -242,7 +239,7 @@ $this->Configuration = new ConfigurationComponent;
 	        });
 	        return false;
 		}
-		
+
 		$("#allowed_ip").submit(function( event ) {
 			$('.ajax-msg-ip').empty().html('<div class="alert alert-info"><a class="close" data-dismiss="alert">×</a><?= $Lang->get('LOADING') ?>...</div>').fadeIn(500);
 	    	event.preventDefault();

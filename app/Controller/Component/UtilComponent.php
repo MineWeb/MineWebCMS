@@ -128,6 +128,13 @@ class UtilComponent extends Object {
   }
 
   public function uploadImage($request, $name) {
+    $folders = explode('/', $name);
+    $folders = end($folders);
+    if(!is_dir($folders)) {
+      if(!mkdir($folders, 0755, true)) {
+        return false;
+      }
+    }
     return move_uploaded_file($request->params['form']['image']['tmp_name'], $name);
   }
 

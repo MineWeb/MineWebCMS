@@ -139,25 +139,38 @@ $(document).ready(function(){
 
       //
 
-    $.post(form.attr('action'), inputs, function(data) {
-      var json = JSON.parse(data);
-      if(json.statut === true) {
-        if(form.attr('data-success-msg') === undefined || form.attr('data-success-msg') == "true") {
-          form.find('.ajax-msg').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b>'+SUCCESS_MSG+' :</b> '+json.msg+'</i></div>').fadeIn(500);
+    if(form.attr('data-upload-image') == "true") {
+			var contentType = false;
+			var processData = false;
+			inputs = (window.FormData) ? new FormData(form[0]) : null;
+		}
+
+    $.ajax({
+      url: form.attr('action'),
+      data: inputs,
+      method: 'post',
+      contentType: (contentType === undefined) ? 'application/x-www-form-urlencoded; charset=UTF-8' : contentType,
+      processData: (processData === undefined) ? 'application/x-www-form-urlencoded; charset=UTF-8' : processData,
+      success: function(data) {
+        var json = JSON.parse(data);
+        if(json.statut === true) {
+          if(form.attr('data-success-msg') === undefined || form.attr('data-success-msg') == "true") {
+            form.find('.ajax-msg').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b>'+SUCCESS_MSG+' :</b> '+json.msg+'</i></div>').fadeIn(500);
+          }
+          if(form.attr('data-callback-function') !== undefined) {
+            window[form.attr('data-callback-function')](inputs, json);
+          }
+          if(form.attr('data-redirect-url') !== undefined) {
+            document.location.href=form.attr('data-redirect-url');
+          }
+          submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
+        } else if(json.statut === false) {
+          form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b>'+ERROR_MSG+' :</b> '+json.msg+'</i></div>').fadeIn(500);
+          submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
+        } else {
+          form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b>'+ERROR_MSG+' :</b> '+INTERNAL_ERROR_MSG+'</i></div>');
+          submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
         }
-        if(form.attr('data-callback-function') !== undefined) {
-          window[form.attr('data-callback-function')](inputs, json);
-        }
-        if(form.attr('data-redirect-url') !== undefined) {
-          document.location.href=form.attr('data-redirect-url');
-        }
-        submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
-      } else if(json.statut === false) {
-        form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b>'+ERROR_MSG+' :</b> '+json.msg+'</i></div>').fadeIn(500);
-        submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
-      } else {
-        form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b>'+ERROR_MSG+' :</b> '+INTERNAL_ERROR_MSG+'</i></div>');
-        submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
       }
     });
   });

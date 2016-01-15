@@ -1,4 +1,4 @@
-<?php 
+<?php
 $this->Configuration = new ConfigurationComponent;
 $this->EyPlugin = new EyPluginComponent;
 ?>
@@ -9,11 +9,11 @@ $this->EyPlugin = new EyPluginComponent;
         		<div class="ribbon-stitches-top"></div>
         		<div class="ribbon-content"><p>
         				<?php if($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
-        					<span class="pull-left hidden-xs"><span class="info"><span class="money"><?= $user['money'] ?></span><?php if($user['money'] == 1) { echo  ' '.$this->Configuration->get_money_name(false, true); } else { echo  ' '.$this->Configuration->get_money_name(); } ?></span></span> 
+        					<span class="pull-left hidden-xs"><span class="info"><span class="money"><?= $user['money'] ?></span><?php if($user['money'] == 1) { echo  ' '.$this->Configuration->get_money_name(false, true); } else { echo  ' '.$this->Configuration->get_money_name(); } ?></span></span>
         				<?php } ?>
 						<span class="text-center"><?= $user['pseudo'] ?></span>
 						<?php if($this->EyPlugin->isInstalled('eywek.vote.2')) { ?>
-	        				<span class="pull-right hidden-xs"><span class="info"><?= $user['vote'] ?> <?= $Lang->get('VOTE') ?></span></span> 
+	        				<span class="pull-right hidden-xs"><span class="info"><?= $user['vote'] ?> <?= $Lang->get('VOTE') ?></span></span>
 	        			<?php } elseif($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
 							<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index')) ?>" class="btn btn-primary pull-right"><?= $Lang->get('SHOP') ?></a>
 	        			<?php } ?>
@@ -21,7 +21,7 @@ $this->EyPlugin = new EyPluginComponent;
         		<div class="ribbon-stitches-bottom"></div>
         	</div>
 			<div class="profile-content">
-				<?php 
+				<?php
 				  	if($search_psc_msg != false AND !empty($search_psc_msg)) {
 				  		foreach ($search_psc_msg as $key => $value) {
 				  			if($value['PaysafecardMessage']['type'] == 1) {
@@ -40,7 +40,7 @@ $this->EyPlugin = new EyPluginComponent;
 				</div>
 				<div class="section">
 					<p>
-						<b><?= $Lang->get('RANK') ?> :</b> 
+						<b><?= $Lang->get('RANK') ?> :</b>
 						<?php foreach ($available_ranks as $key => $value) {
 							if($user['rank'] == $key) {
 								echo $value;
@@ -137,7 +137,7 @@ $this->EyPlugin = new EyPluginComponent;
 										</tr>
 									</thead>
 									<tbody id="table-ip">
-										<?php 
+										<?php
 										foreach ($api as $key => $value) { ?>
 											<tr id="<?= $key ?>">
 												<th><?= $value ?></th>
@@ -148,7 +148,7 @@ $this->EyPlugin = new EyPluginComponent;
 
 								</table>
 							</div>
-				
+
 							<div class="col-md-4">
 								<form id="allowed_ip">
 									<div class="ajax-msg-ip"></div>
@@ -164,7 +164,7 @@ $this->EyPlugin = new EyPluginComponent;
 						</div>
 					</div>
 					<div class="row">
-						
+
 						<div class="ajax-msg-mineguard"></div>
 						<?php if($user['allowed_ip'] == '0') { ?>
 							<button onClick="enableMineGuard();" class="btn btn-block btn-success"><?= $Lang->get('ENABLE') ?></button>
@@ -179,13 +179,12 @@ $this->EyPlugin = new EyPluginComponent;
 
 					<h3><?= $Lang->get('SKIN') ?></h3>
 
-					<form class="form-inline" method="post" enctype="multipart/form-data">
-						<input type="hidden" name="MAX_FILE_SIZE" value="<?= $skin_max_size ?>" />
-						<input type="hidden" name="skin_form" value="1">
+					<form class="form-inline" id="skin" method="post" data-ajax="true" data-upload-image="true" action="<?= $this->Html->url(array('action' => 'uploadSkin')) ?>">
 					  <div class="form-group">
 					    <label><?= $Lang->get('CHOOSE_YOUR_FILE') ?></label>
-					    <input name="skin" type="file">
+					    <input name="image" type="file">
 					  </div>
+						<input name="data[_Token][key]" value="<?= $csrfToken ?>" type="hidden">
 					  <button type="submit" class="btn btn-default"><?= $Lang->get('SUBMIT') ?></button>
 					  <div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;</div>
 					  <div class="form-group">
@@ -201,15 +200,14 @@ $this->EyPlugin = new EyPluginComponent;
 				<?php if($can_cape) { ?>
 					<hr>
 
-					<h3><?= $Lang->get('CAPE') ?></h3>	
+					<h3><?= $Lang->get('CAPE') ?></h3>
 
-					<form class="form-inline" method="post" enctype="multipart/form-data">
-						<input type="hidden" name="MAX_FILE_SIZE" value="<?= $cape_max_size ?>" />
-						<input type="hidden" name="cape_form" value="1">
+					<form class="form-inline" method="post" id="cape" method="post" data-ajax="true" data-upload-image="true" action="<?= $this->Html->url(array('action' => 'uploadCape')) ?>">
 					  <div class="form-group">
 					    <label><?= $Lang->get('CHOOSE_YOUR_FILE') ?></label>
-					    <input name="cape" type="file">
+					    <input name="image" type="file">
 					  </div>
+						<input name="data[_Token][key]" value="<?= $csrfToken ?>" type="hidden">
 					  <button type="submit" class="btn btn-default"><?= $Lang->get('SUBMIT') ?></button>
 					  <div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;</div>
 					  <div class="form-group">
@@ -219,7 +217,7 @@ $this->EyPlugin = new EyPluginComponent;
                 		- <?= $Lang->get('WIDTH_MAX') ?><br>
                 		- <?= $Lang->get('HEIGHT_MAX') ?><br>
 					  </div>
-					</form>	
+					</form>
 				<?php } ?>
 
 				<?= $Module->loadModules('user_profile') ?>
