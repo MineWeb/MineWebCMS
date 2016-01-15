@@ -162,12 +162,9 @@ WCqkx22behAGZq6rhwIDAQAB
 					$updateThis = '';
 
 					if($thisFileName == 'modify.php') {
-						$upgradeExec = fopen('modify.php','w');
+						$upgradeExec = fopen(ROOT.DS.'modify.php','w');
 						fwrite($upgradeExec, $contents);
 						fclose($upgradeExec);
-						include 'modify.php';
-						unlink('modify.php');
-						$this->set_log('EXECUTE', 'success', $thisFileName, $rand);
 					} elseif($thisFileName != ".DS_Store" AND $thisFileName != "app/Config/database.php" AND $thisFileName != "config/secure" AND stristr($thisFileName, "lang/") === FALSE) {
 						if(file_exists(ROOT.'/'.$thisFileName)) {
 							$exist = true;
@@ -207,6 +204,21 @@ WCqkx22behAGZq6rhwIDAQAB
 			if($this->end_log($rand)) {
 				@unlink(ROOT.'/temp/'.$version.'.zip');
 				@unlink(ROOT.'/config/update');
+				$this->updateDb();
+
+				// au cas ou des modifications non pas pu être faites
+
+				if(file_exists(ROOT.DS.'modify.php')) {
+					// on l'inclue pour l'exec
+					try {
+						include(ROOT.DS.'modify.php');
+					} catch(Exception $e) {
+						// y'a eu une erreur
+						$this->log('Error on update (execute modify.php) - '.$e->getMessage());
+					}
+					unlink(ROOT.DS.'modify.php'); // on le supprime
+				}
+
 				return true;
 			} else {
 				return false;
@@ -214,6 +226,79 @@ WCqkx22behAGZq6rhwIDAQAB
 		} else {
 			$this->set_log('GET_FILES', 'error', 'CANT_WRITE_IN_TEMP', $rand);
 		}
+	}
+
+	public function updateDb() {
+		App::uses('CakeSchema', 'Model');
+    $this->Schema = new CakeSchema(array('name' => 'App', 'path' => ROOT.DS.'app'.DS.'Config'.DS.'Schema', 'file' => 'schema.php', 'connection' => 'default', 'plugin' => null));
+
+    App::uses('SchemaShell', 'Console/Command');
+    $SchemaShell = new SchemaShell();
+
+    $db = ConnectionManager::getDataSource($this->Schema->connection);
+
+    $options = array(
+        'name' => $this->Schema->name,
+        'path' => $this->Schema->path,
+        'file' => $this->Schema->file,
+        'plugin' => null,
+        'connection' => $this->Schema->connection,
+    );
+    $Schema = $this->Schema->load($options);
+
+    $Old = $this->Schema->read($options);
+    $compare = $this->Schema->compare($Old, $Schema);
+
+    $contents = array();
+
+    foreach ($compare as $table => $changes) {
+        if (isset($compare[$table]['create'])) {
+            $contents[$table] = $db->createSchema($Schema, $table);
+        } else {
+
+            // on vérifie que ce soit pas un plugin (pour ne pas supprimer ses modifications sur la tables lors d'une MISE A JOUR)
+            if(isset($compare[$table]['drop'])) { // si ca concerne un drop de colonne
+
+                foreach ($compare[$table]['drop'] as $column => $structure) {
+
+                    // vérifions que cela ne correspond pas à une colonne de plugin
+                    if(count(explode('__', $column)) > 1) {
+                        unset($compare[$table]['drop'][$column]);
+                    }
+                }
+
+            }
+
+            if(isset($compare[$table]['drop']) && count($compare[$table]['drop']) <= 0) {
+                unset($compare[$table]['drop']); // on supprime l'action si y'a plus rien à faire dessus
+            }
+
+            if(count($compare[$table]) > 0) {
+                $contents[$table] = $db->alterSchema(array($table => $compare[$table]), $table);
+            }
+        }
+    }
+
+		$error = array();
+		if(!empty($contents)) {
+				foreach ($contents as $table => $query) {
+						if(!empty($query)) {
+								try {
+										$db->execute($query);
+								} catch (PDOException $e) {
+										$error[] = $table . ': ' . $e->getMessage();
+										$this->log('MYSQL Schema Update : '.$e->getMessage());
+								}
+						}
+				}
+		}
+
+		$updateEntries = array();
+		include ROOT.DS.'Config'.DS.'Schema'.DS.'update-entries.php';
+
+		$this->Schema->after(array(), false, $updateEntries);
+
+		return (empty($error)) ? true : false;
 	}
 
 	public function plugin($zip, $plugin_name, $plugin_id) {

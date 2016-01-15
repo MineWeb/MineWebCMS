@@ -133,6 +133,14 @@ class SchemaShell extends AppShell {
 			$snapshot = true;
 		}
 
+		$plugin = false;
+		if (isset($this->args[0]) && explode('-', $this->args[0])[0] === 'plugin') {
+			$plugin = explode('-', $this->args[0])[1];
+
+			$this->Schema->path = ROOT.DS.'app'.DS.'Plugin'.DS.$plugin.DS.'SQL';
+			$this->params['file'] = 'schema.php';
+		}
+
 		if (!$snapshot && file_exists($this->Schema->path . DS . $this->params['file'])) {
 			$snapshot = true;
 			$prompt = __d('cake_console', "Schema file exists.\n [O]verwrite\n [S]napshot\n [Q]uit\nWould you like to do?");
@@ -153,8 +161,17 @@ class SchemaShell extends AppShell {
 
 		Configure::write('Cache.disable', $cacheDisable);
 
-		if (!empty($this->params['exclude']) && !empty($content)) {
-			$excluded = String::tokenize($this->params['exclude']);
+		if ((!empty($this->params['exclude']) || $plugin !== false) && !empty($content)) {
+
+			foreach ($content['tables'] as $key => $value) {
+				if(explode('__', $key)[0] != $plugin) {
+					$excluded[] = $key;
+				}
+			}
+
+			if(!$plugin) {
+				$excluded = String::tokenize($this->params['exclude']);
+			}
 			foreach ($excluded as $table) {
 				unset($content['tables'][$table]);
 			}

@@ -1,7 +1,7 @@
 <?php
 App::uses('CakeEvent', 'Event');
 
-class VoteModel extends VoteAppModel {
+class Vote extends VoteAppModel {
 
 	public function afterSave($created, $options = array()) {
 		if($created) {
