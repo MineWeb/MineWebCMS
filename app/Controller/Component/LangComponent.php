@@ -168,6 +168,20 @@ class LangComponent extends Object {
       return $messages; // le msg tel quel ou modifié
 		}
 
+    public function set($msg, $value) {
+
+      $language = $this->lang;
+
+      $lang = file_get_contents($this->langFolder.DS.$language['path'].'.json');
+			$lang = json_decode($lang, true);
+
+      $lang['MESSAGES'][$msg] = $value;
+
+      $edit = json_encode($lang, JSON_PRETTY_PRINT);
+      @file_put_contents($this->langFolder.DS.$language['path'].'.json', $edit);
+
+    }
+
     public function setAll($data) {
 
     	$language = $this->getAll();

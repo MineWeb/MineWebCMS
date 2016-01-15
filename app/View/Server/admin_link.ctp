@@ -27,6 +27,33 @@
       </div>
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+        <div class="box-header with-border">
+          <h3 class="box-title"><?= $Lang->get('SERVER__CONFIG_BANNER_MSG') ?></h3>
+        </div>
+        <div class="box-body">
+
+          <form action="<?= $this->Html->url(array('controller' => 'server', 'action' => 'editBannerMsg', 'admin' => true)) ?>" method="post">
+
+            <input type="hidden" id="form_infos" data-ajax="true">
+
+            <div class="ajax-msg"></div>
+
+            <div class="form-group">
+              <input type="text" class="form-control" name="msg" value="<?= $bannerMsg ?>">
+              <small><?= $Lang->get('AVAILABLE_VARIABLES') ?> : {MOTD}, {VERSION}, {ONLINE}, {ONLINE_LIMIT}</small>
+            </div>
+
+            <button type="submit" class="btn btn-primary"><?= $Lang->get('SUBMIT') ?></button>
+
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
   <?php if(!empty($servers)) { ?>
     <?php foreach ($servers as $key => $value) { ?>
       <div class="row">

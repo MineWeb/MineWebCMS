@@ -26,13 +26,33 @@ class ServerController extends AppController {
 				}
 			}
 
-			$this->set(compact('servers'));
+			$bannerMsg = $this->Lang->get('BANNER_SERVER');
+
+			$this->set(compact('servers', 'bannerMsg'));
 
 			$this->set('isEnabled', $this->Configuration->get('server_state'));
 
 			$this->set('timeout', $this->Configuration->get('server_timeout'));
 		} else {
 			$this->redirect('/');
+		}
+	}
+
+	public function admin_editBannerMsg() {
+		$this->autoRender = false;
+
+		if($this->isConnected AND $this->User->isAdmin()) {
+
+			if($this->request->is('ajax')) {
+
+				$this->Lang->set('BANNER_SERVER', $this->request->data['msg']);
+
+				echo $this->Lang->get('SERVER__EDIT_BANNER_MSG_SUCCESS').'|true';
+
+			} else {
+				throw new NotFoundException();
+			}
+
 		}
 	}
 
