@@ -45,30 +45,25 @@ class User extends AppModel {
 
 		$data_to_save['password'] = password($data['password']);
 
-		$data_to_save['session'] = $data['session'];
-
 		$this->create();
 		$this->set($data_to_save);
-		return $this->save();
+		$this->save();
+		return $this->getLastInsertId();
 	}
 
-	public function login($data, $session) {
+	public function login($data) {
 		$search_user = $this->find('first', array('conditions' => array('pseudo' => $data['pseudo'], 'password' => password($data['password']))));
 		if(!empty($search_user)) {
 
 			$this->getEventManager()->dispatch(new CakeEvent('onLogin', $data));
 
-			$this->read(null, $search_user['User']['id']);
-			$this->set(array('session' => $session));
-			$this->save();
-
-			return true;
+			return array('status' => true, 'session' => $search_user['User']['id']);
 		} else {
 			return 'BAD_PSEUDO_OR_PASSWORD';
 		}
 	}
 
-	public function resetPass($data, $session) {
+	public function resetPass($data) {
 		$data['password'] = password($data['password']);
 		$data['password2'] = password($data['password2']);
 		if($data['password'] == $data['password2']) {
@@ -83,13 +78,12 @@ class User extends AppModel {
 					$this->Lostpassword->delete($Lostpassword[0]['Lostpassword']['id']);
 
 					$data_to_save['password'] = $data['password'];
-					$data_to_save['session'] = $session; // on connecte l'utilisateur
 
 					$this->read(null, $search['0']['User']['id']);
 					$this->set($data_to_save);
 					$this->save();
 
-					return true;
+					return array('status' => true, 'session' => $search[0]['User']['id']);
 
 				} else {
 					return 'INVALID_KEY_FOR_RESET';
@@ -104,7 +98,7 @@ class User extends AppModel {
 
 	private function getDataBySession($session) {
     	if(empty($this->userData)) {
-      		$this->userData = $this->find('first', array('conditions' => array('session' => $session)));
+      		$this->userData = $this->find('first', array('conditions' => array('id' => $session)));
     	}
     	return $this->userData;
   	}
@@ -116,10 +110,10 @@ class User extends AppModel {
         	// Je cherche si il la session est pas vide et si elle est dans la bdd
         	$user = $this->find('all', array(
             	'conditions' => array(
-                	'session' => CakeSession::read('user'),
+                	'id' => CakeSession::read('user'),
             	)
         	));
-       	 	return (isset($user['0']['User']['session']));
+       	 	return (isset($user['0']['User']['id']));
     	}
 	}
 
@@ -129,7 +123,7 @@ class User extends AppModel {
       	} else {
         	// Je cherche si il la session est pas vide et si elle est dans la bdd
         	$user = $this->getDataBySession(CakeSession::read('user'));
-        	return (isset($user['User']['session']) AND $user['User']['rank'] == 3 OR $user['User']['rank'] == 4);
+        	return (isset($user['User']['id']) AND $user['User']['rank'] == 3 OR $user['User']['rank'] == 4);
       }
 	}
 
