@@ -52,14 +52,47 @@ class User extends AppModel {
 	}
 
 	public function login($data) {
-		$search_user = $this->find('first', array('conditions' => array('pseudo' => $data['pseudo'], 'password' => password($data['password']))));
-		if(!empty($search_user)) {
+		$LoginRetryTable = ClassRegistry::init('LoginRetry');
+		$findRetryWithIP = $LoginRetryTable->find('first', array(array('ip' => $_SERVER['REMOTE_ADDR'])));
 
-			$this->getEventManager()->dispatch(new CakeEvent('onLogin', $data));
+		// si on trouve rien OU que il n'a pas encore essayé plus de 10 fois OU que la dernière date du retry est passé depuis 2h
 
-			return array('status' => true, 'session' => $search_user['User']['id']);
+		if(empty($findRetryWithIP) || $findRetryWithIP['LoginRetry']['count'] < 10 || strtotime('+2 hours', strtotime($findRetryWithIP['LoginRetry']['modified'])) < time()) {
+
+			$search_user = $this->find('first', array('conditions' => array('pseudo' => $data['pseudo'], 'password' => password($data['password']))));
+			if(!empty($search_user)) {
+
+				$this->getEventManager()->dispatch(new CakeEvent('onLogin', $data));
+
+				return array('status' => true, 'session' => $search_user['User']['id']);
+			} else {
+
+				if(empty($findRetryWithIP)) { // si il avais rien fail encore
+
+					$LoginRetryTable->create();
+					$LoginRetryTable->set(array(
+						'ip' => $_SERVER['REMOTE_ADDR'],
+						'count' => 1
+					));
+					$LoginRetryTable->save();
+
+				} else {
+
+					$LoginRetryTable->read(null, $findRetryWithIP['LoginRetry']['id']);
+					$LoginRetryTable->set(array(
+						'ip' => $_SERVER['REMOTE_ADDR'],
+						'count' => ($findRetryWithIP['LoginRetry']['count']+1),
+						'modified' => date('Y-m-d H:i:s')
+					));
+					$LoginRetryTable->save();
+
+				}
+
+				return 'BAD_PSEUDO_OR_PASSWORD';
+			}
+
 		} else {
-			return 'BAD_PSEUDO_OR_PASSWORD';
+			return 'LOGIN__BLOCKED';
 		}
 	}
 
