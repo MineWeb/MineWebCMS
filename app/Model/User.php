@@ -51,7 +51,7 @@ class User extends AppModel {
 		return $this->getLastInsertId();
 	}
 
-	public function login($data) {
+	public function login($data, $need_email_confirmed = false) {
 		$LoginRetryTable = ClassRegistry::init('LoginRetry');
 		$findRetryWithIP = $LoginRetryTable->find('first', array(array('ip' => $_SERVER['REMOTE_ADDR'])));
 
@@ -62,9 +62,15 @@ class User extends AppModel {
 			$search_user = $this->find('first', array('conditions' => array('pseudo' => $data['pseudo'], 'password' => password($data['password']))));
 			if(!empty($search_user)) {
 
+				if($need_email_confirmed && !empty($search_user['User']['confirmed']) && date('Y-m-d H:i:s', strtotime($search_user['User']['confirmed'])) != $search_user['User']['confirmed']) {
+					// mail non confirmé
+					return 'USER__MSG_NOT_CONFIRMED_EMAIL';
+				}
+
 				$this->getEventManager()->dispatch(new CakeEvent('onLogin', $data));
 
 				return array('status' => true, 'session' => $search_user['User']['id']);
+
 			} else {
 
 				if(empty($findRetryWithIP)) { // si il avais rien fail encore

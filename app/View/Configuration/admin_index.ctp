@@ -267,6 +267,46 @@
               <div class="tab-pane" id="tab_3">
 
                 <div class="form-group">
+                  <label><?= $Lang->get('CONFIG__KEY_CONFIRM_MAIL_SIGNUP') ?></label>
+                  <br>
+                  <small><?= $Lang->get('CONFIG__CONFIRM_MAIL_SIGNUP_EXPLAIN') ?></small>
+                  <div class="radio">
+                    <input type="radio" name="confirm_mail_signup" value="1" <?= ($config['confirm_mail_signup'] == '1') ? 'checked=""' : '' ?>>
+                    <label><?= $Lang->get('ENABLE') ?></label>
+                  </div>
+                  <div class="radio">
+                    <input type="radio" name="confirm_mail_signup" value="0" <?= ($config['confirm_mail_signup'] == '0') ? 'checked=""': '' ?>>
+                    <label><?= $Lang->get('DISABLE') ?></label>
+                  </div>
+                </div>
+
+                <script type="text/javascript">
+                  $('input[name="confirm_mail_signup"]').on('change', function(e) {
+                    if($(this).val() == '1') {
+                      $('#confirm_mail_signup').slideDown(250);
+                    } else {
+                      $('#confirm_mail_signup').slideUp(250);
+                    }
+                  });
+                </script>
+
+                <div id="confirm_mail_signup" style="display:<?= ($config['confirm_mail_signup'] == '1') ? 'block' : 'none' ?>;">
+                  <div class="form-group">
+                    <label><?= $Lang->get('CONFIG__KEY_CONFIRM_MAIL_SIGNUP_BLOCK') ?></label>
+                    <div class="radio">
+                      <input type="radio" name="confirm_mail_signup_block" value="1" <?= ($config['confirm_mail_signup_block'] == '1') ? 'checked=""' : '' ?>>
+                      <label><?= $Lang->get('ENABLE') ?></label>
+                    </div>
+                    <div class="radio">
+                      <input type="radio" name="confirm_mail_signup_block" value="0" <?= ($config['confirm_mail_signup_block'] == '0') ? 'checked=""': '' ?>>
+                      <label><?= $Lang->get('DISABLE') ?></label>
+                    </div>
+                  </div>
+                </div>
+
+                <hr>
+
+                <div class="form-group">
                   <label><?= $Lang->get('CONFIG__KEY_CAPTCHA_TYPE') ?></label>
                   <div class="radio">
                     <input type="radio" name="captcha_type" value="1" <?= ($config['captcha_type'] == '1') ? 'checked=""' : '' ?>>
@@ -312,6 +352,8 @@
                   </div>
                 </div>
 
+                <hr>
+
                 <div class="form-group">
                   <label><?= $Lang->get('CONFIG__KEY_GOOGLE_ANALYTICS') ?></label>
                     <?= $this->Form->input(false, array(
@@ -323,6 +365,8 @@
                       'maxlength' => '15'
                     )); ?>
                 </div>
+
+                <hr>
 
                 <div class="form-group">
                   <label><?= $Lang->get('CONFIG__KEY_END_LAYOUT_COE') ?></label>
@@ -336,6 +380,8 @@
                     )); ?>
                 </div>
 
+                <hr>
+
                 <div class="form-group">
                   <label><?= $Lang->get('CONFIG__KEY_MINEGUARD') ?></label>
                   <div class="radio">
@@ -347,6 +393,8 @@
                     <label><?= $Lang->get('DISABLED') ?></label>
                   </div>
                 </div>
+
+                <hr>
 
                 <div class="form-group">
                   <label><?= $Lang->get('CONFIG__KEY_EMAIL_SEND_TYPE') ?></label>

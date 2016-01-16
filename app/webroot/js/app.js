@@ -160,7 +160,19 @@ $(document).ready(function(){
       contentType: (contentType === undefined) ? 'application/x-www-form-urlencoded; charset=UTF-8' : contentType,
       processData: (processData === undefined) ? 'application/x-www-form-urlencoded; charset=UTF-8' : processData,
       success: function(data) {
-        var json = JSON.parse(data);
+        try {
+          var json = JSON.parse(data);
+        }
+        catch (e) { // si c'est pas du JSON
+          console.log(e);
+
+          if(recaptcha) {
+            grecaptcha.reset();
+          }
+
+          form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b>'+ERROR_MSG+' :</b> '+INTERNAL_ERROR_MSG+'</i></div>');
+          submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
+        }
         if(json.statut === true) {
           if(form.attr('data-success-msg') === undefined || form.attr('data-success-msg') == "true") {
             form.find('.ajax-msg').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b>'+SUCCESS_MSG+' :</b> '+json.msg+'</i></div>').fadeIn(500);
@@ -189,6 +201,14 @@ $(document).ready(function(){
           form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b>'+ERROR_MSG+' :</b> '+INTERNAL_ERROR_MSG+'</i></div>');
           submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
         }
+      },
+      error : function(data) {
+        if(recaptcha) {
+          grecaptcha.reset();
+        }
+
+        form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b>'+ERROR_MSG+' :</b> '+INTERNAL_ERROR_MSG+'</i></div>');
+        submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
       }
     });
   });

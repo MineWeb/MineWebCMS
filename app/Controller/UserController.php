@@ -56,8 +56,38 @@ class UserController extends AppController {
 						// on enregistre
 						$userSession = $this->User->register($this->request->data);
 
-						// on prépare la connexion
-						$this->Session->write('user', $userSession);
+						// On envoie le mail de confirmation si demandé
+						if($this->Configuration->get('confirm_mail_signup')) {
+
+							$confirmCode = substr(md5(uniqid()), 0, 12);
+
+							$emailMsg = $this->Lang->get('EMAIL__CONTENT_CONFIRM_MAIL');
+							$emailMsg = str_replace('{LINK}', Router::url('/user/confirm/').$confirmCode, $emailMsg);
+							$emailMsg = str_replace('{IP}', $_SERVER['REMOTE_ADDR'], $emailMsg);
+							$emailMsg = str_replace('{USERNAME}', $this->request->data['pseudo'], $emailMsg);
+							$emailMsg = str_replace('{DATE}', $this->Lang->date(date('Y-m-d H:i:s')), $emailMsg);
+
+							$email = $this->Util->prepareMail(
+								$this->request->data['email'],
+								$this->Lang->get('EMAIL__TITLE_CONFIRM_MAIL'),
+								$emailMsg
+							)->sendMail();
+
+							if($email) {
+
+								$this->User->read(null, $this->User->getLastInsertID());
+								$this->User->set(array('confirmed' => $confirmCode));
+								$this->User->save();
+
+							}
+
+						}
+
+						if(!$this->Configuration->get('confirm_mail_signup_block')) { // si on doit pas bloquer le compte si non confirmé
+							// on prépare la connexion
+							$this->Session->write('user', $userSession);
+							$this->getEventManager()->dispatch(new CakeEvent('onLogin', array($this->request->data, $userSession, 'register' => true)));
+						}
 
 						// on dis que c'est bon
 						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_REGISTER')));
@@ -81,7 +111,9 @@ class UserController extends AppController {
 		if($this->request->is('Post')) {
 			if(!empty($this->request->data['pseudo']) && !empty($this->request->data['password'])) {
 
-				$login = $this->User->login($this->request->data);
+				$need_confirmed_email = ($this->Configuration->get('confirm_mail_signup') && $this->Configuration->get('confirm_mail_signup_block'));
+
+				$login = $this->User->login($this->request->data, $need_confirmed_email);
 				if(isset($login['status']) && $login['status'] === true) {
 
 					$this->Session->write('user', $login['session']);
@@ -99,6 +131,34 @@ class UserController extends AppController {
 			}
 		} else {
 			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('PAGE_BAD_EXECUTED')));
+		}
+	}
+
+	function confirm($code = false) {
+		$this->autoRender = false;
+		if(isset($code)) {
+
+			$find = $this->User->find('first', array('conditions' => array('confirmed' => $code)));
+
+			if(!empty($find)) {
+
+				$this->User->read(null, $find['User']['id']);
+				$this->User->set(array('confirmed' => date('Y-m-d H:i:s')));
+				$this->User->save();
+
+				$userSession = $find['User']['id'];
+
+				$this->Session->write('user', $userSession);
+				$this->getEventManager()->dispatch(new CakeEvent('onLogin', array($find, $userSession, 'confirmEmail' => true)));
+
+				$this->redirect(array('action' => 'profile'));
+
+			} else {
+				throw new NotFoundException();
+			}
+
+		} else {
+			throw new NotFoundException();
 		}
 	}
 
@@ -304,6 +364,10 @@ class UserController extends AppController {
 			$this->set('can_cape', $this->API->can_cape());
 			$this->set('can_skin', $this->API->can_skin());
 
+			if($this->Configuration->get('confirm_mail_signup') && !empty($this->User->getKey('confirmed')) && date('Y-m-d H:i:s', strtotime($this->User->getKey('confirmed'))) != $this->User->getKey('confirmed')) { // si ca ne correspond pas à une date -> compte non confirmé
+				$this->Session->setFlash($this->Lang->get('USER__MSG_NOT_CONFIRMED_EMAIL'), 'default.warning');
+			}
+
 		} else {
 			$this->redirect('/');
 		}
@@ -440,6 +504,12 @@ class UserController extends AppController {
 						}
 					}
 
+					if($this->Configuration->get('confirm_mail_signup') && !empty($user['confirmed']) && date('Y-m-d H:i:s', strtotime($user['confirmed'])) != $user['confirmed']) {
+						$user['confirmed'] = false;
+					} else {
+						$user['confirmed'] = true;
+					}
+
 					$this->set(compact('options_ranks'));
 
 					$this->set(compact('user'));
@@ -452,6 +522,31 @@ class UserController extends AppController {
 			}
 		} else {
 			$this->redirect('/');
+		}
+	}
+
+	function admin_confirm($user_id = false) {
+		$this->autoRender = false;
+		if(isset($user_id) && $this->isConnected AND $this->User->isAdmin()) {
+
+			$find = $this->User->find('first', array('conditions' => array('id' => $user_id)));
+
+			if(!empty($find)) {
+
+				$this->User->read(null, $find['User']['id']);
+				$this->User->set(array('confirmed' => date('Y-m-d H:i:s')));
+				$this->User->save();
+
+				$userSession = $find['User']['id'];
+
+				$this->redirect(array('action' => 'edit', $user_id));
+
+			} else {
+				throw new NotFoundException();
+			}
+
+		} else {
+			throw new NotFoundException();
 		}
 	}
 

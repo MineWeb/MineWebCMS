@@ -82,7 +82,12 @@ class AppSchema extends CakeSchema {
 				'smtpPort' => null,
 				'smtpPassword' => null,
 				'google_analytics' => null,
-				'end_layout_code' => null
+				'end_layout_code' => null,
+				'captcha_type' => 1,
+				'captcha_google_sitekey' => null,
+				'captcha_google_secret' => null,
+				'confirm_mail_signup' => 0,
+				'confirm_mail_signup_block' => 0
 			));
 
 	    $configuration->save();
@@ -203,6 +208,8 @@ class AppSchema extends CakeSchema {
 		'captcha_type' => array('type' => 'integer', 'null' => true, 'default' => '1', 'length' => 1, 'unsigned' => false, 'comment' => '1 = default, 2 = google'),
 		'captcha_google_sitekey' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 60, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'captcha_google_secret' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 60, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+		'confirm_mail_signup' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 1, 'unsigned' => false),
+		'confirm_mail_signup_block' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 1, 'unsigned' => false),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),
@@ -383,6 +390,7 @@ class AppSchema extends CakeSchema {
 		'cape' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1, 'unsigned' => false),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'rewards_waited' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
+		'confirmed' => array('type' => 'string', 'length' => 25, 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),

@@ -21,6 +21,7 @@ $this->EyPlugin = new EyPluginComponent;
         		<div class="ribbon-stitches-bottom"></div>
         	</div>
 			<div class="profile-content">
+				<?= $flash_messages ?>
 				<?php
 				  	if($search_psc_msg != false AND !empty($search_psc_msg)) {
 				  		foreach ($search_psc_msg as $key => $value) {

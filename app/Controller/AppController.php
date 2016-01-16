@@ -273,14 +273,6 @@ WCqkx22behAGZq6rhwIDAQAB
 	    	}
 			}
 
-    	// Message flash
-    if($this->params['prefix'] != "admin") {
-    	App::uses('SessionHelper', 'View/Helper');
-			$SessionHelper = new SessionHelper(new View());
-    	$flash = $SessionHelper->flash();
-  		$flash_messages = (!empty($flash)) ? '<div class="container">'.html_entity_decode($flash).'</div>' : '';
-    }
-
   	// infos user
   	$user = ($this->isConnected) ? $this->User->getAllFromCurrentUser() : array();
     if(!empty($user)) {
@@ -306,7 +298,7 @@ WCqkx22behAGZq6rhwIDAQAB
     $reCaptcha['siteKey'] = $this->Configuration->get('captcha_google_sitekey');
 
 			// on set tout
-			$this->set(compact('nav', 'reCaptcha', 'website_name', 'theme_config', 'banner_server', 'flash_messages', 'user', 'csrfToken', 'facebook_link', 'skype_link', 'youtube_link', 'twitter_link', 'findSocialButtons', 'google_analytics', 'configuration_end_code'));
+			$this->set(compact('nav', 'reCaptcha', 'website_name', 'theme_config', 'banner_server', 'user', 'csrfToken', 'facebook_link', 'skype_link', 'youtube_link', 'twitter_link', 'findSocialButtons', 'google_analytics', 'configuration_end_code'));
 
 		if($this->params['controller'] == "user" OR $this->params['controller'] == "maintenance" OR $this->Configuration->get('maintenance') == '0' OR $this->isConnected AND $this->User->isAdmin()) {
 		} else {
@@ -443,6 +435,16 @@ WCqkx22behAGZq6rhwIDAQAB
 		if($this->params['prefix'] == "admin") {
 			$this->getEventManager()->dispatch(new CakeEvent('onLoadAdminPanel', $this, $this->request->data));
 		}
+
+    // Message flash
+    $flash_messages = null;
+    if($this->params['prefix'] != "admin") {
+      App::uses('SessionHelper', 'View/Helper');
+      $SessionHelper = new SessionHelper(new View());
+      $flash = $SessionHelper->flash();
+      $flash_messages = (!empty($flash)) ? '<div>'.html_entity_decode($flash).'</div>' : '';
+    }
+    $this->set(compact('flash_messages'));
 	}
 
 	function __setTheme() {

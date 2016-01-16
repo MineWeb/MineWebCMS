@@ -111,7 +111,9 @@
         </div>
     </nav>
     <div class="nav-hop"></div>
-      <?= $flash_messages ?>
+    <?php if(!empty($flash_messages)) {
+      echo '<div class="container">'.$flash_messages.'</div>';
+    } ?>
       <?= $this->fetch('content'); ?>
     </div>
     <!-- Footer -->

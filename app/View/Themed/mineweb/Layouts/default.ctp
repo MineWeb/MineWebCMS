@@ -36,7 +36,6 @@
     <!-- Navbar -->
     <?= $this->element($theme_config['navbar']) ?>
 
-    <?= $flash_messages ?>
     <?= $this->fetch('content'); ?>
     </div>
 
