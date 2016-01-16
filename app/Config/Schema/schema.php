@@ -18,14 +18,14 @@ class AppSchema extends CakeSchema {
 	    $permission->create(); // les permissions du rank de base
 			$permission->set(array(
 				'rank' => '0',
-				'permissions' => serialize(array('COMMENT_NEWS', 'LIKE_NEWS', 'DELETE_HIS_COMMENT'))
+				'permissions' => serialize(array('COMMENT_NEWS', 'LIKE_NEWS', 'DELETE_HIS_COMMENT', 'EDIT_HIS_EMAIL'))
 			));
 	    $permission->save();
 
 			$permission->create(); // les perissions du rank modo
 			$permission->set(array(
 				'rank' => '2',
-				'permissions' => serialize(array('COMMENT_NEWS', 'LIKE_NEWS', 'DELETE_HIS_COMMENT'))
+				'permissions' => serialize(array('COMMENT_NEWS', 'LIKE_NEWS', 'DELETE_HIS_COMMENT', 'EDIT_HIS_EMAIL'))
 			));
 	    $permission->save();
 

@@ -6,13 +6,14 @@
           <h3 class="box-title"><?= $Lang->get('PERMISSIONS') ?></h3>
         </div>
         <div class="box-body">
-        
+
           <button data-toggle="modal" data-target="#addRank" class="btn btn-block btn-success"><?= $Lang->get('ADD_RANK') ?></button>
-          
+
           <hr>
 
           <form action="" method="post">
             <input type="hidden" id="form_infos" data-ajax="false">
+            <input name="data[_Token][key]" value="<?= $csrfToken ?>" type="hidden">
 
             <table class="table table-bordered">
                 <thead>
@@ -21,12 +22,12 @@
                     <th><?= $Lang->get('NORMAL') ?></th>
                     <th><?= $Lang->get('MODERATOR') ?></th>
                     <th><?= $Lang->get('ADMINISTRATOR') ?></th>
-                    <?php 
+                    <?php
                       if(!empty($custom_ranks)) {
                         foreach ($custom_ranks as $k => $data) {
                           echo '<th>'.$data['Rank']['name'].'</th>';
                         }
-                      } 
+                      }
                     ?>
                   </tr>
                 </thead>
@@ -51,12 +52,12 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <?php 
+                    <?php
                     if(!empty($custom_ranks)) {
                       foreach ($custom_ranks as $k => $data) {
                         echo '<td><a class="btn btn-danger" href="'.$this->Html->url(array('controller' => 'permissions', 'action' => 'delete_rank', 'admin' => true, $data['Rank']['rank_id'])).'">'.$Lang->get('DELETE').'</a></td>';
                       }
-                    } 
+                    }
                   ?>
                   </tr>
                 </tbody>

@@ -70,22 +70,24 @@ $this->Configuration = new ConfigurationComponent;
 					 </div>
 				</form>
 
-				<hr>
+				<?php if($Permissions->can('EDIT_HIS_EMAIL')) { ?>
+					<hr>
 
-				<h3><?= $Lang->get('CHANGE_EMAIL') ?></h3>
+					<h3><?= $Lang->get('CHANGE_EMAIL') ?></h3>
 
-				<form method="post" class="form-inline" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'change_email')) ?>">
-					<div class="form-group">
-						<input type="email" class="form-control" name="email" placeholder="<?= $Lang->get('EMAIL_CONFIRMATION') ?>">
-					</div>
-					<div class="form-group">
-						<input type="email" class="form-control" name="email_confirmation" placeholder="<?= $Lang->get('EMAIL') ?>">
-					</div>
+					<form method="post" class="form-inline" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'change_email')) ?>">
+						<div class="form-group">
+							<input type="email" class="form-control" name="email" placeholder="<?= $Lang->get('EMAIL_CONFIRMATION') ?>">
+						</div>
+						<div class="form-group">
+							<input type="email" class="form-control" name="email_confirmation" placeholder="<?= $Lang->get('EMAIL') ?>">
+						</div>
 
-					<div class="form-group">
-						<button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
-					</div>
-				</form>
+						<div class="form-group">
+							<button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
+						</div>
+					</form>
+				<?php } ?>
 
 				<?php if($shop_active) { ?>
 

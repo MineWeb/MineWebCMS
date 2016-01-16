@@ -399,7 +399,7 @@ class UserController extends AppController {
 
 	function change_email() {
 		$this->autoRender = false;
-		if($this->isConnected) {
+		if($this->isConnected && $this->Permissions->can('EDIT_HIS_EMAIL')) {
 			if($this->request->is('ajax')) {
 				if(!empty($this->request->data['email']) AND !empty($this->request->data['email_confirmation'])) {
 					if($this->request->data['email'] == $this->request->data['email_confirmation']) {
@@ -419,7 +419,7 @@ class UserController extends AppController {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
 			}
 		} else {
-			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NEED_CONNECT')));
+			throw new ForbiddenException();
 		}
 	}
 

@@ -447,6 +447,7 @@
         "PERMISSIONS__LIKE_NEWS": "Aimer une news",
         "PERMISSIONS__DELETE_HIS_COMMENT": "Supprimer son propre commentaire",
         "PERMISSIONS__DELETE_COMMENT": "Supprimer n'importe quel commentaire",
+        "PERMISSIONS__EDIT_HIS_EMAIL":"Modifier son propre email",
         "PERMISSIONS__ACCESS_DASHBOARD": "Acc\u00e9der \u00e0 au dashboard admin",
         "PERMISSIONS__MANAGE_NEWS": "G\u00e9rer les news (suppression, ajout, \u00e9dition)",
         "PERMISSIONS__MANAGE_SLIDER": "G\u00e9rer les sliders (suppression, ajout, \u00e9dition)",
