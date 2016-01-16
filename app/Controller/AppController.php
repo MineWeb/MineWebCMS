@@ -302,8 +302,11 @@ WCqkx22behAGZq6rhwIDAQAB
     $this->loadModel('SocialButton');
     $findSocialButtons = $this->SocialButton->find('all');
 
+    $reCaptcha['type'] = ($this->Configuration->get('captcha_type') == '2') ? 'google' : 'default';
+    $reCaptcha['siteKey'] = $this->Configuration->get('captcha_google_sitekey');
+
 			// on set tout
-			$this->set(compact('nav', 'website_name', 'theme_config', 'banner_server', 'flash_messages', 'user', 'csrfToken', 'facebook_link', 'skype_link', 'youtube_link', 'twitter_link', 'findSocialButtons', 'google_analytics', 'configuration_end_code'));
+			$this->set(compact('nav', 'reCaptcha', 'website_name', 'theme_config', 'banner_server', 'flash_messages', 'user', 'csrfToken', 'facebook_link', 'skype_link', 'youtube_link', 'twitter_link', 'findSocialButtons', 'google_analytics', 'configuration_end_code'));
 
 		if($this->params['controller'] == "user" OR $this->params['controller'] == "maintenance" OR $this->Configuration->get('maintenance') == '0' OR $this->isConnected AND $this->User->isAdmin()) {
 		} else {

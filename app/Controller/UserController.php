@@ -33,9 +33,22 @@ class UserController extends AppController {
 	function ajax_register() {
 		$this->autoRender = false;
 		if($this->request->is('Post')) { // si la requête est bien un post
-			if(!empty($this->request->data['pseudo']) && !empty($this->request->data['password']) && !empty($this->request->data['password_confirmation']) && !empty($this->request->data['email']) && !empty($this->request->data['captcha'])) { // si tout les champs sont bien remplis
-				$captcha = $this->Session->read('captcha_code');
-				if($captcha == $this->request->data['captcha']) { // on check le captcha déjà
+			if(!empty($this->request->data['pseudo']) && !empty($this->request->data['password']) && !empty($this->request->data['password_confirmation']) && !empty($this->request->data['email'])) { // si tout les champs sont bien remplis
+
+				// Captcha
+				if($this->Configuration->get('captcha_type') == "2") { // ReCaptcha
+
+					$validCaptcha = $this->Util->isValidReCaptcha($this->request->data['recaptcha'], $_SERVER['REMOTE_ADDR'], $this->Configuration->get('captcha_google_secret'));
+
+				} else {
+
+					$captcha = $this->Session->read('captcha_code');
+					$validCaptcha = (!empty($captcha) && $captcha == $this->request->data['captcha']);
+
+				}
+				//
+
+				if($validCaptcha) { // on check le captcha déjà
 					$this->loadModel('User');
 					$isValid = $this->User->validRegister($this->request->data);
 					if($isValid === true) { // on vérifie si y'a aucune erreur

@@ -124,21 +124,31 @@
               <input type="email" class="form-control" name="email" placeholder="<?= $Lang->get('ENTER_EMAIL') ?>">
             </div>
           </div>
-          <div class="form-group">
-            <label for="inputPassword3" class="col-sm-2 control-label"><?= $Lang->get('CAPTCHA') ?></label>
-            <div class="col-sm-10">
-              <?php 
-                echo $this->Html->image(array('controller' => 'user', 'action' => 'get_captcha', 'plugin' => false), array('plugin' => false, 'id' => 'captcha_image'));
-                echo $this->Html->link($Lang->get('RELOAD_CAPTCHA'), 'javascript:void(0);',array('id' => 'reload'));
-              ?>
+          <?php if($reCaptcha['type'] == "google") { ?>
+            <script src='https://www.google.com/recaptcha/api.js'></script>
+            <div class="form-group">
+              <label class="col-sm-2 control-label"><?= $Lang->get('CAPTCHA') ?></label>
+              <div class="col-sm-10">
+                <div class="g-recaptcha" data-sitekey="<?= $reCaptcha['siteKey'] ?>"></div>
+              </div>
             </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label"></label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" name="captcha" id="inputPassword3" placeholder="<?= $Lang->get('ENTER_CAPTCHA') ?>">
+          <?php } else { ?>
+            <div class="form-group">
+              <label for="inputPassword3" class="col-sm-2 control-label"><?= $Lang->get('CAPTCHA') ?></label>
+              <div class="col-sm-10">
+                <?php
+                  echo $this->Html->image(array('controller' => 'user', 'action' => 'get_captcha', 'plugin' => false), array('plugin' => false, 'id' => 'captcha_image'));
+                  echo $this->Html->link($Lang->get('RELOAD_CAPTCHA'), 'javascript:void(0);',array('id' => 'reload'));
+                ?>
+              </div>
             </div>
-          </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label"></label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" name="captcha" id="inputPassword3" placeholder="<?= $Lang->get('ENTER_CAPTCHA') ?>">
+              </div>
+            </div>
+          <?php } ?>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('CLOSE') ?></button>

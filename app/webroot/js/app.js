@@ -134,6 +134,14 @@ $(document).ready(function(){
         i++;
       }
 
+      // ReCaptcha
+      if(grecaptcha.getResponse() !== undefined) {
+        inputs['recaptcha'] = grecaptcha.getResponse();
+        var recaptcha = true;
+      } else {
+        var recaptcha = false;
+      }
+
       // CSRF
       inputs["data[_Token][key]"] = CSRF_TOKEN;
 
@@ -165,9 +173,19 @@ $(document).ready(function(){
           }
           submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
         } else if(json.statut === false) {
+
+          if(recaptcha) {
+            grecaptcha.reset();
+          }
+
           form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b>'+ERROR_MSG+' :</b> '+json.msg+'</i></div>').fadeIn(500);
           submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
         } else {
+
+          if(recaptcha) {
+            grecaptcha.reset();
+          }
+
           form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b>'+ERROR_MSG+' :</b> '+INTERNAL_ERROR_MSG+'</i></div>');
           submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
         }

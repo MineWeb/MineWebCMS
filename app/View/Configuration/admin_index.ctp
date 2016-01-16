@@ -267,6 +267,52 @@
               <div class="tab-pane" id="tab_3">
 
                 <div class="form-group">
+                  <label><?= $Lang->get('CONFIG__KEY_CAPTCHA_TYPE') ?></label>
+                  <div class="radio">
+                    <input type="radio" name="captcha_type" value="1" <?= ($config['captcha_type'] == '1') ? 'checked=""' : '' ?>>
+                    <label><?= $Lang->get('NORMAL') ?></label>
+                  </div>
+                  <div class="radio">
+                    <input type="radio" name="captcha_type" value="2" <?= ($config['captcha_type'] == '2') ? 'checked=""': '' ?>>
+                    <label><?= $Lang->get('CONFIG__TYPE_CAPTCHA_GOOGLE') ?></label>
+                  </div>
+                </div>
+
+                <script type="text/javascript">
+                  $('input[name="captcha_type"]').on('change', function(e) {
+                    if($(this).val() == '2') {
+                      $('#captcha-google').slideDown(250);
+                    } else {
+                      $('#captcha-google').slideUp(250);
+                    }
+                  });
+                </script>
+
+                <div id="captcha-google" style="display:<?= ($config['captcha_type'] == '2') ? 'block' : 'none' ?>;">
+                  <div class="form-group">
+                    <label><?= $Lang->get('CONFIG__KEY_CAPTCHA_GOOGLE_SITEKEY') ?></label>
+                      <?= $this->Form->input(false, array(
+                        'div' => false,
+                        'type' => 'text',
+                        'name' => 'captcha_google_sitekey',
+                        'class' => 'form-control',
+                        'value' => $config['captcha_google_sitekey'],
+                      )); ?>
+                  </div>
+
+                  <div class="form-group">
+                    <label><?= $Lang->get('CONFIG__KEY_CAPTCHA_GOOGLE_SECRET') ?></label>
+                      <?= $this->Form->input(false, array(
+                        'div' => false,
+                        'type' => 'text',
+                        'name' => 'captcha_google_secret',
+                        'class' => 'form-control',
+                        'value' => $config['captcha_google_secret'],
+                      )); ?>
+                  </div>
+                </div>
+
+                <div class="form-group">
                   <label><?= $Lang->get('CONFIG__KEY_GOOGLE_ANALYTICS') ?></label>
                     <?= $this->Form->input(false, array(
                       'div' => false,
