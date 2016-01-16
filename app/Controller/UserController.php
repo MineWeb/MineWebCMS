@@ -487,8 +487,12 @@ class UserController extends AppController {
 				$this->set('title_for_layout',$this->Lang->get('EDIT_USER'));
 				$this->loadModel('User');
 				$find = $this->User->find('all', array('conditions' => array('id' => $id)));
+
 				if(!empty($find)) {
 					$user = $find[0]['User'];
+					$this->loadModel('History');
+					$findHistory = $this->History->getLastFromUser($id);
+					$user['History'] = $this->History->format($findHistory);
 
 					$options_ranks = array('member' => $this->Lang->get('MEMBER'), 2 => $this->Lang->get('MODERATOR'), 3 => $this->Lang->get('ADMINISTRATOR'), 5 => $this->Lang->get('BANNED'));
 					$this->loadModel('Rank');

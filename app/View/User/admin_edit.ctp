@@ -88,4 +88,34 @@ $this->Configuration = new ConfigurationComponent;
       </div>
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+        <div class="box-header with-border">
+          <h3 class="box-title"><?= $Lang->get('USER__HIS_HISTORIES') ?></h3>
+        </div>
+        <div class="box-body">
+
+          <table class="table table-bordered dataTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th><?= $Lang->get('ACTION') ?></th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($user['History'] as $key => $v) { ?>
+                <tr>
+                  <td><?= $key ?></td>
+                  <td><?= $v ?></td>
+                </tr>
+              <?php } ?>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <?= $Module->loadModules('admin_user_edit') ?>
 </section>

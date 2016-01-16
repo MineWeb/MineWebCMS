@@ -5,6 +5,20 @@ class User extends AppModel {
 
 	private $userData;
 
+	public $hasMany = array(
+		'Comment' => array(
+      'className' => 'Comment',
+      'foreignKey' => 'user_id',
+      'order' => 'Comment.created DESC',
+      'dependent' => true
+  	),
+		'Like' => array(
+      'className' => 'Like',
+      'foreignKey' => 'user_id',
+      'dependent' => true
+  	)
+	);
+
 	public function validRegister($data) {
 		if(preg_match('`^([a-zA-Z0-9-_]{2,16})$`', $data['pseudo'])) {
 			$data['password'] = password($data['password']);

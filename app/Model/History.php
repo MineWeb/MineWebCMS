@@ -3,10 +3,89 @@ App::uses('CakeEvent', 'Event');
 
 class History extends AppModel {
 
+	public $belongsTo = 'User';
+
+	public function getLastFromUser($user_id) {
+		return $this->find('all', array('conditions' => array('user_id' => $user_id), 'limit' => '50', 'order' => 'id DESC'));
+	}
+
+	public function format($data) {
+
+		if(empty($data)) {
+			return array();
+		}
+
+		$return = array();
+
+		App::import('Component', 'LangComponent');
+		$this->Lang = new LangComponent();
+
+		foreach ($data as $key => $value) {
+
+			$category = 'HISTORY__CATEGORY_'.strtoupper($value['History']['category']);
+			$category = ($this->Lang->get($category) != $category) ? $this->Lang->get($category) : $value['History']['category'];
+			$string = '('.$category.') ';
+
+			$string .= 'Le '.$this->Lang->date($value['History']['created']);
+
+			$action = 'HISTORY__ACTION_'.strtoupper($value['History']['action']);
+			$action = ($this->Lang->get($action) != $action) ? $this->Lang->get($action) : $value['History']['action'];
+			$string .= ' : '.$action;
+
+			// Autres
+			switch ($value['History']['action']) {
+				case 'SEND_MONEY':
+					$other = explode('|', $value['History']['other']);
+					$string .= ' pour un montant de '.$other[1].' à '.$other[0];
+					break;
+				case 'BUY_MONEY':
+					$other = explode('|', $value['History']['other']);
+					$string .= ' pour un montant de '.$other[1];
+					if(isset($other[3])) {
+						$string .= ' (Money : '.$other[3].')';
+					}
+					$string .= ' avec '.$other[0];
+					break;
+				case 'BUY_ITEM':
+					$string .= ' l\'article "'.$value['History']['other'].'"';
+					break;
+
+				default:
+					break;
+			}
+
+			$string .= ' par '.$value['History']['author'].'.';
+
+			$return[$value['History']['id']] = $string;
+
+		}
+
+		return $return;
+
+	}
+
+	public function afterFind($results, $primary = false) {
+		if(!isset($results[0][0]['count'])) {
+			$users = ClassRegistry::init('User')->find('all', array('fields' => array('id', 'pseudo')));
+			foreach ($users as $key => $value) {
+				$users_list[$value['User']['id']] = $value['User']['pseudo'];
+			}
+			foreach ($results as $k => $v) {
+				if(isset($users_list[$v['History']['user_id']])) {
+					$results[$k]['History']['author'] = $users_list[$v['History']['user_id']];
+				} else {
+					$results[$k]['History']['author'] = 'N/A';
+				}
+			}
+		}
+
+		return $results;
+	}
+
 	public function afterSave($created, $options = array()) {
 		if($created) {
 			// nouvel enregistrement
-			
+
 			switch ($this->data['History']['action']) {
 				case 'BUY_ITEM':
 					$author = $this->data['History']['author'];
@@ -17,7 +96,7 @@ class History extends AppModel {
 				case 'BUY_MONEY':
 					$this->getEventManager()->dispatch(new CakeEvent('afterAddMoney', $this));
 					break;
-				
+
 				default:
 					$this->getEventManager()->dispatch(new CakeEvent('afterAddHistory', $this));
 					break;

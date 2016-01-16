@@ -3,7 +3,16 @@ App::uses('CakeEvent', 'Event');
 
 class Comment extends AppModel {
 
-	public $belongsTo = 'News';
+	public $belongsTo = array(
+		'User' => array(
+				'className' => 'User',
+				'foreignKey' => 'user_id'
+		),
+    'News' => array(
+        'className' => 'News',
+        'foreignKey' => 'news_id'
+    )
+  );
 
 	public function afterSave($created, $options = array()) {
 		if($created) {
