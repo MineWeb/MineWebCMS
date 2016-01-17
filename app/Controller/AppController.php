@@ -446,7 +446,7 @@ WCqkx22behAGZq6rhwIDAQAB
 
       if($this->EyPlugin->isInstalled('eywek.vote.3')) {
 
-        $this->loadModel('VoteConfiguration');
+        $this->loadModel('Vote.VoteConfiguration');
         $pl = 'eywek.vote.3';
 
         $configVote = $this->VoteConfiguration->find('first')['VoteConfiguration'];

@@ -808,7 +808,6 @@ class ShopController extends ShopAppController {
 			} else {
 				echo $this->Lang->get('NOT_POST').'|false';
 			}
-			$this->render('ajax_get');
 		} else {
 			$this->redirect('/');
 		}
@@ -926,12 +925,14 @@ class ShopController extends ShopAppController {
 		}
 	}
 
-	public function starpass() {
-
+	public function starpass($id = false) {
 		if($this->isConnected AND $this->Permissions->can('CREDIT_ACCOUNT')) {
-			if($this->request->is('post') AND !empty($this->request->data['offer'])) {
+			if(($this->request->is('post') AND !empty($this->request->data['offer'])) || $id) {
 				$this->loadModel('Shop.Starpass');
-				$search = $this->Starpass->find('all', array('conditions' => array('id' => $this->request->data['offer'])));
+				if($this->request->is('post')) {
+					$id = $this->request->data['offer'];
+				}
+				$search = $this->Starpass->find('all', array('conditions' => array('id' => $id)));
 				if(!empty($search)) {
 					$this->set('id', $search[0]['Starpass']['id']);
 					$this->set('idd', $search[0]['Starpass']['idd']);
@@ -940,13 +941,13 @@ class ShopController extends ShopAppController {
 					$this->set('title_for_layout', $this->Lang->get('CREDIT_STARPASS'));
 					$this->layout = $this->Configuration->get_layout();
 				} else {
-					$this->redirect(array('controller' => 'shop', 'action' => 'index'));
+					throw new NotFoundException();
 				}
 			} else {
-				$this->redirect(array('controller' => 'shop', 'action' => 'index'));
+				throw new NotFoundException();
 			}
 		} else {
-			$this->redirect('/');
+			throw new ForbiddenException();
 		}
 	}
 

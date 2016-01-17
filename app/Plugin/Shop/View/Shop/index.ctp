@@ -108,6 +108,7 @@
             <br>
             <div class="collapse" id="starpass">
                 <form method="POST" action="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'starpass')) ?>">
+                  <input name="data[_Token][key]" value="<?= $csrfToken ?>" type="hidden">
                   <div class="form-group col-md-8">
                     <select class="form-control" name="offer">
                       <?php foreach ($starpass_offers as $key => $value) { ?>
