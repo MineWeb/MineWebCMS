@@ -6,7 +6,7 @@
           <h3 class="box-title"><?= $Lang->get('CUSTOMIZATION') ?></h3>
         </div>
         <div class="box-body">
-        
+
           <form method="post">
             <input type="hidden" id="form_infos" data-ajax="false">
 
@@ -39,9 +39,11 @@
               <input type="text" class="form-control" name="favicon_url" value="<?= $config['favicon_url'] ?>">
             </div>
 
+            <input name="data[_Token][key]" value="<?= $csrfToken ?>" type="hidden">
+
             <button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
-            <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'index', 'admin' => true)) ?>" type="button" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a> 
-          </form>   
+            <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'index', 'admin' => true)) ?>" type="button" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
+          </form>
 
         </div>
       </div>

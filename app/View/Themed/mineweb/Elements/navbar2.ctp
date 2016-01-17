@@ -11,7 +11,13 @@ $this->EyPlugin = new EyPluginComponent;
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="<?= $this->Html->url('/') ?>"><?= $website_name ?></a>
+                <a class="navbar-brand" href="<?= $this->Html->url('/') ?>">
+                  <?php if(isset($theme_config['logo']) && $theme_config['logo']) { ?>
+                    <img src="<?= $theme_config['logo'] ?>" alt="" />
+                  <?php } else { ?>
+                    <?= $website_name ?>
+                  <?php } ?>
+                </a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">

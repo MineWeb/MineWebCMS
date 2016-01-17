@@ -63,6 +63,14 @@ $(document).ready( function() {
   });
 });
 
+$('form #delete_upload_file').on('click', function(e) {
+  e.preventDefault();
+
+  $('form').find('input[name="image"]').val('');
+  $('#image_preview').find('.thumbnail img').attr('src', '#');
+  $('#image_preview .thumbnail .caption h5').html('');
+})
+
 // A change sélection de fichier
 $('form').find('input[name="image"]').on('change', function (e) {
     var files = $(this)[0].files;
@@ -92,6 +100,6 @@ $('#choose_form_uploaded_files').click(function(e) {
     $('body').append(modal);
   }
 
-  
+
 
 });

@@ -18,7 +18,11 @@ $this->EyPlugin = new EyPluginComponent;
                       <div class="shape-left"></div>
                       <div class="shape-right"></div>
                       <div class="shape-down"></div>
-                      <span class="logo"><?= $website_name ?></span>
+                      <?php if(isset($theme_config['logo']) && $theme_config['logo']) { ?>
+                        <span class="logo"><img src="<?= $theme_config['logo'] ?>" alt="" /></span>
+                      <?php } else { ?>
+                        <span class="logo"><?= $website_name ?></span>
+                      <?php } ?>
                     </div>
                     <li class="li-nav pull-left<?php if($this->params['controller'] == 'pages') { ?> actived<?php } ?>">
                         <a href="<?= $this->Html->url('/') ?>"><i class="fa fa-home" title="<?= $Lang->get('HOME') ?>"></i></a>

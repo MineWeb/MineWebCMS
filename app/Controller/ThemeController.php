@@ -275,6 +275,37 @@ WCqkx22behAGZq6rhwIDAQAB
 					if($this->request->is('post')) {
 						$config = json_decode(file_get_contents(ROOT.'/app/View/Themed/'.$theme_name.'/config/config.json'), true);
 						$this->request->data['version'] = $config['version'];
+
+						if(!isset($this->request->data['img_edit'])) {
+							$isValidImg = $this->Util->isValidImage($this->request, array('png', 'jpg', 'jpeg'));
+
+							if(!$isValidImg['status'] && $isValidImg['msg'] != $this->Lang->get('FORM__EMPTY_IMG')) {
+								$this->Session->setFlash($isValidImg['msg'], 'default.error');
+								exit;
+							} else {
+								if(isset($isValidImg['infos'])) {
+									$infos = $isValidImg['infos'];
+								} else {
+									$infos = false;
+								}
+							}
+
+							if($infos) {
+								$url_img = WWW_ROOT.'img'.DS.'uploads'.DS.'theme_logo.'.$infos['extension'];
+
+								if(!$this->Util->uploadImage($this->request, $url_img)) {
+									$this->Session->setFlash($this->Lang->get('FORM__ERROR_WHEN_UPLOAD'), 'default.error');
+									exit;
+								}
+
+								$this->request->data['logo'] = Router::url('/').'img'.DS.'uploads'.DS.'theme_logo.'.$infos['extension'];
+							} else {
+								$this->request->data['logo'] = false;
+							}
+						} else {
+							$this->request->data['logo'] = $config['logo'];
+						}
+
 						$data = json_encode($this->request->data, JSON_PRETTY_PRINT);
 						$fp = fopen(ROOT.'/app/View/Themed/'.$theme_name.'/config/config.json',"w+");
 						fwrite($fp, $data);
