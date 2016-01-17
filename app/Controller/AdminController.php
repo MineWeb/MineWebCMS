@@ -28,17 +28,14 @@ class AdminController extends AppController {
 			$this->set(compact('registered_users'));
 			$this->set(compact('registered_users_today'));
 
-			$count_visits = $this->Statistics->get_all_visits(); $this->set(compact('count_visits'));
-			$count_visits_before_before_yesterday = $this->Statistics->get_visits_by_day(date('Y-m-d', strtotime('-3 day')));
-			$count_visits_before_yesterday = $this->Statistics->get_visits_by_day(date('Y-m-d', strtotime('-2 day')));
-			$count_visits_yesterday = $this->Statistics->get_visits_by_day(date('Y-m-d', strtotime('-1 day')));
-			$count_visits_today = $this->Statistics->get_visits_by_day(date('Y-m-d'));
+			$this->loadModel('Visit');
+			$count_visits = $this->Visit->getVisits()['count'];
+			$count_visits_before_before_yesterday = $this->Visit->getVisitsByDay(date('Y-m-d', strtotime('-3 day')))['count'];
+			$count_visits_before_yesterday = $this->Visit->getVisitsByDay(date('Y-m-d', strtotime('-2 day')))['count'];
+			$count_visits_yesterday = $this->Visit->getVisitsByDay(date('Y-m-d', strtotime('-1 day')))['count'];
+			$count_visits_today = $this->Visit->getVisitsByDay(date('Y-m-d'))['count'];
 
-			$this->set(compact('count_visits'));
-			$this->set(compact('count_visits_before_before_yesterday'));
-			$this->set(compact('count_visits_before_yesterday'));
-			$this->set(compact('count_visits_yesterday'));
-			$this->set(compact('count_visits_today'));
+			$this->set(compact('count_visits', 'count_visits_before_before_yesterday', 'count_visits_before_yesterday', 'count_visits_yesterday', 'count_visits_today'));
 
 			$purchase = $this->History->get('shop', false, false, 'BUY_ITEM');
 			$purchase = count($purchase);
