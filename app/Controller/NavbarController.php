@@ -11,6 +11,38 @@ class NavbarController extends AppController {
 			$this->layout = 'admin';
 			$this->loadModel('Navbar');
 			$navbars = $this->Navbar->find('all', array('order' => 'order'));
+
+			$this->loadModel('Page');
+			$pages = $this->Page->find('all', array('fields' => array('id', 'slug')));
+			foreach ($pages as $key => $value) {
+				$pages_listed[$value['Page']['id']] = $value['Page']['slug'];
+			}
+
+			foreach ($navbars as $key => $value) {
+
+				if($value['Navbar']['url']['type'] == "plugin") {
+
+					$plugin = $this->EyPlugin->findPluginByDBid($value['Navbar']['url']['id']);
+					$navbars[$key]['Navbar']['url'] = Router::url('/'.$plugin->slug);
+
+				} elseif($value['Navbar']['url']['type'] == "page") {
+
+					if(isset($pages_listed[$value['Navbar']['url']['id']])) {
+						$navbars[$key]['Navbar']['url'] = Router::url('/p/'.$pages_listed[$value['Navbar']['url']['id']]);
+					} else {
+						$navbars[$key]['Navbar']['url'] = '#';
+					}
+
+				} elseif($value['Navbar']['url']['type'] == "custom") {
+
+					$navbars[$key]['Navbar']['url'] = $value['Navbar']['url']['url'];
+
+				} else {
+					$navbars[$key]['Navbar']['url'] = '#';
+				}
+
+			}
+
 			$this->set(compact('navbars'));
 		} else {
 			$this->redirect('/');
@@ -18,8 +50,8 @@ class NavbarController extends AppController {
 	}
 
 	public function admin_save_ajax() {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NAV')) {
-			$this->layout = null;
 
 			if($this->request->is('post')) {
 				if(!empty($this->request->data)) {
@@ -37,12 +69,13 @@ class NavbarController extends AppController {
 					$data = $data1;
 					$this->loadModel('Navbar');
 					foreach ($data as $key => $value) {
-						$id = $this->Navbar->find('all', array('conditions' => array('name' => $key)));
-						if(!empty($id)) {
-							$id = $id[0]['Navbar']['id'];
+						$find = $this->Navbar->find('first', array('conditions' => array('name' => $key)));
+						if(!empty($find)) {
+							$id = $find['Navbar']['id'];
 							$this->Navbar->read(null, $id);
 							$this->Navbar->set(array(
-								'order' => $value
+								'order' => $value,
+								'url' => json_encode($find['Navbar']['url'])
 							));
 							$this->Navbar->save();
 						} else {
@@ -59,7 +92,7 @@ class NavbarController extends AppController {
 					echo $this->Lang->get('CANT_BE_EMPTY').'|false';
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST' ,$language).'|false';
+				echo $this->Lang->get('NOT_POST').'|false';
 			}
 		} else {
 			$this->redirect('/');
@@ -67,6 +100,7 @@ class NavbarController extends AppController {
 	}
 
 	public function admin_delete($id = false) {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NAV')) {
 			if($id != false) {
 
@@ -93,8 +127,8 @@ class NavbarController extends AppController {
 			$this->set('title_for_layout', $this->Lang->get('ADD_NAV'));
 			$url_plugins = $this->EyPlugin->getPluginsActive();
 			foreach ($url_plugins as $key => $value) {
-				$slug = $value->slug;
-				$url_plugins2[$slug] = $value->name;
+				$DBid = $value->DBid;
+				$url_plugins2[$DBid] = $value->name;
 			}
 			if(!empty($url_plugins2)) {
 				$url_plugins = $url_plugins2;
@@ -104,7 +138,7 @@ class NavbarController extends AppController {
 			$this->loadModel('Page');
 			$url_pages = $this->Page->find('all');
 			foreach ($url_pages as $key => $value) {
-				$url_pages2[$value['Page']['slug']] = $value['Page']['title'];
+				$url_pages2[$value['Page']['id']] = $value['Page']['title'];
 			}
 			$url_pages = @$url_pages2;
 			$this->set(compact('url_plugins'));
@@ -115,55 +149,48 @@ class NavbarController extends AppController {
 	}
 
 	public function admin_add_ajax() {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NAV')) {
-			$this->layout = null;
 
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['name']) AND !empty($this->request->data['type'])) {
 					$this->loadModel('Navbar');
-					if($this->request->data['type'] == "normal") {
-						if(!empty($this->request->data['url']) AND $this->request->data['url'] != "undefined") {
-							$order = $this->Navbar->find('first', array('order' => array('order' => 'DESC')));
-							$order = $order['Navbar']['order'];
-							$order = intval($order) + 1;
-							$open_new_tab = ($this->request->data['open_new_tab']) ? 1 : 0;
-							$this->Navbar->read(null, null);
-							$this->Navbar->set(array(
-								'order' => $order,
-								'name' => $this->request->data['name'],
-								'type' => 1,
-								'url' => $this->request->data['url'],
-								'open_new_tab' => $open_new_tab
-							));
-							$this->Navbar->save();
-							$this->History->set('ADD_NAV', 'navbar');
-							echo $this->Lang->get('SUCCESS_NAV_ADD').'|true';
-							$this->Session->setFlash($this->Lang->get('SUCCESS_NAV_ADD'), 'default.success');
+					if(!empty($this->request->data['url']) AND $this->request->data['url'] != "undefined") {
+
+						$order = $this->Navbar->find('first', array('order' => array('order' => 'DESC')));
+						$order = $order['Navbar']['order'];
+						$order = intval($order) + 1;
+
+						$open_new_tab = ($this->request->data['open_new_tab']) ? 1 : 0;
+
+						$this->Navbar->read(null, null);
+
+						$data = array(
+							'order' => $order,
+							'name' => $this->request->data['name'],
+							'type' => 1,
+							'open_new_tab' => $open_new_tab
+						);
+
+						if($this->request->data['type'] == "dropdown") {
+							$data['type'] = 2;
+							$data['url'] = json_encode(array('type' => 'submenu'));
+							$data['submenu'] = json_encode($this->request->data['url']);
 						} else {
-							echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+							// URL
+							$data['url'] = $this->request->data['url'];
 						}
+
+						$this->Navbar->set($data);
+						$this->Navbar->save();
+
+						$this->History->set('ADD_NAV', 'navbar');
+
+						echo $this->Lang->get('SUCCESS_NAV_ADD').'|true';
+						$this->Session->setFlash($this->Lang->get('SUCCESS_NAV_ADD'), 'default.success');
+
 					} else {
-						if(!empty($this->request->data['url']) AND $this->request->data['url'] != "undefined") {
-							$order = $this->Navbar->find('first', array('order' => array('order' => 'DESC')));
-							$order = $order['Navbar']['order'];
-							$order = intval($order) + 1;
-							$open_new_tab = ($this->request->data['open_new_tab']) ? 1 : 0;
-							$this->Navbar->read(null, null);
-							$this->Navbar->set(array(
-								'order' => $order,
-								'name' => $this->request->data['name'],
-								'type' => 2,
-								'url' => '#',
-								'submenu' => json_encode($this->request->data['url']),
-								'open_new_tab' => $open_new_tab
-							));
-							$this->Navbar->save();
-							$this->History->set('ADD_NAV', 'navbar');
-							echo $this->Lang->get('SUCCESS_NAV_ADD').'|true';
-							$this->Session->setFlash($this->Lang->get('SUCCESS_NAV_ADD'), 'default.success');
-						} else {
-							echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
-						}
+						echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
 					}
 				} else {
 					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
@@ -175,4 +202,100 @@ class NavbarController extends AppController {
 			$this->redirect('/');
 		}
 	}
+
+	public function admin_edit($id = false) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_NAV')) {
+			if($id) {
+
+				$find = $this->Navbar->find('first', array('conditions' => array('id' => $id)));
+				if(!empty($find)) {
+
+					$nav = $find['Navbar'];
+
+					$this->layout = 'admin';
+					$this->set('title_for_layout', $this->Lang->get('NAV__EDIT_TITLE'));
+
+					$url_plugins = $this->EyPlugin->getPluginsActive();
+					foreach ($url_plugins as $key => $value) {
+						$DBid = $value->DBid;
+						$url_plugins2[$DBid] = $value->name;
+					}
+					if(!empty($url_plugins2)) {
+						$url_plugins = $url_plugins2;
+					} else {
+						$url_plugins = array();
+					}
+
+					$this->loadModel('Page');
+					$url_pages = $this->Page->find('all');
+					foreach ($url_pages as $key => $value) {
+						$url_pages2[$value['Page']['id']] = $value['Page']['title'];
+					}
+					$url_pages = @$url_pages2;
+
+
+					$this->set(compact('url_pages', 'url_plugins', 'nav'));
+
+				} else {
+					throw new NotFoundException();
+				}
+
+			} else {
+				throw new NotFoundException();
+			}
+		} else {
+			$this->redirect('/');
+		}
+	}
+
+	public function admin_edit_ajax($id) {
+		$this->autoRender = false;
+		if($this->isConnected AND $this->Permissions->can('MANAGE_NAV')) {
+
+			if($this->request->is('post')) {
+				if(!empty($this->request->data['name']) AND !empty($this->request->data['type'])) {
+					$this->loadModel('Navbar');
+					if(!empty($this->request->data['url']) AND $this->request->data['url'] != "undefined") {
+
+						$open_new_tab = ($this->request->data['open_new_tab']) ? 1 : 0;
+
+						$this->Navbar->read(null, $id);
+
+						$data = array(
+							'name' => $this->request->data['name'],
+							'type' => 1,
+							'open_new_tab' => $open_new_tab
+						);
+
+						if($this->request->data['type'] == "dropdown") {
+							$data['type'] = 2;
+							$data['url'] = json_encode(array('type' => 'submenu'));
+							$data['submenu'] = json_encode($this->request->data['url']);
+						} else {
+							// URL
+							$data['url'] = $this->request->data['url'];
+						}
+
+						$this->Navbar->set($data);
+						$this->Navbar->save();
+
+						$this->History->set('ADD_NAV', 'navbar');
+
+						echo $this->Lang->get('SUCCESS_NAV_ADD').'|true';
+						$this->Session->setFlash($this->Lang->get('SUCCESS_NAV_ADD'), 'default.success');
+
+					} else {
+						echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					}
+				} else {
+					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+				}
+			} else {
+				echo $this->Lang->get('NOT_POST' ,$language).'|false';
+			}
+		} else {
+			$this->redirect('/');
+		}
+	}
+
 }

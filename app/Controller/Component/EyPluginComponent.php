@@ -837,6 +837,21 @@ WCqkx22behAGZq6rhwIDAQAB
       return (isset($this->pluginsLoaded->$id)) ? $this->pluginsLoaded->$id : (object) array();
     }
 
+    public function findPluginByDBid($DBid) {
+      $this->pluginsLoaded = $this->loadPlugins();
+      $plugin = array();
+
+      foreach ($this->pluginsLoaded as $id => $data) {
+        if($data->DBid == $DBid) {
+          $plugin = $data;
+          break;
+        }
+      }
+
+      return $plugin;
+
+    }
+
     public function findPluginsByAuthor($author) {
       $plugins = array();
       $pluginsLoaded = $this->loadPlugins();

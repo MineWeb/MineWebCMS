@@ -105,6 +105,7 @@
         "HISTORY__ACTION_ADD_MAINTENANCE":"Ajout de la maintenance",
         "HISTORY__ACTION_DELETE_MAINTENANCE":"Suppression de la maintenance",
         "HISTORY__ACTION_EDIT_CONFIGURATION":"Modification de la configuration",
+        "NAV__EDIT_TITLE":"Modifier un lien",
         "NONE_PLUGIN_INSTALLED": "Aucun plugin n'est install\u00e9",
         "ERROR_CSRF": "Erreur de type CSRF est survenue, rafraichissez la page et r\u00e9essayez.",
         "PROBLEM_DATABASE_NO_CONNECTION": "Une erreur avec la base de donn\u00e9es est survenue !",

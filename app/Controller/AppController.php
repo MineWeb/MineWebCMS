@@ -205,7 +205,43 @@ WCqkx22behAGZq6rhwIDAQAB
 			$this->loadModel('Navbar');
 			$nav = $this->Navbar->find('all', array('order' => 'order'));
 			if(!empty($nav)) {
-				$nav = $nav;
+
+        $this->loadModel('Page');
+        $pages = $this->Page->find('all', array('fields' => array('id', 'slug')));
+        foreach ($pages as $key => $value) {
+          $pages_listed[$value['Page']['id']] = $value['Page']['slug'];
+        }
+
+        foreach ($nav as $key => $value) {
+
+          if($value['Navbar']['url']['type'] == "plugin") {
+
+            $plugin = $this->EyPlugin->findPluginByDBid($value['Navbar']['url']['id']);
+            if(is_object($plugin)) {
+              $nav[$key]['Navbar']['url'] = Router::url('/'.$plugin->slug);
+            } else {
+              $nav[$key]['Navbar']['url'] = '#';
+            }
+
+          } elseif($value['Navbar']['url']['type'] == "page") {
+
+            if(isset($pages_listed[$value['Navbar']['url']['id']])) {
+              $nav[$key]['Navbar']['url'] = Router::url('/p/'.$pages_listed[$value['Navbar']['url']['id']]);
+            } else {
+              $nav[$key]['Navbar']['url'] = '#';
+            }
+
+          } elseif($value['Navbar']['url']['type'] == "custom") {
+
+            $nav[$key]['Navbar']['url'] = $value['Navbar']['url']['url'];
+
+          }
+
+        }
+
+        unset($pages);
+        unset($pages_listed);
+
 			} else {
 				$nav = false;
 			}

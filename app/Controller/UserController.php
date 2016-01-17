@@ -489,10 +489,10 @@ class UserController extends AppController {
 				$find = $this->User->find('all', array('conditions' => array('id' => $id)));
 
 				if(!empty($find)) {
-					$user = $find[0]['User'];
+					$search_user = $find[0]['User'];
 					$this->loadModel('History');
 					$findHistory = $this->History->getLastFromUser($id);
-					$user['History'] = $this->History->format($findHistory);
+					$search_user['History'] = $this->History->format($findHistory);
 
 					$options_ranks = array('member' => $this->Lang->get('MEMBER'), 2 => $this->Lang->get('MODERATOR'), 3 => $this->Lang->get('ADMINISTRATOR'), 5 => $this->Lang->get('BANNED'));
 					$this->loadModel('Rank');
@@ -502,21 +502,21 @@ class UserController extends AppController {
 					}
 
 					foreach ($options_ranks as $k => $v) {
-						if($user['rank'] == $k OR $k == "member" && $user['rank'] == 0) {
-							$user['rank'] = $v;
+						if($search_user['rank'] == $k OR $k == "member" && $search_user['rank'] == 0) {
+							$search_user['rank'] = $v;
 							unset($options_ranks[$k]);
 						}
 					}
 
-					if($this->Configuration->get('confirm_mail_signup') && !empty($user['confirmed']) && date('Y-m-d H:i:s', strtotime($user['confirmed'])) != $user['confirmed']) {
-						$user['confirmed'] = false;
+					if($this->Configuration->get('confirm_mail_signup') && !empty($search_user['confirmed']) && date('Y-m-d H:i:s', strtotime($user['confirmed'])) != $user['confirmed']) {
+						$search_user['confirmed'] = false;
 					} else {
-						$user['confirmed'] = true;
+						$search_user['confirmed'] = true;
 					}
 
 					$this->set(compact('options_ranks'));
 
-					$this->set(compact('user'));
+					$this->set(compact('search_user'));
 				} else {
 					$this->Session->setFlash($this->Lang->get('UNKNOWN_ID'), 'default.error');
 					$this->redirect(array('controller' => 'user', 'action' => 'index', 'admin' => true));

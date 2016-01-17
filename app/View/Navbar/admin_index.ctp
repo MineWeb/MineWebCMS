@@ -31,7 +31,8 @@
                     <td><a href="#"><?= $Lang->get('DROPDOWN') ?></a></td>
                   <?php } ?>
                   <td>
-                    <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'delete/'.$value['Navbar']['id'], 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>
+                    <a class="btn btn-info" href="<?= $this->Html->url(array('action' => 'edit', $value['Navbar']['id'])) ?>"><?= $Lang->get('EDIT') ?></a>
+                    <a onClick="confirmDel('<?= $this->Html->url(array('action' => 'delete', $value['Navbar']['id'])) ?>')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>
                   </td>
                 </tr>
               </li>

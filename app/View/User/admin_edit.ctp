@@ -15,25 +15,25 @@ $this->Configuration = new ConfigurationComponent;
 
             <div class="ajax-msg"></div>
 
-            <input type="hidden" value="<?= $user['pseudo'] ?>" name="pseudo">
+            <input type="hidden" value="<?= $search_user['pseudo'] ?>" name="pseudo">
 
             <div class="form-group">
               <label><?= $Lang->get('PSEUDO') ?></label>
-              <input class="form-control" value="<?= $user['pseudo'] ?>" type="text" disabled="">
+              <input class="form-control" value="<?= $search_user['pseudo'] ?>" type="text" disabled="">
            	</div>
 
             <?php if(!$this->Configuration->get('confirm_mail_signup')) { ?>
               <div class="form-group">
                 <label><?= $Lang->get('EMAIL') ?></label>
-                <input name="email" class="form-control" value="<?= $user['email'] ?>" type="email">
+                <input name="email" class="form-control" value="<?= $search_user['email'] ?>" type="email">
               </div>
             <?php } else { ?>
               <div class="form-group">
                 <label><?= $Lang->get('EMAIL') ?></label>
                 <div class="input-group">
-                  <input value="<?= $user['email'] ?>" type="email" name="email" class="form-control">
+                  <input value="<?= $search_user['email'] ?>" type="email" name="email" class="form-control">
                   <span class="input-group-btn">
-                    <a class="btn btn-success<?= ($user['confirmed']) ? ' disabled' : '' ?>" href="<?= ($user['confirmed']) ? '#' : $this->Html->url(array('action' => 'confirm', $user['id'])) ?>"><?= ($user['confirmed']) ? $Lang->get('USER__EMAIL_CONFIRMED') : $Lang->get('USER__CONFIRM_EMAIL') ?></a>
+                    <a class="btn btn-success<?= ($search_user['confirmed']) ? ' disabled' : '' ?>" href="<?= ($search_user['confirmed']) ? '#' : $this->Html->url(array('action' => 'confirm', $search_user['id'])) ?>"><?= ($search_user['confirmed']) ? $Lang->get('USER__EMAIL_CONFIRMED') : $Lang->get('USER__CONFIRM_EMAIL') ?></a>
                   </span>
                 </div>
               </div>
@@ -47,7 +47,7 @@ $this->Configuration = new ConfigurationComponent;
             <div class="form-group">
               <label><?= $Lang->get('RANK') ?></label>
               <select class="form-control" name="rank">
-                <option value="" selected><?= ($user['rank'] == 4) ? $Lang->get('ADMINISTRATOR') : $user['rank'] ?></option>
+                <option value="" selected><?= ($search_user['rank'] == 4) ? $Lang->get('ADMINISTRATOR') : $search_user['rank'] ?></option>
                 <?php foreach ($options_ranks as $key => $value) { ?>
                     <option value="<?= $key ?>"><?= $value ?></option>
                 <?php } ?>
@@ -57,26 +57,26 @@ $this->Configuration = new ConfigurationComponent;
             <?php if($this->EyPlugin->isInstalled('Shop')) { ?>
               <div class="form-group">
                 <label><?= $Lang->get('MONEY') ?></label>
-                <input name="money" class="form-control" value="<?= $user['money'] ?>" type="text">
+                <input name="money" class="form-control" value="<?= $search_user['money'] ?>" type="text">
               </div>
             <?php } ?>
 
             <?php if($this->EyPlugin->isInstalled('Vote')) { ?>
               <div class="form-group">
                 <label><?= $Lang->get('VOTE') ?></label>
-               	<input name="vote" class="form-control" value="<?= $user['vote'] ?>" type="text">
+               	<input name="vote" class="form-control" value="<?= $search_user['vote'] ?>" type="text">
               </div>
             <?php } ?>
 
 
             <div class="form-group">
               <label>IP</label>
-              <input class="form-control" value="<?= $user['ip'] ?>" type="text" disabled="">
+              <input class="form-control" value="<?= $search_user['ip'] ?>" type="text" disabled="">
             </div>
 
             <div class="form-group">
               <label><?= $Lang->get('CREATED_SIGNIN') ?></label>
-              <input class="form-control" value="<?= $user['created'] ?>" type="text" disabled="">
+              <input class="form-control" value="<?= $search_user['created'] ?>" type="text" disabled="">
             </div>
 
             <div class="pull-right">
@@ -104,7 +104,7 @@ $this->Configuration = new ConfigurationComponent;
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($user['History'] as $key => $v) { ?>
+              <?php foreach ($search_user['History'] as $key => $v) { ?>
                 <tr>
                   <td><?= $key ?></td>
                   <td><?= $v ?></td>
