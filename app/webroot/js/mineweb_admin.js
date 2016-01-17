@@ -25,14 +25,20 @@ $("#generate_slug").click(function( event ) {
 });
 
 $(function () {
-  $('table.dataTable').DataTable({
-    "paging": true,
-    "lengthChange": false,
-    "searching": false,
-    "ordering": false,
-    "info": false,
-    "autoWidth": false,
-    'searching': true
+  $('table.dataTable').each(function(e) {
+
+    if(!$.fn.dataTable.isDataTable(this)) {
+      $(this).DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": false,
+        "info": false,
+        "autoWidth": false,
+        'searching': true
+      });
+    }
+
   });
 });
 

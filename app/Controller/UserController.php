@@ -463,19 +463,51 @@ class UserController extends AppController {
 
 			$this->set('title_for_layout',$this->Lang->get('USER'));
 			$this->layout = 'admin';
-			$this->loadModel('User');
-			$users = $this->User->find('all');
-			$this->set(compact('users'));
 
-			$available_ranks = array(0 => $this->Lang->get('MEMBER'), 2 => $this->Lang->get('MODERATOR'), 3 => $this->Lang->get('ADMINISTRATOR'), 4 => $this->Lang->get('ADMINISTRATOR'), 5 => $this->Lang->get('BANNED'));
-			$this->loadModel('Rank');
-			$custom_ranks = $this->Rank->find('all');
-			foreach ($custom_ranks as $key => $value) {
-				$available_ranks[$value['Rank']['rank_id']] = $value['Rank']['name'];
-			}
-			$this->set(compact('available_ranks'));
 		} else {
 			$this->redirect('/');
+		}
+	}
+
+	public function admin_get_users() {
+		if($this->isConnected AND $this->User->isAdmin()) {
+			$this->autoRender = false;
+			$this->response->type('json');
+
+			if($this->request->is('ajax')) {
+
+				$available_ranks = array(
+					0 => array('label' => 'success', 'name' => $this->Lang->get('MEMBER')),
+					2 => array('label' => 'warning', 'name' => $this->Lang->get('MODERATOR')),
+					3 => array('label' => 'danger', 'name' => $this->Lang->get('ADMINISTRATOR')),
+					4 => array('label' => 'danger', 'name' => $this->Lang->get('ADMINISTRATOR')),
+					5 => array('label' => 'primary', 'name' => $this->Lang->get('BANNED'))
+				);
+				$this->loadModel('Rank');
+				$custom_ranks = $this->Rank->find('all');
+				foreach ($custom_ranks as $key => $value) {
+					$available_ranks[$value['Rank']['rank_id']] = array('label' => 'info', 'name' => $value['Rank']['name']);
+				}
+
+				$find = $this->User->find('all');
+
+				$data['data'] = array();
+
+				foreach ($find as $key => $value) {
+
+					$username = $value['User']['pseudo'];
+					$date = 'Le'.$this->Lang->date($value['User']['created']);
+					$rank = '<span class="label label-'.$available_ranks[$value['User']['rank']]['label'].'">'.$available_ranks[$value['User']['rank']]['name'].'</span>';
+					$btns = '<a href="'.Router::url(array('controller' => 'user', 'action' => 'edit/'.$value["User"]["id"], 'admin' => true)).'" class="btn btn-info">'.$this->Lang->get('EDIT').'</a>';
+					$btns .= '&nbsp;<a onClick="confirmDel('.Router::url(array('controller' => 'user', 'action' => 'delete/'.$value["User"]["id"], 'admin' => true)).')" class="btn btn-danger">'.$this->Lang->get('DELETE').'</button>';
+
+					$data['data'][] = array($username, $date, $rank, $btns);
+
+				}
+
+				echo json_encode($data);
+
+			}
 		}
 	}
 

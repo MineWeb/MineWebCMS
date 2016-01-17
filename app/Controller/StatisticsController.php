@@ -23,7 +23,7 @@ class StatisticsController extends AppController {
 	function admin_get_visits() {
 		if($this->isConnected AND $this->User->isAdmin()) {
 
-			//$this->response->type('json');
+			$this->response->type('json');
 
 			$this->autoRender = false;
 			$this->loadModel('Visit');
