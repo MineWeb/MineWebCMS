@@ -316,6 +316,9 @@ WCqkx22behAGZq6rhwIDAQAB
     }
 
   	$csrfToken = $this->Session->read('_Token')['key'];
+    if(empty($csrfToken)) {
+      debug($this->Session->read('_Token'));
+    }
 
   	// socials links
   	$facebook_link = $this->Configuration->get('facebook');

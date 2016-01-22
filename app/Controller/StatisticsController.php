@@ -28,7 +28,7 @@ class StatisticsController extends AppController {
 			$this->autoRender = false;
 			$this->loadModel('Visit');
 
-			$visits = $this->Visit->getVisits();
+			$visits = $this->Visit->getVisits(15);
 
 			foreach ($visits as $key => $value) {
 
@@ -53,11 +53,7 @@ class StatisticsController extends AppController {
 			$limit = 15;
 			$i = 0;
 			foreach ($visitsToFormatte as $key => $value) {
-				$i++;
 				$visitsFormatted[] = array($key, $value);
-				if($i == $limit) {
-					break;
-				}
 			}
 
 			echo json_encode($visitsFormatted);

@@ -99,17 +99,13 @@ class EyPluginComponent extends Object {
 
    private function unloadPlugins() {
 
-     // On récupére le modal
-     $PluginModel = ClassRegistry::init('Plugin');
+     if(!empty($this->pluginsLoaded)) {
 
-     // On cherche tout les plugins installés en db & désactivé
-     $dbPlugins = $PluginModel->find('all', array('conditions' => array('state' => 0)));
+       foreach ($this->pluginsLoaded as $key => $value) { // on les parcours
 
-     if(!empty($dbPlugins)) {
-
-       foreach ($dbPlugins as $key => $value) { // on les parcours
-
-         CakePlugin::unload($value['Plugin']['name']); // on le décharge
+        if(!$value->active) {
+          CakePlugin::unload($value->slug); // on le décharge
+        }
 
        }
 

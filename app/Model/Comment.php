@@ -21,7 +21,7 @@ class Comment extends AppModel {
 		}
 	}
 
-	public function afterDelete() {
+	public function afterDelete($cascade = true) {
 		$this->getEventManager()->dispatch(new CakeEvent('afterDeleteComment', $this));
 	}
 }

@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="Eywek">
 
-    <title><?= $title_for_layout; ?> - <?= $website_name ?></title>
+    <title><?= (isset($title_for_layout)) ? $title_for_layout :  'Error' ?> - <?= (isset($website_name)) ? $website_name : 'MineWeb' ?></title>
 
     <?= $this->Html->css('bootstrap.css') ?>
     <?= $this->Html->css('modern-business.css') ?>
@@ -21,7 +21,7 @@
 	  <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,900' rel='stylesheet' type='text/css'>
 	  <?= $this->Html->script('jquery-1.11.0.js') ?>
     <?= $this->Html->script('easy_paginate.js') ?>
-    <link rel="icon" type="image/png" href="<?= $theme_config['favicon_url'] ?>" />
+    <link rel="icon" type="image/png" href="<?= (isset($theme_config)) ? $theme_config['favicon_url'] : '' ?>" />
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -29,7 +29,8 @@
 
 </head>
 
-<body style="background: url(<?= $theme_config['background_url'] ?>);"><!-- grey.png -->
+<body style="background: url(<?= (isset($theme_config)) ? $theme_config['background_url'] : '' ?>);"><!-- grey.png -->
+  <?php if(isset($Lang)) { ?>
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="mini-navbar mini-navbar-dark hidden-xs">
       <div class="container">
@@ -109,53 +110,56 @@
             </div>
         </div>
     </nav>
+  <?php } ?>
     <div class="nav-hop"></div>
     <?php if(!empty($flash_messages)) {
       echo '<div class="container">'.$flash_messages.'</div>';
     } ?>
     <?= $this->fetch('content'); ?>
     <!-- Footer -->
-
-    <div class="container">
-      <footer>
-        <div class="row">
-          <div class="col-lg-12">
-            <p><?= $Lang->get('COPYRIGHT') ?></p>
+    <?php if(isset($Lang)) { ?>
+      <div class="container">
+        <footer>
+          <div class="row">
+            <div class="col-lg-12">
+              <p><?= $Lang->get('COPYRIGHT') ?></p>
+            </div>
           </div>
-        </div>
-      </footer>
-    </div>
+        </footer>
+      </div>
 
-    <?= $this->element('modals') ?>
+      <?= $this->element('modals') ?>
 
-    <?= $this->Html->script('jquery-1.11.0.js') ?>
-    <?= $this->Html->script('bootstrap.js') ?>
+      <?= $this->Html->script('jquery-1.11.0.js') ?>
+      <?= $this->Html->script('bootstrap.js') ?>
 
-    <?= $this->Html->script('app.js') ?>
-    <script>
-    // Config APP.JS
+      <?= $this->Html->script('app.js') ?>
+      <script>
+      // Config APP.JS
 
-    var LIKE_URL = "<?= $this->Html->url(array('controller' => 'news', 'action' => 'like')) ?>";
-    var DISLIKE_URL = "<?= $this->Html->url(array('controller' => 'news', 'action' => 'dislike')) ?>";
+      var LIKE_URL = "<?= $this->Html->url(array('controller' => 'news', 'action' => 'like')) ?>";
+      var DISLIKE_URL = "<?= $this->Html->url(array('controller' => 'news', 'action' => 'dislike')) ?>";
 
-    var LOADING_MSG = "<?= $Lang->get('LOADING') ?>";
-    var ERROR_MSG = "<?= $Lang->get('ERROR') ?>";
-    var INTERNAL_ERROR_MSG = "<?= $Lang->get('ERROR_WHEN_AJAX') ?>";
-    var SUCCESS_MSG = "<?= $Lang->get('SUCCESS') ?>";
+      var LOADING_MSG = "<?= $Lang->get('LOADING') ?>";
+      var ERROR_MSG = "<?= $Lang->get('ERROR') ?>";
+      var INTERNAL_ERROR_MSG = "<?= $Lang->get('ERROR_WHEN_AJAX') ?>";
+      var SUCCESS_MSG = "<?= $Lang->get('SUCCESS') ?>";
 
-    var CSRF_TOKEN = "<?= $csrfToken ?>";
-    </script>
+      var CSRF_TOKEN = "<?= $csrfToken ?>";
+      </script>
 
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-      ga('create', '<?= $google_analytics ?>', 'auto');
-      ga('send', 'pageview');
-    </script>
-    <?= $configuration_end_code ?>
+        ga('create', '<?= $google_analytics ?>', 'auto');
+        ga('send', 'pageview');
+      </script>
+      <?= $configuration_end_code ?>
+
+    <?php } ?>
 
 </body>
 

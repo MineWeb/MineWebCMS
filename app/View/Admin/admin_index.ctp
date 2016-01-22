@@ -72,7 +72,7 @@ $this->EyPlugin = new EyPluginComponent;
           <i class="fa fa-pencil"></i>
         </div>
         <a href="#" class="small-box-footer">
-          <?php 
+          <?php
           if($nbr_comments_type == "today") {
             echo '+ ';
           }
@@ -175,7 +175,7 @@ $this->EyPlugin = new EyPluginComponent;
         </div>
         <div class="box-body">
           <?php if($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
-            <?php if($counts_items >= 5) { ?>
+            <?php if(count($items_solded) >= 5) { ?>
               <div class="alert alert-warning"><b><?= $Lang->get('INFORMATION') ?> :</b> <?= $Lang->get('BIGGEST_SELLERS') ?></div>
               <div class="row">
                 <div class="col-md-8">
@@ -186,27 +186,27 @@ $this->EyPlugin = new EyPluginComponent;
                     var pieChart = new Chart(pieChartCanvas);
                     var PieData = [
                       {
-                        value: <?= $how['0'] ?>,
+                        value: <?= $items_solded['0'][0]['COUNT(*)'] ?>,
                         color:"#1abc9c",
                         label : '<?= addslashes($items_solded[0]['History']['other']) ?>'
                       },
                       {
-                        value : <?= $how['1'] ?>,
+                        value : <?= $items_solded['1'][0]['COUNT(*)'] ?>,
                         color : "#2ecc71",
                         label : '<?= addslashes($items_solded[1]['History']['other']) ?>'
                       },
                       {
-                        value : <?= $how['2'] ?>,
+                        value : <?= $items_solded['2'][0]['COUNT(*)'] ?>,
                         color : "#3498db",
                         label : '<?= addslashes($items_solded[2]['History']['other']) ?>'
                       },
                       {
-                        value : <?= $how['3'] ?>,
+                        value : <?= $items_solded['3'][0]['COUNT(*)'] ?>,
                         color : "#e67e22",
                         label : '<?= addslashes($items_solded[3]['History']['other']) ?>'
                       },
                       {
-                        value : <?= $how['4'] ?>,
+                        value : <?= $items_solded['4'][0]['COUNT(*)'] ?>,
                         color : "#e74c3c",
                         label : '<?= addslashes($items_solded[4]['History']['other']) ?>'
                       }
@@ -245,11 +245,11 @@ $this->EyPlugin = new EyPluginComponent;
                 </div>
                 <div class="col-md-4">
                   <ul class="chart-legend clearfix">
-                    <li><i class="fa fa-circle-o" style="color:#1abc9c;"></i> <?= $items_solded['0']['History']['other'] ?> (<?= $how['0'] ?> <?= $Lang->get('SALES') ?>)</li>
-                    <li><i class="fa fa-circle-o" style="color:#2ecc71;"></i> <?= $items_solded['1']['History']['other'] ?> (<?= $how['1'] ?> <?= $Lang->get('SALES') ?>)</li>
-                    <li><i class="fa fa-circle-o" style="color:#3498db;"></i> <?= $items_solded['2']['History']['other'] ?> (<?= $how['2'] ?> <?= $Lang->get('SALES') ?>)</li>
-                    <li><i class="fa fa-circle-o" style="color:#e67e22;"></i> <?= $items_solded['3']['History']['other'] ?> (<?= $how['3'] ?> <?= $Lang->get('SALES') ?>)</li>
-                    <li><i class="fa fa-circle-o" style="color:#e74c3c;"></i> <?= $items_solded['4']['History']['other'] ?> (<?= $how['4'] ?> <?= $Lang->get('SALES') ?>)</li>
+                    <li><i class="fa fa-circle-o" style="color:#1abc9c;"></i> <?= $items_solded['0']['History']['other'] ?> (<?= $items_solded['0']['0']['COUNT(*)'] ?> <?= $Lang->get('SALES') ?>)</li>
+                    <li><i class="fa fa-circle-o" style="color:#2ecc71;"></i> <?= $items_solded['1']['History']['other'] ?> (<?= $items_solded['1']['0']['COUNT(*)'] ?> <?= $Lang->get('SALES') ?>)</li>
+                    <li><i class="fa fa-circle-o" style="color:#3498db;"></i> <?= $items_solded['2']['History']['other'] ?> (<?= $items_solded['2']['0']['COUNT(*)'] ?> <?= $Lang->get('SALES') ?>)</li>
+                    <li><i class="fa fa-circle-o" style="color:#e67e22;"></i> <?= $items_solded['3']['History']['other'] ?> (<?= $items_solded['3']['0']['COUNT(*)'] ?> <?= $Lang->get('SALES') ?>)</li>
+                    <li><i class="fa fa-circle-o" style="color:#e74c3c;"></i> <?= $items_solded['4']['History']['other'] ?> (<?= $items_solded['4']['0']['COUNT(*)'] ?> <?= $Lang->get('SALES') ?>)</li>
                   </ul>
                 </div>
               </div>
@@ -306,8 +306,8 @@ $this->EyPlugin = new EyPluginComponent;
                       <button class="btn" type="button" data-toggle="modal" onClick="$('#server_id').val(<?= $value['Server']['id'] ?>)" data-target="#executeCommand" style="padding: 4px 12px;margin-right: 8px;"><i class="fa fa-terminal"></i> <?= $Lang->get('COMMAND') ?></button>
                   </div>
                   <br>
-                  <button class="btn btn-large btn-block btn-success" type="button"><?= $Lang->get('ONLINE') ?> <br> 
-                    <?php 
+                  <button class="btn btn-large btn-block btn-success" type="button"><?= $Lang->get('ONLINE') ?> <br>
+                    <?php
                     $get = $Server->call(array('getPlayerCount' => 'server', 'getPlayerMax' => 'server'), false, $value['Server']['id']);
                     echo $get['getPlayerCount'].'/'.$get['getPlayerMax'];
                     ?>

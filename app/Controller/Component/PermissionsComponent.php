@@ -3,25 +3,29 @@ class PermissionsComponent extends Object {
 
   public $permissions = array('COMMENT_NEWS', 'LIKE_NEWS', 'DELETE_HIS_COMMENT', 'DELETE_COMMENT', 'EDIT_HIS_EMAIL', 'ACCESS_DASHBOARD', 'MANAGE_NEWS', 'MANAGE_SLIDER', 'MANAGE_PAGE', 'MANAGE_NAV');
 
-  public $components = array('Session', 'Connect');
+  public $components = array('Session');
+
+  private $userModel;
 
 	function shutdown(&$controller) {}
 	function beforeRender(&$controller) {}
   function beforeRedirect() {}
-  function initialize(&$controller) {$this->controller =& $controller;}
+  function initialize(&$controller) {
+    $this->controller =& $controller;
+    $this->userModel = ClassRegistry::init('User');
+  }
   function startup(&$controller) {
-    $controller->set('Permissions', new PermissionsComponent());
+    $controller->set('Permissions', $this);
   }
   function __construct() {}
 
   public function can($perm) {
-    $this->User = ClassRegistry::init('User');
-    if($this->User->isConnected()) {
-      if($this->User->isAdmin()) {
+    if($this->userModel->isConnected()) {
+      if($this->userModel->isAdmin()) {
         return true;
       } else {
         $this->Perm = ClassRegistry::init('Permission');
-        $search_perm = $this->Perm->find('all', array('conditions' => array('rank' => $this->User->getKey('rank'))));
+        $search_perm = $this->Perm->find('all', array('conditions' => array('rank' => $this->userModel->getKey('rank'))));
         $search_perm = unserialize($search_perm[0]['Permission']['permissions']);
         return in_array($perm, $search_perm);
       }

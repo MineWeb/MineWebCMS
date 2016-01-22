@@ -27,7 +27,7 @@
                 if($key != 'null') {
                   $hostes[] = parse_url($key, PHP_URL_HOST);
                 } else {
-                  $hostes[] = 'undefined';
+                  $hostes[] = 'N/A';
                 }
 
                 if(!isset($colors[$i])) {
@@ -39,7 +39,7 @@
                 if($key != 'null') {
                   echo 'label : \''.addslashes(urldecode(parse_url($key, PHP_URL_HOST))).'\'';
                 } else {
-                  echo 'label : \'undefined\'';
+                  echo 'label : \'N/A\'';
                 }
                 echo '},';
                 $i++;
@@ -166,8 +166,6 @@
 <script type="text/javascript">
 $(function () {
   $.getJSON('<?= $this->Html->url(array('action' => 'get_visits')) ?>', function (data) {
-
-    console.log(data);
 
       $('#visits').highcharts({
           chart: {

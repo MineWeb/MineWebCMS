@@ -33,14 +33,7 @@ class AppModel extends Model {
 
   public $recursive = -1;
 
-	/*function find($conditions = null, $fields = array(), $order = null, $recursive = null) {
-        $cacheConfig = 'short';
-        $cacheName = md5(serialize(func_get_args()));
-        $data = Cache::read($cacheName, $cacheConfig);
-        if ($data == false) {
-            $data = parent::find($conditions, $fields, $order, $recursive);
-            Cache::write($cacheName, $data, $cacheConfig);
-        }
-        return $data;
-    }*/
+  //var $actsAs = array('Cache');
+  var $cacheQueries = true;
+
 }

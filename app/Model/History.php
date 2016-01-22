@@ -71,7 +71,7 @@ class History extends AppModel {
 				$users_list[$value['User']['id']] = $value['User']['pseudo'];
 			}
 			foreach ($results as $k => $v) {
-				if(isset($users_list[$v['History']['user_id']])) {
+				if(isset($v['History']['user_id']) && isset($users_list[$v['History']['user_id']])) {
 					$results[$k]['History']['author'] = $users_list[$v['History']['user_id']];
 				} else {
 					$results[$k]['History']['author'] = 'N/A';
@@ -104,7 +104,7 @@ class History extends AppModel {
 		}
 	}
 
-	public function afterDelete() {
+	public function afterDelete($cascade = true) {
 		$this->getEventManager()->dispatch(new CakeEvent('afterDeleteHistory', $this));
 	}
 

@@ -1,8 +1,8 @@
 <?php
 class Visit extends AppModel {
 
-  function getVisits() {
-    $data = $this->find('all');
+  function getVisits($limit = false, $order = 'DESC') {
+    $data = $this->find('all', array('limit' => $limit, 'order' => 'id '.$order));
     $data['count'] = count($data);
     return $data;
   }
@@ -13,11 +13,13 @@ class Visit extends AppModel {
     return $data;
   }
 
-  function get($groupBy) {
-    $search = $this->find('all', array('fields' => $groupBy.',COUNT(*)', 'group' => $groupBy));
+  function get($groupBy, $limit = false, $order = 'DESC') {
+    $search = $this->find('all', array('fields' => $groupBy.',COUNT(*)', 'group' => $groupBy, 'order' => 'id '.$order, 'limit' => $limit));
     foreach ($search as $key => $value) {
 
-      $data[$value['Visit'][$groupBy]] = $value['0']['COUNT(*)'];
+      if($value['0']['COUNT(*)'] >= 5) {
+        $data[$value['Visit'][$groupBy]] = $value['0']['COUNT(*)'];
+      }
 
     }
     return $data;
