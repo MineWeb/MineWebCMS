@@ -202,12 +202,16 @@ $(document).ready(function(){
           submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
         }
       },
-      error : function(data) {
+      error : function(xhr) {
         if(recaptcha) {
           grecaptcha.reset();
         }
 
-        form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b>'+ERROR_MSG+' :</b> '+INTERNAL_ERROR_MSG+'</i></div>');
+        if(xhr.status == "403") {
+          form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b>'+ERROR_MSG+' :</b> '+FORBIDDEN_ERROR_MSG+'</i></div>');
+        } else {
+          form.find('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b>'+ERROR_MSG+' :</b> '+INTERNAL_ERROR_MSG+'</i></div>');
+        }
         submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
       }
     });
