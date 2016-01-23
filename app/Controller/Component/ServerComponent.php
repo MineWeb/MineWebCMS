@@ -27,6 +27,35 @@ class ServerComponent extends Object {
 		}
 
     if($this->online($server_id)) {
+			$config = $this->getConfig($server_id);
+			if($config['type'] == 2) { // si query
+
+				$authorised_method_for_query = array('getMOTD', 'getPlayerCount', 'getVersion', 'getPlayerMax');
+
+				// si c'est des méthodes autorisés pour le query
+				if(is_array($method)) {
+
+					$result = array();
+					$ping = $this->ping(array('ip' => $config['ip'], 'port' => $config['port']));
+
+					foreach ($method as $key => $value) {
+						if(!in_array($key, $authorised_method_for_query)) {
+							return array('status' => 'error', 'code' => '6', 'msg' => 'This server type can\'t accept this methods');
+						}
+						$result[$key] = $ping[$key];
+					}
+
+					return $result;
+
+				} else {
+					if(!in_array($method, $authorised_method_for_query)) {
+						return array('status' => 'error', 'code' => '6', 'msg' => 'This server type can\'t accept this method');
+					}
+					return $this->ping(array('ip' => $config['ip'], 'port' => $config['port']))[$method];
+				}
+
+			}
+
         // method example : $method = array('getPlayerLimit' => 'server', 'getPlayer' => 'Eywek');
         // or $method = 'getPlayerLimit';
         if($method != false) {
@@ -68,7 +97,7 @@ class ServerComponent extends Object {
 								return array('status' => 'error', 'code' => '4', 'msg' => 'Request not allowed');
 							}
 							if(isset($result['REQUEST']) && $result['REQUEST'] == "NEED_PARAMATER_FOR_INSTALLATION") {
-								return array('status' => 'error', 'code' => '5dddd', 'msg' => 'Plugin not installed');
+								return array('status' => 'error', 'code' => '5', 'msg' => 'Plugin not installed');
 							}
 	            return $result;
 	        } else {
@@ -109,8 +138,8 @@ class ServerComponent extends Object {
 		            $this->Server = ClassRegistry::init('Server');
 		            $search = $this->Server->find('first', array('conditions' => array('id' => $server_id)));
 		            if(!empty($search)) {
-		            	$this->config[$server_id] = array('ip' => $search['Server']['ip'], 'port' => $search['Server']['port']);
-		                return $this->config[$server_id];
+		            	$this->config[$server_id] = array('ip' => $search['Server']['ip'], 'port' => $search['Server']['port'], 'type' => $search['Server']['type']);
+		              return $this->config[$server_id];
 		            } else {
 		            	$this->config[$server_id] = false;
 		                return false;
@@ -126,6 +155,32 @@ class ServerComponent extends Object {
 		} else {
 			return $this->config[$server_id];
 		}
+	}
+
+	public function ping($config = false) {
+
+		if(!$config || !isset($config['ip']) || !isset($config['port'])) {
+			return false;
+		}
+
+		App::import('Vendor', 'MinecraftPing', array('file' => 'ping-xpaw/MinecraftPing.php'));
+		App::import('Vendor', 'MinecraftPingException', array('file' => 'ping-xpaw/MinecraftPingException.php'));
+
+		try {
+			$Query = new MinecraftPing($config['ip'], $config['port'], $this->getTimeout());
+			$Info = $Query->Query();
+		}
+		catch(MinecraftPingException $e)
+		{
+			$Exception = $e;
+		}
+
+		if(isset($Query)) {
+			$Query->Close();
+		}
+
+		return (empty($Exception) && isset($Info['players'])) ? array('getMOTD' => $Info['description'], 'getVersion' => $Info['version']['name'], 'getPlayerCount' => $Info['players']['online'], 'getPlayerMax' => $Info['players']['max'])  : false;
+
 	}
 
 	public function getUrl($server_id, $key = false) {
@@ -155,8 +210,12 @@ class ServerComponent extends Object {
 
 		if(empty($this->online[$server_id])) {
 		    if(!empty($server_id)) {
-		        $config = $this->getConfig();
+		        $config = $this->getConfig($server_id);
 		        if($config) {
+
+							if($config['type'] == 2) {
+								return ($this->ping(array('ip' => $config['ip'], 'port' => $config['port']))) ? true : false;
+							} else {
 		            $url = $this->getUrl($server_id).'getPlayerMax=server';
 		            $opts = array('http' => array('timeout' => $this->getTimeout()));
 		            @$get = file_get_contents($url, false, stream_context_create($opts));
@@ -184,6 +243,7 @@ class ServerComponent extends Object {
 		            	$this->online[$server_id] = false;
 		                return false;
 		            }
+							}
 		        } else {
 		        	$this->online[$server_id] = false;
 		            return false;
@@ -305,22 +365,20 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 		}
 
     if(!is_array($server_id)) {
-        if($this->online($server_id)) {
-            $search = $this->call(array('getMOTD' => 'server', 'getVersion' => 'server', 'getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $server_id);
+      if($this->online($server_id)) {
+          $search = $this->call(array('getMOTD' => 'server', 'getVersion' => 'server', 'getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $server_id);
 
-						if(isset($search['status']) && $search['status'] == "error") {
-							return false;
-						}
+					if(isset($search['status']) && $search['status'] == "error") {
+						return false;
+					}
 
-						var_dump($search);
-
-            if($search['getPlayerCount'] == "null") {
-                $search['getPlayerCount'] = 0;
-            }
-            return $search;
-        } else {
-          return false;
-        }
+          if($search['getPlayerCount'] == "null") {
+              $search['getPlayerCount'] = 0;
+          }
+          return $search;
+      } else {
+        return false;
+      }
     } else {
         $servers = $server_id;
         $return['getPlayerMax'] = 0;

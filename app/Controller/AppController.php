@@ -122,16 +122,22 @@ WCqkx22behAGZq6rhwIDAQAB
 			curl_setopt($curl, CURLOPT_POST, true);
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
 
+      curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+
 			$return = curl_exec($curl);
 			curl_close($curl);
 
+      if(!$return) {
+        throw new LicenseException('MINEWEB_DOWN');
+      }
+
 			if(!preg_match('#Errors#i', $return)) {
-		        $return = json_decode($return, true);
-		        if($return['status'] == "success") {
-		        	file_put_contents(ROOT.'/config/last_check', $return['time']);
-		        } elseif($return['status'] == "error") {
-		        	throw new LicenseException($return['msg']);
-		        }
+        $return = json_decode($return, true);
+        if($return['status'] == "success") {
+        	file_put_contents(ROOT.'/config/last_check', $return['time']);
+        } elseif($return['status'] == "error") {
+        	throw new LicenseException($return['msg']);
+        }
 			}
 		}
 	}
@@ -301,8 +307,8 @@ WCqkx22behAGZq6rhwIDAQAB
 	      	} else {
 	        	$server_infos = $this->Server->banner_infos($banner_server);
 	      	}
-	      	if(!empty($server_infos['getPlayerMax']) && !empty($server_infos['getPlayerCount'])) {
-	      		$banner_server = $this->Lang->banner_server($this->Server->banner_infos($server_infos));
+	      	if(isset($server_infos['getPlayerMax']) && isset($server_infos['getPlayerCount'])) {
+	      		$banner_server = $this->Lang->banner_server($server_infos);
 	      	} else {
 	        		$banner_server = false;
 	      	}
@@ -317,7 +323,7 @@ WCqkx22behAGZq6rhwIDAQAB
 
   	$csrfToken = $this->Session->read('_Token')['key'];
     if(empty($csrfToken)) {
-      debug($this->Session->read('_Token'));
+      $this->Session->renew();
     }
 
   	// socials links

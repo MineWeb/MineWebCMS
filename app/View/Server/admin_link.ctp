@@ -71,6 +71,16 @@
                 <div class="ajax-msg"></div>
 
                 <input type="hidden" name="id" value="<?= $value['Server']['id'] ?>">
+
+                <div class="form-group">
+                  <label><?= $Lang->get('SERVER__TYPE') ?></label>
+                  <select class="form-control" name="type">
+                    <option value="0"<?= ($value['Server']['type'] == '0') ? ' selected' : '' ?>><?= $Lang->get('SERVER__TYPE_DEFAULT') ?></option>
+                    <option value="1"<?= ($value['Server']['type'] == '1') ? ' selected' : '' ?>><?= $Lang->get('SERVER__TYPE_BUNGEE') ?></option>
+                    <option value="2"<?= ($value['Server']['type'] == '2') ? ' selected' : '' ?>><?= $Lang->get('SERVER__TYPE_QUERY') ?></option>
+                  </select>
+                </div>
+
                 <div class="form-group">
                   <label><?= $Lang->get('NAME') ?></label>
                   <input type="text" class="form-control" name="name" value="<?= $value['Server']['name'] ?>" placeholder="Ex: MineWeb">
@@ -128,7 +138,45 @@
   var i = 0;
   $("#add_server").click(function() {
     i++;
-    var new_server = '<div class="row"><div class="col-md-12"><div class="box"><div class="box-header with-border"><h3 class="box-title"><?= $Lang->get('LINK_SERVER') ?></h3></div><div class="box-body"><form id="'+i+'" action="<?= $this->Html->url(array('controller' => 'server', 'action' => 'link_ajax', 'admin' => true)) ?>" method="post"><input type="hidden" id="form_infos" data-ajax="true"><div class="ajax-msg"></div><div class="form-group"><label><?= $Lang->get('NAME') ?></label><input type="text" class="form-control" name="name" placeholder="Ex: MineWeb"></div><div class="form-group"><label><?= $Lang->get('SERVER_HOST') ?></label><input type="text" class="form-control" name="host" placeholder="Ex: 127.0.0.1"></div><div class="form-group"><label><?= $Lang->get('PORT') ?></label><input type="text" class="form-control" name="port" placeholder="Ex: 8080"></div><button  type="submit" class="btn btn-success"><?= $Lang->get('SUBMIT') ?></button></form></div></div></div></div>'+"\n";
+    var new_server = '<div class="row">';
+      new_server += '<div class="col-md-12">';
+        new_server += '<div class="box">';
+          new_server += '<div class="box-header with-border">';
+            new_server += '<h3 class="box-title"><?= $Lang->get('LINK_SERVER') ?></h3>';
+          new_server += '</div>';
+          new_server += '<div class="box-body">';
+            new_server += '<form id="'+i+'" action="<?= $this->Html->url(array('controller' => 'server', 'action' => 'link_ajax', 'admin' => true)) ?>" method="post">';
+              new_server += '<input type="hidden" id="form_infos" data-ajax="true">';
+              new_server += '<div class="ajax-msg"></div>';
+              new_server += '<div class="form-group">';
+                new_server += '<label><?= $Lang->get('SERVER__TYPE') ?></label>';
+                new_server += '<select class="form-control" name="type">';
+                  new_server += '<option value="0"><?= $Lang->get('SERVER__TYPE_DEFAULT') ?></option>';
+                  new_server += '<option value="1"><?= $Lang->get('SERVER__TYPE_BUNGEE') ?></option>';
+                  new_server += '<option value="2"><?= $Lang->get('SERVER__TYPE_QUERY') ?></option>';
+                new_server +='</select>';
+              new_server += '</div>';
+              new_server += '<div class="form-group">';
+                new_server += '<label><?= $Lang->get('NAME') ?></label>';
+                new_server += '<input type="text" class="form-control" name="name" placeholder="Ex: MineWeb">';
+              new_server += '</div>';
+              new_server += '<div class="form-group">';
+                new_server += '<label><?= $Lang->get('SERVER_HOST') ?></label>';
+                new_server += '<input type="text" class="form-control" name="host" placeholder="Ex: 127.0.0.1">';
+              new_server += '</div>';
+              new_server += '<div class="form-group">';
+                new_server += '<label><?= $Lang->get('PORT') ?></label>';
+                new_server += '<input type="text" class="form-control" name="port" placeholder="Ex: 8080">';
+              new_server += '</div>';
+              new_server += '<button type="submit" class="btn btn-success"><?= $Lang->get('SUBMIT') ?></button>';
+            new_server += '</form>';
+          new_server += '</div>';
+        new_server += '</div>';
+      new_server +='</div>';
+    new_server +='</div>'+"\n";
+
+
+
       $('#add_server_content').append(new_server);
 
       $("form").unbind("submit");
@@ -192,6 +240,8 @@
 
             i++;
           }
+
+          inputs["data[_Token][key]"] = '<?= $csrfToken ?>';
 
           //
 

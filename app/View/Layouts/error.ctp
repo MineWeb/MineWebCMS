@@ -6,7 +6,7 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
 	    <meta name="description" content="">
 	    <meta name="author" content="Eywek">
-		
+
 	    <title><?= $message; ?> - EyCraft</title>
 	    <?= $this->Html->css('bootstrap.css') ?>
 	    <style>
@@ -21,11 +21,10 @@
 		    <div class="row">
 		        <div class="col-md-12">
 		        	<div id="content">
-		
-						<?php echo $this->Session->flash(); ?>
 	
+
 						<?php echo $this->fetch('content'); ?>
-					
+
 					</div>
 		        </div>
 		    </div>

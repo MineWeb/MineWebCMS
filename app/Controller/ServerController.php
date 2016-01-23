@@ -146,41 +146,55 @@ class ServerController extends AppController {
 	}
 
 	public function admin_link_ajax() {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->User->isAdmin()) {
-
-			$this->layout = null;
 			if($this->request->is('ajax')) {
 
-				if(!empty($this->request->data['host']) AND !empty($this->request->data['port']) AND !empty($this->request->data['name'])) {
-					$secret_key = $this->Server->get('secret_key');
-					if($secret_key !== false) {
-						$timeout = $this->Configuration->get('server_timeout');
-						if(!empty($timeout)) {
-							if($this->Server->check('connection', array('host' => $this->request->data['host'], 'port' => $this->request->data['port'], 'timeout' => $timeout, 'secret_key' => $secret_key))) {
-								$this->Configuration->set('server_state', 1);
+				if(!empty($this->request->data['host']) AND !empty($this->request->data['port']) AND !empty($this->request->data['name']) AND !empty($this->request->data['type']) && ($this->request->data['type'] == 0 || $this->request->data['type'] == 1 || $this->request->data['type'] == 2)) {
 
-								if(!empty($this->request->data['id'])) {
-									$id = $this->request->data['id'];
-								} else {
-									$id = null;
+					if($this->request->data['type'] == 0 || $this->request->data['type'] == 1) {
+						$secret_key = $this->Server->get('secret_key');
+						if($secret_key !== false) {
+							$timeout = $this->Configuration->get('server_timeout');
+							if(!empty($timeout)) {
+								if(!$this->Server->check('connection', array('host' => $this->request->data['host'], 'port' => $this->request->data['port'], 'timeout' => $timeout, 'secret_key' => $secret_key))) {
+									echo $this->Lang->get('SERVER_CONNECTION_FAILED').'|false';
+									exit;
 								}
-
-								$this->loadModel('Server');
-								$this->Server->read(null, $id);
-								$this->Server->set(array('name' => $this->request->data['name'], 'ip' => $this->request->data['host'], 'port' => $this->request->data['port']));
-								$this->Server->save();
-
-								$this->Configuration->set('server_secretkey', $secret_key);
-								echo $this->Lang->get('SUCCESS_CONNECTION_SERVER').'|true';
 							} else {
-								echo $this->Lang->get('SERVER_CONNECTION_FAILED').'|false';
+								echo $this->Lang->get('NEED_CONFIG_SERVER_TIMEOUT').'|false';
+								exit;
 							}
 						} else {
-							echo $this->Lang->get('NEED_CONFIG_SERVER_TIMEOUT').'|false';
+							echo $this->Lang->get('SERVER_CONNECTION_FAILED').'|false';
+							exit;
 						}
-					} else {
-						echo $this->Lang->get('SERVER_CONNECTION_FAILED').'|false';
+					} elseif($this->request->data['type'] == 2) {
+						$ping = $this->Server->ping(array('ip' => $this->request->data['host'], 'port' => $this->request->data['port']));
+						if(!$ping) {
+							echo $this->Lang->get('SERVER_CONNECTION_FAILED').'|false';
+							exit;
+						}
 					}
+
+					$this->Configuration->set('server_state', 1);
+
+					if(!empty($this->request->data['id'])) {
+						$id = $this->request->data['id'];
+					} else {
+						$id = null;
+					}
+
+					$this->loadModel('Server');
+					$this->Server->read(null, $id);
+					$this->Server->set(array('name' => $this->request->data['name'], 'ip' => $this->request->data['host'], 'port' => $this->request->data['port'], 'type' => $this->request->data['type']));
+					$this->Server->save();
+
+					if($this->request->data['type'] != '2' && isset($secret_key)) {
+						$this->Configuration->set('server_secretkey', $secret_key);
+					}
+					echo $this->Lang->get('SUCCESS_CONNECTION_SERVER').'|true';
+
 				} else {
 					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
 				}

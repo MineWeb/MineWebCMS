@@ -347,6 +347,7 @@ class AppSchema extends CakeSchema {
 		'name' => array('type' => 'string', 'null' => false, 'length' => 20, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'ip' => array('type' => 'string', 'null' => false, 'length' => 120, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'port' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 5, 'unsigned' => false),
+		'type' => array('type' => 'integer', 'null' => false, 'default' => 0, 'length' => 1, 'unsigned' => false),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),

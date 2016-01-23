@@ -30,7 +30,7 @@
 </head>
 
 <body style="background: url(<?= (isset($theme_config)) ? $theme_config['background_url'] : '' ?>);"><!-- grey.png -->
-  <?php if(isset($Lang)) { ?>
+  <?php if(isset($Lang) && isset($banner_server)) { ?>
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="mini-navbar mini-navbar-dark hidden-xs">
       <div class="container">
@@ -117,7 +117,7 @@
     } ?>
     <?= $this->fetch('content'); ?>
     <!-- Footer -->
-    <?php if(isset($Lang)) { ?>
+    <?php if(isset($Lang) && isset($banner_server)) { ?>
       <div class="container">
         <footer>
           <div class="row">
