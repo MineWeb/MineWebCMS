@@ -269,26 +269,21 @@ class ShopController extends ShopAppController {
 					$this->set(compact('categories'));
 
 					$this->loadModel('Server');
+					
+					$servers = $this->Server->findSelectableServers();
+					$this->set(compact('servers'));
+
 					if(!empty($item['servers'])) {
 						$item['servers'] = unserialize($item['servers']);
 						foreach ($item['servers'] as $key => $value) {
-							$d = $this->Server->find('first', array('conditions' => array('id' => $value)));
-							$selected_server[] = $d['Server']['id'];
+							if(isset($servers[$value])) {
+								$selected_server[] = $value;
+							}
 						}
 					} else {
 						$selected_server = array();
 					}
 					$this->set(compact('selected_server'));
-
-					$search_servers = $this->Server->find('all');
-					if(!empty($search_servers)) {
-						foreach ($search_servers as $v) {
-							$servers[$v['Server']['id']] = $v['Server']['name'];
-						}
-					} else {
-						$servers = array();
-					}
-					$this->set(compact('servers'));
 
 				} else {
 					$this->Session->setFlash($this->Lang->get('UNKNONW_ID'), 'default.error');
@@ -360,14 +355,7 @@ class ShopController extends ShopAppController {
 			$this->set(compact('categories'));
 
 			$this->loadModel('Server');
-			$search_servers = $this->Server->find('all');
-			if(!empty($search_servers)) {
-				foreach ($search_servers as $v) {
-					$servers[$v['Server']['id']] = $v['Server']['name'];
-				}
-			} else {
-				$servers = array();
-			}
+			$servers = $this->Server->findSelectableServers();
 			$this->set(compact('servers'));
 		} else {
 			$this->redirect('/');

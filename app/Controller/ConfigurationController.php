@@ -75,29 +75,6 @@ class ConfigurationController extends AppController {
 			$this->Lang->lang = $this->Lang->getLang(); // on refresh les messages
 
 			$config = $this->Configuration->get_all(true)['Configuration'];
-			$this->loadModel('Server');
-			$config['banner_server'] = unserialize($config['banner_server']);
-			if(!empty($config['banner_server'])) {
-				foreach ($config['banner_server'] as $key => $value) {
-					$d = $this->Server->find('first', array('conditions' => array('id' => $value)));
-					$selected_server[] = $d['Server']['id'];
-				}
-			} else {
-				$selected_server = array();
-			}
-			$this->set(compact('selected_server'));
-
-			$search_servers = $this->Server->find('all');
-			if(!empty($search_servers)) {
-				foreach ($search_servers as $v) {
-					$servers[$v['Server']['id']] = $v['Server']['name'];
-				}
-			} else {
-				$servers = array();
-			}
-			$this->set(compact('servers'));
-
-			$config = $this->Configuration->get_all()['Configuration'];
 
 			$config['lang'] = $this->Lang->getLang('config')['path'];
 

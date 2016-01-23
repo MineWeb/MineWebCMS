@@ -567,29 +567,22 @@ class VoterController extends VoteAppController {
             $this->set(compact('vote'));
 
             $this->loadModel('Server');
-            $vote['servers'] = unserialize($vote['servers']);
+
+            $servers = $this->Server->findSelectableServers();
+						$this->set(compact('servers'));
+
+						$vote['servers'] = unserialize($vote['servers']);
             if(!empty($vote['servers'])) {
                 $selected_server = array();
                 foreach ($vote['servers'] as $key => $value) {
-                    $d = $this->Server->find('first', array('conditions' => array('id' => $value)));
-                    if(!empty($d)) {
-                        $selected_server[] = $d['Server']['id'];
+                    if(isset($servers[$value])) {
+                        $selected_server[] = $value;
                     }
                 }
             } else {
                 $selected_server = array();
             }
             $this->set(compact('selected_server'));
-
-            $search_servers = $this->Server->find('all');
-            if(!empty($search_servers)) {
-                foreach ($search_servers as $v) {
-                    $servers[$v['Server']['id']] = $v['Server']['name'];
-                }
-            } else {
-                $servers = array();
-            }
-            $this->set(compact('servers'));
 
             $this->set('title_for_layout',$this->Lang->get('VOTE_TITLE'));
         } else {
