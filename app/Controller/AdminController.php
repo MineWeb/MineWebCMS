@@ -56,7 +56,8 @@ class AdminController extends AppController {
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['cmd']) && !empty($this->request->data['server_id'])) {
 					$this->ServerComponent = $this->Components->load('Server');
-					$this->ServerComponent->call(array('performCommand' => $this->request->data['cmd']), true, $this->request->data['server_id']);
+					$call = $this->ServerComponent->call(array('performCommand' => $this->request->data['cmd']), true, $this->request->data['server_id']);
+
 					$this->Session->setFlash($this->Lang->get('SUCCESS_SEND_COMMAND'), 'default.success');
 				}
 			}
