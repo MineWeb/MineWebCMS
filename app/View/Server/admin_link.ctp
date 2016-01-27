@@ -20,6 +20,7 @@
 
             <button type="submit" class="btn btn-primary"><?= $Lang->get('SUBMIT') ?></button>
             <a href="<?= $this->Html->url(array('action' => 'switchState')) ?>" class="btn btn-<?= ($isEnabled) ? 'danger' : 'success' ?>"><?= ($isEnabled) ? $Lang->get('DISABLE') : $Lang->get('ENABLE') ?></a>
+            <a href="<?= $this->Html->url(array('action' => 'switchCacheState')) ?>" class="btn btn-<?= ($isCacheEnabled) ? 'danger' : 'success' ?>"><?= ($isCacheEnabled) ? $Lang->get('SERVER__DISABLE_CACHE') : $Lang->get('SERVER__ENABLE_CACHE') ?></a>
 
           </form>
 

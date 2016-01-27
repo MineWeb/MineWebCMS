@@ -216,6 +216,7 @@ class ServerComponent extends Object {
 		if(empty($this->online[$server_id])) {
 		    if(!empty($server_id)) {
 		        $config = $this->getConfig($server_id);
+
 		        if($config) {
 
 							if($config['type'] == 2) {
@@ -369,6 +370,13 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 			$server_id = $this->getFirstServerID();
 		}
 
+		if(ClassRegistry::init('Configuration')->find('first')['Configuration']['server_cache']) {
+			$cacheFile = ROOT.DS.'tmp'.DS.'cache'.DS.'server.cache';
+			if(file_exists($cacheFile) && strtotime('+1 min', filemtime($cacheFile)) > time() && isset(unserialize(file_get_contents($cacheFile))[$server_id])) {
+				return unserialize(file_get_contents($cacheFile))[$server_id];
+			}
+		}
+
     if(!is_array($server_id)) {
       if($this->online($server_id)) {
           $search = $this->call(array('getMOTD' => 'server', 'getVersion' => 'server', 'getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $server_id);
@@ -380,25 +388,35 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
           if($search['getPlayerCount'] == "null") {
               $search['getPlayerCount'] = 0;
           }
+
+					if(ClassRegistry::init('Configuration')->find('first')['Configuration']['server_cache']) {
+						file_put_contents($cacheFile, serialize(array($server_id => $search)));
+					}
+
           return $search;
       } else {
         return false;
       }
     } else {
         $servers = $server_id;
-        $online = false;
+        $online[] = false;
         foreach ($servers as $key => $value) {
-            if($this->online($value)) {
-							$online = true;
-              $search = $this->call(array('getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $value);
-              if($search['getPlayerCount'] == "null") {
-                  $search['getPlayerCount'] = 0;
-              }
-              $return['getPlayerMax'] = $return['getPlayerMax'] + $search['getPlayerMax'];
-              $return['getPlayerCount'] = $return['getPlayerCount'] + $search['getPlayerCount'];
+          if($this->online($value)) {
+						$online[] = true;
+            $search = $this->call(array('getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $value);
+            if($search['getPlayerCount'] == "null") {
+                $search['getPlayerCount'] = 0;
             }
+            $return['getPlayerMax'] = $return['getPlayerMax'] + $search['getPlayerMax'];
+            $return['getPlayerCount'] = $return['getPlayerCount'] + $search['getPlayerCount'];
+          }
         }
-        return ($online) ? $return : false;
+
+				if(in_array(true, $online) && ClassRegistry::init('Configuration')->find('first')['Configuration']['server_cache']) {
+					file_put_contents($cacheFile, serialize(array($server_id => $return)));
+				}
+
+        return (in_array(true, $online)) ? $return : false;
     }
 	}
 

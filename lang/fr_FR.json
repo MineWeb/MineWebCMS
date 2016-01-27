@@ -15,6 +15,8 @@
         "SERVER__AFFICH_BANNER": "Afficher ce serveur sur la banni\u00e8re du site",
         "SERVER__CONFIG_BANNER_MSG":"Configurer le message affiché sur la bannière",
         "SERVER__EDIT_BANNER_MSG_SUCCESS": "Le message a bien \u00e9t\u00e9 \u00e9dit\u00e9 !",
+        "SERVER__DISABLE_CACHE":"Désactiver le cache (bannière)",
+        "SERVER__ENABLE_CACHE":"Activer le cache (bannière)",
         "CONFIG__GENERAL_PREFERENCES": "Pr\u00e9f\u00e9rences g\u00e9n\u00e9ral",
         "CONFIG__SOCIAL_PREFERENCES": "Pr\u00e9f\u00e9rences social",
         "CONFIG__OTHER_PREFERENCES": "Pr\u00e9f\u00e9rences autres",
