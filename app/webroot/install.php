@@ -105,14 +105,14 @@ $write_tmp = is_writable(ROOT.'/app/tmp/');
 $write_plugin = is_writable(ROOT.'/app/Plugin/');
 $compatible['chmod'] = ($write && $write_config && $write_tmp && $write_plugin) ? true : false;
 
-$compatible['phpVersion'] = true;
-$compatible['ionCube'] = true;
-$compatible['pdo'] = true;
-$compatible['curl'] = true;
-$compatible['rewriteUrl'] = true;
-$compatible['gd2'] = true;
-$compatible['openZip'] = true;
-$compatible['openSSL'] = true;
+$compatible['phpVersion'] = false;
+$compatible['ionCube'] = false;
+$compatible['pdo'] = false;
+$compatible['curl'] = false;
+$compatible['rewriteUrl'] = false;
+$compatible['gd2'] = false;
+$compatible['openZip'] = false;
+$compatible['openSSL'] = false;
 
 $compatible['curl'] = extension_loaded('cURL');
 
@@ -140,4 +140,7 @@ if($compatible['allowGetURL']) {
 $compatible['ionCube'] = ((function_exists('ioncube_loader_version') && ioncube_loader_version() >= 5.0) || (function_exists('ioncube_loader_iversion') && ioncube_loader_iversion() >= 5.0));
 
 $needAffichCompatibility = (in_array(false, $compatible)) ? true : false;
+if(file_exists(ROOT.DS.'config'.DS.'bypass_compatibility')) {
+  $needAffichCompatibility = false;
+}
 ?>

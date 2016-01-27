@@ -9,7 +9,7 @@ class ServerComponent extends Object {
 
 	function initialize(&$controller) {
 	  $this->controller =& $controller;
-		$this->controller->set('Server', new ServerComponent());
+		$this->controller->set('Server', $this);
 	}
 
 	function startup(&$controller) {}
@@ -208,6 +208,11 @@ class ServerComponent extends Object {
 			$server_id = $this->getFirstServerID();
 		}
 
+		if(ClassRegistry::init('Configuration')->find('first')['Configuration']['server_state'] == '0') {
+			$this->online[$server_id] = false;
+			return false;
+		}
+
 		if(empty($this->online[$server_id])) {
 		    if(!empty($server_id)) {
 		        $config = $this->getConfig($server_id);
@@ -381,19 +386,19 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
       }
     } else {
         $servers = $server_id;
-        $return['getPlayerMax'] = 0;
-        $return['getPlayerCount'] = 0;
+        $online = false;
         foreach ($servers as $key => $value) {
             if($this->online($value)) {
-                $search = $this->call(array('getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $value);
-                if($search['getPlayerCount'] == "null") {
-                    $search['getPlayerCount'] = 0;
-                }
-                $return['getPlayerMax'] = $return['getPlayerMax'] + $search['getPlayerMax'];
-                $return['getPlayerCount'] = $return['getPlayerCount'] + $search['getPlayerCount'];
+							$online = true;
+              $search = $this->call(array('getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $value);
+              if($search['getPlayerCount'] == "null") {
+                  $search['getPlayerCount'] = 0;
+              }
+              $return['getPlayerMax'] = $return['getPlayerMax'] + $search['getPlayerMax'];
+              $return['getPlayerCount'] = $return['getPlayerCount'] + $search['getPlayerCount'];
             }
         }
-        return $return;
+        return ($online) ? $return : false;
     }
 	}
 

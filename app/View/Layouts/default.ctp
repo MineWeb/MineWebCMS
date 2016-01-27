@@ -9,19 +9,20 @@
     <meta name="description" content="">
     <meta name="author" content="Eywek">
 
-    <title><?= (isset($title_for_layout)) ? $title_for_layout :  'Error' ?> - <?= (isset($website_name)) ? $website_name : 'MineWeb' ?></title>
+    <title><?= $title_for_layout; ?> - <?= $website_name ?></title>
 
     <?= $this->Html->css('bootstrap.css') ?>
     <?= $this->Html->css('modern-business.css') ?>
     <?= $this->Html->css('animate.css') ?>
     <?= $this->Html->css('font-awesome.min.css') ?>
-    <?= $this->Html->css('timeline.css') ?>
-    <?= $this->Html->css('social.css') ?>
-	  <?= $this->Html->css('../font-awesome-4.1.0/css/font-awesome.min.css') ?>
-	  <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,900' rel='stylesheet' type='text/css'>
-	  <?= $this->Html->script('jquery-1.11.0.js') ?>
+    <?= $this->Html->css('../font-awesome-4.1.0/css/font-awesome.min.css') ?>
+    <?= $this->Html->css('flat.css') ?>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,900' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700' rel='stylesheet' type='text/css'>
+    <?= $this->Html->script('jquery-1.11.0.js') ?>
     <?= $this->Html->script('easy_paginate.js') ?>
-    <link rel="icon" type="image/png" href="<?= (isset($theme_config)) ? $theme_config['favicon_url'] : '' ?>" />
+    <link rel="icon" type="image/png" href="<?= $theme_config['favicon_url'] ?>" />
+
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -29,17 +30,16 @@
 
 </head>
 
-<body style="background: url(<?= (isset($theme_config)) ? $theme_config['background_url'] : '' ?>);"><!-- grey.png -->
-  <?php if(isset($Lang) && isset($banner_server)) { ?>
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="mini-navbar mini-navbar-dark hidden-xs">
+<body><!-- grey.png -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="mini-navbar mini-navbar-default hidden-xs">
       <div class="container">
         <div class="col-sm-12">
           <?= ($banner_server) ? '<p>'.$banner_server.'</p>' : '<p class="text-center">'.$Lang->get('SERVER_OFF').'</p>' ?>
         </div>
       </div>
     </div>
-        <div class="container">
+        <div class="container nav-content">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span>
@@ -51,116 +51,114 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                  <li>
-                      <a href="<?= $this->Html->url('/') ?>"><?= $Lang->get('HOME') ?></a>
-                  </li>
-                  <?php
-                    if(!empty($nav)) {
-                      $i = 0;
-                      foreach ($nav as $key => $value) {
-                        if(empty($value['Navbar']['submenu'])) { ?>
-                          <li class="li-nav<?= ($this->params['controller'] == $value['Navbar']['name']) ? ' actived' : '' ?>">
-                            <a href="<?= $value['Navbar']['url'] ?>"<?= ($value['Navbar']['open_new_tab']) ? ' target="_blank"' : '' ?>><?= $value['Navbar']['name'] ?></a>
-                          </li>
-                        <?php } else { ?>
-                          <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?= $value['Navbar']['name'] ?> <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                              <?php
-                              $submenu = json_decode($value['Navbar']['submenu']);
-                              foreach ($submenu as $k => $v) { ?>
-                                <li><a href="<?= rawurldecode($v) ?>"<?= ($value['Navbar']['open_new_tab']) ? ' target="_blank"' : '' ?>><?= rawurldecode(str_replace('+', ' ', $k)) ?></a></li>
-                              <?php } ?>
-                            </ul>
-                          </li>
-                        <?php } ?>
-                      <?php
-                        $i++;
-                      }
-                    }
-                    ?>
-                    <li>
-                      <div class="btn-group">
-                        <?php if($isConnected) { ?>
-                          <button type="button" class="btn btn-success"><?= $user['pseudo'] ?></button>
-                        <?php } else { ?>
-                          <button type="button" class="btn btn-success"><i class="fa fa-user"></i></button>
-                        <?php } ?>
-                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                          <span class="caret"></span>
-                          <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                          <?php if($isConnected) { ?>
-                            <li><a href="<?= $this->Html->url(array('controller' => 'profile', 'action' => 'index', 'plugin' => false)) ?>"><?= $Lang->get('PROFILE') ?></a></li>
-                            <?php if($Permissions->can('ACCESS_DASHBOARD')) { ?>
-                              <li class="divider"></li>
-                                  <li><a href="<?= $this->Html->url(array('controller' => 'admin', 'action' => 'index', 'plugin' => false, 'admin' => true)) ?>"><?= $Lang->get('ADMIN_PANEL') ?></a></li>
+                    <li class="li-nav">
+                        <a href="<?= $this->Html->url('/') ?>"><?= $Lang->get('HOME') ?></a>
+                    </li>
+                    <?php
+                        if(!empty($nav)) {
+                          $i = 0;
+                          foreach ($nav as $key => $value) { ?>
+                            <?php if(empty($value['Navbar']['submenu'])) { ?>
+                              <li class="li-nav<?php if($this->params['controller'] == $value['Navbar']['name']) { ?> actived<?php } ?>">
+                                  <a href="<?= $value['Navbar']['url'] ?>"<?= ($value['Navbar']['open_new_tab']) ? ' target="_blank"' : '' ?>><?= $value['Navbar']['name'] ?></a>
+                              </li>
+                            <?php } else { ?>
+                              <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?= $value['Navbar']['name'] ?> <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                <?php
+                                $submenu = json_decode($value['Navbar']['submenu']);
+                                foreach ($submenu as $k => $v) {
+                                ?>
+                                  <li><a href="<?= rawurldecode($v) ?>"<?= ($value['Navbar']['open_new_tab']) ? ' target="_blank"' : '' ?>><?= rawurldecode(str_replace('+', ' ', $k)) ?></a></li>
+                                <?php } ?>
+                                </ul>
+                              </li>
                             <?php } ?>
-                            <li class="divider"></li>
-                            <li><a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'logout', 'plugin' => false)) ?>"><?= $Lang->get('LOGOUT') ?></a></li>
+                    <?php
+                          $i++;
+                        }
+                      } ?>
+                    <li class="button">
+                        <div class="btn-group">
+                          <?php if($isConnected) { ?>
+                            <button type="button" class="btn btn-success"><?= $user['pseudo'] ?></button>
                           <?php } else { ?>
-                            <li><a href="#" data-toggle="modal" data-target="#login"><?= $Lang->get('LOGIN') ?></a></li>
-                            <li><a href="#" data-toggle="modal" data-target="#register"><?= $Lang->get('REGISTER') ?></a></li>
+                            <button type="button" class="btn btn-success"><i class="fa fa-user"></i></button>
                           <?php } ?>
-                        </ul>
-                      </div>
+                          <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                          </button>
+                          <ul class="dropdown-menu" role="menu">
+                            <?php if($isConnected) { ?>
+                              <li><a href="<?= $this->Html->url(array('controller' => 'profile', 'action' => 'index', 'plugin' => null)) ?>"><?= $Lang->get('PROFILE') ?></a></li>
+                              <?php if($Permissions->can('ACCESS_DASHBOARD')) { ?>
+                                <li class="divider"></li>
+                                    <li><a href="<?= $this->Html->url(array('controller' => '', 'action' => 'index', 'plugin' => 'admin')) ?>"><?= $Lang->get('ADMIN_PANEL') ?></a></li>
+                              <?php } ?>
+                              <li class="divider"></li>
+                              <li><a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'logout', 'plugin' => null)) ?>"><?= $Lang->get('LOGOUT') ?></a></li>
+                            <?php } else { ?>
+                              <li><a href="#" data-toggle="modal" data-target="#login"><?= $Lang->get('LOGIN') ?></a></li>
+                              <li><a href="#" data-toggle="modal" data-target="#register"><?= $Lang->get('REGISTER') ?></a></li>
+                            <?php } ?>
+                          </ul>
+                        </div>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-  <?php } ?>
     <div class="nav-hop"></div>
     <?php if(!empty($flash_messages)) {
       echo '<div class="container">'.$flash_messages.'</div>';
     } ?>
-    <?= $this->fetch('content'); ?>
+      <?= $this->fetch('content'); ?>
+    </div>
     <!-- Footer -->
-    <?php if(isset($Lang) && isset($banner_server)) { ?>
+    <footer>
       <div class="container">
-        <footer>
-          <div class="row">
-            <div class="col-lg-12">
-              <p><?= $Lang->get('COPYRIGHT') ?></p>
-            </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <p><?= $Lang->get('COPYRIGHT') ?></p>
           </div>
-        </footer>
+        </div>
       </div>
+    </footer>
 
-      <?= $this->element('modals') ?>
 
-      <?= $this->Html->script('jquery-1.11.0.js') ?>
-      <?= $this->Html->script('bootstrap.js') ?>
+    <?= $this->element('modals') ?>
 
-      <?= $this->Html->script('app.js') ?>
-      <script>
-      // Config APP.JS
+    <?= $this->Html->script('jquery-1.11.0.js') ?>
+    <?= $this->Html->script('bootstrap.js') ?>
 
-      var LIKE_URL = "<?= $this->Html->url(array('controller' => 'news', 'action' => 'like')) ?>";
-      var DISLIKE_URL = "<?= $this->Html->url(array('controller' => 'news', 'action' => 'dislike')) ?>";
+    <?= $this->Html->script('app.js') ?>
+    <script>
+    // Config APP.JS
 
-      var LOADING_MSG = "<?= $Lang->get('LOADING') ?>";
-      var ERROR_MSG = "<?= $Lang->get('ERROR') ?>";
-      var INTERNAL_ERROR_MSG = "<?= $Lang->get('ERROR_WHEN_AJAX') ?>";
-      var FORBIDDEN_ERROR_MSG = "<?= $Lang->get('ERROR__FORBIDDEN') ?>"
-      var SUCCESS_MSG = "<?= $Lang->get('SUCCESS') ?>";
+    var LIKE_URL = "<?= $this->Html->url(array('controller' => 'news', 'action' => 'like')) ?>";
+    var DISLIKE_URL = "<?= $this->Html->url(array('controller' => 'news', 'action' => 'dislike')) ?>";
 
-      var CSRF_TOKEN = "<?= $csrfToken ?>";
-      </script>
+    var LOADING_MSG = "<?= $Lang->get('LOADING') ?>";
+    var ERROR_MSG = "<?= $Lang->get('ERROR') ?>";
+    var INTERNAL_ERROR_MSG = "<?= $Lang->get('ERROR_WHEN_AJAX') ?>";
+    var FORBIDDEN_ERROR_MSG = "<?= $Lang->get('ERROR__FORBIDDEN') ?>"
+    var SUCCESS_MSG = "<?= $Lang->get('SUCCESS') ?>";
 
-      <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    var CSRF_TOKEN = "<?= $csrfToken ?>";
+    </script>
 
-        ga('create', '<?= $google_analytics ?>', 'auto');
-        ga('send', 'pageview');
-      </script>
-      <?= $configuration_end_code ?>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-    <?php } ?>
+      ga('create', '<?= $google_analytics ?>', 'auto');
+      ga('send', 'pageview');
+    </script>
+    <?= $configuration_end_code ?>
 
 </body>
 

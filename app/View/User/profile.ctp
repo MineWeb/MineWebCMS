@@ -3,8 +3,12 @@ $this->EyPlugin = new EyPluginComponent;
 $this->Configuration = new ConfigurationComponent;
 ?>
 	<div class="container">
+		<div class="row">
+			<div class="col-md-6">
+				<h1><?= $Lang->get('PROFILE') ?></h1>
+			</div>
+		</div>
 		<div class="panel panel-default">
-		  <div class="panel-heading"><?= $Lang->get('PROFILE') ?></div>
 		 	<div class="panel-body">
 
 				<?php

@@ -12,7 +12,7 @@ class NewsController extends AppController {
 		foreach ($search_news as $key => $model) {
 			$search_news[$key]['News']['absolute_url'] = Router::url('/blog/'.$model['News']['slug'], true);
 		}
-		
+
 		if($this->isConnected) {
 			foreach ($news['Like'] as $k => $value) {
 				foreach ($value as $column => $v) {
@@ -112,7 +112,7 @@ class NewsController extends AppController {
 		if($this->request->is('post')) {
 			if($this->Permissions->can('LIKE_NEWS')) {
 				$this->loadModel('Like');
-				$already = $this->Like->find('all', array('conditions' => array('news_id' => $this->request->data['id'], 'author' => $this->User->getKey('pseudo'))));
+				$already = $this->Like->find('all', array('conditions' => array('news_id' => $this->request->data['id'], 'user_id' => $this->User->getKey('id'))));
 				if(empty($already)) {
 					$this->loadModel('News');
 					$like = $this->News->find('all', array('conditions' => array('id' => $this->request->data['id'])));
@@ -123,7 +123,7 @@ class NewsController extends AppController {
 					$this->News->save();
 
 					$this->Like->read(null, null);
-					$this->Like->set(array('news_id' => $this->request->data['id'], 'author' => $this->User->getKey('pseudo')));
+					$this->Like->set(array('news_id' => $this->request->data['id'], 'user_id' => $this->User->getKey('id')));
 					$this->Like->save();
 				}
 			}
@@ -135,7 +135,7 @@ class NewsController extends AppController {
 		if($this->request->is('post')) {
 			if($this->Permissions->can('LIKE_NEWS')) {
 				$this->loadModel('Like');
-				$already = $this->Like->find('all', array('conditions' => array('news_id' => $this->request->data['id'], 'author' => $this->User->getKey('pseudo'))));
+				$already = $this->Like->find('all', array('conditions' => array('news_id' => $this->request->data['id'], 'user_id' => $this->User->getKey('id'))));
 				if(!empty($already)) {
 					$this->loadModel('News');
 					$like = $this->News->find('all', array('conditions' => array('id' => $this->request->data['id'])));
@@ -145,7 +145,7 @@ class NewsController extends AppController {
 					$this->News->set(array('like' => $like));
 					$this->News->save();
 
-					$this->Like->deleteAll(array('news_id' => $this->request->data['id'], 'author' => $this->User->getKey('pseudo')));
+					$this->Like->deleteAll(array('news_id' => $this->request->data['id'], 'user_id' => $this->User->getKey('id')));
 				}
 			}
 		}

@@ -303,7 +303,7 @@ WCqkx22behAGZq6rhwIDAQAB
 	    	} else {
 	      	$banner_server = unserialize($banner_server);
 	      	if(count($banner_server) == 1) {
-	        		$server_infos = $this->Server->banner_infos($banner_server[0]);
+	        	$server_infos = $this->Server->banner_infos($banner_server[0]);
 	      	} else {
 	        	$server_infos = $this->Server->banner_infos($banner_server);
 	      	}
