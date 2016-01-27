@@ -137,7 +137,7 @@ if($compatible['allowGetURL']) {
     $compatible['allowGetURL'] = true;
 }
 
-$compatible['ionCube'] = (extension_loaded('ionCube Loader') || function_exists('ioncube_loader_version') || function_exists('ioncube_loader_iversion'));
+$compatible['ionCube'] = ((function_exists('ioncube_loader_version') && ioncube_loader_version() >= 5.0) || (function_exists('ioncube_loader_iversion') && ioncube_loader_iversion() >= 5.0));
 
 $needAffichCompatibility = (in_array(false, $compatible)) ? true : false;
 ?>
