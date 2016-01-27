@@ -28,7 +28,7 @@ class LangComponent extends Object {
   	function beforeRedirect() {}
 	  function initialize(&$controller) {
 		  $this->controller =& $controller;
-		  $this->controller->set('Lang', new LangComponent());
+		  $this->controller->set('Lang', $this);
 	  }
     function startup(&$controller) {}
 

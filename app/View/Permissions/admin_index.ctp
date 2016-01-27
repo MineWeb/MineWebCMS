@@ -12,7 +12,6 @@
           <hr>
 
           <form action="" method="post">
-            <input type="hidden" id="form_infos" data-ajax="false">
             <input name="data[_Token][key]" value="<?= $csrfToken ?>" type="hidden">
 
             <table class="table table-bordered">

@@ -76,7 +76,7 @@ class SliderController extends AppController {
 						$isValidImg = $this->Util->isValidImage($this->request, array('png', 'jpg', 'jpeg'));
 
 						if(!$isValidImg['status']) {
-							echo $isValidImg['msg'].'|false';
+							echo json_encode(array('statut' => false, 'msg' => $isValidImg['msg']));
 							exit;
 						} else {
 							$infos = $isValidImg['infos'];
@@ -85,7 +85,7 @@ class SliderController extends AppController {
 						$url_img = WWW_ROOT.'img'.DS.'uploads'.DS.'slider'.DS.date('Y-m-d_His').'.'.$infos['extension'];
 
 						if(!$this->Util->uploadImage($this->request, $url_img)) {
-							echo $this->Lang->get('FORM__ERROR_WHEN_UPLOAD').'|false';
+							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD')));
 							exit;
 						}
 
@@ -111,16 +111,16 @@ class SliderController extends AppController {
 					$this->Slider->set($data);
 					$this->Slider->save();
 					$this->History->set('EDIT_SLIDER', 'slider');
-					echo $this->Lang->get('SUCCESS_SLIDER_EDIT').'|true';
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_SLIDER_EDIT')));
 					$this->Session->setFlash($this->Lang->get('SUCCESS_SLIDER_EDIT'), 'default.success');
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST' ,$language).'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
 			}
 		} else {
-			$this->redirect('/');
+			throw new ForbiddenException();
 		}
 	}
 
@@ -145,7 +145,7 @@ class SliderController extends AppController {
 					$isValidImg = $this->Util->isValidImage($this->request, array('png', 'jpg', 'jpeg'));
 
 					if(!$isValidImg['status']) {
-						echo $isValidImg['msg'].'|false';
+						echo json_encode(array('statut' => false, 'msg' => $isValidImg['msg']));
 						exit;
 					} else {
 						$infos = $isValidImg['infos'];
@@ -154,7 +154,7 @@ class SliderController extends AppController {
 					$url_img = WWW_ROOT.'img'.DS.'uploads'.DS.'slider'.DS.date('Y-m-d_His').'.'.$infos['extension'];
 
 					if(!$this->Util->uploadImage($this->request, $url_img)) {
-						echo $this->Lang->get('FORM__ERROR_WHEN_UPLOAD').'|false';
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD')));
 						exit;
 					}
 
@@ -169,16 +169,16 @@ class SliderController extends AppController {
 					));
 					$this->Slider->save();
 					$this->History->set('ADD_SLIDER', 'slider');
-					echo $this->Lang->get('SUCCESS_SLIDER_ADD').'|true';
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_SLIDER_ADD')));
 					$this->Session->setFlash($this->Lang->get('SUCCESS_SLIDER_ADD'), 'default.success');
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST' ,$language).'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST' ,$language)));
 			}
 		} else {
-			$this->redirect('/');
+			throw new ForbiddenException();
 		}
 	}
 

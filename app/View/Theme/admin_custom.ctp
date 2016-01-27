@@ -6,9 +6,8 @@
           <h3 class="box-title"><?= $Lang->get('CUSTOMIZATION') ?></h3>
         </div>
         <div class="box-body">
-        
-          <form method="post">
-            <input type="hidden" id="form_infos" data-ajax="false">
+
+          <form method="post" data-ajax="false">
 
             <div class="form-group">
               <div class="checkbox">
@@ -50,8 +49,8 @@
             </div>
 
             <button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
-            <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'index', 'admin' => true)) ?>" type="button" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a> 
-          </form>   
+            <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'index', 'admin' => true)) ?>" type="button" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
+          </form>
 
         </div>
       </div>

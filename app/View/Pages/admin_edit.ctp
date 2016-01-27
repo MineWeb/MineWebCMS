@@ -6,13 +6,12 @@
           <h3 class="box-title"><?= $Lang->get('EDIT_PAGE') ?></h3>
         </div>
         <div class="box-body">
-          <form action="<?= $this->Html->url(array('controller' => 'pages', 'action' => 'edit_ajax')) ?>" method="post">
-            <input type="hidden" id="form_infos" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'pages', 'action' => 'index', 'admin' => 'true')) ?>">
+          <form action="<?= $this->Html->url(array('controller' => 'pages', 'action' => 'edit_ajax')) ?>" method="post" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'pages', 'action' => 'index', 'admin' => 'true')) ?>">
 
             <div class="ajax-msg"></div>
-            
+
             <input type="hidden" name="id" value="<?= $page['id'] ?>">
-      
+
             <div class="form-group">
               <label><?= $Lang->get('TITLE') ?></label>
               <input name="title" class="form-control" value="<?= $page['title'] ?>" placeholder="<?= $Lang->get('TITLE') ?>" type="text">
@@ -21,6 +20,7 @@
             <div class="form-group">
               <label><?= $Lang->get('SLUG') ?></label>
               <div class="input-group">
+                <div class="input-group-addon"><?= $this->Html->url('/p/', true) ?></div>
                 <input name="slug" id="slug" class="form-control" value="<?= $page['slug'] ?>" placeholder="<?= $Lang->get('SLUG') ?>" type="text">
                 <span class="input-group-btn">
                   <a href="#" id="generate_slug" class="btn btn-info"><?= $Lang->get('GENERATE') ?></a>
@@ -44,10 +44,10 @@
             </div>
 
             <div class="pull-right">
-              <a href="<?= $this->Html->url(array('controller' => 'pages', 'action' => 'admin_index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>  
+              <a href="<?= $this->Html->url(array('controller' => 'pages', 'action' => 'admin_index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
               <button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
             </div>
-          </form>      
+          </form>
         </div>
       </div>
     </div>

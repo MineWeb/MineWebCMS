@@ -610,12 +610,12 @@ class UserController extends AppController {
 					}
 					$this->History->set('EDIT_USER', 'user');
 					$this->Session->setFlash($this->Lang->get('USER_SUCCESS_EDIT'), 'default.success');
-					echo $this->Lang->get('USER_SUCCESS_EDIT').'|true';
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER_SUCCESS_EDIT')));
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST' ,$language).'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST' ,$language)));
 			}
 		} else {
 			$this->redirect('/');

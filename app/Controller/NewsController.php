@@ -153,7 +153,7 @@ class NewsController extends AppController {
 
 
 	function ajax_comment_delete() {
-        $this->layout = null;
+        $this->autoRender = false;
         $this->loadModel('Comment');
         $search = $this->Comment->find('all', array('conditions' => array('id' => $this->request->data['id'])));
         if($this->Permissions->can('DELETE_COMMENT') OR $this->Permissions->can('DELETE_HIS_COMMENT') AND $this->User->getKey('pseudo') == $search[0]['Comment']['author']) {
@@ -179,7 +179,7 @@ class NewsController extends AppController {
 			$this->set('title_for_layout',$this->Lang->get('NEWS_LIST'));
 			$this->layout = 'admin';
 			$this->loadModel('News');
-			$view_news = $this->News->find('all');
+			$view_news = $this->News->find('all', array('recursive' => 1));
 			$this->set(compact('view_news'));
 		} else {
 			$this->redirect('/');
@@ -221,8 +221,8 @@ class NewsController extends AppController {
 	}
 
 	function admin_add_ajax() {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NEWS')) {
-			$this->layout = null;
 
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['title']) AND !empty($this->request->data['content']) AND !empty($this->request->data['slug'])) {
@@ -241,16 +241,16 @@ class NewsController extends AppController {
 					));
 					$this->News->save();
 					$this->History->set('ADD_NEWS', 'news');
-					echo $this->Lang->get('SUCCESS_NEWS_ADD').'|true';
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_NEWS_ADD')));
 					$this->Session->setFlash($this->Lang->get('SUCCESS_NEWS_ADD'), 'default.success');
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST').'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
 			}
 		} else {
-			$this->redirect('/');
+			throw new ForbiddenException();
 		}
 	}
 
@@ -277,8 +277,8 @@ class NewsController extends AppController {
 	}
 
 	function admin_edit_ajax() {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NEWS')) {
-			$this->layout = null;
 
 			if($this->request->is('post')) {
 
@@ -294,16 +294,16 @@ class NewsController extends AppController {
 					));
 					$this->News->save();
 					$this->History->set('EDIT_NEWS', 'news');
-					echo $this->Lang->get('SUCCESS_NEWS_EDIT').'|true';
+				echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_NEWS_EDIT')));
 					$this->Session->setFlash($this->Lang->get('SUCCESS_NEWS_EDIT'), 'default.success');
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST').'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
 			}
 		} else {
-			$this->redirect('/');
+			throw new ForbiddenException();
 		}
 
 	}

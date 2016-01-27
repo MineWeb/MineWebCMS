@@ -7,8 +7,7 @@
         </div>
         <div class="box-body">
 
-          <form action="" method="post">
-            <input type="hidden" id="form_infos" data-ajax="false">
+          <form action="#" method="post">
 
             <div class="form-group">
                 <label><?= $Lang->get('SKIN') ?></label>

@@ -7,7 +7,6 @@
         </div>
         <div class="box-body">
           <form action="" method="post">
-            <input type="hidden" id="form_infos" data-ajax="false">
 
             <div class="ajax-msg"></div>
 

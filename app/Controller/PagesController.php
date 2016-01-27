@@ -249,9 +249,8 @@ class PagesController extends AppController {
 	}
 
 	public function admin_add_ajax() {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Permissions->can('MANAGE_PAGE')) {
-
-			$this->layout = null;
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['title']) AND !empty($this->request->data['slug']) AND !empty($this->request->data['content'])) {
 					$this->loadModel('Page');
@@ -266,23 +265,22 @@ class PagesController extends AppController {
 					));
 					$this->Page->save();
 					$this->History->set('ADD_PAGE', 'page');
-					echo $this->Lang->get('SUCCESS_PAGE_ADD').'|true';
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_PAGE_ADD')));
 					$this->Session->setFlash($this->Lang->get('SUCCESS_PAGE_ADD'), 'default.success');
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST' ,$language).'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST' ,$language)));
 			}
 		} else {
-			$this->redirect('/');
+			throw new ForbiddenException();
 		}
 	}
 
 	public function admin_delete($id = false) {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Permissions->can('MANAGE_PAGE')) {
-
-			$this->layout = null;
 			if($id != false) {
 
 				$this->loadModel('Page');
@@ -324,9 +322,8 @@ class PagesController extends AppController {
 	}
 
 	public function admin_edit_ajax() {
+		$this->autoRender = false;
 		if($this->isConnected AND $this->Permissions->can('MANAGE_PAGE')) {
-
-			$this->layout = null;
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['id']) AND !empty($this->request->data['title']) AND !empty($this->request->data['slug']) AND !empty($this->request->data['content'])) {
 					$this->loadModel('Page');
@@ -339,16 +336,16 @@ class PagesController extends AppController {
 					));
 					$this->Page->save();
 					$this->History->set('EDIT_PAGE', 'page');
-					echo $this->Lang->get('SUCCESS_PAGE_EDIT').'|true';
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_PAGE_EDIT')));
 					$this->Session->setFlash($this->Lang->get('SUCCESS_PAGE_EDIT'), 'default.success');
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST' ,$language).'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST' ,$language)));
 			}
 		} else {
-			$this->redirect('/');
+			throw new ForbiddenException();
 		}
 	}
 }

@@ -16,8 +16,7 @@ if(isset($config['logo']) && $config['logo']) {
         </div>
         <div class="box-body">
 
-          <form method="post" enctype="multipart/form-data">
-            <input type="hidden" id="form_infos" data-ajax="false">
+          <form method="post" enctype="multipart/form-data" data-ajax="false">
 
             <div class="col-md-4">
               <?= $this->element('form.input.upload.img', $form_input) ?>

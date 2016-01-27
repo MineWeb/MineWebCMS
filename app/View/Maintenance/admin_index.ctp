@@ -10,9 +10,8 @@ $this->Configuration = new ConfigurationComponent();
           <h3 class="box-title"><?= $Lang->get('MAINTENANCE') ?></h3>
         </div>
         <div class="box-body">
-        
+
           <form action="" method="post">
-            <input type="hidden" id="form_infos" data-ajax="false">
 
             <div class="ajax-msg"></div>
 
@@ -48,10 +47,10 @@ $this->Configuration = new ConfigurationComponent();
             </div>
 
             <div class="pull-right">
-              <a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'admin_index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>  
+              <a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'admin_index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
               <button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
             </div>
-          </form>      
+          </form>
 
         </div>
       </div>

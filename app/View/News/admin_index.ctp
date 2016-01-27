@@ -29,8 +29,8 @@
                   <td><?= $v['News']['author'] ?></td>
                   <td><?= ($v['News']['published']) ? '<span class="label label-success">'.$Lang->get('YES').'</span>' : '<span class="label label-danger">'.$Lang->get('NO').'</span>'; ?></td>
                   <td><?= $Lang->date($v['News']['created']) ?></td>
-                  <td><?= $v['News']['comments'] ?> <?= $Lang->get('COMMENTS') ?></td>
-                  <td><?= $v['News']['like'] ?> <?= $Lang->get('LIKES') ?></td>
+                  <td><?= $v['News']['count_comments'] ?> <?= $Lang->get('COMMENTS') ?></td>
+                  <td><?= $v['News']['count_likes'] ?> <?= $Lang->get('LIKES') ?></td>
                   <td>
                     <a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'edit/'.$v['News']['id'], 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('EDIT') ?></a>
                     <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'news', 'action' => 'delete/'.$v['News']['id'], 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>

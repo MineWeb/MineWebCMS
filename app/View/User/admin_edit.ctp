@@ -10,10 +10,7 @@ $this->Configuration = new ConfigurationComponent;
           <h3 class="box-title"><?= $Lang->get('EDIT_USER') ?></h3>
         </div>
         <div class="box-body">
-          <form action="<?= $this->Html->url(array('controller' => 'user', 'action' => 'edit_ajax')) ?>" method="post">
-            <input type="hidden" id="form_infos" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'user', 'action' => 'index', 'admin' => 'true')) ?>">
-
-            <div class="ajax-msg"></div>
+          <form action="<?= $this->Html->url(array('controller' => 'user', 'action' => 'edit_ajax')) ?>" method="post" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'user', 'action' => 'index', 'admin' => 'true')) ?>">
 
             <input type="hidden" value="<?= $search_user['pseudo'] ?>" name="pseudo">
 

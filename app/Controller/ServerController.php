@@ -48,7 +48,7 @@ class ServerController extends AppController {
 
 				$this->Lang->set('BANNER_SERVER', $this->request->data['msg']);
 
-				echo $this->Lang->get('SERVER__EDIT_BANNER_MSG_SUCCESS').'|true';
+				echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SERVER__EDIT_BANNER_MSG_SUCCESS')));
 
 			} else {
 				throw new NotFoundException();
@@ -148,18 +148,18 @@ class ServerController extends AppController {
 					if(filter_var($this->request->data['timeout'], FILTER_VALIDATE_FLOAT)) {
 						$this->Configuration->set('server_timeout', $this->request->data['timeout']);
 
-						echo $this->Lang->get('SUCCESS_SAVE_TIMEOUT').'|true';
+						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_SAVE_TIMEOUT')));
 					} else {
-						echo $this->Lang->get('INVALID_TIMEOUT').'|false';
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('INVALID_TIMEOUT')));
 					}
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST' ,$language).'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST' ,$language)));
 			}
 		} else {
-			$this->redirect('/');
+			throw new ForbiddenException();
 		}
 	}
 
@@ -168,7 +168,7 @@ class ServerController extends AppController {
 		if($this->isConnected AND $this->User->isAdmin()) {
 			if($this->request->is('ajax')) {
 
-				if(!empty($this->request->data['host']) AND !empty($this->request->data['port']) AND !empty($this->request->data['name']) AND !empty($this->request->data['type']) && ($this->request->data['type'] == 0 || $this->request->data['type'] == 1 || $this->request->data['type'] == 2)) {
+				if(!empty($this->request->data['host']) AND !empty($this->request->data['port']) AND !empty($this->request->data['name']) AND isset($this->request->data['type']) && ($this->request->data['type'] == 0 || $this->request->data['type'] == 1 || $this->request->data['type'] == 2)) {
 
 					if($this->request->data['type'] == 0 || $this->request->data['type'] == 1) {
 						$secret_key = $this->Server->get('secret_key');
@@ -176,21 +176,21 @@ class ServerController extends AppController {
 							$timeout = $this->Configuration->get('server_timeout');
 							if(!empty($timeout)) {
 								if(!$this->Server->check('connection', array('host' => $this->request->data['host'], 'port' => $this->request->data['port'], 'timeout' => $timeout, 'secret_key' => $secret_key))) {
-									echo $this->Lang->get('SERVER_CONNECTION_FAILED').'|false';
+									echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER_CONNECTION_FAILED')));
 									exit;
 								}
 							} else {
-								echo $this->Lang->get('NEED_CONFIG_SERVER_TIMEOUT').'|false';
+								echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NEED_CONFIG_SERVER_TIMEOUT')));
 								exit;
 							}
 						} else {
-							echo $this->Lang->get('SERVER_CONNECTION_FAILED').'|false';
+							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER_CONNECTION_FAILED')));
 							exit;
 						}
 					} elseif($this->request->data['type'] == 2) {
 						$ping = $this->Server->ping(array('ip' => $this->request->data['host'], 'port' => $this->request->data['port']));
 						if(!$ping) {
-							echo $this->Lang->get('SERVER_CONNECTION_FAILED').'|false';
+							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER_CONNECTION_FAILED')));
 							exit;
 						}
 					}
@@ -211,13 +211,13 @@ class ServerController extends AppController {
 					if($this->request->data['type'] != '2' && isset($secret_key)) {
 						$this->Configuration->set('server_secretkey', $secret_key);
 					}
-					echo $this->Lang->get('SUCCESS_CONNECTION_SERVER').'|true';
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_CONNECTION_SERVER')));
 
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST' ,$language).'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
 			}
 		} else {
 			$this->redirect('/');

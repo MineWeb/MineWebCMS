@@ -7,9 +7,7 @@
         </div>
         <div class="box-body">
 
-          <form action="<?= $this->Html->url(array('controller' => 'server', 'action' => 'config', 'admin' => true)) ?>" method="post">
-
-            <input type="hidden" id="form_infos" data-ajax="true">
+          <form action="<?= $this->Html->url(array('controller' => 'server', 'action' => 'config', 'admin' => true)) ?>" method="post" data-ajax="true">
 
             <div class="ajax-msg"></div>
 
@@ -36,9 +34,7 @@
         </div>
         <div class="box-body">
 
-          <form action="<?= $this->Html->url(array('controller' => 'server', 'action' => 'editBannerMsg', 'admin' => true)) ?>" method="post">
-
-            <input type="hidden" id="form_infos" data-ajax="true">
+          <form action="<?= $this->Html->url(array('controller' => 'server', 'action' => 'editBannerMsg', 'admin' => true)) ?>" method="post" data-ajax="true">
 
             <div class="ajax-msg"></div>
 
@@ -65,9 +61,7 @@
             </div>
             <div class="box-body">
 
-              <form action="<?= $this->Html->url(array('controller' => 'server', 'action' => 'link_ajax', 'admin' => true)) ?>" method="post">
-
-                <input type="hidden" id="form_infos" data-ajax="true">
+              <form action="<?= $this->Html->url(array('controller' => 'server', 'action' => 'link_ajax', 'admin' => true)) ?>" method="post" data-ajax="true">
 
                 <div class="ajax-msg"></div>
 
@@ -146,8 +140,7 @@
             new_server += '<h3 class="box-title"><?= $Lang->get('LINK_SERVER') ?></h3>';
           new_server += '</div>';
           new_server += '<div class="box-body">';
-            new_server += '<form id="'+i+'" action="<?= $this->Html->url(array('controller' => 'server', 'action' => 'link_ajax', 'admin' => true)) ?>" method="post">';
-              new_server += '<input type="hidden" id="form_infos" data-ajax="true">';
+            new_server += '<form id="'+i+'" action="<?= $this->Html->url(array('controller' => 'server', 'action' => 'link_ajax', 'admin' => true)) ?>" method="post" data-ajax="true">';
               new_server += '<div class="ajax-msg"></div>';
               new_server += '<div class="form-group">';
                 new_server += '<label><?= $Lang->get('SERVER__TYPE') ?></label>';

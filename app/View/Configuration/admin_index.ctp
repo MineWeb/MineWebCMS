@@ -8,7 +8,6 @@
         <div class="box-body">
 
           <form method="post">
-            <input type="hidden" id="form_infos" data-ajax="false">
 
             <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">

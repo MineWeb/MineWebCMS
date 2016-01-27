@@ -134,8 +134,9 @@
     <?= $this->Html->script('bootstrap.js') ?>
 
     <?= $this->Html->script('app.js') ?>
+    <?= $this->Html->script('form.js') ?>
     <script>
-    // Config APP.JS
+    // Config FORM/APP.JS
 
     var LIKE_URL = "<?= $this->Html->url(array('controller' => 'news', 'action' => 'like')) ?>";
     var DISLIKE_URL = "<?= $this->Html->url(array('controller' => 'news', 'action' => 'dislike')) ?>";

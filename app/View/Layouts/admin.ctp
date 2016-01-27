@@ -200,6 +200,17 @@ $this->EyPlugin = new EyPluginComponent;
 
      <?= $this->Html->script('mineweb_admin.js') ?>
 
+     <?= $this->Html->script('form.js') ?>
+     <script type="text/javascript">
+       var LOADING_MSG = "<?= $Lang->get('LOADING') ?>";
+       var ERROR_MSG = "<?= $Lang->get('ERROR') ?>";
+       var INTERNAL_ERROR_MSG = "<?= $Lang->get('ERROR_WHEN_AJAX') ?>";
+       var FORBIDDEN_ERROR_MSG = "<?= $Lang->get('ERROR__FORBIDDEN') ?>"
+       var SUCCESS_MSG = "<?= $Lang->get('SUCCESS') ?>";
+
+       var CSRF_TOKEN = "<?= $csrfToken ?>";
+     </script>
+
     <?= $this->element('mineweb_admin_js'); ?>
 
   </body>
