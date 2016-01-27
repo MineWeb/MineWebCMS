@@ -7,6 +7,7 @@
                     <div class="fill" style="background-image:url('<?= $v['Slider']['url_img'] ?>');"></div>
                     <div class="carousel-caption">
                         <h2><?= before_display($v['Slider']['title']) ?></h2>
+                        <p><?= before_display($v['Slider']['subtitle']) ?></p>
                     </div>
                 </div>
                 <?php $i++; } ?>
