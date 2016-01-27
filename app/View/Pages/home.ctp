@@ -70,5 +70,31 @@
         <ol id="pagination"></ol>
         <?php } else { echo '<center><h3>'.$Lang->get('NO_NEWS').'</h3></center>'; } ?>
     </div>
+    <div class="row">
+      <?php
+        if(!empty($facebook_link)) {
+          echo '<a href="'.$facebook_link.'" target="_blank" class="btn btn-lg btn-primary" style="margin: 5px 5px;"><i class="fa fa-facebook-square"></i> '.$Lang->get('JOIN_US_ON').' Facebook</a>';
+        }
+        if(!empty($twitter_link)) {
+          echo '<a href="'.$twitter_link.'" target="_blank" class="btn btn-lg btn-info" style="margin: 5px 5px;"><i class="fa fa-twitter"></i> '.$Lang->get('JOIN_US_ON').' Twitter</a>';
+        }
+        if(!empty($youtube_link)) {
+          echo '<a href="'.$youtube_link.'" target="_blank" class="btn btn-lg btn-danger" style="margin: 5px 5px;"><i class="fa fa-youtube"></i> '.$Lang->get('JOIN_US_ON').' YouTube</a>';
+        }
+        if(!empty($skype_link)) {
+          echo '<a href="'.$skype_link.'" target="_blank" class="btn btn-lg btn-info" style="margin: 5px 5px;"><i class="fa fa-skype"></i> '.$Lang->get('JOIN_US_ON').' Skype</a>';
+        }
+        foreach ($findSocialButtons as $key => $value) {
+          echo '<a class="btn btn-default" style="background-color:'.$value['SocialButton']['color'].';color:white;color:white;margin: 0 5px;" target="_blank" href="'.$value['SocialButton']['url'].'">';
+          if(!empty($value['SocialButton']['img'])) {
+            echo '<img src="'.$value['SocialButton']['img'].'">';
+          }
+          if(!empty($value['SocialButton']['title'])) {
+            echo (!empty($value['SocialButton']['img'])) ? '<br>'.$value['SocialButton']['title'] : $value['SocialButton']['title'];
+          }
+          echo '</a>';
+        }
+      ?>
+    </div>
 
     <?= $Module->loadModules('home') ?>
