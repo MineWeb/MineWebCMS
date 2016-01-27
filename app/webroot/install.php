@@ -1,16 +1,18 @@
 <?php
 
+$needDisplayDatabase = (strpos(file_get_contents(ROOT.DS.'app'.DS.'Config'.DS.'database.php'), 'LOGIN1')) ? true : false;
+
 if(!file_exists(ROOT.DS.'config'.DS.'install.txt')) {
   if($_POST) {
 
-    if($_GET['action'] == "db") {
+    if($_GET['action'] == "db" && $needDisplayDatabase) {
 
       if(!empty($_POST['host']) && !empty($_POST['database']) && !empty($_POST['login']) && !empty($_POST['password'])) {
 
-      $sql_host = $_POST['host'];
-      $sql_name = $_POST['database'];
-      $sql_user = $_POST['login'];
-      $sql_pass = $_POST['password'];
+        $sql_host = $_POST['host'];
+        $sql_name = $_POST['database'];
+        $sql_user = $_POST['login'];
+        $sql_pass = $_POST['password'];
 
         try {
             $pdo = new PDO("mysql:host=$sql_host;dbname=$sql_name;", $sql_user, $sql_pass, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
@@ -118,11 +120,11 @@ $compatible['phpVersion'] = version_compare(PHP_VERSION, '5.3', '>=');
 
 $compatible['pdo'] = in_array('pdo_mysql', get_loaded_extensions());
 
-if(function_exists('apache_get_modules')) {
-  $compatible['rewriteUrl'] = in_array('mod_rewrite', @apache_get_modules());
-} else {
+//if(function_exists('apache_get_modules')) {
+  //$compatible['rewriteUrl'] = in_array('mod_rewrite', @apache_get_modules());
+//} else {
   $compatible['rewriteUrl'] = (!isset($InstallRewrite)) ? true : false;
-}
+//}
 
 $compatible['gd2'] = function_exists('imagettftext');
 

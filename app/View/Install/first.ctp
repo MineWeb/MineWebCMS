@@ -91,7 +91,7 @@
               <td><?= affichImg($compatible['curl']) ?></td>
             </tr>
             <tr>
-              <td>Réécriture d'URL</td>
+              <td>Réécriture d'URL - .htaccess activés</td>
               <td><?= affichImg($compatible['rewriteUrl']) ?></td>
             </tr>
             <tr>
@@ -118,7 +118,7 @@
 
       <div class="ajax-msg"></div>
 
-      <div class="database" style="display:none;" data-need-to-display="true">
+      <div class="database" style="display:none;" data-need-to-display="<?= ($needDisplayDatabase) ? 'true' : 'false' ?>">
         <form id="saveDB">
           <div class="form-group">
             <label>Hébergeur</label>
