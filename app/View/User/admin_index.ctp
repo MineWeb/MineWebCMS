@@ -6,34 +6,91 @@
           <h3 class="box-title"><?= $Lang->get('USER_LIST') ?></h3>
         </div>
         <div class="box-body">
+          <?php if($type == '0') { ?>
             <table class="table table-bordered" id="users">
-            <thead>
-              <tr>
-                <th><?= $Lang->get('USER') ?></th>
-                <th><?= $Lang->get('CREATED') ?></th>
-                <th><?= $Lang->get('RANK') ?></th>
-                <th class="right"><?= $Lang->get('ACTIONS') ?></th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
+              <thead>
+                <tr>
+                  <th><?= $Lang->get('USER') ?></th>
+                  <th><?= $Lang->get('CREATED') ?></th>
+                  <th><?= $Lang->get('RANK') ?></th>
+                  <th class="right"><?= $Lang->get('ACTIONS') ?></th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          <?php } else { ?>
+            <form action="<?= $this->Html->url(array('action' => 'liveSearch')) ?>" method="search">
+
+              <div class="form-group">
+                <label><?= $Lang->get('GLOBAL__SEARCH') ?></label>
+                <input type="text" name="search" placeholder="Pseudo..." class="form-control">
+                <div class="list-group" style="display:none;">
+                </div>
+              </div>
+
+            </form>
+          <?php } ?>
         </div>
       </div>
     </div>
   </div>
 </section>
 <script type="text/javascript">
-$(document).ready(function() {
-  $('#users').DataTable({
-    "paging": true,
-    "lengthChange": false,
-    "searching": false,
-    "ordering": false,
-    "info": false,
-    "autoWidth": false,
-    'searching': true,
-    'ajax': '<?= $this->Html->url(array('action' => 'get_users')) ?>',
+<?php if($type == '0') { ?>
+  $(document).ready(function() {
+    $('#users').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": false,
+      "info": false,
+      "autoWidth": false,
+      'searching': true,
+      'ajax': '<?= $this->Html->url(array('action' => 'get_users')) ?>',
+    });
   });
-});
+<?php } else { ?>
+  $('form[method="search"]').each(function(e) {
+
+    var url = $(this).attr('action');
+    var form = $(this);
+
+    $(this).find('input[name="search"]').keyup(function(e) {
+
+      var value = $(this).val();
+
+      $.ajax({
+        url: url+'/'+encodeURI(value),
+        method: 'GET',
+        dataType: 'JSON',
+        success: function(data) {
+
+          form.find('.list-group').empty();
+
+          if(data.status) {
+
+            var users = data.data;
+
+            for (var i = 0; i < users.length; i++) {
+
+              console.log(users[i]);
+
+              form.find('.list-group').prepend('<a href="<?= $this->Html->url(array('action' => 'edit')) ?>/'+users[i]['id']+'" class="list-group-item">'+users[i]['pseudo']+'</a>')
+
+            }
+
+            form.find('.list-group').slideDown(250);
+
+          } else {
+            form.find('.list-group').slideUp(250);
+          }
+
+        },
+        error: function(data) { form.find('.list-group').slideUp(250); }
+      })
+
+    });
+  });
+<?php } ?>
 </script>

@@ -8,13 +8,15 @@ class ConfigurationController extends AppController {
 		if($this->isConnected AND $this->User->isAdmin()) {
 			$this->layout = "admin";
 
+			$data = array();
+
 			if($this->request->is('post')) {
 				foreach ($this->request->data as $key => $value) {
 					if($key != "version" && $key != "social_btn" && $key != "social_btn_edited" && $key != "social_btn_added") {
 						if($key == "banner_server") {
 							$value = serialize($value);
 						}
-						$this->Configuration->set($key, $value);
+						$data[$key] = $value;
 						if($key == "mineguard") {
 							if($value == "true") {
 								$this->ServerComponent = $this->Components->load('Server');
@@ -79,6 +81,11 @@ class ConfigurationController extends AppController {
 					}
 				}
 
+				$this->loadModel('Configuration');
+				$this->Configuration->read(null, 1);
+				$this->Configuration->set($data);
+				$this->Configuration->save();
+
 				$this->History->set('EDIT_CONFIGURATION', 'configuration');
 
 				$this->Session->setFlash($this->Lang->get('EDIT_CONFIGURATION_SUCCESS'), 'default.success');
@@ -86,7 +93,8 @@ class ConfigurationController extends AppController {
 
 			$this->Lang->lang = $this->Lang->getLang(); // on refresh les messages
 
-			$config = $this->Configuration->get_all(true)['Configuration'];
+			$this->loadModel('Configuration');
+			$config = $this->Configuration->query('SELECT * FROM configurations WHERE id=1;', false)[0]['configurations'];
 
 			$config['lang'] = $this->Lang->getLang('config')['path'];
 

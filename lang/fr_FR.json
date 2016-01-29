@@ -10,6 +10,7 @@
         "GLOBAL__FORMAT_DATE": "{%day}\/{%month}\/{%year} \u00e0 {%hour|24}h{%minutes}",
         "GLOBAL__BY": "Par",
         "GLOBAL__SUBMIT": "Envoyer",
+        "GLOBAL__SEARCH":"Rechercher",
 
         "ERROR__PLUGIN_CANT_BE_DOWNLOADED": "Le plugin ne peux pas \u00eatre t\u00e9l\u00e9charg\u00e9.",
         "ERROR__PLUGIN_REQUIREMENTS": "Les pr\u00e9-requis du plugins ne sont pas remplis, celui-ci ne peux pas \u00eatre install\u00e9.",
@@ -68,6 +69,10 @@
         "CONFIG__KEY_CONFIRM_MAIL_SIGNUP": "Confirmation de l'email \u00e0 l'inscription",
         "CONFIG__CONFIRM_MAIL_SIGNUP_EXPLAIN": "\u00c0 l'inscription, un email sera envoy\u00e9 \u00e0 l'utilisateur, celui-ci devra le confirmer en cliquant sur le lien re\u00e7u dans le mail. Vous pouvez choisir si le compte est bloqu\u00e9 ou non si l'email n'est pas confirm\u00e9",
         "CONFIG__KEY_CONFIRM_MAIL_SIGNUP_BLOCK": "Bloquer le compte si non confirm\u00e9",
+        "CONFIG__KEY_MEMBER_PAGE_TYPE":"Type d'affichage de la page membre",
+        "CONFIG__KEY_MEMBER_PAGE_TYPE_EXPLAIN":"Vous pouvez choisir d'afficher et de charger la totalité de vos membres sur la page membres (lourd si beaucoup d'inscrits) ou d'afficher un formulaire pour effectuer une recherche rapide par pseudo.",
+        "CONFIG__KEY_MEMBER_PAGE_TYPE_DEFAULT":"Charger la totalité",
+        "CONFIG__KEY_MEMBER_PAGE_TYPE_SEARCH":"Recherche",
 
         "EMAIL__TITLE_CONFIRM_MAIL": "Confirmer votre email",
         "EMAIL__CONTENT_CONFIRM_MAIL": "Salut {USERNAME} ! <br> Tu t'es inscris le {DATE} avec l'IP <b>{IP}<\/b>, tu dois confirmer ton email en te rendant sur ce lien <a href=\"{LINK}\">{LINK}<\/a>.<br><br><br>Cet email est automatique, inutile d'y r\u00e9pondre.",

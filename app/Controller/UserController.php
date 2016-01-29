@@ -464,8 +464,35 @@ class UserController extends AppController {
 			$this->set('title_for_layout',$this->Lang->get('USER'));
 			$this->layout = 'admin';
 
+			$this->set('type', $this->Configuration->get('member_page_type'));
+
 		} else {
 			$this->redirect('/');
+		}
+	}
+
+	function admin_liveSearch($query = false) {
+		$this->autoRender = false;
+		$this->response->type('json');
+		if($this->isConnected AND $this->User->isAdmin()) {
+			if($query != false) {
+
+				$result = $this->User->find('all', array('conditions' => array('pseudo LIKE' => $query.'%')));
+
+
+				foreach ($result as $key => $value) {
+
+					$users[] = array('pseudo' => $value['User']['pseudo'], 'id' => $value['User']['id']);
+
+				}
+
+				echo (empty($result)) ? json_encode(array('status' => false)) : json_encode(array('status' => true, 'data' => $users));
+
+			} else {
+				echo json_encode(array('status' => false));
+			}
+		} else {
+			echo json_encode(array('status' => false));
 		}
 	}
 

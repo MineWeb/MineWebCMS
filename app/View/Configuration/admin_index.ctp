@@ -266,6 +266,22 @@
               <div class="tab-pane" id="tab_3">
 
                 <div class="form-group">
+                  <label><?= $Lang->get('CONFIG__KEY_MEMBER_PAGE_TYPE') ?></label>
+                  <br>
+                  <small><?= $Lang->get('CONFIG__KEY_MEMBER_PAGE_TYPE_EXPLAIN') ?></small>
+                  <div class="radio">
+                    <input type="radio" name="member_page_type" value="0" <?= ($config['member_page_type'] == '0') ? 'checked=""' : '' ?>>
+                    <label><?= $Lang->get('CONFIG__KEY_MEMBER_PAGE_TYPE_DEFAULT') ?></label>
+                  </div>
+                  <div class="radio">
+                    <input type="radio" name="member_page_type" value="1" <?= ($config['member_page_type'] == '1') ? 'checked=""': '' ?>>
+                    <label><?= $Lang->get('CONFIG__KEY_MEMBER_PAGE_TYPE_SEARCH') ?></label>
+                  </div>
+                </div>
+
+                <hr>
+
+                <div class="form-group">
                   <label><?= $Lang->get('CONFIG__KEY_CONFIRM_MAIL_SIGNUP') ?></label>
                   <br>
                   <small><?= $Lang->get('CONFIG__CONFIRM_MAIL_SIGNUP_EXPLAIN') ?></small>
