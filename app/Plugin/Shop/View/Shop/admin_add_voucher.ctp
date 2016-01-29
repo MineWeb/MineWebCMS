@@ -7,8 +7,7 @@
         </div>
         <div class="box-body">
 
-          <form action="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'admin_add_voucher_ajax', 'admin' => true)) ?>" method="post">
-            <input type="hidden" id="form_infos" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true, 'plugin' => 'shop')) ?>">
+          <form action="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'admin_add_voucher_ajax', 'admin' => true)) ?>" method="post" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true, 'plugin' => 'shop')) ?>">
 
             <div class="ajax-msg"></div>
 

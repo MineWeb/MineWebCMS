@@ -88,7 +88,7 @@ class History extends AppModel {
 
 			switch ($this->data['History']['action']) {
 				case 'BUY_ITEM':
-					$author = $this->data['History']['author'];
+					$author = $this->data['History']['user_id'];
 					$item_name = $this->data['History']['other'];
 					$informations = array('buyer' => $author, 'item_name' => $item_name);
 					$this->getEventManager()->dispatch(new CakeEvent('afterBuy', $informations));

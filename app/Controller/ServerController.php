@@ -106,8 +106,12 @@ class ServerController extends AppController {
 						$banner[] = $id;
 					}
 
+					$banner = array_values($banner);
+
 					$this->Configuration->set('banner_server', serialize($banner));
 
+				} else {
+					$this->Configuration->set('banner_server', serialize(array($id)));
 				}
 			}
 

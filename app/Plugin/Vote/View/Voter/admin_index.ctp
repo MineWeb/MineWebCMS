@@ -7,9 +7,8 @@
           <h3 class="box-title"><?= $Lang->get('VOTE_TITLE') ?></h3>
         </div>
         <div class="box-body">
-        
-          <form action="" method="post">
-            <input type="hidden" id="form_infos" data-ajax="false">
+
+          <form action="" method="post"  data-ajax="false">
 
             <div class="ajax-msg"></div>
 
@@ -60,7 +59,7 @@
                     </div>
                     <div class="form-group">
                       <label><?= $Lang->get('REWARD_VALUE') ?></label>
-                      <?php 
+                      <?php
                       if($v['type'] == "money") {
                         $reward_value = $v['how'];
                       } else {
@@ -108,7 +107,7 @@
             <div class="form-group">
               <a href="#" id="add_reward" class="btn btn-info"><?= $Lang->get('ADD_REWARD') ?></a>
             </div>
-            
+
             <hr>
 
             <?php if(!empty($vote['websites'])) { ?>
@@ -175,7 +174,7 @@
                 </div>
               </div>
             <?php } ?>
-            
+
             <div id="website_content"></div>
 
             <div class="form-group">
@@ -185,7 +184,7 @@
             <div class="pull-right">
               <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             </div>
-          </form>      
+          </form>
 
         </div>
       </div>

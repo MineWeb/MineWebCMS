@@ -14,11 +14,10 @@ $this->Configuration = new ConfigurationComponent;
           <h3 class="box-title"><?= $Lang->get('ADD_OFFER_STARPASS') ?></h3>
         </div>
         <div class="box-body">
-          <form action="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_starpass_ajax', 'admin' => true)) ?>" method="post">
-            <input type="hidden" id="form_infos" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>">
+          <form action="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_starpass_ajax', 'admin' => true)) ?>" method="post" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>">
 
             <div class="ajax-msg"></div>
-      
+
             <div class="form-group">
               <label><?= $Lang->get('NAME') ?></label>
               <input name="name" class="form-control" type="text">
@@ -40,10 +39,10 @@ $this->Configuration = new ConfigurationComponent;
             </div>
 
             <div class="pull-right">
-              <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>  
+              <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
               <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             </div>
-          </form>      
+          </form>
         </div>
       </div>
     </div>

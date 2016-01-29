@@ -269,8 +269,8 @@ class ShopController extends ShopAppController {
 					$this->set(compact('categories'));
 
 					$this->loadModel('Server');
-					
-					$servers = $this->Server->findSelectableServers();
+
+					$servers = $this->Server->findSelectableServers(true);
 					$this->set(compact('servers'));
 
 					if(!empty($item['servers'])) {
@@ -329,16 +329,15 @@ class ShopController extends ShopAppController {
 						));
 					$this->Item->save();
 					$this->Session->setFlash($this->Lang->get('ITEM_SUCCESS_EDIT'), 'default.success');
-					echo $this->Lang->get('ITEM_SUCCESS_EDIT').'|true';
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('ITEM_SUCCESS_EDIT')));
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
-					debug($this->request->data);
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST' ,$language).'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
 			}
 		} else {
-			$this->redirect('/');
+			throw new ForbiddenException();
 		}
 	}
 
@@ -355,7 +354,7 @@ class ShopController extends ShopAppController {
 			$this->set(compact('categories'));
 
 			$this->loadModel('Server');
-			$servers = $this->Server->findSelectableServers();
+			$servers = $this->Server->findSelectableServers(true);
 			$this->set(compact('servers'));
 		} else {
 			$this->redirect('/');
@@ -392,15 +391,15 @@ class ShopController extends ShopAppController {
 					$this->Item->save();
 					$this->History->set('ADD_ITEM', 'shop');
 					$this->Session->setFlash($this->Lang->get('ITEM_SUCCESS_ADD'), 'default.success');
-					echo $this->Lang->get('ITEM_SUCCESS_ADD').'|true';
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('ITEM_SUCCESS_ADD')));
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST' ,$language).'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
 			}
 		} else {
-			$this->redirect('/');
+			throw new ForbiddenException();
 		}
 	}
 
@@ -721,18 +720,18 @@ class ShopController extends ShopAppController {
 						$this->Paypal->save();
 						$this->History->set('ADD_PAYPAL_OFFER', 'shop');
 						$this->Session->setFlash($this->Lang->get('ADD_PAYPAL_OFFER_SUCCESS'), 'default.success');
-						echo $this->Lang->get('ADD_PAYPAL_OFFER_SUCCESS').'|true';
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ADD_PAYPAL_OFFER_SUCCESS')));
 					} else {
-						echo $this->Lang->get('EMAIL_NOT_VALIDATE').'|false';
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('EMAIL_NOT_VALIDATE')));
 					}
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST').'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
 			}
 		} else {
-			$this->redirect('/');
+			throw new ForbiddenException();
 		}
 	}
 
@@ -754,24 +753,24 @@ class ShopController extends ShopAppController {
 								$this->Paypal->save();
 								$this->History->set('EDIT_PAYPAL_OFFER', 'shop');
 								$this->Session->setFlash($this->Lang->get('EDIT_PAYPAL_OFFER_SUCCESS'), 'default.success');
-								echo $this->Lang->get('EDIT_PAYPAL_OFFER_SUCCESS').'|true';
+								echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('EDIT_PAYPAL_OFFER_SUCCESS')));
 							} else {
-								echo $this->Lang->get('EMAIL_NOT_VALIDATE').'|false';
+								echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('EMAIL_NOT_VALIDATE')));
 							}
 						} else {
-							echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 						}
 					} else {
-						echo $this->Lang->get('NOT_POST').'|false';
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
 					}
 				} else {
-					echo $this->Lang->get('UNKNONW_ID').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('UNKNONW_ID')));
 				}
 			} else {
-				$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
+				throw new NotFoundException();
 			}
 		} else {
-			$this->redirect('/');
+			throw new ForbiddenException();
 		}
 	}
 
@@ -789,15 +788,15 @@ class ShopController extends ShopAppController {
 					$this->Starpass->save();
 					$this->History->set('ADD_STARPASS_OFFER', 'shop');
 					$this->Session->setFlash($this->Lang->get('ADD_STARPASS_OFFER_SUCCESS'), 'default.success');
-					echo $this->Lang->get('ADD_STARPASS_OFFER_SUCCESS').'|true';
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('ADD_STARPASS_OFFER_SUCCESS')));
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST').'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
 			}
 		} else {
-			$this->redirect('/');
+			throw new ForbiddenException();
 		}
 	}
 
@@ -816,19 +815,18 @@ class ShopController extends ShopAppController {
 						$this->Starpass->save();
 						$this->History->set('EDIT_STARPASS_OFFER', 'shop');
 						$this->Session->setFlash($this->Lang->get('EDIT_STARPASS_OFFER_SUCCESS'), 'default.success');
-						echo $this->Lang->get('EDIT_STARPASS_OFFER_SUCCESS').'|true';
+						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('EDIT_STARPASS_OFFER_SUCCESS')));
 					} else {
-						echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 					}
 				} else {
-					echo $this->Lang->get('NOT_POST').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
 				}
-				$this->render('ajax_get');
 			} else {
-				$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
+				throw new NotFoundException();
 			}
 		}	 else {
-			$this->redirect('/');
+			throw new ForbiddenException();
 		}
 	}
 
@@ -884,15 +882,15 @@ class ShopController extends ShopAppController {
 					$this->Voucher->save();
 					$this->History->set('ADD_VOUCHER', 'shop');
 					$this->Session->setFlash($this->Lang->get('VOUCHER_SUCCESS_ADD'), 'default.success');
-					echo $this->Lang->get('VOUCHER_SUCCESS_ADD').'|true';
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('VOUCHER_SUCCESS_ADD')));
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST' ,$language).'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
 			}
 		} else {
-			$this->redirect('/');
+			throw new ForbiddenException();
 		}
 	}
 

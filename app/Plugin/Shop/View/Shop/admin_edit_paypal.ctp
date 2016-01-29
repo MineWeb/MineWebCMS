@@ -9,11 +9,10 @@ $this->Configuration = new ConfigurationComponent;
           <h3 class="box-title"><?= $Lang->get('EDIT_OFFER_PAYPAL') ?></h3>
         </div>
         <div class="box-body">
-          <form action="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'edit_paypal_ajax', 'admin' => true, $id)) ?>" method="post">
-            <input type="hidden" id="form_infos" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>">
+          <form action="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'edit_paypal_ajax', 'admin' => true, $id)) ?>" method="post" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>">
 
             <div class="ajax-msg"></div>
-      
+
             <div class="form-group">
               <label><?= $Lang->get('NAME') ?></label>
               <input name="name" class="form-control" value="<?= $paypal['name'] ?>" type="text">
@@ -35,10 +34,10 @@ $this->Configuration = new ConfigurationComponent;
             </div>
 
             <div class="pull-right">
-              <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>  
+              <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
               <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             </div>
-          </form>      
+          </form>
         </div>
       </div>
     </div>

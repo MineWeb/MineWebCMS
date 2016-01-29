@@ -6,21 +6,20 @@
           <h3 class="box-title"><?= $Lang->get('ADD_CATEGORY') ?></h3>
         </div>
         <div class="box-body">
-          <form action="" method="post">
-            <input type="hidden" id="form_infos" data-ajax="false">
+          <form action="" method="post" data-ajax="false">
 
             <div class="ajax-msg"></div>
-      
+
             <div class="form-group">
               <label><?= $Lang->get('NAME') ?></label>
               <input name="name" class="form-control"type="text">
             </div>
 
             <div class="pull-right">
-              <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>  
+              <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
               <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             </div>
-          </form>      
+          </form>
         </div>
       </div>
     </div>

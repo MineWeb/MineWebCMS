@@ -568,7 +568,7 @@ class VoterController extends VoteAppController {
 
             $this->loadModel('Server');
 
-            $servers = $this->Server->findSelectableServers();
+            $servers = $this->Server->findSelectableServers(true);
 						$this->set(compact('servers'));
 
 						$vote['servers'] = unserialize($vote['servers']);

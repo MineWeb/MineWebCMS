@@ -215,9 +215,9 @@ class ServerComponent extends Object {
 		}
 
 		if(empty($this->online[$server_id])) {
+
 		    if(!empty($server_id)) {
 		        $config = $this->getConfig($server_id);
-
 		        if($config) {
 
 							if($config['type'] == 2) {
@@ -354,9 +354,11 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 					if(isset($response['REQUEST']) AND $response['REQUEST'] == 'INSTALLATION_COMPLETED') {
 						return true; // response
 					} else {
+						$this->log('Server connection result : '.json_encode($response));
 						return false;
 					}
 				} else {
+					$this->log('Server connection failed');
 					return false; // timeout
 				}
 			}
@@ -384,6 +386,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 		}
 
     if(!is_array($server_id)) {
+
       if($this->online($server_id)) {
           $search = $this->call(array('getMOTD' => 'server', 'getVersion' => 'server', 'getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $server_id);
 
@@ -396,7 +399,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
           }
 
 					if(ClassRegistry::init('Configuration')->find('first')['Configuration']['server_cache']) {
-						file_put_contents($cacheFile, serialize(array($server_id => $search)));
+						@file_put_contents($cacheFile, serialize(array($server_id => $search)));
 					}
 
           return $search;
