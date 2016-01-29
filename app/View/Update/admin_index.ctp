@@ -11,8 +11,8 @@
             <p class="text-center"><?= $Lang->get('LAST_VERSION') ?> : <?= $Update->update['version'] ?></p>
             <div class="btn-group">
               <button id="update" class="btn btn-large btn-primary"><?= $Lang->get('UPDATE') ?></button>
-              <a href="<?= $this->Html->url(array('action' => 'check')) ?>" class="btn btn-large btn-info"><?= $Lang->get('CHECK_UPDATE') ?></a>
-              <a href="http://mineweb.org/changelog" target="_blank" class="btn btn-large btn-default"><?= $Lang->get('VIEW_UPDATE') ?></a>
+              <a href="<?= $this->Html->url(array('action' => 'check')) ?>" class="btn btn-large btn-info"><?= $Lang->get('UPDATE__CHECK_STATUS') ?></a>
+              <a href="http://mineweb.org/changelog" target="_blank" class="btn btn-large btn-default"><?= $Lang->get('UPDATE__VIEW_CHANGELOG') ?></a>
             </div>
             <div id="update-msg"></div>
             <div class="progress progress-striped active" style="display:none;">

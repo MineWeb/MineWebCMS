@@ -48,7 +48,7 @@
     <div class="row">
         <div class="col-lg-12">
             <h1 class="page-header animated fadeInRight home">
-                <?= $Lang->get('LAST_NEWS') ?>
+                <?= $Lang->get('NEWS__LAST_TITLE') ?>
             </h1>
         </div>
         <?php if(!empty($search_news)) { ?>
@@ -62,27 +62,27 @@
                       <button id="<?= $v['News']['id'] ?>" type="button" class="btn btn-primary like<?= ($v['News']['liked']) ? ' active' : ''; ?>"<?= ($can_like) ? '' : ' disabled' ?>><?= $v['News']['count_likes'] ?> <i class="fa fa-thumbs-up"></i></button>
                       <button type="button" class="btn btn-primary"><?= $v['News']['count_comments'] ?> <i class="fa fa-comments"></i></button>
                     </div>
-                    <a href="<?= $this->Html->url(array('controller' => 'blog', 'action' => $v['News']['slug'])) ?>" class="btn btn-success pull-right"><?= $Lang->get('READ_MORE') ?> »</a>
+                    <a href="<?= $this->Html->url(array('controller' => 'blog', 'action' => $v['News']['slug'])) ?>" class="btn btn-success pull-right"><?= $Lang->get('NEWS__READ_MORE') ?> »</a>
                 </div>
             </li>
         <?php } ?>
         </ul>
         <ol id="pagination"></ol>
-        <?php } else { echo '<center><h3>'.$Lang->get('NO_NEWS').'</h3></center>'; } ?>
+        <?php } else { echo '<center><h3>'.$Lang->get('NEWS__NONE_PUBLISHED').'</h3></center>'; } ?>
     </div>
     <div class="row">
       <?php
         if(!empty($facebook_link)) {
-          echo '<a href="'.$facebook_link.'" target="_blank" class="btn btn-lg btn-primary" style="margin: 5px 5px;"><i class="fa fa-facebook-square"></i> '.$Lang->get('JOIN_US_ON').' Facebook</a>';
+          echo '<a href="'.$facebook_link.'" target="_blank" class="btn btn-lg btn-primary" style="margin: 5px 5px;"><i class="fa fa-facebook-square"></i> '.$Lang->get('GLOBAL__JOIN_US').' Facebook</a>';
         }
         if(!empty($twitter_link)) {
-          echo '<a href="'.$twitter_link.'" target="_blank" class="btn btn-lg btn-info" style="margin: 5px 5px;"><i class="fa fa-twitter"></i> '.$Lang->get('JOIN_US_ON').' Twitter</a>';
+          echo '<a href="'.$twitter_link.'" target="_blank" class="btn btn-lg btn-info" style="margin: 5px 5px;"><i class="fa fa-twitter"></i> '.$Lang->get('GLOBAL__JOIN_US').' Twitter</a>';
         }
         if(!empty($youtube_link)) {
-          echo '<a href="'.$youtube_link.'" target="_blank" class="btn btn-lg btn-danger" style="margin: 5px 5px;"><i class="fa fa-youtube"></i> '.$Lang->get('JOIN_US_ON').' YouTube</a>';
+          echo '<a href="'.$youtube_link.'" target="_blank" class="btn btn-lg btn-danger" style="margin: 5px 5px;"><i class="fa fa-youtube"></i> '.$Lang->get('GLOBAL__JOIN_US').' YouTube</a>';
         }
         if(!empty($skype_link)) {
-          echo '<a href="'.$skype_link.'" target="_blank" class="btn btn-lg btn-info" style="margin: 5px 5px;"><i class="fa fa-skype"></i> '.$Lang->get('JOIN_US_ON').' Skype</a>';
+          echo '<a href="'.$skype_link.'" target="_blank" class="btn btn-lg btn-info" style="margin: 5px 5px;"><i class="fa fa-skype"></i> '.$Lang->get('GLOBAL__JOIN_US').' Skype</a>';
         }
         foreach ($findSocialButtons as $key => $value) {
           echo '<a class="btn btn-default" style="background-color:'.$value['SocialButton']['color'].';color:white;color:white;margin: 0 5px;" target="_blank" href="'.$value['SocialButton']['url'].'">';

@@ -22,7 +22,7 @@ $this->EyPlugin = new EyPluginComponent;
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="li-nav<?php if($this->params['controller'] == 'pages') { ?> actived<?php } ?>">
-                        <a href="<?= $this->Html->url('/') ?>"><i class="fa fa-home" title="<?= $Lang->get('HOME') ?>"></i></a>
+                        <a href="<?= $this->Html->url('/') ?>"><i class="fa fa-home" title="<?= $Lang->get('GLOBAL__HOME') ?>"></i></a>
                     </li>
                     <?php
                         if(!empty($nav)) {

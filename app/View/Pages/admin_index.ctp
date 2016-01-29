@@ -6,16 +6,16 @@
           <h3 class="box-title"><?= $Lang->get('PAGES_LIST') ?></h3>
         </div>
         <div class="box-body">
-        
+
           <a class="btn btn-large btn-block btn-primary" href="<?= $this->Html->url(array('controller' => 'pages', 'action' => 'add', 'admin' => true)) ?>"><?= $Lang->get('ADD_PAGE') ?></a>
-          
+
           <hr>
 
           <table class="table table-bordered">
             <thead>
               <tr>
                 <th><?= $Lang->get('TITLE') ?></th>
-                <th><?= $Lang->get('BY') ?></th>
+                <th><?= $Lang->get('GLOBAL__BY') ?></th>
                 <th><?= $Lang->get('POSTED_ON') ?></th>
                 <th><?= $Lang->get('LAST_UPDATE') ?></th>
                 <th><?= $Lang->get('URL') ?></th>

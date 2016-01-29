@@ -4,7 +4,7 @@
         <div class="news-content">
             <h1><?= $news['News']['title'] ?></h1>
             <p class="author">
-                <?= $Lang->get('BY') ?> <?= $news['News']['author'] ?>
+                <?= $Lang->get('GLOBAL__BY') ?> <?= $news['News']['author'] ?>
             </p>
 
             <div><?= $news['News']['content'] ?></div>
@@ -36,7 +36,7 @@
                 <img class="media-object" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/<?= $v['author'] ?>/64" alt="">
                 <div class="media-body">
                     <?= before_display($v['content']) ?>
-                    <h4 class="author"><?= $Lang->get('BY') ?> <?= $v['author'] ?></h4>
+                    <h4 class="author"><?= $Lang->get('GLOBAL__BY') ?> <?= $v['author'] ?></h4>
                     <h4 class="created"><?= $Lang->date($v['created']); ?></h4>
                 </div>
                  <div class="pull-right">
@@ -47,7 +47,7 @@
             </div>
         <?php } ?>
         <?php if($Permissions->can('COMMENT_NEWS')) { ?>
-            <center><a href="#" data-toggle="modal" data-target="#postcomment" class="btn btn-primary btn-lg"><?= $Lang->get('LEAVE_COMMENT') ?></a></center>
+            <center><a href="#" data-toggle="modal" data-target="#postcomment" class="btn btn-primary btn-lg"><?= $Lang->get('NEWS__COMMENT_TITLE') ?></a></center>
         <?php } ?>
 
         </div>
@@ -61,7 +61,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="<?= $Lang->get('CLOSE') ?>"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('LEAVE_COMMENT') ?></h4>
+          <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('NEWS__COMMENT_TITLE') ?></h4>
         </div>
         <div class="modal-body">
           <div id="form-comment-fade-out">
@@ -75,7 +75,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('CLOSE') ?></button>
-          <button type="submit" class="btn btn-primary pull-right"><?= $Lang->get('SUBMIT') ?></button>
+          <button type="submit" class="btn btn-primary pull-right"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
           </form>
         </div>
       </div>
@@ -100,7 +100,7 @@
 
     function addcomment(data) {
       var d = new Date();
-      var comment = '<div class="media"><img class="media-object" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/<?= $user['pseudo'] ?>/64" alt=""><div class="media-body">'+data['content']+'<h4 class="author"><?= $Lang->get('BY') ?> '+data['author']+'</h4><h4 class="created">'+d.getHours()+'h'+d.getMinutes()+'</h4></div></div>';
+      var comment = '<div class="media"><img class="media-object" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/<?= $user['pseudo'] ?>/64" alt=""><div class="media-body">'+data['content']+'<h4 class="author"><?= $Lang->get('GLOBAL__BY') ?> '+data['author']+'</h4><h4 class="created">'+d.getHours()+'h'+d.getMinutes()+'</h4></div></div>';
       $('.add-comment').hide().html(comment).fadeIn(1500);
       $('#postcomment').modal('hide')
     }

@@ -89,7 +89,7 @@
 
             <div class="pull-right">
               <a href="<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'admin_index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
-              <button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
+              <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             </div>
           </form>
         </div>

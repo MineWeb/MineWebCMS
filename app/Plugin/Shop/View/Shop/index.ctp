@@ -116,7 +116,7 @@
                       <?php } ?>
                     </select>
                   </div>
-                  <button type="submit" class="btn btn-primary"><?= $Lang->get('SUBMIT') ?></button>
+                  <button type="submit" class="btn btn-primary"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
                 </form>
                 <br>
             </div>
@@ -148,7 +148,7 @@
                   <?php } ?>
                 </select>
               </div>
-              <button type="submit" class="btn btn-primary"><?= $Lang->get('SUBMIT') ?></button>
+              <button type="submit" class="btn btn-primary"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             </form>
             <br>
           </div>
@@ -181,7 +181,7 @@
               <div class="form-group">
                 <input type="text" class="form-control" name="code4" placeholder="XXXX" maxlength="4" data-type="numbers" tabindex="5" style="width:60px;">
               </div>
-              <button type="submit" class="btn btn-default pull-right"><?= $Lang->get('SUBMIT') ?></button>
+              <button type="submit" class="btn btn-default pull-right"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             </form>
           </div>
         <?php } ?>

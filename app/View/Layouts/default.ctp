@@ -52,7 +52,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="li-nav">
-                        <a href="<?= $this->Html->url('/') ?>"><?= $Lang->get('HOME') ?></a>
+                        <a href="<?= $this->Html->url('/') ?>"><?= $Lang->get('GLOBAL__HOME') ?></a>
                     </li>
                     <?php
                         if(!empty($nav)) {

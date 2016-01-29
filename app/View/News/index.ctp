@@ -4,11 +4,11 @@
         <div class="col-lg-8">
             <h1><?= before_display($news['News']['title']) ?></h1>
             <p class="lead">
-                <?= $Lang->get('BY') ?> <a href="#"><?= $news['News']['author'] ?></a>
+                <?= $Lang->get('GLOBAL__BY') ?> <a href="#"><?= $news['News']['author'] ?></a>
             </p>
 
             <hr>
-            <p><span class="glyphicon glyphicon-time"></span> <?= $Lang->get('POSTED_ON') . ' ' . $Lang->date($news['News']['created']); ?></p>
+            <p><span class="glyphicon glyphicon-time"></span> <?= $Lang->get('NEWS__POSTED_ON') . ' ' . $Lang->date($news['News']['created']); ?></p>
 
             <hr>
             <p class="lead"><?= $news['News']['content'] ?></p>
@@ -17,13 +17,13 @@
                 <div id="form-comment-fade-out">
                     <hr>
                     <div class="well">
-                        <h4><?= $Lang->get('LEAVE_COMMENT') ?> :</h4>
+                        <h4><?= $Lang->get('NEWS__COMMENT_TITLE') ?> :</h4>
                         <form method="POST" data-ajax="true" action="<?= $this->Html->url(array('controller' => 'news', 'action' => 'add_comment')) ?>" data-callback-function="addcomment" data-success-msg="false">
                             <input name="news_id" value="<?= $news['News']['id'] ?>" type="hidden">
                             <div class="form-group">
                                 <textarea name="content" class="form-control" rows="3"></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary"><?= $Lang->get('SUBMIT') ?></button>
+                            <button type="submit" class="btn btn-primary"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
                         </form>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
         </div>
         <div class="col-md-4">
             <div class="well">
-                <h4><?= $Lang->get('LAST_NEWS') ?></h4>
+                <h4><?= $Lang->get('NEWS__LAST_TITLE') ?></h4>
                 <div class="row">
                     <div class="col-lg-6">
                         <ul class="list-unstyled">

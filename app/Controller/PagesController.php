@@ -98,7 +98,7 @@ class PagesController extends AppController {
 		if (!empty($path[$count - 1])) {
 			$title_for_layout = Inflector::humanize($path[$count - 1]);
 		}
-		$title_for_layout = $this->Lang->get('HOME');
+		$title_for_layout = $this->Lang->get('GLOBAL__HOME');
 		$this->set(compact('page', 'subpage', 'title_for_layout'));
 
 		try {

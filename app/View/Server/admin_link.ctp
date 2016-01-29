@@ -16,7 +16,7 @@
               <input type="text" class="form-control" name="timeout" value="<?= $timeout ?>">
             </div>
 
-            <button type="submit" class="btn btn-primary"><?= $Lang->get('SUBMIT') ?></button>
+            <button type="submit" class="btn btn-primary"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             <a href="<?= $this->Html->url(array('action' => 'switchState')) ?>" class="btn btn-<?= ($isEnabled) ? 'danger' : 'success' ?>"><?= ($isEnabled) ? $Lang->get('DISABLE') : $Lang->get('ENABLE') ?></a>
             <a href="<?= $this->Html->url(array('action' => 'switchCacheState')) ?>" class="btn btn-<?= ($isCacheEnabled) ? 'danger' : 'success' ?>"><?= ($isCacheEnabled) ? $Lang->get('SERVER__DISABLE_CACHE') : $Lang->get('SERVER__ENABLE_CACHE') ?></a>
 
@@ -43,7 +43,7 @@
               <small><?= $Lang->get('AVAILABLE_VARIABLES') ?> : {MOTD}, {VERSION}, {ONLINE}, {ONLINE_LIMIT}</small>
             </div>
 
-            <button type="submit" class="btn btn-primary"><?= $Lang->get('SUBMIT') ?></button>
+            <button type="submit" class="btn btn-primary"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
 
           </form>
 
@@ -91,7 +91,7 @@
                   <input type="text" class="form-control" name="port" value="<?= $value['Server']['port'] ?>" placeholder="Ex: 8080">
                 </div>
 
-                <button type="submit" class="btn btn-success"><?= $Lang->get('SUBMIT') ?></button>
+                <button type="submit" class="btn btn-success"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
                 <a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'delete', 'admin' => true, $value['Server']['id'])) ?>" type="submit" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>
 
                 <button class="btn btn-info switchBanner pull-right<?= ($value['Server']['activeInBanner']) ? ' active' : '' ?>" id="<?= $value['Server']['id'] ?>"><?= $Lang->get('SERVER__AFFICH_BANNER') ?></button>
@@ -162,7 +162,7 @@
                 new_server += '<label><?= $Lang->get('PORT') ?></label>';
                 new_server += '<input type="text" class="form-control" name="port" placeholder="Ex: 8080">';
               new_server += '</div>';
-              new_server += '<button type="submit" class="btn btn-success"><?= $Lang->get('SUBMIT') ?></button>';
+              new_server += '<button type="submit" class="btn btn-success"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>';
             new_server += '</form>';
           new_server += '</div>';
         new_server += '</div>';

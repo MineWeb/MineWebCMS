@@ -66,7 +66,7 @@ $this->Configuration = new ConfigurationComponent;
 					</div>
 
 					 <div class="form-group">
-					 	<button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
+					 	<button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
 					 </div>
 				</form>
 
@@ -84,7 +84,7 @@ $this->Configuration = new ConfigurationComponent;
 						</div>
 
 						<div class="form-group">
-							<button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
+							<button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
 						</div>
 					</form>
 				<?php } ?>
@@ -104,7 +104,7 @@ $this->Configuration = new ConfigurationComponent;
 						</div>
 
 						<div class="form-group">
-							<button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
+							<button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
 						</div>
 					</form>
 
@@ -173,7 +173,7 @@ $this->Configuration = new ConfigurationComponent;
 					    <label><?= $Lang->get('CHOOSE_YOUR_FILE') ?></label>
 					    <input name="image" type="file">
 					  </div>
-					  <button type="submit" class="btn btn-default"><?= $Lang->get('SUBMIT') ?></button>
+					  <button type="submit" class="btn btn-default"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
 					  <div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;</div>
 					  <div class="form-group">
 					  	<u><?= $Lang->get('FILE_NEED') ?> :</u><br>
@@ -196,7 +196,7 @@ $this->Configuration = new ConfigurationComponent;
 					    <input name="image" type="file">
 					  </div>
 						<input name="data[_Token][key]" value="<?= $csrfToken ?>" type="hidden">
-					  <button type="submit" class="btn btn-default"><?= $Lang->get('SUBMIT') ?></button>
+					  <button type="submit" class="btn btn-default"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
 					  <div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;</div>
 					  <div class="form-group">
 					  	<u><?= $Lang->get('FILE_NEED') ?> :</u><br>

@@ -42,7 +42,7 @@
             <input type="hidden" name="data[_Token][key]" value="<?= $csrfToken ?>">
 
             <div class="pull-right">
-              <button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
+              <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             </div>
           </form>
         </div>

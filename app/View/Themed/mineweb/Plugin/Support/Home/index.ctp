@@ -106,7 +106,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" data-dismiss="modal" class="btn btn-default"><?= $Lang->get('CLOSE') ?></button>
-            <button type="submit" class="btn btn-primary"><?= $Lang->get('SUBMIT') ?></button>
+            <button type="submit" class="btn btn-primary"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
         </form>
           </div>
         </div>
@@ -130,7 +130,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" data-dismiss="modal" class="btn btn-default"><?= $Lang->get('CLOSE') ?></button>
-            <button type="submit" class="btn btn-primary"><?= $Lang->get('SUBMIT') ?></button>
+            <button type="submit" class="btn btn-primary"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
            </form>
           </div>
         </div>

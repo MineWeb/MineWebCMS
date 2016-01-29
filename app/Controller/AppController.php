@@ -502,10 +502,10 @@ WCqkx22behAGZq6rhwIDAQAB
 		if($type == "csrf") {
 			$this->autoRender = false;
 			if($this->request->is('ajax')) {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR_CSRF')));
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__CSRF')));
 				exit();
 			} else {
-				$this->Session->setFlash($this->Lang->get('ERROR_CSRF'), 'default.error');
+				$this->Session->setFlash($this->Lang->get('ERROR__CSRF'), 'default.error');
 				$this->redirect($this->referer());
 			}
 		}

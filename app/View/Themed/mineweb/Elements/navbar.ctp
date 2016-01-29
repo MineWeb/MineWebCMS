@@ -25,7 +25,7 @@ $this->EyPlugin = new EyPluginComponent;
                       <?php } ?>
                     </div>
                     <li class="li-nav pull-left<?php if($this->params['controller'] == 'pages') { ?> actived<?php } ?>">
-                        <a href="<?= $this->Html->url('/') ?>"><i class="fa fa-home" title="<?= $Lang->get('HOME') ?>"></i></a>
+                        <a href="<?= $this->Html->url('/') ?>"><i class="fa fa-home" title="<?= $Lang->get('GLOBAL__HOME') ?>"></i></a>
                     </li>
                     <li class="li-nav pull-right">
                       <div class="btn-group">

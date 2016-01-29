@@ -339,7 +339,7 @@ $this->EyPlugin = new EyPluginComponent;
               <input class="form-control col-md-4" name="cmd" type="text"></input>
           </div>
           <input type="hidden" name="data[_Token][key]" value="<?= $csrfToken ?>">
-          <button class="btn btn-info" type="submit"><?= $Lang->get('SUBMIT') ?></button>
+          <button class="btn btn-info" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
         </form>
       </div>
       <div class="modal-footer">

@@ -79,7 +79,7 @@ $this->EyPlugin = new EyPluginComponent;
 
 					<div class="clearfix"></div>
 
-					<center><button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button></center>
+					<center><button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button></center>
 				</form>
 
 				<?php if($Permissions->can('EDIT_HIS_EMAIL')) { ?>
@@ -97,7 +97,7 @@ $this->EyPlugin = new EyPluginComponent;
 
 						<div class="clearfix"></div>
 
-						<center><button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button></center>
+						<center><button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button></center>
 					</form>
 				<?php } ?>
 
@@ -117,7 +117,7 @@ $this->EyPlugin = new EyPluginComponent;
 
 						<div class="clearfix"></div>
 
-						<center><button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button></center>
+						<center><button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button></center>
 					</form>
 
 				<?php } ?>
@@ -188,7 +188,7 @@ $this->EyPlugin = new EyPluginComponent;
 					    <input name="image" type="file">
 					  </div>
 						<input name="data[_Token][key]" value="<?= $csrfToken ?>" type="hidden">
-					  <button type="submit" class="btn btn-default"><?= $Lang->get('SUBMIT') ?></button>
+					  <button type="submit" class="btn btn-default"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
 					  <div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;</div>
 					  <div class="form-group">
 					  	<u><?= $Lang->get('FILE_NEED') ?> :</u><br>
@@ -211,7 +211,7 @@ $this->EyPlugin = new EyPluginComponent;
 					    <input name="image" type="file">
 					  </div>
 						<input name="data[_Token][key]" value="<?= $csrfToken ?>" type="hidden">
-					  <button type="submit" class="btn btn-default"><?= $Lang->get('SUBMIT') ?></button>
+					  <button type="submit" class="btn btn-default"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
 					  <div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;</div>
 					  <div class="form-group">
 					  	<u><?= $Lang->get('FILE_NEED') ?> :</u><br>

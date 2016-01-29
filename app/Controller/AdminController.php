@@ -7,7 +7,7 @@ class AdminController extends AppController {
 	function admin_index() {
 		if($this->isConnected AND $this->Permissions->can('ACCESS_DASHBOARD')) {
 
-			$this->set('title_for_layout', $this->Lang->get('HOME'));
+			$this->set('title_for_layout', $this->Lang->get('GLOBAL__HOME'));
 			$this->layout = 'admin';
 
 			$this->loadModel('News');

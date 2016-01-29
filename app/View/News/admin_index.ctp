@@ -14,9 +14,9 @@
               <thead>
                 <tr>
                   <th><?= $Lang->get('TITLE') ?></th>
-                  <th><?= $Lang->get('BY') ?></th>
+                  <th><?= $Lang->get('GLOBAL__BY') ?></th>
                   <th><?= $Lang->get('PUBLISHED') ?></th>
-                  <th><?= $Lang->get('POSTED_ON') ?></th>
+                  <th><?= $Lang->get('NEWS__POSTED_ON') ?></th>
                   <th><?= $Lang->get('NUMBER_OF_COMMENTS') ?></th>
                   <th><?= $Lang->get('NUMBER_OF_LIKES') ?></th>
                   <th><?= $Lang->get('ACTION') ?></th>

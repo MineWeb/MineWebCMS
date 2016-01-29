@@ -143,7 +143,7 @@ $this->Configuration = new ConfigurationComponent;
 					    <label class="sr-only">OUT</label>
 					    <input type="text" class="form-control input-step3" name="out" placeholder="<?= $Lang->get('NUMBER_OF_OUT') ?>" disabled="">
 					  </div>
-					  <button type="submit" class="btn btn-info btn-step3 disabled"><?= $Lang->get('SUBMIT') ?></button>
+					  <button type="submit" class="btn btn-info btn-step3 disabled"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
 					</form>
 				  </div>
 				  	<div class="response_step3"></div>

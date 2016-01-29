@@ -56,7 +56,7 @@ $this->EyPlugin = new EyPluginComponent;
               </tbody>
             </table>
           <?php } else {
-            echo '<div class="alert alert-danger">'.$Lang->get('NONE_PLUGIN_INSTALLED').'</div>';
+            echo '<div class="alert alert-danger">'.$Lang->get('PLUGIN__NONE_INSTALLED').'</div>';
           } ?>
         </div>
       </div>

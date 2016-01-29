@@ -64,14 +64,14 @@
                         <p><?= $v['News']['count_likes'] ?> <i class="fa fa-thumbs-up"></i></p>
                     </div>
                     <div class="a-like pull-right">
-                        <p><a href="<?= $this->Html->url(array('controller' => 'blog', 'action' => $v['News']['slug'])) ?>"><?= $Lang->get('READ_MORE') ?> »</a></p>
+                        <p><a href="<?= $this->Html->url(array('controller' => 'blog', 'action' => $v['News']['slug'])) ?>"><?= $Lang->get('NEWS__READ_MORE') ?> »</a></p>
                     </div>
                 </div>
             </li>
         <?php } ?>
         </ul>
         <ol id="pagination"></ol>
-        <?php } else { echo '<center><h3>'.$Lang->get('NO_NEWS').'</h3></center>'; } ?>
+        <?php } else { echo '<center><h3>'.$Lang->get('NEWS__NONE_PUBLISHED').'</h3></center>'; } ?>
     </div>
 
 

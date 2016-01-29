@@ -326,11 +326,11 @@ class LangComponent extends Object {
 
   		$language = $this->lang;
 
-  		if(isset($language['messages']['FORMAT_DATE'])) { // si le format de la date est configuré je fais les actions suivantes
+  		if(isset($language['messages']['GLOBAL__FORMAT_DATE'])) { // si le format de la date est configuré je fais les actions suivantes
   			$date = explode(' ', $date); // j'explode les espaces pour séparé date & heure
   			$time = explode(':', $date['1']); // ensuite je sépare tout les chiffre de la date
   			$date = explode('-', $date['0']); // puis tout ceux de l'heure
-  			$return = str_replace('{%day}', $date['2'], $language['messages']['FORMAT_DATE']); // puis je remplace les variable de la config lang.php par les chiffres | Le jour
+  			$return = str_replace('{%day}', $date['2'], $language['messages']['GLOBAL__FORMAT_DATE']); // puis je remplace les variable de la config lang.php par les chiffres | Le jour
   			$return = str_replace('{%month}', $date['1'], $return); // puis je remplace les variable de la config lang.php par les chiffres | Le mois
   			$return = str_replace('{%year}', $date['0'], $return); // puis je remplace les variable de la config lang.php par les chiffres | L'année
   			$return = str_replace('{%minutes}', $time['1'], $return); // puis je remplace les variable de la config lang.php par les chiffres | Les minutes
@@ -384,7 +384,7 @@ class LangComponent extends Object {
         } else {
           $return = 'ERROR'; // format inconnu
         }
-  		} else { // sinon, si le message FORMAT_DATE n'est pas configuré
+  		} else { // sinon, si le message GLOBAL__FORMAT_DATE n'est pas configuré
   			$return = $date; // je laisse la date tel quel
   		}
 

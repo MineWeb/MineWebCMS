@@ -62,7 +62,7 @@
                 </tbody>
               </table>
 
-            <button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
+            <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
 
           </form>
 
@@ -85,7 +85,7 @@
           <div class="input-group">
             <input type="text" class="form-control" name="name" placeholder="<?= $Lang->get('NAME') ?>">
             <span class="input-group-btn">
-              <button class="btn btn-info btn-flat" type="submit"><?= $Lang->get('SUBMIT') ?></button>
+              <button class="btn btn-info btn-flat" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             </span>
           </div>
         </form>

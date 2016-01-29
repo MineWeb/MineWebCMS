@@ -48,7 +48,7 @@
               <input type="text" class="form-control" name="favicon_url" value="<?= $config['favicon_url'] ?>">
             </div>
 
-            <button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
+            <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'index', 'admin' => true)) ?>" type="button" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
           </form>
 

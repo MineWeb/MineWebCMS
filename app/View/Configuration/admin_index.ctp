@@ -473,7 +473,7 @@
 
             <input type="hidden" name="data[_Token][key]" value="<?= $csrfToken ?>">
 
-            <button class="btn btn-primary" type="submit"><?= $Lang->get('SUBMIT') ?></button>
+            <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             <a href="<?= $this->Html->url(array('controller' => '', 'action' => '', 'admin' => true)) ?>" type="button" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
           </form>
 
