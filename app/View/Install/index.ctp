@@ -2,8 +2,8 @@
 
     <div class="tab-content">
         <div class="tab-pane active" id="tabsleft-tab1">
-            <h1><?= $Lang->get('STEP_1') ?></h1>
-            <p><?= $Lang->get('DESC_STEP_1') ?></p>
+            <h1><?= $Lang->get('INSTALL__STEP_1_TITLE') ?></h1>
+            <p><?= $Lang->get('INSTALL__STEP_1_DESC') ?></p>
             <br>
             <p>
                 <?php 
@@ -33,26 +33,26 @@
             </p>
         </div>
         <div class="tab-pane" id="tabsleft-tab2">
-            <h1><?= $Lang->get('STEP_2') ?></h1>
-            <p><?= $Lang->get('DESC_STEP_2') ?></p>
+            <h1><?= $Lang->get('INSTALL__STEP_2_TITLE') ?></h1>
+            <p><?= $Lang->get('INSTALL__STEP_2_DESC') ?></p>
             <p>
                 <form id="step3">
                     <div class="ajax-msg-step3"></div>
                     <div class="form-group">
-                        <label><?= $Lang->get('PSEUDO') ?></label>
-                        <input type="text" class="form-control" name="pseudo"<?php if(!empty($admin_pseudo)) { echo ' value="'.$admin_pseudo.'"'; } ?> placeholder="<?= $Lang->get('ENTER_PSEUDO') ?>">
+                        <label><?= $Lang->get('USER__USERNAME') ?></label>
+                        <input type="text" class="form-control" name="pseudo"<?php if(!empty($admin_pseudo)) { echo ' value="'.$admin_pseudo.'"'; } ?> placeholder="<?= $Lang->get('USER__USERNAME_LABEL') ?>">
                       </div>
                       <div class="form-group">
-                        <label><?= $Lang->get('PASSWORD') ?></label>
-                        <input type="password" class="form-control" name="password"<?php if(!empty($admin_password)) { echo ' value="*********"'; } ?> placeholder="<?= $Lang->get('ENTER_PASSWORD') ?>">
+                        <label><?= $Lang->get('USER__PASSWORD') ?></label>
+                        <input type="password" class="form-control" name="password"<?php if(!empty($admin_password)) { echo ' value="*********"'; } ?> placeholder="<?= $Lang->get('USER__PASSWORD_LABEL') ?>">
                       </div>
                       <div class="form-group">
-                        <label><?= $Lang->get('PASSWORD_CONFIRMATION') ?></label>
-                        <input type="password" class="form-control" name="password_confirmation"<?php if(!empty($admin_password)) { echo ' value="*********"'; } ?> placeholder="<?= $Lang->get('ENTER_PASSWORD_CONFIRMATION') ?>">
+                        <label><?= $Lang->get('USER__PASSWORD_CONFIRM') ?></label>
+                        <input type="password" class="form-control" name="password_confirmation"<?php if(!empty($admin_password)) { echo ' value="*********"'; } ?> placeholder="<?= $Lang->get('USER__PASSWORD_CONFIRM_LABEL') ?>">
                       </div>
                       <div class="form-group">
-                        <label><?= $Lang->get('EMAIL') ?></label>
-                        <input type="email" class="form-control" name="email"<?php if(!empty($admin_email)) { echo ' value="'.$admin_email.'"'; } ?> placeholder="<?= $Lang->get('ENTER_EMAIL') ?>">
+                        <label><?= $Lang->get('USER__EMAIL') ?></label>
+                        <input type="email" class="form-control" name="email"<?php if(!empty($admin_email)) { echo ' value="'.$admin_email.'"'; } ?> placeholder="<?= $Lang->get('USER__EMAIL_LABEL') ?>">
                       </div>
                        <?php if(!empty($admin_pseudo)) { ?>
                             <input type="hidden" name="step3" value="true">
@@ -68,8 +68,8 @@
             </p>
         </div>
         <div class="tab-pane" id="tabsleft-tab3">
-            <h1><?= $Lang->get('STEP_4') ?></h1>
-            <div class="alert alert-success"><?= $Lang->get('DESC_STEP_4') ?></div>
+            <h1><?= $Lang->get('INSTALL__STEP_3_TITLE') ?></h1>
+            <div class="alert alert-success"><?= $Lang->get('INSTALL__STEP_3_DESC') ?></div>
             <p>
                 <a href="<?= $this->Html->url(array('controller' => 'install', 'action' => 'end')) ?>" class="btn btn-block btn-success"><?= $Lang->get('USE_CMS') ?></a>
                 <ul class="pager wizard">

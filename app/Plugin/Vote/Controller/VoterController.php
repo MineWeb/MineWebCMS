@@ -261,7 +261,7 @@ class VoterController extends VoteAppController {
                                     }
 
                                     if(in_array('server_error', $success_msg)) {
-                                        echo $this->Lang->get('NEED_SERVER_ON').'|false';
+                                        echo $this->Lang->get('SERVER__MUST_BE_ON').'|false';
                                     } elseif (in_array('internal_error', $success_msg)) {
                                         echo $this->Lang->get('INTERNAL_ERROR').'|false';
                                     } else {
@@ -325,7 +325,7 @@ class VoterController extends VoteAppController {
                                             echo $this->Lang->get('VOTE_SUCCESS').' '.$this->Lang->get('REWARD').' : <b>'.$rewards[$reward]['name'].'</b>.|true';
 
                                         } else {
-                                            echo $this->Lang->get('NEED_SERVER_ON').'|false';
+                                            echo $this->Lang->get('SERVER__MUST_BE_ON').'|false';
                                         }
 
                                     } elseif($rewards[$reward]['type'] == 'money') { // si c'est des points boutique
@@ -451,7 +451,7 @@ class VoterController extends VoteAppController {
                 }
 
                 if(in_array('server_error', $success_msg)) {
-                    $this->Session->setFlash($this->Lang->get('NEED_SERVER_ON'), 'default.error');
+                    $this->Session->setFlash($this->Lang->get('SERVER__MUST_BE_ON'), 'default.error');
                     $this->redirect(array('controller' => 'user', 'action' => 'profile', 'plugin' => false));
                 } elseif (in_array('internal_error', $success_msg)) {
                     $this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
@@ -524,7 +524,7 @@ class VoterController extends VoteAppController {
                         $this->redirect(array('controller' => 'user', 'action' => 'profile', 'plugin' => false));
 
                     } else {
-                        $this->Session->setFlash($this->Lang->get('NEED_SERVER_ON'), 'default.error');
+                        $this->Session->setFlash($this->Lang->get('SERVER__MUST_BE_ON'), 'default.error');
                         $this->redirect(array('controller' => 'user', 'action' => 'profile', 'plugin' => false));
                     }
 
@@ -629,7 +629,7 @@ class VoterController extends VoteAppController {
                         if($this->request->data['rewards_type'] == 0) {
                             foreach ($this->request->data['rewards'] as $key => $value) {
                                 if(!isset($value['proba']) || empty($value['proba'])) {
-                                    echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+                                    echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
                                     die();
                                 }
                             }
@@ -654,10 +654,10 @@ class VoterController extends VoteAppController {
                         $this->Session->setFlash($this->Lang->get('CONFIGURATION_SAVE'), 'default.success');
                         echo $this->Lang->get('CONFIGURATION_SAVE').'|true';
                     } else {
-                        echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+                        echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
                     }
                 } else {
-                    echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+                    echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
                 }
             } else {
                 echo $this->Lang->get('NOT_POST').'|false';

@@ -1,4 +1,4 @@
-<?php 
+<?php
 $this->Configuration = new ConfigurationComponent;
 ?>
 <div class="container vote">
@@ -48,7 +48,7 @@ $this->Configuration = new ConfigurationComponent;
 			<!-- Choose username -->
 				<div class="panel panel-default panel-step step1" style="opacity : 0.5;">
 				  <div class="panel-heading">
-				    <h3 class="panel-title"><?= $Lang->get('STEP') ?> 1 : <?= $Lang->get('LOGIN') ?> <i style="display:none" id="icon_step1" class="glyphicon glyphicon-ok"></i></h3>
+				    <h3 class="panel-title"><?= $Lang->get('STEP') ?> 1 : <?= $Lang->get('USER__LOGIN') ?> <i style="display:none" id="icon_step1" class="glyphicon glyphicon-ok"></i></h3>
 				  </div>
 				  <div class="panel-body">
 				    <form class="form-inline" id="step1">
@@ -56,7 +56,7 @@ $this->Configuration = new ConfigurationComponent;
 					    <label class="sr-only">Pseudo</label>
 					    <input type="text" class="form-control input-lg input-step1" name="pseudo" placeholder="<?= $Lang->get('MC_USERNAME') ?>">
 					  </div>
-					  <button type="submit" class="btn btn-info btn-lg btn-step1"><?= $Lang->get('LOGIN') ?></button>
+					  <button type="submit" class="btn btn-info btn-lg btn-step1"><?= $Lang->get('USER__LOGIN') ?></button>
 					</form>
 				  </div>
 				  	<div class="response_step1"></div>
@@ -76,12 +76,12 @@ $this->Configuration = new ConfigurationComponent;
 						    	$('.btn-step1').addClass('disabled');
 						    	$('.btn-step2').removeClass('disabled');
 						    	$('.input-step1').prop('disabled', true);
-						        $('.response_step1').html('<div class="panel-footer"><div class="alert alert-success" style="margin-bottom:0px;"><b><?= $Lang->get('SUCCESS') ?> : </b>'+data2[0]+'</div></div>');
+						        $('.response_step1').html('<div class="panel-footer"><div class="alert alert-success" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__SUCCESS') ?> : </b>'+data2[0]+'</div></div>');
 						        $('#script_step1').remove();
 						    } else if(data.indexOf('false') != -1) {
-						    	$('.response_step1').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('ERROR') ?> : </b>'+data2[0]+'</div></div>');
+						    	$('.response_step1').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b>'+data2[0]+'</div></div>');
 						    } else {
-						    	$('.response_step1').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('ERROR') ?> : </b><?= $Lang->get('ERROR_WHEN_AJAX') ?></div></div>');
+						    	$('.response_step1').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b><?= $Lang->get('ERROR_WHEN_AJAX') ?></div></div>');
 						    }
 						});
 					});
@@ -164,12 +164,12 @@ $this->Configuration = new ConfigurationComponent;
 						    	$('#step4').removeClass('disabled');
 						    	$('.btn-step4').removeClass('disabled');
 						    	$('.input-step3').prop('disabled', true);
-						        $('.response_step3').html('<div class="panel-footer"><div class="alert alert-success" style="margin-bottom:0px;"><b><?= $Lang->get('SUCCESS') ?> : </b>'+data2[0]+'</div></div>');
+						        $('.response_step3').html('<div class="panel-footer"><div class="alert alert-success" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__SUCCESS') ?> : </b>'+data2[0]+'</div></div>');
 						        $('#script_step3').remove();
 						    } else if(data.indexOf('false') != -1) {
-						    	$('.response_step3').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('ERROR') ?> : </b>'+data2[0]+'</div></div>');
+						    	$('.response_step3').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b>'+data2[0]+'</div></div>');
 						    } else {
-						    	$('.response_step3').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('ERROR') ?> : </b><?= $Lang->get('ERROR_WHEN_AJAX') ?></div></div>');
+						    	$('.response_step3').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b><?= $Lang->get('ERROR_WHEN_AJAX') ?></div></div>');
 						    }
 						});
 					});
@@ -194,7 +194,7 @@ $this->Configuration = new ConfigurationComponent;
 		 	<div class="modal-dialog">
 		    	<div class="modal-content">
 		      		<div class="modal-header">
-		        		<button type="button" class="close" data-dismiss="modal" aria-label="<?= $Lang->get('CLOSE') ?>"><span aria-hidden="true">×</span></button>
+		        		<button type="button" class="close" data-dismiss="modal" aria-label="<?= $Lang->get('GLOBAL__CLOSE') ?>"><span aria-hidden="true">×</span></button>
 		        		<h4 class="modal-title" id="myModalLabel"><?= $Lang->get('REWARDS') ?></h4>
 		      		</div>
 		      		<div class="modal-body">
@@ -218,7 +218,7 @@ $this->Configuration = new ConfigurationComponent;
 				        </table>
 		            </div>
 		      		<div class="modal-footer">
-		        		<button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('CLOSE') ?></button>
+		        		<button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('GLOBAL__CLOSE') ?></button>
 		     		</div>
 		    	</div>
 		  	</div>
@@ -229,7 +229,7 @@ $this->Configuration = new ConfigurationComponent;
 		 	<div class="modal-dialog">
 		    	<div class="modal-content">
 		      		<div class="modal-header">
-		        		<button type="button" class="close" data-dismiss="modal" aria-label="<?= $Lang->get('CLOSE') ?>"><span aria-hidden="true">×</span></button>
+		        		<button type="button" class="close" data-dismiss="modal" aria-label="<?= $Lang->get('GLOBAL__CLOSE') ?>"><span aria-hidden="true">×</span></button>
 		        		<h4 class="modal-title" id="myModalLabel"><?= $Lang->get('RANKING') ?></h4>
 		      		</div>
 		      		<div class="modal-body">
@@ -257,7 +257,7 @@ $this->Configuration = new ConfigurationComponent;
 				        </table>
 		            </div>
 		      		<div class="modal-footer">
-		        		<button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('CLOSE') ?></button>
+		        		<button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('GLOBAL__CLOSE') ?></button>
 		     		</div>
 		    	</div>
 		  	</div>
@@ -277,12 +277,12 @@ $this->Configuration = new ConfigurationComponent;
 			    	$('.step4').css("opacity", "0.7");
 			    	$('.step4 .response_step4').css("opacity", "");
 			    	$('.btn-step4').addClass('disabled');
-			        $('.response_step4').html('<div class="panel-footer"><div class="alert alert-success" style="margin-bottom:0px;"><b><?= $Lang->get('SUCCESS') ?> : </b>'+data2[0]+'</div></div>');
+			        $('.response_step4').html('<div class="panel-footer"><div class="alert alert-success" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__SUCCESS') ?> : </b>'+data2[0]+'</div></div>');
 			        $('#script_step4').remove();
 			    } else if(data.indexOf('false') != -1) {
-			    	$('.response_step4').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('ERROR') ?> : </b>'+data2[0]+'</div></div>');
+			    	$('.response_step4').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b>'+data2[0]+'</div></div>');
 			    } else {
-			    	$('.response_step4').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('ERROR') ?> : </b><?= $Lang->get('ERROR_WHEN_AJAX') ?></div></div>');
+			    	$('.response_step4').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b><?= $Lang->get('ERROR_WHEN_AJAX') ?></div></div>');
 			    }
 			});
 	    });

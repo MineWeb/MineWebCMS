@@ -119,7 +119,7 @@ class ShopController extends ShopAppController {
 			echo $element_content;
 
 		} else {
-			echo $this->Lang->get('NEED_CONNECT'); // si il n'est pas connecté
+			echo $this->Lang->get('USER__ERROR_MUST_BE_LOGGED'); // si il n'est pas connecté
 		}
 	}
 
@@ -189,15 +189,15 @@ class ShopController extends ShopAppController {
 					    }
 					}
 
-					echo '<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('CLOSE').'</span></button><strong>'.$this->Lang->get('SUCCESS').' :</strong> '.$this->Lang->get('BUY_SUCCESS').'</div>';
+					echo '<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('GLOBAL__CLOSE').'</span></button><strong>'.$this->Lang->get('GLOBAL__SUCCESS').' :</strong> '.$this->Lang->get('BUY_SUCCESS').'</div>';
 				} else {
-					echo '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('CLOSE').'</span></button><strong>'.$this->Lang->get('ERROR').' :</strong> '.$this->Lang->get('NO_ENOUGH_MONEY').'</div>';
+					echo '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('GLOBAL__CLOSE').'</span></button><strong>'.$this->Lang->get('GLOBAL__ERROR').' :</strong> '.$this->Lang->get('NO_ENOUGH_MONEY').'</div>';
 				}
 			} else {
-					echo '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('CLOSE').'</span></button><strong>'.$this->Lang->get('ERROR').' :</strong> '.$this->Lang->get('NEED_SERVER_ON').'</div>';
+					echo '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('GLOBAL__CLOSE').'</span></button><strong>'.$this->Lang->get('GLOBAL__ERROR').' :</strong> '.$this->Lang->get('SERVER__MUST_BE_ON').'</div>';
 			}
 		} else {
-			echo '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('CLOSE').'</span></button><strong>'.$this->Lang->get('ERROR').' :</strong> '.$this->Lang->get('NEED_CONNECT').'</div>';
+			echo '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('GLOBAL__CLOSE').'</span></button><strong>'.$this->Lang->get('GLOBAL__ERROR').' :</strong> '.$this->Lang->get('USER__ERROR_MUST_BE_LOGGED').'</div>';
 		}
 	}
 
@@ -331,7 +331,7 @@ class ShopController extends ShopAppController {
 					$this->Session->setFlash($this->Lang->get('ITEM_SUCCESS_EDIT'), 'default.success');
 					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('ITEM_SUCCESS_EDIT')));
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
@@ -393,7 +393,7 @@ class ShopController extends ShopAppController {
 					$this->Session->setFlash($this->Lang->get('ITEM_SUCCESS_ADD'), 'default.success');
 					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('ITEM_SUCCESS_ADD')));
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
@@ -420,7 +420,7 @@ class ShopController extends ShopAppController {
 					$this->Session->setFlash($this->Lang->get('CATEGORY_SUCCESS_ADD'), 'default.success');
 					$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 				} else {
-					$this->Session->setFlash($this->Lang->get('COMPLETE_ALL_FIELDS'), 'default.error');
+					$this->Session->setFlash($this->Lang->get('ERROR__FILL_ALL_FIELDS'), 'default.error');
 				}
 			}
 		} else {
@@ -632,7 +632,7 @@ class ShopController extends ShopAppController {
 						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_NUMBER')));
 					}
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
@@ -722,10 +722,10 @@ class ShopController extends ShopAppController {
 						$this->Session->setFlash($this->Lang->get('ADD_PAYPAL_OFFER_SUCCESS'), 'default.success');
 						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ADD_PAYPAL_OFFER_SUCCESS')));
 					} else {
-						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('EMAIL_NOT_VALIDATE')));
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID')));
 					}
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
@@ -755,10 +755,10 @@ class ShopController extends ShopAppController {
 								$this->Session->setFlash($this->Lang->get('EDIT_PAYPAL_OFFER_SUCCESS'), 'default.success');
 								echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('EDIT_PAYPAL_OFFER_SUCCESS')));
 							} else {
-								echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('EMAIL_NOT_VALIDATE')));
+								echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID')));
 							}
 						} else {
-							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 						}
 					} else {
 						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
@@ -790,7 +790,7 @@ class ShopController extends ShopAppController {
 					$this->Session->setFlash($this->Lang->get('ADD_STARPASS_OFFER_SUCCESS'), 'default.success');
 					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('ADD_STARPASS_OFFER_SUCCESS')));
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
@@ -817,7 +817,7 @@ class ShopController extends ShopAppController {
 						$this->Session->setFlash($this->Lang->get('EDIT_STARPASS_OFFER_SUCCESS'), 'default.success');
 						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('EDIT_STARPASS_OFFER_SUCCESS')));
 					} else {
-						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 					}
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
@@ -884,7 +884,7 @@ class ShopController extends ShopAppController {
 					$this->Session->setFlash($this->Lang->get('VOUCHER_SUCCESS_ADD'), 'default.success');
 					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('VOUCHER_SUCCESS_ADD')));
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));

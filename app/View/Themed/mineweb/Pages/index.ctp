@@ -10,7 +10,7 @@
 
             <p style="color:black;"><?= $page['content'] ?></p>
             <br>
-            <p class="created"><?= $Lang->get('LAST_UPDATE') ?> : <?= $Lang->date($page['updated']) ?></p>
+            <p class="created"><?= $Lang->get('GLOBAL__UPDATED') ?> : <?= $Lang->date($page['updated']) ?></p>
             <div class="clearfix"></div>
         </div>
     </div>

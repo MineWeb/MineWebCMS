@@ -90,7 +90,7 @@ class UserController extends AppController {
 						}
 
 						// on dis que c'est bon
-						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_REGISTER')));
+						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_SUCCESS')));
 
 					} else { // si c'est pas bon, on envoie le message d'erreur retourné par l'étape de validation
 						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get($isValid)));
@@ -99,10 +99,10 @@ class UserController extends AppController {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('INVALID_CAPTCHA')));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 			}
 		} else {
-			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('PAGE_BAD_EXECUTED')));
+			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
 		}
 	}
 
@@ -120,17 +120,17 @@ class UserController extends AppController {
 
 					$this->getEventManager()->dispatch(new CakeEvent('afterLogin', $this));
 
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_LOGIN')));
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN')));
 
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get($login)));
 				}
 
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 			}
 		} else {
-			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('PAGE_BAD_EXECUTED')));
+			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
 		}
 	}
 
@@ -192,13 +192,13 @@ class UserController extends AppController {
 						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('UNKNONWN_USER')));
 					}
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('EMAIL_NOT_VALIDATE')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID')));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 			}
 		} else {
-			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('PAGE_BAD_EXECUTED')));
+			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
 		}
 	}
 
@@ -218,10 +218,10 @@ class UserController extends AppController {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get($reset)));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 			}
 		} else {
-			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('PAGE_BAD_EXECUTED')));
+			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
 		}
 	}
 
@@ -384,16 +384,16 @@ class UserController extends AppController {
 						$this->User->setKey('password', $password);
 						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('PASSWORD_CHANGE_SUCCESS')));
 					} else {
-						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('PASSWORD_NOT_SAME')));
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_PASSWORDS_NOT_SAME')));
 					}
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
 			}
 		} else {
-			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NEED_CONNECT')));
+			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED')));
 		}
 	}
 
@@ -407,13 +407,13 @@ class UserController extends AppController {
 							$this->User->setKey('email', $this->request->data['email']);
 							echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('EMAIL_CHANGE_SUCCESS')));
 						} else {
-							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('EMAIL_NOT_VALIDATE')));
+							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID')));
 						}
 					} else {
 						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('EMAIL_NOT_SAME')));
 					}
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
@@ -448,13 +448,13 @@ class UserController extends AppController {
 						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER_NOT_EXIST')));
 					}
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
 			}
 		} else {
-			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NEED_CONNECT')));
+			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED')));
 		}
 	}
 
@@ -639,7 +639,7 @@ class UserController extends AppController {
 					$this->Session->setFlash($this->Lang->get('USER_SUCCESS_EDIT'), 'default.success');
 					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER_SUCCESS_EDIT')));
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST' ,$language)));

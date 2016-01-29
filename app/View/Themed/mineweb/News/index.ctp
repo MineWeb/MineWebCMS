@@ -60,7 +60,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="<?= $Lang->get('CLOSE') ?>"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="<?= $Lang->get('GLOBAL__CLOSE') ?>"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('NEWS__COMMENT_TITLE') ?></h4>
         </div>
         <div class="modal-body">
@@ -74,7 +74,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('CLOSE') ?></button>
+          <button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('GLOBAL__CLOSE') ?></button>
           <button type="submit" class="btn btn-primary pull-right"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
           </form>
         </div>

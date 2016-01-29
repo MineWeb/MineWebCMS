@@ -46,7 +46,7 @@
 <div class="mini-navbar mini-navbar-dark hidden-xs">
   <div class="container">
     <div class="col-sm-12">
-      <?= ($banner_server) ? '<p class="text-center">'.$banner_server.'</p>' : '<p class="text-center">'.$Lang->get('SERVER_OFF').'</p>' ?>
+      <?= ($banner_server) ? '<p class="text-center">'.$banner_server.'</p>' : '<p class="text-center">'.$Lang->get('->get('SERVER__STATUS_OFF')').'</p>' ?>
     </div>
   </div>
 </div>

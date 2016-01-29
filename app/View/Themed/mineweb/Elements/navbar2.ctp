@@ -78,7 +78,7 @@ $this->EyPlugin = new EyPluginComponent;
 
                             <li class="divider"></li>
 
-                            <a class="btn btn-primary btn-block" href="<?= $this->Html->url(array('controller' => 'profile', 'action' => 'index', 'plugin' => null)) ?>"><?= $Lang->get('PROFILE') ?></a>
+                            <a class="btn btn-primary btn-block" href="<?= $this->Html->url(array('controller' => 'profile', 'action' => 'index', 'plugin' => null)) ?>"><?= $Lang->get('USER__PROFILE') ?></a>
 
                             <?php if($Permissions->can('ACCESS_DASHBOARD')) { ?>
                               <a style="color:red;" class="btn btn-primary btn-block" href="<?= $this->Html->url(array('controller' => '', 'action' => 'index', 'plugin' => 'admin')) ?>"><?= $Lang->get('ADMIN_PANEL') ?></a>
@@ -86,10 +86,10 @@ $this->EyPlugin = new EyPluginComponent;
                               <a class="btn btn-primary btn-block" href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'plugin' => 'shop')) ?>"><?= $Lang->get('ADD_MONEY') ?></a>
                             <?php } ?>
 
-                            <a class="btn btn-primary btn-block" href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'logout', 'plugin' => null)) ?>"><?= $Lang->get('LOGOUT') ?></a>
+                            <a class="btn btn-primary btn-block" href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'logout', 'plugin' => null)) ?>"><?= $Lang->get('USER__LOGOUT') ?></a>
                           <?php } else { ?>
-                            <a class="btn btn-primary btn-block" href="#" data-toggle="modal" data-target="#login"><?= $Lang->get('LOGIN') ?></a>
-                            <a class="btn btn-primary btn-block" href="#" data-toggle="modal" data-target="#register"><?= $Lang->get('REGISTER') ?></a>
+                            <a class="btn btn-primary btn-block" href="#" data-toggle="modal" data-target="#login"><?= $Lang->get('USER__LOGIN') ?></a>
+                            <a class="btn btn-primary btn-block" href="#" data-toggle="modal" data-target="#register"><?= $Lang->get('USER__REGISTER') ?></a>
                           <?php } ?>
                         </ul>
                         </div>

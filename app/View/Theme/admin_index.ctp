@@ -1,4 +1,4 @@
-<?php 
+<?php
 $this->Configuration = new ConfigurationComponent;
 ?>
 <section class="content">
@@ -9,7 +9,7 @@ $this->Configuration = new ConfigurationComponent;
           <h3 class="box-title"><?= $Lang->get('THEME_LIST') ?></h3>
         </div>
         <div class="box-body">
-        
+
           <table class="table table-bordered">
             <thead>
                 <tr>
@@ -83,7 +83,7 @@ $this->Configuration = new ConfigurationComponent;
           <h3 class="box-title"><?= $Lang->get('FREE_THEMES_AVAILABLE') ?></h3>
         </div>
         <div class="box-body">
-        
+
           <?php if(!empty($free_themes_available)) { ?>
           <table class="table table-bordered">
             <thead>
@@ -108,7 +108,7 @@ $this->Configuration = new ConfigurationComponent;
             </tbody>
           </table>
         <?php } else { ?>
-          <div class="alert alert-danger"><b><?= $Lang->get('ERROR') ?> : </b><?= $Lang->get('NONE_THEME_AVAILABLE') ?></div>
+          <div class="alert alert-danger"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b><?= $Lang->get('NONE_THEME_AVAILABLE') ?></div>
         <?php } ?>
 
         </div>

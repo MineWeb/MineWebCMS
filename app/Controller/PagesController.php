@@ -268,7 +268,7 @@ class PagesController extends AppController {
 					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_PAGE_ADD')));
 					$this->Session->setFlash($this->Lang->get('SUCCESS_PAGE_ADD'), 'default.success');
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST' ,$language)));
@@ -339,7 +339,7 @@ class PagesController extends AppController {
 					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_PAGE_EDIT')));
 					$this->Session->setFlash($this->Lang->get('SUCCESS_PAGE_EDIT'), 'default.success');
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST' ,$language)));

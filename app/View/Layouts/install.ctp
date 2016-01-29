@@ -43,16 +43,16 @@
 		<?php if($this->params['action'] == 'end') { ?>
 		<ul class="nav nav-tabs nav-pills nav-stacked col-xs-6 col-sm-3" style="max-width: 300px;">
 
-			<li role="presentation"><a title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_1') ?></a></li>
-			<li role="presentation"><a title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_2') ?></a></li>
-			<li role="presentation" class="active"><a title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_4') ?></a></li>
+			<li role="presentation"><a title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('INSTALL__STEP_1_TITLE') ?></a></li>
+			<li role="presentation"><a title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('INSTALL__STEP_2_TITLE') ?></a></li>
+			<li role="presentation" class="active"><a title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('INSTALL__STEP_3_TITLE') ?></a></li>
 		</ul>
 		<?php } else { ?>
 		<div id="tabsleft" class="tabbable tabs-left">
 			<ul class="nav nav-tabs nav-pills nav-stacked col-xs-6 col-sm-3" style="max-width: 300px;">
-				<li role="presentation" class="active"><a href="#tabsleft-tab1" data-toggle="tab" title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_1') ?></a></li>
-				<li role="presentation" class=""><a href="#tabsleft-tab2" data-toggle="tab" data-toggle="tab" title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_2') ?></a></li>
-				<li role="presentation" class=""><a href="#tabsleft-tab3" data-toggle="tab" title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('STEP_4') ?></a></li>
+				<li role="presentation" class="active"><a href="#tabsleft-tab1" data-toggle="tab" title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('INSTALL__STEP_1_TITLE') ?></a></li>
+				<li role="presentation" class=""><a href="#tabsleft-tab2" data-toggle="tab" data-toggle="tab" title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('INSTALL__STEP_2_TITLE') ?></a></li>
+				<li role="presentation" class=""><a href="#tabsleft-tab3" data-toggle="tab" title="<?= $Lang->get('CANT_SKIP_A_STEP') ?>"><?= $Lang->get('INSTALL__STEP_3_TITLE') ?></a></li>
 			</ul>
 		<?php } ?>
 
@@ -93,21 +93,21 @@
 							 	success : function(data){
 		              data2 = data.split("|");
 							  	if(data.indexOf('true') != -1) {
-					          		$('.ajax-msg-step1').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+					          		$('.ajax-msg-step1').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
 					          		step1success = true;
 					          		return true;
 					          	} else if(data.indexOf('false') != -1) {
-					            	$('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+					            	$('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
 					            	step1success = false;
 					            	return false;
 						        } else {
-							    	$('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+							    	$('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
 							    	step1success = false;
 							    	return false;
 							    }
               	},
               	error : function(data){
-              		$('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+              		$('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
     					    var step1success = false;
     					    return false;
               	},
@@ -138,21 +138,21 @@
 							 	success : function(data){
 		              data2 = data.split("|");
 							  	if(data.indexOf('true') != -1) {
-					          		$('.ajax-msg-step3').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+					          		$('.ajax-msg-step3').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
 					          		step3Success = true;
 					          		return true;
 					          	} else if(data.indexOf('false') != -1) {
-					            	$('.ajax-msg-step3').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+					            	$('.ajax-msg-step3').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
 					            	step3Success = false;
 					            	return false;
 						        } else {
-							    	$('.ajax-msg-step3').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+							    	$('.ajax-msg-step3').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
 							    	step3Success = false;
 							    	return false;
 							    }
 		            },
               	error : function(data){
-              		$('.ajax-msg-step3').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+              		$('.ajax-msg-step3').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
 								  var step3Success = false;
 								  return false;
 		            },

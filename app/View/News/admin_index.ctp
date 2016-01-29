@@ -17,8 +17,8 @@
                   <th><?= $Lang->get('GLOBAL__BY') ?></th>
                   <th><?= $Lang->get('PUBLISHED') ?></th>
                   <th><?= $Lang->get('NEWS__POSTED_ON') ?></th>
-                  <th><?= $Lang->get('NUMBER_OF_COMMENTS') ?></th>
-                  <th><?= $Lang->get('NUMBER_OF_LIKES') ?></th>
+                  <th><?= $Lang->get('NEWS__COMMENTS_NBR') ?></th>
+                  <th><?= $Lang->get('NEWS__LIKES_NBR') ?></th>
                   <th><?= $Lang->get('ACTION') ?></th>
                 </tr>
               </thead>

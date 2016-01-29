@@ -114,7 +114,7 @@ class SliderController extends AppController {
 					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_SLIDER_EDIT')));
 					$this->Session->setFlash($this->Lang->get('SUCCESS_SLIDER_EDIT'), 'default.success');
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
@@ -172,7 +172,7 @@ class SliderController extends AppController {
 					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_SLIDER_ADD')));
 					$this->Session->setFlash($this->Lang->get('SUCCESS_SLIDER_ADD'), 'default.success');
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST' ,$language)));

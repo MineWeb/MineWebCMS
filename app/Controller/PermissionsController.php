@@ -73,7 +73,7 @@ class PermissionsController extends AppController {
 					echo $this->Lang->get('SUCCESS_ADD_RANK').'|true';
 
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
 				}
 
 			} else {

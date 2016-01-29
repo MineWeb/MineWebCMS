@@ -95,7 +95,7 @@ $this->EyPlugin = new EyPluginComponent;
           </div>
         </div>
         <div class="box-body">
-          <div class="alert alert-info"><b><?= $Lang->get('INFORMATION') ?> :</b> <?= $Lang->get('VISITS_LAST_DAYS') ?></div>
+          <div class="alert alert-info"><b><?= $Lang->get('GLOBAL__INFORMATIONS') ?> :</b> <?= $Lang->get('VISITS_LAST_DAYS') ?></div>
           <div class="chart">
             <canvas id="visitsChart" style="height: 180px;"></canvas>
             <script>
@@ -176,7 +176,7 @@ $this->EyPlugin = new EyPluginComponent;
         <div class="box-body">
           <?php if($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
             <?php if(count($items_solded) >= 5) { ?>
-              <div class="alert alert-warning"><b><?= $Lang->get('INFORMATION') ?> :</b> <?= $Lang->get('BIGGEST_SELLERS') ?></div>
+              <div class="alert alert-warning"><b><?= $Lang->get('GLOBAL__INFORMATIONS') ?> :</b> <?= $Lang->get('BIGGEST_SELLERS') ?></div>
               <div class="row">
                 <div class="col-md-8">
                   <div class="chart-responsive">
@@ -254,7 +254,7 @@ $this->EyPlugin = new EyPluginComponent;
                 </div>
               </div>
             <?php } else { ?>
-              <div class="alert alert-danger"><i class="icon-shopping-cart"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('NEED_MORE_5_ITEMS') ?></div>
+              <div class="alert alert-danger"><i class="icon-shopping-cart"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('NEED_MORE_5_ITEMS') ?></div>
             <?php } ?>
           <?php } else {
             echo $Lang->get('PLUGIN_SHOP_NOT_INSTALLED');

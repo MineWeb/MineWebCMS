@@ -190,10 +190,10 @@ class NavbarController extends AppController {
 						$this->Session->setFlash($this->Lang->get('SUCCESS_NAV_ADD'), 'default.success');
 
 					} else {
-						echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+						echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
 					}
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
 				}
 			} else {
 				echo $this->Lang->get('NOT_POST' ,$language).'|false';
@@ -285,10 +285,10 @@ class NavbarController extends AppController {
 						$this->Session->setFlash($this->Lang->get('SUCCESS_NAV_ADD'), 'default.success');
 
 					} else {
-						echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+						echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
 					}
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
 				}
 			} else {
 				echo $this->Lang->get('NOT_POST' ,$language).'|false';

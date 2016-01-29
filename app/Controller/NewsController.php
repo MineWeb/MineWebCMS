@@ -97,13 +97,13 @@ class NewsController extends AppController {
 
 					echo json_encode(array('statut' => true, 'msg' => 'success'));
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NEED_CONNECT')));
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED')));
 			}
 		} else {
-			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('PAGE_BAD_EXECUTED')));
+			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
 		}
 	}
 
@@ -244,7 +244,7 @@ class NewsController extends AppController {
 					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_NEWS_ADD')));
 					$this->Session->setFlash($this->Lang->get('SUCCESS_NEWS_ADD'), 'default.success');
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
@@ -297,7 +297,7 @@ class NewsController extends AppController {
 				echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_NEWS_EDIT')));
 					$this->Session->setFlash($this->Lang->get('SUCCESS_NEWS_EDIT'), 'default.success');
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));

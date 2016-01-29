@@ -5,7 +5,7 @@ $this->Configuration = new ConfigurationComponent;
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6">
-				<h1><?= $Lang->get('PROFILE') ?></h1>
+				<h1><?= $Lang->get('USER__PROFILE') ?></h1>
 			</div>
 		</div>
 		<div class="panel panel-default">
@@ -15,19 +15,19 @@ $this->Configuration = new ConfigurationComponent;
 			  	if($search_psc_msg != false AND !empty($search_psc_msg)) {
 			  		foreach ($search_psc_msg as $key => $value) {
 			  			if($value['PaysafecardMessage']['type'] == 1) {
-			  				echo '<div class="alert alert-success"><b>'.$Lang->get('SUCCESS').' :</b> '.$Lang->get('YOUR_PSC_OF').' '.$value['PaysafecardMessage']['amount'].'€ '.$Lang->get('IS_VALID_GAIN').' : '.$value['PaysafecardMessage']['added_points'].' '.$this->Configuration->get_money_name().'.</div>';
+			  				echo '<div class="alert alert-success"><b>'.$Lang->get('GLOBAL__SUCCESS').' :</b> '.$Lang->get('YOUR_PSC_OF').' '.$value['PaysafecardMessage']['amount'].'€ '.$Lang->get('IS_VALID_GAIN').' : '.$value['PaysafecardMessage']['added_points'].' '.$this->Configuration->get_money_name().'.</div>';
 			  			} elseif ($value['PaysafecardMessage']['type'] == 0) {
-			  				echo '<div class="alert alert-danger"><b>'.$Lang->get('ERROR').' :</b> '.$Lang->get('YOUR_PSC_OF').' '.$value['PaysafecardMessage']['amount'].'€ '.$Lang->get('IS_INVALID').'</div>';
+			  				echo '<div class="alert alert-danger"><b>'.$Lang->get('GLOBAL__ERROR').' :</b> '.$Lang->get('YOUR_PSC_OF').' '.$value['PaysafecardMessage']['amount'].'€ '.$Lang->get('IS_INVALID').'</div>';
 			  			}
 			  		}
 			  	}
 			  	?>
 
 			  	<div class="section">
-					<p><b><?= $Lang->get('PSEUDO') ?> :</b> <?= $user['pseudo'] ?></p>
+					<p><b><?= $Lang->get('USER__USERNAME') ?> :</b> <?= $user['pseudo'] ?></p>
 				</div>
 				<div class="section">
-					<p><b><?= $Lang->get('EMAIL') ?> :</b> <span id="email"><?= $user['email'] ?></span></p>
+					<p><b><?= $Lang->get('USER__EMAIL') ?> :</b> <span id="email"><?= $user['email'] ?></span></p>
 				</div>
 				<div class="section">
 					<p>
@@ -59,10 +59,10 @@ $this->Configuration = new ConfigurationComponent;
 
 				<form method="post" class="form-inline" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'change_pw')) ?>">
 					 <div class="form-group">
-						<input type="password" class="form-control" name="password" placeholder="<?= $Lang->get('PASSWORD_CONFIRMATION') ?>">
+						<input type="password" class="form-control" name="password" placeholder="<?= $Lang->get('USER__PASSWORD_CONFIRM') ?>">
 					</div>
 					 <div class="form-group">
-						<input type="password" class="form-control" name="password_confirmation" placeholder="<?= $Lang->get('PASSWORD') ?>">
+						<input type="password" class="form-control" name="password_confirmation" placeholder="<?= $Lang->get('USER__PASSWORD') ?>">
 					</div>
 
 					 <div class="form-group">
@@ -80,7 +80,7 @@ $this->Configuration = new ConfigurationComponent;
 							<input type="email" class="form-control" name="email" placeholder="<?= $Lang->get('EMAIL_CONFIRMATION') ?>">
 						</div>
 						<div class="form-group">
-							<input type="email" class="form-control" name="email_confirmation" placeholder="<?= $Lang->get('EMAIL') ?>">
+							<input type="email" class="form-control" name="email_confirmation" placeholder="<?= $Lang->get('USER__EMAIL') ?>">
 						</div>
 
 						<div class="form-group">
@@ -220,11 +220,11 @@ $this->Configuration = new ConfigurationComponent;
 			$.post("<?= $this->Html->url(array('controller' => 'api', 'action' => 'enable_mineguard', 'admin' => false)) ?>", {}, function(data) {
 	          	data2 = data.split("|");
 			  	if(data.indexOf('true') != -1) {
-	          		$('.ajax-msg-mineguard').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+	          		$('.ajax-msg-mineguard').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
 	          	} else if(data.indexOf('false') != -1) {
-	            	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+	            	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
 		        } else {
-			    	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+			    	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
 			    }
 	        });
 	        return false;
@@ -234,13 +234,13 @@ $this->Configuration = new ConfigurationComponent;
 			$.post("<?= $this->Html->url(array('controller' => 'api', 'action' => 'disable_mineguard', 'admin' => false)) ?>", {}, function(data) {
 	          	data2 = data.split("|");
 			  	if(data.indexOf('true') != -1) {
-	          		$('.ajax-msg-mineguard').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+	          		$('.ajax-msg-mineguard').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
 	          		var table_ip = $('#table-ip').html();
 	          		$('#table-mineguard').html(table_ip+'<tr><th>'+ip+'</th></tr>');
 	          	} else if(data.indexOf('false') != -1) {
-	            	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+	            	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
 		        } else {
-			    	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+			    	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
 			    }
 	        });
 	        return false;
@@ -254,13 +254,13 @@ $this->Configuration = new ConfigurationComponent;
 	        $.post("<?= $this->Html->url(array('controller' => 'api', 'action' => 'add_ip', 'admin' => false)) ?>", { ip : ip }, function(data) {
 	          	data2 = data.split("|");
 			  	if(data.indexOf('true') != -1) {
-	          		$('.ajax-msg-ip').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+	          		$('.ajax-msg-ip').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
 	          		var table_ip = $('#table-ip').html();
 	          		$('#table-ip').html(table_ip+'<tr><th>'+ip+'</th></tr>');
 	          	} else if(data.indexOf('false') != -1) {
-	            	$('.ajax-msg-ip').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+	            	$('.ajax-msg-ip').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
 		        } else {
-			    	$('.ajax-msg-ip').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+			    	$('.ajax-msg-ip').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
 			    }
 	        });
 	        return false;
@@ -274,9 +274,9 @@ $this->Configuration = new ConfigurationComponent;
 			  	if(data.indexOf('true') != -1) {
 	          		$('#'+ip).fadeOut(500);
 	          	} else if(data.indexOf('false') != -1) {
-	            	$('.ajax-msg-ip').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+	            	$('.ajax-msg-ip').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
 		        } else {
-			    	$('.ajax-msg-ip').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+			    	$('.ajax-msg-ip').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
 			    }
 	        });
 	        return false;

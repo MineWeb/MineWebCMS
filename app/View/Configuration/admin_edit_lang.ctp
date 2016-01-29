@@ -20,10 +20,10 @@
                   <?php } else { ?>
                     <textarea name="<?= $key ?>" class="form-control" cols="30" rows="10"><?= $value ?></textarea>
                   <?php } ?>
-                  <?php if($key == "FORMATE_DATE") { ?>
+                  <?php if($key == "GLOBAL__FORMAT_DATE") { ?>
                     <small><?= $Lang->get('AVAILABLE_VARIABLES') ?> : {%day}, {%month}, {%year}, {%hour|24}, {%hour|12}, {%minutes}</small>
                   <?php } ?>
-                  <?php if($key == "BANNER_SERVER") { ?>
+                  <?php if($key == "SERVER__STATUS_MESSAGE") { ?>
                     <small><?= $Lang->get('AVAILABLE_VARIABLES') ?> : {MOTD}, {VERSION}, {ONLINE}, {ONLINE_LIMIT}</small>
                   <?php } ?>
                   <?php if($key == "VOTE_SUCCESS_SERVER") { ?>

@@ -9,7 +9,7 @@ class InstallController extends AppController {
 		$this->Security->csrfUseOnce = false;
 
 		if(file_exists(ROOT.DS.'config'.DS.'installed.txt')) {
-			echo $this->Lang->get('ALREADY_INSTALL');
+			echo $this->Lang->get('INSTALL__ALREADY_INSTALLED');
 			$url = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 			$url = substr($url, 0, -7);
 			echo ' <a href="http://'.$url.'">'.$this->Lang->get('RETURN_TO_HOME').'</a>';
@@ -94,7 +94,7 @@ WCqkx22behAGZq6rhwIDAQAB
 					}
 
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
 				}
 
 			} else {
@@ -120,21 +120,21 @@ WCqkx22behAGZq6rhwIDAQAB
 							$this->loadModel('User');
 							$this->User->set($this->request->data);
 							$this->User->save();
-							echo $this->Lang->get('SUCCESS_REGISTER').'|true';
+							echo $this->Lang->get('USER__REGISTER_SUCCESS').'|true';
 						} else {
-							echo $this->Lang->get('EMAIL_NOT_VALIDATE').'|false';
+							echo $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID').'|false';
 						}
 					} else {
-						echo $this->Lang->get('PASSWORD_NOT_SAME').'|false';
+						echo $this->Lang->get('USER__ERROR_PASSWORDS_NOT_SAME').'|false';
 					}
 				} else {
-					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+					echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
 				}
 			} else {
 				echo $this->Lang->get('NOT_POST').'|false';
 			}
 		} else {
-			echo $this->Lang->get('ALREADY_INSTALL').'|false';
+			echo $this->Lang->get('INSTALL__ALREADY_INSTALLED').'|false';
 		}
 	}
 

@@ -60,10 +60,10 @@
     var DISLIKE_URL = "<?= $this->Html->url(array('controller' => 'news', 'action' => 'dislike')) ?>";
 
     var LOADING_MSG = "<?= $Lang->get('LOADING') ?>";
-    var ERROR_MSG = "<?= $Lang->get('ERROR') ?>";
+    var ERROR_MSG = "<?= $Lang->get('GLOBAL__ERROR') ?>";
     var INTERNAL_ERROR_MSG = "<?= $Lang->get('ERROR_WHEN_AJAX') ?>";
     var FORBIDDEN_ERROR_MSG = "<?= $Lang->get('ERROR__FORBIDDEN') ?>"
-    var SUCCESS_MSG = "<?= $Lang->get('SUCCESS') ?>";
+    var SUCCESS_MSG = "<?= $Lang->get('GLOBAL__SUCCESS') ?>";
 
     var CSRF_TOKEN = "<?= $csrfToken ?>";
     </script>

@@ -117,7 +117,7 @@ class HomeController extends AppController {
                     echo 'NOT_PERMISSION';
                 }
             } else {
-                echo $this->Lang->get('COMPLETE_ALL_FIELDS');
+                echo $this->Lang->get('ERROR__FILL_ALL_FIELDS');
             }
         } else {
             echo 'NOT_POST';

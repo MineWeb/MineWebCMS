@@ -19,7 +19,7 @@ $this->Configuration = new ConfigurationComponent;
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('EMAIL') ?></label>
+              <label><?= $Lang->get('USER__EMAIL') ?></label>
               <input name="email" class="form-control" type="email">
             </div>
 

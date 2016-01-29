@@ -1,4 +1,4 @@
 <?php $Lang = new LangComponent;  ?>
 <div class="alert alert-danger alert-dismissible" role="alert">
-  <strong><?= $Lang->get('ERROR') ?> :</strong> <?php echo h($message); ?>
+  <strong><?= $Lang->get('GLOBAL__ERROR') ?> :</strong> <?php echo h($message); ?>
 </div>

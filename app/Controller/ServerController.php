@@ -26,7 +26,7 @@ class ServerController extends AppController {
 				}
 			}
 
-			$bannerMsg = $this->Lang->get('BANNER_SERVER');
+			$bannerMsg = $this->Lang->get('SERVER__STATUS_MESSAGE');
 
 			$this->set(compact('servers', 'bannerMsg'));
 
@@ -46,7 +46,7 @@ class ServerController extends AppController {
 
 			if($this->request->is('ajax')) {
 
-				$this->Lang->set('BANNER_SERVER', $this->request->data['msg']);
+				$this->Lang->set('SERVER__STATUS_MESSAGE', $this->request->data['msg']);
 
 				echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SERVER__EDIT_BANNER_MSG_SUCCESS')));
 
@@ -127,7 +127,7 @@ class ServerController extends AppController {
 			if($id) {
 				$this->loadModel('Server');
 				if($this->Server->delete($id)) {
-					$this->Session->setFlash($this->Lang->get('SUCCESS_DELETE_SERVER'), 'default.success');
+					$this->Session->setFlash($this->Lang->get('SERVER__DELETE_SERVER_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'server', 'action' => 'link', 'admin' => true));
 				} else {
 					$this->Session->setFlash($this->Lang->get('ERROR_WHEN_AJAX'), 'default.error');
@@ -157,7 +157,7 @@ class ServerController extends AppController {
 						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('INVALID_TIMEOUT')));
 					}
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST' ,$language)));
@@ -218,7 +218,7 @@ class ServerController extends AppController {
 					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_CONNECTION_SERVER')));
 
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('COMPLETE_ALL_FIELDS')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));

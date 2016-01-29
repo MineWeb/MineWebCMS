@@ -11,7 +11,7 @@
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-					<div class="alert alert-danger"><b><?= $Lang->get('ERROR') ?> : </b><?= $Lang->get('LICENSE_ERROR__'.$message) ?></div>
+					<div class="alert alert-danger"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b><?= $Lang->get('LICENSE_ERROR__'.$message) ?></div>
                 </div>
             </div>
         </div>

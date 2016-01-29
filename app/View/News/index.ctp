@@ -63,10 +63,10 @@
                 </div>
             </div>
             <div class="well">
-                <h4><?= $Lang->get('INFORMATION') ?></h4>
-                <p><b><?= $Lang->get('LAST_UPDATE') ?> : </b><?= $Lang->date($news['News']['updated']) ?></p>
-                <p><b><?= $Lang->get('NUMBER_OF_COMMENTS') ?> : </b><?= $news['News']['count_comments'] ?></p>
-                <p><b><?= $Lang->get('NUMBER_OF_LIKES') ?> : </b><?= $news['News']['count_likes'] ?></p>
+                <h4><?= $Lang->get('GLOBAL__INFORMATIONS') ?></h4>
+                <p><b><?= $Lang->get('GLOBAL__UPDATED') ?> : </b><?= $Lang->date($news['News']['updated']) ?></p>
+                <p><b><?= $Lang->get('NEWS__COMMENTS_NBR') ?> : </b><?= $news['News']['count_comments'] ?></p>
+                <p><b><?= $Lang->get('NEWS__LIKES_NBR') ?> : </b><?= $news['News']['count_likes'] ?></p>
             </div>
         </div>
     </div>

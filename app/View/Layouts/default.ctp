@@ -36,7 +36,7 @@
       <div class="mini-navbar mini-navbar-default hidden-xs">
       <div class="container">
         <div class="col-sm-12">
-          <?= (isset($banner_server) && $banner_server) ? '<p>'.$banner_server.'</p>' : '<p class="text-center">'.$Lang->get('SERVER_OFF').'</p>' ?>
+          <?= (isset($banner_server) && $banner_server) ? '<p>'.$banner_server.'</p>' : '<p class="text-center">'.$Lang->get('SERVER__STATUS_OFF').'</p>' ?>
         </div>
       </div>
     </div>
@@ -93,16 +93,16 @@
                           </button>
                           <ul class="dropdown-menu" role="menu">
                             <?php if($isConnected) { ?>
-                              <li><a href="<?= $this->Html->url(array('controller' => 'profile', 'action' => 'index', 'plugin' => null)) ?>"><?= $Lang->get('PROFILE') ?></a></li>
+                              <li><a href="<?= $this->Html->url(array('controller' => 'profile', 'action' => 'index', 'plugin' => null)) ?>"><?= $Lang->get('USER__PROFILE') ?></a></li>
                               <?php if($Permissions->can('ACCESS_DASHBOARD')) { ?>
                                 <li class="divider"></li>
                                     <li><a href="<?= $this->Html->url(array('controller' => '', 'action' => 'index', 'plugin' => 'admin')) ?>"><?= $Lang->get('ADMIN_PANEL') ?></a></li>
                               <?php } ?>
                               <li class="divider"></li>
-                              <li><a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'logout', 'plugin' => null)) ?>"><?= $Lang->get('LOGOUT') ?></a></li>
+                              <li><a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'logout', 'plugin' => null)) ?>"><?= $Lang->get('USER__LOGOUT') ?></a></li>
                             <?php } else { ?>
-                              <li><a href="#" data-toggle="modal" data-target="#login"><?= $Lang->get('LOGIN') ?></a></li>
-                              <li><a href="#" data-toggle="modal" data-target="#register"><?= $Lang->get('REGISTER') ?></a></li>
+                              <li><a href="#" data-toggle="modal" data-target="#login"><?= $Lang->get('USER__LOGIN') ?></a></li>
+                              <li><a href="#" data-toggle="modal" data-target="#register"><?= $Lang->get('USER__REGISTER') ?></a></li>
                             <?php } ?>
                           </ul>
                         </div>
@@ -146,10 +146,10 @@
     var DISLIKE_URL = "<?= $this->Html->url(array('controller' => 'news', 'action' => 'dislike')) ?>";
 
     var LOADING_MSG = "<?= $Lang->get('LOADING') ?>";
-    var ERROR_MSG = "<?= $Lang->get('ERROR') ?>";
+    var ERROR_MSG = "<?= $Lang->get('GLOBAL__ERROR') ?>";
     var INTERNAL_ERROR_MSG = "<?= $Lang->get('ERROR_WHEN_AJAX') ?>";
     var FORBIDDEN_ERROR_MSG = "<?= $Lang->get('ERROR__FORBIDDEN') ?>"
-    var SUCCESS_MSG = "<?= $Lang->get('SUCCESS') ?>";
+    var SUCCESS_MSG = "<?= $Lang->get('GLOBAL__SUCCESS') ?>";
 
     var CSRF_TOKEN = "<?= $csrfToken ?>";
     </script>

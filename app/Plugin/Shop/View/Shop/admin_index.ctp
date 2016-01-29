@@ -174,7 +174,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
             <table class="table table-bordered dataTable">
               <thead>
                 <tr>
-                  <th><?= $Lang->get('PSEUDO') ?></th>
+                  <th><?= $Lang->get('USER__USERNAME') ?></th>
                   <th><?= $Lang->get('AMOUNT') ?></th>
                   <th><?= $Lang->get('CODE') ?></th>
                   <th><?= $Lang->get('CREATED') ?></th>

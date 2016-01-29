@@ -31,19 +31,19 @@ class User extends AppModel {
 						if(empty($search_member_by_email)) {
 							return true;
 						} else {
-							return 'EMAIL_ALREADY_EXIST';
+							return 'USER__ERROR_EMAIL_ALREADY_REGISTERED';
 						}
 					} else {
-						return 'PSEUDO_ALREADY_EXIST';
+						return 'USER__ERROR_PSEUDO_ALREADY_REGISTERED';
 					}
 				} else {
-					return 'EMAIL_NOT_VALIDATE';
+					return 'USER__ERROR_EMAIL_NOT_VALID';
 				}
 			} else {
-				return 'PASSWORD_NOT_SAME';
+				return 'USER__ERROR_PASSWORDS_NOT_SAME';
 			}
 		} else {
-			return 'PSEUDO_NOT_GOOD_FORMAT';
+			return 'USER__ERROR_PSEUDO_INVALID_FORMAT';
 		}
 	}
 
@@ -108,7 +108,7 @@ class User extends AppModel {
 
 				}
 
-				return 'BAD_PSEUDO_OR_PASSWORD';
+				return 'USER__ERROR_INVALID_CREDENTIALS';
 			}
 
 		} else {

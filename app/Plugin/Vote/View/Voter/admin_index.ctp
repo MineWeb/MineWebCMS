@@ -315,14 +315,14 @@
    $.post("<?= $this->Html->url(array('controller' => 'voter', 'action' => 'add_ajax', 'admin' => true)) ?>", { servers : servers, rewards_type : rewards_type, rewards : rewards, website : website }, function(data) {
         data2 = data.split("|");
     if(data.indexOf('true') != -1) {
-          $('.ajax-msg').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+          $('.ajax-msg').html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
           $form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
            document.location.href="<?= $this->Html->url(array('controller' => 'voter', 'action' => 'admin_index', 'admin' => 'true')) ?>";
         } else if(data.indexOf('false') != -1) {
-          $('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+          $('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
           $form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
       } else {
-      $('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+      $('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
       $form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
     }
     });

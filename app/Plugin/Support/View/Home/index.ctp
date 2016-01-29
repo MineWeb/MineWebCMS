@@ -89,7 +89,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"><?= $Lang->get('CLOSE') ?></span></button>
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"><?= $Lang->get('GLOBAL__CLOSE') ?></span></button>
             <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('POST_A_TICKET') ?></h4>
           </div>
           <div class="modal-body">
@@ -114,7 +114,7 @@
 			  </div>
           </div>
           <div class="modal-footer">
-            <button type="button" data-dismiss="modal" class="btn btn-default"><?= $Lang->get('CLOSE') ?></button>
+            <button type="button" data-dismiss="modal" class="btn btn-default"><?= $Lang->get('GLOBAL__CLOSE') ?></button>
             <button type="submit" class="btn btn-primary"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
         </form>
           </div>
@@ -126,7 +126,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"><?= $Lang->get('CLOSE') ?></span></button>
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"><?= $Lang->get('GLOBAL__CLOSE') ?></span></button>
             <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('REPLY_TO_TICKET') ?></h4>
           </div>
           <div class="modal-body">
@@ -138,7 +138,7 @@
           		<textarea name="reply" class="form-control" rows="3" placeholder="<?= $Lang->get('YOUR_REPLY') ?>"></textarea>
           </div>
           <div class="modal-footer">
-            <button type="button" data-dismiss="modal" class="btn btn-default"><?= $Lang->get('CLOSE') ?></button>
+            <button type="button" data-dismiss="modal" class="btn btn-default"><?= $Lang->get('GLOBAL__CLOSE') ?></button>
             <button type="submit" class="btn btn-primary"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
            </form>
           </div>
@@ -275,7 +275,7 @@
               } else if(data == 1) {
                 $('#msg-on-reply').hide().html('<div class="alert alert-danger" role="alert"><p><?= $Lang->get('CANT_BE_EMPTY') ?></p></div>').fadeIn(1500);
               } else {
-                $('#msg-on-reply').hide().html('<div class="alert alert-danger" role="alert"><p><b><?= $Lang->get('ERROR') ?> : </b>'+data+'</p></div>').fadeIn(1500);
+                $('#msg-on-reply').hide().html('<div class="alert alert-danger" role="alert"><p><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b>'+data+'</p></div>').fadeIn(1500);
               }
             });
             return false;
@@ -311,7 +311,7 @@
             $('#nbr-ticket-unresolved').html(nbr_ticket_unresolved);
             // fin stast
           } else {
-            $('#msg-on-post').hide().html('<div class="alert alert-danger" role="alert"><p><b><?= $Lang->get('ERROR') ?> : </b>'+data+'</p></div>').fadeIn(1500);
+            $('#msg-on-post').hide().html('<div class="alert alert-danger" role="alert"><p><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b>'+data+'</p></div>').fadeIn(1500);
           }
         });
         return false;

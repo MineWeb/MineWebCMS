@@ -17,7 +17,7 @@
             <table class="table table-bordered dataTable">
                 <thead>
                     <tr>
-                        <th><?= $Lang->get('PSEUDO') ?></th>
+                        <th><?= $Lang->get('USER__USERNAME') ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,7 +30,7 @@
             </table>
           <?php } else { ?>
               <div class="well">
-                  <div class="alert alert-danger"><?= $Lang->get('NEED_SERVER_ON') ?></div>
+                  <div class="alert alert-danger"><?= $Lang->get('SERVER__MUST_BE_ON') ?></div>
               </div>
           <?php } ?>
 

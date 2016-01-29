@@ -28,13 +28,13 @@ class APIController extends AppController {
     					echo $this->Lang->get('INTERNAL_ERROR').'|false';
     				}
     			} else {
-    				echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+    				echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
     			}
     		} else {
     			echo $this->Lang->get('NOT_POST').'|false';
     		}
     	} else {
-    		echo $this->Lang->get('NEED_CONNECT').'|false';
+    		echo $this->Lang->get('USER__ERROR_MUST_BE_LOGGED').'|false';
     	}
 	}
 
@@ -53,13 +53,13 @@ class APIController extends AppController {
 	    				echo $this->Lang->get('INVALID_IP').'|false';
 	    			}
     			} else {
-    				echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
+    				echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
     			}
     		} else {
     			echo $this->Lang->get('NOT_POST').'|false';
     		}
     	} else {
-    		echo $this->Lang->get('NEED_CONNECT').'|false';
+    		echo $this->Lang->get('USER__ERROR_MUST_BE_LOGGED').'|false';
     	}
 	}
 
@@ -76,7 +76,7 @@ class APIController extends AppController {
     			echo $this->Lang->get('NOT_POST').'|false';
     		}
     	} else {
-    		echo $this->Lang->get('NEED_CONNECT').'|false';
+    		echo $this->Lang->get('USER__ERROR_MUST_BE_LOGGED').'|false';
     	}
 	}
 
@@ -93,7 +93,7 @@ class APIController extends AppController {
     			echo $this->Lang->get('NOT_POST').'|false';
     		}
     	} else {
-    		echo $this->Lang->get('NEED_CONNECT').'|false';
+    		echo $this->Lang->get('USER__ERROR_MUST_BE_LOGGED').'|false';
     	}
 	}
 
@@ -110,7 +110,7 @@ class APIController extends AppController {
 					$this->History->set('EDIT_CONFIGURATION', 'api');
 					$this->Session->setFlash($this->Lang->get('EDIT_CONFIGURATION_SUCCESS'), 'default.success');
 				} else {
-					$this->Session->setFlash($this->Lang->get('COMPLETE_ALL_FIELDS'), 'default.error');
+					$this->Session->setFlash($this->Lang->get('ERROR__FILL_ALL_FIELDS'), 'default.error');
 				}
 			}
 

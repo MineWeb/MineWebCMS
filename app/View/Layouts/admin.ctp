@@ -48,7 +48,7 @@ $this->EyPlugin = new EyPluginComponent;
                 </a>
               </li>
               <li>
-                <a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'logout', 'admin' => false)); ?>"><i class="fa fa-power-off"></i> <?= $Lang->get('LOGOUT') ?></a>
+                <a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'logout', 'admin' => false)); ?>"><i class="fa fa-power-off"></i> <?= $Lang->get('USER__LOGOUT') ?></a>
               </li>
             </ul>
           </div>
@@ -81,7 +81,7 @@ $this->EyPlugin = new EyPluginComponent;
             <li class="treeview">
               <a href="#">
                 <i class="fa fa-files-o"></i>
-                <span><?= $Lang->get('PERSONALISATION') ?></span> <i class="fa fa-angle-left pull-right"></i>
+                <span><?= $Lang->get('GLOBAL__CUSTOMIZE') ?></span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
                 <li><a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('NEWS') ?></a></li>
@@ -203,10 +203,10 @@ $this->EyPlugin = new EyPluginComponent;
      <?= $this->Html->script('form.js') ?>
      <script type="text/javascript">
        var LOADING_MSG = "<?= $Lang->get('LOADING') ?>";
-       var ERROR_MSG = "<?= $Lang->get('ERROR') ?>";
+       var ERROR_MSG = "<?= $Lang->get('GLOBAL__ERROR') ?>";
        var INTERNAL_ERROR_MSG = "<?= $Lang->get('ERROR_WHEN_AJAX') ?>";
        var FORBIDDEN_ERROR_MSG = "<?= $Lang->get('ERROR__FORBIDDEN') ?>"
-       var SUCCESS_MSG = "<?= $Lang->get('SUCCESS') ?>";
+       var SUCCESS_MSG = "<?= $Lang->get('GLOBAL__SUCCESS') ?>";
 
        var CSRF_TOKEN = "<?= $csrfToken ?>";
      </script>

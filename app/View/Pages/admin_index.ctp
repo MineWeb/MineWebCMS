@@ -17,7 +17,7 @@
                 <th><?= $Lang->get('TITLE') ?></th>
                 <th><?= $Lang->get('GLOBAL__BY') ?></th>
                 <th><?= $Lang->get('POSTED_ON') ?></th>
-                <th><?= $Lang->get('LAST_UPDATE') ?></th>
+                <th><?= $Lang->get('GLOBAL__UPDATED') ?></th>
                 <th><?= $Lang->get('URL') ?></th>
                 <th><?= $Lang->get('ACTION') ?></th>
               </tr>

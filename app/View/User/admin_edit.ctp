@@ -15,18 +15,18 @@ $this->Configuration = new ConfigurationComponent;
             <input type="hidden" value="<?= $search_user['pseudo'] ?>" name="pseudo">
 
             <div class="form-group">
-              <label><?= $Lang->get('PSEUDO') ?></label>
+              <label><?= $Lang->get('USER__USERNAME') ?></label>
               <input class="form-control" value="<?= $search_user['pseudo'] ?>" type="text" disabled="">
            	</div>
 
             <?php if(!$this->Configuration->get('confirm_mail_signup')) { ?>
               <div class="form-group">
-                <label><?= $Lang->get('EMAIL') ?></label>
+                <label><?= $Lang->get('USER__EMAIL') ?></label>
                 <input name="email" class="form-control" value="<?= $search_user['email'] ?>" type="email">
               </div>
             <?php } else { ?>
               <div class="form-group">
-                <label><?= $Lang->get('EMAIL') ?></label>
+                <label><?= $Lang->get('USER__EMAIL') ?></label>
                 <div class="input-group">
                   <input value="<?= $search_user['email'] ?>" type="email" name="email" class="form-control">
                   <span class="input-group-btn">
@@ -37,7 +37,7 @@ $this->Configuration = new ConfigurationComponent;
             <?php } ?>
 
             <div class="form-group">
-              <label><?= $Lang->get('PASSWORD') ?></label>
+              <label><?= $Lang->get('USER__PASSWORD') ?></label>
               <input name="password" class="form-control" type="password">
             </div>
 

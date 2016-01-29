@@ -122,7 +122,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="<?= $Lang->get('CLOSE') ?>"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="<?= $Lang->get('GLOBAL__CLOSE') ?>"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('ADD_MONEY') ?></h4>
       </div>
       <div class="modal-body">
@@ -212,11 +212,11 @@
             </div>
           <?php } ?>
         <?php } else { ?>
-            <p><?= $Lang->get('NEED_CONNECT') ?></p>
+            <p><?= $Lang->get('USER__ERROR_MUST_BE_LOGGED') ?></p>
         <?php } ?>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('CLOSE') ?></button>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('GLOBAL__CLOSE') ?></button>
         </form>
       </div>
     </div>
