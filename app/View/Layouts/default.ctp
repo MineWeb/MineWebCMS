@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="Eywek">
 
-    <title><?= $title_for_layout; ?> - <?= $website_name ?></title>
+    <title><?= (isset($title_for_layout)) ? $title_for_layout : 'Error' ?> - <?= (isset($website_name)) ? $website_name : 'MineWeb' ?></title>
 
     <?= $this->Html->css('bootstrap.css') ?>
     <?= $this->Html->css('modern-business.css') ?>
@@ -21,7 +21,7 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700' rel='stylesheet' type='text/css'>
     <?= $this->Html->script('jquery-1.11.0.js') ?>
     <?= $this->Html->script('easy_paginate.js') ?>
-    <link rel="icon" type="image/png" href="<?= $theme_config['favicon_url'] ?>" />
+    <link rel="icon" type="image/png" href="<?= (isset($theme_config)) ? $theme_config['favicon_url'] : '' ?>" />
 
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -31,11 +31,12 @@
 </head>
 
 <body><!-- grey.png -->
+  <?php if(isset($Lang)) { ?>
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="mini-navbar mini-navbar-default hidden-xs">
       <div class="container">
         <div class="col-sm-12">
-          <?= ($banner_server) ? '<p>'.$banner_server.'</p>' : '<p class="text-center">'.$Lang->get('SERVER_OFF').'</p>' ?>
+          <?= (isset($banner_server) && $banner_server) ? '<p>'.$banner_server.'</p>' : '<p class="text-center">'.$Lang->get('SERVER_OFF').'</p>' ?>
         </div>
       </div>
     </div>
@@ -47,7 +48,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="<?= $this->Html->url('/') ?>"><?= $website_name ?></a>
+                <a class="navbar-brand" href="<?= $this->Html->url('/') ?>"><?= (isset($website_name)) ? $website_name : 'MineWeb' ?></a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
@@ -81,7 +82,7 @@
                       } ?>
                     <li class="button">
                         <div class="btn-group">
-                          <?php if($isConnected) { ?>
+                          <?php if(isset($isConnected) && $isConnected) { ?>
                             <button type="button" class="btn btn-success"><?= $user['pseudo'] ?></button>
                           <?php } else { ?>
                             <button type="button" class="btn btn-success"><i class="fa fa-user"></i></button>
@@ -110,13 +111,15 @@
             </div>
         </div>
     </nav>
+  <?php } ?>
     <div class="nav-hop"></div>
-    <?php if(!empty($flash_messages)) {
+    <?php if(isset($flash_messages) && !empty($flash_messages)) {
       echo '<div class="container">'.$flash_messages.'</div>';
     } ?>
       <?= $this->fetch('content'); ?>
     </div>
     <!-- Footer -->
+  <?php if(isset($Lang)) { ?>
     <footer>
       <div class="container">
         <div class="row">
@@ -126,6 +129,7 @@
         </div>
       </div>
     </footer>
+
 
 
     <?= $this->element('modals') ?>
@@ -156,11 +160,11 @@
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-      ga('create', '<?= $google_analytics ?>', 'auto');
+      ga('create', '<?= (isset($google_analytics)) ? $google_analytics : '' ?>', 'auto');
       ga('send', 'pageview');
     </script>
-    <?= $configuration_end_code ?>
-
+    <?= (isset($configuration_end_code)) ? $configuration_end_code : '' ?>
+  <?php } ?>
 </body>
 
 </html>
