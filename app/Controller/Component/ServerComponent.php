@@ -112,7 +112,8 @@ class ServerComponent extends Object {
 	}
 
 	public function getFirstServerID() {
-		return ClassRegistry::init('Server')->find('first')['Server']['id'];
+		$get = ClassRegistry::init('Server')->find('first');
+		return (!empty($get)) ? $get['Server']['id'] : null;
 	}
 
 	private function getTimeout() {
@@ -370,11 +371,16 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 			$server_id = $this->getFirstServerID();
 		}
 
-		if(ClassRegistry::init('Configuration')->find('first')['Configuration']['server_cache']) {
-			$cacheFile = ROOT.DS.'tmp'.DS.'cache'.DS.'server.cache';
-			if(file_exists($cacheFile) && strtotime('+1 min', filemtime($cacheFile)) > time() && isset(unserialize(file_get_contents($cacheFile))[$server_id])) {
-				return unserialize(file_get_contents($cacheFile))[$server_id];
+		$ModelConfig = ClassRegistry::init('Configuration')->find('first');
+		if(isset($ModelConfig['Configuration']['server_cache'])) {
+			if($ModelConfig['Configuration']['server_cache']) {
+				$cacheFile = ROOT.DS.'tmp'.DS.'cache'.DS.'server.cache';
+				if(file_exists($cacheFile) && strtotime('+1 min', filemtime($cacheFile)) > time() && isset(unserialize(file_get_contents($cacheFile))[$server_id])) {
+					return unserialize(file_get_contents($cacheFile))[$server_id];
+				}
 			}
+		} else {
+			return false;
 		}
 
     if(!is_array($server_id)) {

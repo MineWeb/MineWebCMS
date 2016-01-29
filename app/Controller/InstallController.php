@@ -1,28 +1,14 @@
-<?php 
+<?php
 
 class InstallController extends AppController {
 
-	public $components = array('Session');
-
 	public function beforeFilter() {
-		if(!file_exists('../../config/install.txt')) {
-			App::import('Model', 'ConnectionManager');
-			$db = ConnectionManager::getDataSource('default');
-			if(!$db->isConnected()) {
-            	exit('Could not connect to database. Please check the settings in app/config/database.php and try again');
-        	} else {
-				$tables = file_get_contents('../../install/sql.txt');
-		        $tables = explode('|', $tables);
-		        foreach ($tables as $do) {
-		          $db->query($do);
-		        }
-		        $data = "CREATED AT ".date('H:i:s d/m/Y');
-				$fp = fopen("../../install.txt","w+");
-				fwrite($fp, $data);
-				fclose($fp);
-			}
-		} elseif(file_exists('../../config/installed.txt')) {
-			 
+
+		$this->Security->blackHoleCallback = 'blackhole';
+		$this->Security->validatePost = false;
+		$this->Security->csrfUseOnce = false;
+
+		if(file_exists(ROOT.DS.'config'.DS.'installed.txt')) {
 			echo $this->Lang->get('ALREADY_INSTALL');
 			$url = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 			$url = substr($url, 0, -7);
@@ -32,9 +18,9 @@ class InstallController extends AppController {
 	}
 
 	public function index() {
-		if(!file_exists('../../config/installed.txt')) {
+		if(!file_exists(ROOT.DS.'config'.DS.'installed.txt')) {
 			$this->layout = 'install';
-			 
+
 			$this->set('title_for_layout',$this->Lang->get('INSTALL'));
 
 			$url = 'http://mineweb.org/api/v1/key_verif/';
@@ -60,12 +46,12 @@ class InstallController extends AppController {
 
 	public function step_1() {
 		$this->autoRender = false;
-		if(!file_exists('../../config/installed.txt')) {
+		if(!file_exists(ROOT.DS.'config'.DS.'installed.txt')) {
 			$this->layout = null;
 			if($this->request->is('ajax')) {
-				 
+
 				if(!empty($this->request->data['key'])) {
-					
+
 					$url = 'http://mineweb.org/api/v1/key_verif/';
 					$secure = file_get_contents(ROOT.'/config/secure');
 					$secure = json_decode($secure, true);
@@ -120,10 +106,10 @@ WCqkx22behAGZq6rhwIDAQAB
 	}
 
 	public function step_3() {
-		if(!file_exists('../../config/installed.txt')) {
-			$this->layout = null;
+		$this->autoRender = false;
+		if(!file_exists(ROOT.DS.'config'.DS.'installed.txt')) {
 			if($this->request->is('ajax')) {
-				 
+
 				if(!empty($this->request->data['pseudo']) AND !empty($this->request->data['password']) AND !empty($this->request->data['password_confirmation']) AND !empty($this->request->data['email'])) {
 					$this->request->data['password'] = password($this->request->data['password']);
 					$this->request->data['password_confirmation'] =password($this->request->data['password_confirmation']);
@@ -145,16 +131,16 @@ WCqkx22behAGZq6rhwIDAQAB
 					echo $this->Lang->get('COMPLETE_ALL_FIELDS').'|false';
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST' ,$language).'|false';
+				echo $this->Lang->get('NOT_POST').'|false';
 			}
 		} else {
-			echo $this->Lang->get('ALREADY_INSTALL' ,$language).'|false';
+			echo $this->Lang->get('ALREADY_INSTALL').'|false';
 		}
 	}
 
 	public function end() {
-		if(!file_exists('../../config/installed.txt')) {
-			$create = fopen("../../config/installed.txt", "w+");
+		if(!file_exists(ROOT.DS.'config'.DS.'installed.txt')) {
+			$create = fopen(ROOT.DS.'config'.DS.'installed.txt', "w+");
 			if(!$create) {
 				echo $this->Lang->get('ERROR_CHMOD');
 			}

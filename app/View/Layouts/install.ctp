@@ -20,7 +20,7 @@
 </head>
 <body>
 <div class="page-container">
-  
+
 	<!-- top navbar -->
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
        <div class="container">
@@ -34,12 +34,12 @@
     	</div>
        </div>
     </div>
-      
+
     <div class="container">
       <div class="row row-offcanvas row-offcanvas-left">
-        
+
         <br>
-  			
+
 		<?php if($this->params['action'] == 'end') { ?>
 		<ul class="nav nav-tabs nav-pills nav-stacked col-xs-6 col-sm-3" style="max-width: 300px;">
 
@@ -72,44 +72,46 @@
     	$(document).ready(function() {
     		$('#tabsleft').bootstrapWizard({
 
-    			'tabClass': 'nav nav-tabs', 
-    			
-    			'debug': false, 
+    			'tabClass': 'nav nav-tabs',
+
+    			'debug': false,
 
     			onNext: function(tab, navigation, index) {
     				if(index==1) {
-	                    var $form = $('#step1');
-	                    if($form.find("input[name='step1']").val() == "true") {
-	                    	return true;
-	                    } else {
-		                    var key = $form.find("input[name='key']").val();
+              var $form = $('#step1');
+              if($form.find("input[name='step1']").val() == "true") {
+              	return true;
+              } else {
+                var inputs = {};
+                inputs['key'] = $form.find("input[name='key']").val();
+                inputs['data[_Token][key]'] = "<?= $this->Session->read('_Token')['key'] ?>";
 							var step1success = false;
 		                    $.ajax({
 							 	type : 'POST',
-							 	url : "<?= $this->Html->url(array('controller' => 'install', 'action' => 'step_1')) ?>", 
-							 	data : { key : key }, 
+							 	url : "<?= $this->Html->url(array('controller' => 'install', 'action' => 'step_1')) ?>",
+							 	data : inputs,
 							 	success : function(data){
-			                      	data2 = data.split("|");
-								  	if(data.indexOf('true') != -1) {
-						          		$('.ajax-msg-step1').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-						          		step1success = true;
-						          		return true;
-						          	} else if(data.indexOf('false') != -1) {
-						            	$('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-						            	step1success = false;
-						            	return false;
-							        } else {
-								    	$('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
-								    	step1success = false;
-								    	return false;
-								    }
-		                    	},
-		                    	error : function(data){
-		                    		$('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
-								    var step1success = false;
-								    return false;
-		                    	},
-		                    	async: false
+		              data2 = data.split("|");
+							  	if(data.indexOf('true') != -1) {
+					          		$('.ajax-msg-step1').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+					          		step1success = true;
+					          		return true;
+					          	} else if(data.indexOf('false') != -1) {
+					            	$('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+					            	step1success = false;
+					            	return false;
+						        } else {
+							    	$('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+							    	step1success = false;
+							    	return false;
+							    }
+              	},
+              	error : function(data){
+              		$('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+    					    var step1success = false;
+    					    return false;
+              	},
+              	async: false
 							});
 							if(step1success == true) {
 								return true;
@@ -118,41 +120,43 @@
 							}
 						}
 					} else if(index==2) {
-	                    var $form = $('#step3');
-	                    if($form.find("input[name='step3']").val() == "true") {
-	                    	return true;
-	                    } else {
-		                    var pseudo = $form.find("input[name='pseudo']").val();
-		                    var password = $form.find("input[name='password']").val();
-		                    var password_confirmation = $form.find("input[name='password_confirmation']").val();
-		                    var email = $form.find("input[name='email']").val();
-		                    var step3Success = false;
-		                    $.ajax({
+            var $form = $('#step3');
+            if($form.find("input[name='step3']").val() == "true") {
+            	return true;
+            } else {
+              var inputs = {};
+              inputs['data[_Token][key]'] = "<?= $this->Session->read('_Token')['key'] ?>";
+              inputs['pseudo'] = $form.find("input[name='pseudo']").val();
+              inputs['password'] = $form.find("input[name='password']").val();
+              inputs['password_confirmation'] = $form.find("input[name='password_confirmation']").val();
+              inputs['email'] = $form.find("input[name='email']").val();
+              var step3Success = false;
+              $.ajax({
 							 	type : 'POST',
-							 	url : "<?= $this->Html->url(array('controller' => 'install', 'action' => 'step_3')) ?>", 
-							 	data : { pseudo : pseudo, password : password, password_confirmation : password_confirmation, email : email }, 
+							 	url : "<?= $this->Html->url(array('controller' => 'install', 'action' => 'step_3')) ?>",
+							 	data : { pseudo : pseudo, password : password, password_confirmation : password_confirmation, email : email },
 							 	success : function(data){
-			                      	data2 = data.split("|");
-								  	if(data.indexOf('true') != -1) {
-						          		$('.ajax-msg-step3').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-						          		step3Success = true;
-						          		return true;
-						          	} else if(data.indexOf('false') != -1) {
-						            	$('.ajax-msg-step3').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-						            	step3Success = false;
-						            	return false;
-							        } else {
-								    	$('.ajax-msg-step3').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
-								    	step3Success = false;
-								    	return false;
-								    }
-		                    	},
-		                    	error : function(data){
-		                    		$('.ajax-msg-step3').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
-								    var step3Success = false;
-								    return false;
-		                    	},
-		                    	async: false
+		              data2 = data.split("|");
+							  	if(data.indexOf('true') != -1) {
+					          		$('.ajax-msg-step3').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+					          		step3Success = true;
+					          		return true;
+					          	} else if(data.indexOf('false') != -1) {
+					            	$('.ajax-msg-step3').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+					            	step3Success = false;
+					            	return false;
+						        } else {
+							    	$('.ajax-msg-step3').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+							    	step3Success = false;
+							    	return false;
+							    }
+		            },
+              	error : function(data){
+              		$('.ajax-msg-step3').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+								  var step3Success = false;
+								  return false;
+		            },
+		            async: false
 							});
 							if(step3Success == true) {
 								return true;
@@ -161,20 +165,20 @@
 							}
 						}
 					}
-					
+
 				},
-    			
+
     			onTabClick: function(tab, navigation, index) {
 					alert('<?= $Lang->get('CANT_SKIP_A_STEP') ?>');
 					return false;
-				}, 
+				},
 
 				onTabShow: function(tab, navigation, index) {
 					var $total = navigation.find('li').length;
 					var $current = index+1;
 					var $percent = ($current/$total) * 100;
 					$('#tabsleft').find('.progress-bar').css({width:$percent+'%'});
-					
+
 					// If it's the last tab then hide the last button and show the finish instead
 					if($current >= $total) {
 						$('#tabsleft').find('.pager .next').hide();
@@ -185,13 +189,13 @@
 						$('#tabsleft').find('.pager .next').show();
 						$('#tabsleft').find('.pager .finish').hide();
 					}
-					
+
 				}
 			});
-				
+
 			$('#tabsleft .finish').click(function() {
 				document.location.href="<?= $this->Html->url(array('controller' => 'install', 'action' => 'end')) ?>";
-			});		
+			});
 		});
     </script>
 	</body>

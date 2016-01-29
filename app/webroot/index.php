@@ -76,7 +76,7 @@ if (!defined('WWW_ROOT')) {
 }
 
 require 'install.php';
-if(!file_exists(ROOT.DS.'config'.DS.'install.txt') || $needAffichCompatibility) {
+if((!file_exists(ROOT.DS.'config'.DS.'install.txt') && $needDisplayDatabase) || $needAffichCompatibility) {
 	require ROOT.DS.'app'.DS.'View'.DS.'Install'.DS.'first.ctp';
 	die();
 }

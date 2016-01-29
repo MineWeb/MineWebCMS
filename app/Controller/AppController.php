@@ -324,6 +324,7 @@ WCqkx22behAGZq6rhwIDAQAB
   	$csrfToken = $this->Session->read('_Token')['key'];
     if(empty($csrfToken)) {
       $this->Session->renew();
+      $csrfToken = $this->Session->read('_Token')['key'];
     }
 
   	// socials links

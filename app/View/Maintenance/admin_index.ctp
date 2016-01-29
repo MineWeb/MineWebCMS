@@ -46,6 +46,8 @@ $this->Configuration = new ConfigurationComponent();
                 <textarea class="form-control" id="editor" name="reason" cols="30" rows="10"><?= ($this->Configuration->get('maintenance') == '0') ? '' : $this->Configuration->get('maintenance') ?></textarea>
             </div>
 
+            <input type="hidden" name="data[_Token][key]" value="<?= $csrfToken ?>">
+
             <div class="pull-right">
               <a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'admin_index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
               <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>

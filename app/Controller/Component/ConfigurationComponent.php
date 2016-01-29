@@ -36,7 +36,7 @@ class ConfigurationComponent extends Object {
       );
       $Schema = $this->Schema->load($options);
 
-      $Old = $this->Schema->read($options);
+      $Old = $this->Schema->read(array('models' => false));
       $compare = $this->Schema->compare($Old, $Schema);
 
       $contents = array();
@@ -83,15 +83,16 @@ class ConfigurationComponent extends Object {
           }
       }
 
-      $this->Schema->after(array(), true);
+      $Schema->after(array(), true);
 
-      if(!empty($error)) {
+      if(empty($error)) {
         $data = "CREATED AT ".date('H:i:s d/m/Y')."\n";
         $fp = fopen(ROOT."/config/install.txt","w+");
         fwrite($fp, $data);
         fclose($fp);
       } else {
-        die('Unable to install MYSQL Table');
+        $this->log('Unable to install MySQL tables');
+        die('Unable to install MYSQL tables');
       }
     }
   }
