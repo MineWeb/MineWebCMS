@@ -9,7 +9,7 @@ $this->EyPlugin = new EyPluginComponent;
 
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('PLUGINS_LIST') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('PLUGIN__LIST') ?></h3>
         </div>
 
         <div class="box-body">
@@ -21,12 +21,12 @@ $this->EyPlugin = new EyPluginComponent;
             <table class="table table-bordered" id="plugin-installed">
               <thead>
                 <tr>
-                  <th><?= $Lang->get('NAME') ?></th>
-                  <th><?= $Lang->get('AUTHOR') ?></th>
-                  <th><?= $Lang->get('CREATED') ?></th>
-                  <th><?= $Lang->get('VERSION') ?></th>
-                  <th><?= $Lang->get('STATE') ?></th>
-                  <th><?= $Lang->get('ACTION') ?></th>
+                  <th><?= $Lang->get('GLOBAL__NAME') ?></th>
+                  <th><?= $Lang->get('GLOBAL__AUTHOR') ?></th>
+                  <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
+                  <th><?= $Lang->get('GLOBAL__VERSION') ?></th>
+                  <th><?= $Lang->get('GLOBAL__STATUS') ?></th>
+                  <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
                 </tr>
               </thead>
               <tbody>
@@ -38,17 +38,17 @@ $this->EyPlugin = new EyPluginComponent;
                     <td><?= $Lang->date($value->DBinstall) ?></td>
                     <td><?= $value->version ?></td>
                     <td>
-                      <?= ($value->active) ? '<span class="label label-success">'.$Lang->get('ENABLED').'</span>' : '<span class="label label-danger">'.$Lang->get('DISABLED').'</span>' ?>
+                      <?= ($value->active) ? '<span class="label label-success">'.$Lang->get('GLOBAL__ENABLED').'</span>' : '<span class="label label-danger">'.$Lang->get('GLOBAL__DISABLED').'</span>' ?>
                     </td>
                     <td>
                       <?php if($value->active) { ?>
-                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'disable/'.$value->DBid, 'admin' => true)) ?>" class="btn btn-info disable"><?= $Lang->get('DISABLED') ?></a>
+                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'disable/'.$value->DBid, 'admin' => true)) ?>" class="btn btn-info disable"><?= $Lang->get('GLOBAL__DISABLED') ?></a>
                        <?php } else { ?>
-                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'enable/'.$value->DBid, 'admin' => true)) ?>" class="btn btn-info enable"><?= $Lang->get('ENABLED') ?></a>
+                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'enable/'.$value->DBid, 'admin' => true)) ?>" class="btn btn-info enable"><?= $Lang->get('GLOBAL__ENABLED') ?></a>
                        <?php } ?>
-                      <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete/'.$value->DBid, 'admin' => true)) ?>')" class="btn btn-danger delete"><?= $Lang->get('DELETE') ?></a>
+                      <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete/'.$value->DBid, 'admin' => true)) ?>')" class="btn btn-danger delete"><?= $Lang->get('GLOBAL__DELETE') ?></a>
                       <?php if($value->version != $this->EyPlugin->getPluginLastVersion($value->apiID)) { ?>
-                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'update/'.$value->apiID.'/'.$value->slug, 'admin' => true)) ?>" class="btn btn-warning update"><?= $Lang->get('UPDATE') ?></a>
+                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'update/'.$value->apiID.'/'.$value->slug, 'admin' => true)) ?>" class="btn btn-warning update"><?= $Lang->get('GLOBAL__UPDATE') ?></a>
                       <?php } ?>
                     </td>
                   </tr>
@@ -66,7 +66,7 @@ $this->EyPlugin = new EyPluginComponent;
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('FREE_PLUGINS_AVAILABLE') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('PLUGIN__AVAILABLE_FREE') ?></h3>
         </div>
         <div class="box-body">
           <?php
@@ -75,10 +75,10 @@ $this->EyPlugin = new EyPluginComponent;
             <table class="table table-bordered" id="plugin-not-installed">
               <thead>
                 <tr>
-                  <th><?= $Lang->get('NAME') ?></th>
-                  <th><?= $Lang->get('AUTHOR') ?></th>
-                  <th><?= $Lang->get('VERSION') ?></th>
-                  <th><?= $Lang->get('ACTION') ?></th>
+                  <th><?= $Lang->get('GLOBAL__NAME') ?></th>
+                  <th><?= $Lang->get('GLOBAL__AUTHOR') ?></th>
+                  <th><?= $Lang->get('GLOBAL__VERSION') ?></th>
+                  <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
                 </tr>
               </thead>
               <tbody>
@@ -95,7 +95,7 @@ $this->EyPlugin = new EyPluginComponent;
               </tbody>
             </table>
           <?php } else { ?>
-            <div class="alert alert-danger"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b><?= $Lang->get('NONE_PLUGIN_AVAILABLE') ?></div>
+            <div class="alert alert-danger"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b><?= $Lang->get('PLUGIN__NONE_AVAILABLE') ?></div>
           <?php } ?>
 
         </div>
@@ -144,11 +144,11 @@ $this->EyPlugin = new EyPluginComponent;
 
           if(data.statut == "success") {
             // on met le message
-            $('.ajax').empty().html('<div class="alert alert-success"><b><?= $Lang->get('GLOBAL__SUCCESS') ?> : <?= $Lang->get('PLUGIN_INSTALL_SUCCESS') ?></b></div>').fadeIn(500);
+            $('.ajax').empty().html('<div class="alert alert-success"><b><?= $Lang->get('GLOBAL__SUCCESS') ?> : <?= $Lang->get('PLUGIN__INSTALL_SUCCESS') ?></b></div>').fadeIn(500);
 
             // on bouge le plugin dans le tableau dans les plugins installés
             $('table#plugin-not-installed').find('tr[plugin-apiID="'+apiID+'"]').slideUp(250);
-            $('table#plugin-installed tr:last').after('<tr><td>'+data.plugin.name+'</td><td>'+data.plugin.author+'</td><td>'+data.plugin.dateformatted+'</td><td>'+data.plugin.version+'</td><td><span class="label label-success"><?= $Lang->get('ENABLED') ?></span></td><td><a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'disable', 'admin' => true)) ?>'+data.plugin.DBid+'" class="btn btn-info"><?= $Lang->get('DISABLED') ?></a><a onClick="confirmDel(\'<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete', 'admin' => true)) ?>'+data.plugin.DBid+'\')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a></td></tr>');
+            $('table#plugin-installed tr:last').after('<tr><td>'+data.plugin.name+'</td><td>'+data.plugin.author+'</td><td>'+data.plugin.dateformatted+'</td><td>'+data.plugin.version+'</td><td><span class="label label-success"><?= $Lang->get('GLOBAL__ENABLED') ?></span></td><td><a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'disable', 'admin' => true)) ?>'+data.plugin.DBid+'" class="btn btn-info"><?= $Lang->get('GLOBAL__DISABLED') ?></a><a onClick="confirmDel(\'<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete', 'admin' => true)) ?>'+data.plugin.DBid+'\')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a></td></tr>');
 
           } else if(data.statut == "error") {
             $('.ajax').empty().html('<div class="alert alert-error"><b><?= $Lang->get('GLOBAL__ERROR') ?> : '+data.msg+'</b></div>').fadeIn(500);

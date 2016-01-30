@@ -18,9 +18,9 @@
                 <thead>
                   <tr>
                     <th><?= $Lang->get('PERMISSIONS') ?></th>
-                    <th><?= $Lang->get('NORMAL') ?></th>
-                    <th><?= $Lang->get('MODERATOR') ?></th>
-                    <th><?= $Lang->get('ADMINISTRATOR') ?></th>
+                    <th><?= $Lang->get('GLOBAL__TYPE_NORMAL') ?></th>
+                    <th><?= $Lang->get('USER__RANK_MODERATOR') ?></th>
+                    <th><?= $Lang->get('USER__RANK_ADMINISTRATOR') ?></th>
                     <?php
                       if(!empty($custom_ranks)) {
                         foreach ($custom_ranks as $k => $data) {
@@ -54,7 +54,7 @@
                     <?php
                     if(!empty($custom_ranks)) {
                       foreach ($custom_ranks as $k => $data) {
-                        echo '<td><a class="btn btn-danger" href="'.$this->Html->url(array('controller' => 'permissions', 'action' => 'delete_rank', 'admin' => true, $data['Rank']['rank_id'])).'">'.$Lang->get('DELETE').'</a></td>';
+                        echo '<td><a class="btn btn-danger" href="'.$this->Html->url(array('controller' => 'permissions', 'action' => 'delete_rank', 'admin' => true, $data['Rank']['rank_id'])).'">'.$Lang->get('GLOBAL__DELETE').'</a></td>';
                       }
                     }
                   ?>
@@ -83,7 +83,7 @@
           <input type="hidden" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'permissions', 'action' => 'index', 'admin' => true)) ?>">
           <div class="ajax-msg"></div>
           <div class="input-group">
-            <input type="text" class="form-control" name="name" placeholder="<?= $Lang->get('NAME') ?>">
+            <input type="text" class="form-control" name="name" placeholder="<?= $Lang->get('GLOBAL__NAME') ?>">
             <span class="input-group-btn">
               <button class="btn btn-info btn-flat" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             </span>
@@ -91,7 +91,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('CANCEL') ?></button>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('GLOBAL__CANCEL') ?></button>
       </div>
     </div>
   </div>

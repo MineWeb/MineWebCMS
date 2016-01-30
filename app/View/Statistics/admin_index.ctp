@@ -150,7 +150,7 @@
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('VISITORS') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('GLOBAL__VISITORS') ?></h3>
         </div>
         <div class="box-body">
 
@@ -180,12 +180,12 @@ $(function () {
           xAxis: {
               type: 'datetime',
               title: {
-                text: '<?= $Lang->get('CREATED') ?>'
+                text: '<?= $Lang->get('GLOBAL__CREATED') ?>'
               }
           },
           yAxis: {
               title: {
-                  text: '<?= $Lang->get('VISITORS') ?>'
+                  text: '<?= $Lang->get('GLOBAL__VISITORS') ?>'
               }
           },
           legend: {
@@ -220,7 +220,7 @@ $(function () {
 
           series: [{
               type: 'area',
-              name: '<?= $Lang->get('VISITORS') ?>',
+              name: '<?= $Lang->get('GLOBAL__VISITORS') ?>',
               data: data
           }]
       });

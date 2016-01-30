@@ -81,7 +81,7 @@ $this->EyPlugin = new EyPluginComponent;
                             <a class="btn btn-primary btn-block" href="<?= $this->Html->url(array('controller' => 'profile', 'action' => 'index', 'plugin' => null)) ?>"><?= $Lang->get('USER__PROFILE') ?></a>
 
                             <?php if($Permissions->can('ACCESS_DASHBOARD')) { ?>
-                              <a style="color:red;" class="btn btn-primary btn-block" href="<?= $this->Html->url(array('controller' => '', 'action' => 'index', 'plugin' => 'admin')) ?>"><?= $Lang->get('ADMIN_PANEL') ?></a>
+                              <a style="color:red;" class="btn btn-primary btn-block" href="<?= $this->Html->url(array('controller' => '', 'action' => 'index', 'plugin' => 'admin')) ?>"><?= $Lang->get('GLOBAL__ADMIN_PANEL') ?></a>
                             <?php } elseif($this->EyPlugin->isInstalled('Shop')) { ?>
                               <a class="btn btn-primary btn-block" href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'plugin' => 'shop')) ?>"><?= $Lang->get('ADD_MONEY') ?></a>
                             <?php } ?>

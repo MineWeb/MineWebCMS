@@ -176,7 +176,7 @@ class NewsController extends AppController {
 	function admin_index() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NEWS')) {
 
-			$this->set('title_for_layout',$this->Lang->get('NEWS_LIST'));
+			$this->set('title_for_layout',$this->Lang->get('NEWS__LIST_PUBLISHED'));
 			$this->layout = 'admin';
 			$this->loadModel('News');
 			$view_news = $this->News->find('all', array('recursive' => 1));
@@ -197,7 +197,7 @@ class NewsController extends AppController {
 					$this->Like->deleteAll(array('news_id' => $id));
 					$this->Comment->deleteAll(array('news_id' => $id));
 					$this->History->set('DELETE_NEWS', 'news');
-					$this->Session->setFlash($this->Lang->get('NEWS_DELETE_SUCCESS'), 'default.success');
+					$this->Session->setFlash($this->Lang->get('NEWS__SUCCESS_DELETE'), 'default.success');
 					$this->redirect(array('controller' => 'news', 'action' => 'index', 'admin' => true));
 				} else {
 					$this->redirect(array('controller' => 'news', 'action' => 'index', 'admin' => true));
@@ -214,7 +214,7 @@ class NewsController extends AppController {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NEWS')) {
 			$this->layout = 'admin';
 
-			$this->set('title_for_layout', $this->Lang->get('ADD_NEWS'));
+			$this->set('title_for_layout', $this->Lang->get('NEWS__ADD_NEWS'));
 		} else {
 			$this->redirect('/');
 		}
@@ -241,8 +241,8 @@ class NewsController extends AppController {
 					));
 					$this->News->save();
 					$this->History->set('ADD_NEWS', 'news');
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_NEWS_ADD')));
-					$this->Session->setFlash($this->Lang->get('SUCCESS_NEWS_ADD'), 'default.success');
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('NEWS__SUCCESS_ADD')));
+					$this->Session->setFlash($this->Lang->get('NEWS__SUCCESS_ADD'), 'default.success');
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
@@ -265,11 +265,10 @@ class NewsController extends AppController {
 					$news = $search['0']['News'];
 					$this->set(compact('news'));
 				} else {
-					$this->Session->setFlash($this->Lang->get('UKNOWN_ID'), 'default.error');
-					$this->redirect(array('controller' => 'news', 'action' => 'admin_index', 'admin' => 'true'));
+					throw new NotFoundException();
 				}
 			} else {
-				$this->redirect(array('controller' => 'news', 'action' => 'admin_index', 'admin' => 'true'));
+				throw new NotFoundException();
 			}
 		} else {
 			$this->redirect('/');
@@ -294,8 +293,8 @@ class NewsController extends AppController {
 					));
 					$this->News->save();
 					$this->History->set('EDIT_NEWS', 'news');
-				echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_NEWS_EDIT')));
-					$this->Session->setFlash($this->Lang->get('SUCCESS_NEWS_EDIT'), 'default.success');
+				echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('NEWS__SUCCESS_EDIT')));
+					$this->Session->setFlash($this->Lang->get('NEWS__SUCCESS_EDIT'), 'default.success');
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}

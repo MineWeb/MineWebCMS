@@ -14,12 +14,12 @@
                 <div class="radio">
                   <label>
                     <input type="radio" name="skins" value="1"<?php if($config['skins'] == 1) { echo ' checked="checked"'; } ?>>
-                    <?= $Lang->get('ENABLED') ?>
+                    <?= $Lang->get('GLOBAL__ENABLED') ?>
                   </label>
                   <br>
                   <label>
                     <input type="radio" name="skins" value="0"<?php if($config['skins'] == 0) { echo ' checked="checked"'; } ?>>
-                    <?= $Lang->get('DISABLED') ?>
+                    <?= $Lang->get('GLOBAL__DISABLED') ?>
                   </label>
                 </div>
               </div>
@@ -29,12 +29,12 @@
                 <div class="radio">
                   <label>
                     <input type="radio" name="skin_free" value="1"<?php if($config['skin_free'] == 1) { echo ' checked="checked"'; } ?>>
-                    <?= $Lang->get('ENABLED') ?>
+                    <?= $Lang->get('GLOBAL__ENABLED') ?>
                   </label>
                   <br>
                   <label>
                     <input type="radio" name="skin_free" value="0"<?php if($config['skin_free'] == 0) { echo ' checked="checked"'; } ?>>
-                    <?= $Lang->get('DISABLED') ?>
+                    <?= $Lang->get('GLOBAL__DISABLED') ?>
                   </label>
                 </div>
               </div>
@@ -62,12 +62,12 @@
               <div class="radio">
                 <label>
                   <input type="radio" name="capes" value="1"<?php if($config['capes'] == 1) { echo ' checked="checked"'; } ?>>
-                  <?= $Lang->get('ENABLED') ?>
+                  <?= $Lang->get('GLOBAL__ENABLED') ?>
                 </label>
                 <br>
                 <label>
                   <input type="radio" name="capes" value="0"<?php if($config['capes'] == 0) { echo ' checked="checked"'; } ?>>
-                  <?= $Lang->get('DISABLED') ?>
+                  <?= $Lang->get('GLOBAL__DISABLED') ?>
                 </label>
               </div>
             </div>
@@ -77,12 +77,12 @@
               <div class="radio">
                 <label>
                   <input type="radio" name="cape_free" value="1"<?php if($config['cape_free'] == 1) { echo ' checked="checked"'; } ?>>
-                  <?= $Lang->get('ENABLED') ?>
+                  <?= $Lang->get('GLOBAL__ENABLED') ?>
                 </label>
                 <br>
                 <label>
                   <input type="radio" name="cape_free" value="0"<?php if($config['cape_free'] == 0) { echo ' checked="checked"'; } ?>>
-                  <?= $Lang->get('DISABLED') ?>
+                  <?= $Lang->get('GLOBAL__DISABLED') ?>
                 </label>
               </div>
             </div>

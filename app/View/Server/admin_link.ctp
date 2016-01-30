@@ -12,7 +12,7 @@
             <div class="ajax-msg"></div>
 
             <div class="form-group">
-              <label><?= $Lang->get('TIMEOUT') ?></label>
+              <label><?= $Lang->get('SERVER__TIMEOUT') ?></label>
               <input type="text" class="form-control" name="timeout" value="<?= $timeout ?>">
             </div>
 
@@ -57,7 +57,7 @@
         <div class="col-md-12">
           <div class="box">
             <div class="box-header with-border">
-              <h3 class="box-title"><?= $Lang->get('LINK_SERVER') ?></h3>
+              <h3 class="box-title"><?= $Lang->get('SERVER__LINK') ?></h3>
             </div>
             <div class="box-body">
 
@@ -77,22 +77,22 @@
                 </div>
 
                 <div class="form-group">
-                  <label><?= $Lang->get('NAME') ?></label>
+                  <label><?= $Lang->get('GLOBAL__NAME') ?></label>
                   <input type="text" class="form-control" name="name" value="<?= $value['Server']['name'] ?>" placeholder="Ex: MineWeb">
                 </div>
 
                 <div class="form-group">
-                  <label><?= $Lang->get('SERVER_HOST') ?></label>
+                  <label><?= $Lang->get('SERVER__HOST') ?></label>
                   <input type="text" class="form-control" name="host" value="<?= $value['Server']['ip'] ?>" placeholder="Ex: 127.0.0.1">
                 </div>
 
                 <div class="form-group">
-                  <label><?= $Lang->get('PORT') ?></label>
+                  <label><?= $Lang->get('SERVER__PORT') ?></label>
                   <input type="text" class="form-control" name="port" value="<?= $value['Server']['port'] ?>" placeholder="Ex: 8080">
                 </div>
 
                 <button type="submit" class="btn btn-success"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
-                <a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'delete', 'admin' => true, $value['Server']['id'])) ?>" type="submit" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>
+                <a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'delete', 'admin' => true, $value['Server']['id'])) ?>" type="submit" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
 
                 <button class="btn btn-info switchBanner pull-right<?= (isset($value['Server']['activeInBanner']) && $value['Server']['activeInBanner']) ? ' active' : '' ?>" id="<?= $value['Server']['id'] ?>"><?= $Lang->get('SERVER__AFFICH_BANNER') ?></button>
 
@@ -137,7 +137,7 @@ $("#add_server").click(function() {
     new_server += '<div class="col-md-12">';
       new_server += '<div class="box">';
         new_server += '<div class="box-header with-border">';
-          new_server += '<h3 class="box-title"><?= $Lang->get('LINK_SERVER') ?></h3>';
+          new_server += '<h3 class="box-title"><?= $Lang->get('SERVER__LINK') ?></h3>';
         new_server += '</div>';
         new_server += '<div class="box-body">';
           new_server += '<form id="'+i+'" action="<?= $this->Html->url(array('controller' => 'server', 'action' => 'link_ajax', 'admin' => true)) ?>" method="post" data-ajax="true">';
@@ -151,15 +151,15 @@ $("#add_server").click(function() {
               new_server +='</select>';
             new_server += '</div>';
             new_server += '<div class="form-group">';
-              new_server += '<label><?= $Lang->get('NAME') ?></label>';
+              new_server += '<label><?= $Lang->get('GLOBAL__NAME') ?></label>';
               new_server += '<input type="text" class="form-control" name="name" placeholder="Ex: MineWeb">';
             new_server += '</div>';
             new_server += '<div class="form-group">';
-              new_server += '<label><?= $Lang->get('SERVER_HOST') ?></label>';
+              new_server += '<label><?= $Lang->get('SERVER__HOST') ?></label>';
               new_server += '<input type="text" class="form-control" name="host" placeholder="Ex: 127.0.0.1">';
             new_server += '</div>';
             new_server += '<div class="form-group">';
-              new_server += '<label><?= $Lang->get('PORT') ?></label>';
+              new_server += '<label><?= $Lang->get('SERVER__PORT') ?></label>';
               new_server += '<input type="text" class="form-control" name="port" placeholder="Ex: 8080">';
             new_server += '</div>';
             new_server += '<button type="submit" class="btn btn-success"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>';

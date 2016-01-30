@@ -7,7 +7,7 @@ $this->Configuration = new ConfigurationComponent;
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('EDIT_USER') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('USER__EDIT_TITLE') ?></h3>
         </div>
         <div class="box-body">
           <form action="<?= $this->Html->url(array('controller' => 'user', 'action' => 'edit_ajax')) ?>" method="post" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'user', 'action' => 'index', 'admin' => 'true')) ?>">
@@ -42,9 +42,9 @@ $this->Configuration = new ConfigurationComponent;
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('RANK') ?></label>
+              <label><?= $Lang->get('USER__RANK') ?></label>
               <select class="form-control" name="rank">
-                <option value="" selected><?= ($search_user['rank'] == 4) ? $Lang->get('ADMINISTRATOR') : $search_user['rank'] ?></option>
+                <option value="" selected><?= ($search_user['rank'] == 4) ? $Lang->get('USER__RANK_ADMINISTRATOR') : $search_user['rank'] ?></option>
                 <?php foreach ($options_ranks as $key => $value) { ?>
                     <option value="<?= $key ?>"><?= $value ?></option>
                 <?php } ?>
@@ -53,7 +53,7 @@ $this->Configuration = new ConfigurationComponent;
 
             <?php if($this->EyPlugin->isInstalled('Shop')) { ?>
               <div class="form-group">
-                <label><?= $Lang->get('MONEY') ?></label>
+                <label><?= $Lang->get('USER__MONEY') ?></label>
                 <input name="money" class="form-control" value="<?= $search_user['money'] ?>" type="text">
               </div>
             <?php } ?>
@@ -72,12 +72,12 @@ $this->Configuration = new ConfigurationComponent;
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('CREATED_SIGNIN') ?></label>
+              <label><?= $Lang->get('USER__REGISTER_DATE') ?></label>
               <input class="form-control" value="<?= $search_user['created'] ?>" type="text" disabled="">
             </div>
 
             <div class="pull-right">
-              <a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
+              <a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
               <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             </div>
           </form>
@@ -97,7 +97,7 @@ $this->Configuration = new ConfigurationComponent;
             <thead>
               <tr>
                 <th>ID</th>
-                <th><?= $Lang->get('ACTION') ?></th>
+                <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
               </tr>
             </thead>
             <tbody>

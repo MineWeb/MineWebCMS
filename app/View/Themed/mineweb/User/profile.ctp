@@ -41,7 +41,7 @@ $this->EyPlugin = new EyPluginComponent;
 				</div>
 				<div class="section">
 					<p>
-						<b><?= $Lang->get('RANK') ?> :</b>
+						<b><?= $Lang->get('USER__RANK') ?> :</b>
 						<?php foreach ($available_ranks as $key => $value) {
 							if($user['rank'] == $key) {
 								echo $value;
@@ -51,7 +51,7 @@ $this->EyPlugin = new EyPluginComponent;
 				</div>
 				<?php if($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
 					<div class="section">
-						<p><b><?= $Lang->get('MONEY') ?> :</b> <span class="money"><?= $user['money'] ?></span></p>
+						<p><b><?= $Lang->get('USER__MONEY') ?> :</b> <span class="money"><?= $user['money'] ?></span></p>
 					</div>
 				<?php } ?>
 
@@ -60,7 +60,7 @@ $this->EyPlugin = new EyPluginComponent;
 				</div>
 
 				<div class="section">
-					<p><b><?= $Lang->get('CREATED') ?> :</b> <?= $Lang->date($user['created']) ?></p>
+					<p><b><?= $Lang->get('GLOBAL__CREATED') ?> :</b> <?= $Lang->date($user['created']) ?></p>
 				</div>
 
 				<div class="clearfix"></div>
@@ -144,7 +144,7 @@ $this->EyPlugin = new EyPluginComponent;
 										foreach ($api as $key => $value) { ?>
 											<tr id="<?= $key ?>">
 												<th><?= $value ?></th>
-												<th><button data-ip-id="<?= $key ?>" class="btn btn-danger delete_ip"><?= $Lang->get('DELETE') ?></button></th>
+												<th><button data-ip-id="<?= $key ?>" class="btn btn-danger delete_ip"><?= $Lang->get('GLOBAL__DELETE') ?></button></th>
 											</tr>
 										<?php } ?>
 									</tbody>
@@ -160,7 +160,7 @@ $this->EyPlugin = new EyPluginComponent;
 									</div>
 
 									<div class="form-group">
-										<button class="btn btn-success"><?= $Lang->get('ADD') ?></button>
+										<button class="btn btn-success"><?= $Lang->get('GLOBAL__ADD') ?></button>
 									</div>
 								</form>
 							</div>
@@ -241,7 +241,7 @@ $this->EyPlugin = new EyPluginComponent;
 	          	} else if(data.indexOf('false') != -1) {
 	            	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
 		        } else {
-			    	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+			    	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></i></div>');
 			    }
 	        });
 	        return false;
@@ -257,14 +257,14 @@ $this->EyPlugin = new EyPluginComponent;
 	          	} else if(data.indexOf('false') != -1) {
 	            	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
 		        } else {
-			    	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+			    	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></i></div>');
 			    }
 	        });
 	        return false;
 		}
 
 		$("#allowed_ip").submit(function( event ) {
-			$('.ajax-msg-ip').empty().html('<div class="alert alert-info"><a class="close" data-dismiss="alert">×</a><?= $Lang->get('LOADING') ?>...</div>').fadeIn(500);
+			$('.ajax-msg-ip').empty().html('<div class="alert alert-info"><a class="close" data-dismiss="alert">×</a><?= $Lang->get('GLOBAL__LOADING') ?>...</div>').fadeIn(500);
 	    	event.preventDefault();
 	        var $form = $( this );
 	        var ip = $form.find("input[name='ip']").val();
@@ -277,7 +277,7 @@ $this->EyPlugin = new EyPluginComponent;
 	          	} else if(data.indexOf('false') != -1) {
 	            	$('.ajax-msg-ip').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
 		        } else {
-			    	$('.ajax-msg-ip').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+			    	$('.ajax-msg-ip').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></i></div>');
 			    }
 	        });
 	        return false;
@@ -293,7 +293,7 @@ $this->EyPlugin = new EyPluginComponent;
 	          	} else if(data.indexOf('false') != -1) {
 	            	$('.ajax-msg-ip').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
 		        } else {
-			    	$('.ajax-msg-ip').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+			    	$('.ajax-msg-ip').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></i></div>');
 			    }
 	        });
 	        return false;

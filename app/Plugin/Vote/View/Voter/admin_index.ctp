@@ -16,9 +16,9 @@
               <label><?= $Lang->get('REWARDS_TYPE') ?></label>
               <?php
                 if(@$vote['rewards_type'] == 0) {
-                  $options = array('0' => $Lang->get('RANDOM'), '1' => $Lang->get('ALL'));
+                  $options = array('0' => $Lang->get('GLOBAL__RANDOM'), '1' => $Lang->get('GLOBAL__ALL'));
                 } else {
-                  $options = array('1' => $Lang->get('ALL'), '0' => $Lang->get('RANDOM'));
+                  $options = array('1' => $Lang->get('GLOBAL__ALL'), '0' => $Lang->get('GLOBAL__RANDOM'));
                 }
               ?>
               <select class="form-control" name="rewards_type" id="rewards_type">
@@ -29,7 +29,7 @@
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('SERVER') ?></label>
+              <label><?= $Lang->get('SERVER__TITLE') ?></label>
               <select class="form-control" name="servers" multiple>
                 <?php foreach ($servers as $key => $value) { ?>
                     <option value="<?= $key ?>"<?= (in_array($key, $selected_server)) ? ' selected' : '' ?>><?= $value ?></option>
@@ -45,16 +45,16 @@
                       <label><?= $Lang->get('REWARD_TYPE') ?></label>
                       <select name="type_reward" class="form-control reward_type">
                         <?php if($v['type'] == "money") { ?>
-                          <option value="money"><?= $Lang->get('MONEY') ?></option>
-                          <option value="server"><?= $Lang->get('SERVER') ?></option>
+                          <option value="money"><?= $Lang->get('USER__MONEY') ?></option>
+                          <option value="server"><?= $Lang->get('SERVER__TITLE') ?></option>
                         <?php } else { ?>
-                          <option value="server"><?= $Lang->get('SERVER') ?></option>
-                          <option value="money"><?= $Lang->get('MONEY') ?></option>
+                          <option value="server"><?= $Lang->get('SERVER__TITLE') ?></option>
+                          <option value="money"><?= $Lang->get('USER__MONEY') ?></option>
                         <?php } ?>
                       </select>
                     </div>
                     <div class="form-group">
-                      <label><?= $Lang->get('NAME') ?></label>
+                      <label><?= $Lang->get('GLOBAL__NAME') ?></label>
                       <input type="text" class="form-control reward_name" name="reward_name" value="<?= $v['name'] ?>">
                     </div>
                     <div class="form-group">
@@ -74,7 +74,7 @@
                     </div>
                   </div>
                   <div class="box-footer">
-                    <button id="<?= $i ?>" class="btn btn-danger pull-right delete"><?= $Lang->get('DELETE') ?></button><br>
+                    <button id="<?= $i ?>" class="btn btn-danger pull-right delete"><?= $Lang->get('GLOBAL__DELETE') ?></button><br>
                   </div>
                 </div>
               <?php } ?>
@@ -84,12 +84,12 @@
                   <div class="form-group">
                     <label><?= $Lang->get('REWARD_TYPE') ?></label>
                     <select name="type_reward" class="form-control reward_type">
-                      <option value="money"><?= $Lang->get('MONEY') ?></option>
-                      <option value="server"><?= $Lang->get('SERVER') ?></option>
+                      <option value="money"><?= $Lang->get('USER__MONEY') ?></option>
+                      <option value="server"><?= $Lang->get('SERVER__TITLE') ?></option>
                     </select>
                   </div>
                   <div class="form-group">
-                    <label><?= $Lang->get('NAME') ?></label>
+                    <label><?= $Lang->get('GLOBAL__NAME') ?></label>
                     <input type="text" class="form-control reward_name" name="reward_name">
                   </div>
                   <div class="form-group">
@@ -140,7 +140,7 @@
                     </div>
                   </div>
                   <div class="box-footer">
-                    <button id="<?= $i ?>" class="btn btn-danger pull-right delete_website"><?= $Lang->get('DELETE') ?></button><br>
+                    <button id="<?= $i ?>" class="btn btn-danger pull-right delete_website"><?= $Lang->get('GLOBAL__DELETE') ?></button><br>
                   </div>
                 </div>
               <?php } ?>
@@ -252,7 +252,7 @@
       var display_proba = 'none';
     }
 
-    var add = '<div class="box box-info reward_list" id="reward-'+how+'"><div class="box-body"><div class="form-group"><label><?= $Lang->get('REWARD_TYPE') ?></label><select name="type_reward" class="form-control reward_type"><option value="money"><?= $Lang->get('MONEY') ?></option><option value="server"><?= $Lang->get('SERVER') ?></option></select></div><div class="form-group"><label><?= $Lang->get('NAME') ?></label><input type="text" class="form-control reward_name" name="reward_name"></div><div class="form-group"><label><?= $Lang->get('REWARD_VALUE') ?></label><input type="text" name="reward_value" class="form-control reward_value" placeholder="<?= $Lang->get('CMD_OR_MONEY') ?>"></div><div class="form-group reward_proba_container" style="display:'+display_proba+';"><label><?= $Lang->get('REWARD_PROBABILITY') ?></label><input type="text" name="reward_proba" class="form-control reward_proba" placeholder="<?= addslashes($Lang->get('REWARD_PERCENTAGE')) ?>"></div></div></div>';
+    var add = '<div class="box box-info reward_list" id="reward-'+how+'"><div class="box-body"><div class="form-group"><label><?= $Lang->get('REWARD_TYPE') ?></label><select name="type_reward" class="form-control reward_type"><option value="money"><?= $Lang->get('USER__MONEY') ?></option><option value="server"><?= $Lang->get('SERVER__TITLE') ?></option></select></div><div class="form-group"><label><?= $Lang->get('GLOBAL__NAME') ?></label><input type="text" class="form-control reward_name" name="reward_name"></div><div class="form-group"><label><?= $Lang->get('REWARD_VALUE') ?></label><input type="text" name="reward_value" class="form-control reward_value" placeholder="<?= $Lang->get('CMD_OR_MONEY') ?>"></div><div class="form-group reward_proba_container" style="display:'+display_proba+';"><label><?= $Lang->get('REWARD_PROBABILITY') ?></label><input type="text" name="reward_proba" class="form-control reward_proba" placeholder="<?= addslashes($Lang->get('REWARD_PERCENTAGE')) ?>"></div></div></div>';
     $('#add-js').append(add);
     $('#add-js').attr('data-number', how);
   });
@@ -265,9 +265,9 @@
 
     var submit = $form.find("input[type='submit']");
 
-    $form.find('.ajax-msg').empty().html('<div class="alert alert-info"><a class="close" data-dismiss="alert">×</a><?= $Lang->get('LOADING') ?> ...</div>').fadeIn(500);
+    $form.find('.ajax-msg').empty().html('<div class="alert alert-info"><a class="close" data-dismiss="alert">×</a><?= $Lang->get('GLOBAL__LOADING') ?> ...</div>').fadeIn(500);
     var submit_btn_content = $form.find('button[type=submit]').html();
-    $form.find('button[type=submit]').html('<?= $Lang->get('LOADING') ?>...').attr('disabled', 'disabled').fadeIn(500);
+    $form.find('button[type=submit]').html('<?= $Lang->get('GLOBAL__LOADING') ?>...').attr('disabled', 'disabled').fadeIn(500);
 
     var servers = $form.find("select[name='servers']").val();
     var rewards_type = $form.find("select[name='rewards_type']").val();
@@ -322,7 +322,7 @@
           $('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
           $form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
       } else {
-      $('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+      $('.ajax-msg').html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></i></div>');
       $form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
     }
     });

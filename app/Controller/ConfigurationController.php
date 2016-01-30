@@ -88,7 +88,7 @@ class ConfigurationController extends AppController {
 
 				$this->History->set('EDIT_CONFIGURATION', 'configuration');
 
-				$this->Session->setFlash($this->Lang->get('EDIT_CONFIGURATION_SUCCESS'), 'default.success');
+				$this->Session->setFlash($this->Lang->get('CONFIG__EDIT_SUCCESS'), 'default.success');
 			}
 
 			$this->Lang->lang = $this->Lang->getLang(); // on refresh les messages

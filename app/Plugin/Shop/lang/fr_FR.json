@@ -7,6 +7,7 @@
     "NO_ENOUGH_MONEY": "Vous n'avez pas assez d'argent pour proc\u00e9der \u00e0 cet achat.",
     "PRICE": "Prix",
     "DESCRIPTION": "Description",
+    "CATEGORY_SUCCESS_ADD": "Cat\u00e9gorie ajout\u00e9e avec succ\u00e8s !",
     "NAME_OF_ITEM": "Nom de l'article",
     "WANT_TO_BUY": "Voulez-vous r\u00e9ellement acheter cet article ?",
     "BUY_SUCCESS": "L'achat vient d'\u00eatre effectu\u00e9",

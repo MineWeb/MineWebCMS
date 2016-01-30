@@ -13,7 +13,7 @@
             <input type="hidden" name="id" value="<?= $item['id'] ?>">
 
             <div class="form-group">
-              <label><?= $Lang->get('NAME') ?></label>
+              <label><?= $Lang->get('GLOBAL__NAME') ?></label>
               <input name="name" class="form-control" value="<?= $item['name'] ?>" type="text">
             </div>
 
@@ -44,7 +44,7 @@
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('SERVER') ?></label>
+              <label><?= $Lang->get('SERVER__TITLE') ?></label>
               <select class="form-control" name="servers" multiple>
                 <?php foreach ($servers as $key => $value) { ?>
                     <option value="<?= $key ?>"<?= (in_array($key, $selected_server)) ? ' selected' : '' ?>><?= $value ?></option>
@@ -53,29 +53,29 @@
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('COMMANDS') ?></label>
+              <label><?= $Lang->get('GLOBAL__SERVER_COMMANDS') ?></label>
               <input name="commands" class="form-control" value="<?= $item['commands'] ?>" type="text">
-              <small><b>{PLAYER}</b> = Pseudo <br> <b>[{+}]</b> <?= $Lang->get('FOR_NEW_COMMAND') ?> <br><b><?= $Lang->get('EXAMPLE') ?>:</b> <i>give {PLAYER} 1 1[{+}]broadcast {PLAYER} ...</i></small>
+              <small><b>{PLAYER}</b> = Pseudo <br> <b>[{+}]</b> <?= $Lang->get('SERVER__PARSE_NEW_COMMAND') ?> <br><b><?= $Lang->get('GLOBAL__EXAMPLE') ?>:</b> <i>give {PLAYER} 1 1[{+}]broadcast {PLAYER} ...</i></small>
             </div>
 
             <div class="form-group">
               <label><?= $Lang->get('TIMED_COMMAND') ?></label>
               <div class="radio">
                 <label>
-                  <input name="timedCommand" type="radio" value="true"<?= ($item['timedCommand']) ? ' checked=""' : ''; ?>> <?= $Lang->get('ENABLED') ?>
+                  <input name="timedCommand" type="radio" value="true"<?= ($item['timedCommand']) ? ' checked=""' : ''; ?>> <?= $Lang->get('GLOBAL__ENABLED') ?>
                 </label>
                 <br>
                 <label>
-                  <input name="timedCommand" type="radio" value="false"<?= (!$item['timedCommand']) ? ' checked=""' : ''; ?>> <?= $Lang->get('DISABLED') ?>
+                  <input name="timedCommand" type="radio" value="false"<?= (!$item['timedCommand']) ? ' checked=""' : ''; ?>> <?= $Lang->get('GLOBAL__DISABLED') ?>
                 </label>
               </div>
               <small><i><?= $Lang->get('TIMED_COMMAND_EXPLAIN') ?></i></small>
             </div>
             <div id="timedCommands" style="display:<?= ($item['timedCommand']) ? 'block' : 'none' ?>;">
               <div class="form-group">
-                <label><?= $Lang->get('COMMANDS') ?></label>
+                <label><?= $Lang->get('GLOBAL__SERVER_COMMANDS') ?></label>
                 <input type="text" name="timedCommand_cmd" value="<?= @$item['timedCommand_cmd'] ?>" class="form-control">
-                <small><b>{PLAYER}</b> = Pseudo <br> <b>[{+}]</b> <?= $Lang->get('FOR_NEW_COMMAND') ?> <br><b><?= $Lang->get('EXAMPLE') ?>:</b> <i>give {PLAYER} 1 1[{+}]broadcast {PLAYER} ...</i></small>
+                <small><b>{PLAYER}</b> = Pseudo <br> <b>[{+}]</b> <?= $Lang->get('SERVER__PARSE_NEW_COMMAND') ?> <br><b><?= $Lang->get('GLOBAL__EXAMPLE') ?>:</b> <i>give {PLAYER} 1 1[{+}]broadcast {PLAYER} ...</i></small>
               </div>
               <div class="form-group">
                 <label><?= $Lang->get('TIME') ?></label>
@@ -84,7 +84,7 @@
             </div>
 
             <div class="pull-right">
-              <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
+              <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
               <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             </div>
           </form>

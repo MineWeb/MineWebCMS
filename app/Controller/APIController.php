@@ -108,7 +108,7 @@ class APIController extends AppController {
 						$this->API->set($key, $value);
 					}
 					$this->History->set('EDIT_CONFIGURATION', 'api');
-					$this->Session->setFlash($this->Lang->get('EDIT_CONFIGURATION_SUCCESS'), 'default.success');
+					$this->Session->setFlash($this->Lang->get('CONFIG__EDIT_SUCCESS'), 'default.success');
 				} else {
 					$this->Session->setFlash($this->Lang->get('ERROR__FILL_ALL_FIELDS'), 'default.error');
 				}

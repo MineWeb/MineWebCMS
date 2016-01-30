@@ -7,7 +7,7 @@ class NavbarController extends AppController {
 	public function admin_index() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NAV')) {
 
-			$this->set('title_for_layout',$this->Lang->get('NAVBAR'));
+			$this->set('title_for_layout',$this->Lang->get('NAVBAR__TITLE'));
 			$this->layout = 'admin';
 			$this->loadModel('Navbar');
 			$navbars = $this->Navbar->find('all', array('order' => 'order'));
@@ -89,7 +89,7 @@ class NavbarController extends AppController {
 						echo $this->Lang->get('INTERNAL_ERROR').'|false';
 					}
 				} else {
-					echo $this->Lang->get('CANT_BE_EMPTY').'|false';
+					echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
 				}
 			} else {
 				echo $this->Lang->get('NOT_POST').'|false';
@@ -107,7 +107,7 @@ class NavbarController extends AppController {
 				$this->loadModel('Navbar');
 				if($this->Navbar->delete($id)) {
 					$this->History->set('DELETE_NAV', 'navbar');
-					$this->Session->setFlash($this->Lang->get('NAV_DELETE_SUCCESS'), 'default.success');
+					$this->Session->setFlash($this->Lang->get('NAVBAR__DELETE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'navbar', 'action' => 'index', 'admin' => true));
 				} else {
 					$this->redirect(array('controller' => 'navbar', 'action' => 'index', 'admin' => true));
@@ -124,7 +124,7 @@ class NavbarController extends AppController {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NAV')) {
 			$this->layout = 'admin';
 
-			$this->set('title_for_layout', $this->Lang->get('ADD_NAV'));
+			$this->set('title_for_layout', $this->Lang->get('NAVBAR__ADD_LINK'));
 			$url_plugins = $this->EyPlugin->getPluginsActive();
 			foreach ($url_plugins as $key => $value) {
 				$DBid = $value->DBid;
@@ -186,8 +186,8 @@ class NavbarController extends AppController {
 
 						$this->History->set('ADD_NAV', 'navbar');
 
-						echo $this->Lang->get('SUCCESS_NAV_ADD').'|true';
-						$this->Session->setFlash($this->Lang->get('SUCCESS_NAV_ADD'), 'default.success');
+						echo $this->Lang->get('NAVBAR__ADD_SUCCESS').'|true';
+						$this->Session->setFlash($this->Lang->get('NAVBAR__ADD_SUCCESS'), 'default.success');
 
 					} else {
 						echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
@@ -213,7 +213,7 @@ class NavbarController extends AppController {
 					$nav = $find['Navbar'];
 
 					$this->layout = 'admin';
-					$this->set('title_for_layout', $this->Lang->get('NAV__EDIT_TITLE'));
+					$this->set('title_for_layout', $this->Lang->get('NAVBAR__EDIT_TITLE'));
 
 					$url_plugins = $this->EyPlugin->getPluginsActive();
 					foreach ($url_plugins as $key => $value) {
@@ -281,8 +281,8 @@ class NavbarController extends AppController {
 
 						$this->History->set('ADD_NAV', 'navbar');
 
-						echo $this->Lang->get('SUCCESS_NAV_ADD').'|true';
-						$this->Session->setFlash($this->Lang->get('SUCCESS_NAV_ADD'), 'default.success');
+						echo $this->Lang->get('NAVBAR__EDIT_SUCCESS').'|true';
+						$this->Session->setFlash($this->Lang->get('NAVBAR__EDIT_SUCCESS'), 'default.success');
 
 					} else {
 						echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';

@@ -19,7 +19,7 @@ $this->Configuration = new ConfigurationComponent;
             <div class="ajax-msg"></div>
 
             <div class="form-group">
-              <label><?= $Lang->get('NAME') ?></label>
+              <label><?= $Lang->get('GLOBAL__NAME') ?></label>
               <input name="name" class="form-control" value="<?= $starpass['name'] ?>" type="text">
             </div>
 
@@ -39,7 +39,7 @@ $this->Configuration = new ConfigurationComponent;
             </div>
 
             <div class="pull-right">
-              <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
+              <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
               <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             </div>
           </form>

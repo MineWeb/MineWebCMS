@@ -87,7 +87,7 @@
                   if(!empty($youtube_link)) {
                     echo '<a href="'.$youtube_link.'" target="_blank" class="btn btn-lg btn-youtube"><img src="theme/mineweb/img/yt.png"></a>';
                   }
-                  echo '<span>'.$Lang->get('JOIN_US').'</span>';
+                  echo '<span>'.$Lang->get('GLOBAL__JOIN_US').'</span>';
                   if(!empty($twitter_link)) {
                     echo '<a href="'.$twitter_link.'" target="_blank" class="btn btn-lg btn-twitter"><img src="theme/mineweb/img/twitter.png"></a>';
                   }

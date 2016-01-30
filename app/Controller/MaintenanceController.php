@@ -18,7 +18,7 @@ class MaintenanceController extends AppController {
 		if($this->isConnected AND $this->User->isAdmin()) {
 			$this->layout = "admin";
 
-			$this->set('title_for_layout',$this->Lang->get('MAINTENANCE'));
+			$this->set('title_for_layout',$this->Lang->get('MAINTENANCE__TITLE'));
 			if($this->request->is('post')) {
 				if($this->request->data['state'] == 'enabled') {
 					$maintenance = $this->request->data['reason'];
@@ -28,7 +28,7 @@ class MaintenanceController extends AppController {
 					$this->History->set('DELETE_MAINTENANCE', 'maintenance');
 				}
 				$this->Configuration->set('maintenance', $maintenance);
-				$this->Session->setFlash($this->Lang->get('EDIT_MAINTENANCE_SUCCESS'), 'default.success');
+				$this->Session->setFlash($this->Lang->get('MAINTENANCE__EDIT_SUCCESS'), 'default.success');
 			}
 		} else {
 			$this->redirect('/');

@@ -228,7 +228,7 @@ class PagesController extends AppController {
 	public function admin_index() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_PAGE')) {
 
-			$this->set('title_for_layout',$this->Lang->get('PAGES_LIST'));
+			$this->set('title_for_layout',$this->Lang->get('PAGE__LIST'));
 			$this->layout = 'admin';
 			$this->loadModel('Page');
 			$pages = $this->Page->find('all');
@@ -241,7 +241,7 @@ class PagesController extends AppController {
 	public function admin_add() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_PAGE')) {
 
-			$this->set('title_for_layout',$this->Lang->get('ADD_PAGE'));
+			$this->set('title_for_layout',$this->Lang->get('PAGE__ADD'));
 			$this->layout = 'admin';
 		} else {
 			$this->redirect('/');
@@ -265,8 +265,8 @@ class PagesController extends AppController {
 					));
 					$this->Page->save();
 					$this->History->set('ADD_PAGE', 'page');
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_PAGE_ADD')));
-					$this->Session->setFlash($this->Lang->get('SUCCESS_PAGE_ADD'), 'default.success');
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('PAGE__ADD_SUCCESS')));
+					$this->Session->setFlash($this->Lang->get('PAGE__ADD_SUCCESS'), 'default.success');
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
@@ -286,7 +286,7 @@ class PagesController extends AppController {
 				$this->loadModel('Page');
 				if($this->Page->delete($id)) {
 					$this->History->set('DELETE_PAGE', 'page');
-					$this->Session->setFlash($this->Lang->get('PAGE_DELETE_SUCCESS'), 'default.success');
+					$this->Session->setFlash($this->Lang->get('PAGE__DELETE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'pages', 'action' => 'index', 'admin' => true));
 				} else {
 					$this->redirect(array('controller' => 'pages', 'action' => 'index', 'admin' => true));
@@ -303,7 +303,7 @@ class PagesController extends AppController {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_PAGE')) {
 			if($id != false) {
 
-				$this->set('title_for_layout',$this->Lang->get('EDIT_PAGE'));
+				$this->set('title_for_layout',$this->Lang->get('PAGE__EDIT'));
 				$this->layout = 'admin';
 				$this->loadModel('Page');
 				$page = $this->Page->find('all', array('conditions' => array('id' => $id)));
@@ -336,8 +336,8 @@ class PagesController extends AppController {
 					));
 					$this->Page->save();
 					$this->History->set('EDIT_PAGE', 'page');
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_PAGE_EDIT')));
-					$this->Session->setFlash($this->Lang->get('SUCCESS_PAGE_EDIT'), 'default.success');
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('PAGE__EDIT_SUCCESS')));
+					$this->Session->setFlash($this->Lang->get('PAGE__EDIT_SUCCESS'), 'default.success');
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}

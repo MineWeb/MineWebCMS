@@ -3,11 +3,11 @@
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('NAVBAR') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('NAVBAR__TITLE') ?></h3>
         </div>
         <div class="box-body">
 
-          <a class="btn btn-large btn-block btn-primary" href="<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'add', 'admin' => true)) ?>"><?= $Lang->get('ADD_NAV') ?></a>
+          <a class="btn btn-large btn-block btn-primary" href="<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'add', 'admin' => true)) ?>"><?= $Lang->get('NAVBAR__ADD_LINK') ?></a>
 
           <hr>
 
@@ -15,9 +15,9 @@
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th><?= $Lang->get('NAME') ?></th>
+                <th><?= $Lang->get('GLOBAL__NAME') ?></th>
                 <th><?= $Lang->get('URL') ?></th>
-                <th><?= $Lang->get('ACTION') ?></th>
+                <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
               </tr>
             </thead>
             <tbody id="sortable">
@@ -28,11 +28,11 @@
                   <?php if($value['Navbar']['url'] != '#') { ?>
                     <td><a href="<?= $value['Navbar']['url'] ?>"><?= $value['Navbar']['url'] ?></a></td>
                   <?php } else { ?>
-                    <td><a href="#"><?= $Lang->get('DROPDOWN') ?></a></td>
+                    <td><a href="#"><?= $Lang->get('NAVBAR__LINK_TYPE_DROPDOWN') ?></a></td>
                   <?php } ?>
                   <td>
-                    <a class="btn btn-info" href="<?= $this->Html->url(array('action' => 'edit', $value['Navbar']['id'])) ?>"><?= $Lang->get('EDIT') ?></a>
-                    <a onClick="confirmDel('<?= $this->Html->url(array('action' => 'delete', $value['Navbar']['id'])) ?>')" class="btn btn-danger"><?= $Lang->get('DELETE') ?></a>
+                    <a class="btn btn-info" href="<?= $this->Html->url(array('action' => 'edit', $value['Navbar']['id'])) ?>"><?= $Lang->get('GLOBAL__EDIT') ?></a>
+                    <a onClick="confirmDel('<?= $this->Html->url(array('action' => 'delete', $value['Navbar']['id'])) ?>')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
                   </td>
                 </tr>
               </li>
@@ -41,7 +41,7 @@
           </table>
           <br>
           <div class="ajax-msg"></div>
-          <button id="save" class="btn btn-success pull-right active" disabled="disabled"><?= $Lang->get('NAV_SAVED') ?></button>
+          <button id="save" class="btn btn-success pull-right active" disabled="disabled"><?= $Lang->get('NAVBAR__SAVE_SUCCESS') ?></button>
 
         </div>
       </div>
@@ -58,7 +58,7 @@ $(function() {
   $( "#sortable" ).sortable({
     axis: 'y',
     stop: function (event, ui) {
-        $('#save').empty().html('<?= $Lang->get('ON_SAVE') ?>');
+        $('#save').empty().html('<?= $Lang->get('NAVBAR__SAVE_IN_PROGRESS') ?>');
         var inputs = {};
         var nav = $(this).sortable('serialize');
         inputs['nav'] = nav;
@@ -67,11 +67,11 @@ $(function() {
         $.post("<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'save_ajax', 'admin' => true)) ?>", inputs, function(data) {
           data2 = data.split("|");
           if(data.indexOf('true') != -1) {
-                $('#save').empty().html('<?= $Lang->get('NAV_SAVED') ?>');
+                $('#save').empty().html('<?= $Lang->get('NAVBAR__SAVE_SUCCESS') ?>');
               } else if(data.indexOf('false') != -1) {
                 $('.ajax-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
             } else {
-            $('.ajax-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+            $('.ajax-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></i></div>');
           }
         });
       }

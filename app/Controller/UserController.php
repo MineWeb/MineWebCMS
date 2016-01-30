@@ -350,7 +350,7 @@ class UserController extends AppController {
 				$this->set('search_psc_msg', false);
 			}
 
-			$available_ranks = array(0 => $this->Lang->get('MEMBER'), 2 => $this->Lang->get('MODERATOR'), 3 => $this->Lang->get('ADMINISTRATOR'), 4 => $this->Lang->get('ADMINISTRATOR'), 5 => $this->Lang->get('BANNED'));
+			$available_ranks = array(0 => $this->Lang->get('USER__RANK_MEMBER'), 2 => $this->Lang->get('USER__RANK_MODERATOR'), 3 => $this->Lang->get('USER__RANK_ADMINISTRATOR'), 4 => $this->Lang->get('USER__RANK_ADMINISTRATOR'), 5 => $this->Lang->get('BANNED'));
 			$this->loadModel('Rank');
 			$custom_ranks = $this->Rank->find('all');
 			foreach ($custom_ranks as $key => $value) {
@@ -461,7 +461,7 @@ class UserController extends AppController {
 	function admin_index() {
 		if($this->isConnected AND $this->User->isAdmin()) {
 
-			$this->set('title_for_layout',$this->Lang->get('USER'));
+			$this->set('title_for_layout',$this->Lang->get('USER__TITLE'));
 			$this->layout = 'admin';
 
 			$this->set('type', $this->Configuration->get('member_page_type'));
@@ -504,10 +504,10 @@ class UserController extends AppController {
 			if($this->request->is('ajax')) {
 
 				$available_ranks = array(
-					0 => array('label' => 'success', 'name' => $this->Lang->get('MEMBER')),
-					2 => array('label' => 'warning', 'name' => $this->Lang->get('MODERATOR')),
-					3 => array('label' => 'danger', 'name' => $this->Lang->get('ADMINISTRATOR')),
-					4 => array('label' => 'danger', 'name' => $this->Lang->get('ADMINISTRATOR')),
+					0 => array('label' => 'success', 'name' => $this->Lang->get('USER__RANK_MEMBER')),
+					2 => array('label' => 'warning', 'name' => $this->Lang->get('USER__RANK_MODERATOR')),
+					3 => array('label' => 'danger', 'name' => $this->Lang->get('USER__RANK_ADMINISTRATOR')),
+					4 => array('label' => 'danger', 'name' => $this->Lang->get('USER__RANK_ADMINISTRATOR')),
 					5 => array('label' => 'primary', 'name' => $this->Lang->get('BANNED'))
 				);
 				$this->loadModel('Rank');
@@ -525,8 +525,8 @@ class UserController extends AppController {
 					$username = $value['User']['pseudo'];
 					$date = 'Le'.$this->Lang->date($value['User']['created']);
 					$rank = '<span class="label label-'.$available_ranks[$value['User']['rank']]['label'].'">'.$available_ranks[$value['User']['rank']]['name'].'</span>';
-					$btns = '<a href="'.Router::url(array('controller' => 'user', 'action' => 'edit/'.$value["User"]["id"], 'admin' => true)).'" class="btn btn-info">'.$this->Lang->get('EDIT').'</a>';
-					$btns .= '&nbsp;<a onClick="confirmDel('.Router::url(array('controller' => 'user', 'action' => 'delete/'.$value["User"]["id"], 'admin' => true)).')" class="btn btn-danger">'.$this->Lang->get('DELETE').'</button>';
+					$btns = '<a href="'.Router::url(array('controller' => 'user', 'action' => 'edit/'.$value["User"]["id"], 'admin' => true)).'" class="btn btn-info">'.$this->Lang->get('GLOBAL__EDIT').'</a>';
+					$btns .= '&nbsp;<a onClick="confirmDel('.Router::url(array('controller' => 'user', 'action' => 'delete/'.$value["User"]["id"], 'admin' => true)).')" class="btn btn-danger">'.$this->Lang->get('GLOBAL__DELETE').'</button>';
 
 					$data['data'][] = array($username, $date, $rank, $btns);
 
@@ -543,7 +543,7 @@ class UserController extends AppController {
 			if($id != false) {
 
 				$this->layout = 'admin';
-				$this->set('title_for_layout',$this->Lang->get('EDIT_USER'));
+				$this->set('title_for_layout',$this->Lang->get('USER__EDIT_TITLE'));
 				$this->loadModel('User');
 				$find = $this->User->find('all', array('conditions' => array('id' => $id)));
 
@@ -553,7 +553,7 @@ class UserController extends AppController {
 					$findHistory = $this->History->getLastFromUser($id);
 					$search_user['History'] = $this->History->format($findHistory);
 
-					$options_ranks = array('member' => $this->Lang->get('MEMBER'), 2 => $this->Lang->get('MODERATOR'), 3 => $this->Lang->get('ADMINISTRATOR'), 5 => $this->Lang->get('BANNED'));
+					$options_ranks = array('member' => $this->Lang->get('USER__RANK_MEMBER'), 2 => $this->Lang->get('USER__RANK_MODERATOR'), 3 => $this->Lang->get('USER__RANK_ADMINISTRATOR'), 5 => $this->Lang->get('BANNED'));
 					$this->loadModel('Rank');
 					$custom_ranks = $this->Rank->find('all');
 					foreach ($custom_ranks as $key => $value) {
@@ -636,8 +636,8 @@ class UserController extends AppController {
 						$this->User->setToUser($key, $value, $this->request->data['pseudo']);
 					}
 					$this->History->set('EDIT_USER', 'user');
-					$this->Session->setFlash($this->Lang->get('USER_SUCCESS_EDIT'), 'default.success');
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER_SUCCESS_EDIT')));
+					$this->Session->setFlash($this->Lang->get('USER__EDIT_SUCCESS'), 'default.success');
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EDIT_SUCCESS')));
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
@@ -658,7 +658,7 @@ class UserController extends AppController {
 				if(!empty($find)) {
 					$this->User->delete($id);
 					$this->History->set('DELETE_USER', 'user');
-					$this->Session->setFlash($this->Lang->get('DELETE_USER_SUCCESS'), 'default.success');
+					$this->Session->setFlash($this->Lang->get('USER__DELETE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'user', 'action' => 'index', 'admin' => true));
 				} else {
 					$this->Session->setFlash($this->Lang->get('UNKNONW_ID'), 'default.error');

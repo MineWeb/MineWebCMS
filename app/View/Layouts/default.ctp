@@ -96,7 +96,7 @@
                               <li><a href="<?= $this->Html->url(array('controller' => 'profile', 'action' => 'index', 'plugin' => null)) ?>"><?= $Lang->get('USER__PROFILE') ?></a></li>
                               <?php if($Permissions->can('ACCESS_DASHBOARD')) { ?>
                                 <li class="divider"></li>
-                                    <li><a href="<?= $this->Html->url(array('controller' => '', 'action' => 'index', 'plugin' => 'admin')) ?>"><?= $Lang->get('ADMIN_PANEL') ?></a></li>
+                                    <li><a href="<?= $this->Html->url(array('controller' => '', 'action' => 'index', 'plugin' => 'admin')) ?>"><?= $Lang->get('GLOBAL__ADMIN_PANEL') ?></a></li>
                               <?php } ?>
                               <li class="divider"></li>
                               <li><a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'logout', 'plugin' => null)) ?>"><?= $Lang->get('USER__LOGOUT') ?></a></li>
@@ -124,7 +124,7 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-12">
-            <p><?= $Lang->get('COPYRIGHT') ?></p>
+            <p><?= $Lang->get('GLOBAL__FOOTER') ?></p>
           </div>
         </div>
       </div>
@@ -145,9 +145,9 @@
     var LIKE_URL = "<?= $this->Html->url(array('controller' => 'news', 'action' => 'like')) ?>";
     var DISLIKE_URL = "<?= $this->Html->url(array('controller' => 'news', 'action' => 'dislike')) ?>";
 
-    var LOADING_MSG = "<?= $Lang->get('LOADING') ?>";
+    var LOADING_MSG = "<?= $Lang->get('GLOBAL__LOADING') ?>";
     var ERROR_MSG = "<?= $Lang->get('GLOBAL__ERROR') ?>";
-    var INTERNAL_ERROR_MSG = "<?= $Lang->get('ERROR_WHEN_AJAX') ?>";
+    var INTERNAL_ERROR_MSG = "<?= $Lang->get('ERROR__INTERNAL_ERROR') ?>";
     var FORBIDDEN_ERROR_MSG = "<?= $Lang->get('ERROR__FORBIDDEN') ?>"
     var SUCCESS_MSG = "<?= $Lang->get('GLOBAL__SUCCESS') ?>";
 

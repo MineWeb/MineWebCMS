@@ -141,7 +141,7 @@
         'searching': true,
         "language": {
             "infoEmpty": "<?= $Lang->get('RANKING_FACTION__EMPTY_DATA') ?>",
-            "loadingRecords": "<?= $Lang->get('LOADING') ?>...",
+            "loadingRecords": "<?= $Lang->get('GLOBAL__LOADING') ?>...",
             "search":         "<b><?= $Lang->get('RANKING_FACTION__SEARCH') ?></b>:",
             "zeroRecords":    "<?= $Lang->get('RANKING_FACTION__ZERO_RECORDS') ?>",
             "paginate": {

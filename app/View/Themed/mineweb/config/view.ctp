@@ -26,7 +26,7 @@ if(isset($config['logo']) && $config['logo']) {
               <div class="form-group">
                 <div class="checkbox">
                   <input type="checkbox" name="slider" id="slider"<?= (isset($config['slider']) && $config['slider'] == 'true') ? ' checked' : '' ?>>
-                  <label><?= $Lang->get('SLIDER') ?></label>
+                  <label><?= $Lang->get('SLIDER_TITLE') ?></label>
                 </div>
               </div>
 
@@ -41,7 +41,7 @@ if(isset($config['logo']) && $config['logo']) {
               </script>
 
               <div class="form-group">
-        				<label><?= $Lang->get('NAVBAR') ?></label>
+        				<label><?= $Lang->get('NAVBAR__TITLE') ?></label>
         				<div class="radio">
         					<input type="radio" name="navbar" value="navbar2"<?php if($config['navbar'] == "navbar2") { echo ' checked'; } ?>>
                   <label><?= $this->Html->image('/theme/Mineweb/img/navbar2.png', array('width' => '450')) ?></label>
@@ -62,7 +62,7 @@ if(isset($config['logo']) && $config['logo']) {
             <input name="data[_Token][key]" value="<?= $csrfToken ?>" type="hidden">
 
             <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
-            <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'index', 'admin' => true)) ?>" type="button" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
+            <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'index', 'admin' => true)) ?>" type="button" class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
           </form>
 
         </div>

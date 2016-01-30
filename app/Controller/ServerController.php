@@ -9,7 +9,7 @@ class ServerController extends AppController {
 		if($this->isConnected AND $this->User->isAdmin()) {
 			$this->layout = "admin";
 
-			$this->set('title_for_layout',$this->Lang->get('LINK_SERVER'));
+			$this->set('title_for_layout',$this->Lang->get('SERVER__LINK'));
 
 			$this->loadModel('Server');
 			$servers = $this->Server->find('all');
@@ -130,11 +130,11 @@ class ServerController extends AppController {
 					$this->Session->setFlash($this->Lang->get('SERVER__DELETE_SERVER_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'server', 'action' => 'link', 'admin' => true));
 				} else {
-					$this->Session->setFlash($this->Lang->get('ERROR_WHEN_AJAX'), 'default.error');
+					$this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
 					$this->redirect(array('controller' => 'server', 'action' => 'link', 'admin' => true));
 				}
 			} else {
-				$this->Session->setFlash($this->Lang->get('ERROR_WHEN_AJAX'), 'default.error');
+				$this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
 				$this->redirect(array('controller' => 'server', 'action' => 'link', 'admin' => true));
 			}
 		} else {
@@ -180,7 +180,7 @@ class ServerController extends AppController {
 							$timeout = $this->Configuration->get('server_timeout');
 							if(!empty($timeout)) {
 								if(!$this->Server->check('connection', array('host' => $this->request->data['host'], 'port' => $this->request->data['port'], 'timeout' => $timeout, 'secret_key' => $secret_key))) {
-									echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER_CONNECTION_FAILED')));
+									echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED')));
 									exit;
 								}
 							} else {
@@ -188,13 +188,13 @@ class ServerController extends AppController {
 								exit;
 							}
 						} else {
-							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER_CONNECTION_FAILED')));
+							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED')));
 							exit;
 						}
 					} elseif($this->request->data['type'] == 2) {
 						$ping = $this->Server->ping(array('ip' => $this->request->data['host'], 'port' => $this->request->data['port']));
 						if(!$ping) {
-							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER_CONNECTION_FAILED')));
+							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED')));
 							exit;
 						}
 					}
@@ -215,7 +215,7 @@ class ServerController extends AppController {
 					if($this->request->data['type'] != '2' && isset($secret_key)) {
 						$this->Configuration->set('server_secretkey', $secret_key);
 					}
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_CONNECTION_SERVER')));
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SERVER__LINK_SUCCESS')));
 
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));

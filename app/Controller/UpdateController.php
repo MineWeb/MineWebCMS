@@ -6,7 +6,7 @@ class UpdateController extends AppController {
 
 	public function admin_index() { // ajout d'un commentaire pour git
 		if($this->isConnected AND $this->User->isAdmin()) {
-			$this->set('title_for_layout',$this->Lang->get('UPDATE'));
+			$this->set('title_for_layout',$this->Lang->get('GLOBAL__UPDATE'));
 			$this->layout = 'admin';
 
         if(@$dir = opendir(ROOT.'/app/tmp/logs/update/')) {

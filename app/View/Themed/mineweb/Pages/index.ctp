@@ -6,7 +6,7 @@
     <div class="row">
         <div class="page-content">
             <h1 class="title"><?= before_display($page['title']) ?></h1>
-            <p class="author"><?= $Lang->get('AUTHOR') ?> : <?= $page['author'] ?></p>
+            <p class="author"><?= $Lang->get('GLOBAL__AUTHOR') ?> : <?= $page['author'] ?></p>
 
             <p style="color:black;"><?= $page['content'] ?></p>
             <br>

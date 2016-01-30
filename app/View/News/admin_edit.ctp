@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('EDIT_NEWS') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('NEWS__EDIT') ?></h3>
         </div>
         <div class="box-body">
           <form action="<?= $this->Html->url(array('controller' => 'news', 'action' => 'edit_ajax')) ?>" method="post" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'news', 'action' => 'admin_index', 'admin' => 'true')) ?>">
@@ -13,17 +13,17 @@
             <input type="hidden" name="id" value="<?= $news['id'] ?>">
 
             <div class="form-group">
-              <label><?= $Lang->get('TITLE') ?></label>
-              <input name="title" class="form-control" value="<?= $news['title'] ?>" placeholder="<?= $Lang->get('TITLE') ?>" type="text">
+              <label><?= $Lang->get('GLOBAL__TITLE') ?></label>
+              <input name="title" class="form-control" value="<?= $news['title'] ?>" placeholder="<?= $Lang->get('GLOBAL__TITLE') ?>" type="text">
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('SLUG') ?></label>
+              <label><?= $Lang->get('GLOBAL__SLUG') ?></label>
               <div class="input-group">
                 <div class="input-group-addon"><?= $this->Html->url('/blog/', true) ?></div>
-                <input name="slug" id="slug" class="form-control" value="<?= $news['slug'] ?>" placeholder="<?= $Lang->get('SLUG') ?>" type="text">
+                <input name="slug" id="slug" class="form-control" value="<?= $news['slug'] ?>" placeholder="<?= $Lang->get('GLOBAL__SLUG') ?>" type="text">
                 <span class="input-group-btn">
-                  <a href="#" id="generate_slug" class="btn btn-info"><?= $Lang->get('GENERATE') ?></a>
+                  <a href="#" id="generate_slug" class="btn btn-info"><?= $Lang->get('GLOBAL__GENERATE') ?></a>
                 </span>
               </div>
             </div>
@@ -59,7 +59,7 @@
             </div>
 
             <div class="pull-right">
-              <a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'admin_index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
+              <a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'admin_index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
               <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             </div>
           </form>

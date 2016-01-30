@@ -27,7 +27,7 @@
                 <option value="" selected><?= $Lang->get('CHOOSE_OPTION') ?></option>
                 <option value="categories"><?= $Lang->get('CATEGORIES') ?></option>
                 <option value="items"><?= $Lang->get('ITEMS') ?></option>
-                <option value="all"><?= $Lang->get('ALL') ?></option>
+                <option value="all"><?= $Lang->get('GLOBAL__ALL') ?></option>
               </select>
             </div>
 
@@ -91,7 +91,7 @@
             </div>
 
             <div class="pull-right">
-              <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true, 'plugin' => 'shop')) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
+              <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true, 'plugin' => 'shop')) ?>" class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
               <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             </div>
           </form>

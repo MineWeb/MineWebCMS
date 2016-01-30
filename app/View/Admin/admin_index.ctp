@@ -19,13 +19,13 @@ $this->EyPlugin = new EyPluginComponent;
       <div class="small-box bg-aqua">
         <div class="inner">
           <h3><?= $registered_users ?></h3>
-          <p><?= $Lang->get('REGISTERED_USER') ?></p>
+          <p><?= $Lang->get('USER__NBR_REGISTERED') ?></p>
         </div>
         <div class="icon">
           <i class="fa fa-user"></i>
         </div>
         <a href="#" class="small-box-footer">
-          + <?= $registered_users_today ?> <?= $Lang->get('TODAY') ?>
+          + <?= $registered_users_today ?> <?= $Lang->get('GLOBAL__TODAY') ?>
         </a>
       </div>
     </div>
@@ -33,13 +33,13 @@ $this->EyPlugin = new EyPluginComponent;
       <div class="small-box bg-red">
         <div class="inner">
           <h3><?= $count_visits ?></h3>
-          <p><?= $Lang->get('NBR_OF_VISITS') ?></p>
+          <p><?= $Lang->get('STATS__NBR_VISITS') ?></p>
         </div>
         <div class="icon">
           <i class="fa fa-rss"></i>
         </div>
         <a href="#" class="small-box-footer">
-          + <?= $count_visits_today ?> <?= $Lang->get('TODAY') ?>
+          + <?= $count_visits_today ?> <?= $Lang->get('GLOBAL__TODAY') ?>
         </a>
       </div>
     </div>
@@ -51,13 +51,13 @@ $this->EyPlugin = new EyPluginComponent;
         <div class="small-box bg-green">
           <div class="inner">
             <h3><?= $purchase ?></h3>
-            <p><?= $Lang->get('PURCHASE') ?></p>
+            <p><?= $Lang->get('DASHBOARD__PURCHASES') ?></p>
           </div>
           <div class="icon">
             <i class="fa fa-shopping-cart"></i>
           </div>
           <a href="#" class="small-box-footer">
-            + <?= $purchase_today ?> <?= $Lang->get('TODAY') ?>
+            + <?= $purchase_today ?> <?= $Lang->get('GLOBAL__TODAY') ?>
           </a>
         </div>
       </div>
@@ -66,7 +66,7 @@ $this->EyPlugin = new EyPluginComponent;
       <div class="small-box bg-yellow">
         <div class="inner">
           <h3><?= $nbr_news ?></h3>
-          <p><?= $Lang->get('NEWS_WRITTEN') ?></p>
+          <p><?= $Lang->get('DASHBOARD__NEWS_WRITTEN') ?></p>
         </div>
         <div class="icon">
           <i class="fa fa-pencil"></i>
@@ -78,7 +78,7 @@ $this->EyPlugin = new EyPluginComponent;
           }
           echo $nbr_comments;
           ?>
-           <?= $Lang->get('COMMENTS') ?>
+           <?= $Lang->get('NEWS__COMMENTS_TITLE') ?>
         </a>
       </div>
     </div>
@@ -88,14 +88,14 @@ $this->EyPlugin = new EyPluginComponent;
     <div class="col-md-8">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('VISITORS') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('GLOBAL__VISITORS') ?></h3>
           <div class="box-tools pull-right">
             <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
             <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
           </div>
         </div>
         <div class="box-body">
-          <div class="alert alert-info"><b><?= $Lang->get('GLOBAL__INFORMATIONS') ?> :</b> <?= $Lang->get('VISITS_LAST_DAYS') ?></div>
+          <div class="alert alert-info"><b><?= $Lang->get('GLOBAL__INFORMATIONS') ?> :</b> <?= $Lang->get('DASHBOARD__VISITS_LAST_DAYS') ?></div>
           <div class="chart">
             <canvas id="visitsChart" style="height: 180px;"></canvas>
             <script>
@@ -104,7 +104,7 @@ $this->EyPlugin = new EyPluginComponent;
               var visitsChart = new Chart(visitsChart);
 
               var visitsChartData = {
-                labels: ["<?= date('d/m/y', strtotime('-3 day')) ?>","<?= date('d/m/y', strtotime('-2 day')) ?>","<?= $Lang->get('YESTERDAY') ?>","<?= $Lang->get('TODAY') ?>"],
+                labels: ["<?= date('d/m/y', strtotime('-3 day')) ?>","<?= date('d/m/y', strtotime('-2 day')) ?>","<?= $Lang->get('GLOBAL__YESTERDAY') ?>","<?= $Lang->get('GLOBAL__TODAY') ?>"],
                 datasets: [
                   {
                     fillColor: "rgba(60,141,188,0.9)",
@@ -167,7 +167,7 @@ $this->EyPlugin = new EyPluginComponent;
     <div class="col-md-4">
       <div class="box box-default">
         <div class="box-header with-border">
-          <h3 class="box-title"> <?= $Lang->get('EARNINGS') ?></h3>
+          <h3 class="box-title"> <?= $Lang->get('DASHBOARD__EARNINGS') ?></h3>
           <div class="box-tools pull-right">
             <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
             <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
@@ -176,7 +176,7 @@ $this->EyPlugin = new EyPluginComponent;
         <div class="box-body">
           <?php if($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
             <?php if(count($items_solded) >= 5) { ?>
-              <div class="alert alert-warning"><b><?= $Lang->get('GLOBAL__INFORMATIONS') ?> :</b> <?= $Lang->get('BIGGEST_SELLERS') ?></div>
+              <div class="alert alert-warning"><b><?= $Lang->get('GLOBAL__INFORMATIONS') ?> :</b> <?= $Lang->get('DASHBOARD__BIGGEST_SELLERS') ?></div>
               <div class="row">
                 <div class="col-md-8">
                   <div class="chart-responsive">
@@ -245,11 +245,11 @@ $this->EyPlugin = new EyPluginComponent;
                 </div>
                 <div class="col-md-4">
                   <ul class="chart-legend clearfix">
-                    <li><i class="fa fa-circle-o" style="color:#1abc9c;"></i> <?= $items_solded['0']['History']['other'] ?> (<?= $items_solded['0']['0']['COUNT(*)'] ?> <?= $Lang->get('SALES') ?>)</li>
-                    <li><i class="fa fa-circle-o" style="color:#2ecc71;"></i> <?= $items_solded['1']['History']['other'] ?> (<?= $items_solded['1']['0']['COUNT(*)'] ?> <?= $Lang->get('SALES') ?>)</li>
-                    <li><i class="fa fa-circle-o" style="color:#3498db;"></i> <?= $items_solded['2']['History']['other'] ?> (<?= $items_solded['2']['0']['COUNT(*)'] ?> <?= $Lang->get('SALES') ?>)</li>
-                    <li><i class="fa fa-circle-o" style="color:#e67e22;"></i> <?= $items_solded['3']['History']['other'] ?> (<?= $items_solded['3']['0']['COUNT(*)'] ?> <?= $Lang->get('SALES') ?>)</li>
-                    <li><i class="fa fa-circle-o" style="color:#e74c3c;"></i> <?= $items_solded['4']['History']['other'] ?> (<?= $items_solded['4']['0']['COUNT(*)'] ?> <?= $Lang->get('SALES') ?>)</li>
+                    <li><i class="fa fa-circle-o" style="color:#1abc9c;"></i> <?= $items_solded['0']['History']['other'] ?> (<?= $items_solded['0']['0']['COUNT(*)'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)</li>
+                    <li><i class="fa fa-circle-o" style="color:#2ecc71;"></i> <?= $items_solded['1']['History']['other'] ?> (<?= $items_solded['1']['0']['COUNT(*)'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)</li>
+                    <li><i class="fa fa-circle-o" style="color:#3498db;"></i> <?= $items_solded['2']['History']['other'] ?> (<?= $items_solded['2']['0']['COUNT(*)'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)</li>
+                    <li><i class="fa fa-circle-o" style="color:#e67e22;"></i> <?= $items_solded['3']['History']['other'] ?> (<?= $items_solded['3']['0']['COUNT(*)'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)</li>
+                    <li><i class="fa fa-circle-o" style="color:#e74c3c;"></i> <?= $items_solded['4']['History']['other'] ?> (<?= $items_solded['4']['0']['COUNT(*)'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)</li>
                   </ul>
                 </div>
               </div>
@@ -257,7 +257,7 @@ $this->EyPlugin = new EyPluginComponent;
               <div class="alert alert-danger"><i class="icon-shopping-cart"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('NEED_MORE_5_ITEMS') ?></div>
             <?php } ?>
           <?php } else {
-            echo $Lang->get('PLUGIN_SHOP_NOT_INSTALLED');
+            echo $Lang->get('DASHBOARD__PLUGIN_SHOP_NOT_INSTALLED');
           } ?>
         </div>
       </div>
@@ -267,16 +267,16 @@ $this->EyPlugin = new EyPluginComponent;
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('LAST_ACTIONS') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('DASHBOARD__LAST_ACTIONS') ?></h3>
         </div><!-- /.box-header -->
         <div class="box-body">
           <table class="table table-bordered">
             <tbody>
               <tr>
-                <th><?= $Lang->get('ACTION') ?></th>
+                <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
                 <th><?= $Lang->get('CATEGORY') ?></th>
-                <th><?= $Lang->get('CREATED') ?></th>
-                <th><?= $Lang->get('AUTHOR') ?></th>
+                <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
+                <th><?= $Lang->get('GLOBAL__AUTHOR') ?></th>
             </tr>
             <?php foreach ($this->History->get(false, 5) as $k => $v) { ?>
               <tr>
@@ -297,7 +297,7 @@ $this->EyPlugin = new EyPluginComponent;
       <div class="col-md-4">
         <div class="box">
             <div class="box-header with-border">
-              <h3 class="box-title"><?= $Lang->get('SERVER') ?> - <?= $value['Server']['name'] ?></h3>
+              <h3 class="box-title"><?= $Lang->get('SERVER__TITLE') ?> - <?= $value['Server']['name'] ?></h3>
             </div>
 
             <div class="well">
@@ -343,7 +343,7 @@ $this->EyPlugin = new EyPluginComponent;
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('CANCEL') ?></button>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('GLOBAL__CANCEL') ?></button>
       </div>
     </div>
   </div>

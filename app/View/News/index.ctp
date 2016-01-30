@@ -43,7 +43,7 @@
                     </div>
                     <div class="pull-right">
                         <?php if($Permissions->can('DELETE_COMMENT') OR $Permissions->can('DELETE_HIS_COMMENT') AND $user['pseudo'] == $v['author']) { ?>
-                            <p><a id="<?= $v['id'] ?>" title="<?= $Lang->get('DELETE') ?>" class="comment-delete btn btn-danger btn-sm"><icon class="fa fa-times"></icon></a></p>
+                            <p><a id="<?= $v['id'] ?>" title="<?= $Lang->get('GLOBAL__DELETE') ?>" class="comment-delete btn btn-danger btn-sm"><icon class="fa fa-times"></icon></a></p>
                         <?php } ?>
                     </div>
                 </div>

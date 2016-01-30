@@ -7,7 +7,7 @@ class ThemeController extends AppController{
 	function admin_index() {
 		if($this->isConnected AND $this->User->isAdmin()) {
 
-			$this->set('title_for_layout',$this->Lang->get('THEME_LIST'));
+			$this->set('title_for_layout',$this->Lang->get('THEME__LIST'));
 			$this->layout = 'admin';
 			$dir = ROOT.'/app/View/Themed';
 			$themes = scandir($dir);
@@ -87,7 +87,7 @@ class ThemeController extends AppController{
 				$this->layout = null;
 				$this->Configuration->set('theme', $name);
 				$this->History->set('SET_THEME', 'theme');
-				$this->Session->setFlash($this->Lang->get('SUCCESS_ENABLED_THEME'), 'default.success');
+				$this->Session->setFlash($this->Lang->get('THEME__ENABLED_SUCCESS'), 'default.success');
 				$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
 			} else {
 				$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
@@ -105,10 +105,10 @@ class ThemeController extends AppController{
 				if($this->Configuration->get('theme') != $name) {
 					clearDir(ROOT.'/app/View/Themed/'.$name);
 					$this->History->set('DELETE_THEME', 'theme');
-					$this->Session->setFlash($this->Lang->get('SUCCESS_DELETE_THEME'), 'default.success');
+					$this->Session->setFlash($this->Lang->get('THEME__DELETE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
 				} else {
-					$this->Session->setFlash($this->Lang->get('CANT_DELETE_THEME_IF_ACTIVE'), 'default.error');
+					$this->Session->setFlash($this->Lang->get('THEME__CANT_DELETE_IF_ACTIVE'), 'default.error');
 					$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
 				}
 			} else {
@@ -169,7 +169,7 @@ WCqkx22behAGZq6rhwIDAQAB
 				if(unzip($zip, '../View/Themed', 'install-zip', true)) {
 					@clearDir(ROOT.'/app/View/Themed/__MACOSX');
 					$this->History->set('INSTALL_THEME', 'theme');
-					$this->Session->setFlash($this->Lang->get('THEME_INSTALL_SUCCESS'), 'default.success');
+					$this->Session->setFlash($this->Lang->get('THEME__INSTALL_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
 				} else {
 					$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');

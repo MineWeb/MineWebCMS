@@ -3,14 +3,14 @@
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('UPDATE') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('GLOBAL__UPDATE') ?></h3>
         </div>
         <div class="box-body">
 
            <center>
             <p class="text-center"><?= $Lang->get('LAST_VERSION') ?> : <?= $Update->update['version'] ?></p>
             <div class="btn-group">
-              <button id="update" class="btn btn-large btn-primary"><?= $Lang->get('UPDATE') ?></button>
+              <button id="update" class="btn btn-large btn-primary"><?= $Lang->get('GLOBAL__UPDATE') ?></button>
               <a href="<?= $this->Html->url(array('action' => 'check')) ?>" class="btn btn-large btn-info"><?= $Lang->get('UPDATE__CHECK_STATUS') ?></a>
               <a href="http://mineweb.org/changelog" target="_blank" class="btn btn-large btn-default"><?= $Lang->get('UPDATE__VIEW_CHANGELOG') ?></a>
             </div>
@@ -25,13 +25,13 @@
             <hr>
             <h5 class="text-center"><?= $Lang->get('LOG_LAST_UPDATE') ?></h5>
             <div id="log-update">
-              <p><b><?= $Lang->get('VERSION') ?></b> : <?= $logs['head']['version'] ?><br>
-              <b><?= $Lang->get('CREATED') ?></b> : <?= $logs['head']['date'] ?></p>
+              <p><b><?= $Lang->get('GLOBAL__VERSION') ?></b> : <?= $logs['head']['version'] ?><br>
+              <b><?= $Lang->get('GLOBAL__CREATED') ?></b> : <?= $logs['head']['date'] ?></p>
               <table class="table table-bordered">
                 <thead>
                   <tr>
-                    <th><?= $Lang->get('ACTION') ?></th>
-                    <th><?= $Lang->get('STATE') ?></th>
+                    <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
+                    <th><?= $Lang->get('GLOBAL__STATUS') ?></th>
                     <th><?= $Lang->get('FILE') ?></th>
                   </tr>
                 </thead>

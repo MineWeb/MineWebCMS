@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('NAV__EDIT_TITLE') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('NAVBAR__EDIT_TITLE') ?></h3>
         </div>
         <div class="box-body">
           <form method="post" id="nav_add">
@@ -11,7 +11,7 @@
             <div class="ajax-msg"></div>
 
             <div class="form-group">
-              <label><?= $Lang->get('NAME') ?></label>
+              <label><?= $Lang->get('GLOBAL__NAME') ?></label>
               <input name="name" class="form-control" type="text" value="<?= $nav['name'] ?>">
             </div>
 
@@ -19,11 +19,11 @@
               <label><?= $Lang->get('TYPE') ?></label>
               <div class="radio">
                 <input type="radio" id="normal" name="type" value="normal"<?= ($nav['type'] == "1") ? ' checked=""' : '' ?>>
-                <label><?= $Lang->get('NORMAL') ?></label>
+                <label><?= $Lang->get('NAVBAR__LINK_NAME') ?></label>
               </div>
               <div class="radio">
                 <input type="radio" id="dropdown" name="type" value="dropdown"<?= ($nav['type'] == "2") ? ' checked=""' : '' ?>>
-                <label><?= $Lang->get('DROPDOWN') ?></label>
+                <label><?= $Lang->get('NAVBAR__LINK_TYPE_DROPDOWN') ?></label>
               </div>
             </div>
 
@@ -32,7 +32,7 @@
                 <label><?= $Lang->get('URL') ?></label>
                 <div class="radio">
                   <input type="radio" class="type_plugin" name="url_type" value="plugin"<?= ($nav['url']['type'] == "plugin") ? ' checked=""' : '' ?>>
-                  <label><?= $Lang->get('PLUGIN') ?></label>
+                  <label><?= $Lang->get('NAVBAR__LINK_TYPE_PLUGIN') ?></label>
                 </div>
                   <div class="plugin<?= ($nav['url']['type'] == "plugin") ? '' : ' hidden' ?>">
                     <select class="form-control" name="url_plugin">
@@ -43,7 +43,7 @@
                   </div>
                 <div class="radio">
                   <input type="radio" class="type_page" name="url_type" value="page"<?= ($nav['url']['type'] == "page") ? ' checked=""' : '' ?>>
-                  <label><?= $Lang->get('PAGE') ?></label>
+                  <label><?= $Lang->get('NAVBAR__LINK_TYPE_PAGE') ?></label>
                 </div>
                   <div class="page<?= ($nav['url']['type'] == "page") ? '' : ' hidden' ?>">
                     <select class="form-control" name="url_page">
@@ -54,10 +54,10 @@
                   </div>
                 <div class="radio">
                   <input type="radio" class="type_custom" name="url_type" value="custom"<?= ($nav['url']['type'] == "custom") ? ' checked=""' : '' ?>>
-                  <label><?= $Lang->get('CUSTOM') ?></label>
+                  <label><?= $Lang->get('NAVBAR__LINK_TYPE_CUSTOM') ?></label>
                 </div>
                   </label>
-                  <input type="text" value="<?= ($nav['url']['type'] == "custom") ? $nav['url']['url'] : '' ?>" class="form-control custom<?= ($nav['url']['type'] == "custom") ? '' : ' hidden' ?>" placeholder="<?= $Lang->get('YOUR_URL') ?>" name="url_custom">
+                  <input type="text" value="<?= ($nav['url']['type'] == "custom") ? $nav['url']['url'] : '' ?>" class="form-control custom<?= ($nav['url']['type'] == "custom") ? '' : ' hidden' ?>" placeholder="<?= $Lang->get('NAVBAR__CUSTOM_URL') ?>" name="url_custom">
                 </div>
               </div>
 
@@ -70,31 +70,31 @@
                 ?>
                   <div class="well" id="nav-<?= $i ?>">
                     <div class="form-group">
-                      <label><?= $Lang->get('NAME_OF_NAV') ?></label>
+                      <label><?= $Lang->get('NAVBAR__LINK_NAME') ?></label>
                       <input type="text" class="form-control name_of_nav" value="<?= $name ?>" name="name_of_nav">
                     </div>
                     <div class="form-group">
                       <label><?= $Lang->get('URL') ?></label>
-                      <input type="text" class="form-control url_of_nav" value="<?= $url ?>" placeholder="<?= $Lang->get('YOUR_URL') ?>" name="url">
+                      <input type="text" class="form-control url_of_nav" value="<?= $url ?>" placeholder="<?= $Lang->get('NAVBAR__CUSTOM_URL') ?>" name="url">
                     </div>
                   </div>
                 <?php } ?>
               </div>
               <div id="add-js" data-number="<?= $i ?>"></div>
               <div class="control-group">
-                <a href="#" id="add_nav" class="btn btn-success"><?= $Lang->get('ADD_NAV') ?></a>
+                <a href="#" id="add_nav" class="btn btn-success"><?= $Lang->get('NAVBAR__ADD_LINK') ?></a>
               </div>
             </div>
 
             <div class="form-group">
               <div class="checkbox">
                 <input type="checkbox" name="new_tab"<?= ($nav['open_new_tab']) ? ' checked=""' : '' ?>>
-                <label><?= $Lang->get('NAV__OPEN_IN_NEW_TAB') ?></label>
+                <label><?= $Lang->get('NAVBAR__OPEN_IN_NEW_TAB') ?></label>
               </div>
             </div>
 
             <div class="pull-right">
-              <a href="<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'admin_index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
+              <a href="<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'admin_index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
               <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             </div>
           </form>
@@ -108,7 +108,7 @@
     e.preventDefault();
     var how = $('#add-js').attr('data-number');
     how = parseInt(how) + 1;
-    var add = '<div class="form-group"><div class="well" id="nav-'+how+'"><div class="form-group"><label><?= addslashes($Lang->get('NAME_OF_NAV')) ?></label><input type="text" class="form-control name_of_nav" name="name_of_nav"></div><div class="form-group"><label><?= $Lang->get('URL') ?></label><input type="text" class="form-control url_of_nav" placeholder="<?= $Lang->get('YOUR_URL') ?>" name="url"></div></div></div>'
+    var add = '<div class="form-group"><div class="well" id="nav-'+how+'"><div class="form-group"><label><?= addslashes($Lang->get('NAVBAR__LINK_NAME')) ?></label><input type="text" class="form-control name_of_nav" name="name_of_nav"></div><div class="form-group"><label><?= $Lang->get('URL') ?></label><input type="text" class="form-control url_of_nav" placeholder="<?= $Lang->get('NAVBAR__CUSTOM_URL') ?>" name="url"></div></div></div>'
     $('#add-js').append(add);
     $('#add-js').attr('data-number', how);
   });
@@ -166,12 +166,12 @@
 <script type="text/javascript">
   $("#nav_add").submit(function( event ) {
 
-    $('.ajax-msg').html('<div class="alert alert-info"><a class="close" data-dismiss="alert">×</a><?= $Lang->get('LOADING') ?> ...</div>').fadeIn(500);
+    $('.ajax-msg').html('<div class="alert alert-info"><a class="close" data-dismiss="alert">×</a><?= $Lang->get('GLOBAL__LOADING') ?> ...</div>').fadeIn(500);
 
     var $form = $( this );
 
     var submit_btn_content = $form.find('button[type=submit]').html();
-    $form.find('button[type=submit]').html('<?= $Lang->get('LOADING') ?>...').attr('disabled', 'disabled').fadeIn(500);
+    $form.find('button[type=submit]').html('<?= $Lang->get('GLOBAL__LOADING') ?>...').attr('disabled', 'disabled').fadeIn(500);
 
     var name = $form.find("input[name='name']").val();
     var type = $form.find("input[type='radio'][name='type']:checked").val();
@@ -234,7 +234,7 @@
           $('.ajax-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
           $form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
       } else {
-        $('.ajax-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR_WHEN_AJAX') ?></i></div>');
+        $('.ajax-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></i></div>');
         $form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
     }
     });

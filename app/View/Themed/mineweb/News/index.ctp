@@ -19,10 +19,10 @@
         <center>
         <p>
             <?php if($Permissions->can('LIKE_NEWS')) { ?>
-                <?= $Lang->get('LIKE_THIS') ?>
+                <?= $Lang->get('NEWS__LIKE_THIS_NEWS') ?>
                 <button id="<?= $news['News']['id'] ?>" type="button" class="btn btn-primary btn-lg like<?= ($news['News']['liked']) ? ' active' : '' ?>"<?= (!$Permissions->can('LIKE_NEWS')) ? ' disabled' : '' ?>><?= $news['News']['count_likes'] ?> <i class="fa fa-thumbs-up"></i></button>
             <?php } else { ?>
-                <?= str_replace('%likes%', $news['News']['count_likes'], $Lang->get('THEY_LIKE_THIS'))?>
+                <?= str_replace('%likes%', $news['News']['count_likes'], $Lang->get('NEWS__NBR_LIKES_ON_THIS_NEWS'))?>
             <?php } ?>
         </p>
         </center>
@@ -41,7 +41,7 @@
                 </div>
                  <div class="pull-right">
                     <?php if($Permissions->can('DELETE_COMMENT') OR $Permissions->can('DELETE_HIS_COMMENT') AND $user['pseudo'] == $v['Comment']['author']) { ?>
-                        <p><a id="<?= $v['id'] ?>" title="<?= $Lang->get('DELETE') ?>" class="comment-delete btn btn-danger btn-sm"><icon class="fa fa-times"></icon></a></p>
+                        <p><a id="<?= $v['id'] ?>" title="<?= $Lang->get('GLOBAL__DELETE') ?>" class="comment-delete btn btn-danger btn-sm"><icon class="fa fa-times"></icon></a></p>
                     <?php } ?>
                 </div>
             </div>

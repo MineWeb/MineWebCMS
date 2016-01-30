@@ -43,7 +43,7 @@
 
     <footer>
         <div class="container">
-            <p><?= $Lang->get('COPYRIGHT') ?></p>
+            <p><?= $Lang->get('GLOBAL__FOOTER') ?></p>
         </div>
     </footer>
 
@@ -59,9 +59,9 @@
     var LIKE_URL = "<?= $this->Html->url(array('controller' => 'news', 'action' => 'like')) ?>";
     var DISLIKE_URL = "<?= $this->Html->url(array('controller' => 'news', 'action' => 'dislike')) ?>";
 
-    var LOADING_MSG = "<?= $Lang->get('LOADING') ?>";
+    var LOADING_MSG = "<?= $Lang->get('GLOBAL__LOADING') ?>";
     var ERROR_MSG = "<?= $Lang->get('GLOBAL__ERROR') ?>";
-    var INTERNAL_ERROR_MSG = "<?= $Lang->get('ERROR_WHEN_AJAX') ?>";
+    var INTERNAL_ERROR_MSG = "<?= $Lang->get('ERROR__INTERNAL_ERROR') ?>";
     var FORBIDDEN_ERROR_MSG = "<?= $Lang->get('ERROR__FORBIDDEN') ?>"
     var SUCCESS_MSG = "<?= $Lang->get('GLOBAL__SUCCESS') ?>";
 

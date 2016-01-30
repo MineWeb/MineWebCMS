@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('SETTINGS') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('CONFIG__GENERAL_PREFERENCES') ?></h3>
         </div>
         <div class="box-body">
 
@@ -179,7 +179,7 @@
                       echo '</div>';
                       echo '<script>$(\'#color_social_btn_'.$i.'\').colorPicker()</script>';
 
-                      echo '<button id="'.$i.'-'.$value['SocialButton']['id'].'" class="btn btn-danger pull-right delete-social-btn-added">'.$Lang->get('DELETE').'</button>';
+                      echo '<button id="'.$i.'-'.$value['SocialButton']['id'].'" class="btn btn-danger pull-right delete-social-btn-added">'.$Lang->get('GLOBAL__DELETE').'</button>';
 
                       echo '</div>';
                       echo '<div class="clearfix"></div>';
@@ -220,7 +220,7 @@
                     html_content += '<input type="text" name="social_btn['+i+'][color]" class="form-control" id="color_social_btn_'+i+'">';
                     html_content += '</div>';
 
-                    html_content += '<button id="'+i+'" class="btn btn-danger pull-right delete-social-btn"><?= $Lang->get('DELETE') ?></button>';
+                    html_content += '<button id="'+i+'" class="btn btn-danger pull-right delete-social-btn"><?= $Lang->get('GLOBAL__DELETE') ?></button>';
 
                     html_content += '</div>';
                     html_content += '<div class="clearfix"></div>';
@@ -325,7 +325,7 @@
                   <label><?= $Lang->get('CONFIG__KEY_CAPTCHA_TYPE') ?></label>
                   <div class="radio">
                     <input type="radio" name="captcha_type" value="1" <?= ($config['captcha_type'] == '1') ? 'checked=""' : '' ?>>
-                    <label><?= $Lang->get('NORMAL') ?></label>
+                    <label><?= $Lang->get('GLOBAL__TYPE_NORMAL') ?></label>
                   </div>
                   <div class="radio">
                     <input type="radio" name="captcha_type" value="2" <?= ($config['captcha_type'] == '2') ? 'checked=""': '' ?>>
@@ -401,11 +401,11 @@
                   <label><?= $Lang->get('CONFIG__KEY_MINEGUARD') ?></label>
                   <div class="radio">
                     <input type="radio" name="mineguard" value="true" <?= ($config['mineguard'] == 'true') ? 'checked=""' : '' ?>>
-                    <label><?= $Lang->get('ENABLED') ?></label>
+                    <label><?= $Lang->get('GLOBAL__ENABLED') ?></label>
                   </div>
                   <div class="radio">
                     <input type="radio" name="mineguard" value="false" <?= ($config['mineguard'] == 'false') ? 'checked=""': '' ?>>
-                    <label><?= $Lang->get('DISABLED') ?></label>
+                    <label><?= $Lang->get('GLOBAL__DISABLED') ?></label>
                   </div>
                 </div>
 
@@ -415,7 +415,7 @@
                   <label><?= $Lang->get('CONFIG__KEY_EMAIL_SEND_TYPE') ?></label>
                   <div class="radio">
                     <input type="radio" name="email_send_type" value="1" <?= ($config['email_send_type'] == '1') ? 'checked=""' : '' ?>>
-                    <label><?= $Lang->get('NORMAL') ?></label>
+                    <label><?= $Lang->get('GLOBAL__TYPE_NORMAL') ?></label>
                   </div>
                   <div class="radio">
                     <input type="radio" name="email_send_type" value="2" <?= ($config['email_send_type'] == '2') ? 'checked=""': '' ?>>
@@ -490,7 +490,7 @@
             <input type="hidden" name="data[_Token][key]" value="<?= $csrfToken ?>">
 
             <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
-            <a href="<?= $this->Html->url(array('controller' => '', 'action' => '', 'admin' => true)) ?>" type="button" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
+            <a href="<?= $this->Html->url(array('controller' => '', 'action' => '', 'admin' => true)) ?>" type="button" class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
           </form>
 
         </div>

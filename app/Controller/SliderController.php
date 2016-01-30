@@ -7,7 +7,7 @@ class SliderController extends AppController {
 	public function admin_index() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_SLIDER')) {
 
-			$this->set('title_for_layout',$this->Lang->get('ADD_SLIDER'));
+			$this->set('title_for_layout',$this->Lang->get('SLIDER__ADD'));
 			$this->layout = 'admin';
 			$this->loadModel('Slider');
 			$sliders = $this->Slider->find('all');
@@ -26,7 +26,7 @@ class SliderController extends AppController {
 				if(!empty($find)) {
 					$this->Slider->delete($id);
 					$this->History->set('DELETE_SLIDER', 'slider');
-					$this->Session->setFlash($this->Lang->get('DELETE_SLIDER_SUCCESS'), 'default.success');
+					$this->Session->setFlash($this->Lang->get('SLIDER__DELETE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'slider', 'action' => 'index', 'admin' => true));
 				} else {
 					$this->Session->setFlash($this->Lang->get('UNKNONW_ID'), 'default.error');
@@ -53,11 +53,10 @@ class SliderController extends AppController {
 					$slider['filename'] = end($slider['filename']);
 					$this->set(compact('slider'));
 				} else {
-					$this->Session->setFlash($this->Lang->get('UKNOWN_ID'), 'default.error');
-					$this->redirect(array('controller' => 'slider', 'action' => 'admin_index', 'admin' => 'true'));
+					throw new NotFoundException();
 				}
 			} else {
-				$this->redirect(array('controller' => 'slider', 'action' => 'admin_index', 'admin' => 'true'));
+				throw new NotFoundException();
 			}
 		} else {
 			$this->redirect('/');
@@ -111,8 +110,8 @@ class SliderController extends AppController {
 					$this->Slider->set($data);
 					$this->Slider->save();
 					$this->History->set('EDIT_SLIDER', 'slider');
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_SLIDER_EDIT')));
-					$this->Session->setFlash($this->Lang->get('SUCCESS_SLIDER_EDIT'), 'default.success');
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SLIDER__EDIT_SUCCESS')));
+					$this->Session->setFlash($this->Lang->get('SLIDER__EDIT_SUCCESS'), 'default.success');
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
@@ -128,7 +127,7 @@ class SliderController extends AppController {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_SLIDER')) {
 			$this->layout = 'admin';
 
-			$this->set('title_for_layout', $this->Lang->get('ADD_SLIDER'));
+			$this->set('title_for_layout', $this->Lang->get('SLIDER__ADD'));
 		} else {
 			$this->redirect('/');
 		}
@@ -169,8 +168,8 @@ class SliderController extends AppController {
 					));
 					$this->Slider->save();
 					$this->History->set('ADD_SLIDER', 'slider');
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_SLIDER_ADD')));
-					$this->Session->setFlash($this->Lang->get('SUCCESS_SLIDER_ADD'), 'default.success');
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SLIDER__ADD_SUCCESS')));
+					$this->Session->setFlash($this->Lang->get('SLIDER__ADD_SUCCESS'), 'default.success');
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}

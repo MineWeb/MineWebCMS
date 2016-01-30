@@ -7,7 +7,7 @@ $this->Configuration = new ConfigurationComponent();
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('MAINTENANCE') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('MAINTENANCE__TITLE') ?></h3>
         </div>
         <div class="box-body">
 
@@ -19,13 +19,13 @@ $this->Configuration = new ConfigurationComponent();
               <div class="radio">
                 <label>
                   <input type="radio" class="enabled" name="state" value="enabled"<?php if($this->Configuration->get('maintenance') != '0') { echo ' checked=""'; } ?>>
-                  <?= $Lang->get('ENABLED') ?>
+                  <?= $Lang->get('GLOBAL__ENABLED') ?>
                 </label>
               </div>
               <div class="radio">
                 <label>
                   <input type="radio" class="disabled" name="state" value="disabled"<?php if($this->Configuration->get('maintenance') == '0') { echo ' checked=""'; } ?>>
-                  <?= $Lang->get('DISABLED') ?>
+                  <?= $Lang->get('GLOBAL__DISABLED') ?>
                 </label>
               </div>
             </div>
@@ -49,7 +49,7 @@ $this->Configuration = new ConfigurationComponent();
             <input type="hidden" name="data[_Token][key]" value="<?= $csrfToken ?>">
 
             <div class="pull-right">
-              <a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'admin_index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('CANCEL') ?></a>
+              <a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'admin_index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
               <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             </div>
           </form>

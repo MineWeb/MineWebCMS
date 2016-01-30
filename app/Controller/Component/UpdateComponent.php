@@ -39,7 +39,7 @@ class UpdateComponent extends Object {
 
 			if($this->update['status']) {
 				if($this->update['visible'] AND $this->update['type'] == "choice") { // choice -> l'utilisateur choisis ou pas, forced -> la màj est faite automatiquement
-					return '<div class="alert alert-info">'.$this->Lang->get('UPDATE_AVAILABLE').' '.$this->Lang->get('YOUR_VERSION').' : '.$this->cmsVersion.', '.$this->Lang->get('UPDATE_VERSION').' : '.$this->update['version'].' <a href="'.Router::url(array('controller' => 'update', 'action' => 'index', 'admin' => true)).'" style="margin-top: -6px;" class="btn btn-info pull-right">'.$this->Lang->get('UPDATE').'</a></div>';
+					return '<div class="alert alert-info">'.$this->Lang->get('UPDATE_AVAILABLE').' '.$this->Lang->get('YOUR_VERSION').' : '.$this->cmsVersion.', '.$this->Lang->get('UPDATE_VERSION').' : '.$this->update['version'].' <a href="'.Router::url(array('controller' => 'update', 'action' => 'index', 'admin' => true)).'" style="margin-top: -6px;" class="btn btn-info pull-right">'.$this->Lang->get('GLOBAL__UPDATE').'</a></div>';
 				}
 			}
 		}

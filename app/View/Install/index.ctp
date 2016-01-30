@@ -22,9 +22,9 @@
                             <input type="text" name="key" class="form-control"<?php if($step1_ok) { ?> value="***********************" disabled<?php } ?>>
                         </div>
                         <ul class="pager wizard">
-                            <li class="previous disabled"><a href="javascript:;"><?= $Lang->get('PREVIOUS') ?></a></li>
-                            <li class="next" style="display: inline;"><a id="tabsleft-link" href="javascript:;"><?= $Lang->get('NEXT') ?></a></li>
-                            <li class="next finish hidden" style="display: none;"><a href="javascript:;"><?= $Lang->get('END') ?></a></li>
+                            <li class="previous disabled"><a href="javascript:;"><?= $Lang->get('GLOBAL__PREVIOUS') ?></a></li>
+                            <li class="next" style="display: inline;"><a id="tabsleft-link" href="javascript:;"><?= $Lang->get('GLOBAL__NEXT') ?></a></li>
+                            <li class="next finish hidden" style="display: none;"><a href="javascript:;"><?= $Lang->get('GLOBAL__END') ?></a></li>
                         </ul>
                     </form>
                 <?php } else { ?>
@@ -58,11 +58,11 @@
                             <input type="hidden" name="step3" value="true">
                         <?php } ?>
                         <div id="input"></div>
-                        <li class="next finish hidden" style="display: none;"><a href="javascript:;"><?= $Lang->get('END') ?></a></li>
+                        <li class="next finish hidden" style="display: none;"><a href="javascript:;"><?= $Lang->get('GLOBAL__END') ?></a></li>
                                         <ul class="pager wizard">
-                        <li class="previous disabled"><a href="javascript:;"><?= $Lang->get('PREVIOUS') ?></a></li>
-                        <li class="next" style="display: inline;"><a id="tabsleft-link" href="javascript:;"><?= $Lang->get('NEXT') ?></a></li>
-                        <li class="next finish hidden" style="display: none;"><a href="javascript:;"><?= $Lang->get('END') ?></a></li>
+                        <li class="previous disabled"><a href="javascript:;"><?= $Lang->get('GLOBAL__PREVIOUS') ?></a></li>
+                        <li class="next" style="display: inline;"><a id="tabsleft-link" href="javascript:;"><?= $Lang->get('GLOBAL__NEXT') ?></a></li>
+                        <li class="next finish hidden" style="display: none;"><a href="javascript:;"><?= $Lang->get('GLOBAL__END') ?></a></li>
                     </ul>
                 </form>
             </p>
@@ -71,10 +71,10 @@
             <h1><?= $Lang->get('INSTALL__STEP_3_TITLE') ?></h1>
             <div class="alert alert-success"><?= $Lang->get('INSTALL__STEP_3_DESC') ?></div>
             <p>
-                <a href="<?= $this->Html->url(array('controller' => 'install', 'action' => 'end')) ?>" class="btn btn-block btn-success"><?= $Lang->get('USE_CMS') ?></a>
+                <a href="<?= $this->Html->url(array('controller' => 'install', 'action' => 'end')) ?>" class="btn btn-block btn-success"><?= $Lang->get('INSTALL__GO_TO_INDEX') ?></a>
                 <ul class="pager wizard">
-                    <li class="previous disabled"><a href="javascript:;"><?= $Lang->get('PREVIOUS') ?></a></li>
-                    <li class="next" style="display: inline;"><a id="tabsleft-link" href="javascript:;"><?= $Lang->get('NEXT') ?></a></li>
+                    <li class="previous disabled"><a href="javascript:;"><?= $Lang->get('GLOBAL__PREVIOUS') ?></a></li>
+                    <li class="next" style="display: inline;"><a id="tabsleft-link" href="javascript:;"><?= $Lang->get('GLOBAL__NEXT') ?></a></li>
                 </ul>
             </p>
         </div>

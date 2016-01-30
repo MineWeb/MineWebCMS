@@ -4,7 +4,7 @@ class PluginController extends AppController{
 	function admin_index() {
 		if($this->isConnected AND $this->User->isAdmin()) {
 
-			$this->set('title_for_layout',$this->Lang->get('PLUGINS_LIST'));
+			$this->set('title_for_layout',$this->Lang->get('PLUGIN__LIST'));
 			$this->layout = 'admin';
 		} else {
 			$this->redirect('/');
@@ -17,7 +17,7 @@ class PluginController extends AppController{
 
 				if($this->EyPlugin->delete($id)) {
 					$this->History->set('DELETE_PLUGIN', 'plugin');
-					$this->Session->setFlash($this->Lang->get('PLUGIN_DELETE_SUCCESS'), 'default.success');
+					$this->Session->setFlash($this->Lang->get('PLUGIN__DELETE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				} else {
 					$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
@@ -37,7 +37,7 @@ class PluginController extends AppController{
 
 				if($this->EyPlugin->enable($id)) {
 					$this->History->set('ENABLE_PLUGIN', 'plugin');
-					$this->Session->setFlash($this->Lang->get('PLUGIN_ENABLE_SUCCESS'), 'default.success');
+					$this->Session->setFlash($this->Lang->get('PLUGIN__ENABLE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				} else {
 					$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
@@ -57,7 +57,7 @@ class PluginController extends AppController{
 
 				if($this->EyPlugin->disable($id)) {
 					$this->History->set('DISABLE_PLUGIN', 'plugin');
-					$this->Session->setFlash($this->Lang->get('PLUGIN_DISABLE_SUCCESS'), 'default.success');
+					$this->Session->setFlash($this->Lang->get('PLUGIN__DISABLE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				} else {
 					$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
@@ -113,7 +113,7 @@ class PluginController extends AppController{
 
 				if($this->EyPlugin->update($plugin_id, $plugin_name)) {
 					$this->History->set('UPDATE_PLUGIN', 'plugin');
-					$this->Session->setFlash($this->Lang->get('PLUGIN_UPDATE_SUCCESS'), 'default.success');
+					$this->Session->setFlash($this->Lang->get('PLUGIN__UPDATE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				} else {
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));

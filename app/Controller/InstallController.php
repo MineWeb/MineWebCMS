@@ -12,7 +12,7 @@ class InstallController extends AppController {
 			echo $this->Lang->get('INSTALL__ALREADY_INSTALLED');
 			$url = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 			$url = substr($url, 0, -7);
-			echo ' <a href="http://'.$url.'">'.$this->Lang->get('RETURN_TO_HOME').'</a>';
+			echo ' <a href="http://'.$url.'">'.$this->Lang->get('GLOBAL__BACK_TO_INDEX').'</a>';
             exit();
 		}
 	}
@@ -21,7 +21,7 @@ class InstallController extends AppController {
 		if(!file_exists(ROOT.DS.'config'.DS.'installed.txt')) {
 			$this->layout = 'install';
 
-			$this->set('title_for_layout',$this->Lang->get('INSTALL'));
+			$this->set('title_for_layout',$this->Lang->get('INSTALL__INSTALL'));
 
 			$url = 'http://mineweb.org/api/v1/key_verif/';
 			$secure = file_get_contents(ROOT.'/config/secure');

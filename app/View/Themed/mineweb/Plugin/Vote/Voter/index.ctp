@@ -76,7 +76,7 @@ $this->Configuration = new ConfigurationComponent;
 			<script type="text/javascript" step-id="1">
 				$('#step1').submit(function(e) {
 					e.preventDefault();
-					$('.response_step1').html('<div class="panel-footer"><div class="alert alert-info" style="margin-bottom:0px;"><?= $this->Html->image('ajax-loader.gif') ?> <?= $Lang->get('LOADING') ?> ...</div></div>');
+					$('.response_step1').html('<div class="panel-footer"><div class="alert alert-info" style="margin-bottom:0px;"><?= $this->Html->image('ajax-loader.gif') ?> <?= $Lang->get('GLOBAL__LOADING') ?> ...</div></div>');
 					var $form = $(this);
 			        var pseudo = $form.find("input[name='pseudo']").val();
 					$.post("<?= $this->Html->url(array('plugin' => 'vote', 'controller' => 'voter', 'action' => 'setPseudo')) ?>", { pseudo : pseudo}, function(data) {
@@ -93,7 +93,7 @@ $this->Configuration = new ConfigurationComponent;
 					    } else if(data.indexOf('false') != -1) {
 					    	$('.response_step1').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b>'+data2[0]+'</div></div>');
 					    } else {
-					    	$('.response_step1').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b><?= $Lang->get('ERROR_WHEN_AJAX') ?></div></div>');
+					    	$('.response_step1').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b><?= $Lang->get('ERROR__INTERNAL_ERROR') ?></div></div>');
 					    }
 					});
 				});
@@ -163,7 +163,7 @@ $this->Configuration = new ConfigurationComponent;
 			<script type="text/javascript" step-id="3">
 			    $('#step3').submit(function(e) {
 					e.preventDefault();
-					$('.response_step3').html('<div class="panel-footer"><div class="alert alert-info" style="margin-bottom:0px;"><?= $this->Html->image('ajax-loader.gif') ?> <?= $Lang->get('LOADING') ?> ...</div></div>');
+					$('.response_step3').html('<div class="panel-footer"><div class="alert alert-info" style="margin-bottom:0px;"><?= $this->Html->image('ajax-loader.gif') ?> <?= $Lang->get('GLOBAL__LOADING') ?> ...</div></div>');
 					var $form = $( this );
 			        var out = $form.find("input[name='out']").val();
 					$.post("<?= $this->Html->url(array('plugin' => 'vote', 'controller' => 'voter', 'action' => 'checkOut')) ?>", { out : out }, function(data) {
@@ -181,7 +181,7 @@ $this->Configuration = new ConfigurationComponent;
 					    } else if(data.indexOf('false') != -1) {
 					    	$('.response_step3').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b>'+data2[0]+'</div></div>');
 					    } else {
-					    	$('.response_step3').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b><?= $Lang->get('ERROR_WHEN_AJAX') ?></div></div>');
+					    	$('.response_step3').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b><?= $Lang->get('ERROR__INTERNAL_ERROR') ?></div></div>');
 					    }
 					});
 				});
@@ -284,7 +284,7 @@ $this->Configuration = new ConfigurationComponent;
 
 	$(".btn-step4").click( function(e) {
       	e.preventDefault();
-		$('.response_step4').html('<div class="panel-footer"><div class="alert alert-info" style="margin-bottom:0px;"><?= $this->Html->image('ajax-loader.gif') ?> <?= $Lang->get('LOADING') ?> ...</div></div>');
+		$('.response_step4').html('<div class="panel-footer"><div class="alert alert-info" style="margin-bottom:0px;"><?= $this->Html->image('ajax-loader.gif') ?> <?= $Lang->get('GLOBAL__LOADING') ?> ...</div></div>');
 		var when = $(this).attr('id');
 		$.post("<?= $this->Html->url(array('plugin' => 'vote', 'controller' => 'voter', 'action' => 'getRewards')) ?>", {when:when}, function(data) {
 			data2 = data.split("|");
@@ -298,7 +298,7 @@ $this->Configuration = new ConfigurationComponent;
 		    } else if(data.indexOf('false') != -1) {
 		    	$('.response_step4').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b>'+data2[0]+'</div></div>');
 		    } else {
-		    	$('.response_step4').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b><?= $Lang->get('ERROR_WHEN_AJAX') ?></div></div>');
+		    	$('.response_step4').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b><?= $Lang->get('ERROR__INTERNAL_ERROR') ?></div></div>');
 		    }
 		});
     });

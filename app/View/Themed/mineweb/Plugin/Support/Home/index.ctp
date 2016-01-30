@@ -23,7 +23,7 @@
 								    <h3 class="support"><?= $value['Ticket']['title'] ?> <?php if($value['Ticket']['state'] == 1) { echo '<icon style="color: green;" class="fa fa-check" title="'.$Lang->get('RESOLVED').'"></icon>'; } else { echo '<div style="display:inline-block;" id="ticket-state-'.$value['Ticket']['id'].'"><icon class="fa fa-times" style="color:red;" title="'.$Lang->get('UNRESOLVED').'"></icon></div>'; } ?></h3>
 								    <div class="pull-right support">
 								    	<?php if($isConnected AND $user['isAdmin'] OR $isConnected AND $user['pseudo'] == $value['Ticket']['author'] AND $Permissions->can('DELETE_HIS_TICKET') OR $Permissions->can('DELETE_ALL_TICKETS')) { ?>
-									    <p><a id="<?= $value['Ticket']['id'] ?>" title="<?= $Lang->get('DELETE') ?>" class="ticket-delete btn btn-danger btn-sm"><icon class="fa fa-times"></icon></a></p>
+									    <p><a id="<?= $value['Ticket']['id'] ?>" title="<?= $Lang->get('GLOBAL__DELETE') ?>" class="ticket-delete btn btn-danger btn-sm"><icon class="fa fa-times"></icon></a></p>
 									    <?php } ?>
 									    <?php if($value['Ticket']['state'] == 0) { ?>
 										    <?php if($isConnected AND $user['isAdmin'] OR $isConnected AND $user['pseudo'] == $value['Ticket']['author'] AND $Permissions->can('RESOLVE_HIS_TICKET') OR $Permissions->can('RESOLVE_ALL_TICKETS')) { ?>
@@ -54,7 +54,7 @@
 													    <img class="support" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/', 'plugin' => false)) ?>/<?= $v['ReplyTicket']['author']; ?>/60" title="<?= $v['ReplyTicket']['author']; ?>">
 													    <?php if($isConnected AND $user['isAdmin']) { ?>
 													    <div class="pull-right">
-														    <p><button id="<?= $v['ReplyTicket']['id'] ?>" title="<?= $Lang->get('DELETE') ?>" class="btn btn-danger btn-sm reply-delete"><icon class="fa fa-times"></icon></button></p>
+														    <p><button id="<?= $v['ReplyTicket']['id'] ?>" title="<?= $Lang->get('GLOBAL__DELETE') ?>" class="btn btn-danger btn-sm reply-delete"><icon class="fa fa-times"></icon></button></p>
 														</div>
 														<?php } ?>
 													    <p class="support"><?= before_display($v['ReplyTicket']['reply']); ?></p>
@@ -87,7 +87,7 @@
           	<div id="msg-on-post"></div>
           	<form id="ticket-form_post_m" method="post" class="form-horizontal">
 			  <div class="form-group">
-			    <label for="inputEmail3" class="col-sm-2 control-label"><?= $Lang->get('TITLE') ?></label>
+			    <label for="inputEmail3" class="col-sm-2 control-label"><?= $Lang->get('GLOBAL__TITLE') ?></label>
 			    <div class="col-sm-10">
 			      <input type="text" name="title" class="form-control" id="inputEmail3" placeholder="">
 			    </div>
@@ -241,7 +241,7 @@
     }
 
     $("#ticket-form_reply").submit(function( event ) {
-            $('#msg-on-reply').hide().html('<div class="alert alert-success" role="alert"><p><?= $Lang->get('IN_PROGRESS') ?></p></div>').fadeIn(1500);
+            $('#msg-on-reply').hide().html('<div class="alert alert-success" role="alert"><p><?= $Lang->get('GLOBAL__IN_PROGRESS') ?></p></div>').fadeIn(1500);
             var $form = $( this );
             var id = $form.find("input[name='id']").val();
             var message = $form.find("textarea[name='reply']").val();
@@ -264,7 +264,7 @@
                 var before = $('.reply.reply_'+id).html();
                 $('.reply.reply_'+id).hide().html(before+'<div class="line-support"></div><div class="col-md-11 reply-col"><div class="panel panel-default panel-support"><div class="panel-body"><img class="support" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/<?= $user['pseudo']; ?>/50" title="<?= $user['pseudo']; ?>"><p class="support">'+message+'</p></div></div></div>').slideDown(1000);
               } else if(data == 1) {
-                $('#msg-on-reply').hide().html('<div class="alert alert-danger" role="alert"><p><?= $Lang->get('CANT_BE_EMPTY') ?></p></div>').fadeIn(1500);
+                $('#msg-on-reply').hide().html('<div class="alert alert-danger" role="alert"><p><?= $Lang->get('ERROR__FILL_ALL_FIELDS') ?></p></div>').fadeIn(1500);
               } else {
                 $('#msg-on-reply').hide().html('<div class="alert alert-danger" role="alert"><p><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b>'+data+'</p></div>').fadeIn(1500);
               }
@@ -274,7 +274,7 @@
 
     $("#ticket-form_post").submit(function( event ) {
         event.preventDefault();
-        $('#msg-on-post').hide().html('<div class="alert alert-success" role="alert"><p><?= $Lang->get('IN_PROGRESS') ?></p></div>').fadeIn(1500);
+        $('#msg-on-post').hide().html('<div class="alert alert-success" role="alert"><p><?= $Lang->get('GLOBAL__IN_PROGRESS') ?></p></div>').fadeIn(1500);
         var $form = $( this );
         var title = $form.find("input[name='title']").val();
         var content = $form.find("textarea[name='content']").val();
