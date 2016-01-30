@@ -159,6 +159,10 @@ class SchemaShell extends AppShell {
 		$content = $this->Schema->read($options);
 		$content['file'] = $this->params['file'];
 
+		if($plugin !== false) {
+			$content['name'] = ucfirst($plugin).'App'; // Pour générer {PLUGIN}AppSchema (ex: ShopAppSchema)
+		}
+
 		Configure::write('Cache.disable', $cacheDisable);
 
 		if ((!empty($this->params['exclude']) || $plugin !== false) && !empty($content)) {
