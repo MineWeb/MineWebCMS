@@ -7,7 +7,7 @@
         <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('USER__LOGIN') ?></h4>
       </div>
       <div class="modal-body">
-        <form class="form-horizontal" method="POST" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'ajax_login')) ?>" data-redirect-url="?">
+        <form class="form-horizontal" method="POST" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'admin' => false, 'controller' => 'user', 'action' => 'ajax_login')) ?>" data-redirect-url="?">
           <div class="form-group">
             <label for="inputEmail3" class="col-sm-2 control-label"><?= $Lang->get('USER__USERNAME') ?></label>
             <div class="col-sm-10">
@@ -39,7 +39,7 @@
         <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('USER__PASSWORD_FORGOT_LABEL') ?></h4>
       </div>
       <div class="modal-body">
-        <form class="form-horizontal" method="POST" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'ajax_lostpasswd')) ?>">
+        <form class="form-horizontal" method="POST" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'admin' => false, 'controller' => 'user', 'action' => 'ajax_lostpasswd')) ?>">
           <div class="form-group">
             <label class="col-sm-2 control-label"><?= $Lang->get('USER__EMAIL') ?></label>
             <div class="col-sm-10">
@@ -65,7 +65,7 @@
           <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('USER__PASSWORD_FORGOT_LABEL') ?></h4>
         </div>
         <div class="modal-body">
-          <form class="form-horizontal" method="POST" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'ajax_resetpasswd')) ?>" data-redirect-url="?">
+          <form class="form-horizontal" method="POST" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'admin' => false, 'controller' => 'user', 'action' => 'ajax_resetpasswd')) ?>" data-redirect-url="?">
             <input type="hidden" name="pseudo" value="<?= $resetpsswd['pseudo'] ?>">
             <input type="hidden" name="email" value="<?= $resetpsswd['email'] ?>">
             <div class="form-group">
@@ -99,7 +99,7 @@
         <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('USER__REGISTER') ?></h4>
       </div>
       <div class="modal-body">
-        <form class="form-horizontal" method="POST" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'ajax_register')) ?>" data-redirect-url="?">
+        <form class="form-horizontal" method="POST" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'admin' => false, 'controller' => 'user', 'action' => 'ajax_register')) ?>" data-redirect-url="?">
           <div class="form-group">
             <label  class="col-sm-2 control-label"><?= $Lang->get('USER__USERNAME') ?></label>
             <div class="col-sm-10">
@@ -137,7 +137,7 @@
               <label for="inputPassword3" class="col-sm-2 control-label"><?= $Lang->get('FORM__CAPTCHA') ?></label>
               <div class="col-sm-10">
                 <?php
-                  echo $this->Html->image(array('controller' => 'user', 'action' => 'get_captcha', 'plugin' => false), array('plugin' => false, 'id' => 'captcha_image'));
+                  echo $this->Html->image(array('controller' => 'user', 'action' => 'get_captcha', 'plugin' => false, 'admin' => false), array('plugin' => false, 'admin' => false, 'id' => 'captcha_image'));
                   echo $this->Html->link($Lang->get('FORM__RELOAD_CAPTCHA'), 'javascript:void(0);',array('id' => 'reload'));
                 ?>
               </div>

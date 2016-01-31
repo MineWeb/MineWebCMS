@@ -67,14 +67,14 @@ $this->EyPlugin = new EyPluginComponent;
 
             <li class="treeview">
               <a href="#">
-                <i class="fa fa-files-o"></i> <span><?= $Lang->get('GLOBAL__ADMIN_GENERAL') ?></span> <i class="fa fa-angle-left pull-right"></i>
+                <i class="fa fa-cogs"></i> <span><?= $Lang->get('GLOBAL__ADMIN_GENERAL') ?></span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('USER__USERS') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'permissions', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('PERMISSIONS__LABEL') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'configuration', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('CONFIG__GENERAL_PREFERENCES') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('NAVBAR__TITLE') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'slider', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('SLIDER__TITLE') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-users"></i> <?= $Lang->get('USER__USERS') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'permissions', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-user"></i> <?= $Lang->get('PERMISSIONS__LABEL') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'configuration', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-cog"></i> <?= $Lang->get('CONFIG__GENERAL_PREFERENCES') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-bars"></i> <?= $Lang->get('NAVBAR__TITLE') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'slider', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-picture-o"></i> <?= $Lang->get('SLIDER__TITLE') ?></a></li>
               </ul>
             </li>
 
@@ -84,39 +84,39 @@ $this->EyPlugin = new EyPluginComponent;
                 <span><?= $Lang->get('GLOBAL__CUSTOMIZE') ?></span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('NEWS__TITLE') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-pencil"></i> <?= $Lang->get('NEWS__TITLE') ?></a></li>
                 <?php if($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
-                  <li><a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true, 'plugin' => 'shop')) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('SHOP') ?></a></li>
+                  <li><a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true, 'plugin' => 'shop')) ?>"><i class="fa fa-shopping-cart"></i> <?= $Lang->get('SHOP') ?></a></li>
                 <?php } ?>
                 <?php if($this->EyPlugin->isInstalled('eywek.vote.2')) { ?>
-                  <li><a href="<?= $this->Html->url(array('controller' => 'voter', 'plugin' => 'vote', 'admin' => true, 'plugin' => 'vote')) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('VOTE') ?></a></li>
+                  <li><a href="<?= $this->Html->url(array('controller' => 'voter', 'plugin' => 'vote', 'admin' => true, 'plugin' => 'vote')) ?>"><i class="fa fa-external-link"></i> <?= $Lang->get('VOTE') ?></a></li>
                 <?php } ?>
-                <li><a href="<?= $this->Html->url(array('controller' => 'pages', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('PAGE__TITLE') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'pages', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-file-text-o"></i> <?= $Lang->get('PAGE__TITLE') ?></a></li>
               </ul>
             </li>
 
             <li class="treeview">
               <a href="#">
-                <i class="fa fa-files-o"></i>
+                <i class="fa fa-server"></i>
                 <span><?= $Lang->get('SERVER__TITLE') ?></span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'link', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('SERVER__LINK') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'banlist', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('SERVER__BANLIST') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'whitelist', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('SERVER__WHITELIST') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'online', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('SERVER__ONLINE_PLAYERS') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'link', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-arrows-h"></i> <?= $Lang->get('SERVER__LINK') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'banlist', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-ban"></i> <?= $Lang->get('SERVER__BANLIST') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'whitelist', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-list"></i> <?= $Lang->get('SERVER__WHITELIST') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'online', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-list-ul"></i> <?= $Lang->get('SERVER__ONLINE_PLAYERS') ?></a></li>
               </ul>
             </li>
 
             <li class="treeview">
               <a href="#">
-                <i class="fa fa-files-o"></i>
+                <i class="fa fa-folder-o"></i>
                 <span><?= $Lang->get('GLOBAL__ADMIN_OTHER_TITLE') ?></span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('PLUGIN__TITLE') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('THEME__TITLE') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'API', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('API__LABEL') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-plus"></i> <?= $Lang->get('PLUGIN__TITLE') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-mobile"></i> <?= $Lang->get('THEME__TITLE') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'API', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-sitemap"></i> <?= $Lang->get('API__LABEL') ?></a></li>
 
                 <?php if(!empty($plugins_need_admin)) { ?>
                   <li class="treeview">
@@ -136,22 +136,29 @@ $this->EyPlugin = new EyPluginComponent;
 
             <li>
               <a href="<?= $this->Html->url(array('controller' => 'statistics', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>">
-                <i class="fa fa-files-o"></i>
+                <i class="fa fa-bar-chart-o"></i>
                 <span><?= $Lang->get('STATS__TITLE') ?></span>
               </a>
             </li>
 
             <li>
               <a href="<?= $this->Html->url(array('controller' => 'maintenance', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>">
-                <i class="fa fa-files-o"></i>
+                <i class="fa fa-hand-paper-o"></i>
                 <span><?= $Lang->get('MAINTENANCE__TITLE') ?></span>
               </a>
             </li>
 
             <li>
               <a href="<?= $this->Html->url(array('controller' => 'update', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>">
-                <i class="fa fa-files-o"></i>
+                <i class="fa fa-wrench"></i>
                 <span><?= $Lang->get('GLOBAL__UPDATE') ?></span>
+              </a>
+            </li>
+
+            <li>
+              <a href="<?= $this->Html->url(array('controller' => 'configuration', 'action' => 'help', 'admin' => true, 'plugin' => false)) ?>">
+                <i class="fa fa-question"></i>
+                <span><?= $Lang->get('HELP__TITLE') ?></span>
               </a>
             </li>
 

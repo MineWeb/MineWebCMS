@@ -6,8 +6,6 @@
 
 		Router::connect('/robots.txt', array('controller' => 'pages', 'action' => 'robots'));
 
-		Router::connect('/admin/problem/debug/*', array('controller' => 'pages', 'action' => 'debug'));
-
 		Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
 
 		Router::connect('/blog', array('controller' => 'news', 'action' => 'blog'));
