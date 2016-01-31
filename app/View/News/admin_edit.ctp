@@ -45,16 +45,8 @@
 
             <div class="form-group">
               <div class="checkbox">
-                <label>
-                  <?php
-                    if($news['published']) {
-                      $checked = true;
-                    } else {
-                      $checked = false;
-                    }
-                  ?>
-                  <input name="published" type="checkbox"<?= ($news['published']) ? ' checked=""' : ''; ?>> <?= $Lang->get('NEWS__WANT_TO_PUBLISH') ?>
-                </label>
+                <input name="published" type="checkbox"<?= ($news['published']) ? ' checked=""' : ''; ?>>
+                <label><?= $Lang->get('NEWS__WANT_TO_PUBLISH') ?></label>
               </div>
             </div>
 

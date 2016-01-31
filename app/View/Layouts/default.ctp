@@ -33,7 +33,7 @@
 <body><!-- grey.png -->
   <?php if(isset($Lang)) { ?>
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-      <div class="mini-navbar mini-navbar-default hidden-xs">
+      <div class="mini-navbar mini-navbar-default">
       <div class="container">
         <div class="col-sm-12">
           <?= (isset($banner_server) && $banner_server) ? '<p>'.$banner_server.'</p>' : '<p class="text-center">'.$Lang->get('SERVER__STATUS_OFF').'</p>' ?>
@@ -116,11 +116,10 @@
     <?php if(isset($flash_messages) && !empty($flash_messages)) {
       echo '<div class="container">'.$flash_messages.'</div>';
     } ?>
-      <?= $this->fetch('content'); ?>
-    </div>
+    <?= $this->fetch('content'); ?>
     <!-- Footer -->
   <?php if(isset($Lang)) { ?>
-    <footer>
+    <footer style="height: 50px;">
       <div class="container">
         <div class="row">
           <div class="col-lg-12">

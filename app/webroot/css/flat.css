@@ -24,6 +24,12 @@ nav .mini-navbar {
 	font-size: 14px;
 }
 
+@media (max-width: 768px) {
+	.navbar-header {
+		height: 90px;
+	}
+}
+
 div.navbar-header {
 	padding-top: 20px;
 	text-transform:uppercase;
@@ -97,11 +103,17 @@ h1.home {
 }
 
 ul#items {
-	height: 300px;
+	height: auto;
+	padding-left: 1px;
 }
 
 header.carousel {
 	margin-top: -40px;
+}
+
+.btn-socials div {
+	margin-top: 5px;
+	margin-bottom: 5px;
 }
 
 /*
