@@ -20,7 +20,7 @@
               <input type="password" class="form-control" name="password" placeholder="<?= $Lang->get('USER__PASSWORD_LABEL') ?>">
             </div>
           </div>
-          <center><a data-dismiss="modal" href="#" data-toggle="modal" data-target="#lostpasswd"><?= $Lang->get('FORGOT_PASSWORD') ?></a></center>
+          <center><a data-dismiss="modal" href="#" data-toggle="modal" data-target="#lostpasswd"><?= $Lang->get('USER__PASSWORD_FORGOT_LABEL') ?></a></center>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('GLOBAL__CLOSE') ?></button>
@@ -36,7 +36,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"><?= $Lang->get('GLOBAL__CLOSE') ?></span></button>
-        <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('FORGOT_PASSWORD') ?></h4>
+        <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('USER__PASSWORD_FORGOT_LABEL') ?></h4>
       </div>
       <div class="modal-body">
         <form class="form-horizontal" method="POST" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'ajax_lostpasswd')) ?>">
@@ -49,7 +49,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('GLOBAL__CLOSE') ?></button>
-        <button type="submit" class="btn btn-primary"><?= $Lang->get('SEND_EMAIL') ?></button>
+        <button type="submit" class="btn btn-primary"><?= $Lang->get('USER__PASSWORD_FORGOT_SEND_MAIL') ?></button>
       </form>
       </div>
     </div>
@@ -62,7 +62,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"><?= $Lang->get('GLOBAL__CLOSE') ?></span></button>
-          <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('FORGOT_PASSWORD') ?></h4>
+          <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('USER__PASSWORD_FORGOT_LABEL') ?></h4>
         </div>
         <div class="modal-body">
           <form class="form-horizontal" method="POST" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'ajax_resetpasswd')) ?>" data-redirect-url="?">
@@ -83,7 +83,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('GLOBAL__CLOSE') ?></button>
-          <button type="submit" class="btn btn-success"><?= $Lang->get('SAVE') ?></button>
+          <button type="submit" class="btn btn-success"><?= $Lang->get('GLOBAL__SAVE') ?></button>
         </form>
         </div>
       </div>
@@ -138,7 +138,7 @@
               <div class="col-sm-10">
                 <?php
                   echo $this->Html->image(array('controller' => 'user', 'action' => 'get_captcha', 'plugin' => false), array('plugin' => false, 'id' => 'captcha_image'));
-                  echo $this->Html->link($Lang->get('RELOAD_CAPTCHA'), 'javascript:void(0);',array('id' => 'reload'));
+                  echo $this->Html->link($Lang->get('FORM__RELOAD_CAPTCHA'), 'javascript:void(0);',array('id' => 'reload'));
                 ?>
               </div>
             </div>

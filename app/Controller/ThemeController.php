@@ -233,7 +233,7 @@ WCqkx22behAGZq6rhwIDAQAB
 				if(unzip($zip, '../View/Themed', 'install-zip', true)) {
 					@clearDir(ROOT.'/app/View/Themed/__MACOSX');
 					$this->History->set('UPDATE_THEME', 'theme');
-					$this->Session->setFlash($this->Lang->get('THEME_UPDATE_SUCCESS'), 'default.success');
+					$this->Session->setFlash($this->Lang->get('THEME__UPDATE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
 				} else {
 					$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
@@ -250,7 +250,7 @@ WCqkx22behAGZq6rhwIDAQAB
 	function admin_custom($theme_name = false) {
 		if($this->isConnected AND $this->User->isAdmin()) {
 			if($theme_name != false) {
-				$this->set('title_for_layout',$this->Lang->get('CUSTOMIZATION'));
+				$this->set('title_for_layout',$this->Lang->get('THEME__CUSTOMIZATION'));
 				$this->layout = 'admin';
 				if($theme_name == "default") {
 					$config = file_get_contents(ROOT.'/config/theme.default.json');
@@ -263,7 +263,7 @@ WCqkx22behAGZq6rhwIDAQAB
 						$fp = fopen(ROOT.'/config/theme.default.json',"w+");
 						fwrite($fp, $data);
 						fclose($fp);
-						$this->Session->setFlash($this->Lang->get('THEME_CUSTOMIZATION_SUCCESS'), 'default.success');
+						$this->Session->setFlash($this->Lang->get('THEME__CUSTOMIZATION_SUCCESS'), 'default.success');
 						$this->redirect(array('controller' => 'theme', 'action' => 'custom/default', 'admin' => true));
 					}
 				} else {
@@ -310,7 +310,7 @@ WCqkx22behAGZq6rhwIDAQAB
 						$fp = fopen(ROOT.'/app/View/Themed/'.$theme_name.'/config/config.json',"w+");
 						fwrite($fp, $data);
 						fclose($fp);
-						$this->Session->setFlash($this->Lang->get('THEME_CUSTOMIZATION_SUCCESS'), 'default.success');
+						$this->Session->setFlash($this->Lang->get('THEME__CUSTOMIZATION_SUCCESS'), 'default.success');
 						$this->redirect(array('controller' => 'theme', 'action' => 'custom/'.$theme_name, 'admin' => true));
 					}
 

@@ -139,13 +139,13 @@ class User extends AppModel {
 					return array('status' => true, 'session' => $search[0]['User']['id']);
 
 				} else {
-					return 'INVALID_KEY_FOR_RESET';
+					return 'USER__PASSWORD_RESET_INVALID_KEY';
 				}
 			} else {
-				return 'INTERNAL_ERROR';
+				return 'ERROR__INTERNAL_ERROR';
 			}
 		} else {
-			return 'PASSWORD_NOT_SAME';
+			return 'USER__ERROR_PASSWORDS_NOT_SAME';
 		}
 	}
 

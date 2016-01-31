@@ -85,7 +85,7 @@ WCqkx22behAGZq6rhwIDAQAB
 				        if($return['status'] == "success") {
 				        	file_put_contents(ROOT.'/config/last_check', $return['time']);
 				        	file_put_contents(ROOT.'/config/secure', json_encode(array('id' => $secure['id'], 'key' => $this->request->data['key'])));
-				        	echo $this->Lang->get('SUCCESS_CONNECTED_TO_API').'|true';
+				        	echo $this->Lang->get('INSTALL__API_CONNECT_SUCCESS').'|true';
 				        } elseif($return['status'] == "error") {
 				        	echo $this->Lang->get('LICENSE_ERROR__'.$return['msg']).'|false';
 				        }

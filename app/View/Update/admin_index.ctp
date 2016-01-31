@@ -8,7 +8,7 @@
         <div class="box-body">
 
            <center>
-            <p class="text-center"><?= $Lang->get('LAST_VERSION') ?> : <?= $Update->update['version'] ?></p>
+            <p class="text-center"><?= $Lang->get('UPDATE__LAST_VERSION') ?> : <?= $Update->update['version'] ?></p>
             <div class="btn-group">
               <button id="update" class="btn btn-large btn-primary"><?= $Lang->get('GLOBAL__UPDATE') ?></button>
               <a href="<?= $this->Html->url(array('action' => 'check')) ?>" class="btn btn-large btn-info"><?= $Lang->get('UPDATE__CHECK_STATUS') ?></a>
@@ -23,7 +23,7 @@
 
           <?php if(!empty($logs)) { ?>
             <hr>
-            <h5 class="text-center"><?= $Lang->get('LOG_LAST_UPDATE') ?></h5>
+            <h5 class="text-center"><?= $Lang->get('UPDATE__LOGS') ?></h5>
             <div id="log-update">
               <p><b><?= $Lang->get('GLOBAL__VERSION') ?></b> : <?= $logs['head']['version'] ?><br>
               <b><?= $Lang->get('GLOBAL__CREATED') ?></b> : <?= $logs['head']['date'] ?></p>
@@ -32,7 +32,7 @@
                   <tr>
                     <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
                     <th><?= $Lang->get('GLOBAL__STATUS') ?></th>
-                    <th><?= $Lang->get('FILE') ?></th>
+                    <th><?= $Lang->get('UPDATE__FILE') ?></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -59,7 +59,7 @@
 <script>
   $('#update').click(function() {
     $('#update').attr('disabled', 'disabled');
-    $('#update-msg').html('<br><div class="alert alert-info"><?= $Lang->get('ON_UPDATE') ?></div>').fadeIn(500);
+    $('#update-msg').html('<br><div class="alert alert-info"><?= $Lang->get('UPDATE__LOADING') ?></div>').fadeIn(500);
     $.ajax({
       xhr: function() {
             $('.progress').css('display', 'block');

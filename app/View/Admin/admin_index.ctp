@@ -304,18 +304,18 @@ $this->EyPlugin = new EyPluginComponent;
               <?php if($Server->online($value['Server']['id'])) { ?>
                 <?php if($value['Server']['type'] != 2) { ?>
                   <div class="row-fluid text-center">
-                    <button class="btn" type="button" data-toggle="modal" onClick="$('#server_id').val(<?= $value['Server']['id'] ?>)" data-target="#executeCommand" style="padding: 4px 12px;margin-right: 8px;"><i class="fa fa-terminal"></i> <?= $Lang->get('COMMAND') ?></button>
+                    <button class="btn" type="button" data-toggle="modal" onClick="$('#server_id').val(<?= $value['Server']['id'] ?>)" data-target="#executeCommand" style="padding: 4px 12px;margin-right: 8px;"><i class="fa fa-terminal"></i> <?= $Lang->get('SERVER__COMMAND') ?></button>
                   </div>
                   <br>
                 <?php } ?>
-                <button class="btn btn-large btn-block btn-success" type="button"><?= $Lang->get('ONLINE') ?> <br>
+                <button class="btn btn-large btn-block btn-success" type="button"><?= $Lang->get('SERVER__STATUS_ONLINE') ?> <br>
                   <?php
                   $get = $Server->call(array('getPlayerCount' => 'server', 'getPlayerMax' => 'server'), false, $value['Server']['id']);
                   echo $get['getPlayerCount'].'/'.$get['getPlayerMax'];
                   ?>
                 </button>
               <?php } else { ?>
-                  <button class="btn btn-large btn-block btn-danger" type="button"><?= $Lang->get('OFFLINE') ?></button>
+                  <button class="btn btn-large btn-block btn-danger" type="button"><?= $Lang->get('SERVER__STATUS_OFFLINE') ?></button>
               <?php } ?>
             </div>
         </div>
@@ -329,7 +329,7 @@ $this->EyPlugin = new EyPluginComponent;
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title"><?= $Lang->get('COMMAND') ?></h4>
+        <h4 class="modal-title"><?= $Lang->get('SERVER__COMMAND') ?></h4>
       </div>
       <div class="modal-body">
         <form action="" method="post">

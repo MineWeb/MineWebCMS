@@ -58,7 +58,7 @@ class AdminController extends AppController {
 					$this->ServerComponent = $this->Components->load('Server');
 					$call = $this->ServerComponent->call(array('performCommand' => $this->request->data['cmd']), true, $this->request->data['server_id']);
 
-					$this->Session->setFlash($this->Lang->get('SUCCESS_SEND_COMMAND'), 'default.success');
+					$this->Session->setFlash($this->Lang->get('SERVER__SEND_COMMAND_SUCCESS'), 'default.success');
 				}
 			}
 

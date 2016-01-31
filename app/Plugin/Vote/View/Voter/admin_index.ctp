@@ -1,5 +1,5 @@
 <section class="content">
-  <a href="<?= $this->Html->url(array('controller' => 'voter', 'action' => 'reset', 'admin' => true)) ?>" class="btn btn-app btn-block"><i class="fa fa-repeat"></i><?= $Lang->get('RESET') ?></a>
+  <a href="<?= $this->Html->url(array('controller' => 'voter', 'action' => 'reset', 'admin' => true)) ?>" class="btn btn-app btn-block"><i class="fa fa-repeat"></i><?= $Lang->get('GLOBAL__RESET') ?></a>
   <div class="row">
     <div class="col-md-12">
       <div class="box">

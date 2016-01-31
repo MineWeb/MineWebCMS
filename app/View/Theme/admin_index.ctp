@@ -34,7 +34,7 @@ $this->Configuration = new ConfigurationComponent;
                      <?php if('default' != $this->Configuration->get('theme')) { ?>
                       <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable/default', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ENABLED') ?></a>
                      <?php } ?>
-                     <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom/default', 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('CUSTOMIZATION') ?></a>
+                     <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom/default', 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('THEME__CUSTOMIZATION') ?></a>
                   </td>
                 </tr>
                 <?php if(!empty($themes)) { ?>
@@ -58,7 +58,7 @@ $this->Configuration = new ConfigurationComponent;
                          <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'theme', 'action' => 'delete/'.$key, 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
                         <?php } ?>
                       <?php if(file_exists(ROOT.'/app/View/Themed/'.$key.'/config/config.json')) { ?>
-                        <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom/'.$key, 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('CUSTOMIZATION') ?></a>
+                        <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom/'.$key, 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('THEME__CUSTOMIZATION') ?></a>
                       <?php } ?>
                       <?php if(isset($value['last_version'])) { ?>
                         <?php if($value['version'] !== $value['last_version']) { ?>

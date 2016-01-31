@@ -3,11 +3,11 @@
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('PERMISSIONS') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('PERMISSIONS__LABEL') ?></h3>
         </div>
         <div class="box-body">
 
-          <button data-toggle="modal" data-target="#addRank" class="btn btn-block btn-success"><?= $Lang->get('ADD_RANK') ?></button>
+          <button data-toggle="modal" data-target="#addRank" class="btn btn-block btn-success"><?= $Lang->get('USER__RANK_ADD') ?></button>
 
           <hr>
 
@@ -17,7 +17,7 @@
             <table class="table table-bordered">
                 <thead>
                   <tr>
-                    <th><?= $Lang->get('PERMISSIONS') ?></th>
+                    <th><?= $Lang->get('PERMISSIONS__LABEL') ?></th>
                     <th><?= $Lang->get('GLOBAL__TYPE_NORMAL') ?></th>
                     <th><?= $Lang->get('USER__RANK_MODERATOR') ?></th>
                     <th><?= $Lang->get('USER__RANK_ADMINISTRATOR') ?></th>
@@ -76,7 +76,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('ADD_RANK') ?></h4>
+        <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('USER__RANK_ADD') ?></h4>
       </div>
       <div class="modal-body">
         <form action="<?= $this->Html->url(array('controller' => 'permissions', 'action' => 'add_rank', 'admin' => true)) ?>" method="post">

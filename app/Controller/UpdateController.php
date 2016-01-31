@@ -34,9 +34,9 @@ class UpdateController extends AppController {
 		if($this->isConnected AND $this->User->isAdmin()) {
 			$this->autoRender = false;
 			if($this->Update->update($this->Update->get_version())) {
-				echo $this->Lang->get('UPDATE_SUCCESS').'|true';
+				echo $this->Lang->get('UPDATE__SUCCESS').'|true';
 			} else {
-				echo $this->Lang->get('UPDATE_FAILED').'|false';
+				echo $this->Lang->get('UPDATE__FAILED').'|false';
 			}
 		} else {
 			$this->redirect('/');

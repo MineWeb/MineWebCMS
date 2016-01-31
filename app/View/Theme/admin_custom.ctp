@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('CUSTOMIZATION') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('THEME__CUSTOMIZATION') ?></h3>
         </div>
         <div class="box-body">
 
@@ -44,7 +44,7 @@
 			</div>
 
             <div class="form-group">
-              <label><?= $Lang->get('FAVICON_URL') ?></label>
+              <label><?= $Lang->get('THEME__FAVICON_URL') ?></label>
               <input type="text" class="form-control" name="favicon_url" value="<?= $config['favicon_url'] ?>">
             </div>
 

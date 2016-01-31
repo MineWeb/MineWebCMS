@@ -71,10 +71,10 @@ $this->EyPlugin = new EyPluginComponent;
               </a>
               <ul class="treeview-menu">
                 <li><a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('USER__USERS') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'permissions', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('PERMISSIONS') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'permissions', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('PERMISSIONS__LABEL') ?></a></li>
                 <li><a href="<?= $this->Html->url(array('controller' => 'configuration', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('CONFIG__GENERAL_PREFERENCES') ?></a></li>
                 <li><a href="<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('NAVBAR__TITLE') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'slider', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('SLIDER_TITLE') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'slider', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('SLIDER__TITLE') ?></a></li>
               </ul>
             </li>
 
@@ -102,9 +102,9 @@ $this->EyPlugin = new EyPluginComponent;
               </a>
               <ul class="treeview-menu">
                 <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'link', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('SERVER__LINK') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'banlist', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('BANLIST') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'whitelist', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('WHITELIST') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'online', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('ONLINE_PLAYERS') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'banlist', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('SERVER__BANLIST') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'whitelist', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('SERVER__WHITELIST') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'online', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('SERVER__ONLINE_PLAYERS') ?></a></li>
               </ul>
             </li>
 
@@ -116,7 +116,7 @@ $this->EyPlugin = new EyPluginComponent;
               <ul class="treeview-menu">
                 <li><a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('PLUGIN__TITLE') ?></a></li>
                 <li><a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('THEME__TITLE') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'API', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('API') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'API', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-circle-o"></i> <?= $Lang->get('API__LABEL') ?></a></li>
 
                 <?php if(!empty($plugins_need_admin)) { ?>
                   <li class="treeview">
@@ -137,7 +137,7 @@ $this->EyPlugin = new EyPluginComponent;
             <li>
               <a href="<?= $this->Html->url(array('controller' => 'statistics', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>">
                 <i class="fa fa-files-o"></i>
-                <span><?= $Lang->get('STATISTICS') ?></span>
+                <span><?= $Lang->get('STATS__TITLE') ?></span>
               </a>
             </li>
 

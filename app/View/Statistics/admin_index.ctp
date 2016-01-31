@@ -2,14 +2,14 @@
   <div class="row">
 
     <div class="col-md-12">
-      <a href="<?= $this->Html->url(array('action' => 'reset')) ?>" class="btn btn-info btn-block"><?= $Lang->get('RESET_STATS') ?></a>
+      <a href="<?= $this->Html->url(array('action' => 'reset')) ?>" class="btn btn-info btn-block"><?= $Lang->get('STATS__RESET_LABEL') ?></a>
     </div>
     <br><br>
 
     <div class="col-md-6">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('REFERING_WEBSITE') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('STATS__VISITS_REFERING_WEBSITE') ?></h3>
         </div>
         <div class="box-body">
 
@@ -83,7 +83,7 @@
     <div class="col-md-6">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('PAGE_MOST_VISITED') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('STATS__VISITS_PAGES') ?></h3>
         </div>
         <div class="box-body">
 

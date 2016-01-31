@@ -55,7 +55,7 @@ $this->Configuration = new ConfigurationComponent;
 
 				<hr>
 
-				<h3><?= $Lang->get('CHANGE_PASSWORD') ?></h3>
+				<h3><?= $Lang->get('USER__UPDATE_PASSWORD') ?></h3>
 
 				<form method="post" class="form-inline" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'change_pw')) ?>">
 					 <div class="form-group">
@@ -73,11 +73,11 @@ $this->Configuration = new ConfigurationComponent;
 				<?php if($Permissions->can('EDIT_HIS_EMAIL')) { ?>
 					<hr>
 
-					<h3><?= $Lang->get('CHANGE_EMAIL') ?></h3>
+					<h3><?= $Lang->get('USER__UPDATE_EMAIL') ?></h3>
 
 					<form method="post" class="form-inline" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'change_email')) ?>">
 						<div class="form-group">
-							<input type="email" class="form-control" name="email" placeholder="<?= $Lang->get('EMAIL_CONFIRMATION') ?>">
+							<input type="email" class="form-control" name="email" placeholder="<?= $Lang->get('USER__EMAIL_CONFIRM_LABEL') ?>">
 						</div>
 						<div class="form-group">
 							<input type="email" class="form-control" name="email_confirmation" placeholder="<?= $Lang->get('USER__EMAIL') ?>">
@@ -114,9 +114,9 @@ $this->Configuration = new ConfigurationComponent;
 
 					<hr>
 
-					<h3><?= $Lang->get('YOUR_ALLOWED_IP') ?></h3>
+					<h3><?= $Lang->get('API__MINEGUARD_LABEL') ?></h3>
 
-					<p><?= $Lang->get('WHAT_IS_MINEGUARD') ?></p>
+					<p><?= $Lang->get('API__MINEGUARD_EXPLAIN') ?></p>
 					<div class="row">
 						<div class="col-md-8">
 							<table class="table">
@@ -156,9 +156,9 @@ $this->Configuration = new ConfigurationComponent;
 
 						<div class="ajax-msg-mineguard"></div>
 						<?php if($user['allowed_ip'] == '0') { ?>
-							<button onClick="enableMineGuard();" class="btn btn-block btn-success"><?= $Lang->get('ENABLE') ?></button>
+							<button onClick="enableMineGuard();" class="btn btn-block btn-success"><?= $Lang->get('GLOBAL__ENABLE') ?></button>
 						<?php } else { ?>
-							<button onClick="disableMineGuard();" class="btn btn-block btn-danger"><?= $Lang->get('DISABLE') ?></button>
+							<button onClick="disableMineGuard();" class="btn btn-block btn-danger"><?= $Lang->get('GLOBAL__DISABLE') ?></button>
 						<?php } ?>
 					</div>
 				<?php } ?>
@@ -166,21 +166,21 @@ $this->Configuration = new ConfigurationComponent;
 				<?php if($can_skin) { ?>
 					<hr>
 
-					<h3><?= $Lang->get('SKIN') ?></h3>
+					<h3><?= $Lang->get('API__SKIN_LABEL') ?></h3>
 
 					<form class="form-inline" method="post" id="skin" method="post" data-ajax="true" data-upload-image="true" action="<?= $this->Html->url(array('action' => 'uploadSkin')) ?>">
 					  <div class="form-group">
-					    <label><?= $Lang->get('CHOOSE_YOUR_FILE') ?></label>
+					    <label><?= $Lang->get('FORM__BROWSE') ?></label>
 					    <input name="image" type="file">
 					  </div>
 					  <button type="submit" class="btn btn-default"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
 					  <div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;</div>
 					  <div class="form-group">
-					  	<u><?= $Lang->get('FILE_NEED') ?> :</u><br>
+					  	<u><?= $Lang->get('USER__PROFILE_FORM_IMG') ?> :</u><br>
 
-                		- <?= $Lang->get('BE_PNG') ?><br>
-                		- <?= $Lang->get('WIDTH_MAX') ?><br>
-                		- <?= $Lang->get('HEIGHT_MAX') ?><br>
+                		- <?= $Lang->get('USER__IMG_UPLOAD_TYPE_PNG') ?><br>
+										- <?= str_replace('{PIXELS}', $skin_width_max, $Lang->get('USER__IMG_UPLOAD_WIDTH_MAX')) ?><br>
+                		- <?= str_replace('{PIXELS}', $skin_height_max, $Lang->get('USER__IMG_UPLOAD_HEIGHT_MAX')) ?><br>
 					  </div>
 					</form>
 				<?php } ?>
@@ -188,22 +188,22 @@ $this->Configuration = new ConfigurationComponent;
 				<?php if($can_cape) { ?>
 					<hr>
 
-					<h3><?= $Lang->get('CAPE') ?></h3>
+					<h3><?= $Lang->get('API__CAPE_LABEL') ?></h3>
 
 					<form class="form-inline" method="post" id="cape" method="post" data-ajax="true" data-upload-image="true" action="<?= $this->Html->url(array('action' => 'uploadCape')) ?>">
 					  <div class="form-group">
-					    <label><?= $Lang->get('CHOOSE_YOUR_FILE') ?></label>
+					    <label><?= $Lang->get('FORM__BROWSE') ?></label>
 					    <input name="image" type="file">
 					  </div>
 						<input name="data[_Token][key]" value="<?= $csrfToken ?>" type="hidden">
 					  <button type="submit" class="btn btn-default"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
 					  <div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;</div>
 					  <div class="form-group">
-					  	<u><?= $Lang->get('FILE_NEED') ?> :</u><br>
+					  	<u><?= $Lang->get('USER__PROFILE_FORM_IMG') ?> :</u><br>
 
-                		- <?= $Lang->get('BE_PNG') ?><br>
-                		- <?= $Lang->get('WIDTH_MAX') ?><br>
-                		- <?= $Lang->get('HEIGHT_MAX') ?><br>
+                		- <?= $Lang->get('USER__IMG_UPLOAD_TYPE_PNG') ?><br>
+										- <?= str_replace('{PIXELS}', $cape_width_max, $Lang->get('USER__IMG_UPLOAD_WIDTH_MAX')) ?><br>
+                		- <?= str_replace('{PIXELS}', $cape_height_max, $Lang->get('USER__IMG_UPLOAD_HEIGHT_MAX')) ?><br>
 					  </div>
 					</form>
 				<?php } ?>

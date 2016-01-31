@@ -152,9 +152,9 @@ class ServerController extends AppController {
 					if(filter_var($this->request->data['timeout'], FILTER_VALIDATE_FLOAT)) {
 						$this->Configuration->set('server_timeout', $this->request->data['timeout']);
 
-						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_SAVE_TIMEOUT')));
+						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SERVER__TIMEOUT_SAVE_SUCCESS')));
 					} else {
-						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('INVALID_TIMEOUT')));
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__INVALID_TIMEOUT')));
 					}
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
@@ -184,7 +184,7 @@ class ServerController extends AppController {
 									exit;
 								}
 							} else {
-								echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NEED_CONFIG_SERVER_TIMEOUT')));
+								echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__TIMEOUT_UNDEFINED')));
 								exit;
 							}
 						} else {
@@ -251,7 +251,7 @@ class ServerController extends AppController {
 			}
 			if(isset($list[0]) AND $list[0] == "none") { $list = array(); }
 			$this->set(compact('list'));
-			$this->set('title_for_layout',$this->Lang->get('BANLIST'));
+			$this->set('title_for_layout',$this->Lang->get('SERVER__BANLIST'));
 		} else {
 			$this->redirect('/');
 		}
@@ -280,7 +280,7 @@ class ServerController extends AppController {
 			}
 			if(isset($list[0]) AND $list[0] == "none") { $list = array(); }
 			$this->set(compact('list'));
-			$this->set('title_for_layout',$this->Lang->get('WHITELIST'));
+			$this->set('title_for_layout',$this->Lang->get('SERVER__WHITELIST'));
 		} else {
 			$this->redirect('/');
 		}
@@ -309,7 +309,7 @@ class ServerController extends AppController {
 			}
 			if(isset($list[0]) AND $list[0] == "none") { $list = array(); }
 			$this->set(compact('list'));
-			$this->set('title_for_layout',$this->Lang->get('ONLINE'));
+			$this->set('title_for_layout',$this->Lang->get('SERVER__STATUS_ONLINE'));
 		} else {
 			$this->redirect('/');
 		}

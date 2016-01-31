@@ -287,11 +287,11 @@
                   <small><?= $Lang->get('CONFIG__CONFIRM_MAIL_SIGNUP_EXPLAIN') ?></small>
                   <div class="radio">
                     <input type="radio" name="confirm_mail_signup" value="1" <?= ($config['confirm_mail_signup'] == '1') ? 'checked=""' : '' ?>>
-                    <label><?= $Lang->get('ENABLE') ?></label>
+                    <label><?= $Lang->get('GLOBAL__ENABLE') ?></label>
                   </div>
                   <div class="radio">
                     <input type="radio" name="confirm_mail_signup" value="0" <?= ($config['confirm_mail_signup'] == '0') ? 'checked=""': '' ?>>
-                    <label><?= $Lang->get('DISABLE') ?></label>
+                    <label><?= $Lang->get('GLOBAL__DISABLE') ?></label>
                   </div>
                 </div>
 
@@ -310,11 +310,11 @@
                     <label><?= $Lang->get('CONFIG__KEY_CONFIRM_MAIL_SIGNUP_BLOCK') ?></label>
                     <div class="radio">
                       <input type="radio" name="confirm_mail_signup_block" value="1" <?= ($config['confirm_mail_signup_block'] == '1') ? 'checked=""' : '' ?>>
-                      <label><?= $Lang->get('ENABLE') ?></label>
+                      <label><?= $Lang->get('GLOBAL__ENABLE') ?></label>
                     </div>
                     <div class="radio">
                       <input type="radio" name="confirm_mail_signup_block" value="0" <?= ($config['confirm_mail_signup_block'] == '0') ? 'checked=""': '' ?>>
-                      <label><?= $Lang->get('DISABLE') ?></label>
+                      <label><?= $Lang->get('GLOBAL__DISABLE') ?></label>
                     </div>
                   </div>
                 </div>

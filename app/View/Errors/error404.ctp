@@ -3,7 +3,7 @@
     <div class="row">
 
         <div class="col-md-6">
-            <h1 style="display: inline-block;"><?= $Lang->get('ERROR_404_TITLE') ?></h1>
+            <h1 style="display: inline-block;"><?= $Lang->get('ERROR__404_LABEL') ?></h1>
         </div>
     </div>
     <br>
@@ -12,7 +12,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
 					<?php 
-					$msg = $Lang->get('ERROR_404_CONTENT');
+					$msg = $Lang->get('ERROR__404_CONTENT');
 					$msg = str_replace('{URL}', $url, $msg);
 					echo $msg;
 					?>

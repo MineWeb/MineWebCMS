@@ -53,7 +53,7 @@
                       $checked = false;
                     }
                   ?>
-                  <input name="published" type="checkbox"<?= ($news['published']) ? ' checked=""' : ''; ?>> <?= $Lang->get('PUBLISH_THIS_NEWS') ?>
+                  <input name="published" type="checkbox"<?= ($news['published']) ? ' checked=""' : ''; ?>> <?= $Lang->get('NEWS__WANT_TO_PUBLISH') ?>
                 </label>
               </div>
             </div>

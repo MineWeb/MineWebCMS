@@ -28,7 +28,7 @@
                         </ul>
                     </form>
                 <?php } else { ?>
-                    <div class="alert alert-danger"><?= $Lang->get('CANT_WRITE') ?></div>
+                    <div class="alert alert-danger"><?= $Lang->get('INSTALL__TMP_NOT_WRITABLE') ?></div>
                 <?php } ?>
             </p>
         </div>

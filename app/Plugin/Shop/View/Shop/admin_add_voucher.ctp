@@ -73,7 +73,7 @@
 
             <div class="form-group">
               <label><?= $Lang->get('END_DATE') ?></label>
-              <input type="text" class="form-control" name="end_date" placeholder="<?= 'Format : '.$Lang->get('YEAR').'-'.$Lang->get('MONTH').'-'.$Lang->get('DAY').' '.$Lang->get('HOUR').':'.$Lang->get('MINUTES').':'.$Lang->get('SECONDS') ?>">
+              <input type="text" class="form-control" name="end_date" placeholder="<?= 'Format : '.$Lang->get('GLOBAL__DATE_YEAR').'-'.$Lang->get('GLOBAL__DATE_MONTH').'-'.$Lang->get('GLOBAL__DATE_DAY').' '.$Lang->get('GLOBAL__DATE_HOUR').':'.$Lang->get('GLOBAL__DATE_MINUTES').':'.$Lang->get('GLOBAL__DATE_SECONDS') ?>">
             </div>
 
             <div class="form-group">

@@ -15,7 +15,7 @@
                 <tr>
                   <th><?= $Lang->get('GLOBAL__TITLE') ?></th>
                   <th><?= $Lang->get('GLOBAL__BY') ?></th>
-                  <th><?= $Lang->get('PUBLISHED') ?></th>
+                  <th><?= $Lang->get('NEWS__PUBLISHED') ?></th>
                   <th><?= $Lang->get('NEWS__POSTED_ON') ?></th>
                   <th><?= $Lang->get('NEWS__COMMENTS_NBR') ?></th>
                   <th><?= $Lang->get('NEWS__LIKES_NBR') ?></th>
@@ -27,7 +27,7 @@
                 <tr>
                   <td><?= $v['News']['title'] ?></td>
                   <td><?= $v['News']['author'] ?></td>
-                  <td><?= ($v['News']['published']) ? '<span class="label label-success">'.$Lang->get('YES').'</span>' : '<span class="label label-danger">'.$Lang->get('NO').'</span>'; ?></td>
+                  <td><?= ($v['News']['published']) ? '<span class="label label-success">'.$Lang->get('GLOBAL__YES').'</span>' : '<span class="label label-danger">'.$Lang->get('GLOBAL__NO').'</span>'; ?></td>
                   <td><?= $Lang->date($v['News']['created']) ?></td>
                   <td><?= $v['News']['count_comments'] ?> <?= $Lang->get('NEWS__COMMENTS_TITLE') ?></td>
                   <td><?= $v['News']['count_likes'] ?> <?= $Lang->get('NEWS__LIKES') ?></td>

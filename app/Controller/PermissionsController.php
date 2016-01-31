@@ -7,7 +7,7 @@ class PermissionsController extends AppController {
 	function admin_index() {
 		if($this->isConnected AND $this->User->isAdmin()) {
 
-			$this->set('title_for_layout', $this->Lang->get('PERMISSIONS'));
+			$this->set('title_for_layout', $this->Lang->get('PERMISSIONS__LABEL'));
 			$this->layout = 'admin';
 
 			$this->loadModel('Rank');
@@ -69,8 +69,8 @@ class PermissionsController extends AppController {
 
 					$this->History->set('ADD_RANK', 'permissions');
 
-					$this->Session->setFlash($this->Lang->get('SUCCESS_ADD_RANK'), 'default.success');
-					echo $this->Lang->get('SUCCESS_ADD_RANK').'|true';
+					$this->Session->setFlash($this->Lang->get('USER__RANK_ADD_SUCCESS'), 'default.success');
+					echo $this->Lang->get('USER__RANK_ADD_SUCCESS').'|true';
 
 				} else {
 					echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
@@ -100,7 +100,7 @@ class PermissionsController extends AppController {
 					$this->Permission->delete($search_perm['Permission']['id']);
 				}
 
-				$this->Session->setFlash($this->Lang->get('SUCCESS_DELETE_RANK'), 'default.success');
+				$this->Session->setFlash($this->Lang->get('USER__RANK_DELETE_SUCCESS'), 'default.success');
 				$this->redirect(array('controller' => 'permissions', 'action' => 'index', 'admin' => true));
 
 			} else {

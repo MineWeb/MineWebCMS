@@ -7,7 +7,7 @@ class StatisticsController extends AppController {
 	function admin_index() {
 		if($this->isConnected AND $this->User->isAdmin()) {
 
-			$this->set('title_for_layout', $this->Lang->get('STATISTICS'));
+			$this->set('title_for_layout', $this->Lang->get('STATS__TITLE'));
 			$this->layout = 'admin';
 
 			$this->loadModel('Visit');

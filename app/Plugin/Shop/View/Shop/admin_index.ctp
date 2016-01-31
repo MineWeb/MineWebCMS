@@ -167,7 +167,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
       <div class="col-md-6">
         <div class="box">
           <div class="box-header with-border">
-            <h3 class="box-title"><?= $Lang->get('PAYSAFECARD') ?>&nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'toggle_paysafecard', 'admin' => true)) ?>" class="btn btn-success"><?php if($paysafecard_enabled) { echo $Lang->get('DISABLE'); } else { echo $Lang->get('ENABLE'); } ?></a></h3>
+            <h3 class="box-title"><?= $Lang->get('PAYSAFECARD') ?>&nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'toggle_paysafecard', 'admin' => true)) ?>" class="btn btn-success"><?php if($paysafecard_enabled) { echo $Lang->get('GLOBAL__DISABLE'); } else { echo $Lang->get('GLOBAL__ENABLE'); } ?></a></h3>
           </div>
           <div class="box-body">
 
@@ -362,7 +362,7 @@ function confirmDel(url) {
             <tr>
               <th><?= $Lang->get('CODE') ?></th>
               <th><?= $Lang->get('END_DATE') ?></th>
-              <th><?= $Lang->get('START_DATE') ?></th>
+              <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
               <th><?= $Lang->get('LIMIT') ?></th>
               <th><?= $Lang->get('AFFICH') ?></th>
               <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
@@ -378,9 +378,9 @@ function confirmDel(url) {
                 <td>
                   <?php
                     if($value['Voucher']['affich'] == 1) {
-                      echo $Lang->get('YES');
+                      echo $Lang->get('GLOBAL__YES');
                     } else {
-                      echo $Lang->get('NO');
+                      echo $Lang->get('GLOBAL__NO');
                     }
                   ?>
                 </td>

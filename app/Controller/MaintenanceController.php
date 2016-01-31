@@ -9,7 +9,7 @@ class MaintenanceController extends AppController {
 			$msg = $this->Configuration->get('maintenance');
 		} else {
 
-			$msg = $this->Lang->get('YOUR_BANNED');
+			$msg = $this->Lang->get('USER__BANNED_MSG');
 		}
 		$this->set(compact('msg'));
 	}

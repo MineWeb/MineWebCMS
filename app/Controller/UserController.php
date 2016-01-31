@@ -96,7 +96,7 @@ class UserController extends AppController {
 						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get($isValid)));
 					}
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('INVALID_CAPTCHA')));
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__INVALID_CAPTCHA')));
 				}
 			} else {
 				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
@@ -175,7 +175,7 @@ class UserController extends AppController {
 						$key = substr(md5(rand().date('sihYdm')), 0, 10);
 
 						$to = $this->request->data['email'];
-						$subject = $this->Lang->get('RESET_PASSWORD').' | '.$this->Configuration->get('name').'';
+						$subject = $this->Lang->get('USER__PASSWORD_RESET_LINK').' | '.$this->Configuration->get('name').'';
 						$message = $this->Lang->email_reset($this->request->data['email'], $search['User']['pseudo'], $key);
 						if($this->Util->prepareMail($to, $subject, $message)->sendMail()) {
 							$this->Lostpassword->create();
@@ -184,12 +184,12 @@ class UserController extends AppController {
 								'key' => $key
 							));
 							$this->Lostpassword->save();
-							echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_SEND_RESET_MAIL')));
+							echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__PASSWORD_FORGOT_EMAIL_SUCCESS')));
 						} else {
 							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('INTERNAL_ERROR')));
 						}
 					} else {
-						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('UNKNONWN_USER')));
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_NOT_FOUND')));
 					}
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID')));
@@ -213,7 +213,7 @@ class UserController extends AppController {
 
 					$this->History->set('RESET_PASSWORD', 'user');
 
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_RESET_PASSWORD')));
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__PASSWORD_RESET_SUCCESS')));
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get($reset)));
 				}
@@ -269,7 +269,7 @@ class UserController extends AppController {
 					exit;
 				}
 
-	     echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SKIN_SUCCESS_UPLOAD')));
+	     echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__UPLOAD_SKIN_SUCCESS')));
 
 			}
 
@@ -316,7 +316,7 @@ class UserController extends AppController {
 					exit;
 				}
 
-	     echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('CAPE_SUCCESS_UPLOAD')));
+	     echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__UPLOAD_CAPE_SUCCESS')));
 
 			}
 
@@ -350,7 +350,7 @@ class UserController extends AppController {
 				$this->set('search_psc_msg', false);
 			}
 
-			$available_ranks = array(0 => $this->Lang->get('USER__RANK_MEMBER'), 2 => $this->Lang->get('USER__RANK_MODERATOR'), 3 => $this->Lang->get('USER__RANK_ADMINISTRATOR'), 4 => $this->Lang->get('USER__RANK_ADMINISTRATOR'), 5 => $this->Lang->get('BANNED'));
+			$available_ranks = array(0 => $this->Lang->get('USER__RANK_MEMBER'), 2 => $this->Lang->get('USER__RANK_MODERATOR'), 3 => $this->Lang->get('USER__RANK_ADMINISTRATOR'), 4 => $this->Lang->get('USER__RANK_ADMINISTRATOR'), 5 => $this->Lang->get('USER__RANK_BANNED'));
 			$this->loadModel('Rank');
 			$custom_ranks = $this->Rank->find('all');
 			foreach ($custom_ranks as $key => $value) {
@@ -363,6 +363,15 @@ class UserController extends AppController {
 
 			$this->set('can_cape', $this->API->can_cape());
 			$this->set('can_skin', $this->API->can_skin());
+
+			$this->loadModel('ApiConfiguration');
+			$configAPI = $this->ApiConfiguration->find('first');
+			$skin_width_max = $configAPI['ApiConfiguration']['skin_width'];
+			$skin_height_max = $configAPI['ApiConfiguration']['skin_height'];
+			$cape_width_max = $configAPI['ApiConfiguration']['cape_width'];
+			$cape_height_max = $configAPI['ApiConfiguration']['cape_height'];
+
+			$this->set(compact('skin_width_max', 'skin_height_max', 'cape_width_max', 'cape_height_max'));
 
 			if($this->Configuration->get('confirm_mail_signup') && !empty($this->User->getKey('confirmed')) && date('Y-m-d H:i:s', strtotime($this->User->getKey('confirmed'))) != $this->User->getKey('confirmed')) { // si ca ne correspond pas à une date -> compte non confirmé
 				$this->Session->setFlash($this->Lang->get('USER__MSG_NOT_CONFIRMED_EMAIL'), 'default.warning');
@@ -382,7 +391,7 @@ class UserController extends AppController {
 					$password_confirmation = password($this->request->data['password_confirmation']);
 					if($password == $password_confirmation) {
 						$this->User->setKey('password', $password);
-						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('PASSWORD_CHANGE_SUCCESS')));
+						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__PASSWORD_UPDATE_SUCCESS')));
 					} else {
 						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_PASSWORDS_NOT_SAME')));
 					}
@@ -405,12 +414,12 @@ class UserController extends AppController {
 					if($this->request->data['email'] == $this->request->data['email_confirmation']) {
 						if(filter_var($this->request->data['email'], FILTER_VALIDATE_EMAIL)) {
 							$this->User->setKey('email', $this->request->data['email']);
-							echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('EMAIL_CHANGE_SUCCESS')));
+							echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EMAIL_UPDATE_SUCCESS')));
 						} else {
 							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID')));
 						}
 					} else {
-						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('EMAIL_NOT_SAME')));
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_SAME')));
 					}
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
@@ -445,7 +454,7 @@ class UserController extends AppController {
 							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('CANT_SEND_EMPTY_POINTS')));
 						}
 					} else {
-						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER_NOT_EXIST')));
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_NOT_FOUND')));
 					}
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
@@ -508,7 +517,7 @@ class UserController extends AppController {
 					2 => array('label' => 'warning', 'name' => $this->Lang->get('USER__RANK_MODERATOR')),
 					3 => array('label' => 'danger', 'name' => $this->Lang->get('USER__RANK_ADMINISTRATOR')),
 					4 => array('label' => 'danger', 'name' => $this->Lang->get('USER__RANK_ADMINISTRATOR')),
-					5 => array('label' => 'primary', 'name' => $this->Lang->get('BANNED'))
+					5 => array('label' => 'primary', 'name' => $this->Lang->get('USER__RANK_BANNED'))
 				);
 				$this->loadModel('Rank');
 				$custom_ranks = $this->Rank->find('all');
@@ -553,7 +562,7 @@ class UserController extends AppController {
 					$findHistory = $this->History->getLastFromUser($id);
 					$search_user['History'] = $this->History->format($findHistory);
 
-					$options_ranks = array('member' => $this->Lang->get('USER__RANK_MEMBER'), 2 => $this->Lang->get('USER__RANK_MODERATOR'), 3 => $this->Lang->get('USER__RANK_ADMINISTRATOR'), 5 => $this->Lang->get('BANNED'));
+					$options_ranks = array('member' => $this->Lang->get('USER__RANK_MEMBER'), 2 => $this->Lang->get('USER__RANK_MODERATOR'), 3 => $this->Lang->get('USER__RANK_ADMINISTRATOR'), 5 => $this->Lang->get('USER__RANK_BANNED'));
 					$this->loadModel('Rank');
 					$custom_ranks = $this->Rank->find('all');
 					foreach ($custom_ranks as $key => $value) {

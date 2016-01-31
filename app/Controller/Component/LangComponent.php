@@ -92,10 +92,20 @@ class LangComponent extends Object {
         $language = 'fr_FR'; // sinon on met en français de base
       }
 
-      $language = $this->languages[$language];
+      if(isset($this->languages[$language])) {
+        $language = $this->languages[$language];
 
-      $lang = file_get_contents($this->langFolder.DS.$language['path'].'.json');
-			$language['messages'] = json_decode($lang, true)['MESSAGES'];
+        $lang = file_get_contents($this->langFolder.DS.$language['path'].'.json');
+  			$language['messages'] = json_decode($lang, true)['MESSAGES'];
+      } else {
+        $language = array();
+        $language['name'] = null;
+        $language['author'] = null;
+        $language['version'] = null;
+        $language['path'] = null;
+        $language['fullpath'] = $this->langFolder.DS;
+        $language['messages'] = array();
+      }
 
       App::import('Component', 'EyPlugin');
       $this->EyPlugin = new EyPluginComponent();
@@ -390,6 +400,28 @@ class LangComponent extends Object {
   		}
 
   		return $return; // puis je retourne la date & l'heure
+    }
+
+    function email_reset($email, $pseudo, $key) {
+    	$msg = "USER__PASSWORD_RESET_EMAIL_CONTENT";
+    	$language = $this->lang;
+
+  		if(file_get_contents(ROOT.'/lang/'.$language.'.json')) {
+  			$language_file = file_get_contents(ROOT.'/lang/'.$language.'.json');
+  			$language_file = json_decode($language_file, true);
+  		} else {
+  			$language_file = file_get_contents(ROOT.'/lang/fr.json');
+  			$language_file = json_decode($language_file, true);
+  		}
+
+  		if(isset($language_file[$msg])) { // et si le msg existe
+  			$msg = str_replace('{EMAIL}', $email, $language_file[$msg]);
+  			$msg = str_replace('{PSEUDO}', $pseudo, $msg);
+  			$msg = str_replace('{LINK}', Router::url('/?resetpasswd_'.$key, true), $msg);
+  			return $msg;
+  		} else { // sinon je vérifie si c'est un msg de plugin
+  		 	return $msg;
+  		}
     }
 
 }

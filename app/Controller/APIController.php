@@ -45,12 +45,12 @@ class APIController extends AppController {
     			if(!empty($this->request->data['ip'])) {
     				if(filter_var($this->request->data['ip'], FILTER_VALIDATE_IP)) {
 	    				if($this->API->setIp($this->User->getKey('pseudo'), $this->request->data['ip'])) {
-	    					echo $this->Lang->get('SUCCESS_ADD_IP').'|true';
+	    					echo $this->Lang->get('API__IP_ADD_SUCCESS').'|true';
 	    				} else {
 	    					echo $this->Lang->get('INTERNAL_ERROR').'|false';
 	    				}
 	    			} else {
-	    				echo $this->Lang->get('INVALID_IP').'|false';
+	    				echo $this->Lang->get('API__IP_INVALID').'|false';
 	    			}
     			} else {
     				echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
@@ -70,7 +70,7 @@ class APIController extends AppController {
 
     			$this->User->setKey('allowed_ip', '0');
 
-    			echo $this->Lang->get('SUCCESS_DISABLE_MINEGUARD').'|true';
+    			echo $this->Lang->get('API__MINEGUARD_DISABLE_SUCCESS').'|true';
 
     		} else {
     			echo $this->Lang->get('NOT_POST').'|false';
@@ -87,7 +87,7 @@ class APIController extends AppController {
 
     			$this->User->setKey('allowed_ip', serialize(array()));
 
-    			echo $this->Lang->get('SUCCESS_ENABLE_MINEGUARD').'|true';
+    			echo $this->Lang->get('API__MINEGUARD_ENABLE_SUCCESS').'|true';
 
     		} else {
     			echo $this->Lang->get('NOT_POST').'|false';
@@ -99,7 +99,7 @@ class APIController extends AppController {
 
 	public function admin_index() {
 		if($this->isConnected AND $this->User->isAdmin()) {
-			$this->set('title_for_layout',$this->Lang->get('API'));
+			$this->set('title_for_layout',$this->Lang->get('API__LABEL'));
 			$this->layout = 'admin';
 
 			if($this->request->is('post')) {

@@ -3,7 +3,7 @@
     <div class="row">
 
         <div class="col-md-6">
-            <h1 style="display: inline-block;"><?= $Lang->get('ERROR_500_TITLE') ?></h1>
+            <h1 style="display: inline-block;"><?= $Lang->get('ERROR__500_LABEL') ?></h1>
         </div>
     </div>
     <br>

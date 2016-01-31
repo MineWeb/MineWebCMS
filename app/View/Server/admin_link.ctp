@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('CONFIG_SERVER') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('SERVER__CONFIG_LABEL') ?></h3>
         </div>
         <div class="box-body">
 
@@ -17,7 +17,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
-            <a href="<?= $this->Html->url(array('action' => 'switchState')) ?>" class="btn btn-<?= ($isEnabled) ? 'danger' : 'success' ?>"><?= ($isEnabled) ? $Lang->get('DISABLE') : $Lang->get('ENABLE') ?></a>
+            <a href="<?= $this->Html->url(array('action' => 'switchState')) ?>" class="btn btn-<?= ($isEnabled) ? 'danger' : 'success' ?>"><?= ($isEnabled) ? $Lang->get('GLOBAL__DISABLE') : $Lang->get('GLOBAL__ENABLE') ?></a>
             <a href="<?= $this->Html->url(array('action' => 'switchCacheState')) ?>" class="btn btn-<?= ($isCacheEnabled) ? 'danger' : 'success' ?>"><?= ($isCacheEnabled) ? $Lang->get('SERVER__DISABLE_CACHE') : $Lang->get('SERVER__ENABLE_CACHE') ?></a>
 
           </form>
@@ -40,7 +40,7 @@
 
             <div class="form-group">
               <input type="text" class="form-control" name="msg" value="<?= $bannerMsg ?>">
-              <small><?= $Lang->get('AVAILABLE_VARIABLES') ?> : {MOTD}, {VERSION}, {ONLINE}, {ONLINE_LIMIT}</small>
+              <small><?= $Lang->get('CONFIG__LANG_AVAILABLE_VARIABLES') ?> : {MOTD}, {VERSION}, {ONLINE}, {ONLINE_LIMIT}</small>
             </div>
 
             <button type="submit" class="btn btn-primary"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
@@ -107,7 +107,7 @@
 
 
   <div id="add_server_content"></div>
-  <div class="btn btn-success btn-block" id="add_server"><?= $Lang->get('ADD_SERVER') ?></div>
+  <div class="btn btn-success btn-block" id="add_server"><?= $Lang->get('SERVER__ADD') ?></div>
 </section>
 <script>
 

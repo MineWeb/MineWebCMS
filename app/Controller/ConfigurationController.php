@@ -128,7 +128,7 @@ class ConfigurationController extends AppController {
 
 					$this->History->set('EDIT_LANG', 'lang');
 
-					$this->Session->setFlash($this->Lang->get('EDIT_LANG_SUCCESS'), 'default.success');
+					$this->Session->setFlash($this->Lang->get('CONFIG__EDIT_LANG_SUCCESS'), 'default.success');
 
 				}
 			}
@@ -136,7 +136,7 @@ class ConfigurationController extends AppController {
 			$this->Lang->lang = $this->Lang->getLang(); // on refresh les messages
 
 			$this->set('messages', $this->Lang->lang['messages']);
-			$this->set('title_for_layout', $this->Lang->get('LANG'));
+			$this->set('title_for_layout', $this->Lang->get('CONFIG__LANG_LABEL'));
 
 		} else {
 			$this->redirect('/');
