@@ -3,16 +3,16 @@
     <div class="col-md-6">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title">Choississez votre question</h3>
+          <h3 class="box-title"><?= $Lang->get('HELP__CHOOSE_QUESTION') ?></h3>
         </div>
         <div class="box-body">
-          <label>Choississez une question</label>
+          <label><?= $Lang->get('HELP__CHOOSE_QUESTION') ?></label>
 
           <?= $this->Html->script('admin/bootstrap-select') ?>
           <?= $this->Html->css('bootstrap-select.min.css') ?>
 
           <div class="form-group">
-            <select class="selectpicker" id="questions" data-live-search="true" title="Sélectionnez une question">
+            <select class="selectpicker" id="questions" data-live-search="true" title="<?= $Lang->get('HELP__CHOOSE_QUESTION') ?>">
             </select>
           </div>
         </div>
@@ -21,12 +21,11 @@
     <div class="col-md-6">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title">Explication</h3>
+          <h3 class="box-title"><?= $Lang->get('HELP__PAGE_EXPLAIN_TITLE') ?></h3>
         </div>
         <div class="box-body">
           <blockquote cite="http://mineweb.org">
-            <p>Cette page rescence une liste de questions et réponses vous permettant de résoudre rapidement vos problèmes.</p>
-            <p>La liste de questions est récupéré automatiquement sur mineweb.org, elle est donc actualisée en temps réel.</p>
+            <?= $Lang->get('HELP__PAGE_EXPLAIN_CONTENT') ?>
           </blockquote>
         </div>
       </div>
@@ -34,12 +33,12 @@
     <div class="col-md-6">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title">Réponse à la question</h3>
+          <h3 class="box-title"><?= $Lang->get('HELP__ANSWER_TITLE') ?></h3>
         </div>
         <div class="box-body">
           <div id="answers">
             <blockquote>
-              <small><i>Veuillez sélectioner une question</i></small>
+              <small><i><?= $Lang->get('HELP__CHOOSE_QUESTION') ?></i></small>
             </blockquote>
           </div>
         </div>
@@ -48,21 +47,21 @@
     <div class="col-md-6">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title">Problème non résolu ?</h3>
+          <h3 class="box-title"><?= $Lang->get('HELP__POST_TICKET_TITLE') ?></h3>
         </div>
         <div class="box-body">
-          <p>Postez directement votre question au support. Le suivi du ticket se fera sur mineweb.org. Un rapport complet de votre CMS sera envoyé à nos serveurs en même temps que le ticket.</p>
+          <p><?= $Lang->get('HELP__POST_TICKET_EXPLAIN') ?></p>
           <form action="<?= $this->Html->url(array('action' => 'submitTicket')) ?>" method="post" data-ajax="true" data-callback="afterSubmitTicket">
             <div class="form-group">
-              <label>Titre</label>
+              <label><?= $Lang->get('HELP__POST_TICKET_TITLE') ?></label>
               <input type="text" class="form-control" name="title" placeholder="Problème de...">
             </div>
             <div class="form-group">
-              <label>Expliquez le plus clairement possible votre problème</label>
-              <textarea class="form-control" name="content">Bonjour,</textarea>
+              <label><?= $Lang->get('HELP__POST_TICKET_CONTENT') ?></label>
+              <textarea class="form-control" name="content"></textarea>
             </div>
             <div class="form-group">
-              <button type="submit" class="btn btn-info">Envoyer</button>
+              <button type="submit" class="btn btn-info"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             </div>
           </form>
         </div>

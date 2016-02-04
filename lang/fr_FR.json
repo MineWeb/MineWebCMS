@@ -78,6 +78,14 @@
 
         "HELP__TITLE":"J'ai besoin d'aide",
         "HELP__TICKET_ADD_SUCCESS":"Le ticket à bien été envoyé à nos serveurs !",
+        "HELP__CHOOSE_QUESTION":"Choississez une question",
+        "HELP__PAGE_EXPLAIN_TITLE":"Explications",
+        "HELP__PAGE_EXPLAIN_CONTENT":"<p>Cette page rescence une liste de questions et réponses vous permettant de résoudre rapidement vos problèmes.</p><p>La liste de questions est récupéré automatiquement sur mineweb.org, elle est donc actualisée en temps réel.</p>",
+        "HELP__ANSWER_TITLE":"Réponse à la question",
+        "HELP__POST_TICKET_TITLE":"Problème non résolu ?",
+        "HELP__POST_TICKET_EXPLAIN":"Postez directement votre question au support. Le suivi du ticket se fera sur mineweb.org. Un rapport complet de votre CMS sera envoyé à nos serveurs en même temps que le ticket.<br> Vos tickets déjà ouverts ne s'affichent pas ici, tout cela se passe sur <a href=\"http://mineweb.org/help\" target=\"_blank\">le support</a>.",
+        "HELP__POST_TICKET_TITLE":"Titre",
+        "HELP__POST_TICKET_CONTENT":"Expliquez le plus clairement possible votre problème",
 
         "ERROR__PLUGIN_CANT_BE_DOWNLOADED": "Le plugin ne peux pas \u00eatre t\u00e9l\u00e9charg\u00e9.",
         "ERROR__PLUGIN_REQUIREMENTS": "Les pr\u00e9-requis du plugins ne sont pas remplis, celui-ci ne peux pas \u00eatre install\u00e9.",
