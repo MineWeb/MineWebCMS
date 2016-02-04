@@ -44,11 +44,20 @@ class HelpController extends AppController {
   public function admin_submitTicket() {
     if($this->isConnected AND $this->User->isAdmin()) {
         $this->autoRender = false;
-        $this->response->type('json');
 
         if($this->request->is('ajax')) {
 
-          $this->sendTicketToAPI(); // Méthode du AppController
+          if(!empty($this->request->data['title']) && !empty($this->request->data['content'])) {
+
+            if($this->sendTicketToAPI($this->request->data)) {
+              echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('HELP__TICKET_ADD_SUCCESS')));
+            } else {
+              echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__INTERNAL_ERROR')));
+            }
+
+          } else {
+            echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+          }
 
         } else {
           echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));

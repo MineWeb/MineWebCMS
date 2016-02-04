@@ -131,7 +131,7 @@ WCqkx22behAGZq6rhwIDAQAB
 					echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST').'|false';
+				echo $this->Lang->get('ERROR__BAD_REQUEST').'|false';
 			}
 		} else {
 			echo $this->Lang->get('INSTALL__ALREADY_INSTALLED').'|false';

@@ -119,7 +119,7 @@ function initForms() {
             window[form.attr('data-callback-function')](inputs, json);
           }
           if(form.attr('data-redirect-url') !== undefined) {
-            document.location.href=form.attr('data-redirect-url');
+            document.location.href=form.attr('data-redirect-url')+'?no-cache='+ (new Date()).getTime();
           }
           submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
         } else if(json.statut === false) {

@@ -116,7 +116,7 @@ class SliderController extends AppController {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST')));
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
 			}
 		} else {
 			throw new ForbiddenException();

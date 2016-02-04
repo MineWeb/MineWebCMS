@@ -323,7 +323,6 @@ class LangComponent extends Object {
   		$language = $this->lang;
   		if(isset($language['messages']['SERVER__STATUS_MESSAGE'])) {
   			$return = str_replace('{MOTD}', @$call['getMOTD'], $language['messages']['SERVER__STATUS_MESSAGE']);
-        var_dump($return);
   			$return = str_replace('{VERSION}', @$call['getVersion'], $return);
   			$return = str_replace('{ONLINE}', @$call['getPlayerCount'], $return);
   			$return = str_replace('{ONLINE_LIMIT}', @$call['getPlayerMax'], $return);

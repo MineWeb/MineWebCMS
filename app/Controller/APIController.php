@@ -31,7 +31,7 @@ class APIController extends AppController {
     				echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
     			}
     		} else {
-    			echo $this->Lang->get('NOT_POST').'|false';
+    			echo $this->Lang->get('ERROR__BAD_REQUEST').'|false';
     		}
     	} else {
     		echo $this->Lang->get('USER__ERROR_MUST_BE_LOGGED').'|false';
@@ -56,7 +56,7 @@ class APIController extends AppController {
     				echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
     			}
     		} else {
-    			echo $this->Lang->get('NOT_POST').'|false';
+    			echo $this->Lang->get('ERROR__BAD_REQUEST').'|false';
     		}
     	} else {
     		echo $this->Lang->get('USER__ERROR_MUST_BE_LOGGED').'|false';
@@ -73,7 +73,7 @@ class APIController extends AppController {
     			echo $this->Lang->get('API__MINEGUARD_DISABLE_SUCCESS').'|true';
 
     		} else {
-    			echo $this->Lang->get('NOT_POST').'|false';
+    			echo $this->Lang->get('ERROR__BAD_REQUEST').'|false';
     		}
     	} else {
     		echo $this->Lang->get('USER__ERROR_MUST_BE_LOGGED').'|false';
@@ -90,7 +90,7 @@ class APIController extends AppController {
     			echo $this->Lang->get('API__MINEGUARD_ENABLE_SUCCESS').'|true';
 
     		} else {
-    			echo $this->Lang->get('NOT_POST').'|false';
+    			echo $this->Lang->get('ERROR__BAD_REQUEST').'|false';
     		}
     	} else {
     		echo $this->Lang->get('USER__ERROR_MUST_BE_LOGGED').'|false';

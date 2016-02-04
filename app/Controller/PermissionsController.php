@@ -77,7 +77,7 @@ class PermissionsController extends AppController {
 				}
 
 			} else {
-				echo $this->Lang->get('NOT_POST').'|false';
+				echo $this->Lang->get('ERROR__BAD_REQUEST').'|false';
 			}
 		} else {
 			$this->redirect('/');

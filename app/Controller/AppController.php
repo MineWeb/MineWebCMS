@@ -355,7 +355,7 @@ WCqkx22behAGZq6rhwIDAQAB
 		$this->__setTheme();
 	}
 
-  function apiCall($key, $debug = false) { // appelé pour récupérer des données
+  function apiCall($key, $debug = false, $return = false) { // appelé pour récupérer des données
     $secure = file_get_contents(ROOT.'/config/secure');
 		$secure = json_decode($secure, true);
 		if($key == $secure['key']) {
@@ -469,10 +469,55 @@ WCqkx22behAGZq6rhwIDAQAB
 
       }
 
+      if($return) {
+        return $infos;
+      }
+
       echo json_encode($infos);
 
       exit;
     }
+  }
+
+  protected function sendTicketToAPI($data) {
+    if(!isset($data['title']) || !isset($data['content'])) {
+      return false;
+    }
+
+    $secure = file_get_contents(ROOT.'/config/secure');
+    $secure = json_decode($secure, true);
+    $url = 'http://mineweb.org/api/v1/addTicket';
+		$postfields = array(
+			'id' => $secure['id'],
+		  'key' => $secure['key'],
+		  'domain' => Router::url('/', true),
+      'debug' => json_encode($this->apiCall($secure['key'], true, true)),
+      'title' => $data['title'],
+      'content' => $data['content']
+		);
+
+    $curl = curl_init();
+
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_COOKIESESSION, true);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
+
+    curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+
+    $return = curl_exec($curl);
+    $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    curl_close($curl);
+
+    $status = ($code == 200) ? true : false;
+
+    if(!$status) {
+      $this->log('SendTicketToAPI : '.$code);
+    }
+
+
+    return $status;
   }
 
 	function beforeRender() {

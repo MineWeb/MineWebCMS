@@ -62,7 +62,7 @@
               <textarea class="form-control" name="content">Bonjour,</textarea>
             </div>
             <div class="form-group">
-              <button type="button" class="btn btn-info">Envoyer</button>
+              <button type="submit" class="btn btn-info">Envoyer</button>
             </div>
           </form>
         </div>
