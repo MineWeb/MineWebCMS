@@ -134,7 +134,7 @@
               $.ajax({
 							 	type : 'POST',
 							 	url : "<?= $this->Html->url(array('controller' => 'install', 'action' => 'step_3')) ?>",
-							 	data : { pseudo : pseudo, password : password, password_confirmation : password_confirmation, email : email },
+							 	data : inputs,
 							 	success : function(data){
 		              data2 = data.split("|");
 							  	if(data.indexOf('true') != -1) {

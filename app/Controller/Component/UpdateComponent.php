@@ -353,7 +353,7 @@ WCqkx22behAGZq6rhwIDAQAB
 						$filezip_size = zip_entry_filesize($aF);
 						$file_size = @filesize(ROOT.'/app/Plugin/'.$thisFileName);
 						if($filezip_size != $file_size OR $exist === false OR $thisFileName == $plugin_name."/config.json") {
-							if($updateThis = fopen(ROOT.'/app/Plugin/'.$thisFileName, 'w')) {
+							if($updateThis = @fopen(ROOT.'/app/Plugin/'.$thisFileName, 'w')) {
 								fwrite($updateThis, $contents);
 								fclose($updateThis);
 								unset($contents);

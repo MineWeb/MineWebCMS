@@ -688,6 +688,9 @@ WCqkx22behAGZq6rhwIDAQAB
             CakePlugin::load(array($slug => array('routes' => true, 'bootstrap' => true))); // On load sur cake
 
           }
+        } else {
+          $LangComponent = new LangComponent();
+          SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_PERMISSIONS'), 'default.error');
         }
         return false;
       } else {
@@ -931,14 +934,14 @@ WCqkx22behAGZq6rhwIDAQAB
         $config = $this->getPluginConfig($name); // on récup la config
       }
 
-      if(isset($config->requirements) && !empty($config->requirements)) {
-        return false;
+      if(is_object($config)) {
+        $requirements = (isset($config->requirements) && !empty($config->requirements)) ? $config->requirements : null;
+      } else {
+        $requirements = (isset($config['requirements']) && !empty($config['requirements'])) ? $config['requirements'] : null;
       }
 
-      if(is_object($config)) {
-        $requirements = $config->requirements;
-      } else {
-        $requirements = $config['requirements'];
+      if(empty($requirements)) {
+        return true;
       }
 
       foreach ($requirements as $type => $version) { // on parcours tout les pré-requis

@@ -75,7 +75,6 @@ class NavbarController extends AppController {
 							$this->Navbar->read(null, $id);
 							$this->Navbar->set(array(
 								'order' => $value,
-								'url' => json_encode($find['Navbar']['url'])
 							));
 							$this->Navbar->save();
 						} else {
@@ -84,9 +83,9 @@ class NavbarController extends AppController {
 					}
 					if(empty($error)) {
 						$this->History->set('EDIT_NAVBAR', 'navbar');
-						echo $this->Lang->get('SUCCESS_SAVE_NAVBAR').'|true';
+						echo $this->Lang->get('NAVBAR__SAVE_SUCCESS').'|true';
 					} else {
-						echo $this->Lang->get('INTERNAL_ERROR').'|false';
+						echo $this->Lang->get('ERROR__INTERNAL_ERROR').'|false';
 					}
 				} else {
 					echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
@@ -196,7 +195,7 @@ class NavbarController extends AppController {
 					echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST' ,$language).'|false';
+				echo $this->Lang->get('ERROR__BAD_REQUEST').'|false';
 			}
 		} else {
 			$this->redirect('/');

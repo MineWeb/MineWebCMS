@@ -88,7 +88,7 @@ class AppSchema extends CakeSchema {
 				'captcha_google_sitekey' => null,
 				'captcha_google_secret' => null,
 				'confirm_mail_signup' => 0,
-				'confirm_mail_signup_block' => 0
+				'confirm_mail_signup_block' => 0,
 				'member_page_type' => 0
 			));
 
@@ -225,7 +225,7 @@ class AppSchema extends CakeSchema {
 		'action' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'category' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
-		'author' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+		'user_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false),
 		'other' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)

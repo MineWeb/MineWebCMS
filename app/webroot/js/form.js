@@ -1,12 +1,8 @@
 function initForms() {
-  $("form").unbind("submit");
+  $('form[data-ajax="true"]').unbind("submit");
 
-  $("form").on("submit", function(e) {
+  $('form[data-ajax="true"]').on("submit", function(e) {
     form = $(this);
-
-    if(form.attr('data-ajax') === undefined || form.attr('data-ajax') == "false") {
-      return;
-    }
 
     e.preventDefault();
 

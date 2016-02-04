@@ -125,7 +125,9 @@ class LangComponent extends Object {
             $language_file = json_decode($language_file, true);
           }
 
-          $language['messages'] = array_merge($language['messages'], $language_file); // on le rajoute aux messages
+          if(isset($language["messages"]) && is_array($language['messages']) && isset($language_file) && is_array($language_file)) {
+            $language['messages'] = array_merge($language['messages'], $language_file); // on le rajoute aux messages
+          }
         }
 
       }
