@@ -6,9 +6,7 @@
           <h3 class="box-title"><?= $Lang->get('NAVBAR__EDIT_TITLE') ?></h3>
         </div>
         <div class="box-body">
-          <form method="post" id="nav_add">
-
-            <div class="ajax-msg"></div>
+          <form method="post" action="<?= $this->Html->url(array('action' => 'edit_ajax', $nav['id'])) ?>" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('action' => 'index')) ?>" data-custom-function="formatteData">
 
             <div class="form-group">
               <label><?= $Lang->get('GLOBAL__NAME') ?></label>
@@ -164,14 +162,7 @@
   });
 </script>
 <script type="text/javascript">
-  $("#nav_add").submit(function( event ) {
-
-    $('.ajax-msg').html('<div class="alert alert-info"><a class="close" data-dismiss="alert">×</a><?= $Lang->get('GLOBAL__LOADING') ?> ...</div>').fadeIn(500);
-
-    var $form = $( this );
-
-    var submit_btn_content = $form.find('button[type=submit]').html();
-    $form.find('button[type=submit]').html('<?= $Lang->get('GLOBAL__LOADING') ?>...').attr('disabled', 'disabled').fadeIn(500);
+  function formatteData($form) {
 
     var name = $form.find("input[name='name']").val();
     var type = $form.find("input[type='radio'][name='type']:checked").val();
@@ -180,7 +171,7 @@
 
       if($form.find("input[name='url_type']:checked").val() == "custom") {
 
-        var url = '{"type":"custom", "url":"'+$form.find("select[name='url_custom']").val()+'"}';
+        var url = '{"type":"custom", "url":"'+$form.find("input[name='url_custom']").val()+'"}';
 
       } else if($form.find("input[name='url_type']:checked").val() == "plugin") {
 
@@ -222,22 +213,6 @@
   inputs['open_new_tab'] = $('input[name="new_tab"]').is(':checked');
   inputs['data[_Token][key]'] = '<?= $csrfToken ?>';
 
-  console.log(inputs);
-
-    $.post("<?= $this->Html->url(array('action' => 'edit_ajax', $nav['id'])) ?>", inputs, function(data) {
-        data2 = data.split("|");
-    if(data.indexOf('true') != -1) {
-          $('.ajax-msg').empty().html('<div class="alert alert-success" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-           document.location.href="<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'admin_index', 'admin' => 'true')) ?>";
-           $form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
-        } else if(data.indexOf('false') != -1) {
-          $('.ajax-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-          $form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
-      } else {
-        $('.ajax-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></i></div>');
-        $form.find('button[type="submit"]').html(submit_btn_content).attr('disabled', false).fadeIn(500);
-    }
-    });
-    return false;
-  });
+  return inputs;
+  }
 </script>

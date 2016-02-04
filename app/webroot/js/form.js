@@ -22,70 +22,79 @@ function initForms() {
       submit.html(LOADING_MSG+'...').attr('disabled', 'disabled').fadeIn(500);
 
       // Data
+    if(form.attr('data-custom-function') == undefined || form.attr('data-custom-function').length == 0) {
 
-      var array = form.serialize();
-      array = array.split('&');
+        var array = form.serialize();
+        array = array.split('&');
 
-      form.find('input[type="checkbox"]').each(function(){
-        if(!$(this).is(':checked')) {
-          array.push($(this).attr('name')+'=off');
-        }
-        });
-
-      var inputs = {};
-
-      var i = 0;
-      for (var key in args = array)
-      {
-        input = args[i];
-        input = input.split('=');
-        input_name = decodeURI(input[0]);
-
-        /*console.log('Name :', input_name+"\n");
-        console.log('Type :', form.find('input[name="'+input_name+'"]').attr('type')+"\n");
-        console.log('Value :', form.find('input[name="'+input_name+'"]').val()+"\n\n")*/
-
-        if(form.find('input[name="'+input_name+'"]').attr('type') == "text" || form.find('input[name="'+input_name+'"]').attr('type') == "hidden" || form.find('input[name="'+input_name+'"]').attr('type') == "email" || form.find('input[name="'+input_name+'"]').attr('type') == "password") {
-          inputs[input_name] = form.find('input[name="'+input_name+'"]').val(); // je récup la valeur comme ça pour éviter la sérialization
-        } else if(form.find('input[name="'+input_name+'"]').attr('type') == "radio") {
-          inputs[input_name] = form.find('input[name="'+input_name+'"][type="radio"]:checked').val();
-        } else if(form.find('input[name="'+input_name+'"]').attr('type') == "checkbox") {
-          if(form.find('input[name="'+input_name+'"]:checked').val() !== undefined) {
-            inputs[input_name] = 1;
-          } else {
-            inputs[input_name] = 0;
+        form.find('input[type="checkbox"]').each(function(){
+          if(!$(this).is(':checked')) {
+            array.push($(this).attr('name')+'=off');
           }
-        } else if(form.find('textarea[name="'+input_name+'"]').attr('id') == "editor") {
-              inputs[input_name] = tinymce.get('editor').getContent();
-          } else if(form.find('textarea[name="'+input_name+'"]').length > 0) {
-            inputs[input_name] = form.find('textarea[name="'+input_name+'"]').val();
-        } else if(form.find('select[name="'+input_name+'"]').val() !== undefined) {
-          inputs[input_name] = form.find('select[name="'+input_name+'"]').val();
+          });
+
+        var inputs = {};
+
+        var i = 0;
+        for (var key in args = array)
+        {
+          input = args[i];
+          input = input.split('=');
+          input_name = decodeURI(input[0]);
+
+          /*console.log('Name :', input_name+"\n");
+          console.log('Type :', form.find('input[name="'+input_name+'"]').attr('type')+"\n");
+          console.log('Value :', form.find('input[name="'+input_name+'"]').val()+"\n\n")*/
+
+          if(form.find('input[name="'+input_name+'"]').attr('type') == "text" || form.find('input[name="'+input_name+'"]').attr('type') == "hidden" || form.find('input[name="'+input_name+'"]').attr('type') == "email" || form.find('input[name="'+input_name+'"]').attr('type') == "password") {
+            inputs[input_name] = form.find('input[name="'+input_name+'"]').val(); // je récup la valeur comme ça pour éviter la sérialization
+          } else if(form.find('input[name="'+input_name+'"]').attr('type') == "radio") {
+            inputs[input_name] = form.find('input[name="'+input_name+'"][type="radio"]:checked').val();
+          } else if(form.find('input[name="'+input_name+'"]').attr('type') == "checkbox") {
+            if(form.find('input[name="'+input_name+'"]:checked').val() !== undefined) {
+              inputs[input_name] = 1;
+            } else {
+              inputs[input_name] = 0;
+            }
+          } else if(form.find('textarea[name="'+input_name+'"]').attr('id') == "editor") {
+                inputs[input_name] = tinymce.get('editor').getContent();
+            } else if(form.find('textarea[name="'+input_name+'"]').length > 0) {
+              inputs[input_name] = form.find('textarea[name="'+input_name+'"]').val();
+          } else if(form.find('select[name="'+input_name+'"]').val() !== undefined) {
+            inputs[input_name] = form.find('select[name="'+input_name+'"]').val();
+          }
+
+          i++;
         }
 
-        i++;
+        // ReCaptcha
+        if(typeof grecaptcha !== "undefined" && typeof grecaptcha.getResponse() !== "undefined") {
+          inputs['recaptcha'] = grecaptcha.getResponse();
+          var recaptcha = true;
+        } else {
+          var recaptcha = false;
+        }
+
+        // CSRF
+        inputs["data[_Token][key]"] = CSRF_TOKEN;
+
+        //
+
+      if(form.attr('data-upload-image') == "true") {
+        var contentType = false;
+        var processData = false;
+        inputs = (window.FormData) ? new FormData(form[0]) : null;
       }
 
-      // ReCaptcha
-      if(typeof grecaptcha !== "undefined" && typeof grecaptcha.getResponse() !== "undefined") {
-        inputs['recaptcha'] = grecaptcha.getResponse();
-        var recaptcha = true;
-      } else {
-        var recaptcha = false;
+    } else {
+      inputs = window[form.attr('data-custom-function')](form);
+
+      if(inputs['data[_Token][key]'] == undefined) {
+        inputs["data[_Token][key]"] = CSRF_TOKEN;
       }
-
-      // CSRF
-      inputs["data[_Token][key]"] = CSRF_TOKEN;
-
-      //
-
-      console.log(inputs);
-
-    if(form.attr('data-upload-image') == "true") {
-      var contentType = false;
-      var processData = false;
-      inputs = (window.FormData) ? new FormData(form[0]) : null;
     }
+
+    console.log(inputs);
 
     $.ajax({
       url: form.attr('action'),

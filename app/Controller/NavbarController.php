@@ -75,6 +75,7 @@ class NavbarController extends AppController {
 							$this->Navbar->read(null, $id);
 							$this->Navbar->set(array(
 								'order' => $value,
+								'url' => json_encode($find['Navbar']['url'])
 							));
 							$this->Navbar->save();
 						} else {
@@ -152,6 +153,7 @@ class NavbarController extends AppController {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NAV')) {
 
 			if($this->request->is('post')) {
+				debug($this->request->data);
 				if(!empty($this->request->data['name']) AND !empty($this->request->data['type'])) {
 					$this->loadModel('Navbar');
 					if(!empty($this->request->data['url']) AND $this->request->data['url'] != "undefined") {
@@ -160,7 +162,7 @@ class NavbarController extends AppController {
 						$order = $order['Navbar']['order'];
 						$order = intval($order) + 1;
 
-						$open_new_tab = ($this->request->data['open_new_tab']) ? 1 : 0;
+						$open_new_tab = ($this->request->data['open_new_tab'] == 'true') ? 1 : 0;
 
 						$this->Navbar->read(null, null);
 
@@ -185,20 +187,20 @@ class NavbarController extends AppController {
 
 						$this->History->set('ADD_NAV', 'navbar');
 
-						echo $this->Lang->get('NAVBAR__ADD_SUCCESS').'|true';
+						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('NAVBAR__ADD_SUCCESS')));
 						$this->Session->setFlash($this->Lang->get('NAVBAR__ADD_SUCCESS'), 'default.success');
 
 					} else {
-						echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 					}
 				} else {
-					echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('ERROR__BAD_REQUEST').'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
 			}
 		} else {
-			$this->redirect('/');
+			throw new ForbiddenException();
 		}
 	}
 
@@ -256,7 +258,7 @@ class NavbarController extends AppController {
 					$this->loadModel('Navbar');
 					if(!empty($this->request->data['url']) AND $this->request->data['url'] != "undefined") {
 
-						$open_new_tab = ($this->request->data['open_new_tab']) ? 1 : 0;
+						$open_new_tab = ($this->request->data['open_new_tab'] == 'true') ? 1 : 0;
 
 						$this->Navbar->read(null, $id);
 
@@ -280,20 +282,20 @@ class NavbarController extends AppController {
 
 						$this->History->set('ADD_NAV', 'navbar');
 
-						echo $this->Lang->get('NAVBAR__EDIT_SUCCESS').'|true';
+						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('NAVBAR__EDIT_SUCCESS')));
 						$this->Session->setFlash($this->Lang->get('NAVBAR__EDIT_SUCCESS'), 'default.success');
 
 					} else {
-						echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 					}
 				} else {
-					echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 			} else {
-				echo $this->Lang->get('NOT_POST' ,$language).'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
 			}
 		} else {
-			$this->redirect('/');
+			throw new ForbiddenException();
 		}
 	}
 
