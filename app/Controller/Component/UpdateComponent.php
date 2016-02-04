@@ -72,45 +72,22 @@ class UpdateComponent extends Object {
 
 		// récupérer les fichiers mis à jour sur mineweb.org (le zip dans un dossier temp)
 
-		$url = 'http://mineweb.org/api/v1/update/';
-		$secure = file_get_contents(ROOT.'/config/secure');
-		$secure = json_decode($secure, true);
-		$postfields = array(
-			'id' => $secure['id'],
-		    'key' => $secure['key'],
-		    'domain' => Router::url('/', true)
-		);
+		$return = $this->sendToAPI(
+								array(),
+								'update',
+								true
+							);
 
-		$postfields = json_encode($postfields);
-		$post[0] = rsa_encrypt($postfields, '-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvFK7LMlAnF8Hzmku9WGbHqYNb
-ehNueKDbF/j4yYwf8WqIizB7k+S++SznqPw3KzeHOshiPfeCcifGzp0kI43grWs+
-nuScYjSuZw9FEvjDjEZL3La00osWxLJx57zNiEX4Wt+M+9RflMjxtvejqXkQoEr/
-WCqkx22behAGZq6rhwIDAQAB
------END PUBLIC KEY-----');
-
-		$curl = curl_init();
-
-		curl_setopt($curl, CURLOPT_URL, $url);
-		curl_setopt($curl, CURLOPT_COOKIESESSION, true);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curl, CURLOPT_POST, true);
-		curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
-
-		$return = curl_exec($curl);
-
-		if(!curl_errno($curl)) {
-	        $return_json = json_decode($return, true);
-          	if(!$return_json) {
-	            $zip = $return;
-    	      } elseif($return_json['status'] == "error") {
-        	    return false;
-          	}
+		if($return['code'] == 200) {
+      $return_json = json_decode($return['content'], true);
+    	if(!$return_json) {
+        $zip = $return;
+      } elseif($return_json['status'] == "error") {
+  	    return false;
+    	}
 		} else {
 			return false;
 		}
-
-		curl_close($curl);
 
 		if (!is_dir(ROOT.'/temp/')) mkdir(ROOT.'/temp/');
 		$write = fopen(ROOT.'/temp/'.$version.'.zip', 'w+');

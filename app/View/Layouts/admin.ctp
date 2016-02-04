@@ -156,7 +156,7 @@ $this->EyPlugin = new EyPluginComponent;
             </li>
 
             <li>
-              <a href="<?= $this->Html->url(array('controller' => 'configuration', 'action' => 'help', 'admin' => true, 'plugin' => false)) ?>">
+              <a href="<?= $this->Html->url(array('controller' => 'help', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>">
                 <i class="fa fa-question"></i>
                 <span><?= $Lang->get('HELP__TITLE') ?></span>
               </a>

@@ -97,48 +97,26 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 		if($last_check < time() || $last_check_domain != Router::url('/', true)) { // si le domain a changé entre temps
 			$plugins = $this->EyPlugin->loadPlugins();
 
-			$url = 'http://mineweb.org/api/v1/key_verif';
-			$postfields = array(
-				'id' => $secure['id'],
-		    'key' => $secure['key'],
-		    'domain' => Router::url('/', true),
-		    'version' => $this->Configuration->get('version'),
-		    //'plugins' => serialize($plugins)
-			);
+      $return = $this->sendToAPI(
+                  array('version' => $this->Configuration->get('version')),
+                  'key_verif',
+                  true
+                );
 
-			$postfields = json_encode($postfields);
-			$post[0] = rsa_encrypt($postfields, '-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvFK7LMlAnF8Hzmku9WGbHqYNb
-ehNueKDbF/j4yYwf8WqIizB7k+S++SznqPw3KzeHOshiPfeCcifGzp0kI43grWs+
-nuScYjSuZw9FEvjDjEZL3La00osWxLJx57zNiEX4Wt+M+9RflMjxtvejqXkQoEr/
-WCqkx22behAGZq6rhwIDAQAB
------END PUBLIC KEY-----');
-
-			$curl = curl_init();
-
-			curl_setopt($curl, CURLOPT_URL, $url);
-			curl_setopt($curl, CURLOPT_COOKIESESSION, true);
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($curl, CURLOPT_POST, true);
-			curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
-
-      curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-
-			$return = curl_exec($curl);
-			curl_close($curl);
-
-      if(!$return) {
+      if($return['error'] == 6) {
         throw new LicenseException('MINEWEB_DOWN');
       }
 
-			if(!preg_match('#Errors#i', $return)) {
-        $return = json_decode($return, true);
+			if($return['code'] == 200) {
+        $return = json_decode($return['content'], true);
         if($return['status'] == "success") {
         	file_put_contents(ROOT.'/config/last_check', $return['time']);
         } elseif($return['status'] == "error") {
         	throw new LicenseException($return['msg']);
         }
-			}
+			} else {
+        $this->log('ApiLicense : '.$return['code']);
+      }
 		}
 	}
 
@@ -484,36 +462,19 @@ WCqkx22behAGZq6rhwIDAQAB
       return false;
     }
 
-    $secure = file_get_contents(ROOT.'/config/secure');
-    $secure = json_decode($secure, true);
-    $url = 'http://mineweb.org/api/v1/addTicket';
-		$postfields = array(
-			'id' => $secure['id'],
-		  'key' => $secure['key'],
-		  'domain' => Router::url('/', true),
-      'debug' => json_encode($this->apiCall($secure['key'], true, true)),
-      'title' => $data['title'],
-      'content' => $data['content']
-		);
+    $return = $this->sendToAPI(
+                array(
+                  'debug' => json_encode($this->apiCall($secure['key'], true, true)),
+                  'title' => $data['title'],
+                  'content' => $data['content']
+                ),
+                'addTicket'
+              );
 
-    $curl = curl_init();
-
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_COOKIESESSION, true);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
-
-    curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-
-    $return = curl_exec($curl);
-    $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    curl_close($curl);
-
-    $status = ($code == 200) ? true : false;
+    $status = ($return['code'] == 200) ? true : false;
 
     if(!$status) {
-      $this->log('SendTicketToAPI : '.$code);
+      $this->log('SendTicketToAPI : '.$return['code']);
     }
 
 
@@ -556,5 +517,48 @@ WCqkx22behAGZq6rhwIDAQAB
 			}
 		}
 	}
+
+  public function sendToAPI($data, $url, $encode = false, $addSecure = true, $timeout = 5) {
+
+		$postfields = $data;
+
+    if($addSecure) {
+      $secure = file_get_contents(ROOT.'/config/secure');
+      $secure = json_decode($secure, true);
+
+      $postfields['id'] = $secure['id'];
+      $postfields['key'] = $secure['key'];
+      $postfields['domain'] = Router::url('/', true);
+    }
+
+    if($encode) {
+      $postfields = json_encode($postfields);
+			$post[0] = rsa_encrypt($postfields, '-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvFK7LMlAnF8Hzmku9WGbHqYNb
+ehNueKDbF/j4yYwf8WqIizB7k+S++SznqPw3KzeHOshiPfeCcifGzp0kI43grWs+
+nuScYjSuZw9FEvjDjEZL3La00osWxLJx57zNiEX4Wt+M+9RflMjxtvejqXkQoEr/
+WCqkx22behAGZq6rhwIDAQAB
+-----END PUBLIC KEY-----');
+      unset($postfields);
+      $postfields = $post;
+    }
+
+    $curl = curl_init();
+
+    curl_setopt($curl, CURLOPT_URL, 'http://mineweb.org/api/v1/'.$url);
+    curl_setopt($curl, CURLOPT_COOKIESESSION, true);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $postfields);
+
+    curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
+
+    $return = curl_exec($curl);
+    $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    $error = curl_errno($curl);
+    curl_close($curl);
+
+    return array('content' => $return, 'code' => $code, 'error' => $error);
+  }
 
 }

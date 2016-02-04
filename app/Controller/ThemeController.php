@@ -125,42 +125,21 @@ class ThemeController extends AppController{
 			if($theme_id != false AND $theme_name != false) {
 
 				// get du zip sur mineweb.org
-			    $url = 'http://mineweb.org/api/v1/get_theme/'.$theme_id;
-			    $secure = file_get_contents(ROOT.'/config/secure');
-			    $secure = json_decode($secure, true);
-			    $postfields = array(
-			      'id' => $secure['id'],
-			      'key' => $secure['key'],
-			      'domain' => Router::url('/', true)
-			    );
 
-			    $postfields = json_encode($postfields);
-			    $post[0] = rsa_encrypt($postfields, '-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvFK7LMlAnF8Hzmku9WGbHqYNb
-ehNueKDbF/j4yYwf8WqIizB7k+S++SznqPw3KzeHOshiPfeCcifGzp0kI43grWs+
-nuScYjSuZw9FEvjDjEZL3La00osWxLJx57zNiEX4Wt+M+9RflMjxtvejqXkQoEr/
-WCqkx22behAGZq6rhwIDAQAB
------END PUBLIC KEY-----');
+					$return = $this->sendToAPI(
+		                  array(),
+		                  'get_theme/'.$theme_id,
+		                  true
+		                );
 
-			    $curl = curl_init();
-
-			    curl_setopt($curl, CURLOPT_URL, $url);
-			    curl_setopt($curl, CURLOPT_COOKIESESSION, true);
-			    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-			    curl_setopt($curl, CURLOPT_POST, true);
-			    curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
-
-			    $return = curl_exec($curl);
-			    curl_close($curl);
-
-			    if(!preg_match('#Errors#i', $return)) {
-			          $return_json = json_decode($return, true);
-			          if(!$return_json) {
-			            $zip = $return;
-			          } elseif($return_json['status'] == "error") {
-			            $this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
-						$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
-			          }
+			    if($return['code'] == 200) {
+	          $return_json = json_decode($return['content'], true);
+	          if(!$return_json) {
+	            $zip = $return;
+	          } elseif($return_json['status'] == "error") {
+	            $this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
+							$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
+			      }
 			    } else {
 			      	$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
 					$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
@@ -189,36 +168,15 @@ WCqkx22behAGZq6rhwIDAQAB
 			if($theme_id != false AND $theme_name != false) {
 
 				// get du zip sur mineweb.org
-			    $url = 'http://mineweb.org/api/v1/get_theme/'.$theme_id;
-			    $secure = file_get_contents(ROOT.'/config/secure');
-			    $secure = json_decode($secure, true);
-			    $postfields = array(
-			      'id' => $secure['id'],
-			      'key' => $secure['key'],
-			      'domain' => Router::url('/', true)
-			    );
 
-			    $postfields = json_encode($postfields);
-			    $post[0] = rsa_encrypt($postfields, '-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvFK7LMlAnF8Hzmku9WGbHqYNb
-ehNueKDbF/j4yYwf8WqIizB7k+S++SznqPw3KzeHOshiPfeCcifGzp0kI43grWs+
-nuScYjSuZw9FEvjDjEZL3La00osWxLJx57zNiEX4Wt+M+9RflMjxtvejqXkQoEr/
-WCqkx22behAGZq6rhwIDAQAB
------END PUBLIC KEY-----');
+					$return = $this->sendToAPI(
+		                  array(),
+		                  'get_theme/'.$theme_id,
+		                  true
+		                );
 
-			    $curl = curl_init();
-
-			    curl_setopt($curl, CURLOPT_URL, $url);
-			    curl_setopt($curl, CURLOPT_COOKIESESSION, true);
-			    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-			    curl_setopt($curl, CURLOPT_POST, true);
-			    curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
-
-			    $return = curl_exec($curl);
-			    curl_close($curl);
-
-			    if(!preg_match('#Errors#i', $return)) {
-			          $return_json = json_decode($return, true);
+			    if($return['code'] == 200) {
+			          $return_json = json_decode($return['content'], true);
 			          if(!$return_json) {
 			            $zip = $return;
 			          } elseif($return_json['status'] == "error") {

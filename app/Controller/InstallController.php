@@ -52,43 +52,21 @@ class InstallController extends AppController {
 
 				if(!empty($this->request->data['key'])) {
 
-					$url = 'http://mineweb.org/api/v1/key_verif/';
-					$secure = file_get_contents(ROOT.'/config/secure');
-					$secure = json_decode($secure, true);
-					$postfields = array(
-						'id' => $secure['id'],
-					    'key' => $this->request->data['key'],
-					    'domain' => Router::url('/', true)
-					);
+					$return = $this->sendToAPI(
+		                  array(),
+		                  'key_verif',
+		                  true
+		                );
 
-					$postfields = json_encode($postfields);
-					$post[0] = rsa_encrypt($postfields, '-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvFK7LMlAnF8Hzmku9WGbHqYNb
-ehNueKDbF/j4yYwf8WqIizB7k+S++SznqPw3KzeHOshiPfeCcifGzp0kI43grWs+
-nuScYjSuZw9FEvjDjEZL3La00osWxLJx57zNiEX4Wt+M+9RflMjxtvejqXkQoEr/
-WCqkx22behAGZq6rhwIDAQAB
------END PUBLIC KEY-----');
-
-					$curl = curl_init();
-
-					curl_setopt($curl, CURLOPT_URL, $url);
-					curl_setopt($curl, CURLOPT_COOKIESESSION, true);
-					curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-					curl_setopt($curl, CURLOPT_POST, true);
-					curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
-
-					$return = curl_exec($curl);
-					curl_close($curl);
-
-					if(!preg_match('#Errors#i', $return)) {
-				        $return = json_decode($return, true);
-				        if($return['status'] == "success") {
-				        	file_put_contents(ROOT.'/config/last_check', $return['time']);
-				        	file_put_contents(ROOT.'/config/secure', json_encode(array('id' => $secure['id'], 'key' => $this->request->data['key'])));
-				        	echo $this->Lang->get('INSTALL__API_CONNECT_SUCCESS').'|true';
-				        } elseif($return['status'] == "error") {
-				        	echo $this->Lang->get('LICENSE_ERROR__'.$return['msg']).'|false';
-				        }
+					if($return['code'] == 200) {
+		        $return = json_decode($return['content'], true);
+		        if($return['status'] == "success") {
+		        	file_put_contents(ROOT.'/config/last_check', $return['time']);
+		        	file_put_contents(ROOT.'/config/secure', json_encode(array('id' => $secure['id'], 'key' => $this->request->data['key'])));
+		        	echo $this->Lang->get('INSTALL__API_CONNECT_SUCCESS').'|true';
+		        } elseif($return['status'] == "error") {
+		        	echo $this->Lang->get('LICENSE_ERROR__'.$return['msg']).'|false';
+		        }
 					} else {
 						echo 'error';
 					}

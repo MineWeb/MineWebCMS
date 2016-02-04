@@ -287,38 +287,17 @@ class ServerComponent extends Object {
 
 	function get($type) {
 		if($type == "secret_key") {
-			$url = 'http://mineweb.org/api/v1/get_secret_key/';
-			$secure = file_get_contents(ROOT.'/config/secure');
-		    $secure = json_decode($secure, true);
-		    $postfields = array(
-		      'id' => $secure['id'],
-		      'key' => $secure['key'],
-		      'domain' => Router::url('/', true)
-		    );
 
-			$postfields = json_encode($postfields);
-			$post[0] = rsa_encrypt($postfields, '-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvFK7LMlAnF8Hzmku9WGbHqYNb
-ehNueKDbF/j4yYwf8WqIizB7k+S++SznqPw3KzeHOshiPfeCcifGzp0kI43grWs+
-nuScYjSuZw9FEvjDjEZL3La00osWxLJx57zNiEX4Wt+M+9RflMjxtvejqXkQoEr/
-WCqkx22behAGZq6rhwIDAQAB
------END PUBLIC KEY-----');
+			$return = $this->sendToAPI(
+                  array(),
+                  'get_secret_key',
+                  true
+                );
 
-			$curl = curl_init();
-
-			curl_setopt($curl, CURLOPT_URL, $url);
-			curl_setopt($curl, CURLOPT_COOKIESESSION, true);
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($curl, CURLOPT_POST, true);
-			curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
-
-			$return = curl_exec($curl);
-			curl_close($curl);
-
-			if(!preg_match('#Errors#i', $return)) {
-			        $return = json_decode($return, true);
-			        if($return['status'] == "success") {
-			        	$key = @rsa_decrypt($return['secret_key'], '-----BEGIN RSA PRIVATE KEY-----
+			if($return['code'] == 200) {
+        $return = json_decode($return['content'], true);
+        if($return['status'] == "success") {
+        	$key = @rsa_decrypt($return['secret_key'], '-----BEGIN RSA PRIVATE KEY-----
 MIICXAIBAAKBgQDGKSGFj8368AmYYiJ9fp1bsu3mzIiUfU7T2uhWXULe9YFqSvs9
 AA/PqTiOgGj8hid2KDamUvzI9UH5RWI83mwAMsj5mxk+ujuoR6WuZykO+A1XN6n4
 I3MWhBe1ZYWRwwgMgoDDe7DDbT2Y6xMxh6sbgdqxeKmkd4RtVB7+UwyuSwIDAQAB
@@ -333,10 +312,10 @@ a74v71JjOJZznmWs9sC5DcrCoSgZTtJ+bHYijMmZcbZ7Pe/hFR/4SWsUU5UTG0Mh
 jP3lq81IDMx/Ui1ksQJBAO4hTKBstrDNlUPkUr0i/2Pb/edVSgZnJ9t3V94OAD+Z
 wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 -----END RSA PRIVATE KEY-----');
-			        	return $key;
-			        } elseif($return['status'] == "error") {
-			        	return false;
-			        }
+        	return $key;
+        } elseif($return['status'] == "error") {
+        	return false;
+        }
 			}
 		} else {
 			return false;
