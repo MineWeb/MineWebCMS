@@ -399,7 +399,7 @@ class EyPluginComponent extends Object {
 
         foreach ($tables as $k => $v) { // on les parcours et on les supprimes
           if(!empty($v)) {
-            $cn->query("DROP TABLE ".$v); // on les supprimes
+            $cn->query("DROP TABLE IF EXISTS ".$v); // on les supprimes
           }
         }
 
