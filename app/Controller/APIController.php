@@ -102,11 +102,19 @@ class APIController extends AppController {
 			$this->set('title_for_layout',$this->Lang->get('API__LABEL'));
 			$this->layout = 'admin';
 
+			$this->loadModel('ApiConfiguration');
+			$config = $this->ApiConfiguration->find('first')['ApiConfiguration'];
+
 			if($this->request->is('post')) {
 				if(isset($this->request->data['skins']) AND isset($this->request->data['skin_free']) AND !empty($this->request->data['skin_filename']) AND isset($this->request->data['capes']) AND isset($this->request->data['cape_free']) AND !empty($this->request->data['cape_filename'])) {
-					foreach ($this->request->data as $key => $value) {
-						$this->API->set($key, $value);
-					}
+
+					$this->loadModel('ApiConfiguration');
+					$this->ApiConfiguration->read(null, 1);
+					$this->ApiConfiguration->set($this->request->data);
+					$this->ApiConfiguration->save();
+
+					$config = $this->request->data;
+
 					$this->History->set('EDIT_CONFIGURATION', 'api');
 					$this->Session->setFlash($this->Lang->get('CONFIG__EDIT_SUCCESS'), 'default.success');
 				} else {
@@ -114,9 +122,7 @@ class APIController extends AppController {
 				}
 			}
 
-			$this->loadModel('ApiConfiguration');
-			$config = $this->ApiConfiguration->find('first');
-			$this->set('config', $config['ApiConfiguration']);
+			$this->set('config', $config);
 		} else {
 			$this->redirect('/');
 		}
