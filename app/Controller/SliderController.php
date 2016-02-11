@@ -81,14 +81,16 @@ class SliderController extends AppController {
 							$infos = $isValidImg['infos'];
 						}
 
-						$url_img = WWW_ROOT.'img'.DS.'uploads'.DS.'slider'.DS.date('Y-m-d_His').'.'.$infos['extension'];
+						$time = date('Y-m-d_His');
+
+						$url_img = WWW_ROOT.'img'.DS.'uploads'.DS.'slider'.DS.$time.'.'.$infos['extension'];
 
 						if(!$this->Util->uploadImage($this->request, $url_img)) {
 							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD')));
 							exit;
 						}
 
-						$url_img = Router::url('/').'img'.DS.'uploads'.DS.'slider'.DS.date('Y-m-d_His').'.'.$infos['extension'];
+						$url_img = Router::url('/').'img'.DS.'uploads'.DS.'slider'.DS.$time.'.'.$infos['extension'];
 
 						$data = array(
 							'title' => $this->request->data['title'],
@@ -150,14 +152,16 @@ class SliderController extends AppController {
 						$infos = $isValidImg['infos'];
 					}
 
-					$url_img = WWW_ROOT.'img'.DS.'uploads'.DS.'slider'.DS.date('Y-m-d_His').'.'.$infos['extension'];
+					$time = date('Y-m-d_His');
+
+					$url_img = WWW_ROOT.'img'.DS.'uploads'.DS.'slider'.DS.$time.'.'.$infos['extension'];
 
 					if(!$this->Util->uploadImage($this->request, $url_img)) {
 						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD')));
 						exit;
 					}
 
-					$url_img = Router::url('/').'img'.DS.'uploads'.DS.'slider'.DS.date('Y-m-d_His').'.'.$infos['extension'];
+					$url_img = Router::url('/').'img'.DS.'uploads'.DS.'slider'.DS.$time.'.'.$infos['extension'];
 
 					$this->loadModel('Slider');
 					$this->Slider->read(null, null);
