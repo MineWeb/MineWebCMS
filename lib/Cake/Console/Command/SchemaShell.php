@@ -139,6 +139,8 @@ class SchemaShell extends AppShell {
 
 			$this->Schema->path = ROOT.DS.'app'.DS.'Plugin'.DS.$plugin.DS.'SQL';
 			$this->params['file'] = 'schema.php';
+
+			$options['models'] = false; // forcé
 		}
 
 		if (!$snapshot && file_exists($this->Schema->path . DS . $this->params['file'])) {
@@ -167,9 +169,26 @@ class SchemaShell extends AppShell {
 
 		if ((!empty($this->params['exclude']) || $plugin !== false) && !empty($content)) {
 
-			foreach ($content['tables'] as $key => $value) {
-				if(explode('__', $key)[0] != $plugin) {
-					$excluded[] = $key;
+			foreach ($content['tables'] as $tableName => $tableStructure) { // on parcours les tables
+
+				$tableHaveUpdate = false; // pour savoir si y'a des colonnes rajoutés ou non
+
+				foreach ($tableStructure as $columnName => $columnStructure) {
+
+					if(explode('__', $tableName)[0] != $plugin) {
+
+						if(explode('__', $columnName)[0] != $plugin) { // on supprime les colonnes qui non pas le prefix du plugin comme nom
+							unset($content['tables'][$tableName][$columnName]);
+						} else {
+							$tableHaveUpdate = true; // on a une nouvelle colonne utile au plugin
+						}
+
+					}
+
+				}
+
+				if(explode('__', $tableName)[0] != $plugin && !$tableHaveUpdate) { // on supprime les tables qui non pas le prefix du plugin comme nom & qui n'ont pas de colonne utile pour le plugin
+					$excluded[] = $tableName;
 				}
 			}
 
