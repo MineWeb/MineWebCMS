@@ -100,7 +100,7 @@
 
     function addcomment(data) {
       var d = new Date();
-      var comment = '<div class="media"><img class="media-object" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/<?= $user['pseudo'] ?>/64" alt=""><div class="media-body">'+data['content']+'<h4 class="author"><?= $Lang->get('GLOBAL__BY') ?> '+data['author']+'</h4><h4 class="created">'+d.getHours()+'h'+d.getMinutes()+'</h4></div></div>';
+      var comment = '<div class="media"><img class="media-object" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/<?= $user['pseudo'] ?>/64" alt=""><div class="media-body">'+data['content']+'<h4 class="author"><?= $Lang->get('GLOBAL__BY') ?> <?= $user['pseudo'] ?></h4><h4 class="created">'+d.getHours()+'h'+d.getMinutes()+'</h4></div></div>';
       $('.add-comment').hide().html(comment).fadeIn(1500);
       $('#postcomment').modal('hide')
     }

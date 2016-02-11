@@ -453,6 +453,7 @@
         "PAGE__TITLE":"Pages",
         "PAGE__LIST":"Liste des pages personnalisées",
         "PAGE__ADD":"Ajouter une page",
+        "PAGE__POSTED_ON": "Post\u00e9 le",
 
         "DASHBOARD__LAST_ACTIONS":"Derni\u00e8res actions",
         "DASHBOARD__EARNINGS":"Revenus",

@@ -6,9 +6,9 @@
           <h3 class="box-title"><?= $Lang->get('SLIDER__LIST') ?></h3>
         </div>
         <div class="box-body">
-        
+
           <a class="btn btn-large btn-block btn-primary" href="<?= $this->Html->url(array('controller' => 'slider', 'action' => 'add', 'admin' => true)) ?>"><?= $Lang->get('SLIDER__ADD') ?></a>
-          
+
           <hr>
 
           <table class="table table-bordered">
@@ -17,7 +17,7 @@
                 <th><?= $Lang->get('GLOBAL__TITLE') ?></th>
                 <th><?= $Lang->get('SLIDER__SUBTITLE') ?></th>
                 <th><?= $Lang->get('GLOBAL__IMAGE') ?></th>
-                <th><?= $Lang->get('ACTIONS') ?></th>
+                <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
               </tr>
             </thead>
             <tbody>

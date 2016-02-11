@@ -14,6 +14,8 @@ class Visit extends AppModel {
   }
 
   function get($groupBy, $limit = false, $order = 'DESC') {
+    $data = array();
+    
     $search = $this->find('all', array('fields' => $groupBy.',COUNT(*)', 'group' => $groupBy, 'order' => 'id '.$order, 'limit' => $limit));
     foreach ($search as $key => $value) {
 

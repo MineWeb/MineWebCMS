@@ -571,7 +571,7 @@ class VoterController extends VoteAppController {
             $servers = $this->Server->findSelectableServers(true);
 						$this->set(compact('servers'));
 
-						$vote['servers'] = unserialize($vote['servers']);
+						$vote['servers'] = (isset($vote['servers'])) ? unserialize($vote['servers']) : array();
             if(!empty($vote['servers'])) {
                 $selected_server = array();
                 foreach ($vote['servers'] as $key => $value) {

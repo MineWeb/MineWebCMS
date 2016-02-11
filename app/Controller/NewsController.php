@@ -114,14 +114,6 @@ class NewsController extends AppController {
 				$this->loadModel('Like');
 				$already = $this->Like->find('all', array('conditions' => array('news_id' => $this->request->data['id'], 'user_id' => $this->User->getKey('id'))));
 				if(empty($already)) {
-					$this->loadModel('News');
-					$like = $this->News->find('all', array('conditions' => array('id' => $this->request->data['id'])));
-					$like = $like['0']['News']['like'];
-					$like = $like + 1;
-					$this->News->read(null, $this->request->data['id']);
-					$this->News->set(array('like' => $like));
-					$this->News->save();
-
 					$this->Like->read(null, null);
 					$this->Like->set(array('news_id' => $this->request->data['id'], 'user_id' => $this->User->getKey('id')));
 					$this->Like->save();
@@ -137,14 +129,6 @@ class NewsController extends AppController {
 				$this->loadModel('Like');
 				$already = $this->Like->find('all', array('conditions' => array('news_id' => $this->request->data['id'], 'user_id' => $this->User->getKey('id'))));
 				if(!empty($already)) {
-					$this->loadModel('News');
-					$like = $this->News->find('all', array('conditions' => array('id' => $this->request->data['id'])));
-					$like = $like['0']['News']['like'];
-					$like = $like - 1;
-					$this->News->read(null, $this->request->data['id']);
-					$this->News->set(array('like' => $like));
-					$this->News->save();
-
 					$this->Like->deleteAll(array('news_id' => $this->request->data['id'], 'user_id' => $this->User->getKey('id')));
 				}
 			}
@@ -158,11 +142,6 @@ class NewsController extends AppController {
         $search = $this->Comment->find('all', array('conditions' => array('id' => $this->request->data['id'])));
         if($this->Permissions->can('DELETE_COMMENT') OR $this->Permissions->can('DELETE_HIS_COMMENT') AND $this->User->getKey('pseudo') == $search[0]['Comment']['author']) {
             if($this->request->is('post')) {
-            	$this->loadModel('News');
-            	$news = $this->News->find('first', array('conditions' => $search[0]['Comment']['news_id']));
-            	$this->News->read(null, $search[0]['Comment']['news_id']);
-            	$this->News->set(array('comments' => ($news['News']['comments'] - 1)));
-            	$this->News->save();
                 $this->Comment->delete($this->request->data['id']);
                 echo 'true';
             } else {
