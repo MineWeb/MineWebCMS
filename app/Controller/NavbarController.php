@@ -153,7 +153,7 @@ class NavbarController extends AppController {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NAV')) {
 
 			if($this->request->is('post')) {
-				debug($this->request->data);
+
 				if(!empty($this->request->data['name']) AND !empty($this->request->data['type'])) {
 					$this->loadModel('Navbar');
 					if(!empty($this->request->data['url']) AND $this->request->data['url'] != "undefined") {
