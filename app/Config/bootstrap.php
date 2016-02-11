@@ -69,8 +69,14 @@ Cache::config('default', array('engine' => 'File'));
  * CakePlugin::load('DebugKit'); //Loads a single plugin named DebugKit
  *
  */
-CakePlugin::loadAll(array(array('bootstrap'=>true,'routes'=>true)));
+CakePlugin::loadAll(array(array('bootstrap' => true,'routes' => true, 'ignoreMissing' => true)));
+/*
+App::import('Component', 'EyPlugin');
+$pluginsComponent = new EyPluginComponent();
+$pluginsComponent->loadPlugins();
 
+debug(CakePlugin::loaded());
+*/
 /**
  * You can attach event listeners to the request lifecycle as Dispatcher Filter. By default CakePHP bundles two filters:
  *
@@ -110,4 +116,3 @@ CakeLog::config('error', array(
 	'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
 	'file' => 'error',
 ));
-

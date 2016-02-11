@@ -51,14 +51,14 @@ $this->Configuration = new ConfigurationComponent;
               </select>
             </div>
 
-            <?php if($this->EyPlugin->isInstalled('Shop')) { ?>
+            <?php if($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
               <div class="form-group">
                 <label><?= $Lang->get('USER__MONEY') ?></label>
                 <input name="money" class="form-control" value="<?= $search_user['money'] ?>" type="text">
               </div>
             <?php } ?>
 
-            <?php if($this->EyPlugin->isInstalled('Vote')) { ?>
+            <?php if($this->EyPlugin->isInstalled('eywek.vote.3')) { ?>
               <div class="form-group">
                 <label><?= $Lang->get('VOTE') ?></label>
                	<input name="vote" class="form-control" value="<?= $search_user['vote'] ?>" type="text">

@@ -12,7 +12,7 @@ $this->EyPlugin = new EyPluginComponent;
         					<span class="pull-left hidden-xs"><span class="info"><span class="money"><?= $user['money'] ?></span><?php if($user['money'] == 1) { echo  ' '.$this->Configuration->get_money_name(false, true); } else { echo  ' '.$this->Configuration->get_money_name(); } ?></span></span>
         				<?php } ?>
 						<span class="text-center"><?= $user['pseudo'] ?></span>
-						<?php if($this->EyPlugin->isInstalled('eywek.vote.2')) { ?>
+						<?php if($this->EyPlugin->isInstalled('eywek.vote.3')) { ?>
 	        				<span class="pull-right hidden-xs"><span class="info"><?= $user['vote'] ?> <?= $Lang->get('VOTE') ?></span></span>
 	        			<?php } elseif($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
 							<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index')) ?>" class="btn btn-primary pull-right"><?= $Lang->get('SHOP') ?></a>

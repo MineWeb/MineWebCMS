@@ -105,7 +105,7 @@ class ConfigurationComponent extends Object {
     function initialize(&$controller) {
         // sauvegarde la référence du contrôleur pour une utilisation ultérieure
         $this->controller =& $controller;
-        $this->controller->set('Configuration', new ConfigurationComponent());
+        $this->controller->set('Configuration', $this);
     }
 
     /*function initialize(&$controller) {}*/

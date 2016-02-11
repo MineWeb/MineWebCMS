@@ -25,6 +25,7 @@ $this->EyPlugin = new EyPluginComponent;
                   <th><?= $Lang->get('GLOBAL__AUTHOR') ?></th>
                   <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
                   <th><?= $Lang->get('GLOBAL__VERSION') ?></th>
+                  <th><?= $Lang->get('PLUGIN__LOADED') ?></th>
                   <th><?= $Lang->get('GLOBAL__STATUS') ?></th>
                   <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
                 </tr>
@@ -37,6 +38,9 @@ $this->EyPlugin = new EyPluginComponent;
                     <td><?= $value->author ?></td>
                     <td><?= $Lang->date($value->DBinstall) ?></td>
                     <td><?= $value->version ?></td>
+                    <td>
+                      <?= ($value->isValid) ? '<span class="label label-success">'.$Lang->get('GLOBAL__YES').'</span>' : '<span class="label label-danger">'.$Lang->get('GLOBAL__NO').'</span>' ?>
+                    </td>
                     <td>
                       <?= ($value->active) ? '<span class="label label-success">'.$Lang->get('GLOBAL__ENABLED').'</span>' : '<span class="label label-danger">'.$Lang->get('GLOBAL__DISABLED').'</span>' ?>
                     </td>

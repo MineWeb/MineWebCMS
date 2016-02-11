@@ -332,7 +332,7 @@ class UserController extends AppController {
 
 			$this->set('title_for_layout', $this->User->getKey('pseudo'));
 			$this->layout= $this->Configuration->get_layout();
-			if($this->EyPlugin->isInstalled('Shop')) {
+			if($this->EyPlugin->isInstalled('eywek.shop.1')) {
 
 				$this->set('shop_active', true);
 

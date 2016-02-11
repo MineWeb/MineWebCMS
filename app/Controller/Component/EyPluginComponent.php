@@ -12,6 +12,8 @@ class EyPluginComponent extends Object {
   public $pluginsInFolder = array();
   public $pluginsInDB = array();
 
+  private $alreadyCheckValid = array();
+
   public $pluginsFolder;
   private $apiVersion = '1';
 
@@ -31,20 +33,25 @@ class EyPluginComponent extends Object {
 
     function initialize(&$controller) {
 
+      $this->controller =& $controller;
+      $this->controller->set('EyPlugin', $this);
+
     // Initialisation des variables importantes
       $this->pluginsInFolder = $this->getPluginsInFolder();
       $this->pluginsInDB = $this->getPluginsInDB();
 
       // Installons les plugins non installés & présent dans le dossier plugins
-      $this->checkIfNeedToBeInstalled($this->pluginsInFolder, $this->pluginsInDB);
+      $this->checkIfNeedToBeInstalled($this->pluginsInFolder['onlyValid'], $this->pluginsInDB);
 
       // Supprimons les plugins installés en base de données mais plus présent dans le dossier
-      $this->checkIfNeedToBeDeleted($this->pluginsInFolder, $this->pluginsInDB);
+      $this->checkIfNeedToBeDeleted($this->pluginsInFolder['all'], $this->pluginsInDB);
 
       $this->pluginsLoaded = $this->loadPlugins();
 
-      // Déchargeons de CakePHP tout les plugins désactivés
-      $this->unloadPlugins();
+      /*debug($this->pluginsLoaded);
+      debug($this->alreadyCheckValid);
+      debug(CakePlugin::loaded());
+      die();*/
 
     }
 
@@ -67,6 +74,11 @@ class EyPluginComponent extends Object {
     public function loadPlugins() {
 
       // On récupére le modal
+
+      if(!class_exists('ClassRegistry')) {
+        App::uses('ClassRegistry', 'Utility');
+      }
+
       $PluginModel = ClassRegistry::init('Plugin');
 
       // On cherche tout les plugins installés en db
@@ -84,34 +96,26 @@ class EyPluginComponent extends Object {
 
         $pluginList->$id = (object) array(); // on initialize les données
         $pluginList->$id = $config; // On met l'object config dedans
+        $pluginList->$id->slug = ucfirst($pluginList->$id->slug);
         $pluginList->$id->DBid = $v['id']; // on met l'id de la base de donnée
         $pluginList->$id->DBinstall = $v['created']; // on met quand on l'a installé sur la bdd
         $pluginList->$id->active = ($v['state']) ? true : false; // On met l'object config dedans
         $pluginList->$id->tables = unserialize($v['tables']);
+        $pluginList->$id->isValid = $this->isValid($pluginList->$id->slug);
+
+        /*if($pluginList->$id->isValid && $pluginList->$id->active) {
+          CakePlugin::load($pluginList->$id->slug, array('bootstrap' => true,'routes' => true));
+          CakePlugin::routes($pluginList->$id->slug);
+        }*/
+        if(!$pluginList->$id->isValid || !$pluginList->$id->active) {
+          CakePlugin::unload($pluginList->$id->slug);
+        }
 
       }
 
       return $pluginList;
 
     }
-
-  // Décharge de CakePHP les plugins désactivés
-
-   private function unloadPlugins() {
-
-     if(!empty($this->pluginsLoaded)) {
-
-       foreach ($this->pluginsLoaded as $key => $value) { // on les parcours
-
-        if(!$value->active) {
-          CakePlugin::unload($value->slug); // on le décharge
-        }
-
-       }
-
-     }
-
-   }
 
   // Retourner les plugins chargés/installés & activés
 
@@ -139,11 +143,14 @@ class EyPluginComponent extends Object {
       if($plugins !== false) {
 
         $bypassedFiles = array('.', '..', '.DS_Store', '__MACOSX'); // On met les fichiers que l'on ne considère pas comme un plugin
-        $pluginsList = array(); // On dis que de base la liste est vide
+        $pluginsList = array('all' => array(), 'onlyValid' => array()); // On dis que de base la liste est vide
 
         foreach ($plugins as $key => $value) { // On parcours tout ce qu'on à trouvé dans le dossier
-          if(!in_array($value, $bypassedFiles) && $this->isValid($value)) { // Si c'est pas un fichier que l'on ne doit pas prendre & qu'il est valide
-            $pluginsList[] = $value; // On l'ajoute dans la liste
+          if(!in_array($value, $bypassedFiles)) { // Si c'est pas un fichier que l'on ne doit pas prendre
+            $pluginsList['all'][] = $value; // On l'ajoute dans la liste
+            if($this->isValid($value)) {
+              $pluginList['onlyValid'][] = $value;
+            }
           }
         }
 
@@ -180,18 +187,26 @@ class EyPluginComponent extends Object {
 
     private function isValid($slug) {
 
+      $slug = ucfirst($slug);
+
       $file = $this->pluginsFolder.DS.$slug; // On met le chemin pour aller le chercher
+      //debug($slug);
 
       if(file_exists($file)) { // on vérifie d'abord que le fichier existe bien
 
         if(is_dir($file)) { // être sur que c'est un dossier
 
+          if(isset($this->alreadyCheckValid[$slug])) {
+            return $this->alreadyCheckValid[$slug];
+          }
+
           // Passons aux pré-requis des plugins.
             // Simple fichier
-            $neededFiles = array('Config/routes.php', 'Config/bootstrap.php', 'lang/fr_FR.json', 'lang/en_US.json', 'Controller', 'Controller/Component', 'Model', 'Model/Behavior', 'View', 'View/Helper', 'View', 'View/Layouts', 'config.json', 'SQL/schema.php');
+            $neededFiles = array('Config/routes.php', 'Config/bootstrap.php', 'lang/fr_FR.json', 'lang/en_US.json', 'Controller', /*'Controller/Component',*/ 'Model', /*'Model/Behavior',*/ 'View', /*'View/Helper',*/ 'View', /*'View/Layouts',*/ 'config.json', 'SQL/schema.php');
             foreach ($neededFiles as $key => $value) {
               if(!file_exists($file.DS.$value)) { // si le fichier existe bien
                 $this->log('Plugin "'.$slug.'" not valid! The file or folder "'.$file.DS.$value.'" doesn\'t exist! Please verify documentation for more informations.');
+                $this->alreadyCheckValid[$slug] = false;
                 return false; // on retourne false, le plugin est invalide et on log
               }
             }
@@ -201,6 +216,7 @@ class EyPluginComponent extends Object {
             foreach ($needToBeJSON as $key => $value) {
               if(json_decode(file_get_contents($file.DS.$value)) === false) { // si le JSON n'est pas valide
                 $this->log('Plugin "'.$slug.'" not valid! The file "'.$file.DS.$value.'" is not at JSON format! Please verify documentation for more informations.');
+                $this->alreadyCheckValid[$slug] = false;
                 return false; // on retourne false, le plugin est invalide et on log
               }
             }
@@ -238,6 +254,7 @@ class EyPluginComponent extends Object {
                   }
 
                   $this->log('File : '.$slug.' is not a valid plugin! The config is not complete! '.$key.' is not a good type ('.$value.' required).'); // la clé n'existe pas
+                  $this->alreadyCheckValid[$slug] = false;
                   return false; // c'est pas le type demandé donc on retourne false et on log
                 }
 
@@ -248,6 +265,7 @@ class EyPluginComponent extends Object {
                 }
 
                 $this->log('File : '.$slug.' is not a valid plugin! The config is not complete! '.$key.' is not defined.'); // la clé n'existe pas
+                $this->alreadyCheckValid[$slug] = false;
                 return false;
               }
 
@@ -257,6 +275,7 @@ class EyPluginComponent extends Object {
             $testVersion = explode('.', $config['version']);
             if(count($testVersion) < 3 && count($testVersion) > 4) { // On autorise que du type 1.0.0 ou 1.0.0.0
               $this->log('File : '.$slug.' is not a valid plugin! The version configured is not at good format !'); // la clé n'existe pas
+              $this->alreadyCheckValid[$slug] = false;
               return false;
             }
 
@@ -266,8 +285,11 @@ class EyPluginComponent extends Object {
 
               App::import('Model', 'CakeSchema');
 
-              require_once $filenameTables;
               $nameClass = ucfirst(strtolower($slug)).'AppSchema';
+
+              if(!class_exists($nameClass)) {
+                require_once $filenameTables;
+              }
 
               if(class_exists($nameClass)) { // on peut load la class
 
@@ -287,6 +309,7 @@ class EyPluginComponent extends Object {
 
                       if(count($valueExploded) <= 1 || $valueExploded[0] != strtolower($slug)) { // si c'est un array de moins d'une key (donc pas de prefix) OU que la première clé n'est pas le slug
                         $this->log('File : '.$slug.' is not a valid plugin! SQL tables need to be prefixed by slug.'); // ce n'est pas un dossier
+                        $this->alreadyCheckValid[$slug] = false;
                         return false;
                       }
 
@@ -296,18 +319,22 @@ class EyPluginComponent extends Object {
 
                 } else {
                   $this->log('File : '.$slug.' is not a valid plugin! SQL Schema class is not valid!'); // ce n'est pas un dossier
+                  $this->alreadyCheckValid[$slug] = false;
                   return false;
                 }
 
               } else {
                 $this->log('File : '.$slug.' is not a valid plugin! SQL Schema class is not valid!'); // ce n'est pas un dossier
+                $this->alreadyCheckValid[$slug] = false;
                 return false;
               }
             } else {
               $this->log('File : '.$slug.' is not a valid plugin! SQL Schema is not created!'); // ce n'est pas un dossier
+              $this->alreadyCheckValid[$slug] = false;
               return false;
             }
 
+            $this->alreadyCheckValid[$slug] = true;
             return true;  // ca s'est bien passé
         } else {
           $this->log('File : '.$file.' is not a folder! Plugin not valid! Please remove this file from de plugin folder.'); // ce n'est pas un dossier
@@ -843,7 +870,7 @@ class EyPluginComponent extends Object {
   // Vérifier si un plguin est installé
 
     public function isInstalled($id) { // on le recherche avec son ID (auteur.name.apiid)
-      return !empty($this->findPluginByID($id));
+      return (!empty($this->findPluginByID($id)) && isset($this->findPluginByID($id)->isValid) && $this->findPluginByID($id)->isValid);
     }
 
   // Récupérer les plugins ou la navbar est activé (pour la nav)

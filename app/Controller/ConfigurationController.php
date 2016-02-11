@@ -104,7 +104,7 @@ class ConfigurationController extends AppController {
 
 			$this->set('config', $config);
 
-			$this->set('shopIsInstalled', $this->EyPlugin->isInstalled('shop.1.eywek'));
+			$this->set('shopIsInstalled', $this->EyPlugin->isInstalled('eywek.shop.1'));
 
 			$this->loadModel('SocialButton');
 			$this->set('social_buttons', $this->SocialButton->find('all', array('order' => 'id desc')));
