@@ -10,17 +10,13 @@ class LangComponent extends Object {
 
     public $lang;
 
+    private $controller;
+
     public $mode = 'config'; // config ou cookie (pour choisir le language)
 
     function __construct() {
       // on set le dossier de langue
       $this->langFolder = ROOT.DS.'lang';
-
-      // Maintenant on indexe tout les fichiers de langues
-      $this->languages = $this->getLanguages();
-
-      // on choisi le language et on indexe les messages
-      $this->lang = $this->getLang();
     }
 
 	  function shutdown(&$controller) {}
@@ -29,6 +25,12 @@ class LangComponent extends Object {
 	  function initialize(&$controller) {
 		  $this->controller =& $controller;
 		  $this->controller->set('Lang', $this);
+
+      // Maintenant on indexe tout les fichiers de langues
+      $this->languages = $this->getLanguages();
+
+      // on choisi le language et on indexe les messages
+      $this->lang = $this->getLang();
 	  }
     function startup(&$controller) {}
 
@@ -81,8 +83,7 @@ class LangComponent extends Object {
   			  $language = $language{0}.$language{1};
     		}
       } else { // config
-        App::import('Component', 'Configuration');
-    		$this->Configuration = new ConfigurationComponent();
+    		$this->Configuration = $this->controller->Configuration;
     		$language = $this->Configuration->get('lang');
       }
 
@@ -107,8 +108,7 @@ class LangComponent extends Object {
         $language['messages'] = array();
       }
 
-      App::import('Component', 'EyPlugin');
-      $this->EyPlugin = new EyPluginComponent();
+      $this->EyPlugin = $this->controller->EyPlugin;
 
       $plugins = $this->EyPlugin->getPluginsActive();
 
@@ -154,8 +154,7 @@ class LangComponent extends Object {
       $lang = file_get_contents($this->langFolder.DS.$language['path'].'.json');
 			$messages['CMS'] = json_decode($lang, true)['MESSAGES'];
 
-      App::import('Component', 'EyPlugin');
-      $this->EyPlugin = new EyPluginComponent();
+      $this->EyPlugin = $this->controller->EyPlugin;
 
       $plugins = $this->EyPlugin->getPluginsActive();
 

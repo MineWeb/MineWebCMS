@@ -7,6 +7,8 @@ class PermissionsComponent extends Object {
 
   private $userModel;
 
+  private $controller;
+
 	function shutdown(&$controller) {}
 	function beforeRender(&$controller) {}
   function beforeRedirect() {}
@@ -50,8 +52,7 @@ class PermissionsComponent extends Object {
   public function get_all() {
     $return = $this->permissions;
     // on récupére les perms des plugins
-    App::import('Component', 'EyPlugin');
-    $this->EyPlugin = new EyPluginComponent();
+    $this->EyPlugin = $this->controller->EyPlugin;
 
     foreach ($this->EyPlugin->getPluginsActive() as $key => $value) {
       $plugins_perm = $value->permissions->available;

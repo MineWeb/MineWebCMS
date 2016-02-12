@@ -6,6 +6,7 @@
 class ConfigurationComponent extends Object {
 
   public $components = array('Session');
+  private $controller;
 
   static private $data;
 

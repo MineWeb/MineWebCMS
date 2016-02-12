@@ -9,9 +9,17 @@ class UpdateComponent extends Object {
 	public $update = array('status' => false, 'version' => NULL, 'type' => NULL, 'visible' => false);
 	public $cmsVersion = NULL;
 
+	private $controller;
+
 	public $lastVersion;
 
-	function __construct() {
+	function shutdown(&$controller) {}
+	function beforeRender(&$controller) {}
+	function beforeRedirect() {}
+	function initialize(&$controller) {
+		$this->controller = $controller;
+		$controller->set('Update', $this);
+
 		$this->check();
 
 		if(!file_exists(ROOT.'/config/update') OR strtotime('+5 hours', filemtime(ROOT.'/config/update')) < time()) {
@@ -23,19 +31,11 @@ class UpdateComponent extends Object {
 			}
 		}
 	}
-
-	function shutdown(&$controller) {}
-	function beforeRender(&$controller) {}
-	function beforeRedirect() {}
-	function initialize(&$controller) {
-		$controller->set('Update', new UpdateComponent());
-	}
 	function startup(&$controller) {}
 
 	public function available() {
 		if(version_compare($this->cmsVersion, $this->update['version'], '<')) {
-			App::import('Component', 'LangComponent');
-	    $this->Lang = new LangComponent();
+	    $this->Lang = $this->controller->Lang;
 
 			if($this->update['status']) {
 				if($this->update['visible'] AND $this->update['type'] == "choice") { // choice -> l'utilisateur choisis ou pas, forced -> la màj est faite automatiquement
@@ -47,8 +47,7 @@ class UpdateComponent extends Object {
 
 	private function check() {
 
-		App::import('Component', 'ConfigurationComponent');
-		$this->Configuration = new ConfigurationComponent();
+		$this->Configuration = $this->controller->Configuration;
 		$cmsVersion = $this->Configuration->get('version');
 
 		$this->cmsVersion = $cmsVersion;
@@ -169,8 +168,7 @@ class UpdateComponent extends Object {
 							}
 						}
 					} elseif(stristr($thisFileName, "lang/") && json_decode($thisFileName)) {
-						App::import('Component', 'LangComponent');
-						$this->Lang = new LangComponent();
+						$this->Lang = $this->controller->Lang;
 
 						$this->Lang->update($contents, $thisFileName);
 
@@ -396,8 +394,7 @@ class UpdateComponent extends Object {
 			}
 		}
 		if(!$error) {
-			App::import('Component', 'Configuration');
-			$this->Configuration = new ConfigurationComponent();
+			$this->Configuration = $this->controller->Configuration;
 			$this->Configuration->set('version', $this->get_version());
 			return true;
 		} else {

@@ -1,7 +1,3 @@
-<?php
-$this->History = new HistoryComponent;
-$this->EyPlugin = new EyPluginComponent;
-?>
 <section class="content-header">
   <h1>
     Dashboard
@@ -46,7 +42,7 @@ $this->EyPlugin = new EyPluginComponent;
 
     <div class="clearfix visible-sm-block"></div>
 
-    <?php if($this->EyPlugin->isInstalled('eywek.shop1')) { ?>
+    <?php if($EyPlugin->isInstalled('eywek.shop.1')) { ?>
       <div class="col-md-3 col-sm-6 col-xs-12">
         <div class="small-box bg-green">
           <div class="inner">
@@ -174,7 +170,7 @@ $this->EyPlugin = new EyPluginComponent;
           </div>
         </div>
         <div class="box-body">
-          <?php if($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
+          <?php if($EyPlugin->isInstalled('eywek.shop.1')) { ?>
             <?php if(count($items_solded) >= 5) { ?>
               <div class="alert alert-warning"><b><?= $Lang->get('GLOBAL__INFORMATIONS') ?> :</b> <?= $Lang->get('DASHBOARD__BIGGEST_SELLERS') ?></div>
               <div class="row">
@@ -278,7 +274,7 @@ $this->EyPlugin = new EyPluginComponent;
                 <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
                 <th><?= $Lang->get('GLOBAL__AUTHOR') ?></th>
             </tr>
-            <?php foreach ($this->History->get(false, 5) as $k => $v) { ?>
+            <?php foreach ($History->get(false, 5) as $k => $v) { ?>
               <tr>
                 <td><?= $v['History']['action'] ?></td>
                 <td><?= $v['History']['category'] ?></td>

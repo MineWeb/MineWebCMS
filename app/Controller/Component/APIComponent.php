@@ -3,6 +3,8 @@ class APIComponent extends Object {
 
 	public $components = array('Session', 'Configuration', 'Lang');
 
+	private $controller;
+
 	public $mineguard_active;
 	public $skin_active;
 	public $cape_active;
@@ -11,38 +13,39 @@ class APIComponent extends Object {
 	function beforeRender(&$controller) {}
 	function beforeRedirect() {}
 	function initialize(&$controller) {
-		$controller->set('API', new APIComponent());
-		App::import('Component', 'LangComponent');
-    	$this->Lang = new LangComponent();
-    	App::import('Component', 'ConfigurationComponent');
-    	$this->Configuration = new ConfigurationComponent();
+		$this->controller = $controller;
 
-    	$this->User = ClassRegistry::init('User');
+		$controller->set('API', $this);
 
-    	$this->mineguard_active = $this->Configuration->get('mineguard');
-    	if($this->mineguard_active == "true") {
-    		$this->mineguard_active = true;
-    	} else {
-    		$this->mineguard_active = false;
-    	}
+  	$this->Lang = $this->controller->Lang;
+  	$this->Configuration = $this->controller->Configuration;
 
-    	$this->ApiConfiguration = ClassRegistry::init('ApiConfiguration');
+  	$this->User = ClassRegistry::init('User');
 
-    	$skin_search = $this->ApiConfiguration->find('first');
-    	$this->skin_active = $skin_search['ApiConfiguration']['skins'];
-    	if($this->skin_active == "1") {
-    		$this->skin_active = true;
-    	} else {
-    		$this->skin_active = false;
-    	}
+  	$this->mineguard_active = $this->Configuration->get('mineguard');
+  	if($this->mineguard_active == "true") {
+  		$this->mineguard_active = true;
+  	} else {
+  		$this->mineguard_active = false;
+  	}
 
-    	$cape_search = $this->ApiConfiguration->find('first');
-    	$this->cape_active = $cape_search['ApiConfiguration']['capes'];
-    	if($this->cape_active == "1") {
-    		$this->cape_active = true;
-    	} else {
-    		$this->cape_active = false;
-    	}
+  	$this->ApiConfiguration = ClassRegistry::init('ApiConfiguration');
+
+  	$skin_search = $this->ApiConfiguration->find('first');
+  	$this->skin_active = $skin_search['ApiConfiguration']['skins'];
+  	if($this->skin_active == "1") {
+  		$this->skin_active = true;
+  	} else {
+  		$this->skin_active = false;
+  	}
+
+  	$cape_search = $this->ApiConfiguration->find('first');
+  	$this->cape_active = $cape_search['ApiConfiguration']['capes'];
+  	if($this->cape_active == "1") {
+  		$this->cape_active = true;
+  	} else {
+  		$this->cape_active = false;
+  	}
 	}
 	function startup(&$controller) {}
 

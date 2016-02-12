@@ -1,6 +1,4 @@
 <?php
-$this->Configuration = new ConfigurationComponent;
-$this->History = new HistoryComponent;
 App::import('Component', 'Shop.DiscountVoucherComponent');
 $this->DiscountVoucher = new DiscountVoucherComponent;
 ?>
@@ -43,7 +41,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                 <?php foreach ($search_items as $value => $v) { ?>
                   <tr>
                     <td><?= $v["Item"]["name"] ?></td>
-                    <td><?= $v["Item"]["price"] ?> <?= $this->Configuration->get_money_name() ?></td>
+                    <td><?= $v["Item"]["price"] ?> <?= $Configuration->get_money_name() ?></td>
                     <td><?= $categories[$v["Item"]["category"]]['name'] ?></td>
                     <td class="right">
                       <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'edit/'.$v["Item"]["id"], 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('GLOBAL__EDIT') ?></a>
@@ -104,7 +102,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                 </tr>
               </thead>
               <tbody>
-                <?php foreach ($this->History->get('SHOP', false, false, 'BUY_ITEM') as $value => $v) { ?>
+                <?php foreach ($History->get('SHOP', false, false, 'BUY_ITEM') as $value => $v) { ?>
                   <tr>
                     <td><?= $v['History']['other'] ?></td>
                     <td><?= $v['History']['author'] ?></td>
@@ -120,7 +118,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
       <div class="col-md-6">
         <div class="box">
           <div class="box-header with-border">
-            <h3 class="box-title"><?= $Lang->get('PURCHASE_HISTORY') ?> <?= $Lang->get('GLOBAL__OF') ?> <?= $this->Configuration->get_money_name() ?></h3>
+            <h3 class="box-title"><?= $Lang->get('PURCHASE_HISTORY') ?> <?= $Lang->get('GLOBAL__OF') ?> <?= $Configuration->get_money_name() ?></h3>
           </div>
           <div class="box-body">
 
@@ -129,13 +127,13 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                 <tr>
                   <th>Pseudo</th>
                   <th><?= $Lang->get('TYPE') ?></th>
-                  <th><?= ucfirst($this->Configuration->get_money_name()) ?></th>
+                  <th><?= ucfirst($Configuration->get_money_name()) ?></th>
                   <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
                   <th><?= $Lang->get('ID_PAYPAL') ?></th>
                 </tr>
               </thead>
               <tbody>
-                <?php foreach ($this->History->get('SHOP', false, false, 'BUY_MONEY') as $value => $v) { ?>
+                <?php foreach ($History->get('SHOP', false, false, 'BUY_MONEY') as $value => $v) { ?>
                 <?php
                 $other = explode('|', $v['History']['other']);
                 $type = $other[0];
@@ -226,7 +224,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                   <th><?= $Lang->get('GLOBAL__NAME') ?></th>
                   <th><?= $Lang->get('MAIL') ?></th>
                   <th><?= $Lang->get('PRICE') ?></th>
-                  <th><?= ucfirst($this->Configuration->get_money_name()) ?></th>
+                  <th><?= ucfirst($Configuration->get_money_name()) ?></th>
                   <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
                   <th class="right"><?= $Lang->get('ACTIONS') ?></th>
                 </tr>
@@ -258,7 +256,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
       <div class="col-md-6">
         <div class="box">
           <div class="box-header with-border">
-            <h3 class="box-title"><?= $Lang->get('SEND_MONEY_HISTORY') ?> <?= $Lang->get('GLOBAL__OF') ?> <?= $this->Configuration->get_money_name() ?></h3>
+            <h3 class="box-title"><?= $Lang->get('SEND_MONEY_HISTORY') ?> <?= $Lang->get('GLOBAL__OF') ?> <?= $Configuration->get_money_name() ?></h3>
           </div>
           <div class="box-body">
 
@@ -266,13 +264,13 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
               <thead>
               <tr>
                 <th>Pseudo</th>
-                <th><?= ucfirst($this->Configuration->get_money_name()) ?></th>
+                <th><?= ucfirst($Configuration->get_money_name()) ?></th>
                 <th><?= $Lang->get('TO') ?></th>
                 <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($this->History->get('SHOP', false, false, 'SEND_MONEY') as $value => $v) { ?>
+              <?php foreach ($History->get('SHOP', false, false, 'SEND_MONEY') as $value => $v) { ?>
               <?php
               $other = explode('|', $v['History']['other']);
               ?>
@@ -300,7 +298,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
               <thead>
                 <tr>
                   <th><?= $Lang->get('GLOBAL__NAME') ?></th>
-                  <th><?= ucfirst($this->Configuration->get_money_name()) ?></th>
+                  <th><?= ucfirst($Configuration->get_money_name()) ?></th>
                   <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
                   <th><?= $Lang->get('ACTIONS') ?></th>
                 </tr>

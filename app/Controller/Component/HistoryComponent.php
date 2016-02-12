@@ -6,6 +6,8 @@
 
 class HistoryComponent extends Object {
 
+  private $controller;
+
   function shutdown(&$controller) {
   }
 
@@ -16,6 +18,8 @@ class HistoryComponent extends Object {
   }
 
   function initialize(&$controller) {
+    $this->controller = $controller;
+    $this->controller->set('History', $this);
   }
 
   function startup(&$controller) {
@@ -60,8 +64,9 @@ class HistoryComponent extends Object {
     $search_history = $this->History->find('all', $array);
 
     $i = 0;
-    App::import('Component', 'LangComponent'); // le component
-    $this->Lang = new LangComponent;
+
+    $this->Lang = $this->controller->Lang;
+
     foreach ($search_history as $key => $value) { // je remplace les actions par leur traduction (ex: BUY_ITEM devient Achat d'un article)
       $search_history[$i]['History']['action'] = str_replace($value['History']['action'], $this->Lang->get($value['History']['action']), $value['History']['action']);
       $i++;
@@ -71,8 +76,8 @@ class HistoryComponent extends Object {
 
   function get_by_author($author) { // récupére tout l'historique d'un utilisateur
       // j'inclue le fichier lang
-    App::import('Component', 'LangComponent'); // le component
-    $this->Lang = new LangComponent;
+    $this->Lang = $this->controller->Lang;
+
     $this->History = ClassRegistry::init('History'); // le model history
     $search_history = $this->History->find('all', array('conditions' => array('author' => $author))); // je cherche l'historique de l'utilisateur
     $i = 0;
