@@ -1,0 +1,16 @@
+{
+  "name":"MineWeb",
+  "slug":"Mineweb",
+	"author":"Eywek",
+	"version":"1.0.0",
+	"apiID":1,
+	"configurations" : {
+    "navbar": "navbar2",
+    "favicon_url": "",
+    "version": "0.1",
+    "logo": false
+	},
+	"supported" : {
+		"CMS" : ">= 1.0.0"
+	}
+}
