@@ -15,6 +15,8 @@ class ThemeComponent extends Object {
   private $themesInstalled;
   private $alreadyCheckValid;
 
+  private $controller;
+
   function __construct() {
     $this->themesFolder = ROOT.DS.'app'.DS.'View'.DS.'Themed'.DS;
   }
@@ -64,6 +66,10 @@ class ThemeComponent extends Object {
             $id = strtolower($config->author.'.'.$slug.'.'.$config->apiID);;
 
             $themesList->$id = $config;
+
+            $checkSupported = $this->checkSupported($slug);
+            $themesList->$id->supported = (empty($checkSupported)) ? true : false;
+            $themesList->$id->supportedErrors = $checkSupported;
 
             if(isset($this->themesAvailable[$id])) {
               $themesList->$id->lastVersion = $this->themesAvailable[$id]['version'];
@@ -235,6 +241,66 @@ class ThemeComponent extends Object {
 
   // Vérifier si ce que supporte le thème n'est pas outdated (au dessus de la version)
 
-    public function checkSupported($slug) {}
+    public function checkSupported($slug) {
+
+      $config = $this->getConfig($slug); // on récup la config
+
+      $supported = (is_object($config) && isset($config->supported) && !empty($config->supported)) ? $config->supported : null;
+
+      if(empty($supported)) {
+        return array();
+      }
+
+      $return = array();
+
+      foreach ($supported as $type => $version) { // on parcours tout les pré-requis
+
+        if($type == "CMS") { // Si c'est sur le cms
+
+          App::import('Component', 'ConfigurationComponent'); // On charge le component d'update
+          $this->Configuration = new ConfigurationComponent();
+
+          $versionExploded = explode(' ', $version);
+          $operator = (count($versionExploded) == 2) ? $versionExploded[0] : '='; // On récupére l'opérateur et la version qui sont définis
+          $versionNeeded = (count($versionExploded) == 2) ? $versionExploded[1] : $version;
+
+          if(!version_compare($this->Configuration->get('version'), $versionNeeded, $operator)) { // Si la version du CMS ne correspond pas à ce qui est demandé
+            $return['CMS'] = $operator.' '.$versionNeeded;
+          }
+
+        } elseif(count(explode('--', $type)) == 2) { // si c'est un pré-requis normal
+
+          $versionExploded = explode(' ', $version);
+          $operator = (count($versionExploded) == 2) ? $versionExploded[0] : '='; // On récupére l'opérateur et la version qui sont définis
+          $versionNeeded = (count($versionExploded) == 2) ? $versionExploded[1] : $version;
+
+          $typeExploded = explode('--', $type);
+          $type = $typeExploded[0];             // On veux savoir le type + l'id de ce qui est concerné
+          $id = $typeExploded[1];
+
+          if($type == "plugin") {
+
+            // C'est un plugin donc il nous faut sa version
+            $search = $this->controller->EyPlugin->findPluginByID($id);
+            if(!empty($search)) { // si on a trouvé quelque chose
+
+              $pluginVersion = $this->controller->EyPlugin->getPluginConfig($search->slug);
+              if(!version_compare($pluginVersion->version, $versionNeeded, $operator)) { // Si la version du CMS ne correspond pas à ce qui est demandé
+                $return[$search->slug] = $operator.' '.$versionNeeded;
+              }
+
+            } else {
+              $return[$search[$id]['slug']] = $operator.' '.$versionNeeded;
+            }
+
+          }
+
+        } // sinon on s'en fou
+
+      }
+
+      return $return; // De base c'est bon
+
+    }
 
 }

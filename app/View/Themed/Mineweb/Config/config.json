@@ -12,7 +12,8 @@
 	},
 	"supported" : {
 		"CMS" : "1.0.0",
-    "plugin--eywek.support.2" : "1.0.0",
-    ""
+    "plugin--eywek.support.2" : "0.2.0",
+    "plugin--eywek.shop.1" : "0.4.0",
+    "plugin--eywek.vote.3" : "0.7.0"
 	}
 }

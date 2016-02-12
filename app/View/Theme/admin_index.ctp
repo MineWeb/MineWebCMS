@@ -15,6 +15,7 @@ $this->Configuration = new ConfigurationComponent;
                 <tr>
                   <th><?= $Lang->get('GLOBAL__NAME') ?></th>
                   <th><?= $Lang->get('GLOBAL__STATUS') ?></th>
+                  <th><?= $Lang->get('THEME__SUPPORTED_STATUS') ?></th>
                   <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
                 </tr>
               </thead>
@@ -29,6 +30,9 @@ $this->Configuration = new ConfigurationComponent;
                       echo '<span class="label label-danger">'.$Lang->get('GLOBAL__DISABLED').'</span>';
                     }
                     ?>
+                  </td>
+                  <td>
+                    <span class="label label-success"><?= $Lang->get('GLOBAL__YES') ?></span>
                   </td>
                   <td>
                      <?php if('default' != $this->Configuration->get('theme')) { ?>
@@ -48,6 +52,16 @@ $this->Configuration = new ConfigurationComponent;
                         } else {
                           echo '<span class="label label-danger">'.$Lang->get('GLOBAL__DISABLED').'</span>';
                         }
+                        ?>
+                      </td>
+                      <td>
+                        <?php
+                          if($value->supported) {
+                            echo '<span class="label label-success">'.$Lang->get('GLOBAL__YES').'</span>';
+                          } else {
+                            echo '<span class="label label-danger">'.$Lang->get('GLOBAL__NO').'</span><br>';
+                            echo '<small><i>'.$Lang->get('THEME__SUPPORTED_EXPLAIN').'</i></small>';
+                          }
                         ?>
                       </td>
                       <td>

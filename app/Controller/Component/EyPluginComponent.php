@@ -957,8 +957,8 @@ class EyPluginComponent extends Object {
           $this->Configuration = new ConfigurationComponent();
 
           $versionExploded = explode(' ', $version);
-          $operator = $versionExploded[0]; // On récupére l'opérateur et la version qui sont définis
-          $versionNeeded = $versionExploded[1];
+          $operator = (count($versionExploded) == 2) ? $versionExploded[0] : '='; // On récupére l'opérateur et la version qui sont définis
+          $versionNeeded = (count($versionExploded) == 2) ? $versionExploded[1] : $version;
 
           if(!version_compare($this->Configuration->get('version'), $versionNeeded, $operator)) { // Si la version du CMS ne correspond pas à ce qui est demandé
             $this->log('Plugin : '.$name.' can\'t be installed, CMS version need to be '.$operator.' '.$versionNeeded.' !');
