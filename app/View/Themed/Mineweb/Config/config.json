@@ -11,6 +11,8 @@
     "logo": false
 	},
 	"supported" : {
-		"CMS" : ">= 1.0.0"
+		"CMS" : "1.0.0",
+    "plugin--eywek.support.2" : "1.0.0",
+    ""
 	}
 }

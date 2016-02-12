@@ -968,8 +968,8 @@ class EyPluginComponent extends Object {
         } elseif(count(explode('--', $type)) == 2) { // si c'est un pré-requis normal
 
           $versionExploded = explode(' ', $version);
-          $operator = $versionExploded[0]; // On récupére l'opérateur et la version qui sont définis
-          $versionNeeded = $versionExploded[1];
+          $operator = (count($versionExploded) == 2) ? $versionExploded[0] : '='; // On récupére l'opérateur et la version qui sont définis
+          $versionNeeded = (count($versionExploded) == 2) ? $versionExploded[1] : $version;
 
           $typeExploded = explode('--', $type);
           $type = $typeExploded[0];             // On veux savoir le type + l'id de ce qui est concerné
