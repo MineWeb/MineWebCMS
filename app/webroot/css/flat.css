@@ -116,6 +116,12 @@ header.carousel {
 	margin-bottom: 5px;
 }
 
+.comment {
+	border: solid 1px #bcbcbc;
+	padding: 10px;
+	border-radius: 5px;
+}
+
 /*
 News
 */

@@ -31,7 +31,7 @@
             <hr>
             <div class="add-comment"></div>
             <?php foreach ($news['Comment'] as $k => $v) { ?>
-                <div class="media" id="comment-<?= $v['id'] ?>">
+                <div class="media comment" id="comment-<?= $v['id'] ?>">
                     <a class="pull-left" href="#">
                         <img class="media-object" src="<?= $this->Html->url(array('controller' => 'API', 'action' => 'get_head_skin/')) ?>/<?= $v['author'] ?>/64" alt="">
                     </a>
