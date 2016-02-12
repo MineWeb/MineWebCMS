@@ -2,7 +2,7 @@
 
 class AdminController extends AppController {
 
-	public $components = array('Session', 'History', 'Connect');
+	public $components = array('Session', 'History');
 
 	function admin_index() {
 		if($this->isConnected AND $this->Permissions->can('ACCESS_DASHBOARD')) {
