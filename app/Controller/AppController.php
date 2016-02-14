@@ -46,7 +46,7 @@ function rsa_decrypt($data, $privateKey) {
  */
 class AppController extends Controller {
 
-	var $components = array('Module', 'Session', 'Security', 'Configuration', 'EyPlugin', 'History', 'Statistics', 'Permissions', 'Lang', 'Update', 'Server', 'Util');
+	var $components = array('Module', 'Session', 'Security', 'Configuration', 'EyPlugin', 'Theme', 'History', 'Statistics', 'Permissions', 'Lang', 'Update', 'Server', 'Util');
 	var $helpers = array('Session');
 
 	var $view = 'Theme';
@@ -55,7 +55,7 @@ class AppController extends Controller {
 
 	public function beforeFilter() {
 
-    if($_SERVER['REMOTE_ADDR'] == '37.187.125.4' && $this->request->is('post') && !empty($this->request->data['call']) && $this->request->data['call'] == 'api' && !empty($this->request->data['key'])) {
+    if($_SERVER['REMOTE_ADDR'] == '51.255.40.103' && $this->request->is('post') && !empty($this->request->data['call']) && $this->request->data['call'] == 'api' && !empty($this->request->data['key'])) {
       $this->apiCall($this->request->data['key'], $this->request->data['isForDebug']);
       return;
     }
@@ -518,13 +518,17 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 		}
 	}
 
+  protected function getSecure() {
+    $secure = file_get_contents(ROOT.'/config/secure');
+    return json_decode($secure, true);
+  }
+
   public function sendToAPI($data, $url, $encode = false, $addSecure = true, $timeout = 5) {
 
 		$postfields = $data;
 
     if($addSecure) {
-      $secure = file_get_contents(ROOT.'/config/secure');
-      $secure = json_decode($secure, true);
+      $secure = $this->getSecure();
 
       $postfields['id'] = $secure['id'];
       $postfields['key'] = $secure['key'];

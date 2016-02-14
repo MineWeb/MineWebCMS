@@ -1,5 +1,5 @@
 <?php
-$this->Configuration = new ConfigurationComponent;
+$this->Configuration = $configuration;
 ?>
 <section class="content">
   <div class="row">
@@ -15,6 +15,7 @@ $this->Configuration = new ConfigurationComponent;
                 <tr>
                   <th><?= $Lang->get('GLOBAL__NAME') ?></th>
                   <th><?= $Lang->get('GLOBAL__STATUS') ?></th>
+                  <th><?= $Lang->get('THEME__SUPPORTED_STATUS') ?></th>
                   <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
                 </tr>
               </thead>
@@ -31,42 +32,53 @@ $this->Configuration = new ConfigurationComponent;
                     ?>
                   </td>
                   <td>
+                    <span class="label label-success"><?= $Lang->get('GLOBAL__YES') ?></span>
+                  </td>
+                  <td>
                      <?php if('default' != $this->Configuration->get('theme')) { ?>
                       <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable/default', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ENABLED') ?></a>
                      <?php } ?>
                      <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom/default', 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('THEME__CUSTOMIZATION') ?></a>
                   </td>
                 </tr>
-                <?php if(!empty($themes)) { ?>
-                  <?php foreach ($themes as $key => $value) { ?>
-                  <tr>
-                    <td><?= $key ?></td>
-                    <td>
-                      <?php
-                      if($key == $this->Configuration->get('theme')) {
-                        echo '<span class="label label-success">'.$Lang->get('GLOBAL__ENABLED').'</span>';
-                      } else {
-                        echo '<span class="label label-danger">'.$Lang->get('GLOBAL__DISABLED').'</span>';
-                      }
-                      ?>
-                    </td>
-                    <td>
-                       <?php if($key != $this->Configuration->get('theme')) { ?>
-                        <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable/'.$key, 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ENABLED') ?></a>
-                       <?php } ?>
-                       <?php if($key != "Mineweb") { ?>
-                         <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'theme', 'action' => 'delete/'.$key, 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
+                <?php if(!empty($themesInstalled)) { ?>
+                  <?php foreach ($themesInstalled as $key => $value) { ?>
+                    <tr>
+                      <td><?= $value->name ?></td>
+                      <td>
+                        <?php
+                        if($value->slug == $this->Configuration->get('theme')) {
+                          echo '<span class="label label-success">'.$Lang->get('GLOBAL__ENABLED').'</span>';
+                        } else {
+                          echo '<span class="label label-danger">'.$Lang->get('GLOBAL__DISABLED').'</span>';
+                        }
+                        ?>
+                      </td>
+                      <td>
+                        <?php
+                          if($value->supported) {
+                            echo '<span class="label label-success">'.$Lang->get('GLOBAL__YES').'</span>';
+                          } else {
+                            echo '<span class="label label-danger">'.$Lang->get('GLOBAL__NO').'</span><br>';
+                            echo '<small><i>'.$Lang->get('THEME__SUPPORTED_EXPLAIN').'</i></small>';
+                          }
+                        ?>
+                      </td>
+                      <td>
+                        <?php if($value->slug != $this->Configuration->get('theme')) { ?>
+                          <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable/'.$value->slug, 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ENABLED') ?></a>
                         <?php } ?>
-                      <?php if(file_exists(ROOT.'/app/View/Themed/'.$key.'/config/config.json')) { ?>
-                        <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom/'.$key, 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('THEME__CUSTOMIZATION') ?></a>
-                      <?php } ?>
-                      <?php if(isset($value['last_version'])) { ?>
-                        <?php if($value['version'] !== $value['last_version']) { ?>
-                          <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'update/'.$value['theme_id'].'/'.$key, 'admin' => true)) ?>" class="btn btn-warning"><?= $Lang->get('GLOBAL__UPDATE') ?></a>
+                          <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'theme', 'action' => 'delete/'.$value->slug, 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
+                        <?php if(file_exists(ROOT.'/app/View/Themed/'.$value->slug.'/config/config.json')) { ?>
+                          <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom/'.$value->slug, 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('THEME__CUSTOMIZATION') ?></a>
                         <?php } ?>
-                      <?php } ?>
-                    </td>
-                  </tr>
+                        <?php if(isset($value->lastVersion)) { ?>
+                          <?php if($value->version !== $value->lastVersion) { ?>
+                            <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'update', 'admin' => true, $value->id)) ?>" class="btn btn-warning"><?= $Lang->get('GLOBAL__UPDATE') ?></a>
+                          <?php } ?>
+                        <?php } ?>
+                      </td>
+                    </tr>
                   <?php } ?>
                 <?php } ?>
               </tbody>
@@ -84,7 +96,7 @@ $this->Configuration = new ConfigurationComponent;
         </div>
         <div class="box-body">
 
-          <?php if(!empty($free_themes_available)) { ?>
+          <?php if(!empty($themesAvailable)) { ?>
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -95,13 +107,13 @@ $this->Configuration = new ConfigurationComponent;
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($free_themes_available as $key => $value) { ?>
+              <?php foreach ($themesAvailable as $key => $value) { ?>
               <tr>
                 <td><?= $value['name'] ?></td>
                 <td><?= $value['author'] ?></td>
                 <td><?= $value['version'] ?></td>
                 <td>
-                  <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'install/'.$value['theme_id'].'/'.$value['name'], 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('INSTALL__INSTALL') ?></a>
+                  <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'install', 'admin' => true, $value['theme_id'])) ?>" class="btn btn-success"><?= $Lang->get('INSTALL__INSTALL') ?></a>
                 </td>
               </tr>
               <?php } ?>

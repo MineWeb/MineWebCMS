@@ -1,6 +1,4 @@
 <?php
-@ignore_user_abort(true);
-@set_time_limit(0);
 
 class ThemeController extends AppController{
 
@@ -9,83 +7,21 @@ class ThemeController extends AppController{
 
 			$this->set('title_for_layout',$this->Lang->get('THEME__LIST'));
 			$this->layout = 'admin';
-			$dir = ROOT.'/app/View/Themed';
-			$themes = scandir($dir);
-    		$themes = array_delete_value($themes, '.');
-    		$themes = array_delete_value($themes, '..');
-    		$themes = array_delete_value($themes, '.DS_Store');
-    		$themes = array_delete_value($themes, 'AdminTheme');
-			foreach ($themes as $key => $value) {
-		      $list_themes[] = ucfirst(strtolower($value));
-		    }
 
-		    if(!empty($list_themes)) {
-		    	unset($themes);
-			    foreach ($list_themes as $key => $value) {
-			    	$config = file_get_contents(ROOT.'/app/View/Themed/'.$value.'/config/config.json');
-    				$config = json_decode($config, true);
-			    	$themes[$value]['version'] = $config['version'];
-			    }
-
-			    $free_themes_available = file_get_contents('http://mineweb.org/api/v1/getFreeThemes');
-			    $free_themes_available = json_decode($free_themes_available, true);
-			    foreach ($free_themes_available as $key => $value) {
-			      if(!in_array(ucfirst(strtolower($value['name'])), $list_themes)) {
-			        $free_themes[] = array('theme_id' => $value['theme_id'], 'name' => $value['name'], 'author' => $value['author'], 'version' => $value['version']);
-			      }
-			    }
-
-			    // themes payés
-			    $secure = file_get_contents(ROOT.'/config/secure');
-    			$secure = json_decode($secure, true);
-			    $purchased_themes = @file_get_contents('http://mineweb.org/api/v1/getPurchasedThemes/'.$secure['id']);
-			    $purchased_themes = json_decode($purchased_themes, true);
-			    if(@$purchased_themes['status'] == "success") {
-				    foreach ($purchased_themes['success'] as $key => $value) {
-				      if(!in_array(ucfirst(strtolower($value['name'])), $list_themes)) {
-				        $free_themes[] = array('theme_id' => $value['theme_id'], 'name' => $value['name'], 'author' => $value['author'], 'version' => $value['version']);
-				      }
-				    }
-				}
-
-			    $getAllThemes = file_get_contents('http://mineweb.org/api/v1/getAllThemes');
-			    $getAllThemes = json_decode($getAllThemes, true);
-
-			    foreach ($getAllThemes as $key => $value) {
-			    	if(in_array(ucfirst(strtolower($value['name'])), $list_themes)) {
-			    		$themes[ucfirst(strtolower($value['name']))]['last_version'] = $value['version'];
-			    		$themes[ucfirst(strtolower($value['name']))]['theme_id'] = $value['theme_id'];
-			    	}
-			    }
-
-			    $this->set(compact('themes'));
-			} else {
-				$themes = null;
-			    $this->set(compact('themes'));
-			    $free_themes_available = file_get_contents('http://mineweb.org/api/getFreeThemes');
-			    $free_themes_available = json_decode($free_themes_available, true);
-			    foreach ($free_themes_available as $key => $value) {
-			       $free_themes[] = array('theme_id' => $value['theme_id'], 'name' => $value['name'], 'author' => $value['author'], 'version' => $value['version']);
-			    }
-			}
-		    if(!empty($free_themes)) {
-		    	$free_themes_available = $free_themes;
-		    } else {
-		    	$free_themes_available = null;
-		    }
-		    $this->set(compact('free_themes_available'));
+			$this->set('themesAvailable', $this->Theme->getThemesOnAPI());
+			$this->set('themesInstalled', $this->Theme->getThemesInstalled());
 
 		} else {
 			$this->redirect('/');
 		}
 	}
 
-	function admin_enable($name = false) {
+	function admin_enable($slug = false) {
 		if($this->isConnected AND $this->User->isAdmin()) {
-			if($name != false) {
+			if($slug != false) {
 
 				$this->layout = null;
-				$this->Configuration->set('theme', $name);
+				$this->Configuration->set('theme', $slug);
 				$this->History->set('SET_THEME', 'theme');
 				$this->Session->setFlash($this->Lang->get('THEME__ENABLED_SUCCESS'), 'default.success');
 				$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
@@ -97,13 +33,13 @@ class ThemeController extends AppController{
 		}
 	}
 
-	function admin_delete($name = false) {
+	function admin_delete($slug = false) {
 		if($this->isConnected AND $this->User->isAdmin()) {
-			if($name != false) {
+			if($slug != false) {
 
 				$this->layout = null;
-				if($this->Configuration->get('theme') != $name) {
-					clearDir(ROOT.'/app/View/Themed/'.$name);
+				if($this->Configuration->get('theme') != $slug) {
+					clearDir(ROOT.'/app/View/Themed/'.$slug);
 					$this->History->set('DELETE_THEME', 'theme');
 					$this->Session->setFlash($this->Lang->get('THEME__DELETE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
@@ -119,41 +55,21 @@ class ThemeController extends AppController{
 		}
 	}
 
-	function admin_install($theme_id = false, $theme_name = false) {
+	function admin_install($apiID = false) {
 		$this->autoRender = false;
 		if($this->isConnected AND $this->User->isAdmin()) {
-			if($theme_id != false AND $theme_name != false) {
+			if($apiID != false) {
 
-				// get du zip sur mineweb.org
+				$install = $this->Theme->install($apiID);
 
-					$return = $this->sendToAPI(
-		                  array(),
-		                  'get_theme/'.$theme_id,
-		                  true
-		                );
-
-			    if($return['code'] == 200) {
-	          $return_json = json_decode($return['content'], true);
-	          if(!$return_json) {
-	            $zip = $return;
-	          } elseif($return_json['status'] == "error") {
-	            $this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
-							$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
-			      }
-			    } else {
-			      	$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
-					$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
-			    }
-
-				if(unzip($zip, '../View/Themed', 'install-zip', true)) {
-					@clearDir(ROOT.'/app/View/Themed/__MACOSX');
-					$this->History->set('INSTALL_THEME', 'theme');
-					$this->Session->setFlash($this->Lang->get('THEME__INSTALL_SUCCESS'), 'default.success');
-					$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
-				} else {
+				if(!$install) {
 					$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
-					$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
+          $this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
 				}
+
+				$this->History->set('INSTALL_THEME', 'theme');
+				$this->Session->setFlash($this->Lang->get('THEME__INSTALL_SUCCESS'), 'default.success');
+				$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
 			} else {
 				$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
 			}
@@ -162,34 +78,13 @@ class ThemeController extends AppController{
 		}
 	}
 
-	function admin_update($theme_id = false, $theme_name = false) {
+	function admin_update($apiID = false) {
 		$this->autoRender = false;
 		if($this->isConnected AND $this->User->isAdmin()) {
-			if($theme_id != false AND $theme_name != false) {
+			if($apiID != false) {
 
-				// get du zip sur mineweb.org
-
-					$return = $this->sendToAPI(
-		                  array(),
-		                  'get_theme/'.$theme_id,
-		                  true
-		                );
-
-			    if($return['code'] == 200) {
-			          $return_json = json_decode($return['content'], true);
-			          if(!$return_json) {
-			            $zip = $return;
-			          } elseif($return_json['status'] == "error") {
-			            return false;
-			          }
-			    } else {
-			      return false;
-			    }
-
-			    clearDir(ROOT.'/app/View/Themed/'.$theme_name);
-
-				if(unzip($zip, '../View/Themed', 'install-zip', true)) {
-					@clearDir(ROOT.'/app/View/Themed/__MACOSX');
+				$update = $this->Theme->update($apiID);
+				if($update) {
 					$this->History->set('UPDATE_THEME', 'theme');
 					$this->Session->setFlash($this->Lang->get('THEME__UPDATE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
@@ -205,11 +100,26 @@ class ThemeController extends AppController{
 		}
 	}
 
-	function admin_custom($theme_name = false) {
+	function admin_custom($slug = false) {
 		if($this->isConnected AND $this->User->isAdmin()) {
-			if($theme_name != false) {
+			if($slug != false) {
 				$this->set('title_for_layout',$this->Lang->get('THEME__CUSTOMIZATION'));
 				$this->layout = 'admin';
+
+				list($theme_name, $config) = $this->Theme->getCustomData($slug);
+				$this->set(compact('config', 'theme_name'));
+
+				if($this->request->is('post')) {
+					if($this->Theme->processCustomData($slug, $this->request)) {
+						$this->Session->setFlash($this->Lang->get('THEME__CUSTOMIZATION_SUCCESS'), 'default.success');
+					}
+					$this->redirect(array('controller' => 'theme', 'action' => 'custom', 'admin' => true, $slug));
+				}
+
+				if($slug != "default") {
+					$this->render(DS.'Themed'.DS.$slug.DS.'config'.DS.'view');
+				}
+/*
 				if($theme_name == "default") {
 					$config = file_get_contents(ROOT.'/config/theme.default.json');
 					$config = json_decode($config, true);
@@ -273,7 +183,7 @@ class ThemeController extends AppController{
 					}
 
 					$this->render('/Themed/'.$theme_name.'/config/view');
-				}
+				}*/
 			} else {
 				$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
 			}
