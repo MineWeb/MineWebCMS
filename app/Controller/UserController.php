@@ -38,7 +38,7 @@ class UserController extends AppController {
 				// Captcha
 				if($this->Configuration->getKey('captcha_type') == "2") { // ReCaptcha
 
-					$validCaptcha = $this->Util->isValidReCaptcha($this->request->data['recaptcha'], $_SERVER['REMOTE_ADDR'], $this->Configuration->getKey('captcha_google_secret'));
+					$validCaptcha = $this->Util->isValidReCaptcha($this->request->data['recaptcha'], $this->Util->getIP(), $this->Configuration->getKey('captcha_google_secret'));
 
 				} else {
 
@@ -61,11 +61,12 @@ class UserController extends AppController {
 
 							$confirmCode = substr(md5(uniqid()), 0, 12);
 
-							$emailMsg = $this->Lang->get('EMAIL__CONTENT_CONFIRM_MAIL');
-							$emailMsg = str_replace('{LINK}', Router::url('/user/confirm/').$confirmCode, $emailMsg);
-							$emailMsg = str_replace('{IP}', $_SERVER['REMOTE_ADDR'], $emailMsg);
-							$emailMsg = str_replace('{USERNAME}', $this->request->data['pseudo'], $emailMsg);
-							$emailMsg = str_replace('{DATE}', $this->Lang->date(date('Y-m-d H:i:s')), $emailMsg);
+							$emailMsg = $this->Lang->get('EMAIL__CONTENT_CONFIRM_MAIL', array(
+								'{LINK}' => Router::url('/user/confirm/').$confirmCode,
+								'{IP}' => $this->Util->getIP(),
+								'{USERNAME}' => $this->request->data['pseudo'],
+								'{DATE}' => $this->Lang->date(date('Y-m-d H:i:s'))
+							));
 
 							$email = $this->Util->prepareMail(
 								$this->request->data['email'],

@@ -55,7 +55,7 @@ class VoterController extends VoteAppController {
 														array(
 															'OR' => array(
 																	'username' => $this->request->data['pseudo'],
-																	'ip' => $_SERVER['REMOTE_ADDR']
+																	'ip' => $this->Util->getIP()
 																),
 															'website' => $this->Session->read('vote.website')
 															)
@@ -164,7 +164,7 @@ class VoterController extends VoteAppController {
 
                     // check si il a pas déjà voté sur ce site
                     $this->loadModel('Vote.Vote');
-                    $get_last_vote = $this->Vote->find('first', array('conditions' => array('OR' => array('username' => $this->Session->read('vote.pseudo'), 'ip' => $_SERVER['REMOTE_ADDR']), 'website' => $this->Session->read('vote.website'))));
+                    $get_last_vote = $this->Vote->find('first', array('conditions' => array('OR' => array('username' => $this->Session->read('vote.pseudo'), 'ip' => $this->Util->getIP()), 'website' => $this->Session->read('vote.website'))));
 
                     if(!empty($get_last_vote['Vote']['created'])) {
                         $now = time();
@@ -186,7 +186,7 @@ class VoterController extends VoteAppController {
                                 $this->Vote->read(null, null);
                                 $this->Vote->set(array(
                                     'username' => $this->Session->read('vote.pseudo'),
-                                    'ip' => $_SERVER['REMOTE_ADDR'],
+                                    'ip' => $this->Util->getIP(),
                                     'website' => $this->Session->read('vote.website')
                                 ));
                                 $this->Vote->save();
@@ -194,7 +194,7 @@ class VoterController extends VoteAppController {
                                 $this->Vote->read(null, $get_last_vote['Vote']['id']);
                                 $this->Vote->set(array(
                                     'username' => $this->Session->read('vote.pseudo'),
-                                    'ip' => $_SERVER['REMOTE_ADDR'],
+                                    'ip' => $this->Util->getIP(),
                                     'website' => $this->Session->read('vote.website'),
                                     'created' => date('Y-m-d H:i:s')
                                 ));
@@ -264,12 +264,13 @@ class VoterController extends VoteAppController {
 
 					if($value['type'] == 'server') { // si c'est une commande serveur
 
-						if($this->executeServerReward($config, $user, $value)) {
+						$server = $this->executeServerReward($config, $user, $value);
+						if($server) {
 
 							$rewardsSended[] = $value['name'];
 
 						} else {
-							return array('status' => false, 'msg' => 'SERVER__MUST_BE_ON');
+							return array('status' => false, 'msg' => $server);
 						}
 
 					} elseif($value['type'] == 'money') { // si c'est des points boutique
@@ -309,12 +310,13 @@ class VoterController extends VoteAppController {
 
 			if($rewards[$reward]['type'] == 'server') { // si c'est une commande serveur
 
-				if($this->executeServerReward($config, $user, $rewards[$reward])) {
+				$server = $this->executeServerReward($config, $user, $rewards[$reward]);
+				if($server) {
 
 					return array('status' => true, 'msg' => $this->Lang->get('VOTE__VOTE_SUCCESS').' ! '.$this->Lang->get('VOTE__MESSAGE_VOTE_SUCCESS_REWARD').' : <b>'.$rewards[$reward]['name'].'</b>.|true');
 
 				} else {
-					return array('status' => false, 'msg' => 'SERVER__MUST_BE_ON');
+					return array('status' => false, 'msg' => $server);
 				}
 
 			 } elseif($rewards[$reward]['type'] == 'money') { // si c'est des points boutique
@@ -358,7 +360,7 @@ class VoterController extends VoteAppController {
 					}
 
 			} else { //le serveur est éteint
-				return false;
+				return 'SERVER__MUST_BE_ON';
 			}
 			return true;
 		}

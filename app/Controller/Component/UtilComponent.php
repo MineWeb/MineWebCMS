@@ -23,6 +23,12 @@ class UtilComponent extends Object {
   }
   function startup(&$controller) {}
 
+  // Get ip (support cloudfare)
+
+  public function getIP() {
+    return isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? $_SERVER["HTTP_CF_CONNECTING_IP"] : $_SERVER["REMOTE_ADDR"];
+  }
+
   /*
     MAIL
   */

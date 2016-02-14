@@ -54,7 +54,7 @@ class User extends AppModel {
 		$data_to_save['pseudo'] = before_display($data['pseudo']);
 		$data_to_save['email'] = before_display($data['email']);
 
-		$data_to_save['ip'] = $_SERVER["REMOTE_ADDR"];
+		$data_to_save['ip'] = isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? $_SERVER["HTTP_CF_CONNECTING_IP"] : $_SERVER["REMOTE_ADDR"];
 		$data_to_save['rank'] = 0;
 
 		$data_to_save['password'] = password($data['password']);
@@ -67,7 +67,8 @@ class User extends AppModel {
 
 	public function login($data, $need_email_confirmed = false) {
 		$LoginRetryTable = ClassRegistry::init('LoginRetry');
-		$findRetryWithIP = $LoginRetryTable->find('first', array(array('ip' => $_SERVER['REMOTE_ADDR'])));
+		$ip = isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? $_SERVER["HTTP_CF_CONNECTING_IP"] : $_SERVER["REMOTE_ADDR"];
+		$findRetryWithIP = $LoginRetryTable->find('first', array(array('ip' => $ip)));
 
 		// si on trouve rien OU que il n'a pas encore essayé plus de 10 fois OU que la dernière date du retry est passé depuis 2h
 
@@ -91,7 +92,7 @@ class User extends AppModel {
 
 					$LoginRetryTable->create();
 					$LoginRetryTable->set(array(
-						'ip' => $_SERVER['REMOTE_ADDR'],
+						'ip' => $ip,
 						'count' => 1
 					));
 					$LoginRetryTable->save();
@@ -100,7 +101,7 @@ class User extends AppModel {
 
 					$LoginRetryTable->read(null, $findRetryWithIP['LoginRetry']['id']);
 					$LoginRetryTable->set(array(
-						'ip' => $_SERVER['REMOTE_ADDR'],
+						'ip' => $ip,
 						'count' => ($findRetryWithIP['LoginRetry']['count']+1),
 						'modified' => date('Y-m-d H:i:s')
 					));

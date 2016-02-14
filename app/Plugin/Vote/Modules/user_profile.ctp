@@ -1,4 +1,4 @@
-<?php if($rewards_waiting) { ?>
+<?php if(isset($rewards_waiting) && $rewards_waiting) { ?>
 	<hr>
 	<div class="alert alert-info">
 		<?= str_replace('{NBR_REWARDS}', $rewards_waiting, $Lang->get('VOTE__USER_MSG_REWARDS_WAITING')) ?>
