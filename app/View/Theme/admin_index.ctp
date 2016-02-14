@@ -1,6 +1,3 @@
-<?php
-$this->Configuration = $configuration;
-?>
 <section class="content">
   <div class="row">
     <div class="col-md-12">
@@ -24,7 +21,7 @@ $this->Configuration = $configuration;
                   <td>Bootstrap</td>
                   <td>
                     <?php
-                    if('default' == $this->Configuration->get('theme')) {
+                    if('default' == $Configuration->get('theme')) {
                       echo '<span class="label label-success">'.$Lang->get('GLOBAL__ENABLED').'</span>';
                     } else {
                       echo '<span class="label label-danger">'.$Lang->get('GLOBAL__DISABLED').'</span>';
@@ -35,7 +32,7 @@ $this->Configuration = $configuration;
                     <span class="label label-success"><?= $Lang->get('GLOBAL__YES') ?></span>
                   </td>
                   <td>
-                     <?php if('default' != $this->Configuration->get('theme')) { ?>
+                     <?php if('default' != $Configuration->get('theme')) { ?>
                       <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable/default', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ENABLED') ?></a>
                      <?php } ?>
                      <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom/default', 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('THEME__CUSTOMIZATION') ?></a>
@@ -47,7 +44,7 @@ $this->Configuration = $configuration;
                       <td><?= $value->name ?></td>
                       <td>
                         <?php
-                        if($value->slug == $this->Configuration->get('theme')) {
+                        if($value->slug == $Configuration->get('theme')) {
                           echo '<span class="label label-success">'.$Lang->get('GLOBAL__ENABLED').'</span>';
                         } else {
                           echo '<span class="label label-danger">'.$Lang->get('GLOBAL__DISABLED').'</span>';
@@ -65,7 +62,7 @@ $this->Configuration = $configuration;
                         ?>
                       </td>
                       <td>
-                        <?php if($value->slug != $this->Configuration->get('theme')) { ?>
+                        <?php if($value->slug != $Configuration->get('theme')) { ?>
                           <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable/'.$value->slug, 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ENABLED') ?></a>
                         <?php } ?>
                           <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'theme', 'action' => 'delete/'.$value->slug, 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
