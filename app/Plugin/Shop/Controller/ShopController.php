@@ -992,7 +992,7 @@ class ShopController extends ShopAppController {
 				if( substr($tab[0],0,3) != "OUI" )
 				{
 			       /* erreur */
-			       $this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
+			       $this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
 			       $this->redirect(array('controller' => 'shop', 'action' => 'index'));
 				}
 				else
@@ -1101,17 +1101,17 @@ class ShopController extends ShopAppController {
 						}
 					} else {
 						// erreur pendant le traitement
-						$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
+						$this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
 		       			$this->redirect(array('controller' => 'shop', 'action' => 'index'));
 					}
 				} else {
 					// erreur pendant le traitement
-					$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
+					$this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
 		       		$this->redirect(array('controller' => 'shop', 'action' => 'index'));
 				}
 			/*} else {
 				// idem
-				$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
+				$this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
 		       	$this->redirect(array('controller' => 'shop', 'action' => 'index'));
 			}*/
 		} else {

@@ -25,7 +25,7 @@ class APIController extends AppController {
     				if($this->API->removeIp($this->User->getKey('pseudo'), $this->request->data['ip'])) {
     					echo 'true';
     				} else {
-    					echo $this->Lang->get('INTERNAL_ERROR').'|false';
+    					echo $this->Lang->get('ERROR__INTERNAL_ERROR').'|false';
     				}
     			} else {
     				echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
@@ -47,7 +47,7 @@ class APIController extends AppController {
 	    				if($this->API->setIp($this->User->getKey('pseudo'), $this->request->data['ip'])) {
 	    					echo $this->Lang->get('API__IP_ADD_SUCCESS').'|true';
 	    				} else {
-	    					echo $this->Lang->get('INTERNAL_ERROR').'|false';
+	    					echo $this->Lang->get('ERROR__INTERNAL_ERROR').'|false';
 	    				}
 	    			} else {
 	    				echo $this->Lang->get('API__IP_INVALID').'|false';

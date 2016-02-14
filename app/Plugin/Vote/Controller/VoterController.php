@@ -70,20 +70,20 @@ class VoterController extends VoteAppController {
                             if(empty($last_vote) OR $last_vote > $time_vote) {
 
                                 $this->Session->write('vote.pseudo', $this->request->data['pseudo']);
-                                echo $this->Lang->get('VOTE_LOGIN_SUCCESS').'|true';
+                                echo $this->Lang->get('VOTE__STEP_1_SUCCESS').'|true';
 
                             } else {
-                                echo $this->Lang->get('ALREADY_VOTED').'|false';
+                                echo $this->Lang->get('VOTE__VOTE_ERROR_WAIT').'|false';
                             }
                         } else {
-                            echo $this->Lang->get('ALREADY_VOTED').'|false';
+                            echo $this->Lang->get('VOTE__VOTE_ERROR_WAIT').'|false';
                         }
                     } else {
-                        echo $this->Lang->get('UNKNOWN_USERNAME').'|false';
+                        echo $this->Lang->get('VOTE__VOTE_ERROR_USER_UNKNOWN').'|false';
                     }
                 }
             } else {
-                echo $this->Lang->get('UNKNOWN_USERNAME').'|false';
+                echo $this->Lang->get('VOTE__VOTE_ERROR_USER_UNKNOWN').'|false';
             }
         } else {
             throw new InternalErrorException();
@@ -130,10 +130,10 @@ class VoterController extends VoteAppController {
                 if(in_array($this->request->data['out'], $array)) {
 
                     $this->Session->write('vote.out', true);
-                    echo $this->Lang->get('OUT_SUCCESS').'|true';
+                    echo $this->Lang->get('VOTE__STEP_3_SUCCESS').'|true';
 
                 } else {
-                    echo $this->Lang->get('OUT_INVALID').'|false';
+                    echo $this->Lang->get('VOTE__STEP_3_ERROR').'|false';
                 }
 
             }
@@ -228,13 +228,13 @@ class VoterController extends VoteAppController {
                                                 if(empty($config['0']['VoteConfiguration']['servers'])) {
                                                     $cmd = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $value['command']);
                                                     $this->Server->send_command($cmd); // on envoie la commande puis enregistre le vote
-                                                    $msg = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $this->Lang->get('VOTE_SUCCESS_SERVER'));
+                                                    $msg = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $this->Lang->get('VOTE__SERVER_MESSAGE_SUCCESS'));
                                                     $this->Server->send_command('broadcast '.$msg);
                                                 } else {
                                                     foreach ($config['0']['VoteConfiguration']['servers'] as $k2 => $v2) {
                                                         $cmd = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $value['command']);
                                                         $this->Server->send_command($cmd, $v2); // on envoie la commande puis enregistre le vote
-                                                        $msg = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $this->Lang->get('VOTE_SUCCESS_SERVER'));
+                                                        $msg = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $this->Lang->get('VOTE__SERVER_MESSAGE_SUCCESS'));
                                                         $this->Server->send_command('broadcast '.$msg, $v2);
                                                     }
                                                 }
@@ -263,11 +263,11 @@ class VoterController extends VoteAppController {
                                     if(in_array('server_error', $success_msg)) {
                                         echo $this->Lang->get('SERVER__MUST_BE_ON').'|false';
                                     } elseif (in_array('internal_error', $success_msg)) {
-                                        echo $this->Lang->get('INTERNAL_ERROR').'|false';
+                                        echo $this->Lang->get('ERROR__INTERNAL_ERROR').'|false';
                                     } else {
-                                        echo $this->Lang->get('VOTE_SUCCESS').' ! ';
+                                        echo $this->Lang->get('VOTE__VOTE_SUCCESS').' ! ';
                                         if(!empty($success_msg)) {
-                                            echo $this->Lang->get('REWARDS').' : ';
+                                            echo $this->Lang->get('VOTE__REWARDS_TITLE').' : ';
 
                                             $i = 0;
                                             $count = count($success_msg);
@@ -311,18 +311,18 @@ class VoterController extends VoteAppController {
                                             if(empty($config['0']['VoteConfiguration']['servers'])) {
                                                 $cmd = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $rewards[$random]['command']);
                                                 $this->Server->send_command($cmd); // on envoie la commande puis enregistre le vote
-                                                $msg = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $this->Lang->get('VOTE_SUCCESS_SERVER'));
+                                                $msg = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $this->Lang->get('VOTE__SERVER_MESSAGE_SUCCESS'));
                                                 $this->Server->send_command('broadcast '.$msg);
                                             } else {
                                                 foreach ($config['0']['VoteConfiguration']['servers'] as $key => $value) {
                                                     $cmd = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $rewards[$reward]['command']);
                                                     $this->Server->send_command($cmd, $value); // on envoie la commande puis enregistre le vote
-                                                    $msg = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $this->Lang->get('VOTE_SUCCESS_SERVER'));
+                                                    $msg = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $this->Lang->get('VOTE__SERVER_MESSAGE_SUCCESS'));
                                                     $this->Server->send_command('broadcast '.$msg, $value);
                                                 }
                                             }
 
-                                            echo $this->Lang->get('VOTE_SUCCESS').' '.$this->Lang->get('REWARD').' : <b>'.$rewards[$reward]['name'].'</b>.|true';
+                                            echo $this->Lang->get('VOTE__VOTE_SUCCESS').' '.$this->Lang->get('VOTE__MESSAGE_VOTE_SUCCESS_REWARD').' : <b>'.$rewards[$reward]['name'].'</b>.|true';
 
                                         } else {
                                             echo $this->Lang->get('SERVER__MUST_BE_ON').'|false';
@@ -334,34 +334,34 @@ class VoterController extends VoteAppController {
                                         $money = $money + intval($rewards[$reward]['how']);
                                         $this->User->setToUser('money', $money, $this->Session->read('vote.pseudo'));
 
-                                        echo $this->Lang->get('VOTE_SUCCESS').' '.$this->Lang->get('REWARDS').' : <b>'.$rewards[$reward]['how'].' '.$this->Configuration->get_money_name().'</b>.|true';
+                                        echo $this->Lang->get('VOTE__VOTE_SUCCESS').' '.$this->Lang->get('VOTE__REWARDS_TITLE').' : <b>'.$rewards[$reward]['how'].' '.$this->Configuration->get_money_name().'</b>.|true';
 
                                     } else {
-                                        echo $this->Lang->get('INTERNAL_ERROR').'|false';
+                                        echo $this->Lang->get('ERROR__INTERNAL_ERROR').'|false';
                                     }
 
                                 }
                             } else { // si c'est plus tard
                                 $this->User->setKey('rewards_waited', ($this->User->getKey('rewards_waited') + 1));
-                                 echo $this->Lang->get('REWARDS_SUCCESS_SET_WAITED').'|true';
+                                 echo $this->Lang->get('VOTE__STEP_4_REWARD_SUCCESS_SAVE').'|true';
                             }
 
                             $this->Session->delete('vote');
 
                         } else {
-                            echo $this->Lang->get('ALREADY_VOTED').'|false';
+                            echo $this->Lang->get('VOTE__VOTE_ERROR_WAIT').'|false';
 
                             $this->Session->delete('vote');
                         }
                     } else {
-                        echo $this->Lang->get('ALREADY_VOTED').'|false';
+                        echo $this->Lang->get('VOTE__VOTE_ERROR_WAIT').'|false';
                     }
 
                 } else {
-                    echo $this->Lang->get('OUT_INVALID').'|false';
+                    echo $this->Lang->get('VOTE__STEP_3_ERROR').'|false';
                 }
             } else {
-                echo $this->Lang->get('UNKNOWN_USERNAME').'|false';
+                echo $this->Lang->get('VOTE__VOTE_ERROR_USER_UNKNOWN').'|false';
             }
         } else {
             throw new InternalErrorException();
@@ -418,13 +418,13 @@ class VoterController extends VoteAppController {
                             if(empty($config['0']['VoteConfiguration']['servers'])) {
                                 $cmd = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $value['command']);
                                 $this->Server->send_command($cmd); // on envoie la commande puis enregistre le vote
-                                $msg = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $this->Lang->get('VOTE_SUCCESS_SERVER'));
+                                $msg = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $this->Lang->get('VOTE__SERVER_MESSAGE_SUCCESS'));
                                 $this->Server->send_command('broadcast '.$msg);
                             } else {
                                 foreach ($config['0']['VoteConfiguration']['servers'] as $k2 => $v2) {
                                     $cmd = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $value['command']);
                                     $this->Server->send_command($cmd, $v2); // on envoie la commande puis enregistre le vote
-                                    $msg = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $this->Lang->get('VOTE_SUCCESS_SERVER'));
+                                    $msg = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $this->Lang->get('VOTE__SERVER_MESSAGE_SUCCESS'));
                                     $this->Server->send_command('broadcast '.$msg, $v2);
                                 }
                             }
@@ -454,12 +454,12 @@ class VoterController extends VoteAppController {
                     $this->Session->setFlash($this->Lang->get('SERVER__MUST_BE_ON'), 'default.error');
                     $this->redirect(array('controller' => 'user', 'action' => 'profile', 'plugin' => false));
                 } elseif (in_array('internal_error', $success_msg)) {
-                    $this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
+                    $this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
                     $this->redirect(array('controller' => 'user', 'action' => 'profile', 'plugin' => false));
                 } else {
-                    $flash = $this->Lang->get('VOTE_SUCCESS').' ! ';
+                    $flash = $this->Lang->get('VOTE__VOTE_SUCCESS').' ! ';
                     if(!empty($success_msg)) {
-                        $flash = $this->Lang->get('REWARDS').' : ';
+                        $flash = $this->Lang->get('VOTE__REWARDS_TITLE').' : ';
 
                         $i = 0;
                         $count = count($success_msg);
@@ -507,20 +507,20 @@ class VoterController extends VoteAppController {
                         if(empty($config['0']['VoteConfiguration']['servers'])) {
                             $cmd = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $rewards[$random]['command']);
                             $this->Server->send_command($cmd); // on envoie la commande puis enregistre le vote
-                            $msg = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $this->Lang->get('VOTE_SUCCESS_SERVER'));
+                            $msg = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $this->Lang->get('VOTE__SERVER_MESSAGE_SUCCESS'));
                             $this->Server->send_command('broadcast '.$msg);
                         } else {
                             foreach ($config['0']['VoteConfiguration']['servers'] as $key => $value) {
                                 $cmd = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $rewards[$reward]['command']);
                                 $this->Server->send_command($cmd, $value); // on envoie la commande puis enregistre le vote
-                                $msg = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $this->Lang->get('VOTE_SUCCESS_SERVER'));
+                                $msg = str_replace('{PLAYER}', $this->Session->read('vote.pseudo'), $this->Lang->get('VOTE__SERVER_MESSAGE_SUCCESS'));
                                 $this->Server->send_command('broadcast '.$msg, $value);
                             }
                         }
 
                         $this->User->setKey('rewards_waited', ($this->User->getKey('rewards_waited') - 1));
 
-                        $this->Session->setFlash($this->Lang->get('VOTE_SUCCESS').' '.$this->Lang->get('REWARD').' : <b>'.$rewards[$reward]['name'].'</b>.', 'default.success');
+                        $this->Session->setFlash($this->Lang->get('VOTE__VOTE_SUCCESS').' '.$this->Lang->get('VOTE__MESSAGE_VOTE_SUCCESS_REWARD').' : <b>'.$rewards[$reward]['name'].'</b>.', 'default.success');
                         $this->redirect(array('controller' => 'user', 'action' => 'profile', 'plugin' => false));
 
                     } else {
@@ -536,11 +536,11 @@ class VoterController extends VoteAppController {
 
                     $this->User->setKey('rewards_waited', ($this->User->getKey('rewards_waited') - 1));
 
-                    $this->Session->setFlash($this->Lang->get('VOTE_SUCCESS').' '.$this->Lang->get('REWARDS').' : <b>'.$rewards[$reward]['how'].' '.$this->Configuration->get_money_name().'</b>.', 'default.success');
+                    $this->Session->setFlash($this->Lang->get('VOTE__VOTE_SUCCESS').' '.$this->Lang->get('VOTE__REWARDS_TITLE').' : <b>'.$rewards[$reward]['how'].' '.$this->Configuration->get_money_name().'</b>.', 'default.success');
                     $this->redirect(array('controller' => 'user', 'action' => 'profile'));
 
                 } else {
-                    $this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
+                    $this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
                     $this->redirect(array('controller' => 'user', 'action' => 'profile', 'plugin' => false));
                 }
 
@@ -584,29 +584,29 @@ class VoterController extends VoteAppController {
             }
             $this->set(compact('selected_server'));
 
-            $this->set('title_for_layout',$this->Lang->get('VOTE_TITLE'));
+            $this->set('title_for_layout',$this->Lang->get('VOTE__TITLE'));
         } else {
             $this->redirect('/');
         }
     }
 
     public function admin_reset() {
+			$this->autoRender = false;
         if($this->isConnected AND $this->User->isAdmin()) {
-            $this->layout = null;
 
             $this->loadModel('Vote.Vote');
             $this->Vote->deleteAll(array('1' => '1'));
             $this->loadModel('User');
             $this->User->updateAll(array('vote' => 0));
             $this->History->set('RESET', 'vote');
-            $this->Session->setFlash($this->Lang->get('RESET_VOTE_SUCCESS'), 'default.success');
+            $this->Session->setFlash($this->Lang->get('VOTE__RESET_SUCCESS'), 'default.success');
             $this->redirect(array('controller' => 'voter', 'action' => 'index', 'admin' => true));
         }
     }
 
     public function admin_add_ajax() {
+			$this->autoRender = false;
         if($this->isConnected AND $this->User->isAdmin()) {
-            $this->layout = null;
 
             if($this->request->is('post')) {
                 if(!empty($this->request->data['servers']) AND !empty($this->request->data['website'][0]['page_vote']) AND !empty($this->request->data['website'][0]['time_vote']) AND !empty($this->request->data['website'][0]['website_type']) AND $this->request->data['rewards_type'] == '0' OR $this->request->data['rewards_type'] == '1') {
@@ -651,8 +651,8 @@ class VoterController extends VoteAppController {
                         ));
                         $this->VoteConfiguration->save();
                         $this->History->set('EDIT_CONFIG', 'vote');
-                        $this->Session->setFlash($this->Lang->get('CONFIGURATION_SAVE'), 'default.success');
-                        echo $this->Lang->get('CONFIGURATION_SAVE').'|true';
+                        $this->Session->setFlash($this->Lang->get('VOTE__CONFIGURATION_SUCCESS'), 'default.success');
+                        echo $this->Lang->get('VOTE__CONFIGURATION_SUCCESS').'|true';
                     } else {
                         echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
                     }

@@ -902,11 +902,15 @@ class EyPluginComponent extends Object {
 
       if(file_exists($this->pluginsFolder.DS.$pluginName.DS.'Controller'.DS.'Component'.DS.'MainComponent.php')) {
         App::uses('MainComponent', $this->pluginsFolder.DS.$pluginName.DS.'Controller'.DS.'Component');
-        $this->Main = new MainComponent();        // On lance l'event onEnable
-        $this->Main->onEnable();
+        if(class_exists('MainComponent')) {
+          $this->Main = new MainComponent();        // On lance l'event onEnable
+          $this->Main->onEnable();
+        }
       }
 
       CakePlugin::load(array($pluginName => array('routes' => true, 'bootstrap' => true))); // On load sur cake
+
+      return true;
     }
 
     public function disable($dbID) {
@@ -922,13 +926,17 @@ class EyPluginComponent extends Object {
 
       if(file_exists($this->pluginsFolder.DS.$pluginName.DS.'Controller'.DS.'Component'.DS.'MainComponent.php')) {
         App::uses('MainComponent', $this->pluginsFolder.DS.$pluginName.DS.'Controller'.DS.'Component');
-        $this->Main = new MainComponent();        // On lance l'event onEnable
-        $this->Main->onDisable();
+        if(class_exists('MainComponent')) {
+          $this->Main = new MainComponent();        // On lance l'event onDisable
+          $this->Main->onDisable();
+        }
       }
 
       CakePlugin::unload($pluginName); // On unload sur cake
 
       Cache::clear(false, '_cake_core_'); // vidons le cache
+
+      return true;
 
     }
 

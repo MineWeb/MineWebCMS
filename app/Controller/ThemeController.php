@@ -63,7 +63,7 @@ class ThemeController extends AppController{
 				$install = $this->Theme->install($apiID);
 
 				if(!$install) {
-					$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
+					$this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
           $this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
 				}
 
@@ -89,7 +89,7 @@ class ThemeController extends AppController{
 					$this->Session->setFlash($this->Lang->get('THEME__UPDATE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
 				} else {
-					$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
+					$this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
 					$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
 				}
 			} else {

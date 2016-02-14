@@ -4,7 +4,7 @@
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('VOTE_TITLE') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('VOTE__TITLE') ?></h3>
         </div>
         <div class="box-body">
 
@@ -13,7 +13,7 @@
             <div class="ajax-msg"></div>
 
             <div class="form-group">
-              <label><?= $Lang->get('REWARDS_TYPE') ?></label>
+              <label><?= $Lang->get('VOTE__CONFIG_REWARDS_TYPE') ?></label>
               <?php
                 if(@$vote['rewards_type'] == 0) {
                   $options = array('0' => $Lang->get('GLOBAL__RANDOM'), '1' => $Lang->get('GLOBAL__ALL'));
@@ -42,7 +42,7 @@
                 <div class="box box-info reward_list" id="reward-<?= $i ?>">
                   <div class="box-body">
                     <div class="form-group">
-                      <label><?= $Lang->get('REWARD_TYPE') ?></label>
+                      <label><?= $Lang->get('VOTE__CONFIG_REWARD_TYPE') ?></label>
                       <select name="type_reward" class="form-control reward_type">
                         <?php if($v['type'] == "money") { ?>
                           <option value="money"><?= $Lang->get('USER__MONEY') ?></option>
@@ -58,7 +58,7 @@
                       <input type="text" class="form-control reward_name" name="reward_name" value="<?= $v['name'] ?>">
                     </div>
                     <div class="form-group">
-                      <label><?= $Lang->get('REWARD_VALUE') ?></label>
+                      <label><?= $Lang->get('VOTE__CONFIG_REWARD_VALUE') ?></label>
                       <?php
                       if($v['type'] == "money") {
                         $reward_value = $v['how'];
@@ -66,11 +66,11 @@
                         $reward_value = $v['command'];
                       }
                       ?>
-                      <input type="text" name="reward_value" class="form-control reward_value" placeholder="<?= $Lang->get('CMD_OR_MONEY') ?>" value="<?= $reward_value ?>">
+                      <input type="text" name="reward_value" class="form-control reward_value" placeholder="<?= $Lang->get('VOTE__CONFIG_COMMAND_OR_MONEY') ?>" value="<?= $reward_value ?>">
                     </div>
                     <div class="form-group reward_proba_container" style="display:<?= (@$vote['rewards_type'] == 0) ? 'block' : 'none' ?>;">
-                      <label><?= $Lang->get('REWARD_PROBABILITY') ?></label>
-                      <input type="text" name="reward_proba" class="form-control reward_proba" value="<?= $v['proba'] ?>" placeholder="<?= $Lang->get('REWARD_PERCENTAGE') ?>">
+                      <label><?= $Lang->get('VOTE__CONFIG_REWARD_PROBABILITY') ?></label>
+                      <input type="text" name="reward_proba" class="form-control reward_proba" value="<?= $v['proba'] ?>" placeholder="<?= $Lang->get('VOTE__CONFIG_REWARD_PERCENTAGE') ?>">
                     </div>
                   </div>
                   <div class="box-footer">
@@ -82,7 +82,7 @@
               <div class="box box-info reward_list" id="reward-1">
                 <div class="box-body">
                   <div class="form-group">
-                    <label><?= $Lang->get('REWARD_TYPE') ?></label>
+                    <label><?= $Lang->get('VOTE__CONFIG_REWARD_TYPE') ?></label>
                     <select name="type_reward" class="form-control reward_type">
                       <option value="money"><?= $Lang->get('USER__MONEY') ?></option>
                       <option value="server"><?= $Lang->get('SERVER__TITLE') ?></option>
@@ -93,19 +93,19 @@
                     <input type="text" class="form-control reward_name" name="reward_name">
                   </div>
                   <div class="form-group">
-                    <label><?= $Lang->get('REWARD_VALUE') ?></label>
-                    <input type="text" name="reward_value" class="form-control reward_value" placeholder="<?= $Lang->get('CMD_OR_MONEY') ?>">
+                    <label><?= $Lang->get('VOTE__CONFIG_REWARD_VALUE') ?></label>
+                    <input type="text" name="reward_value" class="form-control reward_value" placeholder="<?= $Lang->get('VOTE__CONFIG_COMMAND_OR_MONEY') ?>">
                   </div>
                   <div class="form-group reward_proba_container" style="display:<?= (@$vote['rewards_type'] == 0) ? 'block' : 'none' ?>;">
-                    <label><?= $Lang->get('REWARD_PROBABILITY') ?></label>
-                    <input type="text" name="reward_proba" class="form-control reward_proba" value="<?= $v['proba'] ?>" placeholder="<?= $Lang->get('REWARD_PERCENTAGE') ?>">
+                    <label><?= $Lang->get('VOTE__CONFIG_REWARD_PROBABILITY') ?></label>
+                    <input type="text" name="reward_proba" class="form-control reward_proba" value="<?= $v['proba'] ?>" placeholder="<?= $Lang->get('VOTE__CONFIG_REWARD_PERCENTAGE') ?>">
                   </div>
                 </div>
             </div>
             <?php } ?>
             <div id="add-js" data-number="<?= $i ?>"></div>
             <div class="form-group">
-              <a href="#" id="add_reward" class="btn btn-info"><?= $Lang->get('ADD_REWARD') ?></a>
+              <a href="#" id="add_reward" class="btn btn-info"><?= $Lang->get('VOTE__CONFIG_ADD_REWARD') ?></a>
             </div>
 
             <hr>
@@ -115,26 +115,26 @@
                 <div class="box box-success websites" id="website-<?= $i ?>">
                   <div class="box-body">
                     <div class="form-group">
-                      <label><?= $Lang->get('TIME_VOTE') ?></label>
+                      <label><?= $Lang->get('VOTE__CONFIG_TIME_VOTE') ?></label>
                       <input name="time_vote" class="form-control" value="<?= $v['time_vote'] ?>" placeholder="minutes" type="text">
                     </div>
 
                     <div class="form-group">
-                      <label><?= $Lang->get('PAGE_VOTE') ?></label>
+                      <label><?= $Lang->get('VOTE__CONFIG_PAGE_VOTE') ?></label>
                       <input name="page_vote" class="form-control" value="<?= $v['page_vote'] ?>" placeholder="Ex: http://google.fr" type="text">
                     </div>
 
                     <div class="form-group">
-                      <label><?= $Lang->get('WEBSITE_TYPE') ?></label>
+                      <label><?= $Lang->get('VOTE__CONFIG_WEBSITE_TYPE') ?></label>
                       <select name="website_type" data-id="<?= $i ?>" class="form-control website_type">
-                        <option value="rpg"<?= ($v['website_type'] == "rpg") ? ' selected' : '' ?>><?= $Lang->get('WEBSITE_TYPE_RPG') ?></option>
-                        <option value="other"<?= ($v['website_type'] == "other") ? ' selected' : '' ?>><?= $Lang->get('WEBSITE_TYPE_OTHER') ?></option>
+                        <option value="rpg"<?= ($v['website_type'] == "rpg") ? ' selected' : '' ?>><?= $Lang->get('VOTE__CONFIG_WEBSITE_TYPE_RPG') ?></option>
+                        <option value="other"<?= ($v['website_type'] == "other") ? ' selected' : '' ?>><?= $Lang->get('VOTE__CONFIG_WEBSITE_TYPE_OTHER') ?></option>
                       </select>
                     </div>
 
                     <div id="rpg-<?= $i ?>" style="display:<?= ($v['website_type'] == "rpg") ? 'block' : 'none' ?>;">
                       <div class="form-group">
-                      <label><?= $Lang->get('ID_VOTE') ?></label>
+                      <label><?= $Lang->get('VOTE__CONFIG_ID_RPG') ?></label>
                         <input name="rpg_id" class="form-control" placeholder="Ex: 44835 (http://www.rpg-paradize.com/site-[...]-44835)" type="text" value="<?= @$v['rpg_id'] ?>">
                       </div>
                     </div>
@@ -148,26 +148,26 @@
               <div class="box box-success websites">
                 <div class="box-body">
                   <div class="form-group">
-                    <label><?= $Lang->get('TIME_VOTE') ?></label>
+                    <label><?= $Lang->get('VOTE__CONFIG_TIME_VOTE') ?></label>
                     <input name="time_vote" class="form-control" placeholder="minutes" type="text">
                   </div>
 
                   <div class="form-group">
-                    <label><?= $Lang->get('PAGE_VOTE') ?></label>
+                    <label><?= $Lang->get('VOTE__CONFIG_PAGE_VOTE') ?></label>
                     <input name="page_vote" class="form-control" placeholder="Ex: http://google.fr" type="text">
                   </div>
 
                   <div class="form-group">
-                    <label><?= $Lang->get('WEBSITE_TYPE') ?></label>
+                    <label><?= $Lang->get('VOTE__CONFIG_WEBSITE_TYPE') ?></label>
                     <select name="website_type" data-id="1" class="form-control website_type">
-                      <option value="rpg"><?= $Lang->get('WEBSITE_TYPE_RPG') ?></option>
-                      <option value="other"><?= $Lang->get('WEBSITE_TYPE_OTHER') ?></option>
+                      <option value="rpg"><?= $Lang->get('VOTE__CONFIG_WEBSITE_TYPE_RPG') ?></option>
+                      <option value="other"><?= $Lang->get('VOTE__CONFIG_WEBSITE_TYPE_OTHER') ?></option>
                     </select>
                   </div>
 
                   <div id="rpg-1" style="display:block;">
                     <div class="form-group">
-                    <label><?= $Lang->get('ID_VOTE') ?></label>
+                    <label><?= $Lang->get('VOTE__CONFIG_ID_RPG') ?></label>
                       <input name="rpg_id" class="form-control" placeholder="Ex: 44835 (http://www.rpg-paradize.com/site-[...]-44835)" type="text">
                     </div>
                   </div>
@@ -178,7 +178,7 @@
             <div id="website_content"></div>
 
             <div class="form-group">
-              <div class="btn btn-success btn-block" data-count="<?= $i ?>" id="add_website"><?= $Lang->get('ADD_WEBSITE') ?></div>
+              <div class="btn btn-success btn-block" data-count="<?= $i ?>" id="add_website"><?= $Lang->get('VOTE__CONFIG_ADD_WEBSITE') ?></div>
             </div>
 
             <div class="pull-right">
@@ -215,7 +215,7 @@
   $('#add_website').click(function(e) {
     e.preventDefault();
     var how = parseInt($(this).attr('data-count')) + 1;
-    var add = '<div class="box box-success websites"><div class="box-body"><div class="form-group"><label><?= addslashes($Lang->get('TIME_VOTE')) ?></label><input name="time_vote" class="form-control" placeholder="minutes" type="text"></div><div class="form-group"><label><?= addslashes($Lang->get('PAGE_VOTE')) ?></label><input name="page_vote" class="form-control" placeholder="Ex: http://google.fr" type="text"></div><div class="form-group"><label><?= addslashes($Lang->get('WEBSITE_TYPE')) ?></label><select name="website_type" data-id="'+how+'" class="form-control website_type"><option value="rpg"><?= addslashes($Lang->get('WEBSITE_TYPE_RPG')) ?></option><option value="other"><?= addslashes($Lang->get('WEBSITE_TYPE_OTHER')) ?></option></select></div><div id="rpg-'+how+'"><div class="form-group"><label><?= addslashes($Lang->get('ID_VOTE')) ?></label><input name="rpg_id" class="form-control" placeholder="Ex: 44835 (http://www.rpg-paradize.com/site-[...]-44835)" type="text"></div></div></div></div>';
+    var add = '<div class="box box-success websites"><div class="box-body"><div class="form-group"><label><?= addslashes($Lang->get('VOTE__CONFIG_TIME_VOTE')) ?></label><input name="time_vote" class="form-control" placeholder="minutes" type="text"></div><div class="form-group"><label><?= addslashes($Lang->get('VOTE__CONFIG_PAGE_VOTE')) ?></label><input name="page_vote" class="form-control" placeholder="Ex: http://google.fr" type="text"></div><div class="form-group"><label><?= addslashes($Lang->get('VOTE__CONFIG_WEBSITE_TYPE')) ?></label><select name="website_type" data-id="'+how+'" class="form-control website_type"><option value="rpg"><?= addslashes($Lang->get('VOTE__CONFIG_WEBSITE_TYPE_RPG')) ?></option><option value="other"><?= addslashes($Lang->get('VOTE__CONFIG_WEBSITE_TYPE_OTHER')) ?></option></select></div><div id="rpg-'+how+'"><div class="form-group"><label><?= addslashes($Lang->get('VOTE__CONFIG_ID_RPG')) ?></label><input name="rpg_id" class="form-control" placeholder="Ex: 44835 (http://www.rpg-paradize.com/site-[...]-44835)" type="text"></div></div></div></div>';
     $('#website_content').append(add);
     $(this).attr('data-count', how);
 
@@ -252,7 +252,7 @@
       var display_proba = 'none';
     }
 
-    var add = '<div class="box box-info reward_list" id="reward-'+how+'"><div class="box-body"><div class="form-group"><label><?= $Lang->get('REWARD_TYPE') ?></label><select name="type_reward" class="form-control reward_type"><option value="money"><?= $Lang->get('USER__MONEY') ?></option><option value="server"><?= $Lang->get('SERVER__TITLE') ?></option></select></div><div class="form-group"><label><?= $Lang->get('GLOBAL__NAME') ?></label><input type="text" class="form-control reward_name" name="reward_name"></div><div class="form-group"><label><?= $Lang->get('REWARD_VALUE') ?></label><input type="text" name="reward_value" class="form-control reward_value" placeholder="<?= $Lang->get('CMD_OR_MONEY') ?>"></div><div class="form-group reward_proba_container" style="display:'+display_proba+';"><label><?= $Lang->get('REWARD_PROBABILITY') ?></label><input type="text" name="reward_proba" class="form-control reward_proba" placeholder="<?= addslashes($Lang->get('REWARD_PERCENTAGE')) ?>"></div></div></div>';
+    var add = '<div class="box box-info reward_list" id="reward-'+how+'"><div class="box-body"><div class="form-group"><label><?= $Lang->get('VOTE__CONFIG_REWARD_TYPE') ?></label><select name="type_reward" class="form-control reward_type"><option value="money"><?= $Lang->get('USER__MONEY') ?></option><option value="server"><?= $Lang->get('SERVER__TITLE') ?></option></select></div><div class="form-group"><label><?= $Lang->get('GLOBAL__NAME') ?></label><input type="text" class="form-control reward_name" name="reward_name"></div><div class="form-group"><label><?= $Lang->get('VOTE__CONFIG_REWARD_VALUE') ?></label><input type="text" name="reward_value" class="form-control reward_value" placeholder="<?= $Lang->get('VOTE__CONFIG_COMMAND_OR_MONEY') ?>"></div><div class="form-group reward_proba_container" style="display:'+display_proba+';"><label><?= $Lang->get('VOTE__CONFIG_REWARD_PROBABILITY') ?></label><input type="text" name="reward_proba" class="form-control reward_proba" placeholder="<?= addslashes($Lang->get('VOTE__CONFIG_REWARD_PERCENTAGE')) ?>"></div></div></div>';
     $('#add-js').append(add);
     $('#add-js').attr('data-number', how);
   });

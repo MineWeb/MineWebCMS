@@ -157,7 +157,7 @@ $this->EyPlugin = new EyPluginComponent;
           } else if(data.statut == "error") {
             $('.ajax').empty().html('<div class="alert alert-error"><b><?= $Lang->get('GLOBAL__ERROR') ?> : '+data.msg+'</b></div>').fadeIn(500);
           } else {
-            $('.ajax').empty().html('<div class="alert alert-error"><b><?= $Lang->get('GLOBAL__ERROR') ?> : <?= addslashes($Lang->get('INTERNAL_ERROR')) ?></b></div>').fadeIn(500);
+            $('.ajax').empty().html('<div class="alert alert-error"><b><?= $Lang->get('GLOBAL__ERROR') ?> : <?= addslashes($Lang->get('ERROR__INTERNAL_ERROR')) ?></b></div>').fadeIn(500);
           }
 
         }

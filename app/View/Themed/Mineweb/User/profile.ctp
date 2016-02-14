@@ -13,7 +13,7 @@ $this->EyPlugin = new EyPluginComponent;
         				<?php } ?>
 						<span class="text-center"><?= $user['pseudo'] ?></span>
 						<?php if($this->EyPlugin->isInstalled('eywek.vote.3')) { ?>
-	        				<span class="pull-right hidden-xs"><span class="info"><?= $user['vote'] ?> <?= $Lang->get('VOTE') ?></span></span>
+	        				<span class="pull-right hidden-xs"><span class="info"><?= $user['vote'] ?> <?= $Lang->get('VOTE__TITLE_ACTION') ?></span></span>
 	        			<?php } elseif($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
 							<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index')) ?>" class="btn btn-primary pull-right"><?= $Lang->get('SHOP') ?></a>
 	        			<?php } ?>

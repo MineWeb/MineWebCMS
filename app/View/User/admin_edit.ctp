@@ -60,7 +60,7 @@ $this->Configuration = new ConfigurationComponent;
 
             <?php if($this->EyPlugin->isInstalled('eywek.vote.3')) { ?>
               <div class="form-group">
-                <label><?= $Lang->get('VOTE') ?></label>
+                <label><?= $Lang->get('VOTE__TITLE_ACTION') ?></label>
                	<input name="vote" class="form-control" value="<?= $search_user['vote'] ?>" type="text">
               </div>
             <?php } ?>

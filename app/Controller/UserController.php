@@ -186,7 +186,7 @@ class UserController extends AppController {
 							$this->Lostpassword->save();
 							echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__PASSWORD_FORGOT_EMAIL_SUCCESS')));
 						} else {
-							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('INTERNAL_ERROR')));
+							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__INTERNAL_ERROR')));
 						}
 					} else {
 						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_NOT_FOUND')));

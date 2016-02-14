@@ -89,7 +89,7 @@ $this->EyPlugin = new EyPluginComponent;
                   <li><a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true, 'plugin' => 'shop')) ?>"><i class="fa fa-shopping-cart"></i> <?= $Lang->get('SHOP') ?></a></li>
                 <?php } ?>
                 <?php if($this->EyPlugin->isInstalled('eywek.vote.3')) { ?>
-                  <li><a href="<?= $this->Html->url(array('controller' => 'voter', 'plugin' => 'vote', 'admin' => true, 'plugin' => 'vote')) ?>"><i class="fa fa-external-link"></i> <?= $Lang->get('VOTE') ?></a></li>
+                  <li><a href="<?= $this->Html->url(array('controller' => 'voter', 'plugin' => 'vote', 'admin' => true, 'plugin' => 'vote')) ?>"><i class="fa fa-external-link"></i> <?= $Lang->get('VOTE__TITLE_ACTION') ?></a></li>
                 <?php } ?>
                 <li><a href="<?= $this->Html->url(array('controller' => 'pages', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-file-text-o"></i> <?= $Lang->get('PAGE__TITLE') ?></a></li>
               </ul>

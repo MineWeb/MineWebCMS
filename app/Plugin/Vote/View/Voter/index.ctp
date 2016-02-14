@@ -2,7 +2,7 @@
 $this->Configuration = new ConfigurationComponent;
 ?>
 <div class="container vote">
-	<h1><?= $Lang->get('VOTE_TITLE') ?></h1><br>
+	<h1><?= $Lang->get('VOTE__TITLE') ?></h1><br>
 	<div class="row">
 		<div class="col-md-9">
 
@@ -11,12 +11,12 @@ $this->Configuration = new ConfigurationComponent;
 			<!-- Choose website -->
 				<div class="panel panel-default panel-step step0">
 				  <div class="panel-heading">
-				    <h3 class="panel-title"><?= $Lang->get('STEP') ?> 0 : <?= $Lang->get('CHOOSE_WEBSITE') ?> <i style="display:none" class="glyphicon glyphicon-ok"></i></h3>
+				    <h3 class="panel-title"><?= $Lang->get('VOTE__STEP_TITLE') ?> 0 : <?= $Lang->get('VOTE__STEP_0_TITLE') ?> <i style="display:none" class="glyphicon glyphicon-ok"></i></h3>
 				  </div>
 				  <div class="panel-body">
 				  	<?php foreach ($websites as $key => $value) { ?>
 				  		<div class="col-md-4">
-							<button class="btn btn-success choose_website btn-block" id="<?= $key ?>"><?= $Lang->get('WEBSITE_NBR') ?> <?= $key+1 ?></button>
+							<button class="btn btn-success choose_website btn-block" id="<?= $key ?>"><?= $Lang->get('VOTE__STEP_0_BTN') ?> <?= $key+1 ?></button>
 						</div>
 					<?php } ?>
 				  </div>
@@ -48,13 +48,13 @@ $this->Configuration = new ConfigurationComponent;
 			<!-- Choose username -->
 				<div class="panel panel-default panel-step step1" style="opacity : 0.5;">
 				  <div class="panel-heading">
-				    <h3 class="panel-title"><?= $Lang->get('STEP') ?> 1 : <?= $Lang->get('USER__LOGIN') ?> <i style="display:none" id="icon_step1" class="glyphicon glyphicon-ok"></i></h3>
+				    <h3 class="panel-title"><?= $Lang->get('VOTE__STEP_TITLE') ?> 1 : <?= $Lang->get('USER__LOGIN') ?> <i style="display:none" id="icon_step1" class="glyphicon glyphicon-ok"></i></h3>
 				  </div>
 				  <div class="panel-body">
 				    <form class="form-inline" id="step1">
 					  <div class="form-group">
 					    <label class="sr-only">Pseudo</label>
-					    <input type="text" class="form-control input-lg input-step1" name="pseudo" placeholder="<?= $Lang->get('MC_USERNAME') ?>">
+					    <input type="text" class="form-control input-lg input-step1" name="pseudo" placeholder="<?= $Lang->get('VOTE__MC_USERNAME') ?>">
 					  </div>
 					  <button type="submit" class="btn btn-info btn-lg btn-step1"><?= $Lang->get('USER__LOGIN') ?></button>
 					</form>
@@ -91,10 +91,10 @@ $this->Configuration = new ConfigurationComponent;
 			<!-- Vote -->
 				<div class="panel panel-default panel-step step2" style="opacity : 0.5;">
 				  <div class="panel-heading">
-				    <h3 class="panel-title"><?= $Lang->get('STEP') ?> 2 : <?= $Lang->get('DO_THE_VOTE') ?> <i style="display:none" id="icon_step2" class="glyphicon glyphicon-ok"></i></h3>
+				    <h3 class="panel-title"><?= $Lang->get('VOTE__STEP_TITLE') ?> 2 : <?= $Lang->get('VOTE__VOTE_ACTION') ?> <i style="display:none" id="icon_step2" class="glyphicon glyphicon-ok"></i></h3>
 				  </div>
 				  <div class="panel-body">
-				  	<p><?= $Lang->get('STEP_2_DESC_VOTE') ?></p>
+				  	<p><?= $Lang->get('VOTE__STEP_2_DESC') ?></p>
 				  	<a class="btn btn-info btn-block btn-step2 disabled" href="#" target="_blank">Voter</a>
 				  </div>
 				</div>
@@ -134,14 +134,14 @@ $this->Configuration = new ConfigurationComponent;
 			<!-- Verification of OUT -->
 				<div class="panel panel-default panel-step step3" style="display:none;opacity : 0.5;">
 				  <div class="panel-heading">
-				    <h3 class="panel-title"><?= $Lang->get('STEP') ?> 3 : <?= $Lang->get('TAKE_OUT') ?> <span class="sec"></span><i style="display:none" id="icon_step3" class="glyphicon glyphicon-ok"></i></h3>
+				    <h3 class="panel-title"><?= $Lang->get('VOTE__STEP_TITLE') ?> 3 : <?= $Lang->get('VOTE__STEP_3_TITLE') ?> <span class="sec"></span><i style="display:none" id="icon_step3" class="glyphicon glyphicon-ok"></i></h3>
 				  </div>
 				  <div class="panel-body">
-				  	<p><?= $Lang->get('STEP_3_DESC_VOTE') ?></p>
+				  	<p><?= $Lang->get('VOTE__STEP_3_DESC') ?></p>
 					<form class="form-inline" id="step3">
 					  <div class="form-group">
 					    <label class="sr-only">OUT</label>
-					    <input type="text" class="form-control input-step3" name="out" placeholder="<?= $Lang->get('NUMBER_OF_OUT') ?>" disabled="">
+					    <input type="text" class="form-control input-step3" name="out" placeholder="<?= $Lang->get('VOTE__STEP_3_INPUT_PLACEHOLDER') ?>" disabled="">
 					  </div>
 					  <button type="submit" class="btn btn-info btn-step3 disabled"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
 					</form>
@@ -178,12 +178,12 @@ $this->Configuration = new ConfigurationComponent;
 
 			<div class="panel panel-default panel-step step4" style="opacity : 0.5;">
 			  <div class="panel-heading">
-			    <h3 class="panel-title"><?= $Lang->get('STEP') ?> <span id="step4_title">3</span> : <?= $Lang->get('REWARDS') ?> <span class="sec"></span><i style="display:none" id="icon_step4" class="glyphicon glyphicon-ok"></i></h3>
+			    <h3 class="panel-title"><?= $Lang->get('VOTE__STEP_TITLE') ?> <span id="step4_title">3</span> : <?= $Lang->get('VOTE__REWARDS_TITLE') ?> <span class="sec"></span><i style="display:none" id="icon_step4" class="glyphicon glyphicon-ok"></i></h3>
 			  </div>
 			  <div class="panel-body">
-			  	<p><?= $Lang->get('STEP_4_DESC_VOTE') ?></p>
-			  	<button class="btn btn-success btn-block btn-step4 disabled" id="now"><?= $Lang->get('GET_REWARDS_NOW') ?></button>
-			  	<button class="btn btn-success btn-block btn-step4 disabled" id="later"><?= $Lang->get('GET_REWARDS_LATER') ?></button>
+			  	<p><?= $Lang->get('VOTE__STEP_4_DESC') ?></p>
+			  	<button class="btn btn-success btn-block btn-step4 disabled" id="now"><?= $Lang->get('VOTE__STEP_4_REWARD_NOW') ?></button>
+			  	<button class="btn btn-success btn-block btn-step4 disabled" id="later"><?= $Lang->get('VOTE__STEP_4_REWARD_LATER') ?></button>
 			  </div>
 			  	<div class="response_step4"></div>
 			</div>
@@ -195,7 +195,7 @@ $this->Configuration = new ConfigurationComponent;
 		    	<div class="modal-content">
 		      		<div class="modal-header">
 		        		<button type="button" class="close" data-dismiss="modal" aria-label="<?= $Lang->get('GLOBAL__CLOSE') ?>"><span aria-hidden="true">×</span></button>
-		        		<h4 class="modal-title" id="myModalLabel"><?= $Lang->get('REWARDS') ?></h4>
+		        		<h4 class="modal-title" id="myModalLabel"><?= $Lang->get('VOTE__REWARDS_TITLE') ?></h4>
 		      		</div>
 		      		<div class="modal-body">
 		      			<table class="table table-striped">
@@ -230,7 +230,7 @@ $this->Configuration = new ConfigurationComponent;
 		    	<div class="modal-content">
 		      		<div class="modal-header">
 		        		<button type="button" class="close" data-dismiss="modal" aria-label="<?= $Lang->get('GLOBAL__CLOSE') ?>"><span aria-hidden="true">×</span></button>
-		        		<h4 class="modal-title" id="myModalLabel"><?= $Lang->get('RANKING') ?></h4>
+		        		<h4 class="modal-title" id="myModalLabel"><?= $Lang->get('VOTE__RANKING_TITLE') ?></h4>
 		      		</div>
 		      		<div class="modal-body">
 		      			<table class="table table-striped">
