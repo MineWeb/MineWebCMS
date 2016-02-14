@@ -171,25 +171,25 @@ class UtilComponent extends Object {
 
   // Retourne un item aléatoire selon sa probabilité
 
-    public function random($items, $probabilityTotal) {
-        $pct = 1000;
-        $rand = mt_rand(0, $pct);
-        $items = array();
+    public function random($list, $probabilityTotal) {
+      $pct = 1000;
+      $rand = mt_rand(0, $pct);
+      $items = array();
 
-        foreach ($items as $key => $value) {
-            $items[$key] = $value / $probabilityTotal;
-        }
+      foreach ($list as $key => $value) {
+          $items[$key] = $value / $probabilityTotal;
+      }
 
-        $i = 0;
-        asort($items);
+      $i = 0;
+      asort($items);
 
-        foreach ($items as $name => $value) {
-            if ($rand <= $i+=($value * $pct)) {
-                $reward = $name;
-                break;
-            }
-        }
-        return $reward;
+      foreach ($items as $name => $value) {
+          if ($rand <= $i+=($value * $pct)) {
+              $item = $name;
+              break;
+          }
+      }
+      return $item;
     }
 
 

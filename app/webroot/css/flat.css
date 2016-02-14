@@ -155,6 +155,6 @@ Pages
 .panel .panel-body {
 	background: white;
 	padding: 30px;
-	border: 1px solid #EEE;
+	/*border: 1px solid #EEE;*/
 	margin: 10px 0;
 }

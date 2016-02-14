@@ -1,3 +1,3 @@
 <div class="alert alert-success alert-dismissible" role="alert">
-  <strong><?= $Lang->get('GLOBAL__SUCCESS') ?> :</strong> <?php echo h($message); ?>
+  <strong><?= (isset($Lang)) ? $Lang->get('GLOBAL__SUCCESS') : 'Success' ?> :</strong> <?php echo h($message); ?>
 </div>
