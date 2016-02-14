@@ -22,7 +22,7 @@ class APIComponent extends Object {
 
   	$this->User = ClassRegistry::init('User');
 
-  	$this->mineguard_active = $this->Configuration->get('mineguard');
+  	$this->mineguard_active = $this->Configuration->getKey('mineguard');
   	if($this->mineguard_active == "true") {
   		$this->mineguard_active = true;
   	} else {
@@ -52,7 +52,7 @@ class APIComponent extends Object {
 	public function set($key, $value) {
       $this->Configuration = ClassRegistry::init('ApiConfiguration');
       $this->Configuration->read(null, 1);
-      $this->Configuration->set(array($key => $value));
+      $this->Configuration->setKey(array($key => $value));
       if($this->Configuration->save()) {
         return true;
       } else {

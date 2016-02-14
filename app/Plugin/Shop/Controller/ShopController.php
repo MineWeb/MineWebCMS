@@ -10,7 +10,7 @@ class ShopController extends ShopAppController {
 		if($category) {
 			$this->set(compact('category'));
 		}
-		$this->layout = $this->Configuration->get_layout(); // On charge le thème configuré
+		$this->layout = $this->Configuration->getKey('layout'); // On charge le thème configuré
 		$this->loadModel('Shop.Item'); // le model des articles
 		$this->loadModel('Shop.Category'); // le model des catégories
 		$search_items = $this->Item->find('all'); // on cherche tous les items et on envoie à la vue
@@ -36,13 +36,13 @@ class ShopController extends ShopAppController {
 		$money = 0;
 		if($this->isConnected) {
 			$money = $this->User->getKey('money') . ' ';
-        	$money += ($this->User->getKey('money') == 1 OR $this->User->getKey('money') == 0) ? $this->Configuration->get_money_name(false, true) : $this->Configuration->get_money_name();
+        	$money += ($this->User->getKey('money') == 1 OR $this->User->getKey('money') == 0) ? $this->Configuration->getMoneyName(false) : $this->Configuration->getMoneyName();
         }
 
         $vouchers = $this->DiscountVoucher;
 
-        $singular_money = $this->Configuration->get_money_name(false, true);
-        $plural_money = $this->Configuration->get_money_name(false, true);
+        $singular_money = $this->Configuration->getMoneyName(false);
+        $plural_money = $this->Configuration->getMoneyName();
 
 		$this->set(compact('paysafecard_enabled', 'money', 'starpass_offers', 'paypal_offers', 'search_first_category', 'search_categories', 'search_items', 'title_for_layout', 'vouchers', 'singular_money', 'plural_money'));
 	}
@@ -53,7 +53,7 @@ class ShopController extends ShopAppController {
 		if($this->isConnected AND $this->Permissions->can('CAN_BUY')) { // si l'utilisateur est connecté
 			$this->loadModel('Shop.Item'); // je charge le model des articles
 			$search_item = $this->Item->find('all', array('conditions' => array('id' => $id))); // je cherche l'article selon l'id
-			if($search_item['0']['Item']['price'] == 1) { $money = $this->Configuration->get_money_name(false, true); } else { $money = $this->Configuration->get_money_name(); } // je dis que la variable $money = le nom de la money au pluriel ou singulier selon le prix
+			$money = ($search_item['0']['Item']['price'] == 1) ?  $this->Configuration->getMoneyName(false) : $this->Configuration->getMoneyName();// je dis que la variable $money = le nom de la money au pluriel ou singulier selon le prix
 			if(!empty($search_item[0]['Item']['servers'])) {
 				$this->loadModel('Server');
 				$search_servers_list = $this->Server->find('all');
@@ -76,8 +76,8 @@ class ShopController extends ShopAppController {
 
 
 			//On récupére l'element
-			if(file_exists(APP.DS.'View'.DS.'Themed'.DS.$this->Configuration->get('theme').DS.'Element'.DS.'modal_buy.ctp')) {
-				$element_content = file_get_contents(APP.DS.'View'.DS.'Themed'.DS.$this->Configuration->get('theme').DS.'Element'.DS.'modal_buy.ctp');
+			if(file_exists(APP.DS.'View'.DS.'Themed'.DS.$this->Configuration->getKey('theme').DS.'Element'.DS.'modal_buy.ctp')) {
+				$element_content = file_get_contents(APP.DS.'View'.DS.'Themed'.DS.$this->Configuration->getKey('theme').DS.'Element'.DS.'modal_buy.ctp');
 			} else {
 				$element_content = file_get_contents($this->EyPlugin->pluginsFolder.DS.'Shop'.DS.'View'.DS.'Element'.DS.'modal_buy.ctp');
 			}
@@ -925,7 +925,7 @@ class ShopController extends ShopAppController {
 					$this->set('idp', $search[0]['Starpass']['idp']);
 					$this->set('money', $search[0]['Starpass']['money']);
 					$this->set('title_for_layout', $this->Lang->get('CREDIT_STARPASS'));
-					$this->layout = $this->Configuration->get_layout();
+					$this->layout = $this->Configuration->getKey('layout');
 				} else {
 					throw new NotFoundException();
 				}

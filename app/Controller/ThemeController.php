@@ -21,7 +21,7 @@ class ThemeController extends AppController{
 			if($slug != false) {
 
 				$this->layout = null;
-				$this->Configuration->set('theme', $slug);
+				$this->Configuration->setKey('theme', $slug);
 				$this->History->set('SET_THEME', 'theme');
 				$this->Session->setFlash($this->Lang->get('THEME__ENABLED_SUCCESS'), 'default.success');
 				$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
@@ -38,7 +38,7 @@ class ThemeController extends AppController{
 			if($slug != false) {
 
 				$this->layout = null;
-				if($this->Configuration->get('theme') != $slug) {
+				if($this->Configuration->getKey('theme') != $slug) {
 					clearDir(ROOT.'/app/View/Themed/'.$slug);
 					$this->History->set('DELETE_THEME', 'theme');
 					$this->Session->setFlash($this->Lang->get('THEME__DELETE_SUCCESS'), 'default.success');

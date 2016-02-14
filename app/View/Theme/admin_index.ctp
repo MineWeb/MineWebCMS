@@ -21,7 +21,7 @@
                   <td>Bootstrap</td>
                   <td>
                     <?php
-                    if('default' == $Configuration->get('theme')) {
+                    if('default' == $Configuration->getKey('theme')) {
                       echo '<span class="label label-success">'.$Lang->get('GLOBAL__ENABLED').'</span>';
                     } else {
                       echo '<span class="label label-danger">'.$Lang->get('GLOBAL__DISABLED').'</span>';
@@ -32,7 +32,7 @@
                     <span class="label label-success"><?= $Lang->get('GLOBAL__YES') ?></span>
                   </td>
                   <td>
-                     <?php if('default' != $Configuration->get('theme')) { ?>
+                     <?php if('default' != $Configuration->getKey('theme')) { ?>
                       <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable/default', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ENABLED') ?></a>
                      <?php } ?>
                      <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom/default', 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('THEME__CUSTOMIZATION') ?></a>
@@ -44,7 +44,7 @@
                       <td><?= $value->name ?></td>
                       <td>
                         <?php
-                        if($value->slug == $Configuration->get('theme')) {
+                        if($value->slug == $Configuration->getKey('theme')) {
                           echo '<span class="label label-success">'.$Lang->get('GLOBAL__ENABLED').'</span>';
                         } else {
                           echo '<span class="label label-danger">'.$Lang->get('GLOBAL__DISABLED').'</span>';
@@ -62,7 +62,7 @@
                         ?>
                       </td>
                       <td>
-                        <?php if($value->slug != $Configuration->get('theme')) { ?>
+                        <?php if($value->slug != $Configuration->getKey('theme')) { ?>
                           <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable/'.$value->slug, 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ENABLED') ?></a>
                         <?php } ?>
                           <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'theme', 'action' => 'delete/'.$value->slug, 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>

@@ -36,9 +36,9 @@ class UserController extends AppController {
 			if(!empty($this->request->data['pseudo']) && !empty($this->request->data['password']) && !empty($this->request->data['password_confirmation']) && !empty($this->request->data['email'])) { // si tout les champs sont bien remplis
 
 				// Captcha
-				if($this->Configuration->get('captcha_type') == "2") { // ReCaptcha
+				if($this->Configuration->getKey('captcha_type') == "2") { // ReCaptcha
 
-					$validCaptcha = $this->Util->isValidReCaptcha($this->request->data['recaptcha'], $_SERVER['REMOTE_ADDR'], $this->Configuration->get('captcha_google_secret'));
+					$validCaptcha = $this->Util->isValidReCaptcha($this->request->data['recaptcha'], $_SERVER['REMOTE_ADDR'], $this->Configuration->getKey('captcha_google_secret'));
 
 				} else {
 
@@ -57,7 +57,7 @@ class UserController extends AppController {
 						$userSession = $this->User->register($this->request->data);
 
 						// On envoie le mail de confirmation si demandé
-						if($this->Configuration->get('confirm_mail_signup')) {
+						if($this->Configuration->getKey('confirm_mail_signup')) {
 
 							$confirmCode = substr(md5(uniqid()), 0, 12);
 
@@ -83,7 +83,7 @@ class UserController extends AppController {
 
 						}
 
-						if(!$this->Configuration->get('confirm_mail_signup_block')) { // si on doit pas bloquer le compte si non confirmé
+						if(!$this->Configuration->getKey('confirm_mail_signup_block')) { // si on doit pas bloquer le compte si non confirmé
 							// on prépare la connexion
 							$this->Session->write('user', $userSession);
 							$this->getEventManager()->dispatch(new CakeEvent('onLogin', array($this->request->data, $userSession, 'register' => true)));
@@ -111,7 +111,7 @@ class UserController extends AppController {
 		if($this->request->is('Post')) {
 			if(!empty($this->request->data['pseudo']) && !empty($this->request->data['password'])) {
 
-				$need_confirmed_email = ($this->Configuration->get('confirm_mail_signup') && $this->Configuration->get('confirm_mail_signup_block'));
+				$need_confirmed_email = ($this->Configuration->getKey('confirm_mail_signup') && $this->Configuration->getKey('confirm_mail_signup_block'));
 
 				$login = $this->User->login($this->request->data, $need_confirmed_email);
 				if(isset($login['status']) && $login['status'] === true) {
@@ -175,7 +175,7 @@ class UserController extends AppController {
 						$key = substr(md5(rand().date('sihYdm')), 0, 10);
 
 						$to = $this->request->data['email'];
-						$subject = $this->Lang->get('USER__PASSWORD_RESET_LINK').' | '.$this->Configuration->get('name').'';
+						$subject = $this->Lang->get('USER__PASSWORD_RESET_LINK').' | '.$this->Configuration->getKey('name').'';
 						$message = $this->Lang->email_reset($this->request->data['email'], $search['User']['pseudo'], $key);
 						if($this->Util->prepareMail($to, $subject, $message)->sendMail()) {
 							$this->Lostpassword->create();
@@ -331,7 +331,7 @@ class UserController extends AppController {
 			$this->loadModel('User');
 
 			$this->set('title_for_layout', $this->User->getKey('pseudo'));
-			$this->layout= $this->Configuration->get_layout();
+			$this->layout= $this->Configuration->getKey('layout');
 			if($this->EyPlugin->isInstalled('eywek.shop.1')) {
 
 				$this->set('shop_active', true);
@@ -373,7 +373,7 @@ class UserController extends AppController {
 
 			$this->set(compact('skin_width_max', 'skin_height_max', 'cape_width_max', 'cape_height_max'));
 
-			if($this->Configuration->get('confirm_mail_signup') && !empty($this->User->getKey('confirmed')) && date('Y-m-d H:i:s', strtotime($this->User->getKey('confirmed'))) != $this->User->getKey('confirmed')) { // si ca ne correspond pas à une date -> compte non confirmé
+			if($this->Configuration->getKey('confirm_mail_signup') && !empty($this->User->getKey('confirmed')) && date('Y-m-d H:i:s', strtotime($this->User->getKey('confirmed'))) != $this->User->getKey('confirmed')) { // si ca ne correspond pas à une date -> compte non confirmé
 				$this->Session->setFlash($this->Lang->get('USER__MSG_NOT_CONFIRMED_EMAIL'), 'default.warning');
 			}
 
@@ -473,7 +473,7 @@ class UserController extends AppController {
 			$this->set('title_for_layout',$this->Lang->get('USER__TITLE'));
 			$this->layout = 'admin';
 
-			$this->set('type', $this->Configuration->get('member_page_type'));
+			$this->set('type', $this->Configuration->getKey('member_page_type'));
 
 		} else {
 			$this->redirect('/');
@@ -576,7 +576,7 @@ class UserController extends AppController {
 						}
 					}
 
-					if($this->Configuration->get('confirm_mail_signup') && !empty($search_user['confirmed']) && date('Y-m-d H:i:s', strtotime($user['confirmed'])) != $user['confirmed']) {
+					if($this->Configuration->getKey('confirm_mail_signup') && !empty($search_user['confirmed']) && date('Y-m-d H:i:s', strtotime($user['confirmed'])) != $user['confirmed']) {
 						$search_user['confirmed'] = false;
 					} else {
 						$search_user['confirmed'] = true;

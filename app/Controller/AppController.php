@@ -46,7 +46,7 @@ function rsa_decrypt($data, $privateKey) {
  */
 class AppController extends Controller {
 
-	var $components = array('Module', 'Session', 'Security', 'Configuration', 'EyPlugin', 'Theme', 'History', 'Statistics', 'Permissions', 'Lang', 'Update', 'Server', 'Util');
+	var $components = array('Util', 'Module', 'Session', 'Security', 'EyPlugin', 'Theme', 'History', 'Statistics', 'Permissions', 'Lang', 'Update', 'Server');
 	var $helpers = array('Session');
 
 	var $view = 'Theme';
@@ -59,6 +59,9 @@ class AppController extends Controller {
       $this->apiCall($this->request->data['key'], $this->request->data['isForDebug']);
       return;
     }
+
+    $this->loadModel('Configuration');
+    $this->set('Configuration', $this->Configuration);
 
 		$this->Security->blackHoleCallback = 'blackhole';
 		$this->Security->validatePost = false;
@@ -98,7 +101,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 			$plugins = $this->EyPlugin->loadPlugins();
 
       $return = $this->sendToAPI(
-                  array('version' => $this->Configuration->get('version')),
+                  array('version' => $this->Configuration->getKey('version')),
                   'key_verif',
                   true
                 );
@@ -258,9 +261,9 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
           	}*/
 
 			// Configuration Thème/Générale
-			$website_name = $this->Configuration->get('name');
+			$website_name = $this->Configuration->getKey('name');
 
-			$theme_name = $this->Configuration->get('theme');
+			$theme_name = $this->Configuration->getKey('theme');
 
 			if(strtolower($theme_name) == "default") {
 				$theme_config = file_get_contents(ROOT.'/config/theme.default.json');
@@ -271,7 +274,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 
 			// Info serveur
 			if($this->params['prefix'] !== "admin") {
-				$banner_server = $this->Configuration->get('banner_server');
+				$banner_server = $this->Configuration->getKey('banner_server');
 	    	if(empty($banner_server)) {
 	      	if($this->Server->online()) {
 	        		//$banner_server = $this->Lang->banner_server($this->Server->banner_infos());
@@ -323,25 +326,25 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
     }
 
   	// socials links
-  	$facebook_link = $this->Configuration->get('facebook');
-  	$skype_link = $this->Configuration->get('skype');
-  	$youtube_link = $this->Configuration->get('youtube');
-  	$twitter_link = $this->Configuration->get('twitter');
+  	$facebook_link = $this->Configuration->getKey('facebook');
+  	$skype_link = $this->Configuration->getKey('skype');
+  	$youtube_link = $this->Configuration->getKey('youtube');
+  	$twitter_link = $this->Configuration->getKey('twitter');
 
     // Config
-    $google_analytics = $this->Configuration->get('google_analytics');
-    $configuration_end_code = $this->Configuration->get('end_layout_code');
+    $google_analytics = $this->Configuration->getKey('google_analytics');
+    $configuration_end_code = $this->Configuration->getKey('end_layout_code');
 
     $this->loadModel('SocialButton');
     $findSocialButtons = $this->SocialButton->find('all');
 
-    $reCaptcha['type'] = ($this->Configuration->get('captcha_type') == '2') ? 'google' : 'default';
-    $reCaptcha['siteKey'] = $this->Configuration->get('captcha_google_sitekey');
+    $reCaptcha['type'] = ($this->Configuration->getKey('captcha_type') == '2') ? 'google' : 'default';
+    $reCaptcha['siteKey'] = $this->Configuration->getKey('captcha_google_sitekey');
 
 			// on set tout
 			$this->set(compact('nav', 'reCaptcha', 'website_name', 'theme_config', 'banner_server', 'user', 'csrfToken', 'facebook_link', 'skype_link', 'youtube_link', 'twitter_link', 'findSocialButtons', 'google_analytics', 'configuration_end_code'));
 
-		if($this->params['controller'] == "user" OR $this->params['controller'] == "maintenance" OR $this->Configuration->get('maintenance') == '0' OR $this->isConnected AND $this->User->isAdmin()) {
+		if($this->params['controller'] == "user" OR $this->params['controller'] == "maintenance" OR $this->Configuration->getKey('maintenance') == '0' OR $this->isConnected AND $this->User->isAdmin()) {
 		} else {
 			$this->redirect(array('controller' => 'maintenance', 'action' => 'index', 'plugin' => false, 'admin' => false));
 		}
@@ -357,10 +360,10 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 
       $this->autoRender = false;
 
-      $infos['general']['first_administrator'] = $this->Configuration->get_first_admin();
-      $infos['general']['created'] = $this->Configuration->get_created_date();
+      $infos['general']['first_administrator'] = $this->Configuration->getFirstAdministrator();
+      $infos['general']['created'] = $this->Configuration->getInstalledDate();
       $infos['general']['url'] = Router::url('/', true);
-      $config = $this->Configuration->get_all();
+      $config = $this->Configuration->getAll();
       foreach ($config as $key => $value) {
         foreach ($value as $k => $v) {
           if(($k == "smtpPassword" && !empty($v)) || ($k == "smtpUsername" && !empty($v))) {

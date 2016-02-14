@@ -5,7 +5,7 @@ class HomeController extends AppController {
 
     public function index() {
         $this->set('title_for_layout',"Support");
-    	$this->layout = $this->Configuration->get_layout();
+    	$this->layout = $this->Configuration->getKey('layout');
         $this->loadModel('Support.Ticket');
     	$tickets = $this->Ticket->find('all', array('order' => array('id' => 'desc')));
     	$this->set(compact('tickets'));

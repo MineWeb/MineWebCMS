@@ -14,7 +14,13 @@ class UtilComponent extends Object {
 	function shutdown(&$controller) {}
 	function beforeRender(&$controller) {}
   function beforeRedirect() {}
-  function initialize(&$controller) {$this->controller =& $controller;}
+  function initialize(&$controller) {
+    $this->controller =& $controller;
+
+    if($this->controller->Configuration === NULL) {
+      $this->controller->Configuration = ClassRegistry::init('Configuration');
+    }
+  }
   function startup(&$controller) {}
 
   /*

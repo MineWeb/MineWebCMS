@@ -1,8 +1,4 @@
-<?php
-$this->Configuration = new ConfigurationComponent;
-$this->EyPlugin = new EyPluginComponent;
-?>
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -47,9 +43,9 @@ $this->EyPlugin = new EyPluginComponent;
                               <?php
                               echo $user['money'] . ' ';
                               if($user['money'] == 1 OR $user['money'] == 0) {
-                                echo  $this->Configuration->get_money_name(false, true);
+                                echo  $Configuration->getMoneyName(false);
                               } else {
-                                echo  $this->Configuration->get_money_name();
+                                echo  $Configuration->getMoneyName();
                               } ?>
                             </span>
                             <div class="clearfix"></div>
@@ -60,7 +56,7 @@ $this->EyPlugin = new EyPluginComponent;
 
                             <?php if($Permissions->can('ACCESS_DASHBOARD')) { ?>
                               <a style="color:red;" class="btn btn-primary btn-block" href="<?= $this->Html->url(array('controller' => '', 'action' => 'index', 'plugin' => 'admin')) ?>"><?= $Lang->get('GLOBAL__ADMIN_PANEL') ?></a>
-                            <?php } elseif($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
+                            <?php } elseif($EyPlugin->isInstalled('eywek.shop.1')) { ?>
                               <a class="btn btn-primary btn-block" href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'plugin' => 'shop')) ?>"><?= $Lang->get('ADD_MONEY') ?></a>
                             <?php } ?>
 

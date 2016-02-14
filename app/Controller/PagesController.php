@@ -50,7 +50,7 @@ class PagesController extends AppController {
 
 	public function display() {
 
-		$this->layout = $this->Configuration->get_layout();
+		$this->layout = $this->Configuration->getKey('layout');
 
 		$passwd = explode('?' ,$_SERVER['REQUEST_URI']); // on récupére l'url
 		if(isset($passwd[1])) { // si il y a un truc en plus
@@ -158,7 +158,7 @@ class PagesController extends AppController {
 			$this->loadModel('Page');
 			$search = $this->Page->find('all', array('conditions' => array('slug' => $slug)));
 			if(!empty($search)) {
-				$this->layout = $this->Configuration->get('layout');
+				$this->layout = $this->Configuration->getKey('layout');
 				$page = $search[0]['Page'];
 
 				// Parser variables

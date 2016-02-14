@@ -1,7 +1,3 @@
-<?php
-$this->EyPlugin = new EyPluginComponent;
-$this->Configuration = new ConfigurationComponent;
-?>
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6">
@@ -15,7 +11,7 @@ $this->Configuration = new ConfigurationComponent;
 			  	if($search_psc_msg != false AND !empty($search_psc_msg)) {
 			  		foreach ($search_psc_msg as $key => $value) {
 			  			if($value['PaysafecardMessage']['type'] == 1) {
-			  				echo '<div class="alert alert-success"><b>'.$Lang->get('GLOBAL__SUCCESS').' :</b> '.$Lang->get('YOUR_PSC_OF').' '.$value['PaysafecardMessage']['amount'].'€ '.$Lang->get('IS_VALID_GAIN').' : '.$value['PaysafecardMessage']['added_points'].' '.$this->Configuration->get_money_name().'.</div>';
+			  				echo '<div class="alert alert-success"><b>'.$Lang->get('GLOBAL__SUCCESS').' :</b> '.$Lang->get('YOUR_PSC_OF').' '.$value['PaysafecardMessage']['amount'].'€ '.$Lang->get('IS_VALID_GAIN').' : '.$value['PaysafecardMessage']['added_points'].' '.$Configuration->get_money_name().'.</div>';
 			  			} elseif ($value['PaysafecardMessage']['type'] == 0) {
 			  				echo '<div class="alert alert-danger"><b>'.$Lang->get('GLOBAL__ERROR').' :</b> '.$Lang->get('YOUR_PSC_OF').' '.$value['PaysafecardMessage']['amount'].'€ '.$Lang->get('IS_INVALID').'</div>';
 			  			}
@@ -39,7 +35,7 @@ $this->Configuration = new ConfigurationComponent;
 						} ?>
 					</p>
 				</div>
-				<?php if($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
+				<?php if($EyPlugin->isInstalled('eywek.shop.1')) { ?>
 					<div class="section">
 						<p><b><?= $Lang->get('USER__MONEY') ?> :</b> <span class="money"><?= $user['money'] ?></span></p>
 					</div>
@@ -110,7 +106,7 @@ $this->Configuration = new ConfigurationComponent;
 
 				<?php } ?>
 
-				<?php if($this->Configuration->get('mineguard') == "true") { ?>
+				<?php if($Configuration->getKey('mineguard') == "true") { ?>
 
 					<hr>
 
@@ -214,7 +210,7 @@ $this->Configuration = new ConfigurationComponent;
 		</div>
 	</div>
 <script type="text/javascript">
-	<?php if($this->Configuration->get('mineguard') == "true") { ?>
+	<?php if($Configuration->getKey('mineguard') == "true") { ?>
 
 		function enableMineGuard() {
 			$.post("<?= $this->Html->url(array('controller' => 'api', 'action' => 'enable_mineguard', 'admin' => false)) ?>", {}, function(data) {

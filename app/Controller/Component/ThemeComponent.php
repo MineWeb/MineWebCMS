@@ -267,7 +267,7 @@ class ThemeComponent extends Object {
           $operator = (count($versionExploded) == 2) ? $versionExploded[0] : '='; // On récupére l'opérateur et la version qui sont définis
           $versionNeeded = (count($versionExploded) == 2) ? $versionExploded[1] : $version;
 
-          if(!version_compare($this->Configuration->get('version'), $versionNeeded, $operator)) { // Si la version du CMS ne correspond pas à ce qui est demandé
+          if(!version_compare($this->Configuration->getKey('version'), $versionNeeded, $operator)) { // Si la version du CMS ne correspond pas à ce qui est demandé
             $return['CMS'] = $operator.' '.$versionNeeded;
           }
 

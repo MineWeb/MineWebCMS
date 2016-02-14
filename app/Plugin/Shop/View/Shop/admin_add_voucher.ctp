@@ -60,14 +60,14 @@
               <label><?= $Lang->get('TYPE') ?></label>
               <select class="form-control" name="type">
                 <option value="" selected><?= $Lang->get('CHOOSE_TYPE') ?></option>
-                <option value="2"><?= $Configuration->get_money_name(false, true) ?></option>
+                <option value="2"><?= $Configuration->getMoneyName(false) ?></option>
                 <option value="1"><?= $Lang->get('PERCENTAGE') ?></option>
               </select>
             </div>
 
             <div class="form-group">
               <label><?= $Lang->get('REDUCTION') ?></label>
-              <input class="form-control" placeholder="<?= $Lang->get('IN').' '.$Configuration->get_money_name(false, true).' '.$Lang->get('OR_PERCENTAGE') ?>" type="text" name="reduction">
+              <input class="form-control" placeholder="<?= $Lang->get('IN').' '.$Configuration->getMoneyName(false).' '.$Lang->get('OR_PERCENTAGE') ?>" type="text" name="reduction">
               <small>Ex: 10</small>
             </div>
 

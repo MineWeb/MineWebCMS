@@ -195,7 +195,7 @@
 			                	<?php
 			                	foreach ($rewards as $key => $value) {
 									if($value['type'] == "money") {
-										echo '<tr><td>'.$value['how'].' '.$Configuration->get_money_name().'</td></tr>';
+										echo '<tr><td>'.$value['how'].' '.$Configuration->getMoneyName().'</td></tr>';
 									} else {
 										echo '<tr><td>'.$value['name'].'</td></tr>';
 									}

@@ -47,7 +47,7 @@ class NewsController extends AppController {
 	}
 
 	function index($slug) {
-		$this->layout= $this->Configuration->get_layout();
+		$this->layout= $this->Configuration->getKey('layout');
 
 		if(isset($slug)) { // si le slug est présent
 			$this->loadModel('News'); // on charge le model

@@ -1,20 +1,16 @@
-<?php
-$this->Configuration = new ConfigurationComponent;
-$this->EyPlugin = new EyPluginComponent;
-?>
 	<div class="push-nav"></div>
 	<div class="container bg profile">
 		<div class="row">
         	<div class="ribbon">
         		<div class="ribbon-stitches-top"></div>
         		<div class="ribbon-content"><p>
-        				<?php if($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
-        					<span class="pull-left hidden-xs"><span class="info"><span class="money"><?= $user['money'] ?></span><?php if($user['money'] == 1) { echo  ' '.$this->Configuration->get_money_name(false, true); } else { echo  ' '.$this->Configuration->get_money_name(); } ?></span></span>
+        				<?php if($EyPlugin->isInstalled('eywek.shop.1')) { ?>
+        					<span class="pull-left hidden-xs"><span class="info"><span class="money"><?= $user['money'] ?></span><?= ($user['money'] == 1) ?  ' '.$Configuration->getMoneyName(false) : ' '.$Configuration->getMoneyName(); ?></span></span>
         				<?php } ?>
 						<span class="text-center"><?= $user['pseudo'] ?></span>
-						<?php if($this->EyPlugin->isInstalled('eywek.vote.3')) { ?>
+						<?php if($EyPlugin->isInstalled('eywek.vote.3')) { ?>
 	        				<span class="pull-right hidden-xs"><span class="info"><?= $user['vote'] ?> <?= $Lang->get('VOTE__TITLE_ACTION') ?></span></span>
-	        			<?php } elseif($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
+	        			<?php } elseif($EyPlugin->isInstalled('eywek.shop.1')) { ?>
 							<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index')) ?>" class="btn btn-primary pull-right"><?= $Lang->get('SHOP') ?></a>
 	        			<?php } ?>
         		</p></div>
@@ -26,7 +22,7 @@ $this->EyPlugin = new EyPluginComponent;
 				  	if($search_psc_msg != false AND !empty($search_psc_msg)) {
 				  		foreach ($search_psc_msg as $key => $value) {
 				  			if($value['PaysafecardMessage']['type'] == 1) {
-				  				echo '<div class="alert alert-success"><b>'.$Lang->get('GLOBAL__SUCCESS').' :</b> '.$Lang->get('YOUR_PSC_OF').' '.$value['PaysafecardMessage']['amount'].'€ '.$Lang->get('IS_VALID_GAIN').' : '.$value['PaysafecardMessage']['added_points'].' '.$this->Configuration->get_money_name().'.</div>';
+				  				echo '<div class="alert alert-success"><b>'.$Lang->get('GLOBAL__SUCCESS').' :</b> '.$Lang->get('YOUR_PSC_OF').' '.$value['PaysafecardMessage']['amount'].'€ '.$Lang->get('IS_VALID_GAIN').' : '.$value['PaysafecardMessage']['added_points'].' '.$Configuration->get_money_name().'.</div>';
 				  			} elseif ($value['PaysafecardMessage']['type'] == 0) {
 				  				echo '<div class="alert alert-danger"><b>'.$Lang->get('GLOBAL__ERROR').' :</b> '.$Lang->get('YOUR_PSC_OF').' '.$value['PaysafecardMessage']['amount'].'€ '.$Lang->get('IS_INVALID').'</div>';
 				  			}
@@ -49,7 +45,7 @@ $this->EyPlugin = new EyPluginComponent;
 						} ?>
 					</p>
 				</div>
-				<?php if($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
+				<?php if($EyPlugin->isInstalled('eywek.shop.1')) { ?>
 					<div class="section">
 						<p><b><?= $Lang->get('USER__MONEY') ?> :</b> <span class="money"><?= $user['money'] ?></span></p>
 					</div>
@@ -122,7 +118,7 @@ $this->EyPlugin = new EyPluginComponent;
 
 				<?php } ?>
 
-				<?php if($this->Configuration->get('mineguard') == "true") { ?>
+				<?php if($Configuration->getKey('mineguard') == "true") { ?>
 
 					<hr>
 
@@ -231,7 +227,7 @@ $this->EyPlugin = new EyPluginComponent;
 	</div>
 
 <script type="text/javascript">
-	<?php if($this->Configuration->get('mineguard') == "true") { ?>
+	<?php if($Configuration->getKey('mineguard') == "true") { ?>
 
 		function enableMineGuard() {
 			$.post("<?= $this->Html->url(array('controller' => 'api', 'action' => 'enable_mineguard', 'admin' => false)) ?>", {}, function(data) {

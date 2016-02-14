@@ -1,6 +1,3 @@
-<?php
-$this->Configuration = new ConfigurationComponent;
-?>
 <section class="content">
   <div class="alert alert-info">
     <p><b>URL 1 :</b> <?= $this->Html->url(array('controller' => 'shop', 'action' => 'starpass', 'plugin' => 'shop', 'admin' => false), true) ?></p>
@@ -34,7 +31,7 @@ $this->Configuration = new ConfigurationComponent;
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('HOW_MONEY_OFFER_PAYPAL') ?> <?= $this->Configuration->get_money_name() ?></label>
+              <label><?= $Lang->get('HOW_MONEY_OFFER_PAYPAL') ?> <?= $Configuration->getMoneyName() ?></label>
               <input name="money" class="form-control" type="text">
             </div>
 

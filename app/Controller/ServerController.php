@@ -14,7 +14,7 @@ class ServerController extends AppController {
 			$this->loadModel('Server');
 			$servers = $this->Server->find('all');
 
-			$banner_server = unserialize($this->Configuration->get('banner_server'));
+			$banner_server = unserialize($this->Configuration->getKey('banner_server'));
 
 			if($banner_server) {
 				foreach ($servers as $key => $value) {
@@ -30,10 +30,10 @@ class ServerController extends AppController {
 
 			$this->set(compact('servers', 'bannerMsg'));
 
-			$this->set('isEnabled', $this->Configuration->get('server_state'));
-			$this->set('isCacheEnabled', $this->Configuration->get('server_cache'));
+			$this->set('isEnabled', $this->Configuration->getKey('server_state'));
+			$this->set('isCacheEnabled', $this->Configuration->getKey('server_cache'));
 
-			$this->set('timeout', $this->Configuration->get('server_timeout'));
+			$this->set('timeout', $this->Configuration->getKey('server_timeout'));
 		} else {
 			$this->redirect('/');
 		}
@@ -62,9 +62,9 @@ class ServerController extends AppController {
 
 			$this->autoRender = false;
 
-			$value = ($this->Configuration->get('server_state')) ? 0 : 1;
+			$value = ($this->Configuration->getKey('server_state')) ? 0 : 1;
 
-			$this->Configuration->set('server_state', $value);
+			$this->Configuration->setKey('server_state', $value);
 
 			$this->Session->setFlash($this->Lang->get('SERVER__SUCCESS_SWITCH'), 'default.success');
 			$this->redirect(array('action' => 'link'));
@@ -79,9 +79,9 @@ class ServerController extends AppController {
 
 			$this->autoRender = false;
 
-			$value = ($this->Configuration->get('server_cache')) ? 0 : 1;
+			$value = ($this->Configuration->getKey('server_cache')) ? 0 : 1;
 
-			$this->Configuration->set('server_cache', $value);
+			$this->Configuration->setKey('server_cache', $value);
 
 			$this->Session->setFlash($this->Lang->get('SERVER__SUCCESS_CACHE_SWITCH'), 'default.success');
 			$this->redirect(array('action' => 'link'));
@@ -96,7 +96,7 @@ class ServerController extends AppController {
 		if($this->isConnected && $this->User->isAdmin()) {
 			if($id) {
 
-				$banner = unserialize($this->Configuration->get('banner_server'));
+				$banner = unserialize($this->Configuration->getKey('banner_server'));
 
 				if($banner) {
 
@@ -108,10 +108,10 @@ class ServerController extends AppController {
 
 					$banner = array_values($banner);
 
-					$this->Configuration->set('banner_server', serialize($banner));
+					$this->Configuration->setKey('banner_server', serialize($banner));
 
 				} else {
-					$this->Configuration->set('banner_server', serialize(array($id)));
+					$this->Configuration->setKey('banner_server', serialize(array($id)));
 				}
 			}
 
@@ -150,7 +150,7 @@ class ServerController extends AppController {
 			if($this->request->is('ajax')) {
 				if(!empty($this->request->data['timeout'])) {
 					if(filter_var($this->request->data['timeout'], FILTER_VALIDATE_FLOAT)) {
-						$this->Configuration->set('server_timeout', $this->request->data['timeout']);
+						$this->Configuration->setKey('server_timeout', $this->request->data['timeout']);
 
 						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SERVER__TIMEOUT_SAVE_SUCCESS')));
 					} else {
@@ -177,7 +177,7 @@ class ServerController extends AppController {
 					if($this->request->data['type'] == 0 || $this->request->data['type'] == 1) {
 						$secret_key = $this->Server->get('secret_key');
 						if($secret_key !== false) {
-							$timeout = $this->Configuration->get('server_timeout');
+							$timeout = $this->Configuration->getKey('server_timeout');
 							if(!empty($timeout)) {
 								if(!$this->Server->check('connection', array('host' => $this->request->data['host'], 'port' => $this->request->data['port'], 'timeout' => $timeout, 'secret_key' => $secret_key))) {
 									echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED')));
@@ -199,7 +199,7 @@ class ServerController extends AppController {
 						}
 					}
 
-					$this->Configuration->set('server_state', 1);
+					$this->Configuration->setKey('server_state', 1);
 
 					if(!empty($this->request->data['id'])) {
 						$id = $this->request->data['id'];
@@ -213,7 +213,7 @@ class ServerController extends AppController {
 					$this->Server->save();
 
 					if($this->request->data['type'] != '2' && isset($secret_key)) {
-						$this->Configuration->set('server_secretkey', $secret_key);
+						$this->Configuration->setKey('server_secretkey', $secret_key);
 					}
 					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SERVER__LINK_SUCCESS')));
 

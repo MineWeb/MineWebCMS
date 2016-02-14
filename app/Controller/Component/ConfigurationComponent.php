@@ -139,7 +139,7 @@ class ConfigurationComponent extends Object {
     public function set($key, $value) {
       $this->Configuration = ClassRegistry::init('Configuration');
       $this->Configuration->read(null, 1);
-      $this->Configuration->set(array($key => $value));
+      $this->Configuration->setKey(array($key => $value));
       if($this->Configuration->save()) {
         return true;
       } else {

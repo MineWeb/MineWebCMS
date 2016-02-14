@@ -1,7 +1,3 @@
-<?php
-App::import('Component', 'ConfigurationComponent');
-$this->Configuration = new ConfigurationComponent();
-?>
 <section class="content">
   <div class="row">
     <div class="col-md-12">
@@ -18,19 +14,19 @@ $this->Configuration = new ConfigurationComponent();
             <div class="form-group">
               <div class="radio">
                 <label>
-                  <input type="radio" class="enabled" name="state" value="enabled"<?php if($this->Configuration->get('maintenance') != '0') { echo ' checked=""'; } ?>>
+                  <input type="radio" class="enabled" name="state" value="enabled"<?php if($Configuration->getKey('maintenance') != '0') { echo ' checked=""'; } ?>>
                   <?= $Lang->get('GLOBAL__ENABLED') ?>
                 </label>
               </div>
               <div class="radio">
                 <label>
-                  <input type="radio" class="disabled" name="state" value="disabled"<?php if($this->Configuration->get('maintenance') == '0') { echo ' checked=""'; } ?>>
+                  <input type="radio" class="disabled" name="state" value="disabled"<?php if($Configuration->getKey('maintenance') == '0') { echo ' checked=""'; } ?>>
                   <?= $Lang->get('GLOBAL__DISABLED') ?>
                 </label>
               </div>
             </div>
 
-            <div class="form-group reason<?php if($this->Configuration->get('maintenance') == '0') { echo ' hidden'; } ?>">
+            <div class="form-group reason<?php if($Configuration->getKey('maintenance') == '0') { echo ' hidden'; } ?>">
                 <label><?= $Lang->get('REASON') ?></label>
                 <?= $this->Html->script('admin/tinymce/tinymce.min.js') ?>
                 <script type="text/javascript">
@@ -43,7 +39,7 @@ $this->Configuration = new ConfigurationComponent();
                     toolbar: "fontselect fontsizeselect bold italic underline strikethrough link image forecolor backcolor alignleft aligncenter alignright alignjustify cut copy paste bullist numlist outdent indent blockquote code"
                  });
                 </script>
-                <textarea class="form-control" id="editor" name="reason" cols="30" rows="10"><?= ($this->Configuration->get('maintenance') == '0') ? '' : $this->Configuration->get('maintenance') ?></textarea>
+                <textarea class="form-control" id="editor" name="reason" cols="30" rows="10"><?= ($Configuration->getKey('maintenance') == '0') ? '' : $Configuration->getKey('maintenance') ?></textarea>
             </div>
 
             <input type="hidden" name="data[_Token][key]" value="<?= $csrfToken ?>">

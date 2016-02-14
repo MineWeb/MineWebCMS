@@ -1,6 +1,3 @@
-<?php
-$this->EyPlugin = new EyPluginComponent;
-?>
 <section class="content">
   <div class="row">
     <div class="col-md-12">
@@ -15,7 +12,7 @@ $this->EyPlugin = new EyPluginComponent;
         <div class="box-body">
 
           <?php
-          $pluginList = $this->EyPlugin->loadPlugins();
+          $pluginList = $EyPlugin->loadPlugins();
             if(!empty($pluginList)) {
           ?>
             <table class="table table-bordered" id="plugin-installed">
@@ -51,7 +48,7 @@ $this->EyPlugin = new EyPluginComponent;
                         <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'enable/'.$value->DBid, 'admin' => true)) ?>" class="btn btn-info enable"><?= $Lang->get('GLOBAL__ENABLED') ?></a>
                        <?php } ?>
                       <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete/'.$value->DBid, 'admin' => true)) ?>')" class="btn btn-danger delete"><?= $Lang->get('GLOBAL__DELETE') ?></a>
-                      <?php if($value->version != $this->EyPlugin->getPluginLastVersion($value->apiID)) { ?>
+                      <?php if($value->version != $EyPlugin->getPluginLastVersion($value->apiID)) { ?>
                         <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'update/'.$value->apiID.'/'.$value->slug, 'admin' => true)) ?>" class="btn btn-warning update"><?= $Lang->get('GLOBAL__UPDATE') ?></a>
                       <?php } ?>
                     </td>
@@ -74,7 +71,7 @@ $this->EyPlugin = new EyPluginComponent;
         </div>
         <div class="box-body">
           <?php
-          $free_plugins = $this->EyPlugin->getFreePlugins();
+          $free_plugins = $EyPlugin->getFreePlugins();
           if(!empty($free_plugins)) { ?>
             <table class="table table-bordered" id="plugin-not-installed">
               <thead>

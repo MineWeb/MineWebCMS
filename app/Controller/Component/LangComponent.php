@@ -84,7 +84,7 @@ class LangComponent extends Object {
     		}
       } else { // config
     		$this->Configuration = $this->controller->Configuration;
-    		$language = $this->Configuration->get('lang');
+    		$language = $this->Configuration->getKey('lang');
       }
 
       // Si la langue existe bien

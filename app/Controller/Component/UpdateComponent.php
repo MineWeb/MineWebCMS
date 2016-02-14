@@ -48,7 +48,7 @@ class UpdateComponent extends Object {
 	private function check() {
 
 		$this->Configuration = $this->controller->Configuration;
-		$cmsVersion = $this->Configuration->get('version');
+		$cmsVersion = $this->Configuration->getKey('version');
 
 		$this->cmsVersion = $cmsVersion;
 
@@ -395,7 +395,7 @@ class UpdateComponent extends Object {
 		}
 		if(!$error) {
 			$this->Configuration = $this->controller->Configuration;
-			$this->Configuration->set('version', $this->get_version());
+			$this->Configuration->setKey('version', $this->get_version());
 			return true;
 		} else {
 			return false;

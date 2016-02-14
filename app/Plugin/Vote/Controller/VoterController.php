@@ -278,7 +278,7 @@ class VoterController extends VoteAppController {
 						$this->loadModel('User');
 						$this->User->setToUser('money', $money, $user['pseudo']);
 
-						$rewardsSended[] = $value['how'].' '.$this->Configuration->get_money_name();
+						$rewardsSended[] = $value['how'].' '.$this->Configuration->getMoneyName();
 
 					} else {
 						return array('status' => false, 'msg' => 'VOTE__UNKNOWN_REWARD_TYPE');
@@ -323,7 +323,7 @@ class VoterController extends VoteAppController {
 					 $this->loadModel('User');
 					 $this->User->setToUser('money', $money, $user['pseudo']);
 
-					 return array('status' => true, 'msg' =>$this->Lang->get('VOTE__VOTE_SUCCESS').' ! '.$this->Lang->get('VOTE__REWARDS_TITLE').' : <b>'.$rewards[$reward]['how'].' '.$this->Configuration->get_money_name().'</b>.');
+					 return array('status' => true, 'msg' =>$this->Lang->get('VOTE__VOTE_SUCCESS').' ! '.$this->Lang->get('VOTE__REWARDS_TITLE').' : <b>'.$rewards[$reward]['how'].' '.$this->Configuration->getMoneyName().'</b>.');
 
 			 } else {
 					 return array('status' => false, 'msg' => 'ERROR__INTERNAL_ERROR');

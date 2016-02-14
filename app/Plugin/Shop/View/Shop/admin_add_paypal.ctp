@@ -1,6 +1,3 @@
-<?php
-$this->Configuration = new ConfigurationComponent;
-?>
 <section class="content">
   <div class="row">
     <div class="col-md-12">
@@ -29,7 +26,7 @@ $this->Configuration = new ConfigurationComponent;
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('HOW_MONEY_OFFER_PAYPAL') ?> <?= $this->Configuration->get_money_name() ?></label>
+              <label><?= $Lang->get('HOW_MONEY_OFFER_PAYPAL') ?> <?= $Configuration->getMoneyName() ?></label>
               <input name="money" class="form-control" type="text">
             </div>
 

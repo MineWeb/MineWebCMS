@@ -1,7 +1,3 @@
-<?php
-$this->EyPlugin = new EyPluginComponent;
-$this->Configuration = new ConfigurationComponent;
-?>
 <section class="content">
   <div class="row">
     <div class="col-md-12">
@@ -19,7 +15,7 @@ $this->Configuration = new ConfigurationComponent;
               <input class="form-control" value="<?= $search_user['pseudo'] ?>" type="text" disabled="">
            	</div>
 
-            <?php if(!$this->Configuration->get('confirm_mail_signup')) { ?>
+            <?php if(!$Configuration->getKey('confirm_mail_signup')) { ?>
               <div class="form-group">
                 <label><?= $Lang->get('USER__EMAIL') ?></label>
                 <input name="email" class="form-control" value="<?= $search_user['email'] ?>" type="email">
@@ -51,14 +47,14 @@ $this->Configuration = new ConfigurationComponent;
               </select>
             </div>
 
-            <?php if($this->EyPlugin->isInstalled('eywek.shop.1')) { ?>
+            <?php if($EyPlugin->isInstalled('eywek.shop.1')) { ?>
               <div class="form-group">
                 <label><?= $Lang->get('USER__MONEY') ?></label>
                 <input name="money" class="form-control" value="<?= $search_user['money'] ?>" type="text">
               </div>
             <?php } ?>
 
-            <?php if($this->EyPlugin->isInstalled('eywek.vote.3')) { ?>
+            <?php if($EyPlugin->isInstalled('eywek.vote.3')) { ?>
               <div class="form-group">
                 <label><?= $Lang->get('VOTE__TITLE_ACTION') ?></label>
                	<input name="vote" class="form-control" value="<?= $search_user['vote'] ?>" type="text">

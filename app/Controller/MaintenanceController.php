@@ -6,7 +6,7 @@ class MaintenanceController extends AppController {
 
 	public function index($banned = false) {
 		if(!$banned) {
-			$msg = $this->Configuration->get('maintenance');
+			$msg = $this->Configuration->getKey('maintenance');
 		} else {
 
 			$msg = $this->Lang->get('USER__BANNED_MSG');
@@ -27,7 +27,7 @@ class MaintenanceController extends AppController {
 					$maintenance = '0';
 					$this->History->set('DELETE_MAINTENANCE', 'maintenance');
 				}
-				$this->Configuration->set('maintenance', $maintenance);
+				$this->Configuration->setKey('maintenance', $maintenance);
 				$this->Session->setFlash($this->Lang->get('MAINTENANCE__EDIT_SUCCESS'), 'default.success');
 			}
 		} else {

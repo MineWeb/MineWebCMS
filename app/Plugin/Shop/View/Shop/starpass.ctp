@@ -1,6 +1,6 @@
-<?php 
-  
-?>    
+<?php
+
+?>
 <br><br>
 <div class="container">
     <div class="row">
@@ -10,7 +10,7 @@
                     <h3 class="panel-title"><?= $Lang->get('CREDIT_STARPASS') ?></h3>
                 </div>
                 <div class="panel-body">
-                    <p>1 code = <?= $money ?> <?= $Configuration->get_money_name() ?></p>
+                    <p>1 code = <?= $money ?> <?= $Configuration->getMoneyName() ?></p>
 
                      <div id="starpass_<?= $idd ?>"></div>
                       <script type="text/javascript" src="http://script.starpass.fr/script.php?idd=<?= $idd ?>&amp;verif_en_php=1&amp;datas=<?= $id ?>"></script>
