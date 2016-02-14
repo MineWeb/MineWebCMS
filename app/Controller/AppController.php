@@ -274,7 +274,14 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 				$banner_server = $this->Configuration->get('banner_server');
 	    	if(empty($banner_server)) {
 	      	if($this->Server->online()) {
-	        		$banner_server = $this->Lang->banner_server($this->Server->banner_infos());
+	        		//$banner_server = $this->Lang->banner_server($this->Server->banner_infos());
+              $server_infos = $this->Server->banner_infos();
+              $banner_server = $this->Lang->get('SERVER__STATUS_MESSAGE', array(
+                '{MOTD}' => @$server_infos['getMOTD'],
+                '{VERSION}' => @$server_infos['getVersion'],
+                '{ONLINE}' => @$server_infos['getPlayerCount'],
+                '{ONLINE_LIMIT}' => @$server_infos['getPlayerMax']
+              ));
 	      	} else {
 	        		$banner_server = false;
 	      	}
@@ -286,7 +293,13 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 	        	$server_infos = $this->Server->banner_infos($banner_server);
 	      	}
 	      	if(isset($server_infos['getPlayerMax']) && isset($server_infos['getPlayerCount'])) {
-	      		$banner_server = $this->Lang->banner_server($server_infos);
+	      		//$banner_server = $this->Lang->banner_server($server_infos);
+            $banner_server = $this->Lang->get('SERVER__STATUS_MESSAGE', array(
+              '{MOTD}' => @$server_infos['getMOTD'],
+              '{VERSION}' => @$server_infos['getVersion'],
+              '{ONLINE}' => @$server_infos['getPlayerCount'],
+              '{ONLINE_LIMIT}' => @$server_infos['getPlayerMax']
+            ));
 	      	} else {
 	        		$banner_server = false;
 	      	}

@@ -136,12 +136,12 @@ class LangComponent extends Object {
 
     }
 
-    public function get($msg) {
+    public function get($msg, $vars = array()) {
 
     	$language = $this->lang;
 
 	  	if(isset($language['messages'][$msg])) { // et si le msg existe
-			  return $language['messages'][$msg]; // je retourne le msg config
+			  return strtr($language['messages'][$msg], $vars); // je retourne le msg config et les variables sont remplacés si contenu
 		  }
 
       return $msg; // le msg tel quel ou modifié
@@ -319,19 +319,6 @@ class LangComponent extends Object {
       }
 
     }
-
-  	function banner_server($call) {
-  		$language = $this->lang;
-  		if(isset($language['messages']['SERVER__STATUS_MESSAGE'])) {
-  			$return = str_replace('{MOTD}', @$call['getMOTD'], $language['messages']['SERVER__STATUS_MESSAGE']);
-  			$return = str_replace('{VERSION}', @$call['getVersion'], $return);
-  			$return = str_replace('{ONLINE}', @$call['getPlayerCount'], $return);
-  			$return = str_replace('{ONLINE_LIMIT}', @$call['getPlayerMax'], $return);
-  			return $return;
-  		} else {
-  			return 'SERVER__STATUS_MESSAGE';
-  		}
-  	}
 
 	  function date($date) {
 
