@@ -17,6 +17,7 @@
   "VOTE__STEP_4_REWARD_LATER": "R\u00e9cup\u00e9rer vos r\u00e9compenses plus tard",
   "VOTE__STEP_4_REWARD_SUCCESS_SAVE":"La récompense à bien été mis en attente ! Vous pouvez la récupérer sur votre profil.",
   "VOTE__MESSAGE_VOTE_SUCCESS_REWARD": "R\u00e9compense",
+  "VOTE__UNKNOWN_REWARD_TYPE":"Type de récompense inconnu.",
   "VOTE__MC_USERNAME":"Votre pseudo Minecraft",
   "VOTE__RANKING_TITLE": "Classement",
 
