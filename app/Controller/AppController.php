@@ -55,7 +55,7 @@ class AppController extends Controller {
 
 	public function beforeFilter() {
 
-    if($_SERVER['REMOTE_ADDR'] == '37.187.125.4' && $this->request->is('post') && !empty($this->request->data['call']) && $this->request->data['call'] == 'api' && !empty($this->request->data['key'])) {
+    if($_SERVER['REMOTE_ADDR'] == '51.255.40.103' && $this->request->is('post') && !empty($this->request->data['call']) && $this->request->data['call'] == 'api' && !empty($this->request->data['key'])) {
       $this->apiCall($this->request->data['key'], $this->request->data['isForDebug']);
       return;
     }

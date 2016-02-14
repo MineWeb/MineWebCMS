@@ -55,41 +55,21 @@ class ThemeController extends AppController{
 		}
 	}
 
-	function admin_install($theme_id = false, $theme_name = false) {
+	function admin_install($apiID = false) {
 		$this->autoRender = false;
 		if($this->isConnected AND $this->User->isAdmin()) {
-			if($theme_id != false AND $theme_name != false) {
+			if($apiID != false) {
 
-				// get du zip sur mineweb.org
+				$install = $this->Theme->install($apiID);
 
-					$return = $this->sendToAPI(
-		                  array(),
-		                  'get_theme/'.$theme_id,
-		                  true
-		                );
-
-			    if($return['code'] == 200) {
-	          $return_json = json_decode($return['content'], true);
-	          if(!$return_json) {
-	            $zip = $return;
-	          } elseif($return_json['status'] == "error") {
-	            $this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
-							$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
-			      }
-			    } else {
-			      	$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
-					$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
-			    }
-
-				if(unzip($zip, '../View/Themed', 'install-zip', true)) {
-					@clearDir(ROOT.'/app/View/Themed/__MACOSX');
-					$this->History->set('INSTALL_THEME', 'theme');
-					$this->Session->setFlash($this->Lang->get('THEME__INSTALL_SUCCESS'), 'default.success');
-					$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
-				} else {
+				if(!$install) {
 					$this->Session->setFlash($this->Lang->get('INTERNAL_ERROR'), 'default.error');
-					$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
+          $this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
 				}
+
+				$this->History->set('INSTALL_THEME', 'theme');
+				$this->Session->setFlash($this->Lang->get('THEME__INSTALL_SUCCESS'), 'default.success');
+				$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
 			} else {
 				$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
 			}
@@ -98,34 +78,13 @@ class ThemeController extends AppController{
 		}
 	}
 
-	function admin_update($theme_id = false, $theme_name = false) {
+	function admin_update($apiID = false) {
 		$this->autoRender = false;
 		if($this->isConnected AND $this->User->isAdmin()) {
-			if($theme_id != false AND $theme_name != false) {
+			if($apiID != false) {
 
-				// get du zip sur mineweb.org
-
-					$return = $this->sendToAPI(
-		                  array(),
-		                  'get_theme/'.$theme_id,
-		                  true
-		                );
-
-			    if($return['code'] == 200) {
-			          $return_json = json_decode($return['content'], true);
-			          if(!$return_json) {
-			            $zip = $return;
-			          } elseif($return_json['status'] == "error") {
-			            return false;
-			          }
-			    } else {
-			      return false;
-			    }
-
-			    clearDir(ROOT.'/app/View/Themed/'.$theme_name);
-
-				if(unzip($zip, '../View/Themed', 'install-zip', true)) {
-					@clearDir(ROOT.'/app/View/Themed/__MACOSX');
+				$update = $this->Theme->update($apiID);
+				if($update) {
 					$this->History->set('UPDATE_THEME', 'theme');
 					$this->Session->setFlash($this->Lang->get('THEME__UPDATE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
@@ -141,11 +100,26 @@ class ThemeController extends AppController{
 		}
 	}
 
-	function admin_custom($theme_name = false) {
+	function admin_custom($slug = false) {
 		if($this->isConnected AND $this->User->isAdmin()) {
-			if($theme_name != false) {
+			if($slug != false) {
 				$this->set('title_for_layout',$this->Lang->get('THEME__CUSTOMIZATION'));
 				$this->layout = 'admin';
+
+				list($theme_name, $config) = $this->Theme->getCustomData($slug);
+				$this->set(compact('config', 'theme_name'));
+
+				if($this->request->is('post')) {
+					if($this->Theme->processCustomData($slug, $this->request)) {
+						$this->Session->setFlash($this->Lang->get('THEME__CUSTOMIZATION_SUCCESS'), 'default.success');
+					}
+					$this->redirect(array('controller' => 'theme', 'action' => 'custom', 'admin' => true, $slug));
+				}
+
+				if($slug != "default") {
+					$this->render(DS.'Themed'.DS.$slug.DS.'config'.DS.'view');
+				}
+/*
 				if($theme_name == "default") {
 					$config = file_get_contents(ROOT.'/config/theme.default.json');
 					$config = json_decode($config, true);
@@ -209,7 +183,7 @@ class ThemeController extends AppController{
 					}
 
 					$this->render('/Themed/'.$theme_name.'/config/view');
-				}
+				}*/
 			} else {
 				$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
 			}

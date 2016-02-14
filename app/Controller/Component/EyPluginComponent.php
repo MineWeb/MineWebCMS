@@ -19,6 +19,8 @@ class EyPluginComponent extends Object {
 
   public $pluginsLoaded;
 
+  private $controller;
+
   function __construct() {
     $this->pluginsFolder = ROOT.DS.'app'.DS.'Plugin';
   }
@@ -214,7 +216,7 @@ class EyPluginComponent extends Object {
             // Configuration valide (JSON)
             $needToBeJSON = array('lang/fr_FR.json', 'lang/en_US.json', 'config.json');
             foreach ($needToBeJSON as $key => $value) {
-              if(json_decode(file_get_contents($file.DS.$value)) === false) { // si le JSON n'est pas valide
+              if(json_decode(file_get_contents($file.DS.$value)) === false || json_decode(file_get_contents($file.DS.$value)) === null) { // si le JSON n'est pas valide
                 $this->log('Plugin "'.$slug.'" not valid! The file "'.$file.DS.$value.'" is not at JSON format! Please verify documentation for more informations.');
                 $this->alreadyCheckValid[$slug] = false;
                 return false; // on retourne false, le plugin est invalide et on log
@@ -528,14 +530,14 @@ class EyPluginComponent extends Object {
           $zip = $return;
         } elseif($return_json['status'] == "error") {
 
-          $LangComponent = new LangComponent();
+          $LangComponent = $this->controller->Lang;
           SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_CANT_BE_DOWNLOADED'), 'default.error');
 
           return false;
         }
       } else {
 
-        $LangComponent = new LangComponent();
+        $LangComponent = $this->controller->Lang;
         SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_CANT_BE_DOWNLOADED'), 'default.error');
 
         return false;
@@ -550,7 +552,7 @@ class EyPluginComponent extends Object {
         return $zip;
       }
 
-      $LangComponent = new LangComponent();
+      $LangComponent = $this->controller->Lang;
       SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_CANT_BE_DOWNLOADED'), 'default.error');
 
       return false;
@@ -569,7 +571,7 @@ class EyPluginComponent extends Object {
             if($addTables['status']) {
               $tablesName = $addTables['tables'];
             } else {
-              $LangComponent = new LangComponent();
+              $LangComponent = $this->controller->Lang;
               SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_SQL_INSTALLATION'), 'default.error');
               return false;
             }
@@ -610,7 +612,7 @@ class EyPluginComponent extends Object {
             CakePlugin::unload($slug); // On unload sur cake
             Cache::clear(false, '_cake_core_'); // On clear le cache
 
-            $LangComponent = new LangComponent();
+            $LangComponent = $this->controller->Lang;
             SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_REQUIREMENTS'), 'default.error');
           }
         }
@@ -622,7 +624,7 @@ class EyPluginComponent extends Object {
           CakePlugin::unload($slug); // On unload sur cake
           Cache::clear(false, '_cake_core_'); // On clear le cache
 
-          $LangComponent = new LangComponent();
+          $LangComponent = $this->controller->Lang;
           SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_NOT_VALID'), 'default.error');
         }
       }
@@ -643,8 +645,7 @@ class EyPluginComponent extends Object {
 
           CakePlugin::unload($slug); // On unload sur cake pour éviter des erreurs
 
-          App::import('Component', 'UpdateComponent');
-          $this->Update = new UpdateComponent();         // On importe le composant Update
+          $this->Update = $this->controller->Update;         // On importe le composant Update
           if($this->Update->plugin($download, $slug, $apiID)) {
 
             $pluginConfig = json_decode(file_get_contents($this->pluginsFolder.DS.$slug.DS.'config.json'), true);
@@ -665,7 +666,7 @@ class EyPluginComponent extends Object {
               $pluginTables = unserialize($searchPlugin['tables']);
               $pluginTables = $addTables['tables']; // on ajoute si y'en a en plus
             } else {
-              $LangComponent = new LangComponent();
+              $LangComponent = $this->controller->Lang;
               SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_SQL_INSTALLATION'), 'default.error');
               return false;
             }
@@ -694,12 +695,12 @@ class EyPluginComponent extends Object {
 
           }
         } else {
-          $LangComponent = new LangComponent();
+          $LangComponent = $this->controller->Lang;
           SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_PERMISSIONS'), 'default.error');
         }
         return false;
       } else {
-        $LangComponent = new LangComponent();
+        $LangComponent = $this->controller->Lang;
         SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_REQUIREMENTS'), 'default.error');
       }
     }
@@ -953,8 +954,7 @@ class EyPluginComponent extends Object {
 
         if($type == "CMS") { // Si c'est sur le cms
 
-          App::import('Component', 'ConfigurationComponent'); // On charge le component d'update
-          $this->Configuration = new ConfigurationComponent();
+          $this->Configuration = $this->controller->Configuration;
 
           $versionExploded = explode(' ', $version);
           $operator = (count($versionExploded) == 2) ? $versionExploded[0] : '='; // On récupére l'opérateur et la version qui sont définis
@@ -1042,8 +1042,7 @@ class EyPluginComponent extends Object {
     private function refreshPermissions() {
 
       // Chargons le component
-      App::import('Component', 'Permissions');
-      $PermissionsComponent = new PermissionsComponent();
+      $PermissionsComponent = $this->controller->Permissions;
 
       $defaultPermissions = $PermissionsComponent->permissions; // les permissions par défaut
       $pluginsPermissions = array(); // les permissions des plugins installés

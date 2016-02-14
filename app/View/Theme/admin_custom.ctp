@@ -11,10 +11,8 @@
 
             <div class="form-group">
               <div class="checkbox">
-                <label>
-                  <input type="checkbox" name="slider" id="slider"<?= (isset($config['slider']) && $config['slider'] == 'true') ? ' checked' : '' ?>>
-                  <?= $Lang->get('SLIDER_TITLE') ?>
-                </label>
+                <input type="checkbox" name="slider" id="slider"<?= (isset($config['slider']) && $config['slider'] == 'true') ? ' checked' : '' ?>>
+                <label><?= $Lang->get('SLIDER__TITLE') ?></label>
               </div>
             </div>
 
@@ -26,27 +24,19 @@
                   $('#slider').attr('value', 'false');
                 }
               });
+              if($('#slider').is(':checked')) {
+                $('#slider').attr('value', 'true');
+              } else {
+                $('#slider').attr('value', 'false');
+              }
             </script>
 
             <div class="form-group">
-				<label><?= $Lang->get('NAVBAR__TITLE') ?></label>
-				<div class="radio">
-					<label>
-						<input type="radio" name="navbar" value="navbar2"<?php if($config['navbar'] == "navbar2") { echo ' checked'; } ?>>
-					  <img src="http://eywek.fr/i/4600.png" width="450" alt="">
-					</label>
-					<br>
-					<label>
-						<input type="radio" name="navbar" value="navbar"<?php if($config['navbar'] == "navbar") { echo ' checked'; } ?>>
-					 	<img src="http://eywek.fr/i/3314.png" width="450" alt="">
-					</label>
-				</div>
-			</div>
-
-            <div class="form-group">
               <label><?= $Lang->get('THEME__FAVICON_URL') ?></label>
-              <input type="text" class="form-control" name="favicon_url" value="<?= $config['favicon_url'] ?>">
+              <input type="text" class="form-control" name="favicon_url" value="<?= (isset($config['favicon_url'])) ? $config['favicon_url'] : '' ?>">
             </div>
+
+            <input type="hidden" name="data[_Token][key]" value="<?= $csrfToken ?>">
 
             <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
             <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'index', 'admin' => true)) ?>" type="button" class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>

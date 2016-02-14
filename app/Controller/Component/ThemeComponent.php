@@ -15,10 +15,12 @@ class ThemeComponent extends Object {
   private $themesInstalled;
   private $alreadyCheckValid;
 
+  private $apiVersion = '1';
+
   private $controller;
 
   function __construct() {
-    $this->themesFolder = ROOT.DS.'app'.DS.'View'.DS.'Themed'.DS;
+    $this->themesFolder = ROOT.DS.'app'.DS.'View'.DS.'Themed';
   }
 
   function shutdown(&$controller) {}
@@ -37,7 +39,7 @@ class ThemeComponent extends Object {
 
   // Récupérer les thèmes
 
-    public function getThemesInstalled() {
+    public function getThemesInstalled($api = true) {
 
       if(!empty($this->themesInstalled)) {
         return $this->themesInstalled;
@@ -52,7 +54,9 @@ class ThemeComponent extends Object {
 
         $bypassedFiles = array('.', '..', '.DS_Store', '__MACOSX'); // On met les fichiers que l'on ne considère pas comme un thème
 
-        $this->getThemesOnAPI(true);
+        if($api) {
+          $this->getThemesOnAPI(true);
+        }
 
         foreach ($themes as $key => $slug) { // On parcours tout ce qu'on à trouvé dans le dossier
           if(!in_array($slug, $bypassedFiles) && $this->isValid($slug)) { // Si c'est pas un fichier que l'on ne doit pas prendre
@@ -97,7 +101,7 @@ class ThemeComponent extends Object {
         return $this->themesAvailable[$type];
       }
 
-      $url = ($all) ? 'http://mineweb.org/api/v1/getAllThemes' : 'http://mineweb.org/api/v1/getFreeThemes';
+      $url = ($all) ? 'http://mineweb.org/api/v'.$this->apiVersion.'/getAllThemes' : 'http://mineweb.org/api/v'.$this->apiVersion.'/getFreeThemes';
 
       // Get sur l'API de tous
         $getAllThemes = @file_get_contents($url);
@@ -108,7 +112,7 @@ class ThemeComponent extends Object {
 
         $secure = $this->getSecure();
 
-        $getPurchasedThemes = @file_get_contents('http://mineweb.org/api/v1/getPurchasedThemes/'.$secure['id']);
+        $getPurchasedThemes = @file_get_contents('http://mineweb.org/api/v'.$this->apiVersion.'/getPurchasedThemes/'.$secure['id']);
         $getPurchasedThemes = ($getPurchasedThemes) ? json_decode($getPurchasedThemes, true) : array();
 
         if(isset($getPurchasedThemes['status']) && $getPurchasedThemes['status'] == "success") {
@@ -127,7 +131,7 @@ class ThemeComponent extends Object {
 
     public function getConfig($slug) {
 
-      return json_decode(file_get_contents($this->themesFolder.$slug.DS.'Config'.DS.'config.json'));
+      return json_decode(file_get_contents($this->themesFolder.DS.$slug.DS.'Config'.DS.'config.json'));
 
     }
 
@@ -160,7 +164,7 @@ class ThemeComponent extends Object {
             // Configuration valide (JSON)
             $needToBeJSON = array('Config/config.json');
             foreach ($needToBeJSON as $key => $value) {
-              if(json_decode(file_get_contents($file.DS.$value)) === false) { // si le JSON n'est pas valide
+              if(json_decode(file_get_contents($file.DS.$value)) === false || json_decode(file_get_contents($file.DS.$value)) === null) { // si le JSON n'est pas valide
                 $this->log('Theme "'.$slug.'" not valid! The file "'.$file.DS.$value.'" is not at JSON format! Please verify documentation for more informations.');
                 $this->alreadyCheckValid[$slug] = false;
                 return false; // on retourne false, le plugin est invalide et on log
@@ -257,8 +261,7 @@ class ThemeComponent extends Object {
 
         if($type == "CMS") { // Si c'est sur le cms
 
-          App::import('Component', 'ConfigurationComponent'); // On charge le component d'update
-          $this->Configuration = new ConfigurationComponent();
+          $this->Configuration = $this->controller->Configuration;
 
           $versionExploded = explode(' ', $version);
           $operator = (count($versionExploded) == 2) ? $versionExploded[0] : '='; // On récupére l'opérateur et la version qui sont définis
@@ -300,6 +303,178 @@ class ThemeComponent extends Object {
       }
 
       return $return; // De base c'est bon
+
+    }
+
+  // Installation d'un thème depuis l'API
+
+    public function install($apiID) {
+
+      $return = $this->sendToAPI(
+                  array(),
+                  'get_theme/'.$apiID,
+                  true
+                );
+
+      if($return['code'] == 200) {
+        $return_json = json_decode($return['content'], true);
+        if(!$return_json) {
+          return false;
+        }
+      } else {
+        return false;
+      }
+
+      if(unzip($return_json, $this->themesFolder, 'install-theme-'.$apiID.'-zip', true)) {
+        clearDir($this->themesFolder.DS.'__MACOSX');
+        return true;
+      } else {
+        return false;
+      }
+
+    }
+
+  // Mise à jour d'un thème depuis l'API
+
+    public function update($apiID) {
+
+      $return = $this->sendToAPI(
+                  array(),
+                  'get_theme/'.$apiID,
+                  true
+                );
+
+      if($return['code'] == 200) {
+        $return_json = json_decode($return['content'], true);
+        if(!$return_json) {
+          return false;
+        }
+      } else {
+        return false;
+      }
+
+      if(unzip($return_json, $this->themesFolder, 'update-theme-'.$apiID.'-zip', true)) {
+        return true;
+        clearDir($this->themesFolder.DS.'__MACOSX');
+      } else {
+        return false;
+      }
+
+    }
+
+  // Retourne la config personnalisé + le nom du thème selon son slug
+
+    public function getCustomData($slug) {
+
+      if($slug == "default") {
+
+        $config = file_get_contents(ROOT.DS.'config'.DS.'theme.default.json');
+        $config = json_decode($config, true);
+        $theme_name = "Bootstrap";
+
+      } else {
+
+        $themesInstalled = $this->getThemesInstalled(false);
+        foreach ($themesInstalled as $id => $data) {
+          if($data->slug == $slug) {
+            $theme_name = $data->name;
+            $config = $data->configurations;
+            break;
+          }
+        }
+
+      }
+      if(isset($config)) {
+        $config = (array) $config;
+      }
+
+      return (isset($theme_name)) ? array($theme_name, $config) : false;
+
+    }
+
+  // Traite et enregistre les données passé pour la configurations perso d'un thème
+
+    public function processCustomData($slug, $request) {
+
+      if($slug == "default") { // thème par défaut
+        $data = json_encode($request->data, JSON_PRETTY_PRINT);
+        $fp = @fopen(ROOT.DS.'config'.DS.'theme.default.json',"w+");
+        if(!$fp) {
+          $this->log('Unable to save theme config. File not writable.');
+          return false;
+        }
+        fwrite($fp, $data);
+        fclose($fp);
+
+        return;
+      }
+
+      // Les components utiles
+
+        $this->Util = $this->controller->Util;
+        $this->Session = $this->controller->Session;
+        $this->Lang = $this->controller->Lang;
+
+      // on détermine si le thème est installé
+        $finded = false;
+        $themesInstalled = $this->getThemesInstalled(false);
+        foreach ($themesInstalled as $id => $data) {
+          if($data->slug == $slug) {
+            $finded = true;
+            $config = $data->configurations;
+            break;
+          }
+        }
+
+        if(!$finded) { return; } //on a rien trouvé
+
+      // On traite les données
+
+        if(!isset($request->data['img_edit'])) {
+          $isValidImg = $this->Util->isValidImage($request, array('png', 'jpg', 'jpeg'));
+
+          if(!$isValidImg['status'] && $isValidImg['msg'] != $this->Lang->get('FORM__EMPTY_IMG')) {
+            $this->Session->setFlash($isValidImg['msg'], 'default.error');
+            return false;
+          } else {
+            if(isset($isValidImg['infos'])) {
+              $infos = $isValidImg['infos'];
+            } else {
+              $infos = false;
+            }
+          }
+
+          if($infos) {
+            $url_img = WWW_ROOT.'img'.DS.'uploads'.DS.'theme_logo.'.$infos['extension'];
+
+            if(!$this->Util->uploadImage($request, $url_img)) {
+              $this->Session->setFlash($this->Lang->get('FORM__ERROR_WHEN_UPLOAD'), 'default.error');
+              return false;
+            }
+
+            $request->data['logo'] = Router::url('/').'img'.DS.'uploads'.DS.'theme_logo.'.$infos['extension'];
+          } else {
+            $request->data['logo'] = false;
+          }
+        } else {
+          $request->data['logo'] = $config['logo'];
+        }
+
+        $json = json_decode(file_get_contents($this->themesFolder.DS.$slug.DS.'Config'.DS.'config.json'));
+
+        $json->configurations = $request->data;
+
+        $data = json_encode($json, JSON_PRETTY_PRINT);
+        $fp = @fopen($this->themesFolder.DS.$slug.DS.'Config'.DS.'config.json',"w+");
+        if(!$fp) {
+          $this->log('Unable to save theme config. File not writable.');
+          return false;
+        }
+        fwrite($fp, $data);
+        fclose($fp);
+
+        return true;
+
 
     }
 

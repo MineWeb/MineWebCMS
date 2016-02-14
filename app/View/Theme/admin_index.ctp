@@ -74,7 +74,7 @@ $this->Configuration = new ConfigurationComponent;
                         <?php } ?>
                         <?php if(isset($value->lastVersion)) { ?>
                           <?php if($value->version !== $value->lastVersion) { ?>
-                            <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'update/'.$value->id.'/'.$value->slug, 'admin' => true)) ?>" class="btn btn-warning"><?= $Lang->get('GLOBAL__UPDATE') ?></a>
+                            <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'update', 'admin' => true, $value->id)) ?>" class="btn btn-warning"><?= $Lang->get('GLOBAL__UPDATE') ?></a>
                           <?php } ?>
                         <?php } ?>
                       </td>
@@ -113,7 +113,7 @@ $this->Configuration = new ConfigurationComponent;
                 <td><?= $value['author'] ?></td>
                 <td><?= $value['version'] ?></td>
                 <td>
-                  <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'install/'.$value['theme_id'].'/'.$value['name'], 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('INSTALL__INSTALL') ?></a>
+                  <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'install', 'admin' => true, $value['theme_id'])) ?>" class="btn btn-success"><?= $Lang->get('INSTALL__INSTALL') ?></a>
                 </td>
               </tr>
               <?php } ?>

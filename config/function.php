@@ -73,7 +73,7 @@ function unzip($file, $path, $name = 'install-zip', $No_file_get_contents = fals
 }
 
 function clearDir($dossier) {
-	if(file_exists($dossier)) {
+	if(file_exists($dossier) && is_dir($dossier)) {
 		$ouverture=opendir($dossier);
 		if (!$ouverture) return false;
 		while($fichier=readdir($ouverture)) {
