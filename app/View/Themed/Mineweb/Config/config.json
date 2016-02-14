@@ -1,6 +1,18 @@
 {
-    "navbar": "navbar2",
-    "favicon_url": "",
-    "version": "0.1",
-    "logo": false
+    "name": "MineWeb",
+    "slug": "Mineweb",
+    "author": "Eywek",
+    "version": "1.0.0",
+    "apiID": 1,
+    "configurations": {
+        "slider": "true",
+        "navbar": "navbar2",
+        "favicon_url": "",
+        "logo": false
+    },
+    "supported": {
+        "eywek.shop.1": "0.4.0",
+        "eywek.support.2": "0.2.0",
+        "eywek.vote.3": "0.7.0"
+    }
 }

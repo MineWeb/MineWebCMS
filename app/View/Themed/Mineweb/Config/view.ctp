@@ -26,7 +26,7 @@ if(isset($config['logo']) && $config['logo']) {
               <div class="form-group">
                 <div class="checkbox">
                   <input type="checkbox" name="slider" id="slider"<?= (isset($config['slider']) && $config['slider'] == 'true') ? ' checked' : '' ?>>
-                  <label><?= $Lang->get('SLIDER_TITLE') ?></label>
+                  <label><?= $Lang->get('SLIDER__TITLE') ?></label>
                 </div>
               </div>
 
@@ -38,6 +38,11 @@ if(isset($config['logo']) && $config['logo']) {
                     $('#slider').attr('value', 'false');
                   }
                 });
+                if($('#slider').is(':checked')) {
+                  $('#slider').attr('value', 'true');
+                } else {
+                  $('#slider').attr('value', 'false');
+                }
               </script>
 
               <div class="form-group">
