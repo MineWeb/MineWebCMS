@@ -210,7 +210,7 @@ class NewsController extends AppController {
 					$this->News->set(array(
 						'title' => $this->request->data['title'],
 						'content' => $this->request->data['content'],
-						'author' => $this->User->getKey('pseudo'),
+						'user_id' => $this->User->getKey('id'),
 						'updated' => date('Y-m-d H:i:s'),
 						'comments' => 0,
 						'likes' => 0,

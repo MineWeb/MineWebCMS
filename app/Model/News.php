@@ -23,15 +23,26 @@ class News extends AppModel {
     if($result === false || !isset($result[$index]) || Configure::read('debug') > 0) {
         $result[$index] = parent::find($conditions, $fields, $order, $recursive);
 
+				$users = ClassRegistry::init('User')->find('all', array('fields' => array('id', 'pseudo')));
+				foreach ($users as $key => $value) {
+					$users[$value['User']['id']] = $value['User']['pseudo'];
+				}
+
+				if($conditions != "count") {
+					if($conditions == "first") {
+						$result[$index]['News']['author'] = $users[$result[$index]['News']['user_id']];
+					} else {
+						foreach ($result[$index] as $key => $value) {
+							$result[$index][$key]['News']['author'] = $users[$result[$index][$key]['News']['user_id']];
+						}
+					}
+				}
+				unset($key);
+				unset($value);
+
 				if(!empty($result) && ($conditions == "all" || $conditions == "first")) {
 					if($recursive || (isset($fields['recursive']) && $fields['recursive'])) {
-						if(isset($result[$index][0]['Comment']) || isset($result[$index]['Comment'])) {
-							$users = ClassRegistry::init('User')->find('all', array('fields' => array('id', 'pseudo')));
-							foreach ($users as $key => $value) {
-								$users[$value['User']['id']] = $value['User']['pseudo'];
-							}
-						}
-						if(key($result[$index]) == '0') {
+						if($conditions == "all") {
 							foreach ($result[$index] as $key => $value) {
 								if(isset($result[$index][$key]['Comment'])) {
 									$result[$index][$key]['News']['count_comments'] = count($result[$index][$key]['Comment']);

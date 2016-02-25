@@ -76,6 +76,8 @@ class UtilComponent extends Object {
 		$this->Email->template = 'default';
 		$this->Email->sendAs = 'html';
 
+    $this->getEventManager()->dispatch(new CakeEvent('beforeSendMail', $this, array('emailConfig' => $this->Email, 'message' => $this->message)));
+
 		return $this->Email->send($this->message);
 
   }
@@ -140,6 +142,8 @@ class UtilComponent extends Object {
   }
 
   public function uploadImage($request, $name) {
+    $this->getEventManager()->dispatch(new CakeEvent('beforeUploadImage', $this, array('request' => $request, 'name' => $name)));
+
     $folders = explode('/', $name);
     $folders = end($folders);
     if(!is_dir($folders)) {
