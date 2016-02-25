@@ -267,10 +267,10 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 
 			if(strtolower($theme_name) == "default") {
 				$theme_config = file_get_contents(ROOT.'/config/theme.default.json');
-			} elseif(file_exists(ROOT.'/app/View/Themed/'.$theme_name.'/config/config.json')) {
-				$theme_config = file_get_contents(ROOT.'/app/View/Themed/'.$theme_name.'/config/config.json');
+        $theme_config = json_decode($theme_config, true);
+			} else {
+				$theme_config = $this->Theme->getCustomData($theme_name)[1];
 			}
-			$theme_config = json_decode($theme_config, true);
 
 			// Info serveur
 			if($this->params['prefix'] !== "admin") {

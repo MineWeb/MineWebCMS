@@ -16,11 +16,11 @@
     <?= $this->Html->css('animate.css') ?>
     <?= $this->Html->css('font-awesome.min.css') ?>
     <?= $this->Html->css('mineweb') ?>
-	<?= $this->Html->css('../font-awesome-4.1.0/css/font-awesome.min.css') ?>
-	<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,900' rel='stylesheet' type='text/css'>
+	  <?= $this->Html->css('../font-awesome-4.1.0/css/font-awesome.min.css') ?>
+	  <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,900' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Rambla' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
-	<?= $this->Html->script('jquery-1.11.0.js') ?>
+	  <?= $this->Html->script('jquery-1.11.0.js') ?>
     <?= $this->Html->script('easy_paginate.js') ?>
 
     <link rel="icon" type="image/png" href="<?= $theme_config['favicon_url'] ?>" />

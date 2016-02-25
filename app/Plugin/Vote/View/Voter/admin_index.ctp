@@ -25,6 +25,12 @@
                   <?php $i = 0; foreach ($vote['websites'] as $k => $v) { $i++; ?>
                     <div class="box box-success websites" id="website-<?= $i ?>">
                       <div class="box-body">
+
+                        <div class="form-group">
+                          <label><?= $Lang->get('VOTE__CONFIG_WEBSITE_NAME') ?></label>
+                          <input name="website_name" class="form-control" value="<?= (isset($v['website_name'])) ? $v['website_name'] : '' ?>" placeholder="Ex: RPG-Paradize" type="text">
+                        </div>
+
                         <div class="form-group">
                           <label><?= $Lang->get('VOTE__CONFIG_TIME_VOTE') ?></label>
                           <input name="time_vote" class="form-control" value="<?= $v['time_vote'] ?>" placeholder="minutes" type="text">
@@ -32,7 +38,7 @@
 
                         <div class="form-group">
                           <label><?= $Lang->get('VOTE__CONFIG_PAGE_VOTE') ?></label>
-                          <input name="page_vote" class="form-control" value="<?= $v['page_vote'] ?>" placeholder="Ex: http://google.fr" type="text">
+                          <input name="page_vote" class="form-control" value="<?= $v['page_vote'] ?>" placeholder="Ex: http://rpg-paradize.com/site-+FR+++RESET++ObsiFight+Serveur+PvP+Faction+2424+1.8-44835" type="text">
                         </div>
 
                         <div class="form-group">
@@ -58,6 +64,12 @@
                 <?php } else { $i=1; ?>
                   <div class="box box-success websites">
                     <div class="box-body">
+
+                      <div class="form-group">
+                        <label><?= $Lang->get('VOTE__CONFIG_WEBSITE_NAME') ?></label>
+                        <input name="website_name" class="form-control" placeholder="Ex: RPG-Paradize" type="text">
+                      </div>
+
                       <div class="form-group">
                         <label><?= $Lang->get('VOTE__CONFIG_TIME_VOTE') ?></label>
                         <input name="time_vote" class="form-control" placeholder="minutes" type="text">
@@ -65,7 +77,7 @@
 
                       <div class="form-group">
                         <label><?= $Lang->get('VOTE__CONFIG_PAGE_VOTE') ?></label>
-                        <input name="page_vote" class="form-control" placeholder="Ex: http://google.fr" type="text">
+                        <input name="page_vote" class="form-control" placeholder="Ex: http://rpg-paradize.com/site-+FR+++RESET++ObsiFight+Serveur+PvP+Faction+2424+1.8-44835" type="text">
                       </div>
 
                       <div class="form-group">
@@ -150,10 +162,22 @@
                           }
                           ?>
                           <input type="text" name="reward_value" class="form-control reward_value" placeholder="<?= $Lang->get('VOTE__CONFIG_COMMAND_OR_MONEY') ?>" value="<?= $reward_value ?>">
+                          <small>
+                            <b>{PLAYER}</b> = Pseudo <br>
+                            <b>{REWARD}</b> = <?= $Lang->get('VOTE__REWARD_NAME') ?> <br>
+                            <b>{PROBA}</b> = <?= $Lang->get('VOTE__CONFIG_REWARD_PROBABILITY') ?> <br>
+                            <b>[{+}]</b> <?= $Lang->get('SERVER__PARSE_NEW_COMMAND') ?> <br>
+                            <b><?= $Lang->get('GLOBAL__EXAMPLE') ?>:</b> <i>give {PLAYER} 1 1[{+}]broadcast {PLAYER} ...</i></small>
                         </div>
                         <div class="form-group reward_proba_container" style="display:<?= (@$vote['rewards_type'] == 0) ? 'block' : 'none' ?>;">
                           <label><?= $Lang->get('VOTE__CONFIG_REWARD_PROBABILITY') ?></label>
                           <input type="text" name="reward_proba" class="form-control reward_proba" value="<?= $v['proba'] ?>" placeholder="<?= $Lang->get('VOTE__CONFIG_REWARD_PERCENTAGE') ?>">
+                        </div>
+                        <div class="form-group">
+                          <div class="checkbox">
+                            <input name="need_connect_on_server" type="checkbox"<?= (isset($v['need_connect_on_server']) && $v['need_connect_on_server'] == "true") ? ' checked=""' : '' ?>>
+                            <label><?= $Lang->get('VOTE__CONFIG_REWARD_NEED_CONNECT') ?></label>
+                          </div>
                         </div>
                       </div>
                       <div class="box-footer">
@@ -183,6 +207,12 @@
                         <label><?= $Lang->get('VOTE__CONFIG_REWARD_PROBABILITY') ?></label>
                         <input type="text" name="reward_proba" class="form-control reward_proba" value="<?= $v['proba'] ?>" placeholder="<?= $Lang->get('VOTE__CONFIG_REWARD_PERCENTAGE') ?>">
                       </div>
+                      <div class="form-group">
+                        <div class="checkbox">
+                          <input name="need_connect_on_server" type="checkbox">
+                          <label><?= $Lang->get('VOTE__CONFIG_REWARD_NEED_CONNECT') ?></label>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 <?php } ?>
@@ -204,9 +234,35 @@
         </div>
       </div>
     </div>
+    <div class="col-md-12">
+      <div class="box">
+        <div class="box-header with-border">
+          <h3 class="box-title"><?= $Lang->get('VOTE__RANKING_TITLE') ?></h3>
+        </div>
+        <div class="box-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th><?= $Lang->get('USER__USERNAME') ?></th>
+                <th><?= $Lang->get('VOTE__TITLE_ACTION') ?></th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($ranking as $key => $value) { ?>
+                <tr>
+                  <td><?= $value['User']['pseudo'] ?></td>
+                  <td><?= $value['User']['vote'] ?></td>
+                </tr>
+              <?php } ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 <script>
+
   $('.website_type').change(function(e) {
     if($(this).val() == "other") {
       $('#rpg-'+$(this).attr('data-id')).hide(500);
@@ -234,12 +290,16 @@
     add +='<div class="box box-success websites">';
       add +='<div class="box-body">';
         add +='<div class="form-group">';
+          add +='<label><?= addslashes($Lang->get('VOTE__CONFIG_WEBSITE_NAME')) ?></label>';
+          add +='<input name="website_name" class="form-control" placeholder="Ex: RPG-Paradize" type="text">';
+        add +='</div>';
+        add +='<div class="form-group">';
           add +='<label><?= addslashes($Lang->get('VOTE__CONFIG_TIME_VOTE')) ?></label>';
           add +='<input name="time_vote" class="form-control" placeholder="minutes" type="text">';
         add +='</div>';
         add +='<div class="form-group">';
           add +='<label><?= addslashes($Lang->get('VOTE__CONFIG_PAGE_VOTE')) ?></label>';
-          add +='<input name="page_vote" class="form-control" placeholder="Ex: http://google.fr" type="text">';
+          add +='<input name="page_vote" class="form-control" placeholder="Ex: http://rpg-paradize.com/site-+FR+++RESET++ObsiFight+Serveur+PvP+Faction+2424+1.8-44835" type="text">';
         add +='</div>';
         add +='<div class="form-group">';
           add +='<label><?= addslashes($Lang->get('VOTE__CONFIG_WEBSITE_TYPE')) ?></label>';
@@ -314,6 +374,12 @@
           add +='<label><?= $Lang->get('VOTE__CONFIG_REWARD_PROBABILITY') ?></label>';
           add +='<input type="text" name="reward_proba" class="form-control reward_proba" placeholder="<?= addslashes($Lang->get('VOTE__CONFIG_REWARD_PERCENTAGE')) ?>">';
         add +='</div>';
+        add += '<div class="form-group">';
+          add += '<div class="checkbox">';
+            add += '<input name="need_connect_on_server" type="checkbox">';
+            add += '<label><?= $Lang->get('VOTE__CONFIG_REWARD_NEED_CONNECT') ?></label>';
+          add += '</div>';
+        add += '</div>';
       add +='</div>';
     add +='</div>';
     $('#add-js').append(add);
@@ -338,13 +404,15 @@
           name : reward_infos.find('input[name="reward_name"]').val(),
           command : reward_infos.find('input[name="reward_value"]').val(),
           proba : reward_infos.find('input[name="reward_proba"]').val(),
+          need_connect_on_server : reward_infos.find('input[name="need_connect_on_server"]').is(':checked')
         }
       } else {
         rewards[i] = {
           type : reward_infos.find('select[name="type_reward"]').val(),
           name : reward_infos.find('input[name="reward_name"]').val(),
           how : reward_infos.find('input[name="reward_value"]').val(),
-          proba : reward_infos.find('input[name="reward_proba"]').val()
+          proba : reward_infos.find('input[name="reward_proba"]').val(),
+          need_connect_on_server : reward_infos.find('input[name="need_connect_on_server"]').is(':checked')
         }
       }
       i++;
@@ -357,6 +425,7 @@
     $.each($('.websites'), function(index, value) {
       var website_infos = $(value);
       website[i] = {
+        website_name : website_infos.find('input[name="website_name"]').val(),
         time_vote : website_infos.find('input[name="time_vote"]').val(),
         page_vote : website_infos.find('input[name="page_vote"]').val(),
         website_type : website_infos.find('select[name="website_type"]').val(),

@@ -13,7 +13,7 @@
 				  <div class="panel-body">
 				  	<?php foreach ($websites as $key => $value) { ?>
 				  		<div class="col-md-4">
-							<button class="btn btn-success choose_website btn-block" id="<?= $key ?>"><?= $Lang->get('VOTE__STEP_0_BTN') ?> <?= $key+1 ?></button>
+							<button class="btn btn-success choose_website btn-block" id="<?= $key ?>"><?= $value['website_name'] ?></button>
 						</div>
 					<?php } ?>
 				  </div>
@@ -180,25 +180,27 @@
 		        		<h4 class="modal-title" id="myModalLabel"><?= $Lang->get('VOTE__REWARDS_TITLE') ?></h4>
 		      		</div>
 		      		<div class="modal-body">
-		      			<table class="table table-striped">
+								<table class="table table-striped">
 				          	<thead>
 				            	<tr>
 				              		<th>Nom</th>
+													<th><?= $Lang->get('VOTE__CONFIG_REWARD_PROBABILITY') ?></th>
 				            	</tr>
 				          	</thead>
 				          	<tbody>
-			                	<?php
+			                <?php
 			                	foreach ($rewards as $key => $value) {
-									if($value['type'] == "money") {
-										echo '<tr><td>'.$value['how'].' '.$Configuration->getMoneyName().'</td></tr>';
-									} else {
-										echo '<tr><td>'.$value['name'].'</td></tr>';
-									}
-								}
-								?>
-							</tbody>
+													echo '<tr>';
+														echo '<td>';
+															echo ($value['type'] == "money") ? $value['how'].' '.$Configuration->getMoneyName() : $value['name'];
+														echo '</td>';
+														echo '<td>'.$value['proba'].'%</td>';
+													echo '</tr>';
+												}
+											?>
+									</tbody>
 				        </table>
-		            </div>
+		          </div>
 		      		<div class="modal-footer">
 		        		<button type="button" class="btn btn-default" data-dismiss="modal"><?= $Lang->get('GLOBAL__CLOSE') ?></button>
 		     		</div>

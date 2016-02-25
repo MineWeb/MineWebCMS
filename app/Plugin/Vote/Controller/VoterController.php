@@ -241,6 +241,7 @@ class VoterController extends VoteAppController {
 
 															if(!$rewardStatus['status']) {
 																echo json_encode(array('statut' => false, 'msg' => $this->Lang->get($rewardStatus['msg'])));
+                                exit;
 															}
 															echo json_encode(array('statut' => true, 'msg' => $rewardStatus['msg']));
 
@@ -367,20 +368,44 @@ class VoterController extends VoteAppController {
 				$servers_online = array($this->Server->online());
 			}
 			if(!in_array(false, $servers_online)) { // si tous les serveurs sont allumés
-					if(empty($config['servers'])) { // si on a pas de liste, on prend celui par défaut
-						$cmd = str_replace('{PLAYER}', $user['pseudo'], $reward['command']);
-						$this->Server->send_command($cmd); // on envoie la commande puis enregistre le vote
-						$msg = str_replace('{PLAYER}', $user['pseudo'], $this->Lang->get('VOTE__SERVER_MESSAGE_SUCCESS')); //on gère le message de broadcast
-						$this->Server->send_command('broadcast '.$msg); // on l'envoie
-					} else {
-						foreach ($config['servers'] as $k2 => $v2) { // on parcours les serveurs
-							$cmd = str_replace('{PLAYER}', $user['pseudo'], $reward['command']);
-							$this->Server->send_command($cmd, $v2); // on envoie la commande puis enregistre le vote
-							$msg = str_replace('{PLAYER}', $user['pseudo'], $this->Lang->get('VOTE__SERVER_MESSAGE_SUCCESS'));
-							$this->Server->send_command('broadcast '.$msg, $v2);//on gère le broadcast
-						}
-					}
 
+        $cmd = $reward['command'];
+        $cmd = str_replace('{PLAYER}', $user['pseudo'], $cmd);
+        $cmd = str_replace('{PROBA}', $reward['proba'], $cmd);
+        $cmd = str_replace('{REWARD}', $reward['name'], $cmd);
+
+				if(empty($config['servers'])) { // si on a pas de liste, on prend celui par défaut
+
+          if($reward['need_connect_on_server'] == "true") {
+            $call = $this->Server->call(array('isConnected' => $user['pseudo']), false, true);
+            if($call['isConnected'] != 'true') {
+              return 'VOTE__ERROR_NEED_CONNECT_ON_SERVER';
+            }
+          }
+
+					$this->Server->commands($cmd); // on envoie la commande puis enregistre le vote
+				} else {
+					foreach ($config['servers'] as $k2 => $v2) { // on parcours les serveurs
+
+            if($reward['need_connect_on_server'] == "true") {
+              $call = $this->Server->call(array('isConnected' => $user['pseudo']), $v2, true);
+              if($call['isConnected'] == 'true') {
+                $continue = true;
+                break;
+              }
+            }
+
+					}
+          if($continue) {
+            unset($k2);
+            unset($v2);
+            foreach ($config['servers'] as $k2 => $v2) {
+              $this->Server->commands($cmd, $v2); // on envoie la commande puis enregistre le vote
+            }
+          } else {
+            return 'VOTE__ERROR_NEED_CONNECT_ON_SERVER';
+          }
+				}
 			} else { //le serveur est éteint
 				return 'SERVER__MUST_BE_ON';
 			}
@@ -442,6 +467,10 @@ class VoterController extends VoteAppController {
                 $selected_server = array();
             }
             $this->set(compact('selected_server'));
+
+            $this->loadModel('User');
+            $ranking = $this->User->find('all', array('limit' => '15', 'order' => 'vote desc'));
+            $this->set(compact('ranking'));
 
             $this->set('title_for_layout',$this->Lang->get('VOTE__TITLE'));
         } else {
