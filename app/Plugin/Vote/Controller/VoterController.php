@@ -1,8 +1,6 @@
 <?php
 class VoterController extends VoteAppController {
 
-	public $components = array('Configuration', 'Configuration');
-
     public function index() {
         $this->loadModel('Vote.VoteConfiguration');
         $search = $this->VoteConfiguration->find('all');
@@ -49,12 +47,15 @@ class VoterController extends VoteAppController {
             if(!empty($user_rank) && $this->Permissions->have($user_rank['User']['rank'], 'VOTE') == "true") {
                 if(!empty($this->request->data['pseudo'])) {
                     if($this->User->exist($this->request->data['pseudo'])) {
+
+											$user_id = $this->User->getFromUser('id', $this->request->data['pseudo']);
+
                         $this->loadModel('Vote.Vote');
                         $get_last_vote = $this->Vote->find('first',
 													array('conditions' =>
 														array(
 															'OR' => array(
-																	'username' => $this->request->data['pseudo'],
+																	'user_id' => $user_id,
 																	'ip' => $this->Util->getIP()
 																),
 															'website' => $this->Session->read('vote.website')
@@ -83,10 +84,30 @@ class VoterController extends VoteAppController {
                                 echo json_encode(array('statut' => true , 'msg' => $this->Lang->get('VOTE__STEP_1_SUCCESS')));
 
                             } else {
-                                echo json_encode(array('statut' => false , 'msg' =>$this->Lang->get('VOTE__VOTE_ERROR_WAIT')));
+
+                              $calcul_wait_time = ($time_vote - $last_vote)*60;
+                              $calcul_wait_time = $this->Util->secondsToTime($calcul_wait_time); //On le sort en jolie
+
+                              $wait_time = array();
+                              if($calcul_wait_time['d'] > 0) {
+                                $wait_time[] = $calcul_wait_time['d'].' '.$this->Lang->get('GLOBAL__DATE_R_DAYS');
+                              }
+                              if($calcul_wait_time['h'] > 0) {
+                                $wait_time[] = $calcul_wait_time['h'].' '.$this->Lang->get('GLOBAL__DATE_R_HOURS');
+                              }
+                              if($calcul_wait_time['m'] > 0) {
+                                $wait_time[] = $calcul_wait_time['m'].' '.$this->Lang->get('GLOBAL__DATE_R_MINUTES');
+                              }
+                              if($calcul_wait_time['s'] > 0) {
+                                $wait_time[] = $calcul_wait_time['s'].' '.$this->Lang->get('GLOBAL__DATE_R_SECONDS');
+                              }
+
+                              $wait_time = implode(', ', $wait_time);
+
+                              echo json_encode(array('statut' => false , 'msg' => $this->Lang->get('VOTE__VOTE_ERROR_WAIT', array('{WAIT_TIME}' => $wait_time))));
                             }
                         } else {
-                            echo json_encode(array('statut' => false , 'msg' =>$this->Lang->get('VOTE__VOTE_ERROR_WAIT')));
+                            echo json_encode(array('statut' => false , 'msg' => $this->Lang->get('VOTE__VOTE_ERROR_UNKNOWN_WEBSITE')));
                         }
                     } else {
                         echo json_encode(array('statut' => false , 'msg' =>$this->Lang->get('VOTE__VOTE_ERROR_USER_UNKNOWN')));
@@ -164,7 +185,8 @@ class VoterController extends VoteAppController {
 
                     // check si il a pas déjà voté sur ce site
                     $this->loadModel('Vote.Vote');
-                    $get_last_vote = $this->Vote->find('first', array('conditions' => array('OR' => array('username' => $this->Session->read('vote.pseudo'), 'ip' => $this->Util->getIP()), 'website' => $this->Session->read('vote.website'))));
+										$user_id = $this->User->getFromUser('id', $this->Session->read('vote.pseudo'));
+                    $get_last_vote = $this->Vote->find('first', array('conditions' => array('OR' => array('user_id' => $user_id, 'ip' => $this->Util->getIP()), 'website' => $this->Session->read('vote.website'))));
 
                     if(!empty($get_last_vote['Vote']['created'])) {
                         $now = time();
@@ -185,7 +207,7 @@ class VoterController extends VoteAppController {
                             if(empty($get_last_vote)) {
                                 $this->Vote->read(null, null);
                                 $this->Vote->set(array(
-                                    'username' => $this->Session->read('vote.pseudo'),
+                                    'user_id' => $user_id,
                                     'ip' => $this->Util->getIP(),
                                     'website' => $this->Session->read('vote.website')
                                 ));
@@ -193,7 +215,7 @@ class VoterController extends VoteAppController {
                             } else {
                                 $this->Vote->read(null, $get_last_vote['Vote']['id']);
                                 $this->Vote->set(array(
-                                    'username' => $this->Session->read('vote.pseudo'),
+                                    'user_id' => $user_id,
                                     'ip' => $this->Util->getIP(),
                                     'website' => $this->Session->read('vote.website'),
                                     'created' => date('Y-m-d H:i:s')
@@ -489,18 +511,18 @@ class VoterController extends VoteAppController {
                         $this->VoteConfiguration->save();
                         $this->History->set('EDIT_CONFIG', 'vote');
                         $this->Session->setFlash($this->Lang->get('VOTE__CONFIGURATION_SUCCESS'), 'default.success');
-                        echo $this->Lang->get('VOTE__CONFIGURATION_SUCCESS').'|true';
+                        echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('VOTE__CONFIGURATION_SUCCESS')));
                     } else {
-                        echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
+                        echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
                     }
                 } else {
-                    echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
+                    echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
                 }
             } else {
-                echo $this->Lang->get('ERROR__BAD_REQUEST').'|false';
+                echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
             }
         } else {
-            $this->redirect('/');
+            throw new ForbiddenException();
         }
     }
 }

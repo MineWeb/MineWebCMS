@@ -22,7 +22,7 @@ class VoteAppSchema extends CakeSchema {
 
   public $vote__votes = array(
     'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'),
-    'username' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 32, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+    'user_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 20),
     'ip' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 16, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
     'website' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
     'created' => array('type' => 'datetime', 'null' => false, 'default' => null),

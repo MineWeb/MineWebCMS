@@ -40,6 +40,13 @@
 								$('.sec')[1].remove();
 							}
 							$('#website_infos').attr('data-type', website_type);
+
+							$('.input-step1').attr('disabled', false);
+							$('.input-step1').removeClass('disabled');
+
+							$('.btn-step1').attr('disabled', false);
+							$('.btn-step1').removeClass('disabled');
+
 						});
 					});
 				</script>
@@ -54,9 +61,9 @@
 				    <form class="form-inline" data-ajax="true" action="<?= $this->Html->url(array('action' => 'setPseudo')) ?>" data-callback-function="step1">
 					  	<div class="form-group">
 					    	<label class="sr-only">Pseudo</label>
-					    	<input type="text" class="form-control input-lg input-step1" name="pseudo" placeholder="<?= $Lang->get('VOTE__MC_USERNAME') ?>">
+					    	<input type="text" class="form-control input-lg input-step1 disabled" name="pseudo" placeholder="<?= $Lang->get('VOTE__MC_USERNAME') ?>" disabled>
 					  	</div>
-					  	<button type="submit" class="btn btn-info btn-lg btn-step1"><?= $Lang->get('USER__LOGIN') ?></button>
+					  	<button type="submit" class="btn btn-info btn-lg btn-step1 disabled" disabled><?= $Lang->get('USER__LOGIN') ?></button>
 						</form>
 				  </div>
 				</div>
@@ -65,10 +72,15 @@
 						$('#icon_step1').css("display", "");
 						$('.step1').css("opacity", "0.7");
 						$('.step2').css("opacity", "");
-						$('.btn-step1').addClass('disabled');
 						$('.btn-step2').removeClass('disabled');
 						$('.input-step1').prop('disabled', true);
 						$('#script_step1').remove();
+
+						$('.input-step1').attr('disabled', 'disabled');
+						$('.input-step1').addClass('disabled');
+
+						$('.btn-step1').attr('disabled', 'disabled');
+						$('.btn-step1').addClass('disabled');
 					}
 				</script>
 			<!-- _______________ -->

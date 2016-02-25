@@ -74,6 +74,10 @@
         "GLOBAL__DATE_HOUR": "Heure",
         "GLOBAL__DATE_MINUTES": "Minutes",
         "GLOBAL__DATE_SECONDS": "Secondes",
+        "GLOBAL__DATE_R_DAYS":"jours",
+        "GLOBAL__DATE_R_HOURS": "heures",
+        "GLOBAL__DATE_R_MINUTES": "minutes",
+        "GLOBAL__DATE_R_SECONDS": "secondes",
         "GLOBAL__SAVE": "Sauvegarder",
 
         "HELP__TITLE":"J'ai besoin d'aide",
