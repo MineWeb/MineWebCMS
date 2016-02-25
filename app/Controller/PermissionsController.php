@@ -70,14 +70,14 @@ class PermissionsController extends AppController {
 					$this->History->set('ADD_RANK', 'permissions');
 
 					$this->Session->setFlash($this->Lang->get('USER__RANK_ADD_SUCCESS'), 'default.success');
-					echo $this->Lang->get('USER__RANK_ADD_SUCCESS').'|true';
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__RANK_ADD_SUCCESS')));
 
 				} else {
-					echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
 
 			} else {
-				echo $this->Lang->get('ERROR__BAD_REQUEST').'|false';
+				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
 			}
 		} else {
 			$this->redirect('/');

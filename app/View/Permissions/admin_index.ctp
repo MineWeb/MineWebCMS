@@ -79,8 +79,7 @@
         <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('USER__RANK_ADD') ?></h4>
       </div>
       <div class="modal-body">
-        <form action="<?= $this->Html->url(array('controller' => 'permissions', 'action' => 'add_rank', 'admin' => true)) ?>" method="post">
-          <input type="hidden" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'permissions', 'action' => 'index', 'admin' => true)) ?>">
+        <form action="<?= $this->Html->url(array('action' => 'add_rank')) ?>" method="post" data-ajax="true" data-redirect-url="#">
           <div class="ajax-msg"></div>
           <div class="input-group">
             <input type="text" class="form-control" name="name" placeholder="<?= $Lang->get('GLOBAL__NAME') ?>">

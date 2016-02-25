@@ -149,8 +149,7 @@
 							</div>
 
 							<div class="col-md-4">
-								<form id="allowed_ip">
-									<div class="ajax-msg-ip"></div>
+								<form method="post" data-ajax="true" action="<?= $this->Html->url(array('controller' => 'api', 'action' => 'add_ip')) ?>" data-callback-function="addIP">
 									<div class="form-group">
 										<input type="text" class="form-control" name="ip" placeholder="<?= $Lang->get('IP') ?>">
 									</div>
@@ -230,69 +229,47 @@
 	<?php if($Configuration->getKey('mineguard') == "true") { ?>
 
 		function enableMineGuard() {
-			$.post("<?= $this->Html->url(array('controller' => 'api', 'action' => 'enable_mineguard', 'admin' => false)) ?>", {}, function(data) {
-	          	data2 = data.split("|");
-			  	if(data.indexOf('true') != -1) {
-	          		$('.ajax-msg-mineguard').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-	          	} else if(data.indexOf('false') != -1) {
-	            	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-		        } else {
-			    	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></i></div>');
-			    }
-	        });
-	        return false;
+			var inputs = {};
+			inputs["data[_Token][key]"] = '<?= $csrfToken ?>';
+			$.post("<?= $this->Html->url(array('controller' => 'api', 'action' => 'enable_mineguard')) ?>", inputs, function(data) {
+				if(data.statut) {
+					$('.ajax-msg-mineguard').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data.msg+'</i></div>').fadeIn(500);
+				} else  {
+					$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data.msg+'</i></div>').fadeIn(500);
+				}
+			});
 		}
 
 		function disableMineGuard() {
-			$.post("<?= $this->Html->url(array('controller' => 'api', 'action' => 'disable_mineguard', 'admin' => false)) ?>", {}, function(data) {
-	          	data2 = data.split("|");
-			  	if(data.indexOf('true') != -1) {
-	          		$('.ajax-msg-mineguard').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-	          		var table_ip = $('#table-ip').html();
-	          		$('#table-mineguard').html(table_ip+'<tr><th>'+ip+'</th></tr>');
-	          	} else if(data.indexOf('false') != -1) {
-	            	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-		        } else {
-			    	$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></i></div>');
-			    }
-	        });
-	        return false;
+			var inputs = {};
+			inputs["data[_Token][key]"] = '<?= $csrfToken ?>';
+			$.post("<?= $this->Html->url(array('controller' => 'api', 'action' => 'disable_mineguard')) ?>", inputs, function(data) {
+				if(data.statut) {
+					$('.ajax-msg-mineguard').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data.msg+'</i></div>').fadeIn(500);
+					$('#table-ip').empty();
+				} else {
+					$('.ajax-msg-mineguard').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data.msg+'</i></div>').fadeIn(500);
+				}
+			});
 		}
 
-		$("#allowed_ip").submit(function( event ) {
-			$('.ajax-msg-ip').empty().html('<div class="alert alert-info"><a class="close" data-dismiss="alert">×</a><?= $Lang->get('GLOBAL__LOADING') ?>...</div>').fadeIn(500);
-	    	event.preventDefault();
-	        var $form = $( this );
-	        var ip = $form.find("input[name='ip']").val();
-	        $.post("<?= $this->Html->url(array('controller' => 'api', 'action' => 'add_ip', 'admin' => false)) ?>", { ip : ip }, function(data) {
-	          	data2 = data.split("|");
-			  	if(data.indexOf('true') != -1) {
-	          		$('.ajax-msg-ip').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-	          		var table_ip = $('#table-ip').html();
-	          		$('#table-ip').html(table_ip+'<tr><th>'+ip+'</th></tr>');
-	          	} else if(data.indexOf('false') != -1) {
-	            	$('.ajax-msg-ip').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-		        } else {
-			    	$('.ajax-msg-ip').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></i></div>');
-			    }
-	        });
-	        return false;
-	    });
+		function addIP(data, response) {
+			$('#table-ip').append('<tr><th>'+data['ip']+'</th></tr>');
+		}
+
 		$(".delete_ip").click(function( event ) {
-	    	event.preventDefault();
-	    	var ip = $(this).attr('data-ip-id');
-	    	console.log(ip);
-	        $.post("<?= $this->Html->url(array('controller' => 'api', 'action' => 'delete_ip', 'admin' => false)) ?>", { ip : ip }, function(data) {
-	          	data2 = data.split("|");
-			  	if(data.indexOf('true') != -1) {
-	          		$('#'+ip).fadeOut(500);
-	          	} else if(data.indexOf('false') != -1) {
-	            	$('.ajax-msg-ip').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-		        } else {
-			    	$('.ajax-msg-ip').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></i></div>');
-			    }
-	        });
-	        return false;
-	    });
+			event.preventDefault();
+			var inputs = {};
+			inputs["data[_Token][key]"] = '<?= $csrfToken ?>';
+			inputs['ip'] = $(this).attr('data-ip-id');
+			$.post("<?= $this->Html->url(array('controller' => 'api', 'action' => 'delete_ip')) ?>", inputs, function(data) {
+				if(data.statut) {
+					$('#'+inputs['ip']).fadeOut(500);
+				} else {
+					$('.ajax-msg-ip').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
+				}
+			});
+		});
+
 	<?php } ?>
 </script>

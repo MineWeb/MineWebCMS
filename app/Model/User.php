@@ -218,12 +218,12 @@ class User extends AppModel {
     }
 
   	public function getFromUser($key, $username) {
-    	$search_user = $this->User->find('all', array(
+    	$search_user = $this->find('first', array(
       		'conditions' => array(
           		'pseudo' => $username,
         	)
     	));
-    	return ($search_user) ? $search_user['User'][$key] : NULL;
+    	return (!empty($search_user)) ? $search_user['User'][$key] : NULL;
   	}
 
   	public function getAllFromCurrentUser() {

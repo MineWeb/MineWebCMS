@@ -60,6 +60,10 @@
   $('#update').click(function() {
     $('#update').attr('disabled', 'disabled');
     $('#update-msg').html('<br><div class="alert alert-info"><?= $Lang->get('UPDATE__LOADING') ?></div>').fadeIn(500);
+
+    var inputs = {};
+    inputs["data[_Token][key]"] = '<?= $csrfToken ?>';
+
     $.ajax({
       xhr: function() {
             $('.progress').css('display', 'block');
@@ -73,7 +77,7 @@
         },
       type: 'POST',
       url: '<?= $this->Html->url(array('controller' => 'update', 'action' => 'update', 'admin' => true)) ?>',
-      data: {},
+      data: inputs,
       complete: function(response, status, xhr) {
         data2 = response['responseText'].split("|");
         if(data2.indexOf('true') != -1) {
