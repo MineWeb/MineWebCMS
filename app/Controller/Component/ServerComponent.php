@@ -5,6 +5,7 @@ class ServerComponent extends Object {
 	private $config = NULL;
 	private $online = NULL;
 
+	public $controller;
   public $components = array('Session', 'Configuration');
 
 	function initialize(&$controller) {
@@ -288,7 +289,7 @@ class ServerComponent extends Object {
 	function get($type) {
 		if($type == "secret_key") {
 
-			$return = $this->sendToAPI(
+			$return = $this->controller->sendToAPI(
                   array(),
                   'get_secret_key',
                   true

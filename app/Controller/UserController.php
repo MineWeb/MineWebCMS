@@ -563,18 +563,17 @@ class UserController extends AppController {
 					$findHistory = $this->History->getLastFromUser($id);
 					$search_user['History'] = $this->History->format($findHistory);
 
-					$options_ranks = array('member' => $this->Lang->get('USER__RANK_MEMBER'), 2 => $this->Lang->get('USER__RANK_MODERATOR'), 3 => $this->Lang->get('USER__RANK_ADMINISTRATOR'), 5 => $this->Lang->get('USER__RANK_BANNED'));
+					$options_ranks = array(
+						0 => $this->Lang->get('USER__RANK_MEMBER'),
+						2 => $this->Lang->get('USER__RANK_MODERATOR'),
+						3 => $this->Lang->get('USER__RANK_ADMINISTRATOR'),
+						4 => $this->Lang->get('USER__RANK_SUPER_ADMINISTRATOR'),
+						5 => $this->Lang->get('USER__RANK_BANNED')
+					);
 					$this->loadModel('Rank');
 					$custom_ranks = $this->Rank->find('all');
 					foreach ($custom_ranks as $key => $value) {
 						$options_ranks[$value['Rank']['rank_id']] = $value['Rank']['name'];
-					}
-
-					foreach ($options_ranks as $k => $v) {
-						if($search_user['rank'] == $k OR $k == "member" && $search_user['rank'] == 0) {
-							$search_user['rank'] = $v;
-							unset($options_ranks[$k]);
-						}
 					}
 
 					if($this->Configuration->getKey('confirm_mail_signup') && !empty($search_user['confirmed']) && date('Y-m-d H:i:s', strtotime($user['confirmed'])) != $user['confirmed']) {
@@ -625,26 +624,44 @@ class UserController extends AppController {
 
 	function admin_edit_ajax() {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected && $this->User->isAdmin()) {
 			if($this->request->is('post')) {
 				$this->loadModel('User');
-				if(!empty($this->request->data['pseudo']) AND !empty($this->request->data['email'])) {
-					if(empty($this->request->data['rank'])) {
-						$rank = $this->User->find('all', array('conditions' => array('pseudo' => $this->request->data['pseudo'])));
-						$this->request->data['rank'] = $rank[0]['User']['rank'];
+				if(!empty($this->request->data['id']) && !empty($this->request->data['email']) && !empty($this->request->data['rank'])) {
+
+					$findUser = $this->User->find('first', array('conditions' => array('id' => intval($this->request->data['id']))));
+
+					if(empty($findUser)) {
+						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EDIT_ERROR_UNKNOWN')));
+						exit;
 					}
-					if(empty($this->request->data['password'])) {
-						$password = $this->User->find('all', array('conditions' => array('pseudo' => $this->request->data['pseudo'])));
-						$this->request->data['password'] = $password[0]['User']['password'];
-					} else {
-						$this->request->data['password'] = password($this->request->data['password']);
+
+					if($findUser['User']['id'] == $this->User->getKey('id') && $this->request->data['rank'] != $this->User->getKey('rank')) {
+						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EDIT_ERROR_YOURSELF')));
+						exit;
 					}
-					foreach ($this->request->data as $key => $value) {
-						if($key == "rank" AND $value == "member") {
-							$value = 0;
-						}
-						$this->User->setToUser($key, $value, $this->request->data['pseudo']);
+
+					$data = array(
+						'email' => $this->request->data['email'],
+						'rank' => $this->request->data['rank']
+					);
+
+					if(!empty($this->request->data['password'])) {
+						$data['password'] = password($this->request->data['password']);
 					}
+
+					if($this->EyPlugin->isInstalled('eywek.shop.1')) {
+						$data['money'] = $this->request->data['money'];
+					}
+
+					if($this->EyPlugin->isInstalled('eywek.vote.3')) {
+						$data['vote'] = $this->request->data['vote'];
+					}
+
+					$this->User->read(null, $findUser['User']['id']);
+					$this->User->set($data);
+					$this->User->save();
+
 					$this->History->set('EDIT_USER', 'user');
 					$this->Session->setFlash($this->Lang->get('USER__EDIT_SUCCESS'), 'default.success');
 					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EDIT_SUCCESS')));

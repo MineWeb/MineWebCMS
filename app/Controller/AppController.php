@@ -317,6 +317,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 
   	$csrfToken = $this->Session->read('_Token')['key'];
     if(empty($csrfToken)) {
+      $this->Session->started();
       $this->Session->renew();
       $csrfToken = $this->Session->read('_Token')['key'];
     }

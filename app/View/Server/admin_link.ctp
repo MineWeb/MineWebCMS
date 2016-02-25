@@ -17,7 +17,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
-            <a href="<?= $this->Html->url(array('action' => 'switchState')) ?>" class="btn btn-<?= ($isEnabled) ? 'danger' : 'success' ?>"><?= ($isEnabled) ? $Lang->get('GLOBAL__DISABLE') : $Lang->get('GLOBAL__ENABLE') ?></a>
+            <a href="<?= $this->Html->url(array('action' => 'switchState')) ?>" class="btn btn-<?= ($isEnabled) ? 'danger' : 'success' ?>"><?= ($isEnabled) ? $Lang->get('SERVER__DISABLE_SERVER') : $Lang->get('SERVER__ENABLE_SERVER') ?></a>
             <a href="<?= $this->Html->url(array('action' => 'switchCacheState')) ?>" class="btn btn-<?= ($isCacheEnabled) ? 'danger' : 'success' ?>"><?= ($isCacheEnabled) ? $Lang->get('SERVER__DISABLE_CACHE') : $Lang->get('SERVER__ENABLE_CACHE') ?></a>
 
           </form>

@@ -1,7 +1,7 @@
 <?php
 class Configuration extends AppModel {
 
-  private $dataConfig;
+  public $dataConfig;
 
   private function getData() {
     if(empty($this->dataConfig)) {

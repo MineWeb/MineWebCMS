@@ -310,7 +310,7 @@ class ThemeComponent extends Object {
 
     public function install($apiID) {
 
-      $return = $this->sendToAPI(
+      $return = $this->controller->sendToAPI(
                   array(),
                   'get_theme/'.$apiID,
                   true
@@ -338,7 +338,7 @@ class ThemeComponent extends Object {
 
     public function update($apiID) {
 
-      $return = $this->sendToAPI(
+      $return = $this->controller->sendToAPI(
                   array(),
                   'get_theme/'.$apiID,
                   true

@@ -159,8 +159,12 @@ class NavbarController extends AppController {
 					if(!empty($this->request->data['url']) AND $this->request->data['url'] != "undefined") {
 
 						$order = $this->Navbar->find('first', array('order' => array('order' => 'DESC')));
-						$order = $order['Navbar']['order'];
-						$order = intval($order) + 1;
+						if(!empty($order)) {
+							$order = $order['Navbar']['order'];
+							$order = intval($order) + 1;
+						} else {
+							$order = 1;
+						}
 
 						$open_new_tab = ($this->request->data['open_new_tab'] == 'true') ? 1 : 0;
 

@@ -71,7 +71,7 @@ class UpdateComponent extends Object {
 
 		// récupérer les fichiers mis à jour sur mineweb.org (le zip dans un dossier temp)
 
-		$return = $this->sendToAPI(
+		$return = $this->controller->sendToAPI(
 								array(),
 								'update',
 								true

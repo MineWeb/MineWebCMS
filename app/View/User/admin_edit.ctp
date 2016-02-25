@@ -8,7 +8,7 @@
         <div class="box-body">
           <form action="<?= $this->Html->url(array('controller' => 'user', 'action' => 'edit_ajax')) ?>" method="post" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'user', 'action' => 'index', 'admin' => 'true')) ?>">
 
-            <input type="hidden" value="<?= $search_user['pseudo'] ?>" name="pseudo">
+            <input type="hidden" value="<?= $search_user['id'] ?>" name="id">
 
             <div class="form-group">
               <label><?= $Lang->get('USER__USERNAME') ?></label>
@@ -40,9 +40,8 @@
             <div class="form-group">
               <label><?= $Lang->get('USER__RANK') ?></label>
               <select class="form-control" name="rank">
-                <option value="" selected><?= ($search_user['rank'] == 4) ? $Lang->get('USER__RANK_ADMINISTRATOR') : $search_user['rank'] ?></option>
                 <?php foreach ($options_ranks as $key => $value) { ?>
-                    <option value="<?= $key ?>"><?= $value ?></option>
+                    <option value="<?= $key ?>"<?= ($search_user['rank'] == $key) ? ' selected' : '' ?>><?= $value ?></option>
                 <?php } ?>
               </select>
             </div>

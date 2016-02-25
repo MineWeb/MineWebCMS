@@ -81,20 +81,22 @@ class ConfigurationController extends AppController {
 					}
 				}
 
-				$this->loadModel('Configuration');
 				$this->Configuration->read(null, 1);
 				$this->Configuration->set($data);
 				$this->Configuration->save();
 
 				$this->History->set('EDIT_CONFIGURATION', 'configuration');
 
+				$this->Configuration->cacheQueries = false; //On désactive le cache
+				$this->Configuration->dataConfig = null;
+				$this->Lang->lang = $this->Lang->getLang(); // on refresh les messages
+
 				$this->Session->setFlash($this->Lang->get('CONFIG__EDIT_SUCCESS'), 'default.success');
 			}
 
-			$this->Lang->lang = $this->Lang->getLang(); // on refresh les messages
+			$config = $this->Configuration->getAll();
 
-			$this->loadModel('Configuration');
-			$config = $this->Configuration->query('SELECT * FROM configurations WHERE id=1;', false)[0]['configurations'];
+			$this->Configuration->cacheQueries = true; //On le réactive
 
 			$config['lang'] = $this->Lang->getLang('config')['path'];
 

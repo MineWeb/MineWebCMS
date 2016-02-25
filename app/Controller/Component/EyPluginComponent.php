@@ -518,7 +518,7 @@ class EyPluginComponent extends Object {
 
     public function download($apiID, $slug, $install = false) {
         // get du zip sur mineweb.org
-      $return = $this->sendToAPI(
+      $return = $this->controller->sendToAPI(
                   array(),
                   'get_plugin/'.$apiID,
                   true

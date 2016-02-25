@@ -70,7 +70,7 @@ class LangComponent extends Object {
       return $languages_available;
     }
 
-    public function getLang($mode = false) {
+    public function getLang($mode = false, $language = null) {
 
       $mode = (!$mode) ? $this->mode : $mode;
 
