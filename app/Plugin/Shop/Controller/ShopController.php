@@ -937,7 +937,6 @@ class ShopController extends ShopAppController {
 		}
 	}
 
-		/* TESTER */
 	public function starpass_verif() {
 		$this->autoRender = false;
 		if($this->isConnected AND $this->Permissions->can('CREDIT_ACCOUNT')) {
@@ -968,7 +967,7 @@ class ShopController extends ShopAppController {
 				/* Envoi de la requête vers le serveur StarPass
 				Dans la variable tab[0] on récupère la réponse du serveur
 				Dans la variable tab[1] on récupère l'URL d'accès ou d'erreur suivant la réponse du serveur */
-				$get_f=@file( "http://script.starpass.fr/check_php.php?ident=$ident&codes=$codes&DATAS=$datas" );
+				$get_f=@file("http://script.starpass.fr/check_php.php?ident=$ident&codes=$codes&DATAS=$datas");
 				if(!$get_f)
 				{
 				exit( "Votre serveur n'a pas accès au serveur de StarPass, merci de contacter votre hébergeur. " );
@@ -1016,109 +1015,137 @@ class ShopController extends ShopAppController {
 		}
 	}
 
-	public function ipn() {
+	public function ipn() { // cf. https://developer.paypal.com/docs/classic/ipn/gs_IPN/
 		$this->autoRender = false;
-		if($this->isConnected AND $_POST AND $this->Permissions->can('CREDIT_ACCOUNT')) {
-		    if(empty($IPN)){
-		        $IPN = $_POST;
-		    }
-		    if(empty($IPN['verify_sign'])){
-		        echo 'null';
-		    }
-		    $IPN['cmd'] = '_notify-validate';
-		    //$PaypalHost = (empty($IPN['test_ipn']) ? 'www' : 'www.sandbox').'.paypal.com';
-		    $PaypalHost = 'www.paypal.com';
-		    $cURL = curl_init();
-		    curl_setopt($cURL, CURLOPT_SSL_VERIFYPEER, false);
-		    curl_setopt($cURL, CURLOPT_SSL_VERIFYHOST, false);
-		    curl_setopt($cURL, CURLOPT_URL, "https://{$PaypalHost}/cgi-bin/webscr");
-		    curl_setopt($cURL, CURLOPT_ENCODING, 'gzip');
-		    curl_setopt($cURL, CURLOPT_BINARYTRANSFER, true);
-		    curl_setopt($cURL, CURLOPT_POST, true); // POST back
-		    curl_setopt($cURL, CURLOPT_POSTFIELDS, $IPN); // the $IPN
-		    curl_setopt($cURL, CURLOPT_HEADER, false);
-		    curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true);
-		    curl_setopt($cURL, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
-		    curl_setopt($cURL, CURLOPT_FORBID_REUSE, true);
-		    curl_setopt($cURL, CURLOPT_FRESH_CONNECT, true);
-		    curl_setopt($cURL, CURLOPT_CONNECTTIMEOUT, 30);
-		    curl_setopt($cURL, CURLOPT_TIMEOUT, 60);
-		    curl_setopt($cURL, CURLINFO_HEADER_OUT, true);
-		    curl_setopt($cURL, CURLOPT_HTTPHEADER, array(
-		        'Connection: close',
-		        'Expect: ',
-		    ));
-		    $Response = curl_exec($cURL);
-		    $Status = (int)curl_getinfo($cURL, CURLINFO_HTTP_CODE);
-		    curl_close($cURL);
-		    if(empty($Response) or !preg_match('~^(VERIFIED|INVALID)$~i', $Response = trim($Response)) or !$Status){
-		        echo 'null';
-		    }
-		    if(intval($Status / 100) != 2){
-		        echo 'false';
-		    }
-		    $item_name = $_POST['item_name'];
-			$item_number = $_POST['item_number'];
-			$payment_status = $_POST['payment_status'];
-			$payment_amount = $_POST['mc_gross'];
-			$payment_currency = $_POST['mc_currency'];
-			$txn_id = $_POST['txn_id'];
-			$receiver_email = $_POST['receiver_email'];
-			$payer_email = $_POST['payer_email'];
-			$custom = $_POST['custom'];
 
-		    //if($Response == "VERIFIED") {
-		    	// vérifier que payment_status a la valeur Completed
-				if ( $payment_status == "Completed") {
-					$this->loadModel('Shop.Paypal');
-					$search_offer = $this->Paypal->find('all', array('conditions' => array('price' => $payment_amount))); // je cherche une offre avec ce montant là
-					if(!empty($search_offer)) {
-						$search_offer = $search_offer[0]['Paypal'];
-						$email_account = $search_offer['email'];
-						if ( $email_account == $receiver_email) {
-							if ($payment_currency=="EUR") {
-								// il a bien payé
+		if($this->request->is('post')) { //On vérifie l'état de la requête
 
-								$this->loadModel('History');
-								$find_history = $this->History->find('first', array('conditions' => array('other LIKE' => '%|'.$txn_id)));
+			// On assigne les variables
+				$item_name        = $this->request->data['item_name'];
+	 			$item_number      = $this->request->data['item_number'];
+	 			$payment_status   = $this->request->data['payment_status'];
+	 			$payment_amount   = $this->request->data['mc_gross'];
+	 			$payment_currency = $this->request->data['mc_currency'];
+	 			$txn_id           = $this->request->data['txn_id'];
+	 			$receiver_email   = $this->request->data['receiver_email'];
+	 			$payer_email      = $this->request->data['payer_email'];
+				$user_id      		= $this->request->data['custom'];
 
-								if($find_history) { // si la transaction n'est pas déjà dans la bdd
+			// On vérifie que l'utilisateur contenu dans le champ custom existe bien
 
-									$user_money = $this->Connect->get('money');
-									$new_money = intval($user_money) + intval($search_offer['money']);
+				$this->loadModel('User');
+				if(!$this->User->exist($user_id)) {
+					throw new InternalErrorException('PayPal : Unknown user');
+				}
 
-									$this->Connect->set('money', $new_money);
+			// On prépare la requête de vérification
+				$IPN = $this->request->data;
+				$IPN['cmd'] = '_notify-validate';
 
-									$this->HistoryC = $this->Components->load('History');
-									$this->HistoryC->set('BUY_MONEY', 'shop', 'paypal|'.$search_offer['money'].'|'.$txn_id);
+			// On fais la requête
 
-									$this->Session->setFlash($this->Lang->get('SUCCESS_PAYPAL'), 'default.success');
+				$cURL = curl_init();
+				curl_setopt($cURL, CURLOPT_SSL_VERIFYPEER, false);
+				curl_setopt($cURL, CURLOPT_SSL_VERIFYHOST, false);
+				curl_setopt($cURL, CURLOPT_URL, "https://www.paypal.com/cgi-bin/webscr");
+				curl_setopt($cURL, CURLOPT_ENCODING, 'gzip');
+				curl_setopt($cURL, CURLOPT_BINARYTRANSFER, true);
+				curl_setopt($cURL, CURLOPT_POST, true); // POST back
+				curl_setopt($cURL, CURLOPT_POSTFIELDS, $IPN); // the $IPN
+				curl_setopt($cURL, CURLOPT_HEADER, false);
+				curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($cURL, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
+				curl_setopt($cURL, CURLOPT_FORBID_REUSE, true);
+				curl_setopt($cURL, CURLOPT_FRESH_CONNECT, true);
+				curl_setopt($cURL, CURLOPT_CONNECTTIMEOUT, 30);
+				curl_setopt($cURL, CURLOPT_TIMEOUT, 60);
+				curl_setopt($cURL, CURLINFO_HEADER_OUT, true);
+				curl_setopt($cURL, CURLOPT_HTTPHEADER, array(
+						'Connection: close',
+						'Expect: ',
+				));
+				$Response = curl_exec($cURL);
+				$Status = (int)curl_getinfo($cURL, CURLINFO_HTTP_CODE);
+				curl_close($cURL);
+
+			// On traite la réponse
+
+				// On vérifie que il y ai pas eu d'erreur
+
+					if(empty($Response) || $Status != 200 || !$Status){
+						throw new InternalErrorException('PayPal : Error with PayPal Response');
+					}
+
+				// On vérifie que la paiement est vérifié
+
+					if(!preg_match('~^(VERIFIED)$~i', trim($Response))) {
+						throw new InternalErrorException('PayPal : Paiement not verified');
+					}
+
+				// On effectue les autres vérifications
+
+					if($payment_status == "Completed") { //Le paiment est complété
+
+						if($payment_currency == "EUR") { //Le paiement est bien en euros
+
+							// On cherche l'offre avec ce montant là
+							$this->loadModel('Shop.Paypal');
+							$findOffer = $this->Paypal->find('first', array('conditions' => array('price' => $payment_amount)));
+							if(!empty($findOffer)) {
+
+								// On vérifie que ce soit le bon mail
+								if($receiver_email == $findOffer['Paypal']['email']) {
+
+									// On vérifie que le paiement pas déjà en base de données
+									$this->loadModel('Shop.PaypalHistory');
+									$findPayment = $this->PaypalHistory->find('first', array('conditions' => array('payment_id' => $txn_id)));
+
+									if(empty($findPayment)) {
+
+										// On récupére le solde de l'utilisateur et on ajoute ses nouveaux crédits
+										$sold = $this->User->getFromUser('money', $user_id);
+										$new_sold = $sold + $findOffer['Paypal']['money'];
+
+										// On ajoute l'argent à l'utilisateur
+										$this->User->setToUser('money', $newSold, $user_id);
+
+										// On l'ajoute dans l'historique global
+										$this->HistoryC = $this->Components->load('History');
+										$this->HistoryC->set('BUY_MONEY', 'shop');
+
+										// On l'ajoute dans l'historique des paiements
+										$this->PaypalHistory->create();
+										$this->PaypalHistory->set(array(
+											'payment_id' => $txn_id,
+											'user_id' => $user_id,
+											'offer_id' => $findOffer['Paypal']['id'],
+											'payment_amount' => $findOffer['Paypal']['money']
+										));
+										$this->PaypalHistory->save();
+
+										$this->response->statusCode(200);
+
+									} else {
+										throw new InternalErrorException('PayPal : Payment already credited');
+									}
 
 								}
 
-								$this->redirect(array('controller' => 'shop', 'action' => 'index'));
+							} else {
+								throw new InternalErrorException('PayPal : Unknown offer');
 							}
+
+						} else {
+							throw new InternalErrorException('PayPal : Bad currency');
 						}
+
 					} else {
-						// erreur pendant le traitement
-						$this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
-		       			$this->redirect(array('controller' => 'shop', 'action' => 'index'));
+						throw new InternalErrorException('PayPal : Paiement not completed');
 					}
-				} else {
-					// erreur pendant le traitement
-					$this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
-		       		$this->redirect(array('controller' => 'shop', 'action' => 'index'));
-				}
-			/*} else {
-				// idem
-				$this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
-		       	$this->redirect(array('controller' => 'shop', 'action' => 'index'));
-			}*/
+
 		} else {
-			// redirection
-			$this->redirect('/');
+			throw new InternalErrorException('PayPal : Not post');
 		}
 	}
-	/* -- */
 
 }

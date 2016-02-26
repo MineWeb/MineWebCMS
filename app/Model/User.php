@@ -181,70 +181,97 @@ class User extends AppModel {
       }
 	}
 
-	public function exist($username) {
-    	$search_user = $this->find('all', array(
-        	'conditions' => array(
-            	'pseudo' => $username,
-        	)
-    	));
-    	return (!empty($search_user));
+	public function exist($search) { //username || id
+
+		if(intval($search) > 0) {
+			$conditions = array(
+					'id' => intval($search),
+			);
+		} else {
+			$conditions = array(
+					'pseudo' => $search,
+			);
+		}
+
+  	$search_user = $this->find('all', array(
+      	'conditions' => $conditions
+  	));
+  	return (!empty($search_user));
+	}
+
+	public function getKey($key) {
+  	if(CakeSession::check('user')) {
+    		$search_user = $this->getDataBySession(CakeSession::read('user'));
+    		return ($search_user) ? $search_user['User'][$key] : '';
   	}
+	}
 
-  	public function getKey($key) {
-    	if(CakeSession::check('user')) {
-      		$search_user = $this->getDataBySession(CakeSession::read('user'));
-      		return ($search_user) ? $search_user['User'][$key] : '';
-    	}
-  	}
-
-  	public function setKey($key, $value) {
-    	if(CakeSession::check('user')) {
-      		$search_user = $this->getDataBySession(CakeSession::read('user'));
-      		if($search_user) {
-        		$this->read(null, $search_user['User']['id']);
-        		$this->set(array($key => $value));
-
-						// on reset les données
-						$userData = null;
-
-        		return $this->save();
-      		}
-    	}
-  	}
-
-  	public function getUsernameByID($id) {
-    	$search_user = $this->getDataBySession(CakeSession::read('user'));
-      	return ($search_user) ? $search_user['0']['User']['pseudo'] : '';
-    }
-
-  	public function getFromUser($key, $username) {
-    	$search_user = $this->find('first', array(
-      		'conditions' => array(
-          		'pseudo' => $username,
-        	)
-    	));
-    	return (!empty($search_user)) ? $search_user['User'][$key] : NULL;
-  	}
-
-  	public function getAllFromCurrentUser() {
-    	if(CakeSession::check('user')) {
-      		$search_user = $this->getDataBySession(CakeSession::read('user'));
-      		return ($search_user) ? $search_user['User'] : NULL;
-    	}
-  	}
-
-  	public function setToUser($key, $value, $username) {
-    	$search_user = $this->find('all', array(
-      		'conditions' => array(
-          		'pseudo' => $username,
-        	)
-    	));
-    	if($search_user) {
-      		$this->read(null, $search_user['0']['User']['id']);
+	public function setKey($key, $value) {
+  	if(CakeSession::check('user')) {
+    		$search_user = $this->getDataBySession(CakeSession::read('user'));
+    		if($search_user) {
+      		$this->read(null, $search_user['User']['id']);
       		$this->set(array($key => $value));
+
+					// on reset les données
+					$userData = null;
+
       		return $this->save();
-    	}
+    		}
   	}
+	}
+
+	public function getUsernameByID($id) {
+  	$search_user = $this->find('first', array('conditons' => array('id' => $id)));
+    return (!empty($search_user)) ? $search_user['User']['pseudo'] : '';
+  }
+
+	public function getFromUser($key, $username) {
+
+		if(intval($search) > 0) {
+			$conditions = array(
+					'id' => intval($search),
+			);
+		} else {
+			$conditions = array(
+					'pseudo' => $search,
+			);
+		}
+
+  	$search_user = $this->find('first', array(
+    		'conditions' => $conditions
+  	));
+  	return (!empty($search_user)) ? $search_user['User'][$key] : NULL;
+	}
+
+	public function getAllFromCurrentUser() {
+  	if(CakeSession::check('user')) {
+    		$search_user = $this->getDataBySession(CakeSession::read('user'));
+    		return ($search_user) ? $search_user['User'] : NULL;
+  	}
+	}
+
+	public function setToUser($key, $value, $username) {
+
+		if(intval($search) > 0) {
+			$conditions = array(
+					'id' => intval($search),
+			);
+		} else {
+			$conditions = array(
+					'pseudo' => $search,
+			);
+		}
+
+  	$search_user = $this->find('all', array(
+    		'conditions' => $conditions
+  	));
+  	if($search_user) {
+    		$this->read(null, $search_user['0']['User']['id']);
+    		$this->set(array($key => $value));
+    		return $this->save();
+  	}
+	}
 
 	public function afterSave($created, $options = array()) {
 		if($created) {

@@ -1,4 +1,7 @@
 {
+  "SHOP__PAYPAL_RETURN_MSG":"Retourner sur {WEBSITE_NAME} pour récupérer les points",
+
+
     "END_DATE": "Date de fin",
     "IN": "En",
     "AFFICH": "Afficher",
