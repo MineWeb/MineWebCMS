@@ -2,7 +2,7 @@
 <div class="container">
   <div class="row">
     <div class="col-md-3">
-      <p class="lead"><?= ($isConnected) ? $money : $Lang->get('SHOP'); ?></p>
+      <p class="lead"><?= ($isConnected) ? $money : $Lang->get('SHOP__TITLE'); ?></p>
         <div class="list-group">
             <?php
             $i = 0;
@@ -30,7 +30,7 @@
                               <h4><a href="#"><?= before_display($v['Item']['name']) ?></a>
                               </h4>
                               <p><?= substr(before_display($v['Item']['description']), 0, 140); ?><?php if(strlen($v['Item']['description']) > "140") { echo '...'; } ?></p>
-                              <?php if($isConnected AND $Permissions->can('CAN_BUY')) { ?><button class="btn btn-success pull-right" onClick="affich_item('<?= $v['Item']['id'] ?>')"><?= $Lang->get('BUY') ?></button> <?php } ?>
+                              <?php if($isConnected AND $Permissions->can('CAN_BUY')) { ?><button class="btn btn-success pull-right" onClick="affich_item('<?= $v['Item']['id'] ?>')"><?= $Lang->get('SHOP__BUY') ?></button> <?php } ?>
                           </div>
                       </div>
                   </div>
@@ -87,7 +87,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('WANT_TO_BUY') ?></h4>
+        <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('SHOP__BUY_CONFIRM') ?></h4>
       </div>
       <div id="content_buy"></div>
     </div>

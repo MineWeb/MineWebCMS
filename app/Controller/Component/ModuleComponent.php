@@ -43,6 +43,7 @@ class ModuleComponent extends Object {
   	$list = $this->listModules();
 
     $Lang = $this->controller->Lang;
+		$Configuration = $this->controller->Configuration;
 
     App::uses('HtmlHelper', 'View/Helper');
     $this->Html = new HtmlHelper(new View());

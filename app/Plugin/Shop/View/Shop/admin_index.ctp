@@ -6,7 +6,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
   <div class="row">
     <div class="col-md-6">
       <a class="btn btn-app btn-block" href="#" data-toggle="modal" data-target="#manage_vouchers">
-          <i class="fa fa-shopping-cart"></i> <?= $Lang->get('MANAGE_VOUCHERS') ?>
+          <i class="fa fa-shopping-cart"></i> <?= $Lang->get('SHOP__VOUCHERS_MANAGE') ?>
       </a>
     </div>
     <div class="col-md-6">
@@ -32,7 +32,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
               <thead>
                 <tr>
                   <th><?= $Lang->get('GLOBAL__NAME') ?></th>
-                  <th><?= $Lang->get('PRICE') ?></th>
+                  <th><?= $Lang->get('SHOP__ITEM_PRICE') ?></th>
                   <th><?= $Lang->get('CATEGORY') ?></th>
                   <th class="right"><?= $Lang->get('ACTIONS') ?></th>
                 </tr>
@@ -165,7 +165,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
       <div class="col-md-6">
         <div class="box">
           <div class="box-header with-border">
-            <h3 class="box-title"><?= $Lang->get('PAYSAFECARD') ?>&nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'toggle_paysafecard', 'admin' => true)) ?>" class="btn btn-success"><?php if($paysafecard_enabled) { echo $Lang->get('GLOBAL__DISABLE'); } else { echo $Lang->get('GLOBAL__ENABLE'); } ?></a></h3>
+            <h3 class="box-title"><?= $Lang->get('SHOP__PAYSAFECARD') ?>&nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'toggle_paysafecard', 'admin' => true)) ?>" class="btn btn-success"><?php if($paysafecard_enabled) { echo $Lang->get('GLOBAL__DISABLE'); } else { echo $Lang->get('GLOBAL__ENABLE'); } ?></a></h3>
           </div>
           <div class="box-body">
 
@@ -202,7 +202,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
       </div>
       <script>
       function howmuch(id) {
-          var money = prompt("<?= $Lang->get('HOW_MUCH_MONEY_GIVE') ?>");
+          var money = prompt("<?= $Lang->get('SHOP__PAYSAFECARD_VALID_CONFIRM') ?>");
 
           if (money != null) {
               document.location = '<?= $this->Html->url(array('controller' => 'Shop', 'action' => 'paysafecard_valid/')) ?>/'+id+'/'+money;
@@ -223,7 +223,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                 <tr>
                   <th><?= $Lang->get('GLOBAL__NAME') ?></th>
                   <th><?= $Lang->get('MAIL') ?></th>
-                  <th><?= $Lang->get('PRICE') ?></th>
+                  <th><?= $Lang->get('SHOP__ITEM_PRICE') ?></th>
                   <th><?= ucfirst($Configuration->getMoneyName()) ?></th>
                   <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
                   <th class="right"><?= $Lang->get('ACTIONS') ?></th>
@@ -256,7 +256,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
       <div class="col-md-6">
         <div class="box">
           <div class="box-header with-border">
-            <h3 class="box-title"><?= $Lang->get('SEND_MONEY_HISTORY') ?> <?= $Lang->get('GLOBAL__OF') ?> <?= $Configuration->get_money_name() ?></h3>
+            <h3 class="box-title"><?= $Lang->get('SEND_MONEY_HISTORY') ?> <?= $Lang->get('GLOBAL__OF') ?> <?= $Configuration->getMoneyName() ?></h3>
           </div>
           <div class="box-body">
 
@@ -265,7 +265,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
               <tr>
                 <th>Pseudo</th>
                 <th><?= ucfirst($Configuration->getMoneyName()) ?></th>
-                <th><?= $Lang->get('TO') ?></th>
+                <th><?= $Lang->get('SHOP__USER_POINTS_TRANSFER_WHO') ?></th>
                 <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
               </tr>
             </thead>
@@ -351,7 +351,7 @@ function confirmDel(url) {
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title"><?= $Lang->get('MANAGE_VOUCHERS') ?></h4>
+        <h4 class="modal-title"><?= $Lang->get('SHOP__VOUCHERS_MANAGE') ?></h4>
       </div>
       <div class="modal-body">
         <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_voucher', 'admin' => true)) ?>" class="btn btn-success btn-block"><?= $Lang->get('ADD_VOUCHER') ?></a><br><br>
@@ -359,10 +359,10 @@ function confirmDel(url) {
           <thead>
             <tr>
               <th><?= $Lang->get('CODE') ?></th>
-              <th><?= $Lang->get('END_DATE') ?></th>
+              <th><?= $Lang->get('SHOP__VOUCHER_END_DATE') ?></th>
               <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
               <th><?= $Lang->get('LIMIT') ?></th>
-              <th><?= $Lang->get('AFFICH') ?></th>
+              <th><?= $Lang->get('SHOP__VOUCHER_DISPLAYED') ?></th>
               <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
             </tr>
           </thead>
@@ -383,7 +383,7 @@ function confirmDel(url) {
                   ?>
                 </td>
                 <td>
-          <a href="<?= $this->Html->url(array('controller' => 'Shop', 'admin' => true, 'action' => 'delete_voucher/'.$value['Voucher']['id'])) ?>" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
+                  <a href="<?= $this->Html->url(array('controller' => 'Shop', 'admin' => true, 'action' => 'delete_voucher/'.$value['Voucher']['id'])) ?>" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
                 </td>
               </tr>
           <?php } ?>

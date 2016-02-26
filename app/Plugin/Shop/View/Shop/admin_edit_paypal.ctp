@@ -21,7 +21,7 @@
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('PRICE') ?></label>
+              <label><?= $Lang->get('SHOP__ITEM_PRICE') ?></label>
               <input name="price" class="form-control" value="<?= $paypal['price'] ?>" type="text">
             </div>
 

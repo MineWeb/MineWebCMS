@@ -42,7 +42,7 @@
                         	<?php if(isset($value['Item']['img_url'])) { ?><img src="<?= $value['Item']['img_url'] ?>" alt=""><?php } ?>
                         </div>
                         <span class="info pull-left"><?= $value['Item']['price'] ?><?php if($value['Item']['price'] == 1) { echo  ' '.$singular_money; } else { echo  ' '.$plural_money; } ?></span>
-                        <?php if($isConnected AND $Permissions->can('CAN_BUY')) { ?><button class="btn btn-primary btn-clear pull-right" onClick="affich_item('<?= $value['Item']['id'] ?>')"><?= $Lang->get('BUY') ?></button> <?php } ?>
+                        <?php if($isConnected AND $Permissions->can('CAN_BUY')) { ?><button class="btn btn-primary btn-clear pull-right" onClick="affich_item('<?= $value['Item']['id'] ?>')"><?= $Lang->get('SHOP__BUY') ?></button> <?php } ?>
                         <div class="clearfix"></div>
                     </div>
                 </div>
@@ -111,7 +111,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('WANT_TO_BUY') ?></h4>
+        <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('SHOP__BUY_CONFIRM') ?></h4>
       </div>
         <div id="content_buy"></div>
     </div>

@@ -6,7 +6,7 @@ class ShopController extends ShopAppController {
 
 	function index($category = false) { // Index de la boutique
 
-		$title_for_layout = $this->Lang->get('SHOP');
+		$title_for_layout = $this->Lang->get('SHOP__TITLE');
 		if($category) {
 			$this->set(compact('category'));
 		}
@@ -189,9 +189,9 @@ class ShopController extends ShopAppController {
 					    }
 					}
 
-					echo '<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('GLOBAL__CLOSE').'</span></button><strong>'.$this->Lang->get('GLOBAL__SUCCESS').' :</strong> '.$this->Lang->get('BUY_SUCCESS').'</div>';
+					echo '<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('GLOBAL__CLOSE').'</span></button><strong>'.$this->Lang->get('GLOBAL__SUCCESS').' :</strong> '.$this->Lang->get('SHOP__BUY_SUCCESS').'</div>';
 				} else {
-					echo '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('GLOBAL__CLOSE').'</span></button><strong>'.$this->Lang->get('GLOBAL__ERROR').' :</strong> '.$this->Lang->get('NO_ENOUGH_MONEY').'</div>';
+					echo '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('GLOBAL__CLOSE').'</span></button><strong>'.$this->Lang->get('GLOBAL__ERROR').' :</strong> '.$this->Lang->get('SHOP__BUY_ERROR_NO_ENOUGH_MONEY').'</div>';
 				}
 			} else {
 					echo '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('GLOBAL__CLOSE').'</span></button><strong>'.$this->Lang->get('GLOBAL__ERROR').' :</strong> '.$this->Lang->get('SERVER__MUST_BE_ON').'</div>';
@@ -204,7 +204,7 @@ class ShopController extends ShopAppController {
 	public function admin_index() {
 		if($this->isConnected AND $this->User->isAdmin()) {
 
-			$this->set('title_for_layout',$this->Lang->get('SHOP'));
+			$this->set('title_for_layout',$this->Lang->get('SHOP__TITLE'));
 			$this->layout = 'admin';
 			$this->loadModel('Shop.Item');
 			$search_items = $this->Item->find('all');
@@ -500,7 +500,7 @@ class ShopController extends ShopAppController {
 
 				$this->History->set('ENABLE_PAYSAFECARD', 'shop');
 
-				$this->Session->setFlash($this->Lang->get('PAYSAFECARD_ENABLE_SUCCESS'), 'default.success');
+				$this->Session->setFlash($this->Lang->get('SHOP__PAYSAFECARD_ENABLE_SUCCESS'), 'default.success');
 				$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 			} else {
 				$this->Paysafecard->read(null, $paysafecard_enabled[0]['Paysafecard']['id']);
@@ -509,7 +509,7 @@ class ShopController extends ShopAppController {
 
 				$this->History->set('DISABLE_PAYSAFECARD', 'shop');
 
-				$this->Session->setFlash($this->Lang->get('PAYSAFECARD_DISABLE_SUCCESS'), 'default.success');
+				$this->Session->setFlash($this->Lang->get('SHOP__PAYSAFECARD_DISABLE_SUCCESS'), 'default.success');
 				$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 			}
 
@@ -548,7 +548,7 @@ class ShopController extends ShopAppController {
 
 					$this->History->set('VALID_PAYSAFECARD', 'shop');
 
-					$this->Session->setFlash($this->Lang->get('PAYSAFECARD_VALID_SUCCESS'), 'default.success');
+					$this->Session->setFlash($this->Lang->get('SHOP__PAYSAFECARD_VALID_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 				} else {
 					$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
@@ -581,7 +581,7 @@ class ShopController extends ShopAppController {
 
 					$this->History->set('INVALID_PAYSAFECARD', 'shop');
 
-					$this->Session->setFlash($this->Lang->get('PAYSAFECARD_INVALID_SUCCESS'), 'default.success');
+					$this->Session->setFlash($this->Lang->get('SHOP__PAYSAFECARD_INVALID_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 				} else {
 					$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
@@ -618,12 +618,12 @@ class ShopController extends ShopAppController {
 									));
 									$this->Paysafecard->save();
 									$this->History->set('ADD_PAYSAFECARD', 'credit_shop');
-									echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SUCCESS_ADD_PSC')));
+									echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOP__PAYSAFECARD_ADD_SUCCESS')));
 								} else {
-									echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ALREADY_2_PSC_IN_DB')));
+									echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__PAYSAFECARD_ERROR_ALREADY_TOO_PSC_IN_DB')));
 								}
 							} else {
-								echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('PSC_ALREADY_IN_DB')));
+								echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__PAYSAFECARD_ERROR_ALREADY_IN_DB')));
 							}
 						}  else {
 							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_4_CHARACTER')));

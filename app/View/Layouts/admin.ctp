@@ -83,7 +83,7 @@
               <ul class="treeview-menu">
                 <li><a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-pencil"></i> <?= $Lang->get('NEWS__TITLE') ?></a></li>
                 <?php if($EyPlugin->isInstalled('eywek.shop.1')) { ?>
-                  <li><a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true, 'plugin' => 'shop')) ?>"><i class="fa fa-shopping-cart"></i> <?= $Lang->get('SHOP') ?></a></li>
+                  <li><a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true, 'plugin' => 'shop')) ?>"><i class="fa fa-shopping-cart"></i> <?= $Lang->get('SHOP__TITLE') ?></a></li>
                 <?php } ?>
                 <?php if($EyPlugin->isInstalled('eywek.vote.3')) { ?>
                   <li><a href="<?= $this->Html->url(array('controller' => 'voter', 'plugin' => 'vote', 'admin' => true, 'plugin' => 'vote')) ?>"><i class="fa fa-external-link"></i> <?= $Lang->get('VOTE__TITLE_ACTION') ?></a></li>

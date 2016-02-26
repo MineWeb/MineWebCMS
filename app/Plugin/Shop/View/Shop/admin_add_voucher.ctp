@@ -59,20 +59,20 @@
             <div class="form-group">
               <label><?= $Lang->get('TYPE') ?></label>
               <select class="form-control" name="type">
-                <option value="" selected><?= $Lang->get('CHOOSE_TYPE') ?></option>
+                <option value="" selected><?= $Lang->get('SHOP__VOUCHER_CHOOSE_TYPE') ?></option>
                 <option value="2"><?= $Configuration->getMoneyName(false) ?></option>
                 <option value="1"><?= $Lang->get('PERCENTAGE') ?></option>
               </select>
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('REDUCTION') ?></label>
-              <input class="form-control" placeholder="<?= $Lang->get('IN').' '.$Configuration->getMoneyName(false).' '.$Lang->get('OR_PERCENTAGE') ?>" type="text" name="reduction">
+              <label><?= $Lang->get('SHOP__VOUCHER_VALUE_LABEL') ?></label>
+              <input class="form-control" placeholder="<?= $Lang->get('SHOP__VOUCHER_VALUE_INPUT', array('{MONEY_NAME}' => $Configuration->getMoneyName())) ?>" type="text" name="reduction">
               <small>Ex: 10</small>
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('END_DATE') ?></label>
+              <label><?= $Lang->get('SHOP__VOUCHER_END_DATE') ?></label>
               <input type="text" class="form-control" name="end_date" placeholder="<?= 'Format : '.$Lang->get('GLOBAL__DATE_YEAR').'-'.$Lang->get('GLOBAL__DATE_MONTH').'-'.$Lang->get('GLOBAL__DATE_DAY').' '.$Lang->get('GLOBAL__DATE_HOUR').':'.$Lang->get('GLOBAL__DATE_MINUTES').':'.$Lang->get('GLOBAL__DATE_SECONDS') ?>">
             </div>
 
@@ -84,7 +84,7 @@
             <div class="form-group">
               <div class="checkbox">
                 <label>
-                  <input name="affich" type="checkbox"> <?= $Lang->get('AFFICH') ?>
+                  <input name="affich" type="checkbox"> <?= $Lang->get('SHOP__VOUCHER_DISPLAYED') ?>
                 </label>
                 <br><small><?= $Lang->get('AFFICH_ON_SHOP') ?></small>
               </div>

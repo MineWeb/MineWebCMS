@@ -11,24 +11,14 @@
 						<?php if($EyPlugin->isInstalled('eywek.vote.3')) { ?>
 	        				<span class="pull-right hidden-xs"><span class="info"><?= $user['vote'] ?> <?= $Lang->get('VOTE__TITLE_ACTION') ?></span></span>
 	        			<?php } elseif($EyPlugin->isInstalled('eywek.shop.1')) { ?>
-							<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index')) ?>" class="btn btn-primary pull-right"><?= $Lang->get('SHOP') ?></a>
+							<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index')) ?>" class="btn btn-primary pull-right"><?= $Lang->get('SHOP__TITLE') ?></a>
 	        			<?php } ?>
         		</p></div>
         		<div class="ribbon-stitches-bottom"></div>
         	</div>
 			<div class="profile-content">
 				<?= $flash_messages ?>
-				<?php
-				  	if($search_psc_msg != false AND !empty($search_psc_msg)) {
-				  		foreach ($search_psc_msg as $key => $value) {
-				  			if($value['PaysafecardMessage']['type'] == 1) {
-				  				echo '<div class="alert alert-success"><b>'.$Lang->get('GLOBAL__SUCCESS').' :</b> '.$Lang->get('YOUR_PSC_OF').' '.$value['PaysafecardMessage']['amount'].'€ '.$Lang->get('IS_VALID_GAIN').' : '.$value['PaysafecardMessage']['added_points'].' '.$Configuration->get_money_name().'.</div>';
-				  			} elseif ($value['PaysafecardMessage']['type'] == 0) {
-				  				echo '<div class="alert alert-danger"><b>'.$Lang->get('GLOBAL__ERROR').' :</b> '.$Lang->get('YOUR_PSC_OF').' '.$value['PaysafecardMessage']['amount'].'€ '.$Lang->get('IS_INVALID').'</div>';
-				  			}
-				  		}
-				  	}
-				  ?>
+				<?= $Module->loadModules('user_profile_messages') ?>
 				<div class="section">
 					<p><b><?= $Lang->get('USER__USERNAME') ?> :</b> <?= $user['pseudo'] ?></p>
 				</div>
@@ -105,10 +95,10 @@
 
 					<form method="post" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'send_points')) ?>">
 						<div class="section password input">
-							<input type="text" class="form-control" name="to" placeholder="<?= $Lang->get('TO') ?>">
+							<input type="text" class="form-control" name="to" placeholder="<?= $Lang->get('SHOP__USER_POINTS_TRANSFER_WHO') ?>">
 						</div>
 						<div class="section password input">
-							<input type="text" class="form-control" name="how" placeholder="<?= $Lang->get('HOW') ?>">
+							<input type="text" class="form-control" name="how" placeholder="<?= $Lang->get('SHOP__USER_POINTS_TRANSFER_HOW_MANY') ?>">
 						</div>
 
 						<div class="clearfix"></div>

@@ -334,21 +334,9 @@ class UserController extends AppController {
 			$this->set('title_for_layout', $this->User->getKey('pseudo'));
 			$this->layout= $this->Configuration->getKey('layout');
 			if($this->EyPlugin->isInstalled('eywek.shop.1')) {
-
 				$this->set('shop_active', true);
-
-				$this->loadModel('Shop.PaysafecardMessage');
-				$search_psc_msg = $this->PaysafecardMessage->find('all', array('conditions' => array('to' =>  $this->User->getKey('pseudo'))));
-				if(!empty($search_psc_msg)) {
-					$this->set(compact('search_psc_msg'));
-					$this->PaysafecardMessage->deleteAll(array('to' =>  $this->User->getKey('pseudo')));
-				} else {
-					$this->set('search_psc_msg', false);
-				}
-
 			} else {
 				$this->set('shop_active', false);
-				$this->set('search_psc_msg', false);
 			}
 
 			$available_ranks = array(0 => $this->Lang->get('USER__RANK_MEMBER'), 2 => $this->Lang->get('USER__RANK_MODERATOR'), 3 => $this->Lang->get('USER__RANK_ADMINISTRATOR'), 4 => $this->Lang->get('USER__RANK_ADMINISTRATOR'), 5 => $this->Lang->get('USER__RANK_BANNED'));
@@ -447,12 +435,12 @@ class UserController extends AppController {
 								$to_money = $this->User->getFromUser('money', $this->request->data['to']) + $how;
 								$this->User->setToUser('money', $to_money, $this->request->data['to']);
 								$this->History->set('SEND_MONEY', 'shop', $this->request->data['to'].'|'.$how);
-								echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('POINTS_SUCCESS_SEND')));
+								echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOP__USER_POINTS_TRANSFER_SUCCESS')));
 							} else {
-								echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NO_ENOUGH_MONEY')));
+								echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__BUY_ERROR_NO_ENOUGH_MONEY')));
 							}
 						} else {
-							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('CANT_SEND_EMPTY_POINTS')));
+							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__USER_POINTS_TRANSFER_ERROR_EMPTY')));
 						}
 					} else {
 						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_NOT_FOUND')));

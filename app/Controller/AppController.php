@@ -137,7 +137,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 
 				$eventFolder = $this->EyPlugin->pluginsFolder.DS.$value->slug.DS.'Event'; // l'endroit du dossier event
 
-				$path = $eventFolder.DS.$slugFormated.'*Listener.php'; // la ou get les fichiers
+				$path = $eventFolder.DS.$slugFormated.'*EventListener.php'; // la ou get les fichiers
 
 				foreach(glob($path) as $eventFile) { // on récupére tout les fichiers SlugName.php dans le dossier du plugin Events/
 

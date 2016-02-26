@@ -18,7 +18,7 @@
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('DESCRIPTION') ?></label>
+              <label><?= $Lang->get('SHOP__ITEM_DESCRIPTION') ?></label>
               <textarea name="description" class="form-control"><?= $item['description'] ?></textarea>
             </div>
 
@@ -34,12 +34,12 @@
             <input type="hidden" name="category_default" value="<?= $item['category'] ?>">
 
             <div class="form-group">
-              <label><?= $Lang->get('PRICE') ?></label>
+              <label><?= $Lang->get('SHOP__ITEM_PRICE') ?></label>
               <input name="price" class="form-control" value="<?= $item['price'] ?>" type="text">
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('IMG_URL') ?></label>
+              <label><?= $Lang->get('SHOP__ITEM_IMG_URL') ?></label>
               <input name="img_url" class="form-control" value="<?= $item['img_url'] ?>" type="text">
             </div>
 

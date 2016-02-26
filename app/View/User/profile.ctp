@@ -7,17 +7,8 @@
 		<div class="panel panel-default">
 		 	<div class="panel-body">
 
-				<?php
-			  	if($search_psc_msg != false AND !empty($search_psc_msg)) {
-			  		foreach ($search_psc_msg as $key => $value) {
-			  			if($value['PaysafecardMessage']['type'] == 1) {
-			  				echo '<div class="alert alert-success"><b>'.$Lang->get('GLOBAL__SUCCESS').' :</b> '.$Lang->get('YOUR_PSC_OF').' '.$value['PaysafecardMessage']['amount'].'€ '.$Lang->get('IS_VALID_GAIN').' : '.$value['PaysafecardMessage']['added_points'].' '.$Configuration->get_money_name().'.</div>';
-			  			} elseif ($value['PaysafecardMessage']['type'] == 0) {
-			  				echo '<div class="alert alert-danger"><b>'.$Lang->get('GLOBAL__ERROR').' :</b> '.$Lang->get('YOUR_PSC_OF').' '.$value['PaysafecardMessage']['amount'].'€ '.$Lang->get('IS_INVALID').'</div>';
-			  			}
-			  		}
-			  	}
-			  	?>
+				<?= $flash_messages ?>
+				<?= $Module->loadModules('user_profile_messages') ?>
 
 			  	<div class="section">
 					<p><b><?= $Lang->get('USER__USERNAME') ?> :</b> <?= $user['pseudo'] ?></p>
@@ -93,10 +84,10 @@
 
 					<form method="post" class="form-inline" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'send_points')) ?>">
 						<div class="form-group">
-							<input type="text" class="form-control" name="to" placeholder="<?= $Lang->get('TO') ?>">
+							<input type="text" class="form-control" name="to" placeholder="<?= $Lang->get('SHOP__USER_POINTS_TRANSFER_WHO') ?>">
 						</div>
 						<div class="form-group">
-							<input type="text" class="form-control" name="how" placeholder="<?= $Lang->get('HOW') ?>">
+							<input type="text" class="form-control" name="how" placeholder="<?= $Lang->get('SHOP__USER_POINTS_TRANSFER_HOW_MANY') ?>">
 						</div>
 
 						<div class="form-group">
