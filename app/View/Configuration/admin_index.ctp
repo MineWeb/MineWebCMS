@@ -65,25 +65,25 @@
                       )); ?>
                   </div>
 
-                  <?= $this->Html->script('admin/bootstrap-select') ?>
-                  <?= $this->Html->css('bootstrap-select.min.css') ?>
-
-                  <div class="form-group">
-                    <label><?= $Lang->get('CONFIG__KEY_LANG') ?></label>
-                    <div class="form-group">
-                      <?= $this->Form->input(false, array(
-                        'div' => false,
-                        'data-live-search' => 'true',
-                        'name' => 'lang',
-                        'class' => 'selectpicker',
-                        'options' => $config['languages_available'],
-                        'selected' => $config['lang']
-                      )); ?>
-                      <a href="<?= $this->Html->url(array('action' => 'editLang')) ?>" class="btn btn-info"><?= $Lang->get('CONFIG__EDIT_LANG_FILE') ?></a>
-                    </div>
-                  </div>
-
                 <?php } ?>
+
+                <?= $this->Html->script('admin/bootstrap-select') ?>
+                <?= $this->Html->css('bootstrap-select.min.css') ?>
+
+                <div class="form-group">
+                  <label><?= $Lang->get('CONFIG__KEY_LANG') ?></label>
+                  <div class="form-group">
+                    <?= $this->Form->input(false, array(
+                      'div' => false,
+                      'data-live-search' => 'true',
+                      'name' => 'lang',
+                      'class' => 'selectpicker',
+                      'options' => $config['languages_available'],
+                      'selected' => $config['lang']
+                    )); ?>
+                    <a href="<?= $this->Html->url(array('action' => 'editLang')) ?>" class="btn btn-info"><?= $Lang->get('CONFIG__EDIT_LANG_FILE') ?></a>
+                  </div>
+                </div>
 
                 <div class="form-group">
                   <label><?= $Lang->get('CONFIG__KEY_VERSION') ?></label>

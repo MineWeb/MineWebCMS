@@ -124,31 +124,31 @@ DATABASE
 if(!file_exists(ROOT.DS.'config'.DS.'install.txt')) {
 
 	App::uses('CakeSchema', 'Model');
-	$this->Schema = new CakeSchema(array('name' => 'App', 'path' => ROOT.DS.'app'.DS.'Config'.DS.'Schema', 'file' => 'schema.php', 'connection' => 'default', 'plugin' => null));
+	$CakeSchema = new CakeSchema(array('name' => 'App', 'path' => ROOT.DS.'app'.DS.'Config'.DS.'Schema', 'file' => 'schema.php', 'connection' => 'default', 'plugin' => null));
 
 	App::uses('SchemaShell', 'Console/Command');
 	$SchemaShell = new SchemaShell();
 
 	App::import('Model', 'ConnectionManager');
 	$con = new ConnectionManager;
-	$cn = $con->getDataSource($this->Schema->connection);
+	$cn = $con->getDataSource($CakeSchema->connection);
 	if(!$cn->isConnected()) {
 			exit('Could not connect to database. Please check the settings in app/config/database.php and try again');
 	}
 
-	$db = ConnectionManager::getDataSource($this->Schema->connection);
+	$db = ConnectionManager::getDataSource($CakeSchema->connection);
 
 	$options = array(
-			'name' => $this->Schema->name,
-			'path' => $this->Schema->path,
-			'file' => $this->Schema->file,
+			'name' => $CakeSchema->name,
+			'path' => $CakeSchema->path,
+			'file' => $CakeSchema->file,
 			'plugin' => null,
-			'connection' => $this->Schema->connection,
+			'connection' => $CakeSchema->connection,
 	);
-	$Schema = $this->Schema->load($options);
+	$Schema = $CakeSchema->load($options);
 
-	$Old = $this->Schema->read(array('models' => false));
-	$compare = $this->Schema->compare($Old, $Schema);
+	$Old = $CakeSchema->read(array('models' => false));
+	$compare = $CakeSchema->compare($Old, $Schema);
 
 	$contents = array();
 
@@ -188,7 +188,10 @@ if(!file_exists(ROOT.DS.'config'.DS.'install.txt')) {
 									$db->execute($query);
 							} catch (PDOException $e) {
 									$error[] = $table . ': ' . $e->getMessage();
-									$this->log('MYSQL Schema install : '.$e->getMessage());
+									file_put_contents(ROOT.DS.'tmp'.DS.'logs'.DS.'db.log',
+										file_get_contents(ROOT.DS.'tmp'.DS.'logs'.DS.'db.log').
+										"\n".$e->getMessage()
+									);
 							}
 					}
 			}
@@ -202,7 +205,6 @@ if(!file_exists(ROOT.DS.'config'.DS.'install.txt')) {
 		fwrite($fp, $data);
 		fclose($fp);
 	} else {
-		$this->log('Unable to install MySQL tables');
 		die('Unable to install MYSQL tables');
 	}
 }
