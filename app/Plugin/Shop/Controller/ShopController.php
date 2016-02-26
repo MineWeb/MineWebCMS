@@ -417,7 +417,7 @@ class ShopController extends ShopAppController {
 					));
 					$this->History->set('ADD_CATEGORY', 'shop');
 					$this->Category->save();
-					$this->Session->setFlash($this->Lang->get('CATEGORY_SUCCESS_ADD'), 'default.success');
+					$this->Session->setFlash($this->Lang->get('SHOP__CATEGORY_ADD_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 				} else {
 					$this->Session->setFlash($this->Lang->get('ERROR__FILL_ALL_FIELDS'), 'default.error');

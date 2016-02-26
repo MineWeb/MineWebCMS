@@ -60,7 +60,7 @@
               <label><?= $Lang->get('TYPE') ?></label>
               <select class="form-control" name="type">
                 <option value="" selected><?= $Lang->get('SHOP__VOUCHER_CHOOSE_TYPE') ?></option>
-                <option value="2"><?= $Configuration->getMoneyName(false) ?></option>
+                <option value="2"><?= ucfirst($Configuration->getMoneyName()) ?></option>
                 <option value="1"><?= $Lang->get('PERCENTAGE') ?></option>
               </select>
             </div>
@@ -83,8 +83,9 @@
 
             <div class="form-group">
               <div class="checkbox">
+                <input name="affich" type="checkbox">
                 <label>
-                  <input name="affich" type="checkbox"> <?= $Lang->get('SHOP__VOUCHER_DISPLAYED') ?>
+                  <?= $Lang->get('SHOP__VOUCHER_DISPLAYED') ?>
                 </label>
                 <br><small><?= $Lang->get('AFFICH_ON_SHOP') ?></small>
               </div>

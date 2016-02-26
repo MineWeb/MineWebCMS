@@ -23,6 +23,8 @@ class DiscountVoucherComponent extends Object {
 
   static private $items;
 
+  private $controller;
+
   function shutdown(&$controller) {
   }
 
@@ -35,6 +37,8 @@ class DiscountVoucherComponent extends Object {
   function initialize(&$controller) {
     // Verification des réductions actuelles
     // suppression si la date de fin est passé
+
+    $this->controller = $controller;
 
     $this->Voucher = ClassRegistry::init('Shop.Voucher');
 
@@ -62,8 +66,8 @@ class DiscountVoucherComponent extends Object {
   }
 
   function get_vouchers() { // affiche dans une alert info les promotions en cours si elle doivent être affichées
-    App::import('Component', 'Lang');
-    $this->Lang = new LangComponent();
+    $this->Lang = $this->controller->Lang;
+    $this->Configuration = $this->controller->Configuration;
       // le fichier de langue
     $this->Voucher = ClassRegistry::init('Shop.Voucher'); // le model principal
     $search_vouchers = $this->Voucher->find('all'); // le cherche les promos
@@ -72,50 +76,55 @@ class DiscountVoucherComponent extends Object {
         $voucher = $k['Voucher'];
         if($voucher['affich'] == 1) { // si on doit l'afficher, sinon je retourne rien
           $voucher['effective_on'] = unserialize($voucher['effective_on']); // j'unserilise le effective_on qui est un array
-          echo '<div class="alert alert-info"><i class="fa fa-shopping-cart"></i> '; // début du message
-          echo $this->Lang->get('DISCOUNT_VOUCHER_ON');
-          if($voucher['effective_on']['type'] == 'categories') { // si cela concerne une catégorie
-            if(count($voucher['effective_on']['value']) > 1) { // combien de catégorie ?
-              echo $this->Lang->get('THE_CATEGORIES'); // plusieurs
-            } else {
-              echo $this->Lang->get('THE_CATEGORY'); // une seule
-            }
-            foreach ($voucher['effective_on']['value'] as $key => $value) { // j'affiche la/les catégorie(s)
-              $last_key = end($voucher['effective_on']['value']);
-              if($last_key == $value) {
-                echo '"'.$value.'" ';
+
+          $return = '<div class="alert alert-info"><i class="fa fa-shopping-cart"></i> '; // début du message
+
+            $langVars = array();
+
+            if($voucher['effective_on']['type'] == 'categories') { // si cela concerne une catégorie
+
+              if(count($voucher['effective_on']['value']) == 1) { // combien de catégories concernée ?
+                $langMSG = 'SHOP__VOUCHER_MSG_ONE_CATEGORY'; // plusieurs
+                $langVars['{CATEGORY}'] = '"'.$voucher['effective_on']['value'][0].'"';
               } else {
-                echo '"'.$value.'", ';
+                $langMSG = 'SHOP__VOUCHER_MSG_MANY_CATEGORIES'; // plusieurs
+                $langVars['{CATEGORIES}'] = '"'.implode('", "', $voucher['effective_on']['value']).'"';
               }
-            }
-          } elseif ($voucher['effective_on']['type'] == 'items') { // si cela concerne un article
-            if(count($voucher['effective_on']['value']) > 1) { // combien d'article concerné ?
-              echo $this->Lang->get('THE_ITEMS'); // plusieurs
-            } else {
-              echo $this->Lang->get('THE_ITEM'); // 1 seul
-            }
-            foreach ($voucher['effective_on']['value'] as $key => $value) { // j'affiche l'/les article(s)
-              $last_key = end($voucher['effective_on']['value']);
-              if($last_key == $value) {
-                echo '"'.$this->getItemNameById($value).'" ';
+
+            } elseif ($voucher['effective_on']['type'] == 'items') { // si cela concerne un article
+
+              if(count($voucher['effective_on']['value']) == 1) { // combien de catégories concernée ?
+                $langMSG = 'SHOP__VOUCHER_MSG_ONE_ITEM'; // plusieurs
+                $langVars['{ITEM}'] = '"'.$this->getItemNameById($voucher['effective_on']['value'][0]).'"';
               } else {
-                echo '"'.$this->getItemNameById($value).'", ';
+                $langMSG = 'SHOP__VOUCHER_MSG_MANY_ITEMS'; // plusieurs
+
+                foreach ($voucher['effective_on']['value'] as $key => $value) {
+                  $voucher['effective_on']['value'][$key] = $this->getItemNameById($value);
+                }
+
+                $langVars['{ITEMS}'] = implode('", "', $voucher['effective_on']['value']);
               }
+
+            } elseif ($voucher['effective_on']['type'] == 'all') { // si cela concerne toute la boutique
+              $langMSG = 'SHOP__VOUCHER_MSG_ALL';
             }
-          } elseif ($voucher['effective_on']['type'] == 'all') { // si cela concerne toute la boutique
-            echo $this->Lang->get('ALL_CATEGORIES_AND_ITEMS');
-          }
-          echo $this->Lang->get('WITH_THE_CODE');
-          echo $voucher['code'];
-          echo ' (-'.$voucher['reduction'];
-          if($voucher['type'] == 1) {
-            echo '%).';
-          } elseif ($voucher['type'] == 2) {
-            echo '€).';
-          } else {
-            echo '%).';
-          }
-          echo '</div>';
+
+            $langVars['{CODE}'] = $voucher['code'];
+
+            $langVars['{REDUCTION}'] = ' -'.$voucher['reduction'];
+            if($voucher['type'] == 1) {
+              $langVars['{REDUCTION}'] .= '%';
+            } elseif ($voucher['type'] == 2) {
+              $langVars['{REDUCTION}'] .= ' '.$this->Configuration->getMoneyName();
+            }
+
+            $return .= $this->Lang->get($langMSG, $langVars);
+
+          $return .= '</div>';
+
+          echo $return;
+
         }
       }
     }

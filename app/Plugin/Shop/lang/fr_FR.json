@@ -9,6 +9,11 @@
   "SHOP__VOUCHER_VALUE_INPUT":"En {MONEY_NAME} ou en pourcentage",
   "SHOP__VOUCHER_DISPLAYED": "Afficher",
   "SHOP__VOUCHER_CHOOSE_TYPE": "Choisissez le type",
+  "SHOP__VOUCHER_MSG_ONE_CATEGORY":"Une promotion est en cours sur la catégorie {CATEGORY} avec le code : {CODE} (Réduction {REDUCTION}).",
+  "SHOP__VOUCHER_MSG_MANY_CATEGORIES":"Une promotion est en cours sur les catégories {CATEGORIES} avec le code : {CODE} (Réduction {REDUCTION}).",
+  "SHOP__VOUCHER_MSG_ONE_ITEM":"Une promotion est en cours sur l'article {ITEM} avec le code : {CODE} (Réduction {REDUCTION}).",
+  "SHOP__VOUCHER_MSG_MANY_ITEMS":"Une promotion est en cours sur les articles {ITEMS} avec le code : {CODE} (Réduction {REDUCTION}).",
+  "SHOP__VOUCHER_MSG_ALL":"Une promotion est en cours sur toute la boutique avec le code : {CODE} (Réduction {REDUCTION}).",
 
   "SHOP__PAYSAFECARD": "PaySafeCard",
   "SHOP__PAYSAFECARD_DISABLE_SUCCESS": "Les PaySafeCard ont bien \u00e9t\u00e9 d\u00e9sactiv\u00e9es !",
@@ -31,20 +36,17 @@
   "SHOP__ITEM_PRICE": "Prix",
   "SHOP__ITEM_DESCRIPTION": "Description",
 
+  "SHOP__CATEGORY_ADD_SUCCESS": "Cat\u00e9gorie ajout\u00e9e avec succ\u00e8s !",
+
   "SHOP__BUY": "Acheter",
   "SHOP__BUY_ERROR_NO_ENOUGH_MONEY": "Vous n'avez pas assez d'argent pour proc\u00e9der \u00e0 cet achat.",
   "SHOP__BUY_CONFIRM": "Voulez-vous r\u00e9ellement acheter cet article ?",
   "SHOP__BUY_SUCCESS": "L'achat vient d'\u00eatre effectu\u00e9",
 
 
-    "CATEGORY_SUCCESS_ADD": "Cat\u00e9gorie ajout\u00e9e avec succ\u00e8s !",
-    "NAME_OF_ITEM": "Nom de l'article",
-    "THE_CATEGORY": "la cat\u00e9gorie ",
-    "THE_CATEGORIES": "les cat\u00e9gories ",
-    "THE_ITEM": "l'article ",
-    "THE_ITEMS": "les articles ",
-    "ALL_CATEGORIES_AND_ITEMS": "toute la boutique ",
-    "WITH_THE_CODE": "avec le code : ",
+
+
+
     "HAVE_YOU_VOUCHER": "Avez vous un code promotionnel ?",
     "BUY_ITEM": "Achat d'un article",
     "BUY_MONEY": "Achat de cr\u00e9dits",
