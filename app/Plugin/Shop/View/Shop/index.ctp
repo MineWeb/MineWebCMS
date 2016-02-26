@@ -2,7 +2,7 @@
 <div class="container">
   <div class="row">
     <div class="col-md-3">
-      <p class="lead"><?= ($isConnected) ? $money : $Lang->get('SHOP__TITLE'); ?></p>
+      <p class="lead"><?= ($isConnected) ? $money.' '.$Configuration->getMoneyName() : $Lang->get('SHOP__TITLE'); ?></p>
         <div class="list-group">
             <?php
             $i = 0;
@@ -13,7 +13,7 @@
             <?php } ?>
         </div>
         <?php if($isConnected AND $Permissions->can('CREDIT_ACCOUNT')) { ?>
-            <a href="#" data-toggle="modal" data-target="#addmoney" class="btn btn-success btn-block pull-right"><?= $Lang->get('ADD_MONEY') ?></a>
+            <a href="#" data-toggle="modal" data-target="#addmoney" class="btn btn-success btn-block pull-right"><?= $Lang->get('SHOP__ADD_MONEY') ?></a>
         <?php } ?>
       </div>
       <div class="col-md-9">
@@ -99,7 +99,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="<?= $Lang->get('GLOBAL__CLOSE') ?>"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('ADD_MONEY') ?></h4>
+        <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('SHOP__ADD_MONEY') ?></h4>
       </div>
       <div class="modal-body">
         <?php if($isConnected AND $Permissions->can('CREDIT_ACCOUNT')) { ?>

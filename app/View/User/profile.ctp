@@ -110,7 +110,7 @@
 								<thead>
 									<tr>
 										<th><?= $Lang->get('IP') ?></th>
-										<th><?= $Lang->get('ACTIONS') ?></th>
+										<th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
 									</tr>
 								</thead>
 								<tbody id="table-ip">

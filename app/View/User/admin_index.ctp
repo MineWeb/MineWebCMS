@@ -13,7 +13,7 @@
                   <th><?= $Lang->get('USER__TITLE') ?></th>
                   <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
                   <th><?= $Lang->get('USER__RANK') ?></th>
-                  <th class="right"><?= $Lang->get('ACTIONS') ?></th>
+                  <th class="right"><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
                 </tr>
               </thead>
               <tbody>

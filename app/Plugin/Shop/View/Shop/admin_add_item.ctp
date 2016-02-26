@@ -21,7 +21,7 @@
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('CATEGORY') ?></label>
+              <label><?= $Lang->get('SHOP__CATEGORY') ?></label>
               <select class="form-control" name="category">
                 <?php foreach ($categories as $key => $value) { ?>
                     <option value="<?= $key ?>"><?= $value ?></option>

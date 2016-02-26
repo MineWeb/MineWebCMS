@@ -79,7 +79,7 @@
                             <?php if($Permissions->can('ACCESS_DASHBOARD')) { ?>
                               <a style="color:red;" class="btn btn-primary btn-block" href="<?= $this->Html->url(array('controller' => '', 'action' => 'index', 'plugin' => 'admin')) ?>"><?= $Lang->get('GLOBAL__ADMIN_PANEL') ?></a>
                             <?php } elseif($EyPlugin->isInstalled('eywek.shop.1')) { ?>
-                              <a class="btn btn-primary btn-block" href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'plugin' => 'shop')) ?>"><?= $Lang->get('ADD_MONEY') ?></a>
+                              <a class="btn btn-primary btn-block" href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'plugin' => 'shop')) ?>"><?= $Lang->get('SHOP__ADD_MONEY') ?></a>
                             <?php } ?>
 
                             <a class="btn btn-primary btn-block" href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'logout', 'plugin' => null)) ?>"><?= $Lang->get('USER__LOGOUT') ?></a>

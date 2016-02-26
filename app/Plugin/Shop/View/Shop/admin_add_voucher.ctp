@@ -25,7 +25,7 @@
               <label><?= $Lang->get('EFFECTIVE_ON') ?></label>
               <select onChange="hide_or_not(this.value)" class="form-control" name="effective_on">
                 <option value="" selected><?= $Lang->get('CHOOSE_OPTION') ?></option>
-                <option value="categories"><?= $Lang->get('CATEGORIES') ?></option>
+                <option value="categories"><?= $Lang->get('SHOP__CATEGORIES') ?></option>
                 <option value="items"><?= $Lang->get('ITEMS') ?></option>
                 <option value="all"><?= $Lang->get('GLOBAL__ALL') ?></option>
               </select>

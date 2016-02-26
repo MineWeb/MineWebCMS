@@ -76,10 +76,10 @@ class ShopController extends ShopAppController {
 
 
 			//On récupére l'element
-			if(file_exists(APP.DS.'View'.DS.'Themed'.DS.$this->Configuration->getKey('theme').DS.'Element'.DS.'modal_buy.ctp')) {
-				$element_content = file_get_contents(APP.DS.'View'.DS.'Themed'.DS.$this->Configuration->getKey('theme').DS.'Element'.DS.'modal_buy.ctp');
+			if(file_exists(APP.DS.'View'.DS.'Themed'.DS.$this->Configuration->getKey('theme').DS.'Elements'.DS.'modal_buy.ctp')) {
+				$element_content = file_get_contents(APP.DS.'View'.DS.'Themed'.DS.$this->Configuration->getKey('theme').DS.'Elements'.DS.'modal_buy.ctp');
 			} else {
-				$element_content = file_get_contents($this->EyPlugin->pluginsFolder.DS.'Shop'.DS.'View'.DS.'Element'.DS.'modal_buy.ctp');
+				$element_content = file_get_contents($this->EyPlugin->pluginsFolder.DS.'Shop'.DS.'View'.DS.'Elements'.DS.'modal_buy.ctp');
 			}
 
 			// On remplace les messages de langues

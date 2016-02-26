@@ -23,7 +23,7 @@
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('CATEGORY') ?></label>
+              <label><?= $Lang->get('SHOP__CATEGORY') ?></label>
               <select class="form-control" name="category">
                 <option value="" selected><?= $item['category'] ?></option>
                 <?php foreach ($categories as $key => $value) { ?>

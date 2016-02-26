@@ -32,34 +32,34 @@
   "SHOP__USER_POINTS_TRANSFER_ERROR_EMPTY": "Vous ne pouvez pas ne rien envoyer",
   "SHOP__USER_POINTS_TRANSFER_SUCCESS": "L'argent \u00e0 bien \u00e9t\u00e9 envoy\u00e9 !",
 
+  "SHOP__ITEM":"Article",
+  "SHOP__ITEMS_AVAILABLE": "Articles en ventes",
+  "SHOP__ITEM_NAME":"Nom",
   "SHOP__ITEM_IMG_URL": "URL de l'image",
   "SHOP__ITEM_PRICE": "Prix",
   "SHOP__ITEM_DESCRIPTION": "Description",
 
+  "SHOP__CATEGORIES": "Cat\u00e9gories",
+  "SHOP__CATEGORY": "Cat\u00e9gorie",
   "SHOP__CATEGORY_ADD_SUCCESS": "Cat\u00e9gorie ajout\u00e9e avec succ\u00e8s !",
 
   "SHOP__BUY": "Acheter",
   "SHOP__BUY_ERROR_NO_ENOUGH_MONEY": "Vous n'avez pas assez d'argent pour proc\u00e9der \u00e0 cet achat.",
+  "SHOP__BUY_ERROR_NEED_LOGIN": "Vous devez \u00eatre connect\u00e9 pour proc\u00e9der \u00e0 un achat",
   "SHOP__BUY_CONFIRM": "Voulez-vous r\u00e9ellement acheter cet article ?",
   "SHOP__BUY_SUCCESS": "L'achat vient d'\u00eatre effectu\u00e9",
+  "SHOP__BUY_VOUCHER_ASK": "Avez vous un code promotionnel ?",
+
+  "SHOP__ADD_MONEY":"Cr\u00e9diter son compte",
+  "SHOP__MONEY_CURRENTLY": "Vous avez actuellement",
 
 
 
 
 
-    "HAVE_YOU_VOUCHER": "Avez vous un code promotionnel ?",
-    "BUY_ITEM": "Achat d'un article",
-    "BUY_MONEY": "Achat de cr\u00e9dits",
-    "INTERNAL_ERROR_PAYMENT": "Erreur lors de la v\u00e9rification de votre paiement.",
-    "ADD_MONEY": "Cr\u00e9diter son compte",
-    "NEED_CONNECT_FOR_BUY": "Vous devez \u00eatre connect\u00e9 pour proc\u00e9der \u00e0 un achat",
-    "HAVE_CURRENTLY": "Vous avez actuellement",
-    "ITEMS_ON_SALE": "Articles en ventes",
-    "CATEGORIES": "Cat\u00e9gories",
-    "CATEGORY": "Cat\u00e9gorie",
-    "ACTIONS": "Actions",
+
+
     "PURCHASE_HISTORY": "Historique des achats",
-    "ITEM": "Article",
     "ID_PAYPAL": "ID PayPal",
     "EDIT_ITEM": "Modification d'un article",
     "ITEM_SUCCESS_EDIT": "Article modifi\u00e9 avec succ\u00e8s !",

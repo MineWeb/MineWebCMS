@@ -6,12 +6,12 @@
     		<div class="ribbon-stitches-top"></div>
     		<div class="ribbon-content"><p>
     			<?php if($isConnected) { ?>
-    				<span class="pull-left hidden-xs"><?= $Lang->get('HAVE_CURRENTLY') ?> : <span class="info"><?= $money ?></span></span>
+    				<span class="pull-left hidden-xs"><?= $Lang->get('SHOP__MONEY_CURRENTLY') ?> : <span class="info"><?= $money ?></span></span>
     			<?php } else { ?>
-				    <span class="text-center"><?= $Lang->get('NEED_CONNECT_FOR_BUY') ?></span>
+				    <span class="text-center"><?= $Lang->get('SHOP__BUY_ERROR_NEED_LOGIN') ?></span>
     			<?php } ?>
 			     <?php if($isConnected AND $Permissions->can('CREDIT_ACCOUNT')) { ?>
-      			<a href="#" data-toggle="modal" data-target="#addmoney" class="btn btn-primary pull-right"><?= $Lang->get('ADD_MONEY') ?></a>
+      			<a href="#" data-toggle="modal" data-target="#addmoney" class="btn btn-primary pull-right"><?= $Lang->get('SHOP__ADD_MONEY') ?></a>
 			     <?php } ?>
     		</p></div>
     		<div class="ribbon-stitches-bottom"></div>
@@ -123,7 +123,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="<?= $Lang->get('GLOBAL__CLOSE') ?>"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('ADD_MONEY') ?></h4>
+        <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('SHOP__ADD_MONEY') ?></h4>
       </div>
       <div class="modal-body">
 

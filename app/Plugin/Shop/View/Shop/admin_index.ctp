@@ -24,7 +24,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
       <div class="col-md-6">
         <div class="box">
           <div class="box-header with-border">
-            <h3 class="box-title"><?= $Lang->get('ITEMS_ON_SALE') ?> &nbsp;&nbsp;<a href="<?php if(!empty($search_categories)) { ?><?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_item', 'admin' => true)) ?><?php } ?>" class="btn btn-success<?php if(empty($search_categories)) { echo ' disabled'; } ?>"><?= $Lang->get('GLOBAL__ADD') ?></a></h3>
+            <h3 class="box-title"><?= $Lang->get('SHOP__ITEMS_AVAILABLE') ?> &nbsp;&nbsp;<a href="<?php if(!empty($search_categories)) { ?><?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_item', 'admin' => true)) ?><?php } ?>" class="btn btn-success<?php if(empty($search_categories)) { echo ' disabled'; } ?>"><?= $Lang->get('GLOBAL__ADD') ?></a></h3>
           </div>
           <div class="box-body">
 
@@ -33,8 +33,8 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                 <tr>
                   <th><?= $Lang->get('GLOBAL__NAME') ?></th>
                   <th><?= $Lang->get('SHOP__ITEM_PRICE') ?></th>
-                  <th><?= $Lang->get('CATEGORY') ?></th>
-                  <th class="right"><?= $Lang->get('ACTIONS') ?></th>
+                  <th><?= $Lang->get('SHOP__CATEGORY') ?></th>
+                  <th class="right"><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
                 </tr>
               </thead>
               <tbody>
@@ -58,7 +58,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
       <div class="col-md-6">
         <div class="box">
           <div class="box-header with-border">
-            <h3 class="box-title"><?= $Lang->get('CATEGORIES') ?> &nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_category', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ADD') ?></a></h3>
+            <h3 class="box-title"><?= $Lang->get('SHOP__CATEGORIES') ?> &nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_category', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ADD') ?></a></h3>
           </div>
           <div class="box-body">
 
@@ -66,7 +66,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
               <thead>
                 <tr>
                   <th><?= $Lang->get('GLOBAL__NAME') ?></th>
-                  <th class="right"><?= $Lang->get('ACTIONS') ?></th>
+                  <th class="right"><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
                 </tr>
               </thead>
               <tbody>
@@ -96,7 +96,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
             <table class="table table-bordered dataTable">
               <thead>
                 <tr>
-                  <th><?= $Lang->get('ITEM') ?></th>
+                  <th><?= $Lang->get('SHOP__ITEM') ?></th>
                   <th>Pseudo</th>
                   <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
                 </tr>
@@ -176,7 +176,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                   <th><?= $Lang->get('AMOUNT') ?></th>
                   <th><?= $Lang->get('CODE') ?></th>
                   <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
-                  <th class="right"><?= $Lang->get('ACTIONS') ?></th>
+                  <th class="right"><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
                 </tr>
               </thead>
               <tbody>
@@ -226,7 +226,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                   <th><?= $Lang->get('SHOP__ITEM_PRICE') ?></th>
                   <th><?= ucfirst($Configuration->getMoneyName()) ?></th>
                   <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
-                  <th class="right"><?= $Lang->get('ACTIONS') ?></th>
+                  <th class="right"><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
                 </tr>
               </thead>
               <tbody>
@@ -300,7 +300,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                   <th><?= $Lang->get('GLOBAL__NAME') ?></th>
                   <th><?= ucfirst($Configuration->getMoneyName()) ?></th>
                   <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
-                  <th><?= $Lang->get('ACTIONS') ?></th>
+                  <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
                 </tr>
               </thead>
               <tbody>
