@@ -2,6 +2,11 @@
 
 class PaymentController extends ShopAppController {
 
+  public function beforeFilter() {
+    parent::beforeFilter();
+    $this->Security->unlockedActions = array('starpass', 'starpass_verif', 'ipn');
+  }
+
   /*
 	* ======== Switch du mode de paiement PaySafeCard (traitement POST) ===========
 	*/
@@ -490,7 +495,8 @@ class PaymentController extends ShopAppController {
   				$get_f=@file("http://script.starpass.fr/check_php.php?ident=$ident&codes=$codes&DATAS=$datas");
   				if(!$get_f)
   				{
-  				exit( "Votre serveur n'a pas accès au serveur de StarPass, merci de contacter votre hébergeur. " );
+            $this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
+            $this->redirect(array('controller' => 'shop', 'action' => 'starpass', $search_starpass[0]['Starpass']['id']));
   				}
   				$tab = explode("|",$get_f[0]);
   				if(!$tab[1]) $url = "http://script.starpass.fr/error.php";
@@ -511,8 +517,8 @@ class PaymentController extends ShopAppController {
   				if( substr($tab[0],0,3) != "OUI" )
   				{
   			       /* erreur */
-  			       $this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
-  			       $this->redirect(array('controller' => 'shop', 'action' => 'index'));
+  			       $this->Session->setFlash($this->Lang->get('SHOP__STARPASS_PAYMENT_ERROR'), 'default.error');
+  			       $this->redirect(array('controller' => 'shop', 'action' => 'starpass', $search_starpass[0]['Starpass']['id']));
   				}
   				else
   				{
@@ -522,7 +528,19 @@ class PaymentController extends ShopAppController {
 
   					$this->User->setKey('money', $new_money);
 
-  					$this->History->set('BUY_MONEY', 'shop', 'starpass|'.$search_starpass[0]['Starpass']['money']);
+  					$this->History->set('BUY_MONEY', 'shop'); //L'historique global
+
+            // On l'ajoute dans l'historique des paiements
+            $this->loadModel('Shop.StarpassHistory');
+
+            $this->StarpassHistory->create();
+            $this->StarpassHistory->set(array(
+              'code' => $codes,
+              'user_id' => $this->User->getKey('id'),
+              'offer_id' => $search_starpass[0]['Starpass']['id'],
+              'credits_gived' => intval($search_starpass[0]['Starpass']['money'])
+            ));
+            $this->StarpassHistory->save();
 
   					$this->Session->setFlash($this->Lang->get('SHOP__STARPASS_PAYMENT_SUCCESS'), 'default.success');
   					$this->redirect(array('controller' => 'shop', 'action' => 'index'));
@@ -646,7 +664,8 @@ class PaymentController extends ShopAppController {
   											'payment_id' => $txn_id,
   											'user_id' => $user_id,
   											'offer_id' => $findOffer['Paypal']['id'],
-  											'payment_amount' => $findOffer['Paypal']['money']
+  											'payment_amount' => $payment_amount,
+                        'credits_gived' => $findOffer['Paypal']['money']
   										));
   										$this->PaypalHistory->save();
 

@@ -104,6 +104,7 @@
   "SHOP__STARPASS_OFFER_EDIT_SUCCESS": "Offre StarPass modifi\u00e9e avec succ\u00e8s !",
   "SHOP__STARPASS_PAYMENT": "Cr\u00e9diter son compte avec StarPass",
   "SHOP__STARPASS_PAYMENT_SUCCESS": "La transaction StarPass s'est bien d\u00e9roul\u00e9e ! Vous avez re\u00e7u vos cr\u00e9dits boutique.",
+  "SHOP__STARPASS_PAYMENT_ERROR":"Le code que vous avez entré est faux. Veuillez rééssayez.",
 
   "SHOP__DASHBOARD_GRAPH_ERROR": "Vous devez avoir plus de 5 articles diff\u00e9rents vendus pour acc\u00e8der au graphique",
   "SHOP__ADMIN_PART_2": "Administrer les cr\u00e9dits",

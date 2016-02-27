@@ -132,12 +132,12 @@
               <a class="btn btn-info btn-block" data-toggle="collapse" href="#starpass" aria-expanded="false" aria-controls="starpass">StarPass</a>
               <br>
               <div class="collapse" id="starpass">
-                  <form method="POST" action="<?= $this->Html->url(array('controller' => 'payment', 'action' => 'starpass')) ?>" data-ajax="false">
+                  <form method="POST" action="<?= $this->Html->url('/shop/payment/starpass') ?>" data-ajax="false">
                     <input name="data[_Token][key]" value="<?= $csrfToken ?>" type="hidden">
                     <div class="form-group col-md-8">
                       <select class="form-control" name="offer">
-                        <?php foreach ($starpass_offers as $key => $value) { ?>
-                          <option value="<?= $value['Starpass']['id'] ?>"><?= $value['Starpass']['name'] ?></option>
+                        <?php $i = 0; foreach ($starpass_offers as $key => $value) { $i++; ?>
+                          <option value="<?= $value['Starpass']['id'] ?>"<?= ($i == 1) ? ' selected' : '' ?>><?= $value['Starpass']['name'] ?></option>
                         <?php } ?>
                       </select>
                     </div>
