@@ -1,17 +1,12 @@
 <section class="content">
-  <div class="alert alert-info">
-    <p><b>URL 1 :</b> <?= $this->Html->url(array('controller' => 'shop', 'action' => 'starpass', 'plugin' => 'shop', 'admin' => false), true) ?></p>
-    <p><b>URL 2 :</b> <?= $this->Html->url(array('controller' => 'shop', 'action' => 'starpass_verif', 'plugin' => 'shop', 'admin' => false), true) ?></p>
-    <p><b>URL 3 :</b> <?= $this->Html->url(array('controller' => 'shop', 'action' => 'starpass', 'plugin' => 'shop', 'admin' => false, 'error'), true) ?></p>
-  </div>
   <div class="row">
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('SHOP__STARPASS_OFFER_ADD') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('SHOP__PAYPAL_OFFER_ADD') ?></h3>
         </div>
         <div class="box-body">
-          <form action="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_starpass_ajax', 'admin' => true)) ?>" method="post" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>">
+          <form action="<?= $this->Html->url(array('controller' => 'payment', 'action' => 'add_paypal_ajax', 'admin' => true)) ?>" method="post" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>">
 
             <div class="ajax-msg"></div>
 
@@ -21,13 +16,13 @@
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('IDD') ?></label>
-              <input name="idd" class="form-control" type="text">
+              <label><?= $Lang->get('USER__EMAIL') ?></label>
+              <input name="email" class="form-control" type="email">
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('IDP') ?></label>
-              <input name="idp" class="form-control" type="text">
+              <label><?= $Lang->get('SHOP__ITEM_PRICE') ?></label>
+              <input name="price" class="form-control" type="text">
             </div>
 
             <div class="form-group">

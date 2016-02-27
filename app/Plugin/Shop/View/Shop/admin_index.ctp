@@ -165,7 +165,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
       <div class="col-md-6">
         <div class="box">
           <div class="box-header with-border">
-            <h3 class="box-title"><?= $Lang->get('SHOP__PAYSAFECARD') ?>&nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'toggle_paysafecard', 'admin' => true)) ?>" class="btn btn-success"><?php if($paysafecard_enabled) { echo $Lang->get('GLOBAL__DISABLE'); } else { echo $Lang->get('GLOBAL__ENABLE'); } ?></a></h3>
+            <h3 class="box-title"><?= $Lang->get('SHOP__PAYSAFECARD') ?>&nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'payment', 'action' => 'toggle_paysafecard', 'admin' => true)) ?>" class="btn btn-success"><?php if($paysafecard_enabled) { echo $Lang->get('GLOBAL__DISABLE'); } else { echo $Lang->get('GLOBAL__ENABLE'); } ?></a></h3>
           </div>
           <div class="box-body">
 
@@ -189,7 +189,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                       <td><?= $Lang->date($value['Paysafecard']['created']) ?></td>
                       <td>
                         <a href="#" onClick="howmuch(<?= $value['Paysafecard']['id'] ?>)" class="btn btn-success"><?= $Lang->get('SHOP__PAYSAFECARD_ACCEPT') ?></a>
-                        <a href="<?= $this->Html->url(array('controller' => 'Shop', 'action' => 'paysafecard_invalid/'.$value['Paysafecard']['id'])) ?>" class="btn btn-danger"><?= $Lang->get('SHOP__PAYSAFECARD_REFUSE') ?></a>
+                        <a href="<?= $this->Html->url(array('controller' => 'payment', 'action' => 'paysafecard_invalid/'.$value['Paysafecard']['id'])) ?>" class="btn btn-danger"><?= $Lang->get('SHOP__PAYSAFECARD_REFUSE') ?></a>
                       </td>
                     </tr>
                   <?php } ?>
@@ -205,7 +205,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
           var money = prompt("<?= $Lang->get('SHOP__PAYSAFECARD_VALID_CONFIRM') ?>");
 
           if (money != null) {
-              document.location = '<?= $this->Html->url(array('controller' => 'Shop', 'action' => 'paysafecard_valid/')) ?>/'+id+'/'+money;
+              document.location = '<?= $this->Html->url(array('controller' => 'payment', 'action' => 'paysafecard_valid/')) ?>/'+id+'/'+money;
           } else {
             return false;
           }
@@ -214,7 +214,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
       <div class="col-md-6">
         <div class="box">
           <div class="box-header with-border">
-            <h3 class="box-title"><?= $Lang->get('SHOP__PAYPAL_OFFERS') ?> &nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_paypal', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ADD') ?></a></h3>
+            <h3 class="box-title"><?= $Lang->get('SHOP__PAYPAL_OFFERS') ?> &nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'payment', 'action' => 'add_paypal', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ADD') ?></a></h3>
           </div>
           <div class="box-body">
 
@@ -239,8 +239,8 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                       <td><?= $value['Paypal']['money'] ?></td>
                       <td><?= $Lang->date($value['Paypal']['created']) ?></td>
                       <td class="right">
-                        <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'edit_paypal/'.$value["Paypal"]["id"], 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('GLOBAL__EDIT') ?></a>
-                        <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'shop', 'action' => 'delete/paypal/'.$value["Paypal"]["id"], 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
+                        <a href="<?= $this->Html->url(array('controller' => 'payment', 'action' => 'edit_paypal/'.$value["Paypal"]["id"], 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('GLOBAL__EDIT') ?></a>
+                        <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'payment', 'action' => 'delete/paypal/'.$value["Paypal"]["id"], 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
                       </td>
                     </tr>
                   <?php } ?>
@@ -290,7 +290,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
       <div class="col-md-6">
         <div class="box">
           <div class="box-header with-border">
-            <h3 class="box-title"><?= $Lang->get('SHOP__STARPASS_OFFERS') ?> &nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_starpass', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ADD') ?></a></h3>
+            <h3 class="box-title"><?= $Lang->get('SHOP__STARPASS_OFFERS') ?> &nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'payment', 'action' => 'add_starpass', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ADD') ?></a></h3>
           </div>
           <div class="box-body">
 
@@ -311,7 +311,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                       <td><?= $value['Starpass']['money'] ?></td>
                       <td><?= $Lang->date($value['Starpass']['created']) ?></td>
                       <td class="right">
-                        <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'edit_starpass/'.$value["Starpass"]["id"], 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('GLOBAL__EDIT') ?></button>
+                        <a href="<?= $this->Html->url(array('controller' => 'payment', 'action' => 'edit_starpass/'.$value["Starpass"]["id"], 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('GLOBAL__EDIT') ?></button>
                         <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'shop', 'action' => 'delete/starpass/'.$value["Starpass"]["id"], 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></button>
                       </td>
                     </tr>

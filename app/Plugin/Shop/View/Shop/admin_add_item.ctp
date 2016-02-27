@@ -58,12 +58,15 @@
             <div class="form-group">
               <label><?= $Lang->get('SHOP__ITEM_TIMED_COMMAND') ?></label>
               <div class="radio">
+                <input name="timedCommand" type="radio" value="true"> 
                 <label>
-                  <input name="timedCommand" type="radio" value="true"> <?= $Lang->get('GLOBAL__ENABLED') ?>
+                  <?= $Lang->get('GLOBAL__ENABLED') ?>
                 </label>
-                <br>
+              </div>
+              <div class="radio">
+                <input name="timedCommand" type="radio" value="false" checked>
                 <label>
-                  <input name="timedCommand" type="radio" value="false" checked> <?= $Lang->get('GLOBAL__DISABLED') ?>
+                  <?= $Lang->get('GLOBAL__DISABLED') ?>
                 </label>
               </div>
               <small><i><?= $Lang->get('SHOP__ITEM_TIMED_COMMAND_DESC') ?></i></small>

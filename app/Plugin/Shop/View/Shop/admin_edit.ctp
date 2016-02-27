@@ -54,19 +54,22 @@
 
             <div class="form-group">
               <label><?= $Lang->get('GLOBAL__SERVER_COMMANDS') ?></label>
-              <input name="commands" class="form-control" value="<?= $item['commands'] ?>" type="text">
+              <input name="commands" class="form-control" value="<?= htmlentities($item['commands']) ?>" type="text">
               <small><b>{PLAYER}</b> = Pseudo <br> <b>[{+}]</b> <?= $Lang->get('SERVER__PARSE_NEW_COMMAND') ?> <br><b><?= $Lang->get('GLOBAL__EXAMPLE') ?>:</b> <i>give {PLAYER} 1 1[{+}]broadcast {PLAYER} ...</i></small>
             </div>
 
             <div class="form-group">
               <label><?= $Lang->get('SHOP__ITEM_TIMED_COMMAND') ?></label>
               <div class="radio">
+                <input name="timedCommand" type="radio" value="true"<?= ($item['timedCommand']) ? ' checked=""' : ''; ?>>
                 <label>
-                  <input name="timedCommand" type="radio" value="true"<?= ($item['timedCommand']) ? ' checked=""' : ''; ?>> <?= $Lang->get('GLOBAL__ENABLED') ?>
+                  <?= $Lang->get('GLOBAL__ENABLED') ?>
                 </label>
-                <br>
+              </div>
+              <div class="radio">
+                <input name="timedCommand" type="radio" value="false"<?= (!$item['timedCommand']) ? ' checked=""' : ''; ?>>
                 <label>
-                  <input name="timedCommand" type="radio" value="false"<?= (!$item['timedCommand']) ? ' checked=""' : ''; ?>> <?= $Lang->get('GLOBAL__DISABLED') ?>
+                  <?= $Lang->get('GLOBAL__DISABLED') ?>
                 </label>
               </div>
               <small><i><?= $Lang->get('SHOP__ITEM_TIMED_COMMAND_DESC') ?></i></small>
@@ -74,7 +77,7 @@
             <div id="timedCommands" style="display:<?= ($item['timedCommand']) ? 'block' : 'none' ?>;">
               <div class="form-group">
                 <label><?= $Lang->get('GLOBAL__SERVER_COMMANDS') ?></label>
-                <input type="text" name="timedCommand_cmd" value="<?= @$item['timedCommand_cmd'] ?>" class="form-control">
+                <input type="text" name="timedCommand_cmd" value="<?= (isset($item['timedCommand_cmd'])) ? htmlentities($item['timedCommand_cmd']) : '' ?>" class="form-control">
                 <small><b>{PLAYER}</b> = Pseudo <br> <b>[{+}]</b> <?= $Lang->get('SERVER__PARSE_NEW_COMMAND') ?> <br><b><?= $Lang->get('GLOBAL__EXAMPLE') ?>:</b> <i>give {PLAYER} 1 1[{+}]broadcast {PLAYER} ...</i></small>
               </div>
               <div class="form-group">

@@ -1,9 +1,8 @@
 <section class="content">
   <div class="alert alert-info">
-    <p><b>URL 1 :</b> <?= $this->Html->url(array('controller' => 'shop', 'action' => 'starpass', 'plugin' => 'shop', 'admin' => false), true) ?></p>
-    <p><b>URL 2 :</b> <?= $this->Html->url(array('controller' => 'shop', 'action' => 'starpass_verif', 'plugin' => 'shop', 'admin' => false), true) ?></p>
-    <p><b>URL 3 :</b> <?= $this->Html->url(array('controller' => 'shop', 'action' => 'starpass', 'plugin' => 'shop', 'admin' => false, 'error'), true) ?></p>
-  </div>
+    <p><b>URL 1 :</b> <?= $this->Html->url('/shop/payment/starpass', true) ?></p>
+    <p><b>URL 2 :</b> <?= $this->Html->url('/shop/payment/starpass_verif', true) ?></p>
+    <p><b>URL 3 :</b> <?= $this->Html->url('/shop/payment/starpass/error', true) ?></p>
   <div class="row">
     <div class="col-md-12">
       <div class="box">
@@ -11,7 +10,7 @@
           <h3 class="box-title"><?= $Lang->get('SHOP__STARPASS_OFFER_EDIT') ?></h3>
         </div>
         <div class="box-body">
-          <form action="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'edit_starpass_ajax', 'admin' => true)) ?>" method="post" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>">
+          <form action="<?= $this->Html->url(array('controller' => 'payment', 'action' => 'edit_starpass_ajax', 'admin' => true)) ?>" method="post" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>">
 
             <div class="ajax-msg"></div>
 

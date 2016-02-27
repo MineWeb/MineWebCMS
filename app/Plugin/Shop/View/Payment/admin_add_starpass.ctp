@@ -1,33 +1,38 @@
 <section class="content">
+  <div class="alert alert-info">
+    <p><b>URL 1 :</b> <?= $this->Html->url('/shop/payment/starpass', true) ?></p>
+    <p><b>URL 2 :</b> <?= $this->Html->url('/shop/payment/starpass_verif', true) ?></p>
+    <p><b>URL 3 :</b> <?= $this->Html->url('/shop/payment/starpass/error', true) ?></p>
+  </div>
   <div class="row">
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('SHOP__PAYPAL_OFFER_EDIT') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('SHOP__STARPASS_OFFER_ADD') ?></h3>
         </div>
         <div class="box-body">
-          <form action="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'edit_paypal_ajax', 'admin' => true, $id)) ?>" method="post" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>">
+          <form action="<?= $this->Html->url(array('controller' => 'payment', 'action' => 'add_starpass_ajax', 'admin' => true)) ?>" method="post" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>">
 
             <div class="ajax-msg"></div>
 
             <div class="form-group">
               <label><?= $Lang->get('GLOBAL__NAME') ?></label>
-              <input name="name" class="form-control" value="<?= $paypal['name'] ?>" type="text">
+              <input name="name" class="form-control" type="text">
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('USER__EMAIL') ?></label>
-              <input name="email" class="form-control" value="<?= $paypal['email'] ?>" type="email">
+              <label><?= $Lang->get('IDD') ?></label>
+              <input name="idd" class="form-control" type="text">
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('SHOP__ITEM_PRICE') ?></label>
-              <input name="price" class="form-control" value="<?= $paypal['price'] ?>" type="text">
+              <label><?= $Lang->get('IDP') ?></label>
+              <input name="idp" class="form-control" type="text">
             </div>
 
             <div class="form-group">
               <label><?= $Lang->get('SHOP__OFFER_MONEY_TO_ADD', array('{MONEY_NAME}' => $Configuration->getMoneyName())) ?></label>
-              <input name="money" class="form-control" value="<?= $paypal['money'] ?>" type="text">
+              <input name="money" class="form-control" type="text">
             </div>
 
             <div class="pull-right">
