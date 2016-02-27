@@ -2,6 +2,10 @@
   "SHOP__TITLE": "Boutique",
   "SHOP__GLOBAL_AMOUNT": "Montant",
 
+  "SHOP__ADMIN_MANAGE_ITEMS":"Gérer les articles",
+  "SHOP__ADMIN_MANAGE_VOUCHERS":"Gérer les promotions",
+  "SHOP__ADMIN_MANAGE_PAYMENT":"Gérer les paiements",
+
   "SHOP__PAYPAL_RETURN_MSG":"Retourner sur {WEBSITE_NAME} pour récupérer les points",
 
   "SHOP__VOUCHERS_MANAGE": "G\u00e9rer les codes promotionnels",
@@ -87,6 +91,9 @@
   "SHOP__MONEY_CURRENTLY": "Vous avez actuellement",
 
   "SHOP__PAYPAL_OFFERS": "Offres PayPal",
+  "SHOP__PAYPAL_OFFER":"Offre",
+  "SHOP__PAYPAL_HISTORIES":"Historique des transactions PayPal",
+  "SHOP__PAYPAL_MAIL":"Email",
   "SHOP__PAYPAL_OFFER_ADD": "Ajouter une offre PayPal",
   "SHOP__PAYPAL_OFFER_ADD_SUCCESS": "Offre PayPal ajout\u00e9e avec succ\u00e8s !",
   "SHOP__PAYPAL_OFFER_EDIT": "Modifier une offre PayPal",
@@ -97,6 +104,9 @@
   "SHOP__OFFER_MONEY_TO_ADD": "Combien de {MONEY_NAME} voulez-vous donner ?",
 
   "SHOP__STARPASS_OFFERS": "Offres StarPass",
+  "SHOP__STARPASS_CODE":"Code",
+  "SHOP__STARPASS_OFFER":"Offre",
+  "SHOP__STARPASS_HISTORIES":"Historique des transactions StarPass",
   "SHOP__STARPASS_OFFER_DELETE_SUCCESS": "L'offre StarPass \u00e0 bien \u00e9t\u00e9 supprim\u00e9e !",
   "SHOP__STARPASS_OFFER_ADD": "Ajouter une offre StarPass",
   "SHOP__STARPASS_OFFER_ADD_SUCCESS": "Offre StarPass ajout\u00e9e avec succ\u00e8s !",

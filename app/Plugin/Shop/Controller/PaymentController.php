@@ -8,6 +8,71 @@ class PaymentController extends ShopAppController {
   }
 
   /*
+	* ======== Affichage de la gestion admin ===========
+	*/
+
+
+    public function admin_index() {
+  		if($this->isConnected AND $this->User->isAdmin()) {
+
+        $this->layout = 'admin';
+
+        $this->set('title_for_layout', $this->Lang->get('SHOP__ADMIN_MANAGE_PAYMENT'));
+
+        // On récupére toutes les offres
+
+          $offers = array();
+          $offersByID = array();
+
+          $this->loadModel('Shop.Starpass');
+          $offers['starpass'] = $this->Starpass->find('all');
+
+          foreach ($offers['starpass'] as $key => $value) {
+            $offersByID['starpass'][$value['Starpass']['id']] = $value['Starpass']['name'];
+          }
+
+          $this->loadModel('Shop.Paypal');
+          $offers['paypal'] = $this->Paypal->find('all');
+
+          foreach ($offers['paypal'] as $key => $value) {
+            $offersByID['paypal'][$value['Paypal']['id']] = $value['Paypal']['name'];
+          }
+
+        // On récupére tous les historiques
+
+          $histories = array();
+
+          $this->loadModel('Shop.StarpassHistory');
+          $histories['starpass'] = $this->StarpassHistory->find('all');
+
+          $this->loadModel('Shop.PaypalHistory');
+          $histories['paypal'] = $this->PaypalHistory->find('all');
+
+        // On récupère tous les utilisateurs pour afficher leur pseudo
+
+          $usersByID = array();
+
+          $findUsers = $this->User->find('all');
+          foreach ($findUsers as $key => $value) {
+            $usersByID[$value['User']['id']] = $value['User']['pseudo'];
+          }
+
+
+        // On set toutes les variables
+          $this->set(compact(
+            'offers',
+            'offersByID',
+            'histories',
+            'usersByID'
+          ));
+
+      } else {
+        throw new ForbiddenException();
+      }
+    }
+
+
+  /*
 	* ======== Switch du mode de paiement PaySafeCard (traitement POST) ===========
 	*/
 
