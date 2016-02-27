@@ -17,7 +17,14 @@ class ShopController extends ShopAppController {
 			$this->layout = $this->Configuration->getKey('layout'); // On charge le thème configuré
 			$this->loadModel('Shop.Item'); // le model des articles
 			$this->loadModel('Shop.Category'); // le model des catégories
-			$search_items = $this->Item->find('all'); // on cherche tous les items et on envoie à la vue
+			$search_items = $this->Item->find('all', array(
+				'conditions' => array(
+					'OR' => array(
+						'display IS NULL',
+						'display = 1'
+					)
+				)
+			)); // on cherche tous les items et on envoie à la vue
 			$search_categories = $this->Category->find('all'); // on cherche toutes les catégories et on envoie à la vue
 
 			$search_first_category = $this->Category->find('first'); //
@@ -83,7 +90,7 @@ class ShopController extends ShopAppController {
 					}
 				}
 
-				$affich_server = (!empty($search_item[0]['Item']['servers'])) ? true : false;
+				$affich_server = (!empty($search_item[0]['Item']['servers']) && $search_item[0]['Item']['display_server']) ? true : false;
 
 
 				//On récupére l'element
@@ -156,6 +163,24 @@ class ShopController extends ShopAppController {
 					$servers_online = array($this->Server->online());
 				}
 				if(!in_array(false, $servers_online)) {
+
+					if($search_item['0']['Item']['need_connect']) { //si on oblige le gars a être connecté pour acheter
+						$continue = false;
+						foreach ($servers_online as $k => $server_id) {
+
+	            $call = $this->Server->call(array('isConnected' => $this->User->getKey('pseudo')), $server_id, true);
+							if($call['isConnected'] == 'true') {
+                $continue = true;
+                break;
+              }
+
+						}
+						if(!$continue) { // Il est pas connecté (sur aucun des serveurs)
+							echo '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('GLOBAL__CLOSE').'</span></button><strong>'.$this->Lang->get('GLOBAL__ERROR').' :</strong> '.$this->Lang->get('SHOP__BUY_ERROR_NO_CONNECTED').'</div>';
+							exit;
+						}
+          }
+
 					$item_price = $search_item['0']['Item']['price'];
 					if(!empty($_GET['code'])) {
 						$voucher_reduc = $this->DiscountVoucher->get_new_price($item_price, $search_item['0']['Item']['category'], $search_item['0']['Item']['id'], $_GET['code']);
@@ -361,8 +386,11 @@ class ShopController extends ShopAppController {
 							'img_url' => $this->request->data['img_url'],
 							'timedCommand' => $this->request->data['timedCommand'],
 							'timedCommand_cmd' => $this->request->data['timedCommand_cmd'],
-							'timedCommand_time' => $this->request->data['timedCommand_time']
-							));
+							'timedCommand_time' => $this->request->data['timedCommand_time'],
+							'display_server' => $this->request->data['display_server'],
+							'need_connect' => $this->request->data['need_connect'],
+							'display' => $this->request->data['display']
+						));
 						$this->Item->save();
 						$this->Session->setFlash($this->Lang->get('SHOP__ITEM_EDIT_SUCCESS'), 'default.success');
 						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOP__ITEM_EDIT_SUCCESS')));
@@ -434,7 +462,10 @@ class ShopController extends ShopAppController {
 							'img_url' => $this->request->data['img_url'],
 							'timedCommand' => $this->request->data['timedCommand'],
 							'timedCommand_cmd' => $this->request->data['timedCommand_cmd'],
-							'timedCommand_time' => $this->request->data['timedCommand_time']
+							'timedCommand_time' => $this->request->data['timedCommand_time'],
+							'display_server' => $this->request->data['display_server'],
+							'need_connect' => $this->request->data['need_connect'],
+							'display' => $this->request->data['display']
 							));
 						$this->Item->save();
 						$this->History->set('ADD_ITEM', 'shop');

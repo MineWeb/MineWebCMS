@@ -65,6 +65,9 @@
   "SHOP__ITEM_TIMED_COMMAND": "Commande diff\u00e9r\u00e9e",
   "SHOP__ITEM_TIMED_COMMAND_DESC": "C'est une commande qui s'effectuera apr\u00e8s un certains temps (pour des grades par exemple)",
   "SHOP__ITEM_TIMED_COMMAND_TIME": "Temps",
+  "SHOP__ITEM_DISPLAY_SERVER":"Afficher le(s) serveur(s) où l'article sera donné.",
+  "SHOP__ITEM_CHECKBOX_CONNECT":"Obliger le joueur a être connecté sur le serveur pour acheter l'article",
+  "SHOP__ITEM_CHECKBOX_DISPLAY":"Afficher l'article sur la boutique",
 
   "SHOP__CATEGORIES": "Cat\u00e9gories",
   "SHOP__CATEGORY": "Cat\u00e9gorie",
@@ -74,7 +77,8 @@
 
   "SHOP__BUY": "Acheter",
   "SHOP__BUY_ERROR_NO_ENOUGH_MONEY": "Vous n'avez pas assez d'argent pour proc\u00e9der \u00e0 cet achat.",
-  "SHOP__BUY_ERROR_NEED_LOGIN": "Vous devez \u00eatre connect\u00e9 pour proc\u00e9der \u00e0 un achat",
+  "SHOP__BUY_ERROR_NEED_LOGIN": "Vous devez \u00eatre connect\u00e9 pour proc\u00e9der \u00e0 un achat.",
+  "SHOP__BUY_ERROR_NO_CONNECTED":"Vous devez être connecté en jeu pour procéder a cet achat.",
   "SHOP__BUY_CONFIRM": "Voulez-vous r\u00e9ellement acheter cet article ?",
   "SHOP__BUY_SUCCESS": "L'achat vient d'\u00eatre effectu\u00e9",
   "SHOP__BUY_VOUCHER_ASK": "Avez vous un code promotionnel ?",

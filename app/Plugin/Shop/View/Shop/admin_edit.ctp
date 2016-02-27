@@ -53,9 +53,23 @@
             </div>
 
             <div class="form-group">
+              <div class="checkbox">
+                <input name="display_server" type="checkbox"<?= (isset($item['display_server']) && $item['display_server']) ? ' checked=""' : '' ?>>
+                <label><?= $Lang->get('SHOP__ITEM_DISPLAY_SERVER') ?></label>
+              </div>
+            </div>
+
+            <div class="form-group">
               <label><?= $Lang->get('GLOBAL__SERVER_COMMANDS') ?></label>
               <input name="commands" class="form-control" value="<?= htmlentities($item['commands']) ?>" type="text">
               <small><b>{PLAYER}</b> = Pseudo <br> <b>[{+}]</b> <?= $Lang->get('SERVER__PARSE_NEW_COMMAND') ?> <br><b><?= $Lang->get('GLOBAL__EXAMPLE') ?>:</b> <i>give {PLAYER} 1 1[{+}]broadcast {PLAYER} ...</i></small>
+            </div>
+
+            <div class="form-group">
+              <div class="checkbox">
+                <input name="need_connect" type="checkbox"<?= (isset($item['need_connect']) && $item['need_connect']) ? ' checked=""' : '' ?>>
+                <label><?= $Lang->get('SHOP__ITEM_CHECKBOX_CONNECT') ?></label>
+              </div>
             </div>
 
             <div class="form-group">
@@ -83,6 +97,13 @@
               <div class="form-group">
                 <label><?= $Lang->get('SHOP__ITEM_TIMED_COMMAND_TIME') ?></label>
                   <input type="text" name="timedCommand_time" placeholder="Minutes" value="<?= @$item['timedCommand_time'] ?>" class="form-control">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="checkbox">
+                <input name="display" type="checkbox"<?= ((isset($item['display']) && $item['display']) || @empty($item['display'])) ? ' checked=""' : '' ?>>
+                <label><?= $Lang->get('SHOP__ITEM_CHECKBOX_DISPLAY') ?></label>
               </div>
             </div>
 

@@ -33,6 +33,9 @@ class ShopAppSchema extends CakeSchema {
 		'timedCommand' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1, 'unsigned' => false),
 		'timedCommand_cmd' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'timedCommand_time' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
+		'display_server' => array('type' => 'integer', 'null' => true, 'default' => '1', 'length' => 1, 'unsigned' => false),
+		'need_connect' => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 1, 'unsigned' => false),
+		'display' => array('type' => 'integer', 'null' => true, 'default' => '1', 'length' => 1, 'unsigned' => false),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),

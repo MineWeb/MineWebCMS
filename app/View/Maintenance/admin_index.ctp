@@ -13,21 +13,21 @@
 
             <div class="form-group">
               <div class="radio">
+                <input type="radio" class="enabledStatus" name="state" value="enabled"<?= ($Configuration->getKey('maintenance') != '0') ? ' checked=""' : '' ?>>
                 <label>
-                  <input type="radio" class="enabled" name="state" value="enabled"<?php if($Configuration->getKey('maintenance') != '0') { echo ' checked=""'; } ?>>
                   <?= $Lang->get('GLOBAL__ENABLED') ?>
                 </label>
               </div>
               <div class="radio">
+                <input type="radio" class="disabledStatus" name="state" value="disabled"<?= ($Configuration->getKey('maintenance') == '0') ? ' checked=""' : '' ?>>
                 <label>
-                  <input type="radio" class="disabled" name="state" value="disabled"<?php if($Configuration->getKey('maintenance') == '0') { echo ' checked=""'; } ?>>
                   <?= $Lang->get('GLOBAL__DISABLED') ?>
                 </label>
               </div>
             </div>
 
             <div class="form-group reason<?php if($Configuration->getKey('maintenance') == '0') { echo ' hidden'; } ?>">
-                <label><?= $Lang->get('REASON') ?></label>
+                <label><?= $Lang->get('MAINTENANCE__REASON') ?></label>
                 <?= $this->Html->script('admin/tinymce/tinymce.min.js') ?>
                 <script type="text/javascript">
                 tinymce.init({
@@ -56,15 +56,15 @@
   </div>
 </section>
 <script type="text/javascript">
-  $(".enabled").change(function() {
-    if($(".enabled").is(':checked')) {
+  $(".enabledStatus").change(function() {
+    if($(".enabledStatus").is(':checked')) {
       $(".reason").removeClass('hidden');
     } else {
       $(".reason").addClass('hidden').slideDown(500);
     }
   });
-  $(".disabled").change(function() {
-    if($(".disabled").is(':checked')) {
+  $(".disabledStatus").change(function() {
+    if($(".disabledStatus").is(':checked')) {
       $(".reason").addClass('hidden').slideDown(500);
     } else {
       $(".reason").removeClass('hidden');
