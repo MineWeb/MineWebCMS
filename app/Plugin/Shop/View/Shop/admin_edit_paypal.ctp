@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('EDIT_OFFER_PAYPAL') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('SHOP__PAYPAL_OFFER_EDIT') ?></h3>
         </div>
         <div class="box-body">
           <form action="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'edit_paypal_ajax', 'admin' => true, $id)) ?>" method="post" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>">
@@ -26,7 +26,7 @@
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('HOW_MONEY_OFFER_PAYPAL') ?> <?= $Configuration->getMoneyName() ?></label>
+              <label><?= $Lang->get('SHOP__OFFER_MONEY_TO_ADD', array('{MONEY_NAME}' => $Configuration->getMoneyName())) ?></label>
               <input name="money" class="form-control" value="<?= $paypal['money'] ?>" type="text">
             </div>
 

@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('ADD_CATEGORY') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('SHOP__CATEGORY_ADD') ?></h3>
         </div>
         <div class="box-body">
           <form action="" method="post" data-ajax="false">

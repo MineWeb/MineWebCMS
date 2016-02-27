@@ -250,7 +250,7 @@
                 </div>
               </div>
             <?php } else { ?>
-              <div class="alert alert-danger"><i class="icon-shopping-cart"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('NEED_MORE_5_ITEMS') ?></div>
+              <div class="alert alert-danger"><i class="icon-shopping-cart"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('SHOP__DASHBOARD_GRAPH_ERROR') ?></div>
             <?php } ?>
           <?php } else {
             echo $Lang->get('DASHBOARD__PLUGIN_SHOP_NOT_INSTALLED');

@@ -7,7 +7,7 @@
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title"><?= $Lang->get('CREDIT_STARPASS') ?></h3>
+                    <h3 class="panel-title"><?= $Lang->get('SHOP__STARPASS_PAYMENT') ?></h3>
                 </div>
                 <div class="panel-body">
                     <p>1 code = <?= $money ?> <?= $Configuration->getMoneyName() ?></p>

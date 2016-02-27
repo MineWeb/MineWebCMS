@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('EDIT_ITEM') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('SHOP__ITEM_EDIT') ?></h3>
         </div>
         <div class="box-body">
           <form action="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'edit_ajax')) ?>" method="post" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>">
@@ -59,7 +59,7 @@
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('TIMED_COMMAND') ?></label>
+              <label><?= $Lang->get('SHOP__ITEM_TIMED_COMMAND') ?></label>
               <div class="radio">
                 <label>
                   <input name="timedCommand" type="radio" value="true"<?= ($item['timedCommand']) ? ' checked=""' : ''; ?>> <?= $Lang->get('GLOBAL__ENABLED') ?>
@@ -69,7 +69,7 @@
                   <input name="timedCommand" type="radio" value="false"<?= (!$item['timedCommand']) ? ' checked=""' : ''; ?>> <?= $Lang->get('GLOBAL__DISABLED') ?>
                 </label>
               </div>
-              <small><i><?= $Lang->get('TIMED_COMMAND_EXPLAIN') ?></i></small>
+              <small><i><?= $Lang->get('SHOP__ITEM_TIMED_COMMAND_DESC') ?></i></small>
             </div>
             <div id="timedCommands" style="display:<?= ($item['timedCommand']) ? 'block' : 'none' ?>;">
               <div class="form-group">
@@ -78,7 +78,7 @@
                 <small><b>{PLAYER}</b> = Pseudo <br> <b>[{+}]</b> <?= $Lang->get('SERVER__PARSE_NEW_COMMAND') ?> <br><b><?= $Lang->get('GLOBAL__EXAMPLE') ?>:</b> <i>give {PLAYER} 1 1[{+}]broadcast {PLAYER} ...</i></small>
               </div>
               <div class="form-group">
-                <label><?= $Lang->get('TIME') ?></label>
+                <label><?= $Lang->get('SHOP__ITEM_TIMED_COMMAND_TIME') ?></label>
                   <input type="text" name="timedCommand_time" placeholder="Minutes" value="<?= @$item['timedCommand_time'] ?>" class="form-control">
               </div>
             </div>

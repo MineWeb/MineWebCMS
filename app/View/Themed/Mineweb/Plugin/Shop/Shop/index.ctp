@@ -190,7 +190,7 @@
               <form class="form-inline" data-ajax="true" action="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'paysafecard')) ?>">
                 <div class="ajax-msg"></div>
                 <div class="form-group" style="margin-right:20px;">
-                  <label class="sr-only"><?= $Lang->get('AMOUNT') ?></label>
+                  <label class="sr-only"><?= $Lang->get('SHOP__GLOBAL_AMOUNT') ?></label>
                   <div class="input-group">
                     <input type="text" class="form-control" name="amount" placeholder="XXX" data-type="numbers" maxlength="3" tabindex="1" style="width:60px;">
                     <div class="input-group-addon">€</div>

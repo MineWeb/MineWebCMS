@@ -14,7 +14,7 @@
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('TYPE') ?></label>
+              <label><?= $Lang->get('GLOBAL__TYPE') ?></label>
               <div class="radio">
                 <input type="radio" id="normal" name="type" value="normal">
                 <label><?= $Lang->get('NAVBAR__LINK_TYPE_DEFAULT') ?></label>

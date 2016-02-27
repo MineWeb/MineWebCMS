@@ -11,10 +11,10 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
     </div>
     <div class="col-md-6">
       <a class="btn btn-app btn-block" id="show" href="#">
-          <i class="fa fa-money"></i> <?= $Lang->get('SHOW_CREDIT') ?>
+          <i class="fa fa-money"></i> <?= $Lang->get('SHOP__ADMIN_PART_2') ?>
       </a>
       <a class="btn btn-app btn-block" id="hide" href="#" style="display:none;">
-          <i class="fa fa-money"></i> <?= $Lang->get('HIDE_CREDIT') ?>
+          <i class="fa fa-money"></i> <?= $Lang->get('SHOP__ADMIN_PART_1') ?>
       </a>
     </div>
   </div>
@@ -89,7 +89,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
       <div class="col-md-6">
         <div class="box">
           <div class="box-header with-border">
-            <h3 class="box-title"><?= $Lang->get('PURCHASE_HISTORY') ?></h3>
+            <h3 class="box-title"><?= $Lang->get('SHOP__HISTORY_PURCHASES') ?></h3>
           </div>
           <div class="box-body">
 
@@ -118,7 +118,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
       <div class="col-md-6">
         <div class="box">
           <div class="box-header with-border">
-            <h3 class="box-title"><?= $Lang->get('PURCHASE_HISTORY') ?> <?= $Lang->get('GLOBAL__OF') ?> <?= $Configuration->getMoneyName() ?></h3>
+            <h3 class="box-title"><?= $Lang->get('SHOP__HISTORY_PURCHASES_MONEY', array('{MONEY_NAME}' => $Configuration->getMoneyName())) ?></h3>
           </div>
           <div class="box-body">
 
@@ -126,10 +126,10 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
               <thead>
                 <tr>
                   <th>Pseudo</th>
-                  <th><?= $Lang->get('TYPE') ?></th>
+                  <th><?= $Lang->get('GLOBAL__TYPE') ?></th>
                   <th><?= ucfirst($Configuration->getMoneyName()) ?></th>
                   <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
-                  <th><?= $Lang->get('ID_PAYPAL') ?></th>
+                  <th><?= $Lang->get('SHOP__PAYPAL_PAYMENT_ID') ?></th>
                 </tr>
               </thead>
               <tbody>
@@ -173,8 +173,8 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
               <thead>
                 <tr>
                   <th><?= $Lang->get('USER__USERNAME') ?></th>
-                  <th><?= $Lang->get('AMOUNT') ?></th>
-                  <th><?= $Lang->get('CODE') ?></th>
+                  <th><?= $Lang->get('SHOP__GLOBAL_AMOUNT') ?></th>
+                  <th><?= $Lang->get('SHOP__VOUCHER_CODE') ?></th>
                   <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
                   <th class="right"><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
                 </tr>
@@ -188,8 +188,8 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                       <td><?= $value['Paysafecard']['code'] ?></td>
                       <td><?= $Lang->date($value['Paysafecard']['created']) ?></td>
                       <td>
-                        <a href="#" onClick="howmuch(<?= $value['Paysafecard']['id'] ?>)" class="btn btn-success"><?= $Lang->get('VALID') ?></a>
-                        <a href="<?= $this->Html->url(array('controller' => 'Shop', 'action' => 'paysafecard_invalid/'.$value['Paysafecard']['id'])) ?>" class="btn btn-danger"><?= $Lang->get('INVALID') ?></a>
+                        <a href="#" onClick="howmuch(<?= $value['Paysafecard']['id'] ?>)" class="btn btn-success"><?= $Lang->get('SHOP__PAYSAFECARD_ACCEPT') ?></a>
+                        <a href="<?= $this->Html->url(array('controller' => 'Shop', 'action' => 'paysafecard_invalid/'.$value['Paysafecard']['id'])) ?>" class="btn btn-danger"><?= $Lang->get('SHOP__PAYSAFECARD_REFUSE') ?></a>
                       </td>
                     </tr>
                   <?php } ?>
@@ -214,7 +214,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
       <div class="col-md-6">
         <div class="box">
           <div class="box-header with-border">
-            <h3 class="box-title"><?= $Lang->get('PAYPAL_OFFERS') ?> &nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_paypal', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ADD') ?></a></h3>
+            <h3 class="box-title"><?= $Lang->get('SHOP__PAYPAL_OFFERS') ?> &nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_paypal', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ADD') ?></a></h3>
           </div>
           <div class="box-body">
 
@@ -256,7 +256,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
       <div class="col-md-6">
         <div class="box">
           <div class="box-header with-border">
-            <h3 class="box-title"><?= $Lang->get('SEND_MONEY_HISTORY') ?> <?= $Lang->get('GLOBAL__OF') ?> <?= $Configuration->getMoneyName() ?></h3>
+            <h3 class="box-title"><?= $Lang->get('SHOP__HISTORY_TRANSFER_MONEY') ?> <?= $Lang->get('GLOBAL__OF') ?> <?= $Configuration->getMoneyName() ?></h3>
           </div>
           <div class="box-body">
 
@@ -290,7 +290,7 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
       <div class="col-md-6">
         <div class="box">
           <div class="box-header with-border">
-            <h3 class="box-title"><?= $Lang->get('STARPASS_OFFERS') ?> &nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_starpass', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ADD') ?></a></h3>
+            <h3 class="box-title"><?= $Lang->get('SHOP__STARPASS_OFFERS') ?> &nbsp;&nbsp;<a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_starpass', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ADD') ?></a></h3>
           </div>
           <div class="box-body">
 
@@ -354,14 +354,14 @@ function confirmDel(url) {
         <h4 class="modal-title"><?= $Lang->get('SHOP__VOUCHERS_MANAGE') ?></h4>
       </div>
       <div class="modal-body">
-        <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_voucher', 'admin' => true)) ?>" class="btn btn-success btn-block"><?= $Lang->get('ADD_VOUCHER') ?></a><br><br>
+        <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'add_voucher', 'admin' => true)) ?>" class="btn btn-success btn-block"><?= $Lang->get('SHOP__VOUCHER_ADD') ?></a><br><br>
         <table class="table table-bordered">
           <thead>
             <tr>
-              <th><?= $Lang->get('CODE') ?></th>
+              <th><?= $Lang->get('SHOP__VOUCHER_CODE') ?></th>
               <th><?= $Lang->get('SHOP__VOUCHER_END_DATE') ?></th>
               <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
-              <th><?= $Lang->get('LIMIT') ?></th>
+              <th><?= $Lang->get('SHOP__VOUCHER_LIMIT_SHORT') ?></th>
               <th><?= $Lang->get('SHOP__VOUCHER_DISPLAYED') ?></th>
               <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
             </tr>

@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('ADD_VOUCHER') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('SHOP__VOUCHER_ADD') ?></h3>
         </div>
         <div class="box-body">
 
@@ -12,28 +12,28 @@
             <div class="ajax-msg"></div>
 
             <div class="form-group">
-              <label><?= $Lang->get('CODE') ?></label>
+              <label><?= $Lang->get('SHOP__VOUCHER_CODE') ?></label>
               <div class="input-group">
-                <input name="code" id="random" class="form-control" placeholder="<?= $Lang->get('CODE') ?>" type="text">
+                <input name="code" id="random" class="form-control" placeholder="<?= $Lang->get('SHOP__VOUCHER_CODE') ?>" type="text">
                 <span class="input-group-btn">
-                  <button class="btn btn-info" type="button" onClick="$('#random').val(random_code(10))"><?= $Lang->get('GENERATE_CODE') ?></button>
+                  <button class="btn btn-info" type="button" onClick="$('#random').val(random_code(10))"><?= $Lang->get('SHOP__VOUCHER_GENERATE') ?></button>
                 </span>
               </div>
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('EFFECTIVE_ON') ?></label>
+              <label><?= $Lang->get('SHOP__VOUCHER_SELECT') ?></label>
               <select onChange="hide_or_not(this.value)" class="form-control" name="effective_on">
-                <option value="" selected><?= $Lang->get('CHOOSE_OPTION') ?></option>
+                <option value="" selected><?= $Lang->get('SHOP__VOUCHER_SELECT_CHOOSE') ?></option>
                 <option value="categories"><?= $Lang->get('SHOP__CATEGORIES') ?></option>
-                <option value="items"><?= $Lang->get('ITEMS') ?></option>
+                <option value="items"><?= $Lang->get('SHOP__ITEMS') ?></option>
                 <option value="all"><?= $Lang->get('GLOBAL__ALL') ?></option>
               </select>
             </div>
 
             <div id="hidden_items" style="display:none;">
               <div class="form-group">
-                <label><?= $Lang->get('CHOOSE_ITEM') ?></label>
+                <label><?= $Lang->get('SHOP__VOUCHER_SELECT_ITEMS') ?></label>
                 <select class="form-control" name="effective_on_item" multiple>
                   <?php if(!empty($items)) { ?>
                     <?php foreach ($items as $key => $value) { ?>
@@ -45,7 +45,7 @@
             </div>
             <div id="hidden_categories" style="display:none;">
               <div class="form-group">
-                <label><?= $Lang->get('CHOOSE_CATEGORY') ?></label>
+                <label><?= $Lang->get('SHOP__VOUCHER_SELECT_CATEGORIES') ?></label>
                 <select class="form-control" name="effective_on_categorie" multiple>
                   <?php if(!empty($categories)) { ?>
                     <?php foreach ($categories as $key => $value) { ?>
@@ -57,11 +57,11 @@
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('TYPE') ?></label>
+              <label><?= $Lang->get('GLOBAL__TYPE') ?></label>
               <select class="form-control" name="type">
                 <option value="" selected><?= $Lang->get('SHOP__VOUCHER_CHOOSE_TYPE') ?></option>
                 <option value="2"><?= ucfirst($Configuration->getMoneyName()) ?></option>
-                <option value="1"><?= $Lang->get('PERCENTAGE') ?></option>
+                <option value="1"><?= $Lang->get('SHOP__VOUCHER_TYPE_PERCENTAGE') ?></option>
               </select>
             </div>
 
@@ -77,8 +77,8 @@
             </div>
 
             <div class="form-group">
-              <label><?= $Lang->get('LIMIT_BY_USER') ?></label>
-              <input type="text" class="form-control" name="limit_per_user" placeholder="<?= $Lang->get('VOUCHER_0_FOR_NO_LIMIT') ?>">
+              <label><?= $Lang->get('SHOP__VOUCHER_LIMIT') ?></label>
+              <input type="text" class="form-control" name="limit_per_user" placeholder="<?= $Lang->get('SHOP__VOUCHER_LIMIT_DESC') ?>">
             </div>
 
             <div class="form-group">
@@ -87,7 +87,7 @@
                 <label>
                   <?= $Lang->get('SHOP__VOUCHER_DISPLAYED') ?>
                 </label>
-                <br><small><?= $Lang->get('AFFICH_ON_SHOP') ?></small>
+                <br><small><?= $Lang->get('SHOP__VOUCHER_DISPLAY_CHECKBOX') ?></small>
               </div>
             </div>
 

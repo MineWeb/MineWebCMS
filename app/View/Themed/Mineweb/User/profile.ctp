@@ -91,7 +91,7 @@
 
 					<hr>
 
-					<h3><?= $Lang->get('SEND_POINTS') ?></h3>
+					<h3><?= $Lang->get('SHOP__USER_POINTS_TRANSFER') ?></h3>
 
 					<form method="post" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'send_points')) ?>">
 						<div class="section password input">

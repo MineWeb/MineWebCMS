@@ -249,7 +249,7 @@ class ShopController extends ShopAppController {
 		if($this->isConnected AND $this->User->isAdmin()) {
 			if($id != false) {
 
-				$this->set('title_for_layout', $this->Lang->get('EDIT_ITEM'));
+				$this->set('title_for_layout', $this->Lang->get('SHOP__ITEM_EDIT'));
 				$this->layout = 'admin';
 				$this->loadModel('Shop.Item');
 				$item = $this->Item->find('all', array('conditions' => array('id' => $id)));
@@ -328,8 +328,8 @@ class ShopController extends ShopAppController {
 						'timedCommand_time' => $this->request->data['timedCommand_time']
 						));
 					$this->Item->save();
-					$this->Session->setFlash($this->Lang->get('ITEM_SUCCESS_EDIT'), 'default.success');
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('ITEM_SUCCESS_EDIT')));
+					$this->Session->setFlash($this->Lang->get('SHOP__ITEM_EDIT_SUCCESS'), 'default.success');
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOP__ITEM_EDIT_SUCCESS')));
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
@@ -344,7 +344,7 @@ class ShopController extends ShopAppController {
 	public function admin_add_item() {
 		if($this->isConnected AND $this->User->isAdmin()) {
 
-			$this->set('title_for_layout', $this->Lang->get('ADD_ITEM'));
+			$this->set('title_for_layout', $this->Lang->get('SHOP__ITEM_ADD'));
 			$this->layout = 'admin';
 			$this->loadModel('Shop.Category');
 			$search_categories = $this->Category->find('all', array('fields' => 'name'));
@@ -390,8 +390,8 @@ class ShopController extends ShopAppController {
 						));
 					$this->Item->save();
 					$this->History->set('ADD_ITEM', 'shop');
-					$this->Session->setFlash($this->Lang->get('ITEM_SUCCESS_ADD'), 'default.success');
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('ITEM_SUCCESS_ADD')));
+					$this->Session->setFlash($this->Lang->get('SHOP__ITEM_ADD_SUCCESS'), 'default.success');
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOP__ITEM_ADD_SUCCESS')));
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
@@ -407,7 +407,7 @@ class ShopController extends ShopAppController {
 		if($this->isConnected AND $this->User->isAdmin()) {
 
 			$this->layout = 'admin';
-			$this->set('title_for_layout', $this->Lang->get('ADD_CATEGORY'));
+			$this->set('title_for_layout', $this->Lang->get('SHOP__CATEGORY_ADD'));
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['name'])) {
 					$this->loadModel('Shop.Category');
@@ -438,7 +438,7 @@ class ShopController extends ShopAppController {
 					if(!empty($find)) {
 						$this->Item->delete($id);
 						$this->History->set('DELETE_ITEM', 'shop');
-						$this->Session->setFlash($this->Lang->get('DELETE_ITEM_SUCCESS'), 'default.success');
+						$this->Session->setFlash($this->Lang->get('SHOP__ITEM_DELETE_SUCCESS'), 'default.success');
 						$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 					} else {
 						$this->Session->setFlash($this->Lang->get('UNKNONW_ID'), 'default.error');
@@ -450,7 +450,7 @@ class ShopController extends ShopAppController {
 					if(!empty($find)) {
 						$this->Category->delete($id);
 						$this->History->set('DELETE_CATEGORY', 'shop');
-						$this->Session->setFlash($this->Lang->get('DELETE_CATEGORY_SUCCESS'), 'default.success');
+						$this->Session->setFlash($this->Lang->get('SHOP__CATEGORY_DELETE_SUCCESS'), 'default.success');
 						$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 					} else {
 						$this->Session->setFlash($this->Lang->get('UNKNONW_ID'), 'default.error');
@@ -462,7 +462,7 @@ class ShopController extends ShopAppController {
 					if(!empty($find)) {
 						$this->Paypal->delete($id);
 						$this->History->set('DELETE_PAYPAL_OFFER', 'shop');
-						$this->Session->setFlash($this->Lang->get('DELETE_PAYPAL_OFFER_SUCCESS'), 'default.success');
+						$this->Session->setFlash($this->Lang->get('SHOP__PAYPAL_OFFER_DELETE_SUCCESS'), 'default.success');
 						$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 					} else {
 						$this->Session->setFlash($this->Lang->get('UNKNONW_ID'), 'default.error');
@@ -474,7 +474,7 @@ class ShopController extends ShopAppController {
 					if(!empty($find)) {
 						$this->Starpass->delete($id);
 						$this->History->set('DELETE_STARPASS_OFFER', 'shop');
-						$this->Session->setFlash($this->Lang->get('DELETE_STARPASS_OFFER_SUCCESS'), 'default.success');
+						$this->Session->setFlash($this->Lang->get('SHOP__STARPASS_OFFER_DELETE_SUCCESS'), 'default.success');
 						$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 					} else {
 						$this->Session->setFlash($this->Lang->get('UNKNONW_ID'), 'default.error');
@@ -645,7 +645,7 @@ class ShopController extends ShopAppController {
 	public function admin_add_paypal() {
 		if($this->isConnected AND $this->User->isAdmin()) {
 
-			$this->set('title_for_layout', $this->Lang->get('ADD_OFFER_PAYPAL'));
+			$this->set('title_for_layout', $this->Lang->get('SHOP__PAYPAL_OFFER_ADD'));
 			$this->layout = 'admin';
 		} else {
 			$this->redirect('/');
@@ -655,7 +655,7 @@ class ShopController extends ShopAppController {
 	public function admin_edit_paypal($id = false) {
 		if($this->isConnected AND $this->User->isAdmin()) {
 
-			$this->set('title_for_layout', $this->Lang->get('EDIT_OFFER_PAYPAL'));
+			$this->set('title_for_layout', $this->Lang->get('SHOP__PAYPAL_OFFER_EDIT'));
 			$this->layout = 'admin';
 			if($id != false) {
 				$this->loadModel('Shop.Paypal');
@@ -677,7 +677,7 @@ class ShopController extends ShopAppController {
 	public function admin_add_starpass() {
 		if($this->isConnected AND $this->User->isAdmin()) {
 
-			$this->set('title_for_layout', $this->Lang->get('ADD_OFFER_STARPASS'));
+			$this->set('title_for_layout', $this->Lang->get('SHOP__STARPASS_OFFER_ADD'));
 			$this->layout = 'admin';
 		} else {
 			$this->redirect('/');
@@ -687,7 +687,7 @@ class ShopController extends ShopAppController {
 	public function admin_edit_starpass($id = false) {
 		if($this->isConnected AND $this->User->isAdmin()) {
 
-			$this->set('title_for_layout', $this->Lang->get('EDIT_OFFER_STARPASS'));
+			$this->set('title_for_layout', $this->Lang->get('SHOP__STARPASS_OFFER_EDIT'));
 			$this->layout = 'admin';
 			if($id != false) {
 				$this->loadModel('Shop.Starpass');
@@ -719,8 +719,8 @@ class ShopController extends ShopAppController {
 						$this->Paypal->set($this->request->data);
 						$this->Paypal->save();
 						$this->History->set('ADD_PAYPAL_OFFER', 'shop');
-						$this->Session->setFlash($this->Lang->get('ADD_PAYPAL_OFFER_SUCCESS'), 'default.success');
-						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ADD_PAYPAL_OFFER_SUCCESS')));
+						$this->Session->setFlash($this->Lang->get('SHOP__PAYPAL_OFFER_ADD_SUCCESS'), 'default.success');
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__PAYPAL_OFFER_ADD_SUCCESS')));
 					} else {
 						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID')));
 					}
@@ -752,8 +752,8 @@ class ShopController extends ShopAppController {
 								$this->Paypal->set($this->request->data);
 								$this->Paypal->save();
 								$this->History->set('EDIT_PAYPAL_OFFER', 'shop');
-								$this->Session->setFlash($this->Lang->get('EDIT_PAYPAL_OFFER_SUCCESS'), 'default.success');
-								echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('EDIT_PAYPAL_OFFER_SUCCESS')));
+								$this->Session->setFlash($this->Lang->get('SHOP__PAYPAL_OFFER_EDIT_SUCCESS'), 'default.success');
+								echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOP__PAYPAL_OFFER_EDIT_SUCCESS')));
 							} else {
 								echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID')));
 							}
@@ -787,8 +787,8 @@ class ShopController extends ShopAppController {
 					$this->Starpass->set($this->request->data);
 					$this->Starpass->save();
 					$this->History->set('ADD_STARPASS_OFFER', 'shop');
-					$this->Session->setFlash($this->Lang->get('ADD_STARPASS_OFFER_SUCCESS'), 'default.success');
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('ADD_STARPASS_OFFER_SUCCESS')));
+					$this->Session->setFlash($this->Lang->get('SHOP__STARPASS_OFFER_ADD_SUCCESS'), 'default.success');
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOP__STARPASS_OFFER_ADD_SUCCESS')));
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
@@ -814,8 +814,8 @@ class ShopController extends ShopAppController {
 						$this->Starpass->set($this->request->data);
 						$this->Starpass->save();
 						$this->History->set('EDIT_STARPASS_OFFER', 'shop');
-						$this->Session->setFlash($this->Lang->get('EDIT_STARPASS_OFFER_SUCCESS'), 'default.success');
-						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('EDIT_STARPASS_OFFER_SUCCESS')));
+						$this->Session->setFlash($this->Lang->get('SHOP__STARPASS_OFFER_EDIT_SUCCESS'), 'default.success');
+						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOP__STARPASS_OFFER_EDIT_SUCCESS')));
 					} else {
 						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 					}
@@ -833,7 +833,7 @@ class ShopController extends ShopAppController {
 	public function admin_add_voucher() {
 		if($this->isConnected AND $this->User->isAdmin()) {
 
-			$this->set('title_for_layout', $this->Lang->get('ADD_VOUCHER'));
+			$this->set('title_for_layout', $this->Lang->get('SHOP__VOUCHER_ADD'));
 			$this->layout = 'admin';
 
 			$this->loadModel('Shop.Category');
@@ -881,8 +881,8 @@ class ShopController extends ShopAppController {
 					));
 					$this->Voucher->save();
 					$this->History->set('ADD_VOUCHER', 'shop');
-					$this->Session->setFlash($this->Lang->get('VOUCHER_SUCCESS_ADD'), 'default.success');
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('VOUCHER_SUCCESS_ADD')));
+					$this->Session->setFlash($this->Lang->get('SHOP__VOUCHER_ADD_SUCCESS'), 'default.success');
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOP__VOUCHER_ADD_SUCCESS')));
 				} else {
 					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 				}
@@ -901,7 +901,7 @@ class ShopController extends ShopAppController {
 				$this->loadModel('Shop.Voucher');
 				$this->Voucher->delete($id);
 				$this->History->set('DELETE_VOUCHER', 'shop');
-				$this->Session->setFlash($this->Lang->get('DELETE_SUCCESS_ADD'), 'default.success');
+				$this->Session->setFlash($this->Lang->get('SHOP__VOUCHER_DELETE_SUCCESS'), 'default.success');
 				$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
 			} else {
 				$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
@@ -924,7 +924,7 @@ class ShopController extends ShopAppController {
 					$this->set('idd', $search[0]['Starpass']['idd']);
 					$this->set('idp', $search[0]['Starpass']['idp']);
 					$this->set('money', $search[0]['Starpass']['money']);
-					$this->set('title_for_layout', $this->Lang->get('CREDIT_STARPASS'));
+					$this->set('title_for_layout', $this->Lang->get('SHOP__STARPASS_PAYMENT'));
 					$this->layout = $this->Configuration->getKey('layout');
 				} else {
 					throw new NotFoundException();
@@ -1004,7 +1004,7 @@ class ShopController extends ShopAppController {
 
 					$this->History->set('BUY_MONEY', 'shop', 'starpass|'.$search_starpass[0]['Starpass']['money']);
 
-					$this->Session->setFlash($this->Lang->get('SUCCESS_STARPASS'), 'default.success');
+					$this->Session->setFlash($this->Lang->get('SHOP__STARPASS_PAYMENT_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'shop', 'action' => 'index'));
 				}
 			} else {
