@@ -22,7 +22,6 @@ table tr td:last-child > div.btn-group {
               <li class=""><a href="#tab_paypal" data-toggle="tab" aria-expanded="false">PayPal</a></li>
               <li class=""><a href="#tab_psc" data-toggle="tab" aria-expanded="false">PaySafeCard</a></li>
               <li class=""><a href="#tab_dedipass" data-toggle="tab" aria-expanded="false">Dédipass</a></li>
-              <li class=""><a href="#tab_hipay" data-toggle="tab" aria-expanded="false">HiPay (Allopass)</a></li>
               <li class=""><a href="#tab_points_transfer" data-toggle="tab" aria-expanded="false"><?= $Lang->get('SHOP__USER_POINTS_TRANSFER_ADMIN') ?></a></li>
               <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
             </ul>
@@ -290,9 +289,6 @@ table tr td:last-child > div.btn-group {
                   </tbody>
                 </table>
 
-              </div>
-
-              <div class="tab-pane" id="tab_hipay">
               </div>
 
               <div class="tab-pane" id="tab_points_transfer">
