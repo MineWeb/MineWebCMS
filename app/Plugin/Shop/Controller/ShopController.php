@@ -231,7 +231,7 @@ class ShopController extends ShopAppController {
 						// Ajouter au champ used si il a utiliser un voucher
 						if(!empty($_GET['code']) && $voucher_reduc != $search_item['0']['Item']['price']) {
 							$diff = $search_item['0']['Item']['price'] - $voucher_reduc;
-							$this->DiscountVoucher->set_used($this->User->getKey('pseudo'), $_GET['code']);
+							$this->DiscountVoucher->set_used($this->User->getKey('id'), $_GET['code']);
 
 							$this->loadModel('Shop.VouchersHistory');
 							$this->VouchersHistory->create();

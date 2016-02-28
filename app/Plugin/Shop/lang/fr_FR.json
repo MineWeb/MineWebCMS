@@ -28,7 +28,7 @@
   "SHOP__VOUCHER_SELECT_CATEGORIES": "Choisissez une\/des cat\u00e9gorie(s)",
   "SHOP__VOUCHER_TYPE_PERCENTAGE": "Pourcentage",
   "SHOP__VOUCHER_DISPLAY_CHECKBOX": "En cochant cette case, la promotion sera afficher sur la boutique",
-  "SHOP__VOUCHER_ADD_SUCCESS": "La promotion à bien \u00e9t\u00e9 ajout\u00e9e !",
+  "SHOP__VOUCHER_ADD_SUCCESS": "La promotion a bien \u00e9t\u00e9 ajout\u00e9e !",
   "SHOP__VOUCHER_DELETE_SUCCESS": "La promotion à bien \u00e9t\u00e9 supprim\u00e9e !",
   "SHOP__VOUCHER_LIMIT":"Limite d'utilisation par utilisateur",
   "SHOP__VOUCHER_LIMIT_SHORT":"Limite",

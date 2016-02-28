@@ -140,9 +140,14 @@ class DiscountVoucherComponent extends Object {
         $can_use = true;
       } else {
         $this->User = ClassRegistry::init('User');
-        $how_used = array_count_values(unserialize($search_vouchers[0]['Voucher']['used']));
-        if(isset($how_used[$this->User->getKey('pseudo')])) {
-          $how_used = $how_used[$this->User->getKey('pseudo')];
+        $used = unserialize($search_vouchers[0]['Voucher']['used']);
+        if(!empty($used)) {
+          $how_used = array_count_values($used);
+          if(isset($how_used[$this->User->getKey('id')])) {
+            $how_used = $how_used[$this->User->getKey('id')];
+          } else {
+            $how_used = 0;
+          }
         } else {
           $how_used = 0;
         }
@@ -152,6 +157,7 @@ class DiscountVoucherComponent extends Object {
           $can_use = false;
         }
       }
+
       if($can_use) {
 
         $this->Category = ClassRegistry::init('Shop.Category');
@@ -191,13 +197,13 @@ class DiscountVoucherComponent extends Object {
     }
   }
 
-  function set_used($pseudo, $code) {
+  function set_used($user_id, $code) {
     $this->Voucher = ClassRegistry::init('Shop.Voucher');
     $search_vouchers = $this->Voucher->find('all', array('conditions' => array('code' => $code)));
     if(!empty($search_vouchers)) {
 
       $used = unserialize($search_vouchers[0]['Voucher']['used']);
-      $used[] = $pseudo;
+      $used[] = $user_id;
       $used = serialize($used);
 
       $this->Voucher->read(null, $search_vouchers[0]['Voucher']['id']);
