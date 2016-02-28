@@ -9,6 +9,7 @@
   "SHOP__PAYPAL_RETURN_MSG":"Retourner sur {WEBSITE_NAME} pour récupérer les points",
 
   "SHOP__VOUCHERS_MANAGE": "G\u00e9rer les codes promotionnels",
+  "SHOP__VOUCHERS_HISTORIES":"Historique des utilisations de code promotionnels",
   "SHOP__VOUCHER_END_DATE": "Date de fin",
   "SHOP__VOUCHER_VALUE_LABEL": "R\u00e9duction",
   "SHOP__VOUCHER_VALUE_INPUT":"En {MONEY_NAME} ou en pourcentage",
@@ -33,6 +34,7 @@
   "SHOP__VOUCHER_LIMIT_SHORT":"Limite",
   "SHOP__VOUCHER_LIMIT_DESC":"Mettez 0 pour aucune limite",
   "SHOP__VOUCHER_CODE": "Code",
+  "SHOP__VOUCHER_REDUCTION":"Réduction en {MONEY_NAME}",
 
   "SHOP__PAYSAFECARD": "PaySafeCard",
   "SHOP__PAYSAFECARD_CODE": "Code",

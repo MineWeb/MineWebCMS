@@ -42,16 +42,16 @@ class PaymentController extends ShopAppController {
 
           $histories = array();
 
-          $this->loadModel('Shop.StarpassHistory');
+          $this->loadModel('Shop.StarpassHistory', array('order' => 'id DESC'));
           $histories['starpass'] = $this->StarpassHistory->find('all');
 
-          $this->loadModel('Shop.PaypalHistory');
+          $this->loadModel('Shop.PaypalHistory', array('order' => 'id DESC'));
           $histories['paypal'] = $this->PaypalHistory->find('all');
 
-          $this->loadModel('Shop.PaysafecardHistory');
+          $this->loadModel('Shop.PaysafecardHistory', array('order' => 'id DESC'));
           $histories['paysafecard'] = $this->PaysafecardHistory->find('all');
 
-          $this->loadModel('Shop.DedipassHistory');
+          $this->loadModel('Shop.DedipassHistory', array('order' => 'id DESC'));
           $histories['dedipass'] = $this->DedipassHistory->find('all');
 
 

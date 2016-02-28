@@ -196,7 +196,19 @@ class ShopController extends ShopAppController {
 
 						// Ajouter au champ used si il a utiliser un voucher
 						if(!empty($_GET['code']) && $voucher_reduc != $search_item['0']['Item']['price']) {
+							$diff = $search_item['0']['Item']['price'] - $voucher_reduc;
 							$this->DiscountVoucher->set_used($this->User->getKey('pseudo'), $_GET['code']);
+
+							$this->loadModel('Shop.VouchersHistory');
+							$this->VouchersHistory->create();
+							$this->VouchersHistory->set(array(
+								'code' => $_GET['code'],
+								'user_id' => $this->User->getKey('id'),
+								'item_id' => $search_item['0']['Item']['id'],
+								'reduction' => $diff
+							));
+							$this->VouchersHistory->save();
+
 						}
 						//
 
@@ -559,6 +571,49 @@ class ShopController extends ShopAppController {
 				$this->redirect('/');
 			}
 		}
+
+
+
+
+	/*
+	* ======== Page principale pour les promos ===========
+	*/
+
+
+		public function admin_vouchers() {
+			if($this->isConnected AND $this->User->isAdmin()) {
+
+				$this->set('title_for_layout',$this->Lang->get('SHOP__VOUCHERS_MANAGE'));
+				$this->layout = 'admin';
+
+				$this->loadModel('Shop.Voucher');
+				$vouchers = $this->Voucher->find('all');
+
+				$this->loadModel('Shop.VouchersHistory');
+				$vouchers_histories = $this->VouchersHistory->find('all', array('order' => 'id DESC'));
+
+				$usersByID = array();
+
+				$findUsers = $this->User->find('all');
+				foreach ($findUsers as $key => $value) {
+					$usersByID[$value['User']['id']] = $value['User']['pseudo'];
+				}
+
+				$itemsByID = array();
+
+				$this->loadModel('Shop.Item');
+				$findItems = $this->Item->find('all');
+				foreach ($findItems as $key => $value) {
+					$itemsByID[$value['Item']['id']] = $value['Item']['name'];
+				}
+
+				$this->set(compact('vouchers', 'vouchers_histories', 'usersByID', 'itemsByID'));
+
+			} else {
+				throw new ForbiddenException();
+			}
+		}
+
 
 
 
