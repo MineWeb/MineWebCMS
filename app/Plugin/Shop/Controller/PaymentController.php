@@ -901,7 +901,10 @@ class PaymentController extends ShopAppController {
     public function dedipass_ipn() {
       $this->autoRender = false;
   		if($this->request->is('post') && $this->Permissions->can('CREDIT_ACCOUNT')) {
-  			$public_key  = isset($this->request->data['key']) ? preg_replace('/[^a-zA-Z0-9]+/', '', $this->request->data['key']) : '';
+  			//$public_key  = isset($this->request->data['key']) ? preg_replace('/[^a-zA-Z0-9]+/', '', $this->request->data['key']) : '';
+        $this->loadModel('Shop.DedipassConfig');
+  			$search = $this->DedipassConfig->find('first');
+        $public_key = $search['DedipassConfig']['public_key'];
   			$code = isset($this->request->data['code']) ? preg_replace('/[^a-zA-Z0-9]+/', '', $this->request->data['code']) : '';
   			$rate = isset($this->request->data['rate']) ? preg_replace('/[^a-zA-Z0-9\-]+/', '', $this->request->data['rate']) : '';
   			// Validation des champs
