@@ -65,7 +65,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-12">
         <div class="box">
           <div class="box-header with-border">
             <h3 class="box-title"><?= $Lang->get('SHOP__HISTORY_PURCHASES') ?></h3>
@@ -81,7 +81,7 @@
                 </tr>
               </thead>
               <tbody>
-                <?php foreach ($History->get('SHOP', false, false, 'BUY_ITEM') as $value => $v) { ?>
+                <?php foreach ($histories_buy as $value => $v) { ?>
                   <tr>
                     <td><?= $v['History']['other'] ?></td>
                     <td><?= $v['History']['author'] ?></td>

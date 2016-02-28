@@ -270,16 +270,20 @@ class ShopController extends ShopAppController {
 
 				$this->set('title_for_layout',$this->Lang->get('SHOP__TITLE'));
 				$this->layout = 'admin';
+
 				$this->loadModel('Shop.Item');
 				$search_items = $this->Item->find('all');
-				$this->set(compact('search_items'));
+
 				$this->loadModel('Shop.Category');
 				$search_categories = $this->Category->find('all');
 				foreach ($search_categories as $v) {
 					$categories[$v['Category']['id']]['name'] = $v['Category']['name'];
 				}
-				$this->set(compact('categories'));
-				$this->set(compact('search_categories'));
+
+				$this->loadModel('History');
+				$histories_buy = $this->History->find('all', array('conditions' => array('action' => 'BUY_ITEM'), 'order' => 'id DESC'));
+
+				$this->set(compact('categories', 'search_categories', 'search_items', 'histories_buy'));
 
 			} else {
 				$this->redirect('/');
