@@ -84,6 +84,7 @@
   "SHOP__ITEM_NAME":"Nom",
   "SHOP__ITEM_IMG_URL": "URL de l'image",
   "SHOP__ITEM_PRICE": "Prix",
+  "SHOP__ITEM_TOTAL":"Total",
   "SHOP__ITEM_DESCRIPTION": "Description",
   "SHOP__ITEM_EDIT_SUCCESS": "Article modifi\u00e9 avec succ\u00e8s !",
   "SHOP__ITEM_DELETE_SUCCESS": "Article supprim\u00e9 avec succ\u00e8s !",

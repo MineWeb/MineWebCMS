@@ -74,6 +74,20 @@
             dataType : 'html',
             success: function(response) {
                 $("#content_buy").hide().html(response).fadeIn('250');
+
+                $('input[id="code-voucher"]').unbind('keyup');
+
+                $('input[id="code-voucher"]').keyup(function(e) {
+
+                  var code = $(this).val();
+
+                  $.get('<?= $this->Html->url(array('action' => 'checkVoucher')) ?>/'+code+'/'+id, function(data) {
+                    if(data.price !== undefined) {
+                      $("#content_buy").find('#total-price').html(data.price);
+                    }
+                  });
+
+                });
             },
             error: function(xhr) {
                 alert('ERROR');

@@ -73,7 +73,12 @@
 
             <div class="form-group">
               <label><?= $Lang->get('SHOP__VOUCHER_END_DATE') ?></label>
-              <input type="text" class="form-control" name="end_date" placeholder="<?= 'Format : '.$Lang->get('GLOBAL__DATE_YEAR').'-'.$Lang->get('GLOBAL__DATE_MONTH').'-'.$Lang->get('GLOBAL__DATE_DAY').' '.$Lang->get('GLOBAL__DATE_HOUR').':'.$Lang->get('GLOBAL__DATE_MINUTES').':'.$Lang->get('GLOBAL__DATE_SECONDS') ?>">
+              <div class="input-group">
+                <div class="input-group-addon">
+                  <i class="fa fa-calendar"></i>
+                </div>
+                <input type="text" class="form-control" name="end_date" id="datetimepicker" placeholder="<?= 'Format : '.$Lang->get('GLOBAL__DATE_YEAR').'-'.$Lang->get('GLOBAL__DATE_MONTH').'-'.$Lang->get('GLOBAL__DATE_DAY').' '.$Lang->get('GLOBAL__DATE_HOUR').':'.$Lang->get('GLOBAL__DATE_MINUTES').':'.$Lang->get('GLOBAL__DATE_SECONDS') ?>">
+              </div>
             </div>
 
             <div class="form-group">
@@ -136,4 +141,15 @@
     }
     return Chaine;
   }
+</script>
+<?= $this->Html->script('moment') ?>
+<?= $this->Html->script('bootstrap-datetimepicker') ?>
+<?= $this->Html->css('bootstrap-datetimepicker') ?>
+<script type="text/javascript">
+$(function () {
+  $('#datetimepicker').datetimepicker({
+      locale: 'fr',
+      format: 'YYYY-MM-DD HH:mm:ss'
+  });
+});
 </script>

@@ -152,6 +152,40 @@ class ShopController extends ShopAppController {
 	* ======== Achat d'un article depuis le modal ===========
 	*/
 
+		public function checkVoucher($code = null, $item_id = null) {
+			$this->autoRender = false;
+			$this->response->type('json');
+
+			if(!empty($code) && !empty($item_id)) {
+
+				$this->loadModel('Shop.Item');
+				$findItem = $this->Item->find('first', array('conditions' => array('id' => $item_id)));
+
+				if(!empty($findItem)) {
+
+					$new_price = $voucher_reduc = $this->DiscountVoucher->get_new_price(
+						$findItem['Item']['price'],
+						$findItem['Item']['category'],
+						$findItem['Item']['id'],
+						$code
+					);
+
+					echo json_encode(array('price' => $new_price));
+
+				}
+
+			}
+
+			return;
+
+		}
+
+
+
+	/*
+	* ======== Achat d'un article depuis le modal ===========
+	*/
+
 		function buy_ajax($id) {
 			$this->autoRender = false;
 
