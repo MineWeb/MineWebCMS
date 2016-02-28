@@ -3,6 +3,7 @@
     <p><b>URL 1 :</b> <?= $this->Html->url('/shop/payment/starpass', true) ?></p>
     <p><b>URL 2 :</b> <?= $this->Html->url('/shop/payment/starpass_verif', true) ?></p>
     <p><b>URL 3 :</b> <?= $this->Html->url('/shop/payment/starpass/error', true) ?></p>
+  </div>
   <div class="row">
     <div class="col-md-12">
       <div class="box">
@@ -10,7 +11,7 @@
           <h3 class="box-title"><?= $Lang->get('SHOP__STARPASS_OFFER_EDIT') ?></h3>
         </div>
         <div class="box-body">
-          <form action="<?= $this->Html->url(array('controller' => 'payment', 'action' => 'edit_starpass_ajax', 'admin' => true)) ?>" method="post" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>">
+          <form action="<?= $this->Html->url(array('controller' => 'payment', 'action' => 'edit_starpass_ajax', 'admin' => true, $starpass['id'])) ?>" method="post" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'payment', 'action' => 'index', 'admin' => true)) ?>">
 
             <div class="ajax-msg"></div>
 

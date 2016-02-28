@@ -228,13 +228,13 @@ class User extends AppModel {
 
 	public function getFromUser($key, $username) {
 
-		if(intval($search) > 0) {
+		if(intval($username) > 0) {
 			$conditions = array(
-					'id' => intval($search),
+					'id' => intval($username),
 			);
 		} else {
 			$conditions = array(
-					'pseudo' => $search,
+					'pseudo' => $username,
 			);
 		}
 
@@ -253,13 +253,13 @@ class User extends AppModel {
 
 	public function setToUser($key, $value, $username) {
 
-		if(intval($search) > 0) {
+		if(intval($username) > 0) {
 			$conditions = array(
-					'id' => intval($search),
+					'id' => intval($username),
 			);
 		} else {
 			$conditions = array(
-					'pseudo' => $search,
+					'pseudo' => $username,
 			);
 		}
 

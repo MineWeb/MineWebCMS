@@ -48,6 +48,9 @@ class PaymentController extends ShopAppController {
           $this->loadModel('Shop.PaypalHistory');
           $histories['paypal'] = $this->PaypalHistory->find('all');
 
+          $this->loadModel('Shop.PaysafecardHistory');
+          $histories['paysafecard'] = $this->PaysafecardHistory->find('all');
+
         // On récupère tous les utilisateurs pour afficher leur pseudo
 
           $usersByID = array();
@@ -57,13 +60,23 @@ class PaymentController extends ShopAppController {
             $usersByID[$value['User']['id']] = $value['User']['pseudo'];
           }
 
+        // Les PaySafeCards c'est différents
+
+          $this->loadModel('Shop.Paysafecard');
+          $findPaysafecardsStatus = $this->Paysafecard->find('first', array('conditions' => array('amount' => '0', 'code' => 'disable', 'user_id' => 0, 'created' => '1990/00/00 15:00:00')));
+    			$paysafecardsStatus = (empty($findPaysafecardsStatus)) ? true : false;
+
+          $paysafecards = $this->Paysafecard->find('all');
+
 
         // On set toutes les variables
           $this->set(compact(
             'offers',
             'offersByID',
             'histories',
-            'usersByID'
+            'usersByID',
+            'paysafecards',
+            'paysafecardsStatus'
           ));
 
       } else {
@@ -81,23 +94,23 @@ class PaymentController extends ShopAppController {
   		if($this->isConnected AND $this->User->isAdmin()) {
   			$this->loadModel('Shop.Paysafecard');
 
-  			$paysafecard_enabled = $this->Paysafecard->find('all', array('conditions' => array('amount' => '0', 'code' => 'disable', 'author' => 'website', 'created' => '1990/00/00 15:00:00')));
+  			$paysafecard_enabled = $this->Paysafecard->find('all', array('conditions' => array('amount' => '0', 'code' => 'disable', 'user_id' => 0, 'created' => '1990/00/00 15:00:00')));
   			if(!empty($paysafecard_enabled)) {
   				$this->Paysafecard->delete($paysafecard_enabled[0]['Paysafecard']['id']);
 
   				$this->History->set('ENABLE_PAYSAFECARD', 'shop');
 
   				$this->Session->setFlash($this->Lang->get('SHOP__PAYSAFECARD_ENABLE_SUCCESS'), 'default.success');
-  				$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
+  				$this->redirect(array('action' => 'index'));
   			} else {
   				$this->Paysafecard->read(null, $paysafecard_enabled[0]['Paysafecard']['id']);
-  				$this->Paysafecard->set(array('amount' => '0', 'code' => 'disable', 'author' => 'website', 'created' => '1990/00/00 15:00:00'));
+  				$this->Paysafecard->set(array('amount' => '0', 'code' => 'disable', 'user_id' => 0, 'created' => '1990/00/00 15:00:00'));
   				$this->Paysafecard->save();
 
   				$this->History->set('DISABLE_PAYSAFECARD', 'shop');
 
   				$this->Session->setFlash($this->Lang->get('SHOP__PAYSAFECARD_DISABLE_SUCCESS'), 'default.success');
-  				$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
+  				$this->redirect(array('action' => 'index'));
   			}
 
   		} else {
@@ -117,39 +130,50 @@ class PaymentController extends ShopAppController {
   		$this->autoRender = false;
   		if($this->isConnected AND $this->User->isAdmin()) {
   			if($id != false AND $money != false) {
+
   				$this->loadModel('Shop.Paysafecard');
-  				$search = $this->Paysafecard->find('all', array('conditions' => array('id' => $id)));
+  				$search = $this->Paysafecard->find('first', array('conditions' => array('id' => $id)));
+
   				if(!empty($search)) {
-  					$this->History->set('BUY_MONEY', 'shop', 'paysafecard|'.$money.'|'.$search['0']['Paysafecard']['amount']);
-  					$this->Paysafecard->delete($id);
-  					$this->loadModel('User');
-  					$user = $this->User->find('all', array('conditions' => array('pseudo' => $search['0']['Paysafecard']['author'])));
-  					$user_id = $user[0]['User']['id'];
-  					$new_money = $user[0]['User']['money'] + intval($money);
-  					$this->User->read(null, $user_id);
-  					$this->User->set(array(
-  						'money' => $new_money
-  					));
-  					$this->User->save();
+
+            $findPaysafecard = $search['Paysafecard'];
+
+  					$this->History->set('BUY_MONEY', 'shop', null, $findPaysafecard['user_id']);
+
+  					$user_money = $this->User->getFromUser('money', $findPaysafecard['user_id']);
+  					$new_money = intval($user_money) + intval($money);
+            $this->User->setToUser('money', $new_money, $findPaysafecard['user_id']);
+
   					$this->loadModel('Shop.PaysafecardMessage');
-  					$this->PaysafecardMessage->read(null, null);
+  					$this->PaysafecardMessage->create();
   					$this->PaysafecardMessage->set(array(
-  						'to' => $search['0']['Paysafecard']['author'],
+  						'user_id' => $findPaysafecard['user_id'],
   						'type' => 1,
-  						'amount' => $search['0']['Paysafecard']['amount'],
+  						'amount' => $findPaysafecard['amount'],
   						'added_points' => intval($money)
   					));
   					$this->PaysafecardMessage->save();
 
+            $this->loadModel('Shop.PaysafecardHistory');
+            $this->PaysafecardHistory->create();
+            $this->PaysafecardHistory->set(array(
+              'code' => $findPaysafecard['code'],
+              'amount' => $findPaysafecard['amount'],
+              'credits_gived' => intval($money),
+              'user_id' => $findPaysafecard['user_id']
+            ));
+            $this->PaysafecardHistory->save();
+
+            $this->Paysafecard->delete($id);
   					$this->History->set('VALID_PAYSAFECARD', 'shop');
 
   					$this->Session->setFlash($this->Lang->get('SHOP__PAYSAFECARD_VALID_SUCCESS'), 'default.success');
-  					$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
+  					$this->redirect(array('action' => 'index', 'admin' => true));
   				} else {
-  					$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
+  					$this->redirect(array('action' => 'index', 'admin' => true));
   				}
   			} else {
-  				$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
+  				$this->redirect(array('action' => 'index', 'admin' => true));
   			}
   		} else {
   			$this->redirect('/');
@@ -219,13 +243,13 @@ class PaymentController extends ShopAppController {
   							$this->loadModel('Shop.Paysafecard');
   							$search = $this->Paysafecard->find('first', array('conditions' => array('code' => $codes)));
   							if(empty($search)) {
-  								$search2 = $this->Paysafecard->find('count', array('conditions' => array('author' => $this->User->getKey('pseudo'))));
+  								$search2 = $this->Paysafecard->find('count', array('conditions' => array('user_id' => $this->User->getKey('id'))));
   								if($search2 < 2) {
   									$this->Paysafecard->read(null, null);
   									$this->Paysafecard->set(array(
   										'amount' => $this->request->data['amount'],
   										'code' => $codes,
-  										'author' => $this->User->getKey('pseudo')
+  										'user_id' => $this->User->getKey('id')
   									));
   									$this->Paysafecard->save();
   									$this->History->set('ADD_PAYSAFECARD', 'credit_shop');
@@ -288,7 +312,7 @@ class PaymentController extends ShopAppController {
               $this->Paypal->save();
               $this->History->set('ADD_PAYPAL_OFFER', 'shop');
               $this->Session->setFlash($this->Lang->get('SHOP__PAYPAL_OFFER_ADD_SUCCESS'), 'default.success');
-              echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__PAYPAL_OFFER_ADD_SUCCESS')));
+              echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOP__PAYPAL_OFFER_ADD_SUCCESS')));
             } else {
               echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID')));
             }

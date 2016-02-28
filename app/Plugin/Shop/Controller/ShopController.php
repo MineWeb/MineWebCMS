@@ -37,7 +37,7 @@ class ShopController extends ShopAppController {
 			$starpass_offers = $this->Starpass->find('all');
 
 			$this->loadModel('Shop.Paysafecard');
-			$paysafecard_enabled = $this->Paysafecard->find('all', array('conditions' => array('amount' => '0', 'code' => 'disable', 'author' => 'website', 'created' => '1990/00/00 15:00:00')));
+			$paysafecard_enabled = $this->Paysafecard->find('all', array('conditions' => array('amount' => '0', 'code' => 'disable', 'user_id' => 0, 'created' => '1990/00/00 15:00:00')));
 			if(!empty($paysafecard_enabled)) {
 				$paysafecard_enabled = false;
 			} else {
@@ -265,29 +265,6 @@ class ShopController extends ShopAppController {
 				$this->set(compact('categories'));
 				$this->set(compact('search_categories'));
 
-				$this->loadModel('Shop.Paysafecard');
-				$psc = $this->Paysafecard->find('all', array('conditions' => array('amount !=' => '0', 'code !=' => 'disable', 'author !=' => 'website', 'created !=' => '1990/00/00 15:00:00')));
-				$this->set(compact('psc'));
-
-				$paysafecard_enabled = $this->Paysafecard->find('all', array('conditions' => array('amount' => '0', 'code' => 'disable', 'author' => 'website', 'created' => '1990/00/00 15:00:00')));
-				if(!empty($paysafecard_enabled)) {
-					$paysafecard_enabled = false;
-				} else {
-					$paysafecard_enabled = true;
-				}
-				$this->set(compact('paysafecard_enabled'));
-
-				$this->loadModel('Shop.Voucher');
-				$vouchers = $this->Voucher->find('all');
-				$this->set(compact('vouchers'));
-
-				$this->loadModel('Shop.Paypal');
-				$paypal_offers = $this->Paypal->find('all');
-				$this->set(compact('paypal_offers'));
-
-				$this->loadModel('Shop.Starpass');
-				$starpass_offers = $this->Starpass->find('all');
-				$this->set(compact('starpass_offers'));
 			} else {
 				$this->redirect('/');
 			}

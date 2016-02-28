@@ -23,12 +23,15 @@ table tr td:last-child > div.btn-group {
               <li class=""><a href="#tab_psc" data-toggle="tab" aria-expanded="false">PaySafeCard</a></li>
               <li class=""><a href="#tab_dedipass" data-toggle="tab" aria-expanded="false">Dédipass</a></li>
               <li class=""><a href="#tab_hipay" data-toggle="tab" aria-expanded="false">HiPay (Allopass)</a></li>
+              <li class=""><a href="#tab_points_transfer" data-toggle="tab" aria-expanded="false"><?= $Lang->get('SHOP__USER_POINTS_TRANSFER_ADMIN') ?></a></li>
               <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
             </ul>
             <div class="tab-content">
               <div class="tab-pane active" id="tab_starpass">
 
-                <h3><?= $Lang->get('SHOP__STARPASS_OFFERS') ?></h3>
+                <h3><?= $Lang->get('SHOP__STARPASS_OFFERS') ?> <a href="<?= $this->Html->url(array('controller' => 'payment', 'action' => 'add_starpass', 'admin' => true)) ?>" class="btn btn-success pull-right"><?= $Lang->get('GLOBAL__ADD') ?></a></h3>
+
+                <br><br>
 
                 <table class="table table-bordered">
                   <thead>
@@ -91,7 +94,9 @@ table tr td:last-child > div.btn-group {
 
               <div class="tab-pane" id="tab_paypal">
 
-                <h3><?= $Lang->get('SHOP__PAYPAL_OFFERS') ?></h3>
+                <h3><?= $Lang->get('SHOP__PAYPAL_OFFERS') ?> <a href="<?= $this->Html->url(array('controller' => 'payment', 'action' => 'add_paypal', 'admin' => true)) ?>" class="btn btn-success pull-right"><?= $Lang->get('GLOBAL__ADD') ?></a></h3>
+
+                <br><br>
 
                 <table class="table table-bordered">
                   <thead>
@@ -105,7 +110,7 @@ table tr td:last-child > div.btn-group {
                     </tr>
                   </thead>
                   <tbody>
-                    <?php if(!empty($offers['paypal'])) { ?>
+                    <?php if(isset($offers['paypal'])) { ?>
                       <?php foreach ($offers['paypal'] as $key => $value) { ?>
                         <tr>
                           <td><?= $value['Paypal']['name'] ?></td>
@@ -159,12 +164,119 @@ table tr td:last-child > div.btn-group {
               </div>
 
               <div class="tab-pane" id="tab_psc">
+
+                <h3><?= $Lang->get('SHOP__PAYSAFECARD_ADMIN_TITLE') ?> <a href="<?= $this->Html->url(array('action' => 'toggle_paysafecard')) ?>" class="btn btn-<?= ($paysafecardsStatus) ? 'danger' : 'success' ?> pull-right"><?= ($paysafecardsStatus) ? $Lang->get('GLOBAL__DISABLE') : $Lang->get('GLOBAL__ENABLE') ?></a></h3>
+
+                <br><br>
+
+                <table class="table table-bordered dataTable">
+                  <thead>
+                    <tr>
+                      <th><?= $Lang->get('USER__USERNAME') ?></th>
+                      <th><?= $Lang->get('SHOP__GLOBAL_AMOUNT') ?></th>
+                      <th><?= $Lang->get('SHOP__VOUCHER_CODE') ?></th>
+                      <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
+                      <th class="right"><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php if(isset($paysafecards)) { ?>
+                      <?php foreach ($paysafecards as $key => $value) { ?>
+                        <?php if($value['Paysafecard']['user_id'] != "0") { ?>
+                          <tr>
+                            <td><?= $usersByID[$value['Paysafecard']['user_id']] ?></td>
+                            <td><?= $value['Paysafecard']['amount'] ?></td>
+                            <td><?= $value['Paysafecard']['code'] ?></td>
+                            <td><?= $Lang->date($value['Paysafecard']['created']) ?></td>
+                            <td>
+                              <a href="#" onClick="howmuch(<?= $value['Paysafecard']['id'] ?>)" class="btn btn-success"><?= $Lang->get('SHOP__PAYSAFECARD_ACCEPT') ?></a>
+                              <a href="<?= $this->Html->url(array('action' => 'paysafecard_invalid/'.$value['Paysafecard']['id'])) ?>" class="btn btn-danger"><?= $Lang->get('SHOP__PAYSAFECARD_REFUSE') ?></a>
+                            </td>
+                          </tr>
+                        <?php } ?>
+                      <?php } ?>
+                    <?php } ?>
+                  </tbody>
+                </table>
+
+                <script>
+                function howmuch(id) {
+                    var money = prompt("<?= $Lang->get('SHOP__PAYSAFECARD_VALID_CONFIRM') ?>");
+
+                    if (money != null) {
+                        document.location = '<?= $this->Html->url(array('controller' => 'payment', 'action' => 'paysafecard_valid/')) ?>/'+id+'/'+money;
+                    } else {
+                      return false;
+                    }
+                }
+                </script>
+
+
+                <hr>
+
+                <h3><?= $Lang->get('SHOP__PAYSAFECARD_HISTORIES') ?></h3>
+
+                <table class="table table-bordered dataTable">
+                  <thead>
+                    <tr>
+                      <th><?= $Lang->get('SHOP__PAYSAFECARD_CODE') ?></th>
+                      <th><?= $Lang->get('USER__USERNAME') ?></th>
+                      <th><?= $Lang->get('SHOP__GLOBAL_AMOUNT') ?></th>
+                      <th><?= ucfirst($Configuration->getMoneyName()) ?></th>
+                      <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php if(isset($histories['paysafecard'])) { ?>
+                      <?php foreach ($histories['paysafecard'] as $key => $value) { ?>
+                        <tr>
+                          <td><?= $value['PaysafecardHistory']['code'] ?></td>
+                          <td><?= (isset($usersByID[$value['PaysafecardHistory']['user_id']])) ? $usersByID[$value['PaysafecardHistory']['user_id']] : $value['PaysafecardHistory']['user_id'] ?></td>
+                          <td><?= $value['PaysafecardHistory']['amount'] ?></td>
+                          <td><?= $value['PaysafecardHistory']['credits_gived'] ?></td>
+                          <td><?= $Lang->date($value['PaysafecardHistory']['created']) ?></td>
+                        </tr>
+                      <?php } ?>
+                    <?php } ?>
+                  </tbody>
+                </table>
+
+
               </div>
 
               <div class="tab-pane" id="tab_dedipass">
               </div>
 
               <div class="tab-pane" id="tab_hipay">
+              </div>
+
+              <div class="tab-pane" id="tab_points_transfer">
+
+                <h3><?= $Lang->get('SHOP__USER_POINTS_TRANSFER_HISTORIES', array('{MONEY_NAME}' => $Configuration->getMoneyName())) ?></h3>
+
+                <table class="table table-bordered dataTable">
+                  <thead>
+                  <tr>
+                    <th>Pseudo</th>
+                    <th><?= ucfirst($Configuration->getMoneyName()) ?></th>
+                    <th><?= $Lang->get('SHOP__USER_POINTS_TRANSFER_WHO') ?></th>
+                    <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php foreach ($History->get('SHOP', false, false, 'SEND_MONEY') as $value => $v) { ?>
+                  <?php
+                  $other = explode('|', $v['History']['other']);
+                  ?>
+                    <tr>
+                      <td><?= $v['History']['author'] ?></td>
+                      <td><?= $other[1] ?></td>
+                      <td><?= $other[0] ?></td>
+                      <td><?= $Lang->date($v['History']['created']) ?></td>
+                    </tr>
+                  <?php } ?>
+                </tbody>
+              </table>
               </div>
             </div>
           </div>

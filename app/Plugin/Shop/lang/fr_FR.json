@@ -35,6 +35,9 @@
   "SHOP__VOUCHER_CODE": "Code",
 
   "SHOP__PAYSAFECARD": "PaySafeCard",
+  "SHOP__PAYSAFECARD_CODE": "Code",
+  "SHOP__PAYSAFECARD_HISTORIES":"Historique des transactions PaySafeCard",
+  "SHOP__PAYSAFECARD_ADMIN_TITLE":"Liste des PaySafeCards en attente",
   "SHOP__PAYSAFECARD_DISABLE_SUCCESS": "Les PaySafeCard ont bien \u00e9t\u00e9 d\u00e9sactiv\u00e9es !",
   "SHOP__PAYSAFECARD_ENABLE_SUCCESS": "Les PaySafeCard ont bien \u00e9t\u00e9 d\u00e9sactiv\u00e9es !",
   "SHOP__PAYSAFECARD_ERROR_ALREADY_TOO_PSC_IN_DB":"Vous avez déjà 2 PaySafeCard en attente",
@@ -49,6 +52,8 @@
   "SHOP__PAYSAFECARD_REFUSE": "Refuser",
 
   "SHOP__USER_POINTS_TRANSFER": "Envoyer de l'argent",
+  "SHOP__USER_POINTS_TRANSFER_ADMIN":"Transfert de points",
+  "SHOP__USER_POINTS_TRANSFER_HISTORIES":"Historique de transfert de {MONEY_NAME} entre joueurs",
   "SHOP__USER_POINTS_TRANSFER_WHO": "\u00c0 qui ?",
   "SHOP__USER_POINTS_TRANSFER_HOW_MANY": "Combien ?",
   "SHOP__USER_POINTS_TRANSFER_ERROR_EMPTY": "Vous ne pouvez pas ne rien envoyer",

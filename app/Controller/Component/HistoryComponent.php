@@ -25,16 +25,18 @@ class HistoryComponent extends Object {
   function startup(&$controller) {
   }
 
-  function set($action, $category, $optionnal = null) { // Ajoute une entrée dans l'historique général
+  function set($action, $category, $optionnal = null, $user_id = null) { // Ajoute une entrée dans l'historique général
       // j'inclue le fichier lang
     $this->User = ClassRegistry::init('User');
+
+    $user_id = (empty($user_id)) ? $this->User->getKey('id') : $user_id;
 
     $this->History = ClassRegistry::init('History'); // le model history
     $this->History->read(null, null);
     $this->History->set(array(
       'action' => $action,
       'category' => $category,
-      'user_id' => $this->User->getKey('id'),
+      'user_id' => $user_id,
       'other' => $optionnal
       ));
     if($this->History->save()) {
