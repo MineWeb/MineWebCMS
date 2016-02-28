@@ -100,7 +100,7 @@
           $('#btn-buy').attr('disabled', true);
           $('#btn-buy').addClass('disabled');
           $.ajax({
-            url: '<?= $this->Html->url(array('controller' => 'shop/buy_ajax', 'plugin' => 'shop')); ?>/'+id,
+            url: '<?= $this->Html->url(array('action' => 'buy_ajax')); ?>/'+id,
             data : { code : code },
             type : 'GET',
             dataType : 'html',

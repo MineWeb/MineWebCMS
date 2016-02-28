@@ -29,7 +29,7 @@
                               <h4 class="pull-right"><?= $v['Item']['price'] ?><?php if($v['Item']['price'] == 1) { echo  ' '.$singular_money; } else { echo  ' '.$plural_money; } ?></h4>
                               <h4><a href="#"><?= before_display($v['Item']['name']) ?></a>
                               </h4>
-                              <p><?= substr(before_display($v['Item']['description']), 0, 140); ?><?php if(strlen($v['Item']['description']) > "140") { echo '...'; } ?></p>
+                              <p><?= substr($v['Item']['description'], 0, 140); ?><?php if(strlen($v['Item']['description']) > "140") { echo '...'; } ?></p>
                               <?php if($isConnected AND $Permissions->can('CAN_BUY')) { ?><button class="btn btn-success pull-right" onClick="affich_item('<?= $v['Item']['id'] ?>')"><?= $Lang->get('SHOP__BUY') ?></button> <?php } ?>
                           </div>
                       </div>
@@ -77,7 +77,7 @@
     $('#btn-buy').attr('disabled', true);
     $('#btn-buy').addClass('disabled');
     $.ajax({
-      url: '<?= $this->Html->url(array('controller' => 'shop/buy_ajax', 'plugin' => 'shop')); ?>/'+id,
+      url: '<?= $this->Html->url(array('action' => 'buy_ajax')); ?>/'+id,
       data : { code : code },
       type : 'GET',
       dataType : 'html',

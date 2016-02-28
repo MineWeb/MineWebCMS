@@ -79,6 +79,7 @@
 
   "SHOP__ITEM":"Article",
   "SHOP__ITEMS": "Articles",
+  "SHOP__ITEM_ADD_COMMAND":"Ajouter une commande",
   "SHOP__ITEM_EDIT": "Modification d'un article",
   "SHOP__ITEMS_AVAILABLE": "Articles en ventes",
   "SHOP__ITEM_NAME":"Nom",

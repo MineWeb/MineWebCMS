@@ -19,7 +19,18 @@
 
             <div class="form-group">
               <label><?= $Lang->get('SHOP__ITEM_DESCRIPTION') ?></label>
-              <textarea name="description" class="form-control"><?= $item['description'] ?></textarea>
+              <textarea id="editor" name="description" class="form-control"><?= $item['description'] ?></textarea>
+              <?= $this->Html->script('admin/tinymce/tinymce.min.js') ?>
+              <script type="text/javascript">
+              tinymce.init({
+                  selector: "textarea",
+                  height : 300,
+                  width : '100%',
+                  language : 'fr_FR',
+                  plugins: "textcolor code image link",
+                  toolbar: "fontselect fontsizeselect bold italic underline strikethrough link image forecolor backcolor alignleft aligncenter alignright alignjustify cut copy paste bullist numlist outdent indent blockquote code"
+               });
+              </script>
             </div>
 
             <div class="form-group">
@@ -61,7 +72,27 @@
 
             <div class="form-group">
               <label><?= $Lang->get('GLOBAL__SERVER_COMMANDS') ?></label>
-              <input name="commands" class="form-control" value="<?= htmlentities($item['commands']) ?>" type="text">
+              <div class="input-group">
+                <input name="commands[0]" class="form-control" value="<?= htmlentities($item['commands'][0]) ?>" type="text">
+                <div class="input-group-btn">
+                  <button data-i="1" type="button" id="addCommand" class="btn btn-success"><?= $Lang->get('SHOP__ITEM_ADD_COMMAND') ?></button>
+                </div>
+              </div>
+              <div class="addCommand">
+                <?php
+                  $i = 0;
+                  unset($item['commands'][0]);
+                  foreach ($item['commands'] as $key => $value) {
+                    $i++;
+                    echo '<div class="input-group" style="margin-top:5px;" id="'.$i.'">';
+                      echo '<input name="commands['.$i.']" class="form-control" value="'.htmlentities($value).'" type="text">';
+                      echo '<span class="input-group-btn">';
+                        echo '<button class="btn btn-danger delete-cmd" data-id="'.$i.'" type="button"><span class="fa fa-close"></span></button>';
+                      echo '</span>';
+                    echo '</div>';
+                  }
+                ?>
+              </div>
               <small><b>{PLAYER}</b> = Pseudo <br> <b>[{+}]</b> <?= $Lang->get('SERVER__PARSE_NEW_COMMAND') ?> <br><b><?= $Lang->get('GLOBAL__EXAMPLE') ?>:</b> <i>give {PLAYER} 1 1[{+}]broadcast {PLAYER} ...</i></small>
             </div>
 
@@ -124,5 +155,37 @@
     } else {
       $('#timedCommands').slideUp(500);
     }
+  });
+
+  $('#addCommand').on('click', function(e) {
+
+    e.preventDefault();
+
+    var i = parseInt($(this).attr('data-i'));
+
+    var input = '';
+    input += '<div style="margin-top:5px;" class="input-group" id="'+i+'">';
+      input += '<input name="commands['+i+']" class="form-control" type="text">';
+      input += '<span class="input-group-btn">';
+        input += '<button class="btn btn-danger delete-cmd" data-id="'+i+'" type="button"><span class="fa fa-close"></span></button>';
+      input += '</span>';
+    input + '</div>';
+
+    i++;
+
+    $(this).attr('data-i', i);
+
+    $('.addCommand').append(input);
+
+    $('.delete-cmd').unbind('click');
+    $('.delete-cmd').on('click', function(e) {
+
+      var id = $(this).attr('data-id');
+
+      $('#'+id).slideUp(150, function() {
+        $('#'+id).remove();
+      });
+    });
+
   });
 </script>

@@ -344,7 +344,6 @@ class ShopController extends ShopAppController {
 						$this->loadModel('Shop.Category');
 						$item['category'] = $this->Category->find('all', array('conditions' => array('id' => $item['category'])));
 						$item['category'] = $item['category'][0]['Category']['name'];
-						$this->set(compact('item'));
 
 						$search_categories = $this->Category->find('all', array('fields' => 'name'));
 						foreach ($search_categories as $v) {
@@ -370,6 +369,13 @@ class ShopController extends ShopAppController {
 							$selected_server = array();
 						}
 						$this->set(compact('selected_server'));
+
+						$commands = $item['commands'];
+						$commands = explode('[{+}]', $commands);
+						unset($item['commands']);
+						$item['commands'] = $commands;
+
+						$this->set(compact('item'));
 
 					} else {
 						$this->Session->setFlash($this->Lang->get('UNKNONW_ID'), 'default.error');
@@ -405,6 +411,9 @@ class ShopController extends ShopAppController {
 							$this->request->data['timedCommand_cmd'] = NULL;
 							$this->request->data['timedCommand_time'] = NULL;
 						}
+
+							$commands = implode('[{+}]', $this->request->data['commands']);
+
 						$this->loadModel('Shop.Item');
 						$this->Item->read(null, $this->request->data['id']);
 						$this->Item->set(array(
@@ -413,7 +422,7 @@ class ShopController extends ShopAppController {
 							'category' => $this->request->data['category'],
 							'price' => $this->request->data['price'],
 							'servers' => serialize($this->request->data['servers']),
-							'commands' => $this->request->data['commands'],
+							'commands' => $commands,
 							'img_url' => $this->request->data['img_url'],
 							'timedCommand' => $this->request->data['timedCommand'],
 							'timedCommand_cmd' => $this->request->data['timedCommand_cmd'],
@@ -472,6 +481,7 @@ class ShopController extends ShopAppController {
 			$this->autoRender = false;
 			if($this->isConnected AND $this->User->isAdmin()) {
 				if($this->request->is('post')) {
+
 					if(!empty($this->request->data['name']) AND !empty($this->request->data['description']) AND !empty($this->request->data['category']) AND !empty($this->request->data['price']) AND !empty($this->request->data['servers']) AND !empty($this->request->data['commands']) AND !empty($this->request->data['timedCommand'])) {
 						$this->loadModel('Shop.Category');
 						$this->request->data['category'] = $this->Category->find('all', array('conditions' => array('name' => $this->request->data['category'])));
@@ -481,6 +491,9 @@ class ShopController extends ShopAppController {
 							$this->request->data['timedCommand_cmd'] = NULL;
 							$this->request->data['timedCommand_time'] = NULL;
 						}
+
+						$commands = implode('[{+}]', $this->request->data['commands']);
+
 						$this->loadModel('Shop.Item');
 						$this->Item->read(null, null);
 						$this->Item->set(array(
@@ -489,7 +502,7 @@ class ShopController extends ShopAppController {
 							'category' => $this->request->data['category'],
 							'price' => $this->request->data['price'],
 							'servers' => serialize($this->request->data['servers']),
-							'commands' => $this->request->data['commands'],
+							'commands' => $commands,
 							'img_url' => $this->request->data['img_url'],
 							'timedCommand' => $this->request->data['timedCommand'],
 							'timedCommand_cmd' => $this->request->data['timedCommand_cmd'],
@@ -497,7 +510,7 @@ class ShopController extends ShopAppController {
 							'display_server' => $this->request->data['display_server'],
 							'need_connect' => $this->request->data['need_connect'],
 							'display' => $this->request->data['display']
-							));
+						));
 						$this->Item->save();
 						$this->History->set('ADD_ITEM', 'shop');
 						$this->Session->setFlash($this->Lang->get('SHOP__ITEM_ADD_SUCCESS'), 'default.success');
