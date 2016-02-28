@@ -33,8 +33,12 @@ class ShopController extends ShopAppController {
 			$this->loadModel('Shop.Paypal');
 			$paypal_offers = $this->Paypal->find('all');
 
-			$this->loadModel('Shop.Starpass');;
+			$this->loadModel('Shop.Starpass');
 			$starpass_offers = $this->Starpass->find('all');
+
+			$this->loadModel('Shop.DedipassConfig');
+			$findDedipassConfig = $this->DedipassConfig->find('first');
+			$dedipass = (!empty($findDedipassConfig) && isset($findDedipassConfig['DedipassConfig']['status']) && $findDedipassConfig['DedipassConfig']['status']) ? true : false;
 
 			$this->loadModel('Shop.Paysafecard');
 			$paysafecard_enabled = $this->Paysafecard->find('all', array('conditions' => array('amount' => '0', 'code' => 'disable', 'user_id' => 0, 'created' => '1990/00/00 15:00:00')));
@@ -55,7 +59,7 @@ class ShopController extends ShopAppController {
 	        $singular_money = $this->Configuration->getMoneyName(false);
 	        $plural_money = $this->Configuration->getMoneyName();
 
-			$this->set(compact('paysafecard_enabled', 'money', 'starpass_offers', 'paypal_offers', 'search_first_category', 'search_categories', 'search_items', 'title_for_layout', 'vouchers', 'singular_money', 'plural_money'));
+			$this->set(compact('dedipass', 'paysafecard_enabled', 'money', 'starpass_offers', 'paypal_offers', 'search_first_category', 'search_categories', 'search_items', 'title_for_layout', 'vouchers', 'singular_money', 'plural_money'));
 		}
 
 

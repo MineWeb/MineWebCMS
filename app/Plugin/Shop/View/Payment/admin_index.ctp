@@ -245,6 +245,51 @@ table tr td:last-child > div.btn-group {
               </div>
 
               <div class="tab-pane" id="tab_dedipass">
+
+                <h3><?= $Lang->get('SHOP__DEDIPASS_CONFIGURATION') ?> <a href="<?= $this->Html->url(array('action' => 'toggle_dedipass')) ?>" class="btn btn-<?= (isset($dedipassConfig['DedipassConfig']['status']) && $dedipassConfig['DedipassConfig']['status']) ? 'danger' : 'success' ?> pull-right"><?= (isset($dedipassConfig['DedipassConfig']['status']) && $dedipassConfig['DedipassConfig']['status']) ? $Lang->get('GLOBAL__DISABLE') : $Lang->get('GLOBAL__ENABLE') ?></a></h3>
+
+                <form action="<?= $this->Html->url(array('action' => 'dedipass_config')) ?>" data-ajax="true">
+
+                  <div class="form-group">
+                    <label><?= $Lang->get('SHOP__DEDIPASS_PUBLICKEY') ?></label>
+                    <input type="text" class="form-control" name="publicKey" placeholder="Ex: 4e2009e88d5c5587302e996de5fe1f47"<?= (isset($dedipassConfig['DedipassConfig']['public_key'])) ? ' value="'.$dedipassConfig['DedipassConfig']['public_key'].'"' : '' ?>>
+                  </div>
+
+                  <div class="form-group">
+                    <button type="submit" class="btn btn-primary"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
+                  </div>
+
+                </form>
+
+                <hr>
+
+                <h3><?= $Lang->get('SHOP__DEDIPASS_HISTORIES') ?></h3>
+
+                <table class="table table-bordered dataTable">
+                  <thead>
+                    <tr>
+                      <th><?= $Lang->get('SHOP__DEDIPASS_CODE') ?></th>
+                      <th><?= $Lang->get('SHOP__DEDIPASS_RATE') ?></th>
+                      <th><?= $Lang->get('USER__USERNAME') ?></th>
+                      <th><?= ucfirst($Configuration->getMoneyName()) ?></th>
+                      <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php if(isset($histories['dedipass'])) { ?>
+                      <?php foreach ($histories['dedipass'] as $key => $value) { ?>
+                        <tr>
+                          <td><?= $value['DedipassHistory']['code'] ?></td>
+                          <td><?= $value['DedipassHistory']['rate'] ?></td>
+                          <td><?= (isset($usersByID[$value['DedipassHistory']['user_id']])) ? $usersByID[$value['DedipassHistory']['user_id']] : $value['DedipassHistory']['user_id'] ?></td>
+                          <td><?= $value['DedipassHistory']['credits_gived'] ?></td>
+                          <td><?= $Lang->date($value['DedipassHistory']['created']) ?></td>
+                        </tr>
+                      <?php } ?>
+                    <?php } ?>
+                  </tbody>
+                </table>
+
               </div>
 
               <div class="tab-pane" id="tab_hipay">

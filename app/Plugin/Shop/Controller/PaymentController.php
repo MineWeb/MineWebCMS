@@ -4,7 +4,7 @@ class PaymentController extends ShopAppController {
 
   public function beforeFilter() {
     parent::beforeFilter();
-    $this->Security->unlockedActions = array('starpass', 'starpass_verif', 'ipn');
+    $this->Security->unlockedActions = array('starpass', 'starpass_verif', 'ipn', 'dedipass_ipn');
   }
 
   /*
@@ -51,6 +51,10 @@ class PaymentController extends ShopAppController {
           $this->loadModel('Shop.PaysafecardHistory');
           $histories['paysafecard'] = $this->PaysafecardHistory->find('all');
 
+          $this->loadModel('Shop.DedipassHistory');
+          $histories['dedipass'] = $this->DedipassHistory->find('all');
+
+
         // On récupère tous les utilisateurs pour afficher leur pseudo
 
           $usersByID = array();
@@ -68,6 +72,11 @@ class PaymentController extends ShopAppController {
 
           $paysafecards = $this->Paysafecard->find('all');
 
+        // Config de dédipass
+
+          $this->loadModel('Shop.DedipassConfig');
+          $dedipassConfig = $this->DedipassConfig->find('first');
+
 
         // On set toutes les variables
           $this->set(compact(
@@ -76,7 +85,8 @@ class PaymentController extends ShopAppController {
             'histories',
             'usersByID',
             'paysafecards',
-            'paysafecardsStatus'
+            'paysafecardsStatus',
+            'dedipassConfig'
           ));
 
       } else {
@@ -782,6 +792,171 @@ class PaymentController extends ShopAppController {
   			throw new InternalErrorException('PayPal : Not post');
   		}
   	}
+
+
+
+
+  /*
+	* ======== Affichage Dédipass ===========
+	*/
+
+    public function dedipass() {
+      if($this->isConnected AND $this->Permissions->can('CREDIT_ACCOUNT')) {
+  			$this->loadModel('Shop.DedipassConfig');
+  			$search = $this->DedipassConfig->find('first');
+				if(!empty($search)) {
+					$this->set('dedipassPublicKey', $search['DedipassConfig']['public_key']);
+					$this->set('title_for_layout', $this->Lang->get('SHOP__DEDIPASS_PAYMENT'));
+					$this->layout = $this->Configuration->getKey('layout');
+				} else {
+					throw new NotFoundException();
+				}
+  		} else {
+  			throw new ForbiddenException();
+  		}
+    }
+
+
+
+  /*
+	* ======== Affichage Dédipass ===========
+	*/
+
+
+
+    public function admin_toggle_dedipass() {
+      $this->autoRender = false;
+      if($this->isConnected AND $this->User->isAdmin()) {
+
+        $this->loadModel('Shop.DedipassConfig');
+        $findConfig = $this->DedipassConfig->find('first');
+
+        if(empty($findConfig['DedipassConfig'])) {
+          $this->Session->setFlash($this->Lang->get('SHOP__DEDIPASS_TOGGLE_ERROR_NO_CONFIG'), 'default.error');
+          $this->redirect(array('action' => 'index'));
+        }
+
+        $dedipassStatus = (isset($findConfig['DedipassConfig']['status']) && $findConfig['DedipassConfig']['status']) ? 0 : 1;
+
+        $this->DedipassConfig->read(null, 1);
+        $this->DedipassConfig->set(array('status' => $dedipassStatus));
+        $this->DedipassConfig->save();
+
+        if($dedipassStatus) {
+          $this->Session->setFlash($this->Lang->get('SHOP__DEDIPASS_TOGGLE_ENABLE_SUCCESS'), 'default.success');
+        } else {
+          $this->Session->setFlash($this->Lang->get('SHOP__DEDIPASS_TOGGLE_DISABLE_SUCCESS'), 'default.success');
+        }
+        $this->redirect(array('action' => 'index'));
+
+      }
+      throw new ForbiddenException();
+    }
+
+
+
+
+  /*
+	* ======== Configuration Dédipass ===========
+	*/
+
+    public function admin_dedipass_config() {
+      $this->autoRender = false;
+      if($this->isConnected AND $this->User->isAdmin()) {
+        if($this->request->is('ajax')) {
+          if(!empty($this->request->data['publicKey'])) {
+
+            $this->loadModel('Shop.DedipassConfig');
+
+            if(empty($this->DedipassConfig->find('first'))) {
+              $this->DedipassConfig->create();
+            } else {
+              $this->DedipassConfig->read(null, 1);
+            }
+            $this->DedipassConfig->set(array(
+              'public_key' => $this->request->data['publicKey']
+            ));
+            $this->DedipassConfig->save();
+
+            $this->History->set('EDIT_DEDIPASS_CONFIG', 'shop');
+
+            echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOP__DEDIPASS_EDIT_CONFIG_SUCCESS')));
+            return;
+
+          } else {
+            echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+            return;
+          }
+        }
+      }
+      throw new ForbiddenException();
+    }
+
+
+
+  /*
+	* ======== Vérification d'une transaction Dédipass ===========
+	*/
+
+    public function dedipass_ipn() {
+      $this->autoRender = false;
+  		if($this->request->is('post') && $this->Permissions->can('CREDIT_ACCOUNT')) {
+  			$public_key  = isset($this->request->data['key']) ? preg_replace('/[^a-zA-Z0-9]+/', '', $this->request->data['key']) : '';
+  			$code = isset($this->request->data['code']) ? preg_replace('/[^a-zA-Z0-9]+/', '', $this->request->data['code']) : '';
+  			$rate = isset($this->request->data['rate']) ? preg_replace('/[^a-zA-Z0-9\-]+/', '', $this->request->data['rate']) : '';
+  			// Validation des champs
+  			if(empty($code)) {
+          $this->Session->setFlash($this->Lang->get('SHOP__DEDIPASS_PAYMENT_ERROR_EMPTY_CODE'), 'default.error');
+          $this->redirect(array('action' => 'dedipass'));
+  			} elseif (empty($rate)) {
+          $this->Session->setFlash($this->Lang->get('SHOP__DEDIPASS_PAYMENT_ERROR_EMPTY_RATE'), 'default.error');
+          $this->redirect(array('action' => 'dedipass'));
+  			} else {
+
+  				if($this->isConnected) {
+
+  				  	$dedipass = file_get_contents('http://api.dedipass.com/v1/pay/?key='.$public_key.'&rate='.$rate.'&code='.$code);
+  				  	$dedipass = json_decode($dedipass);
+
+  				  	$code = $dedipass->code; // Le code
+  				  	$rate = $dedipass->rate; // Le palier
+
+  				  	if($dedipass->status == 'success') {
+  				    	// Le code est valide
+  				    	$virtual_currency = $dedipass->virtual_currency; // Nombre de points à créditer à l'utilisateur
+
+  				    	$user_money = $this->User->getKey('money');
+  				    	$new_money = $user_money + floatval($virtual_currency);
+                $this->User->setKey('money', $new_money);
+
+  						  $this->History->set('BUY_MONEY_DEDIPASS', 'buy');
+
+                $this->loadModel('Shop.DedipassHistory');
+                $this->DedipassHistory->create();
+                $this->DedipassHistory->set(array(
+                  'user_id' => $this->User->getKey('id'),
+                  'code' => $code,
+                  'rate' => $rate,
+                  'credits_gived' => $virtual_currency
+                ));
+                $this->DedipassHistory->save();
+
+  				    	$this->Session->setFlash($this->Lang->get('SHOP__DEDIPASS_PAYMENT_SUCCESS', array('{MONEY}' => $virtual_currency, '{MONEY_NAME}' => $this->Configuration->getMoneyName())), 'default.success');
+  						  $this->redirect(array('controller' => 'shop', 'action' => 'index'));
+
+  				  	} else {
+                $this->Session->setFlash($this->Lang->get('SHOP__DEDIPASS_PAYMENT_ERROR_INVAID_CODE'), 'default.error');
+                $this->redirect(array('action' => 'dedipass'));
+  				  	}
+
+  				} else {
+            $this->Session->setFlash($this->Lang->get('SHOP__DEDIPASS_PAYMENT_ERROR_NOT_CONNECTED', array('{CODE}' => $code)), 'default.error');
+            $this->redirect(array('controller' => 'shop', 'action' => 'index'));
+  				}
+  			}
+  		}
+  		throw new NotFoundException();
+    }
 
 
 }

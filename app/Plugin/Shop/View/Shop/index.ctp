@@ -121,6 +121,9 @@
                 <br>
             </div>
         <?php } ?>
+        <?php if(!empty($dedipass)) { ?>
+          <a class="btn btn-info btn-block" href="<?= $this->Html->url(array('controller' => 'payment', 'action' => 'dedipass')) ?>">Dedipass</a>
+        <?php } ?>
         <?php if(!empty($paypal_offers)) { ?>
           <a class="btn btn-info btn-block" data-toggle="collapse" href="#PayPal" aria-expanded="false" aria-controls="PayPal">PayPal</a>
           <br>

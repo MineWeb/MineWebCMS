@@ -1,6 +1,3 @@
-<?php
-
-?>
 <div class="push-nav"></div>
 <div class="container page">
     <div class="row">
