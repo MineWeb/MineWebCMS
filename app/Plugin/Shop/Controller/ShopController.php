@@ -138,10 +138,10 @@ class ShopController extends ShopAppController {
 				$search_server = '[IF AFFICH_SERVER]'.$element_explode_for_server.'[/IF AFFICH_SERVER]';
 				$element_content = ($affich_server) ? str_replace($search_server, $element_explode_for_server, $element_content) : str_replace($search_server, '', $element_content);
 
-				echo $element_content;
+				echo json_encode(array('statut' => true, 'html' => $element_content, 'item_infos' => array('id' => $search_item['0']['Item']['id'], 'price' => $search_item['0']['Item']['price'])));
 
 			} else {
-				echo $this->Lang->get('USER__ERROR_MUST_BE_LOGGED'); // si il n'est pas connecté
+				echo json_encode(array('statut' => false, 'html' => '<div class="modal-body"><div class="alert alert-danger">'.$this->Lang->get('USER__ERROR_MUST_BE_LOGGED').'</div></div>')); // si il n'est pas connecté
 			}
 		}
 
@@ -186,111 +186,191 @@ class ShopController extends ShopAppController {
 	* ======== Achat d'un article depuis le modal ===========
 	*/
 
-		function buy_ajax($id) {
+		function buy_ajax() {
 			$this->autoRender = false;
 
-			if($this->isConnected AND $this->Permissions->can('CAN_BUY')) {
-				$this->loadModel('Shop.Item');
-				$search_item = $this->Item->find('all', array('conditions' => array('id' => $id)));
-				$search_item['0']['Item']['servers'] = unserialize($search_item['0']['Item']['servers']);
-				if(!empty($search_item['0']['Item']['servers'])) {
-					foreach ($search_item['0']['Item']['servers'] as $key => $value) {
-						$servers_online[] = $this->Server->online($value);
-					}
-				} else {
-					$servers_online = array($this->Server->online());
-				}
-				if(!in_array(false, $servers_online)) {
+			if($this->request->is('ajax')) {
 
-					if($search_item['0']['Item']['need_connect']) { //si on oblige le gars a être connecté pour acheter
-						$continue = false;
-						foreach ($servers_online as $k => $server_id) {
+				if($this->isConnected && $this->Permissions->can('CAN_BUY')) {
 
-	            $call = $this->Server->call(array('isConnected' => $this->User->getKey('pseudo')), $server_id, true);
-							if($call['isConnected'] == 'true') {
-                $continue = true;
-                break;
-              }
+					if(!empty($this->request->data['items'])) {
 
-						}
-						if(!$continue) { // Il est pas connecté (sur aucun des serveurs)
-							echo '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('GLOBAL__CLOSE').'</span></button><strong>'.$this->Lang->get('GLOBAL__ERROR').' :</strong> '.$this->Lang->get('SHOP__BUY_ERROR_NO_CONNECTED').'</div>';
-							exit;
-						}
-          }
+						// Nos variables de traitement
+							$items = array();
+							$total_price = 0;
+							$servers = array();
 
-					$item_price = $search_item['0']['Item']['price'];
-					if(!empty($_GET['code'])) {
-						$voucher_reduc = $this->DiscountVoucher->get_new_price($item_price, $search_item['0']['Item']['category'], $search_item['0']['Item']['id'], $_GET['code']);
-						$item_price = $voucher_reduc; // j'obtient le nouveau prix si une promotion est en cours sur cet article ou sa catégorie
-					}
-					if($item_price <= $this->User->getKey('money')) {
+							$voucher_code = (isset($this->request->data['code']) && !empty($this->request->data['code'])) ? $this->request->data['code'] : NULL;
 
-						$this->getEventManager()->dispatch(new CakeEvent('onBuy', $this));
 
-						// Ajouter au champ used si il a utiliser un voucher
-						if(!empty($_GET['code']) && $voucher_reduc != $search_item['0']['Item']['price']) {
-							$diff = $search_item['0']['Item']['price'] - $voucher_reduc;
-							$this->DiscountVoucher->set_used($this->User->getKey('id'), $_GET['code']);
+						// On parcours les articles donnés
+							$this->loadModel('Shop.Item');
 
-							$this->loadModel('Shop.VouchersHistory');
-							$this->VouchersHistory->create();
-							$this->VouchersHistory->set(array(
-								'code' => $_GET['code'],
-								'user_id' => $this->User->getKey('id'),
-								'item_id' => $search_item['0']['Item']['id'],
-								'reduction' => $diff
-							));
-							$this->VouchersHistory->save();
+							$i = 0;
+							foreach ($this->request->data['items'] as $key => $value) {
 
-						}
-						//
+								$findItem = $this->Item->find('first', array('conditions' => array('id' => $value['item_id'])));
+								if(!empty($findItem)) {
 
-						$new_sold = $this->User->getKey('money') - $item_price;
-						$this->loadModel('User');
-						$this->User->read(null, $this->User->getKey('id'));
-						$this->User->set(array('money' => $new_sold));
-						$this->User->save();
-						$this->History->set('BUY_ITEM', 'shop', $search_item['0']['Item']['name']);
-						$commands = $search_item['0']['Item']['commands'];
-						// executer les commandes
-						if(empty($search_item['0']['Item']['servers'])) {
+									$items[$i] = $findItem['Item'];
+									//$items[$i]['quantity'] = $value['quantity'];
+									$items[$i]['servers'] = (is_array(unserialize($items[$i]['servers']))) ? unserialize($items[$i]['servers']) : array();
 
-							$this->Server->commands($commands);
+									//$items[$i]['price'] = $items[$i]['price'] * $items[$i]['quantity'];
 
-						} else {
+									$total_price += $items[$i]['price'];
 
-							foreach ($search_item['0']['Item']['servers'] as $key => $value) {
-								$this->Server->commands($commands, $value);
+									$servers = array_merge($servers, $items[$i]['servers']);
+
+									if($value['quantity'] > 1) { //si y'en a plusieurs
+										$duplicate = 1;
+										while ($duplicate < $value['quantity']) { // on le duplique autant de fois qu'il est acheté
+
+											$items[($i+$duplicate)] = $items[$i]; // On l'ajoute à la liste
+
+											$duplicate++;
+										}
+
+										$total_price += $items[$i]['price']*($value['quantity']-1); // On ajoute ce qu'on a dupliqué au prix (on enlève 1 à la quantity parce qu'on la déjà fais une fois)
+
+										$i = $i+$duplicate;
+									} else {
+										$i++; //Si on continue tranquillement
+									}
+
+								}
+
+								unset($findItem);
 							}
 
+						// Traitement du prix avec le code promotionnel
+							$total_price_before_voucher = $total_price;
+							/*
+									!!!!!	PROMO ICI  !!!!!
+							*/
+
+						// On va vérifier que l'utilisateur a assez d'argent
+						if($this->User->getKey('money') >= $total_price) {
+
+							// On vas voir si tous les serveurs sont ouverts (ceux necessaires aux articles achetés)
+								if(!empty($servers)) {
+									foreach ($servers as $key => $value) {
+										$servers_online[] = $this->Server->online($value);
+									}
+								} else {
+									$servers_online = array($this->Server->online());
+								}
+
+							if(!in_array(false, $servers_online)) {
+
+								// L'event
+									$this->getEventManager()->dispatch(new CakeEvent('onBuy', $this, array('items' => $items, 'total_price' => $total_price)));
+
+								// Ajouter au champ used si il a utiliser un voucher
+									if(!empty($voucher_code) && $total_price_before_voucher != $total_price) {
+
+										// On le met en utilisé
+											$this->DiscountVoucher->set_used($this->User->getKey('id'), $voucher_code);
+
+										// On le met dans l'historique
+											$this->loadModel('Shop.VouchersHistory');
+											$this->VouchersHistory->create();
+											$diff = $total_price - $total_price_before_voucher;
+											$this->VouchersHistory->set(array(
+												'code' => $_GET['code'],
+												'user_id' => $this->User->getKey('id'),
+												'item_id' => $search_item['0']['Item']['id'],
+												'reduction' => $diff
+											));
+											$this->VouchersHistory->save();
+									}
+
+								// On enlève les crédits à l'utilisateur
+									$new_sold = $this->User->getKey('money') - $total_price;
+									$this->User->setKey('money', $new_sold);
+
+								// On prépare l'historique a add
+									$history = array();
+
+
+								// Si il y a des commandes à faire
+									foreach ($items as $key => $value) {
+
+										// On l'ajoute à l'historique (préparation)
+											//$this->History->set('BUY_ITEM', 'shop', $value['name']);
+											$history[] = array(
+												'action' => 'BUY_ITEM',
+												'category' => 'shop',
+												'user_id' => $this->User->getKey('id'),
+												'other' => $value['name']
+											);
+
+										// On execute les commandes
+											if(empty($value['servers'])) {
+
+												$this->Server->commands($value['commands']);
+
+											} else {
+
+												foreach ($value['servers'] as $k => $server_id) {
+													$this->Server->commands($value['commands'], $server_id);
+												}
+
+											}
+
+										// On s'occupe des commandes à faire après
+											if($value['timedCommand']) {
+
+												// Get le timestamp du server
+													$serverTimestamp = $this->Server->call('getServerTimestamp')['getServerTimestamp'];
+
+												// On calcul le time
+													$time = ($value['timedCommand_time'] * 60000) + $serverTimestamp; // minutes*60000 = miliseconds + timestamp de base
+
+												// On prépare les commandes
+													$commands = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $value['timedCommand_cmd']);
+													$commands = explode('[{+}]', $commands);
+
+												// On parcours les commandes & on les executes
+													foreach ($commands as $k => $value) {
+														if(empty($value['servers'])) {
+													 		$this->Server->call(array('performTimedCommand' => $time.':!:'.$value), true);
+														} else {
+															foreach ($value['servers'] as $k => $server_id) {
+																$this->Server->call(array('performTimedCommand' => $time.':!:'.$value), true, $server_id);
+															}
+														}
+													}
+
+											}
+
+									}
+
+								//On le met dans l'historique
+									$this->loadModel('History');
+									$this->History->saveMany($history);
+
+								echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOP__BUY_SUCCESS')));
+
+							} else {
+								echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__MUST_BE_ON')));
+							}
+
+
+						} else {
+							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__BUY_ERROR_NO_ENOUGH_MONEY')));
 						}
 
-						// si y'a une timed command à faire
-						if($search_item[0]['Item']['timedCommand']) {
-
-							// Get le timestamp du server
-							$serverTimestamp = $this->Server->call('getServerTimestamp')['getServerTimestamp'];
-
-							$time = ($search_item[0]['Item']['timedCommand_time'] * 60000) + $serverTimestamp; // minutes*60000 = miliseconds + timestamp de base
-
-							$commands = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $search_item[0]['Item']['timedCommand_cmd']);
-						    $commands = explode('[{+}]', $commands);
-						    $performCommands = array();
-						    foreach ($commands as $key => $value) {
-						    	$result[] = $this->Server->call(array('performTimedCommand' => $time.':!:'.$value), true);
-						    }
-						}
-
-						echo '<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('GLOBAL__CLOSE').'</span></button><strong>'.$this->Lang->get('GLOBAL__SUCCESS').' :</strong> '.$this->Lang->get('SHOP__BUY_SUCCESS').'</div>';
 					} else {
-						echo '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('GLOBAL__CLOSE').'</span></button><strong>'.$this->Lang->get('GLOBAL__ERROR').' :</strong> '.$this->Lang->get('SHOP__BUY_ERROR_NO_ENOUGH_MONEY').'</div>';
+						throw new InternalErrorException('No items');
 					}
+
 				} else {
-						echo '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('GLOBAL__CLOSE').'</span></button><strong>'.$this->Lang->get('GLOBAL__ERROR').' :</strong> '.$this->Lang->get('SERVER__MUST_BE_ON').'</div>';
+					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED')));
 				}
+
 			} else {
-				echo '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">'.$this->Lang->get('GLOBAL__CLOSE').'</span></button><strong>'.$this->Lang->get('GLOBAL__ERROR').' :</strong> '.$this->Lang->get('USER__ERROR_MUST_BE_LOGGED').'</div>';
+				throw new InternalErrorException('Not ajax');
 			}
 		}
 
