@@ -50,6 +50,13 @@
             </div>
 
             <div class="form-group">
+              <div class="checkbox">
+                <input name="multiple_buy" type="checkbox"<?= (isset($item['multiple_buy']) && $item['multiple_buy']) ? ' checked=""' : '' ?>>
+                <label><?= $Lang->get('SHOP__ITEM_MULTIPLE_BUY') ?></label>
+              </div>
+            </div>
+
+            <div class="form-group">
               <label><?= $Lang->get('SHOP__ITEM_IMG_URL') ?></label>
               <input name="img_url" class="form-control" value="<?= $item['img_url'] ?>" type="text">
             </div>

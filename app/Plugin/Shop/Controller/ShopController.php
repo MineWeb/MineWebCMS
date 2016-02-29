@@ -95,6 +95,7 @@ class ShopController extends ShopAppController {
 				}
 
 				$affich_server = (!empty($search_item[0]['Item']['servers']) && $search_item[0]['Item']['display_server']) ? true : false;
+				$multiple_buy = (!empty($search_item[0]['Item']['multiple_buy']) && $search_item[0]['Item']['multiple_buy']) ? true : false;
 
 
 				//On récupére l'element
@@ -137,6 +138,14 @@ class ShopController extends ShopAppController {
 
 				$search_server = '[IF AFFICH_SERVER]'.$element_explode_for_server.'[/IF AFFICH_SERVER]';
 				$element_content = ($affich_server) ? str_replace($search_server, $element_explode_for_server, $element_content) : str_replace($search_server, '', $element_content);
+
+				// La condition d'affichage de l'input achat multiple
+				$element_explode_for_multiple_buy = explode('[IF MULTIPLE_BUY]', $element_content);
+				$element_explode_for_multiple_buy = explode('[/IF MULTIPLE_BUY]', $element_explode_for_multiple_buy[1])[0];
+
+				$search_multiple_buy = '[IF MULTIPLE_BUY]'.$element_explode_for_multiple_buy.'[/IF MULTIPLE_BUY]';
+				$element_content = ($multiple_buy) ? str_replace($search_multiple_buy, $element_explode_for_multiple_buy, $element_content) : str_replace($search_multiple_buy, '', $element_content);
+
 
 				echo json_encode(array('statut' => true, 'html' => $element_content, 'item_infos' => array('id' => $search_item['0']['Item']['id'], 'price' => $search_item['0']['Item']['price'])));
 
@@ -212,11 +221,13 @@ class ShopController extends ShopAppController {
 								$findItem = $this->Item->find('first', array('conditions' => array('id' => $value['item_id'])));
 								if(!empty($findItem)) {
 
-									$items[$i] = $findItem['Item'];
-									//$items[$i]['quantity'] = $value['quantity'];
-									$items[$i]['servers'] = (is_array(unserialize($items[$i]['servers']))) ? unserialize($items[$i]['servers']) : array();
+									if($value['quantity'] > 1 && (empty($findItem['Item']['multiple_buy']) || !$findItem['Item']['multiple_buy'])) {
+										echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__ITEM_CANT_BUY_MULTIPLE', array('{ITEM_NAME}' => $findItem['Item']['name']))));
+										return;
+									}
 
-									//$items[$i]['price'] = $items[$i]['price'] * $items[$i]['quantity'];
+									$items[$i] = $findItem['Item'];
+									$items[$i]['servers'] = (is_array(unserialize($items[$i]['servers']))) ? unserialize($items[$i]['servers']) : array();
 
 									$total_price += $items[$i]['price'];
 
@@ -509,7 +520,8 @@ class ShopController extends ShopAppController {
 							'timedCommand_time' => $this->request->data['timedCommand_time'],
 							'display_server' => $this->request->data['display_server'],
 							'need_connect' => $this->request->data['need_connect'],
-							'display' => $this->request->data['display']
+							'display' => $this->request->data['display'],
+							'multiple_buy' => $this->request->data['multiple_buy']
 						));
 						$this->Item->save();
 						$this->Session->setFlash($this->Lang->get('SHOP__ITEM_EDIT_SUCCESS'), 'default.success');
@@ -589,7 +601,8 @@ class ShopController extends ShopAppController {
 							'timedCommand_time' => $this->request->data['timedCommand_time'],
 							'display_server' => $this->request->data['display_server'],
 							'need_connect' => $this->request->data['need_connect'],
-							'display' => $this->request->data['display']
+							'display' => $this->request->data['display'],
+							'multiple_buy' => $this->request->data['multiple_buy']
 						));
 						$this->Item->save();
 						$this->History->set('ADD_ITEM', 'shop');

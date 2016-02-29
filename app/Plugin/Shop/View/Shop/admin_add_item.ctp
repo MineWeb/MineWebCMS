@@ -47,6 +47,13 @@
             </div>
 
             <div class="form-group">
+              <div class="checkbox">
+                <input name="multiple_buy" type="checkbox">
+                <label><?= $Lang->get('SHOP__ITEM_MULTIPLE_BUY') ?></label>
+              </div>
+            </div>
+
+            <div class="form-group">
               <label><?= $Lang->get('SHOP__ITEM_IMG_URL') ?></label>
               <input name="img_url" class="form-control" type="text">
             </div>

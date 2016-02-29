@@ -59,6 +59,7 @@ class ShopAppSchema extends CakeSchema {
 		'display_server' => array('type' => 'integer', 'null' => true, 'default' => '1', 'length' => 1, 'unsigned' => false),
 		'need_connect' => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 1, 'unsigned' => false),
 		'display' => array('type' => 'integer', 'null' => true, 'default' => '1', 'length' => 1, 'unsigned' => false),
+		'multiple_buy' => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 1, 'unsigned' => false),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),

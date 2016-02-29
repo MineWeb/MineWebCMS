@@ -10,7 +10,9 @@
 <div class="pull-left">
   <button class="btn disabled">{LANG-SHOP__ITEM_TOTAL} : <span id="total-price">{ITEM_PRICE}</span>  {SITE_MONEY}</button>
 </div>
+[IF MULTIPLE_BUY]
 <div class="col-md-3">
   <input type="text" value="1" name="quantity">
 </div>
+[/IF MULTIPLE_BUY]
 <button type="button" class="btn btn-primary buy-item" data-item-id="{ITEM_ID}" id="btn-buy">{LANG-SHOP__BUY}</button>

@@ -97,6 +97,8 @@
   "SHOP__ITEM_DISPLAY_SERVER":"Afficher le(s) serveur(s) où l'article sera donné.",
   "SHOP__ITEM_CHECKBOX_CONNECT":"Obliger le joueur a être connecté sur le serveur pour acheter l'article",
   "SHOP__ITEM_CHECKBOX_DISPLAY":"Afficher l'article sur la boutique",
+  "SHOP__ITEM_MULTIPLE_BUY":"Autoriser que cet article soit acheté plusieurs fois (en 1 seul achat)",
+  "SHOP__ITEM_CANT_BUY_MULTIPLE":"Vous ne pouvez pas acheter cet article (<i>{ITEM_NAME}</i>) plus d'une fois",
 
   "SHOP__CATEGORIES": "Cat\u00e9gories",
   "SHOP__CATEGORY": "Cat\u00e9gorie",
