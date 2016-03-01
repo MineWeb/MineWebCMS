@@ -205,7 +205,7 @@
                       </div>
                       <div class="form-group reward_proba_container" style="display:<?= (@$vote['rewards_type'] == 0) ? 'block' : 'none' ?>;">
                         <label><?= $Lang->get('VOTE__CONFIG_REWARD_PROBABILITY') ?></label>
-                        <input type="text" name="reward_proba" class="form-control reward_proba" value="<?= $v['proba'] ?>" placeholder="<?= $Lang->get('VOTE__CONFIG_REWARD_PERCENTAGE') ?>">
+                        <input type="text" name="reward_proba" class="form-control reward_proba" value="<?= (isset($v['proba'])) ? $v['proba'] : '' ?>" placeholder="<?= $Lang->get('VOTE__CONFIG_REWARD_PERCENTAGE') ?>">
                       </div>
                       <div class="form-group">
                         <div class="checkbox">

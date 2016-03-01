@@ -85,7 +85,7 @@
           echo '<div class="col-md-3 text-center"><a href="'.$skype_link.'" target="_blank" class="btn btn-lg btn-info"><i class="fa fa-skype"></i> '.$Lang->get('GLOBAL__JOIN_US_SOCIAL').' Skype</a></div>';
         }
         foreach ($findSocialButtons as $key => $value) {
-          echo '<div class="col-md-3 text-center"><a class="btn btn-default" style="background-color:'.$value['SocialButton']['color'].';color:white;color:white;" target="_blank" href="'.$value['SocialButton']['url'].'">';
+          echo '<div class="col-md-3 text-center"><a class="btn btn-default" style="background-color:'.$value['SocialButton']['color'].';color:white;font-size:18px;" target="_blank" href="'.$value['SocialButton']['url'].'">';
           if(!empty($value['SocialButton']['img'])) {
             echo '<img src="'.$value['SocialButton']['img'].'">';
           }

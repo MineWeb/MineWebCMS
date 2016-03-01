@@ -100,7 +100,7 @@
                 <center>
                   <?php
                   foreach ($findSocialButtons as $key => $value) {
-                    echo '<a target="_blank" class="btn btn-primary" style="background-color:'.$value['SocialButton']['color'].'!important;color:white;margin: 0 5px;" href="'.$value['SocialButton']['url'].'">';
+                    echo '<a target="_blank" class="btn btn-primary" style="background-color:'.$value['SocialButton']['color'].'!important;color:white;font-size:18px;margin: 0 5px;" href="'.$value['SocialButton']['url'].'">';
                     if(!empty($value['SocialButton']['img'])) {
                       echo '<img src="'.$value['SocialButton']['img'].'">';
                     }
