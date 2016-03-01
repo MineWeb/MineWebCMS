@@ -51,7 +51,7 @@ $('.display-item').click(function(e) {
           $('input[id="code-voucher"]').keyup(function(e) {
 
             var code = $(this).val();
-
+            code = (code.length == 0) ? 'undefined' : code;
 
             $.get(VOUCHER_CHECK_URL+code+'/'+id, function(data) {
               if(data.price !== undefined) {

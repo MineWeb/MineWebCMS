@@ -226,12 +226,12 @@ class ShopController extends ShopAppController {
 
 							$i = 0;
 							foreach ($this->request->data['items'] as $key => $value) {
-								if($value['quantity'] > 0) {
+								if(!isset($value['quantity']) || $value['quantity'] > 0) {
 
 									$findItem = $this->Item->find('first', array('conditions' => array('id' => $value['item_id'])));
 									if(!empty($findItem)) {
 
-										if($value['quantity'] > 1 && (empty($findItem['Item']['multiple_buy']) || !$findItem['Item']['multiple_buy'])) {
+										if(isset($value['quantity']) && $value['quantity'] > 1 && (empty($findItem['Item']['multiple_buy']) || !$findItem['Item']['multiple_buy'])) {
 											echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__ITEM_CANT_BUY_MULTIPLE', array('{ITEM_NAME}' => $findItem['Item']['name']))));
 											return;
 										}
@@ -243,7 +243,8 @@ class ShopController extends ShopAppController {
 											// Donc si on doit broadcast
 											if(!empty($config['ItemsConfig']['broadcast_global'])) { // Si il est pas vide dans la config
 												$msg = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $config['ItemsConfig']['broadcast_global']);
-												$msg = str_replace('{QUANTITY}', $value['quantity'], $msg);
+												$quantity = (isset($value['quantity'])) ? $value['quantity'] : 1;
+												$msg = str_replace('{QUANTITY}', $quantity, $msg);
 												$msg = str_replace('{ITEM_NAME}', $findItem['Item']['name'], $msg);
 												$items[$i]['commands'] .= '[{+}]'.$msg;
 												unset($msg);
@@ -254,7 +255,7 @@ class ShopController extends ShopAppController {
 
 										$servers = array_merge($servers, $items[$i]['servers']);
 
-										if($value['quantity'] > 1) { //si y'en a plusieurs
+										if(isset($value['quantity']) && $value['quantity'] > 1) { //si y'en a plusieurs
 											$duplicate = 1;
 											while ($duplicate < $value['quantity']) { // on le duplique autant de fois qu'il est acheté
 
@@ -286,6 +287,7 @@ class ShopController extends ShopAppController {
 							$total_price_before_voucher = $total_price;
 							/*
 									!!!!!	PROMO ICI  !!!!!
+									avec set_used et tout
 							*/
 
 						// On va vérifier que l'utilisateur a assez d'argent
@@ -915,9 +917,9 @@ class ShopController extends ShopAppController {
 					$this->Voucher->delete($id);
 					$this->History->set('DELETE_VOUCHER', 'shop');
 					$this->Session->setFlash($this->Lang->get('SHOP__VOUCHER_DELETE_SUCCESS'), 'default.success');
-					$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
+					$this->redirect(array('controller' => 'shop', 'action' => 'vouchers', 'admin' => true));
 				} else {
-					$this->redirect(array('controller' => 'shop', 'action' => 'index', 'admin' => true));
+					$this->redirect(array('controller' => 'shop', 'action' => 'vouchers', 'admin' => true));
 				}
 			} else {
 				$this->redirect('/');
