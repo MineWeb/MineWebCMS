@@ -151,7 +151,7 @@ class EyPluginComponent extends Object {
           if(!in_array($value, $bypassedFiles)) { // Si c'est pas un fichier que l'on ne doit pas prendre
             $pluginsList['all'][] = $value; // On l'ajoute dans la liste
             if($this->isValid($value)) {
-              $pluginList['onlyValid'][] = $value;
+              $pluginsList['onlyValid'][] = $value;
             }
           }
         }

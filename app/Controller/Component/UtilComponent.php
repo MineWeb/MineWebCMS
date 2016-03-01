@@ -109,7 +109,7 @@ class UtilComponent extends Object {
 		$this->Email->template = 'default';
 		$this->Email->sendAs = 'html';
 
-    $this->getEventManager()->dispatch(new CakeEvent('beforeSendMail', $this, array('emailConfig' => $this->Email, 'message' => $this->message)));
+    $this->controller->getEventManager()->dispatch(new CakeEvent('beforeSendMail', $this, array('emailConfig' => $this->Email, 'message' => $this->message)));
 
 		return $this->Email->send($this->message);
 
@@ -127,8 +127,7 @@ class UtilComponent extends Object {
 
   public function isValidImage($request, $extensions = array('png'), $width_max = false, $height_max = false, $max_size = false) {
 
-    App::import('Component', 'LangComponent'); // le component
-    $Lang = new LangComponent;
+    $Lang = $this->controller->Lang;
 
     if(empty($request->params['form']['image']['name'])) {
       return array('status' => false, 'msg' => $Lang->get('FORM__EMPTY_IMG'));
@@ -175,12 +174,15 @@ class UtilComponent extends Object {
   }
 
   public function uploadImage($request, $name) {
-    $this->getEventManager()->dispatch(new CakeEvent('beforeUploadImage', $this, array('request' => $request, 'name' => $name)));
+    $this->controller->getEventManager()->dispatch(new CakeEvent('beforeUploadImage', $this, array('request' => $request, 'name' => $name)));
 
     $folders = explode('/', $name);
     $folders = end($folders);
-    if(!is_dir($folders)) {
-      if(!mkdir($folders, 0755, true)) {
+    $key = key($folders);
+    unset($folders[$key]); //on supprime le nom du fichier du path
+    $path = implode('/', $folders);
+    if(!is_dir($path)) {
+      if(!mkdir($path, 0755, true)) {
         return false;
       }
     }

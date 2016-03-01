@@ -129,7 +129,7 @@ class NewsController extends AppController {
 				$this->loadModel('Like');
 				$already = $this->Like->find('all', array('conditions' => array('news_id' => $this->request->data['id'], 'user_id' => $this->User->getKey('id'))));
 				if(!empty($already)) {
-					$this->Like->deleteAll(array('news_id' => $this->request->data['id'], 'user_id' => $this->User->getKey('id')));
+					$this->Like->deleteAll(array('Like.news_id' => $this->request->data['id'], 'Like.user_id' => $this->User->getKey('id')));
 				}
 			}
 		}
@@ -173,8 +173,8 @@ class NewsController extends AppController {
 				if($this->News->delete($id)) {
 					$this->loadModel('Like');
 					$this->loadModel('Comment');
-					$this->Like->deleteAll(array('news_id' => $id));
-					$this->Comment->deleteAll(array('news_id' => $id));
+					$this->Like->deleteAll(array('Like.news_id' => $id));
+					$this->Comment->deleteAll(array('Comment.news_id' => $id));
 					$this->History->set('DELETE_NEWS', 'news');
 					$this->Session->setFlash($this->Lang->get('NEWS__SUCCESS_DELETE'), 'default.success');
 					$this->redirect(array('controller' => 'news', 'action' => 'index', 'admin' => true));

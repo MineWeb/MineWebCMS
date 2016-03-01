@@ -57,7 +57,7 @@
             <li class="col-md-4 animated fadeInUp">
                 <div class="bloc <?= rand_color_news() ?>" style="width:100%;">
                     <h2><?= cut($v['News']['title'], 15) ?></h2>
-                    <p><?= cut($v['News']['content'], 220) ?></p>
+                    <div><?= $this->Text->truncate($v['News']['content'], 220, array('ellipsis' => '...', 'html' => true)) ?></div>
                     <div class="btn-group">
                       <button id="<?= $v['News']['id'] ?>" type="button" class="btn btn-primary like<?= ($v['News']['liked']) ? ' active' : ''; ?>"<?= ($can_like) ? '' : ' disabled' ?>><?= $v['News']['count_likes'] ?> <i class="fa fa-thumbs-up"></i></button>
                       <button type="button" class="btn btn-primary"><?= $v['News']['count_comments'] ?> <i class="fa fa-comments"></i></button>
