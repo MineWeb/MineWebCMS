@@ -211,6 +211,15 @@ class ShopController extends ShopAppController {
 
 							$voucher_code = (isset($this->request->data['code']) && !empty($this->request->data['code'])) ? $this->request->data['code'] : NULL;
 
+							$broadcasts_global = array(); //Les commandes a effectuer en plus globalement
+
+						// On récupère le broadcast global
+							$this->loadModel('Shop.ItemsConfig');
+							$config = $this->ItemsConfig->find('first');
+							if(empty($config)) {
+								$config['broadcast_global'] = '';
+							}
+
 
 						// On parcours les articles donnés
 							$this->loadModel('Shop.Item');
@@ -228,6 +237,17 @@ class ShopController extends ShopAppController {
 
 									$items[$i] = $findItem['Item'];
 									$items[$i]['servers'] = (is_array(unserialize($items[$i]['servers']))) ? unserialize($items[$i]['servers']) : array();
+
+									if(!isset($findItem['Item']['broadcast_global']) || $findItem['Item']['broadcast_global']) {
+										// Donc si on doit broadcast
+										if(!empty($config['ItemsConfig']['broadcast_global'])) { // Si il est pas vide dans la config
+											$msg = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $config['ItemsConfig']['broadcast_global']);
+											$msg = str_replace('{QUANTITY}', $value['quantity'], $msg);
+											$msg = str_replace('{ITEM_NAME}', $findItem['Item']['name'], $msg);
+											$items[$i]['commands'] .= '[{+}]'.$msg;
+											unset($msg);
+										}
+									}
 
 									$total_price += $items[$i]['price'];
 
@@ -321,10 +341,12 @@ class ShopController extends ShopAppController {
 
 												$this->Server->commands($value['commands']);
 
+
 											} else {
 
 												foreach ($value['servers'] as $k => $server_id) {
 													$this->Server->commands($value['commands'], $server_id);
+
 												}
 
 											}
@@ -412,6 +434,38 @@ class ShopController extends ShopAppController {
 
 			} else {
 				$this->redirect('/');
+			}
+		}
+
+
+
+	/*
+	* ======== Page principale du panel admin ===========
+	*/
+		public function admin_config_items() {
+			$this->autoRender = false;
+			if($this->isConnected AND $this->User->isAdmin()) {
+
+				if($this->request->is('ajax')) {
+
+					$this->loadModel('Shop.ItemsConfig');
+
+					if(empty($this->ItemsConfig->find('first'))) {
+						$this->ItemsConfig->create();
+					} else {
+						$this->ItemsConfig->read(null, 1);
+					}
+					$this->ItemsConfig->set($this->request->data);
+					$this->ItemsConfig->save();
+
+					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOP__CONFIG_SAVE_SUCCESS')));
+
+				} else {
+					throw new ForbiddenException();
+				}
+
+			} else {
+				throw new ForbiddenException();
 			}
 		}
 
@@ -521,7 +575,8 @@ class ShopController extends ShopAppController {
 							'display_server' => $this->request->data['display_server'],
 							'need_connect' => $this->request->data['need_connect'],
 							'display' => $this->request->data['display'],
-							'multiple_buy' => $this->request->data['multiple_buy']
+							'multiple_buy' => $this->request->data['multiple_buy'],
+							'broadcast_global' => $this->request->data['broadcast_global']
 						));
 						$this->Item->save();
 						$this->Session->setFlash($this->Lang->get('SHOP__ITEM_EDIT_SUCCESS'), 'default.success');
@@ -602,7 +657,8 @@ class ShopController extends ShopAppController {
 							'display_server' => $this->request->data['display_server'],
 							'need_connect' => $this->request->data['need_connect'],
 							'display' => $this->request->data['display'],
-							'multiple_buy' => $this->request->data['multiple_buy']
+							'multiple_buy' => $this->request->data['multiple_buy'],
+							'broadcast_global' => $this->request->data['broadcast_global']
 						));
 						$this->Item->save();
 						$this->History->set('ADD_ITEM', 'shop');

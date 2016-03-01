@@ -105,6 +105,13 @@
 
             <div class="form-group">
               <div class="checkbox">
+                <input name="broadcast_global" type="checkbox"<?= (!isset($item['broadcast_global']) || $item['broadcast_global']) ? ' checked=""' : '' ?>>
+                <label><?= $Lang->get('SHOP__ITEM_BROADCAST_GLOBAL') ?></label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="checkbox">
                 <input name="need_connect" type="checkbox"<?= (isset($item['need_connect']) && $item['need_connect']) ? ' checked=""' : '' ?>>
                 <label><?= $Lang->get('SHOP__ITEM_CHECKBOX_CONNECT') ?></label>
               </div>

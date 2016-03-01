@@ -88,6 +88,13 @@
 
             <div class="form-group">
               <div class="checkbox">
+                <input name="broadcast_global" type="checkbox">
+                <label><?= $Lang->get('SHOP__ITEM_BROADCAST_GLOBAL') ?></label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="checkbox">
                 <input name="need_connect" type="checkbox">
                 <label><?= $Lang->get('SHOP__ITEM_CHECKBOX_CONNECT') ?></label>
               </div>

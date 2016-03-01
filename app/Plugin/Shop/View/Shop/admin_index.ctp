@@ -1,4 +1,50 @@
 <section class="content">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="box">
+        <div class="box-header with-border">
+          <h3 class="box-title"><?= $Lang->get('SHOP__CONFIG') ?></h3>
+        </div>
+        <div class="box-body">
+          <form action="<?= $this->Html->url(array('action' => 'config_items')) ?>" method="post" data-ajax="true">
+
+            <div class="form-group">
+              <label><?= $Lang->get('SHOP__CONFIG_BROADCAST_GLOBAL') ?></label>
+              <input name="broadcast_global" class="form-control" type="text">
+            </div>
+
+            <div class="form-group">
+              <div class="checkbox">
+                <input name="sort_by_server" type="checkbox"<?= (isset($config['sort_by_server']) && $config['sort_by_server']) ? ' checked=""' : '' ?>>
+                <label><?= $Lang->get('SHOP__CONFIG_SORT_BY_SERVER') ?></label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title"><?= $Lang->get('SHOP__CONFIG_EXPLAIN_TITLE') ?></h3>
+        </div>
+        <div class="box-body">
+          <blockquote>
+            <p><?= $Lang->get('SHOP__CONFIG_EXPLAIN') ?></p>
+          </blockquote>
+          <p><b><?= $Lang->get('SHOP__CONFIG_VARIABLES') ?> : </b></p>
+          <p><em>{ITEM_NAME}</em> : <?= $Lang->get('SHOP__CONFIG_VARIABLE_ITEM') ?></p>
+          <p><em>{QUANTITY}</em> : <?= $Lang->get('SHOP__CONFIG_VARIABLE_QUANTITY') ?></p>
+          <p><em>{PLAYER}</em> : <?= $Lang->get('SHOP__CONFIG_VARIABLE_PLAYER') ?></p>
+        </div>
+      </div>
+    </div>
+  </div>
     <div class="row">
       <div class="col-md-12">
         <div class="box">

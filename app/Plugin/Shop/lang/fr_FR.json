@@ -2,9 +2,20 @@
   "SHOP__TITLE": "Boutique",
   "SHOP__GLOBAL_AMOUNT": "Montant",
 
-  "SHOP__ADMIN_MANAGE_ITEMS":"Gérer les articles",
-  "SHOP__ADMIN_MANAGE_VOUCHERS":"Gérer les promotions",
-  "SHOP__ADMIN_MANAGE_PAYMENT":"Gérer les paiements",
+  "SHOP__CONFIG": "Configuration",
+  "SHOP__CONFIG_SORT_BY_SERVER": "Classer les articles et catégories par serveur",
+  "SHOP__CONFIG_BROADCAST_GLOBAL": "Commande global effectuée à chaque achat",
+  "SHOP__CONFIG_EXPLAIN_TITLE":"Explications",
+  "SHOP__CONFIG_EXPLAIN":"La commande globale sera effectué sur tous les serveurs selectionnés de l'article achetés, vous pouvez désactiver ce message global pour un article lors de sa création ou de sa modification.",
+  "SHOP__CONFIG_VARIABLES":"Variables diponibles",
+  "SHOP__CONFIG_VARIABLE_ITEM":"Nom de l'article acheté",
+  "SHOP__CONFIG_VARIABLE_QUANTITY":"Quantité de l'article acheté",
+  "SHOP__CONFIG_VARIABLE_PLAYER":"Joueur ayant acheté l'article",
+  "SHOP__CONFIG_SAVE_SUCCESS":"La configuration a bien été sauvegardée !",
+
+  "SHOP__ADMIN_MANAGE_ITEMS": "Gérer les articles",
+  "SHOP__ADMIN_MANAGE_VOUCHERS": "Gérer les promotions",
+  "SHOP__ADMIN_MANAGE_PAYMENT": "Gérer les paiements",
 
   "SHOP__PAYPAL_RETURN_MSG":"Retourner sur {WEBSITE_NAME} pour récupérer les points",
 
@@ -99,6 +110,7 @@
   "SHOP__ITEM_CHECKBOX_DISPLAY":"Afficher l'article sur la boutique",
   "SHOP__ITEM_MULTIPLE_BUY":"Autoriser que cet article soit acheté plusieurs fois (en 1 seul achat)",
   "SHOP__ITEM_CANT_BUY_MULTIPLE":"Vous ne pouvez pas acheter cet article (<i>{ITEM_NAME}</i>) plus d'une fois",
+  "SHOP__ITEM_BROADCAST_GLOBAL":"Effectuer la commande globale lors de l'achat de cet article",
 
   "SHOP__CATEGORIES": "Cat\u00e9gories",
   "SHOP__CATEGORY": "Cat\u00e9gorie",
