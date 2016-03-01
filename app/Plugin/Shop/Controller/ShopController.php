@@ -226,52 +226,60 @@ class ShopController extends ShopAppController {
 
 							$i = 0;
 							foreach ($this->request->data['items'] as $key => $value) {
+								if($value['quantity'] > 0) {
 
-								$findItem = $this->Item->find('first', array('conditions' => array('id' => $value['item_id'])));
-								if(!empty($findItem)) {
+									$findItem = $this->Item->find('first', array('conditions' => array('id' => $value['item_id'])));
+									if(!empty($findItem)) {
 
-									if($value['quantity'] > 1 && (empty($findItem['Item']['multiple_buy']) || !$findItem['Item']['multiple_buy'])) {
-										echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__ITEM_CANT_BUY_MULTIPLE', array('{ITEM_NAME}' => $findItem['Item']['name']))));
-										return;
-									}
-
-									$items[$i] = $findItem['Item'];
-									$items[$i]['servers'] = (is_array(unserialize($items[$i]['servers']))) ? unserialize($items[$i]['servers']) : array();
-
-									if(!isset($findItem['Item']['broadcast_global']) || $findItem['Item']['broadcast_global']) {
-										// Donc si on doit broadcast
-										if(!empty($config['ItemsConfig']['broadcast_global'])) { // Si il est pas vide dans la config
-											$msg = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $config['ItemsConfig']['broadcast_global']);
-											$msg = str_replace('{QUANTITY}', $value['quantity'], $msg);
-											$msg = str_replace('{ITEM_NAME}', $findItem['Item']['name'], $msg);
-											$items[$i]['commands'] .= '[{+}]'.$msg;
-											unset($msg);
-										}
-									}
-
-									$total_price += $items[$i]['price'];
-
-									$servers = array_merge($servers, $items[$i]['servers']);
-
-									if($value['quantity'] > 1) { //si y'en a plusieurs
-										$duplicate = 1;
-										while ($duplicate < $value['quantity']) { // on le duplique autant de fois qu'il est acheté
-
-											$items[($i+$duplicate)] = $items[$i]; // On l'ajoute à la liste
-
-											$duplicate++;
+										if($value['quantity'] > 1 && (empty($findItem['Item']['multiple_buy']) || !$findItem['Item']['multiple_buy'])) {
+											echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__ITEM_CANT_BUY_MULTIPLE', array('{ITEM_NAME}' => $findItem['Item']['name']))));
+											return;
 										}
 
-										$total_price += $items[$i]['price']*($value['quantity']-1); // On ajoute ce qu'on a dupliqué au prix (on enlève 1 à la quantity parce qu'on la déjà fais une fois)
+										$items[$i] = $findItem['Item'];
+										$items[$i]['servers'] = (is_array(unserialize($items[$i]['servers']))) ? unserialize($items[$i]['servers']) : array();
 
-										$i = $i+$duplicate;
-									} else {
-										$i++; //Si on continue tranquillement
+										if(!isset($findItem['Item']['broadcast_global']) || $findItem['Item']['broadcast_global']) {
+											// Donc si on doit broadcast
+											if(!empty($config['ItemsConfig']['broadcast_global'])) { // Si il est pas vide dans la config
+												$msg = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $config['ItemsConfig']['broadcast_global']);
+												$msg = str_replace('{QUANTITY}', $value['quantity'], $msg);
+												$msg = str_replace('{ITEM_NAME}', $findItem['Item']['name'], $msg);
+												$items[$i]['commands'] .= '[{+}]'.$msg;
+												unset($msg);
+											}
+										}
+
+										$total_price += $items[$i]['price'];
+
+										$servers = array_merge($servers, $items[$i]['servers']);
+
+										if($value['quantity'] > 1) { //si y'en a plusieurs
+											$duplicate = 1;
+											while ($duplicate < $value['quantity']) { // on le duplique autant de fois qu'il est acheté
+
+												$items[($i+$duplicate)] = $items[$i]; // On l'ajoute à la liste
+
+												$duplicate++;
+											}
+
+											$total_price += $items[$i]['price']*($value['quantity']-1); // On ajoute ce qu'on a dupliqué au prix (on enlève 1 à la quantity parce qu'on la déjà fais une fois)
+
+											$i = $i+$duplicate;
+										} else {
+											$i++; //Si on continue tranquillement
+										}
+
 									}
 
+									unset($findItem);
 								}
+							}
 
-								unset($findItem);
+						// On évite le reste si on a pas d'article
+							if(empty($items)) {
+								echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__BUY_ERROR_EMPTY')));
+								return;
 							}
 
 						// Traitement du prix avec le code promotionnel

@@ -1162,6 +1162,13 @@ footer p {
 
 /* -- BUTTON -- */
 
+/* SHOP exception */
+.btn.btn-default.bootstrap-touchspin-up,
+.btn.btn-default.bootstrap-touchspin-down {
+  height: 34px;
+  margin-top: -1.5px;
+}
+
 .btn.btn-default {
 	border: none;
 	background-color: #d7dee3!important;
