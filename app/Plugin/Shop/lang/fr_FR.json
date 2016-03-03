@@ -96,6 +96,7 @@
   "SHOP__ITEM_NAME":"Nom",
   "SHOP__ITEM_IMG_URL": "URL de l'image",
   "SHOP__ITEM_PRICE": "Prix",
+  "SHOP__ITEM_QUANTITY":"Quantité",
   "SHOP__ITEM_TOTAL":"Total",
   "SHOP__ITEM_DESCRIPTION": "Description",
   "SHOP__ITEM_EDIT_SUCCESS": "Article modifi\u00e9 avec succ\u00e8s !",
@@ -119,6 +120,10 @@
   "SHOP__CATEGORY_DELETE_SUCCESS": "Cat\u00e9gorie supprim\u00e9e avec succ\u00e8s !",
 
   "SHOP__BUY": "Acheter",
+  "SHOP__BUY_CART":"Voir mon panier",
+  "SHOP__BUY_CART_EMPTY":"Votre panier est vide.",
+  "SHOP__BUY_ADD_TO_CART":"Ajouter au panier",
+  "SHOP__BUY_ADDED_TO_CART":"Ajouté au panier",
   "SHOP__BUY_ERROR_NO_ENOUGH_MONEY": "Vous n'avez pas assez d'argent pour proc\u00e9der \u00e0 cet achat.",
   "SHOP__BUY_ERROR_NEED_LOGIN": "Vous devez \u00eatre connect\u00e9 pour proc\u00e9der \u00e0 un achat.",
   "SHOP__BUY_ERROR_EMPTY":"Vous ne pouvez pas rien acheter.",

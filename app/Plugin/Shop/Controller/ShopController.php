@@ -97,6 +97,7 @@ class ShopController extends ShopAppController {
 				$affich_server = (!empty($search_item[0]['Item']['servers']) && $search_item[0]['Item']['display_server']) ? true : false;
 				$multiple_buy = (!empty($search_item[0]['Item']['multiple_buy']) && $search_item[0]['Item']['multiple_buy']) ? true : false;
 
+				$add_to_cart = true;
 
 				//On récupére l'element
 				if(file_exists(APP.DS.'View'.DS.'Themed'.DS.$this->Configuration->getKey('theme').DS.'Elements'.DS.'modal_buy.ctp')) {
@@ -146,11 +147,18 @@ class ShopController extends ShopAppController {
 				$search_multiple_buy = '[IF MULTIPLE_BUY]'.$element_explode_for_multiple_buy.'[/IF MULTIPLE_BUY]';
 				$element_content = ($multiple_buy) ? str_replace($search_multiple_buy, $element_explode_for_multiple_buy, $element_content) : str_replace($search_multiple_buy, '', $element_content);
 
+				// La condition d'affichage de l'ajout au pnier
+				$element_explode_for_add_to_cart = explode('[IF ADD_TO_CART]', $element_content);
+				$element_explode_for_add_to_cart = explode('[/IF ADD_TO_CART]', $element_explode_for_add_to_cart[1])[0];
 
-				echo json_encode(array('statut' => true, 'html' => $element_content, 'item_infos' => array('id' => $search_item['0']['Item']['id'], 'price' => $search_item['0']['Item']['price'])));
+				$search_add_to_cart = '[IF ADD_TO_CART]'.$element_explode_for_add_to_cart.'[/IF ADD_TO_CART]';
+				$element_content = ($add_to_cart) ? str_replace($search_add_to_cart, $element_explode_for_add_to_cart, $element_content) : str_replace($search_add_to_cart, '', $element_content);
+
+
+				echo json_encode(array('statut' => true, 'html' => $element_content, 'item_infos' => array('id' => $search_item['0']['Item']['id'], 'name' => $search_item['0']['Item']['name'], 'price' => $search_item['0']['Item']['price'])));
 
 			} else {
-				echo json_encode(array('statut' => false, 'html' => '<div class="modal-body"><div class="alert alert-danger">'.$this->Lang->get('USER__ERROR_MUST_BE_LOGGED').'</div></div>')); // si il n'est pas connecté
+				echo json_encode(array('statut' => false, 'html' => '<div class="alert alert-danger">'.$this->Lang->get('USER__ERROR_MUST_BE_LOGGED').'</div>')); // si il n'est pas connecté
 			}
 		}
 
@@ -405,7 +413,7 @@ class ShopController extends ShopAppController {
 						}
 
 					} else {
-						throw new InternalErrorException('No items');
+						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__BUY_ERROR_EMPTY')));
 					}
 
 				} else {
