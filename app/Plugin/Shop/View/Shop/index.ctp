@@ -16,7 +16,9 @@
         <?php if($isConnected AND $Permissions->can('CREDIT_ACCOUNT')) { ?>
             <a href="#" data-toggle="modal" data-target="#addmoney" class="btn btn-success btn-block pull-right"><?= $Lang->get('SHOP__ADD_MONEY') ?></a>
         <?php } ?>
-        <a href="#" data-toggle="modal" data-target="#cart-modal" class="btn btn-primary btn-block pull-right"><?= $Lang->get('SHOP__BUY_CART') ?></a>
+        <?php if($isConnected) { ?>
+          <a href="#" data-toggle="modal" data-target="#cart-modal" class="btn btn-primary btn-block pull-right"><?= $Lang->get('SHOP__BUY_CART') ?></a>
+        <?php } ?>
       </div>
       <div class="col-md-9">
         <div class="row">
@@ -86,6 +88,7 @@
         <div class="pull-left">
           <input name="code" type="text" class="form-control" autocomplete="off" id="cart-voucher" style="width:245px;" placeholder="<?= $Lang->get('SHOP__BUY_VOUCHER_ASK') ?>">
         </div>
+        <button class="btn disabled"><?= $Lang->get('SHOP__ITEM_TOTAL') ?> : <span id="cart-total-price">0</span>  <?= $Configuration->getMoneyName() ?></button>
         <button type="button" class="btn btn-primary" id="buy-cart"><?= $Lang->get('SHOP__BUY') ?></button>
       </div>
     </div>

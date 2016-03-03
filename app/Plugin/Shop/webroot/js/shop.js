@@ -296,6 +296,8 @@ function refreshCart() {
 
   var notEmpty = false;
 
+  var total = 0;
+
   for (var key in cart) {
 
     if(cart[key] !== null) {
@@ -309,6 +311,8 @@ function refreshCart() {
         table += '<td><button class="btn btn-danger remove-from-cart" data-item-id="'+cart[key]['item_id']+'"><i class="fa fa-close"></i></button></td>';
       table += '</tr>';
 
+      total += parseFloat(cart[key]['item_price']) * cart[key]['quantity'];
+
     }
 
   }
@@ -318,10 +322,12 @@ function refreshCart() {
   table += '</div>';
 
   if(notEmpty) {
+    $('#cart-total-price').html(total);
     $('#buy-cart').attr('disabled', false);
     $('#buy-cart').removeClass('disabled');
     $('#cart-modal .modal-body').html(table);
   } else {
+    $('#cart-total-price').html('0');
     $('#buy-cart').attr('disabled', true);
     $('#buy-cart').addClass('disabled');
     $('#cart-modal .modal-body').html('<div class="alert alert-danger">'+CART_EMPTY_MSG+'</div>');
@@ -338,12 +344,14 @@ function refreshCart() {
 
     var item_id = $(this).attr('data-item-id');
 
+    var total = 0;
+
     for (var k in cartContent) {
       if(cartContent[k] !== null && cartContent[k]['item_id'] != item_id) { // si c'est pas l'article qu'on cherche
 
         newCart.push(cartContent[k]);
 
-        break; // On arrête la boucle
+        total += parseFloat(cartContent[k]['item_price']) * cartContent[k]['quantity'];
 
       }
     }
@@ -351,10 +359,12 @@ function refreshCart() {
     $.cookie('cart', newCart); // On le met dans les cookies maintenant
 
     if(newCart.length > 0) {
+      $('#cart-total-price').html(total);
       $('#cart-modal .modal-body').find('tr[data-item-id="'+item_id+'"]').slideUp(150); // On l'enlève de la table
     } else {
       $('#buy-cart').attr('disabled', true);
       $('#buy-cart').addClass('disabled');
+      $('#cart-total-price').html('0');
       $('#cart-modal .modal-body').html('<div class="alert alert-danger">'+CART_EMPTY_MSG+'</div>');
     }
 

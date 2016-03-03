@@ -448,7 +448,11 @@ class ShopController extends ShopAppController {
 				$this->loadModel('History');
 				$histories_buy = $this->History->find('all', array('conditions' => array('action' => 'BUY_ITEM'), 'order' => 'id DESC'));
 
-				$this->set(compact('categories', 'search_categories', 'search_items', 'histories_buy'));
+				$this->loadModel('Shop.ItemsConfig');
+				$findConfig = $this->ItemsConfig->find('first');
+				$config = (!empty($findConfig)) ? $findConfig['ItemsConfig'] : array();
+
+				$this->set(compact('categories', 'search_categories', 'search_items', 'histories_buy', 'config'));
 
 			} else {
 				$this->redirect('/');

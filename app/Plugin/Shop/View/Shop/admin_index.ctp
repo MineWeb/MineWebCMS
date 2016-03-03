@@ -10,7 +10,7 @@
 
             <div class="form-group">
               <label><?= $Lang->get('SHOP__CONFIG_BROADCAST_GLOBAL') ?></label>
-              <input name="broadcast_global" class="form-control" type="text">
+              <input name="broadcast_global" class="form-control" type="text"<?= (isset($config['broadcast_global'])) ? ' value="'.$config['broadcast_global'].'"' : '' ?>>
             </div>
 
             <div class="form-group">
