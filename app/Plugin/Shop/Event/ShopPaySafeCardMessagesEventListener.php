@@ -2,14 +2,21 @@
 App::uses('CakeEventListener', 'Event');
 
 class ShopPaySafeCardMessagesEventListener implements CakeEventListener {
-    public function implementedEvents() {
-        return array(
-            'onLoadPage' => 'checkPSCMessages',
-        );
-    }
 
-    public function checkPSCMessages($event) {
+  private $controller;
 
+  public function __construct($request, $response, $controller) {
+    $this->controller = $controller;
+  }
+
+  public function implementedEvents() {
+      return array(
+          'onLoadPage' => 'checkPSCMessages',
+      );
+  }
+
+  public function checkPSCMessages($event) {
+    if($this->controller->params['controller'] == "user" && $this->controller->params['action'] == "profile") {
       // On chage les models
       $this->User = ClassRegistry::init('User');
       $this->PaysafecardMessage = ClassRegistry::init('Shop.PaysafecardMessage');
@@ -21,6 +28,6 @@ class ShopPaySafeCardMessagesEventListener implements CakeEventListener {
 
         ModuleComponent::$vars['search_psc_msg'] = $search_psc_msg;
       }
-
     }
+  }
 }

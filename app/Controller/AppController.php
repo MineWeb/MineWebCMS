@@ -123,6 +123,11 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 		}
 	}
 
+  $this->loadModel('User');
+  $this->isConnected = $this->User->isConnected();
+  $this->set('isConnected', $this->isConnected);
+
+
 
 		/* Charger les components des plugins si ils s'appellent "EventsConpoment.php" */
 		$plugins = $this->EyPlugin->getPluginsActive();
@@ -147,7 +152,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 		            App::uses($className, 'Plugin/'.DS.$value->slug.DS.'Event');
 
 		            // then instantiate the file and attach it to the event manager
-		            $this->getEventManager()->attach(new $className($request, $response));
+		            $this->getEventManager()->attach(new $className($this->request, $this->response, $this));
 		        }
 
 			}
@@ -160,10 +165,6 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 		if($this->request->is('post')) {
 			$this->getEventManager()->dispatch(new CakeEvent('onPostRequest', $this, $this->request->data));
 		}
-
-		$this->loadModel('User');
-		$this->isConnected = $this->User->isConnected();
-		$this->set('isConnected', $this->isConnected);
 
 		if($this->isConnected) {
 			if($this->User->getKey('rank') == 5 AND $this->params['controller'] != "maintenance") {

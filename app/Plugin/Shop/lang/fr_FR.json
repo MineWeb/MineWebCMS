@@ -6,7 +6,7 @@
   "SHOP__CONFIG_SORT_BY_SERVER": "Classer les articles et catégories par serveur",
   "SHOP__CONFIG_BROADCAST_GLOBAL": "Commande global effectuée à chaque achat",
   "SHOP__CONFIG_EXPLAIN_TITLE":"Explications",
-  "SHOP__CONFIG_EXPLAIN":"La commande globale sera effectué sur tous les serveurs selectionnés de l'article achetés, vous pouvez désactiver ce message global pour un article lors de sa création ou de sa modification.",
+  "SHOP__CONFIG_EXPLAIN":"La commande globale sera effectué sur tous les serveurs selectionnés de l'article acheté, vous pouvez désactiver ce message global pour un article lors de sa création ou de sa modification.",
   "SHOP__CONFIG_VARIABLES":"Variables diponibles",
   "SHOP__CONFIG_VARIABLE_ITEM":"Nom de l'article acheté",
   "SHOP__CONFIG_VARIABLE_QUANTITY":"Quantité de l'article acheté",

@@ -225,7 +225,7 @@ class ShopController extends ShopAppController {
 							$this->loadModel('Shop.ItemsConfig');
 							$config = $this->ItemsConfig->find('first');
 							if(empty($config)) {
-								$config['broadcast_global'] = '';
+								$config['ItemsConfig']['broadcast_global'] = '';
 							}
 
 
@@ -249,7 +249,7 @@ class ShopController extends ShopAppController {
 
 										if(!isset($findItem['Item']['broadcast_global']) || $findItem['Item']['broadcast_global']) {
 											// Donc si on doit broadcast
-											if(!empty($config['ItemsConfig']['broadcast_global'])) { // Si il est pas vide dans la config
+											if(isset($config['ItemsConfig']['broadcast_global']) && !empty($config['ItemsConfig']['broadcast_global'])) { // Si il est pas vide dans la config
 												$msg = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $config['ItemsConfig']['broadcast_global']);
 												$quantity = (isset($value['quantity'])) ? $value['quantity'] : 1;
 												$msg = str_replace('{QUANTITY}', $quantity, $msg);
@@ -295,7 +295,6 @@ class ShopController extends ShopAppController {
 							$total_price_before_voucher = $total_price;
 							/*
 									!!!!!	PROMO ICI  !!!!!
-									avec set_used et tout
 							*/
 
 						// On va vérifier que l'utilisateur a assez d'argent
@@ -326,7 +325,7 @@ class ShopController extends ShopAppController {
 											$this->VouchersHistory->create();
 											$diff = $total_price - $total_price_before_voucher;
 											$this->VouchersHistory->set(array(
-												'code' => $_GET['code'],
+												'code' => $voucher_code,
 												'user_id' => $this->User->getKey('id'),
 												'item_id' => $search_item['0']['Item']['id'],
 												'reduction' => $diff
