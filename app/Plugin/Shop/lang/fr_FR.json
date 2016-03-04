@@ -49,6 +49,7 @@
 
   "SHOP__PAYSAFECARD": "PaySafeCard",
   "SHOP__PAYSAFECARD_CODE": "Code",
+  "SHOP__PAYSAFECARD_VALID_USER":"Qui a validé ?",
   "SHOP__PAYSAFECARD_HISTORIES":"Historique des transactions PaySafeCard",
   "SHOP__PAYSAFECARD_ADMIN_TITLE":"Liste des PaySafeCards en attente",
   "SHOP__PAYSAFECARD_DISABLE_SUCCESS": "Les PaySafeCard ont bien \u00e9t\u00e9 d\u00e9sactiv\u00e9es !",

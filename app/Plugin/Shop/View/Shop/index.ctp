@@ -94,4 +94,4 @@
     </div>
   </div>
 </div>
-<?= $this->element('payment_modals') ?>
+<?= $this->element('payments_modal') ?>

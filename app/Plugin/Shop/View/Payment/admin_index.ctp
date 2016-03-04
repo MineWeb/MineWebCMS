@@ -220,6 +220,7 @@ table tr td:last-child > div.btn-group {
                     <tr>
                       <th><?= $Lang->get('SHOP__PAYSAFECARD_CODE') ?></th>
                       <th><?= $Lang->get('USER__USERNAME') ?></th>
+                      <th><?= $Lang->get('SHOP__PAYSAFECARD_VALID_USER') ?></th>
                       <th><?= $Lang->get('SHOP__GLOBAL_AMOUNT') ?></th>
                       <th><?= ucfirst($Configuration->getMoneyName()) ?></th>
                       <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
@@ -231,6 +232,7 @@ table tr td:last-child > div.btn-group {
                         <tr>
                           <td><?= $value['PaysafecardHistory']['code'] ?></td>
                           <td><?= (isset($usersByID[$value['PaysafecardHistory']['user_id']])) ? $usersByID[$value['PaysafecardHistory']['user_id']] : $value['PaysafecardHistory']['user_id'] ?></td>
+                          <td><?= (isset($usersByID[$value['PaysafecardHistory']['author_id']])) ? $usersByID[$value['PaysafecardHistory']['author_id']] : $value['PaysafecardHistory']['author_id'] ?></td>
                           <td><?= $value['PaysafecardHistory']['amount'] ?></td>
                           <td><?= $value['PaysafecardHistory']['credits_gived'] ?></td>
                           <td><?= $Lang->date($value['PaysafecardHistory']['created']) ?></td>

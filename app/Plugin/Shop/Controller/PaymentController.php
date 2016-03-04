@@ -170,7 +170,8 @@ class PaymentController extends ShopAppController {
               'code' => $findPaysafecard['code'],
               'amount' => $findPaysafecard['amount'],
               'credits_gived' => intval($money),
-              'user_id' => $findPaysafecard['user_id']
+              'user_id' => $findPaysafecard['user_id'],
+              'author_id' => $this->User->getKey('id')
             ));
             $this->PaysafecardHistory->save();
 
