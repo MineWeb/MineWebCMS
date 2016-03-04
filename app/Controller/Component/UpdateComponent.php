@@ -80,7 +80,7 @@ class UpdateComponent extends Object {
 		if($return['code'] == 200) {
       $return_json = json_decode($return['content'], true);
     	if(!$return_json) {
-        $zip = $return;
+        $zip = $return['content'];
       } elseif($return_json['status'] == "error") {
   	    return false;
     	}
@@ -345,13 +345,13 @@ class UpdateComponent extends Object {
 
 	public function set_log($action, $state = "success", $args, $rand) {
 		// set les logs de la mise à jour
-		$filename = ROOT.'/app/tmp/logs/update/'.$this->get_version().'-'.$rand.'.log';
+		$filename = ROOT.'/app/tmp/logs/update/'.$this->update['version'].'-'.$rand.'.log';
 		if(!file_exists($filename)) {
 			if(!is_dir(ROOT.'/app/tmp/logs/update')) {
 				mkdir(ROOT.'/app/tmp/logs/update');
 			}
 			$write = fopen($filename, "x+");
-			$header = json_encode(array('head' => array('date' => date('d/m/Y H:i:s'), 'version' => $this->get_version())), JSON_PRETTY_PRINT);
+			$header = json_encode(array('head' => array('date' => date('d/m/Y H:i:s'), 'version' => $this->update['version'])), JSON_PRETTY_PRINT);
 			fwrite($write, $header);
 			fclose($write);
 		}
@@ -368,13 +368,13 @@ class UpdateComponent extends Object {
 	}
 
 	public function end_log($rand) {
-		$filename = ROOT.'/app/tmp/logs/update/'.$this->get_version().'-'.$rand.'.log';
+		$filename = ROOT.'/app/tmp/logs/update/'.$this->update['version'].'-'.$rand.'.log';
 		if(!file_exists($filename)) {
 			if(!is_dir(ROOT.'/app/tmp/logs/update')) {
 				mkdir(ROOT.'/app/tmp/logs/update');
 			}
 			$write = fopen($filename, "x+");
-			$header = json_encode(array('head' => array('date' => date('d/m/Y H:i:s'), 'version' => $this->get_version())), JSON_PRETTY_PRINT);
+			$header = json_encode(array('head' => array('date' => date('d/m/Y H:i:s'), 'version' => $this->update['version'])), JSON_PRETTY_PRINT);
 			fwrite($write, $header);
 			fclose($write);
 		}
@@ -395,7 +395,7 @@ class UpdateComponent extends Object {
 		}
 		if(!$error) {
 			$this->Configuration = $this->controller->Configuration;
-			$this->Configuration->setKey('version', $this->get_version());
+			$this->Configuration->setKey('version', $this->update['version']);
 			return true;
 		} else {
 			return false;

@@ -100,10 +100,10 @@ function affichImg($bool) {
 $compatible = array();
 
 $write = is_writable(ROOT);
-$write_config = is_writable(ROOT.'/config/');
+/*$write_config = is_writable(ROOT.'/config/');
 $write_tmp = is_writable(ROOT.'/app/tmp/');
-$write_plugin = is_writable(ROOT.'/app/Plugin/');
-$compatible['chmod'] = ($write && $write_config && $write_tmp && $write_plugin) ? true : false;
+$write_plugin = is_writable(ROOT.'/app/Plugin/');*/
+$compatible['chmod'] = ($write/* && $write_config && $write_tmp && $write_plugin*/) ? true : false;
 
 $compatible['phpVersion'] = false;
 $compatible['ionCube'] = false;

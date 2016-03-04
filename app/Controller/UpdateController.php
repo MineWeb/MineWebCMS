@@ -33,7 +33,7 @@ class UpdateController extends AppController {
 	public function admin_update() {
 		if($this->isConnected AND $this->User->isAdmin()) {
 			$this->autoRender = false;
-			if($this->Update->update($this->Update->get_version())) {
+			if($this->Update->update($this->Update->update['version'])) {
 				echo $this->Lang->get('UPDATE__SUCCESS').'|true';
 			} else {
 				echo $this->Lang->get('UPDATE__FAILED').'|false';
