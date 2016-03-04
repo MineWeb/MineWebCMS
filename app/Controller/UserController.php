@@ -50,11 +50,11 @@ class UserController extends AppController {
 
 				if($validCaptcha) { // on check le captcha déjà
 					$this->loadModel('User');
-					$isValid = $this->User->validRegister($this->request->data);
+					$isValid = $this->User->validRegister($this->request->data, $this->Util);
 					if($isValid === true) { // on vérifie si y'a aucune erreur
 
 						// on enregistre
-						$userSession = $this->User->register($this->request->data);
+						$userSession = $this->User->register($this->request->data, $this->Util);
 
 						// On envoie le mail de confirmation si demandé
 						if($this->Configuration->getKey('confirm_mail_signup')) {
@@ -114,7 +114,7 @@ class UserController extends AppController {
 
 				$need_confirmed_email = ($this->Configuration->getKey('confirm_mail_signup') && $this->Configuration->getKey('confirm_mail_signup_block'));
 
-				$login = $this->User->login($this->request->data, $need_confirmed_email);
+				$login = $this->User->login($this->request->data, $need_confirmed_email, $this->Util);
 				if(isset($login['status']) && $login['status'] === true) {
 
 					$this->Session->write('user', $login['session']);
@@ -208,7 +208,7 @@ class UserController extends AppController {
 		if($this->request->is('ajax')) {
 			if(!empty($this->request->data['password']) AND !empty($this->request->data['password2']) AND !empty($this->request->data['email'])) {
 
-				$reset = $this->User->resetPass($this->request->data);
+				$reset = $this->User->resetPass($this->request->data, $this->Util);
 				if($reset['status'] && $reset['status'] === true) {
 					$this->Session->write('user', $reset['session']);
 
@@ -376,8 +376,8 @@ class UserController extends AppController {
 		if($this->isConnected) {
 			if($this->request->is('ajax')) {
 				if(!empty($this->request->data['password']) AND !empty($this->request->data['password_confirmation'])) {
-					$password = password($this->request->data['password']);
-					$password_confirmation = password($this->request->data['password_confirmation']);
+					$password = $this->Util->password($this->request->data['password'], $this->User->getKey('pseudo'));
+					$password_confirmation = $this->Util->password($this->request->data['password_confirmation'], $this->User->getKey('pseudo'));
 					if($password == $password_confirmation) {
 						$this->User->setKey('password', $password);
 						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__PASSWORD_UPDATE_SUCCESS')));
@@ -635,7 +635,7 @@ class UserController extends AppController {
 					);
 
 					if(!empty($this->request->data['password'])) {
-						$data['password'] = password($this->request->data['password']);
+						$data['password'] = $this->Util->password($this->request->data['password'], $findUser['User']['pseudo']);
 					}
 
 					if($this->EyPlugin->isInstalled('eywek.shop.1')) {

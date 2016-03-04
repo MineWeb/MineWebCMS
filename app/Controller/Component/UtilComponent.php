@@ -29,6 +29,14 @@ class UtilComponent extends Object {
     return isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? $_SERVER["HTTP_CF_CONNECTING_IP"] : $_SERVER["REMOTE_ADDR"];
   }
 
+  // Encoder un mot de passe
+
+  public function password($password, $username) {
+    $this->controller->getEventManager()->dispatch(new CakeEvent('beforeEncodePassword', $this, array('password' => $password, 'username' => $username)));
+
+    return hash('sha256', $password);
+  }
+
   // Pour gérer les temps d'attente ou autre
 
   public function secondsToTime($inputSeconds) {

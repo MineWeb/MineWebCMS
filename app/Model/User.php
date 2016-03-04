@@ -19,10 +19,10 @@ class User extends AppModel {
   	)
 	);
 
-	public function validRegister($data) {
+	public function validRegister($data, $UtilComponent) {
 		if(preg_match('`^([a-zA-Z0-9-_]{2,16})$`', $data['pseudo'])) {
-			$data['password'] = password($data['password']);
-			$data['password_confirmation'] = password($data['password_confirmation']);
+			$data['password'] = $UtilComponent->password($data['password'], $data['pseudo']);
+			$data['password_confirmation'] = $UtilComponent->password($data['password_confirmation'], $data['pseudo']);
 			if($data['password'] == $data['password_confirmation']) {
 				if(filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
 					$search_member_by_pseudo = $this->find('all', array('conditions' => array('pseudo' => $data['pseudo'])));
@@ -47,7 +47,7 @@ class User extends AppModel {
 		}
 	}
 
-	public function register($data) {
+	public function register($data, $UtilComponent) {
 
 		$data_to_save = array();
 
@@ -57,7 +57,7 @@ class User extends AppModel {
 		$data_to_save['ip'] = isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? $_SERVER["HTTP_CF_CONNECTING_IP"] : $_SERVER["REMOTE_ADDR"];
 		$data_to_save['rank'] = 0;
 
-		$data_to_save['password'] = password($data['password']);
+		$data_to_save['password'] = $UtilComponent->password($data['password'], $data['pseudo']);
 
 		$this->create();
 		$this->set($data_to_save);
@@ -65,7 +65,7 @@ class User extends AppModel {
 		return $this->getLastInsertId();
 	}
 
-	public function login($data, $need_email_confirmed = false) {
+	public function login($data, $need_email_confirmed = false, $UtilComponent) {
 		$LoginRetryTable = ClassRegistry::init('LoginRetry');
 		$ip = isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? $_SERVER["HTTP_CF_CONNECTING_IP"] : $_SERVER["REMOTE_ADDR"];
 		$findRetryWithIP = $LoginRetryTable->find('first', array(array('ip' => $ip)));
@@ -74,7 +74,7 @@ class User extends AppModel {
 
 		if(empty($findRetryWithIP) || $findRetryWithIP['LoginRetry']['count'] < 10 || strtotime('+2 hours', strtotime($findRetryWithIP['LoginRetry']['modified'])) < time()) {
 
-			$search_user = $this->find('first', array('conditions' => array('pseudo' => $data['pseudo'], 'password' => password($data['password']))));
+			$search_user = $this->find('first', array('conditions' => array('pseudo' => $data['pseudo'], 'password' => $UtilComponent->password($data['password'], $data['pseudo']))));
 			if(!empty($search_user)) {
 
 				if($need_email_confirmed && !empty($search_user['User']['confirmed']) && date('Y-m-d H:i:s', strtotime($search_user['User']['confirmed'])) != $search_user['User']['confirmed']) {
@@ -117,9 +117,7 @@ class User extends AppModel {
 		}
 	}
 
-	public function resetPass($data) {
-		$data['password'] = password($data['password']);
-		$data['password2'] = password($data['password2']);
+	public function resetPass($data, $UtilComponent) {
 		if($data['password'] == $data['password2']) {
 			unset($data['password2']);
 			$search = $this->find('all', array('conditions' => array('email' => $data['email'])));
@@ -131,7 +129,7 @@ class User extends AppModel {
 
 					$this->Lostpassword->delete($Lostpassword[0]['Lostpassword']['id']);
 
-					$data_to_save['password'] = $data['password'];
+					$data_to_save['password'] = $UtilComponent->password($data['password'], $search['0']['User']['pseudo']);
 
 					$this->read(null, $search['0']['User']['id']);
 					$this->set($data_to_save);

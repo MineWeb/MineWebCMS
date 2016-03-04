@@ -89,12 +89,11 @@ class InstallController extends AppController {
 			if($this->request->is('ajax')) {
 
 				if(!empty($this->request->data['pseudo']) AND !empty($this->request->data['password']) AND !empty($this->request->data['password_confirmation']) AND !empty($this->request->data['email'])) {
-					$this->request->data['password'] = password($this->request->data['password']);
-					$this->request->data['password_confirmation'] =password($this->request->data['password_confirmation']);
 					if($this->request->data['password'] == $this->request->data['password_confirmation']) {
 						if(filter_var($this->request->data['email'], FILTER_VALIDATE_EMAIL)) {
 							$this->request->data['ip'] = $_SERVER["REMOTE_ADDR"];
 							$this->request->data['rank'] = 4;
+							$this->request->data['password'] = $this->Util->password($this->request->data['password'], $this->request->data['pseudo']);
 							$this->loadModel('User');
 							$this->User->set($this->request->data);
 							$this->User->save();

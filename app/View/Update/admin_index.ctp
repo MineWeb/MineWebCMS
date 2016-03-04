@@ -39,7 +39,7 @@
                   <?php if(!empty($logs['update'])) { ?>
                     <?php foreach ($logs['update'] as $k => $v) { ?>
                     <tr>
-                      <td><?= $Lang->get(key($v)) ?></td>
+                      <td><?= $Lang->get('UPDATE__ACTION_'.key($v)) ?></td>
                       <td><?= $Lang->get(strtoupper($v[key($v)]['statut'])) ?></td>
                       <td><?= $v[key($v)]['arg'] ?></td>
                       <td></td>

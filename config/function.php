@@ -15,10 +15,6 @@ function array_delete_value($array,$search) {
 	return $temp;
 }
 
-function password($password) {
-	return hash('sha256', $password);
-}
-
 function cut($data, $how) {
 	$return = substr($data, 0, $how);
 	return (strlen($data) > $how) ? $return.'...' : $return;
