@@ -15,7 +15,9 @@ class PluginController extends AppController{
 		if($this->isConnected AND $this->User->isAdmin()) {
 			if($id != false) {
 
-				if($this->EyPlugin->delete($id)) {
+				$slug = $this->Plugin->find('first', array('conditions' => array('id' => $id)));
+
+				if(isset($slug['Plugin']['name']) && $this->EyPlugin->delete($slug['Plugin']['name'])) {
 					$this->History->set('DELETE_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN__DELETE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));

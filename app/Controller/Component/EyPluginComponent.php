@@ -439,6 +439,8 @@ class EyPluginComponent extends Object {
         clearDir($this->pluginsFolder.DS.$slug);
         CakePlugin::unload($slug); // On unload sur cake
         Cache::clear(false, '_cake_core_'); // On clear le cache
+
+        return true;
       }
 
     }
