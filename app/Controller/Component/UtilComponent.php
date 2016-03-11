@@ -80,20 +80,20 @@ class UtilComponent extends Object {
 
     $this->to = $to;
 
-    $this->subject = $subject.' | '.$configuration->get('name');
+    $this->subject = $subject.' | '.$configuration->getKey('name');
 
     $this->message = $message;
 
-    $this->from = $configuration->get('name').' <'.$configuration->get('email').'>';
+    $this->from = array($configuration->getKey('email') => $configuration->getKey('name'));
 
-    $this->typeSend = (!$configuration->get('email_send_type') || $configuration->get('email_send_type') != 2) ? 'default' : 'smtp';
+    $this->typeSend = (!$configuration->getKey('email_send_type') || $configuration->getKey('email_send_type') != 2) ? 'default' : 'smtp';
 
     if($this->typeSend == "smtp") {
 
-      $this->smtpOptions['host'] = $configuration->get('smtpHost'); // smtp.sendgrid.net - ssl://smtp.gmail.com
-      $this->smtpOptions['port'] = $configuration->get('smtpPort'); // 587 - 465
-      $this->smtpOptions['username'] = $configuration->get('smtpUsername'); // Eywek
-      $this->smtpOptions['password'] = $configuration->get('smtpPassword'); // motdepasse
+      $this->smtpOptions['host'] = $configuration->getKey('smtpHost'); // smtp.sendgrid.net - ssl://smtp.gmail.com
+      $this->smtpOptions['port'] = $configuration->getKey('smtpPort'); // 587 - 465
+      $this->smtpOptions['username'] = $configuration->getKey('smtpUsername'); // Eywek
+      $this->smtpOptions['password'] = $configuration->getKey('smtpPassword'); // motdepasse
       $this->smtpOptions['timeout'] = '30';
       //$this->smtpOptions['client'] = ''; // mineweb.org
 
@@ -104,18 +104,21 @@ class UtilComponent extends Object {
 
   public function sendMail() {
 
-    $this->Email = $this->controller->Components->load('Email');
+    App::uses('CakeEmail', 'Network/Email');
+    $this->Email = new CakeEmail();
 
     if($this->typeSend == "smtp") {
-		  $this->Email->smtpOptions = $this->smtpOptions;
-      $this->Email->delivery = 'smtp';
+      $this->Email->transport('Smtp');
+
+		  $this->Email->config($this->smtpOptions);
     }
 
-		$this->Email->from = $this->from;
-		$this->Email->to = $this->to;
-		$this->Email->subject = $this->subject;
-		$this->Email->template = 'default';
-		$this->Email->sendAs = 'html';
+		$this->Email->from($this->from);
+		$this->Email->to($this->to);
+		$this->Email->subject($this->subject);
+		$this->Email->template('default');
+		$this->Email->emailFormat('html');
+    $this->Email->theme($this->controller->Configuration->getKey('theme'));
 
     $this->controller->getEventManager()->dispatch(new CakeEvent('beforeSendMail', $this, array('emailConfig' => $this->Email, 'message' => $this->message)));
 

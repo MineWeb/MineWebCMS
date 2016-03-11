@@ -101,6 +101,20 @@ function initForms() {
 
     console.log(inputs);
 
+    if(form.attr('data-checkData') !== undefined && form.attr('data-checkData').length > 0) {
+      var check = window[form.attr('data-checkData')](inputs);
+
+      if(typeof(check) == "object" && !check.statut) {
+        if(recaptcha) {
+          grecaptcha.reset();
+        }
+
+        div_msg.html('<div class="alert alert-danger"><b>'+ERROR_MSG+' : </b>'+data.msg+'</div>');
+        submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
+        return;
+      }
+    }
+
     $.ajax({
       url: form.attr('action'),
       data: inputs,

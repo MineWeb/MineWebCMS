@@ -68,7 +68,7 @@ class User extends AppModel {
 	public function login($data, $need_email_confirmed = false, $UtilComponent) {
 		$LoginRetryTable = ClassRegistry::init('LoginRetry');
 		$ip = isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? $_SERVER["HTTP_CF_CONNECTING_IP"] : $_SERVER["REMOTE_ADDR"];
-		$findRetryWithIP = $LoginRetryTable->find('first', array(array('ip' => $ip)));
+		$findRetryWithIP = $LoginRetryTable->find('first', array('conditions' => array('ip' => $ip)));
 
 		// si on trouve rien OU que il n'a pas encore essayé plus de 10 fois OU que la dernière date du retry est passé depuis 2h
 

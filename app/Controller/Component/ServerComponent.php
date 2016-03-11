@@ -356,9 +356,15 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 		$ModelConfig = ClassRegistry::init('Configuration')->find('first');
 		if(isset($ModelConfig['Configuration']['server_cache'])) {
 			if($ModelConfig['Configuration']['server_cache']) {
-				$cacheFile = ROOT.DS.'tmp'.DS.'cache'.DS.'server.cache';
-				if(file_exists($cacheFile) && strtotime('+1 min', filemtime($cacheFile)) > time() && isset(unserialize(file_get_contents($cacheFile))[$server_id])) {
-					return unserialize(file_get_contents($cacheFile))[$server_id];
+				$cacheFolder = ROOT.DS.'tmp'.DS.'cache'.DS;
+				$cacheFile = $cacheFolder.'server.cache';
+				if(is_array($server_id)) {
+					$server_id_implode = implode('-', $server_id);
+				} else {
+					$server_id_implode = $server_id;
+				}
+				if(file_exists($cacheFile) && strtotime('+1 min', filemtime($cacheFile)) > time() && isset(unserialize(file_get_contents($cacheFile))[$server_id_implode])) {
+					return unserialize(file_get_contents($cacheFile))[$server_id_implode];
 				}
 			}
 		} else {
@@ -379,7 +385,12 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
           }
 
 					if(ClassRegistry::init('Configuration')->find('first')['Configuration']['server_cache']) {
-						@file_put_contents($cacheFile, serialize(array($server_id => $search)));
+						if(!is_dir($cacheFolder)) {
+							mkdir($cacheFolder, 0755, true);
+						}
+						if(is_dir($cacheFolder)) {
+							@file_put_contents($cacheFile, serialize(array($server_id => $search)));
+						}
 					}
 
           return $search;
@@ -402,7 +413,13 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
         }
 
 				if(in_array(true, $online) && ClassRegistry::init('Configuration')->find('first')['Configuration']['server_cache']) {
-					file_put_contents($cacheFile, serialize(array($server_id => $return)));
+					if(!is_dir($cacheFolder)) {
+						mkdir($cacheFolder, 0755, true);
+					}
+					if(is_dir($cacheFolder)) {
+						$server_id_implode = implode('-', $server_id);
+						@file_put_contents($cacheFile, serialize(array($server_id_implode => $return)));
+					}
 				}
 
         return (in_array(true, $online)) ? $return : false;

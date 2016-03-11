@@ -30,10 +30,10 @@ class News extends AppModel {
 
 				if($conditions != "count") {
 					if($conditions == "first") {
-						$result[$index]['News']['author'] = $users[$result[$index]['News']['user_id']];
+						$result[$index]['News']['author'] = (isset($users[$result[$index]['News']['user_id']])) ? $users[$result[$index]['News']['user_id']] : '<null>';
 					} else {
 						foreach ($result[$index] as $key => $value) {
-							$result[$index][$key]['News']['author'] = $users[$result[$index][$key]['News']['user_id']];
+							$result[$index][$key]['News']['author'] = (isset($users[$result[$index][$key]['News']['user_id']])) ? $users[$result[$index][$key]['News']['user_id']] : '<null>';
 						}
 					}
 				}
