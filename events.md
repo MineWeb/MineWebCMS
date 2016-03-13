@@ -37,3 +37,22 @@
 - beforeSendPoints : Appelé avant l'enregistrement de la transaction avec l'utilisateur, le nouveau solde de l'utilisateur, à qui sont transféré les points et combien comme données.
 - beforeEditUser : Appelé avant que les données ne soit enregistrées avec l'ID de l'utilisateur, les données et password_updated comme données.
 - beforeDeleteUser : Avant que l'utilisateur ne soit supprimé avec ses informations comme données.
+
+### Shop
+- onBuy : Appelé à chaque achat avant tout enregistrement avec les articles, le prix total et les infos de l'user comme données.
+- beforeEditItem : Appelé avant que les modifications de l'article ne soit enregistrés avec les infos et l'utilisateur en données.
+- beforeAddItem : Appelé avant que les modifications de l'article ne soit enregistrés avec les infos et l'utilisateur en données.
+- beforeAddCategory : Appelé avant l'enregistrement de la catégorie avec le nom de la catégorie et les infos de l'utilisateur en données.
+- beforeDeleteItem : Appelé avant la suppression de l'article avec l'ID de l'article et les infos de l'utilisateur en données.
+- beforeDeleteCategory : Appelé avant la suppression de la catégorie avec l'ID de la catégorie et les infos de l'utilisateur en données.
+- beforeDeletePaypalOffer : Appelé avant la suppression de l'offre PayPal avec l'ID de l'offre et les infos de l'utilisateur en données.
+- beforeDeleteStarpassOffer : Appelé avant la suppression de l'offre StarPass avec l'ID de l'offre et les infos de l'utilisateur en données.
+- beforeAddVoucher : Appelé avant l'enregistrement du code promo avec les données et les infos de l'utilisateur en données.
+- beforeDeleteVoucher : Appelé avant la suppression du code promo avec l'ID du code et les infos de l'utilisateur en données.
+
+
+### Vote
+- onVote : Appelé pendant le vote (après l'enregistrement du vote, avant les récompenses) avec le choix du moyen de récompense (now/later), le site, la config et les infos de l'utilisateur en données.
+- beforeReceiveRewards : Appelé avant le gain des récompenses avec les récompenses, le type et les infos de l'utilisateur en données.
+- beforeGetWaitingReward : Appelé avant que la récompense en attente ne soit donné avec l'utilisateur en données.
+- beforeResetVotes : Appelé avant que tous les votes ne soit rénitialisés avec les infos de l'utilisateur en données.

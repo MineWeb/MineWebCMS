@@ -232,7 +232,11 @@ class VoterController extends VoteAppController {
                             $this->User->save();
 
                             // on cast l'event
-                            $this->getEventManager()->dispatch(new CakeEvent('onVote', $this));
+                            $event = new CakeEvent('onVote', $this, array('when' => $when, 'website' => $this->Session->read('vote.website'), 'config' => $config['VoteConfiguration'], 'user' => $userData));
+                  					$this->getEventManager()->dispatch($event);
+                  					if($event->isStopped()) {
+                  						return $event->result;
+                  					}
 
 
                             if($when == 'now') { // si c'est maintenant
@@ -281,7 +285,11 @@ class VoterController extends VoteAppController {
 
 				$rewards = unserialize($config['VoteConfiguration']['rewards']); // on récupére la liste
 
-				$this->getEventManager()->dispatch(new CakeEvent('beforeRecieveRewards', $this, $rewards)); // on le passe à l'event
+        $event = new CakeEvent('beforeReceiveRewards', $this, array('rewards' => $id, 'type' => 'all', 'user' => $user));
+        $this->getEventManager()->dispatch($event);
+        if($event->isStopped()) {
+          return $event->result;
+        }
 
 				foreach ($rewards as $key => $value) { // on parcoure les récompenses
 
@@ -329,7 +337,11 @@ class VoterController extends VoteAppController {
 
 			$reward = $this->Util->random($rewards_rand, $probability_all); // on récupère la reward tiré au sort
 
-			$this->getEventManager()->dispatch(new CakeEvent('beforeRecieveRewards', $this, $reward));
+      $event = new CakeEvent('beforeReceiveRewards', $this, array('rewards' => $reward, 'type' => 'random', 'user' => $user));
+      $this->getEventManager()->dispatch($event);
+      if($event->isStopped()) {
+        return $event->result;
+      }
 
 			if($rewards[$reward]['type'] == 'server') { // si c'est une commande serveur
 
@@ -418,6 +430,12 @@ class VoterController extends VoteAppController {
             $this->loadModel('Vote.VoteConfiguration');
             $config = $this->VoteConfiguration->find('first');
 
+            $event = new CakeEvent('beforeGetWaitingReward', $this, array('user' => $this->User->getAllFromCurrentUser()));
+            $this->getEventManager()->dispatch($event);
+            if($event->isStopped()) {
+              return $event->result;
+            }
+
 						$rewardStatus = $this->processRewards($config['VoteConfiguration'], $this->User->getAllFromCurrentUser());
 
 						if(!$rewardStatus['status']) {
@@ -482,13 +500,19 @@ class VoterController extends VoteAppController {
 			$this->autoRender = false;
         if($this->isConnected AND $this->User->isAdmin()) {
 
-            $this->loadModel('Vote.Vote');
-            $this->Vote->deleteAll(array('1' => '1'));
-            $this->loadModel('User');
-            $this->User->updateAll(array('vote' => 0));
-            $this->History->set('RESET', 'vote');
-            $this->Session->setFlash($this->Lang->get('VOTE__RESET_SUCCESS'), 'default.success');
-            $this->redirect(array('controller' => 'voter', 'action' => 'index', 'admin' => true));
+          $event = new CakeEvent('beforeResetVotes', $this, array('user' => $this->User->getAllFromCurrentUser()));
+          $this->getEventManager()->dispatch($event);
+          if($event->isStopped()) {
+            return $event->result;
+          }
+
+          $this->loadModel('Vote.Vote');
+          $this->Vote->deleteAll(array('1' => '1'));
+          $this->loadModel('User');
+          $this->User->updateAll(array('vote' => 0));
+          $this->History->set('RESET', 'vote');
+          $this->Session->setFlash($this->Lang->get('VOTE__RESET_SUCCESS'), 'default.success');
+          $this->redirect(array('controller' => 'voter', 'action' => 'index', 'admin' => true));
         }
     }
 

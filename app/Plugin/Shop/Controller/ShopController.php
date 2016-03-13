@@ -312,7 +312,11 @@ class ShopController extends ShopAppController {
 							if(!in_array(false, $servers_online)) {
 
 								// L'event
-									$this->getEventManager()->dispatch(new CakeEvent('onBuy', $this, array('items' => $items, 'total_price' => $total_price)));
+									$event = new CakeEvent('onBuy', $this, array('items' => $items, 'total_price' => $total_price, 'user' => $this->User->getAllFromCurrentUser()));
+									$this->getEventManager()->dispatch($event);
+									if($event->isStopped()) {
+										return $event->result;
+									}
 
 								// Ajouter au champ used si il a utiliser un voucher
 									if(!empty($voucher_code) && $total_price_before_voucher != $total_price) {
@@ -580,6 +584,13 @@ class ShopController extends ShopAppController {
 
 							$commands = implode('[{+}]', $this->request->data['commands']);
 
+						$this->request->data['commands'] = $commands;
+						$event = new CakeEvent('beforeEditItem', $this, array('data' => $this->request->data, 'user' => $this->User->getAllFromCurrentUser()));
+						$this->getEventManager()->dispatch($event);
+						if($event->isStopped()) {
+							return $event->result;
+						}
+
 						$this->loadModel('Shop.Item');
 						$this->Item->read(null, $this->request->data['id']);
 						$this->Item->set(array(
@@ -662,6 +673,13 @@ class ShopController extends ShopAppController {
 
 						$commands = implode('[{+}]', $this->request->data['commands']);
 
+						$this->request->data['commands'] = $commands;
+						$event = new CakeEvent('beforeAddItem', $this, array('data' => $this->request->data, 'user' => $this->User->getAllFromCurrentUser()));
+						$this->getEventManager()->dispatch($event);
+						if($event->isStopped()) {
+							return $event->result;
+						}
+
 						$this->loadModel('Shop.Item');
 						$this->Item->read(null, null);
 						$this->Item->set(array(
@@ -711,6 +729,13 @@ class ShopController extends ShopAppController {
 				if($this->request->is('post')) {
 					if(!empty($this->request->data['name'])) {
 						$this->loadModel('Shop.Category');
+
+						$event = new CakeEvent('beforeAddCategory', $this, array('category' => $this->request->data['name'], 'user' => $this->User->getAllFromCurrentUser()));
+						$this->getEventManager()->dispatch($event);
+						if($event->isStopped()) {
+							return $event->result;
+						}
+
 						$this->Category->read(null, null);
 						$this->Category->set(array(
 							'name' => $this->request->data['name'],
@@ -740,6 +765,13 @@ class ShopController extends ShopAppController {
 						$this->loadModel('Shop.Item');
 						$find = $this->Item->find('all', array('conditions' => array('id' => $id)));
 						if(!empty($find)) {
+
+							$event = new CakeEvent('beforeDeleteItem', $this, array('item_id' => $id, 'user' => $this->User->getAllFromCurrentUser()));
+							$this->getEventManager()->dispatch($event);
+							if($event->isStopped()) {
+								return $event->result;
+							}
+
 							$this->Item->delete($id);
 							$this->History->set('DELETE_ITEM', 'shop');
 							$this->Session->setFlash($this->Lang->get('SHOP__ITEM_DELETE_SUCCESS'), 'default.success');
@@ -752,6 +784,13 @@ class ShopController extends ShopAppController {
 						$this->loadModel('Shop.Category');
 						$find = $this->Category->find('all', array('conditions' => array('id' => $id)));
 						if(!empty($find)) {
+
+							$event = new CakeEvent('beforeDeleteCategory', $this, array('category_id' => $id, 'user' => $this->User->getAllFromCurrentUser()));
+							$this->getEventManager()->dispatch($event);
+							if($event->isStopped()) {
+								return $event->result;
+							}
+
 							$this->Category->delete($id);
 							$this->History->set('DELETE_CATEGORY', 'shop');
 							$this->Session->setFlash($this->Lang->get('SHOP__CATEGORY_DELETE_SUCCESS'), 'default.success');
@@ -764,6 +803,13 @@ class ShopController extends ShopAppController {
 						$this->loadModel('Shop.Paypal');
 						$find = $this->Paypal->find('all', array('conditions' => array('id' => $id)));
 						if(!empty($find)) {
+
+							$event = new CakeEvent('beforeDeletePaypalOffer', $this, array('offer_id' => $id, 'user' => $this->User->getAllFromCurrentUser()));
+							$this->getEventManager()->dispatch($event);
+							if($event->isStopped()) {
+								return $event->result;
+							}
+
 							$this->Paypal->delete($id);
 							$this->History->set('DELETE_PAYPAL_OFFER', 'shop');
 							$this->Session->setFlash($this->Lang->get('SHOP__PAYPAL_OFFER_DELETE_SUCCESS'), 'default.success');
@@ -776,6 +822,13 @@ class ShopController extends ShopAppController {
 						$this->loadModel('Shop.Starpass');
 						$find = $this->Starpass->find('all', array('conditions' => array('id' => $id)));
 						if(!empty($find)) {
+
+							$event = new CakeEvent('beforeDeleteStarpassOffer', $this, array('offer_id' => $id, 'user' => $this->User->getAllFromCurrentUser()));
+							$this->getEventManager()->dispatch($event);
+							if($event->isStopped()) {
+								return $event->result;
+							}
+
 							$this->Starpass->delete($id);
 							$this->History->set('DELETE_STARPASS_OFFER', 'shop');
 							$this->Session->setFlash($this->Lang->get('SHOP__STARPASS_OFFER_DELETE_SUCCESS'), 'default.success');
@@ -887,6 +940,14 @@ class ShopController extends ShopAppController {
 						if($this->request->data['effective_on'] == "all") {
 							$effective_on_value = array('type' => 'all');
 						}
+
+						$this->request->data['effective_on'] = $effective_on_value;
+						$event = new CakeEvent('beforeAddVoucher', $this, array('data' => $this->request->data, 'user' => $this->User->getAllFromCurrentUser()));
+						$this->getEventManager()->dispatch($event);
+						if($event->isStopped()) {
+							return $event->result;
+						}
+
 						$this->loadModel('Shop.Voucher');
 						$this->Voucher->read(null, null);
 						$this->Voucher->set(array(
@@ -924,6 +985,13 @@ class ShopController extends ShopAppController {
 			$this->autoRender = false;
 			if($this->isConnected AND $this->User->isAdmin()) {
 				if($id != false) {
+
+					$event = new CakeEvent('beforeDeleteVoucher', $this, array('voucher_id' => $id, 'user' => $this->User->getAllFromCurrentUser()));
+					$this->getEventManager()->dispatch($event);
+					if($event->isStopped()) {
+						return $event->result;
+					}
+
 					$this->loadModel('Shop.Voucher');
 					$this->Voucher->delete($id);
 					$this->History->set('DELETE_VOUCHER', 'shop');
