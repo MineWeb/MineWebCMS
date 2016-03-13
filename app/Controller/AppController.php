@@ -161,7 +161,9 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 
 		/* ---- */
 
-		$event = $this->getEventManager()->dispatch(new CakeEvent('requestPage', $this, $this->request->data));
+    $event = new CakeEvent('requestPage', $this, $this->request->data);
+    $this->getEventManager()->dispatch($event);
+
 		if($this->request->is('post')) {
 			$this->getEventManager()->dispatch(new CakeEvent('onPostRequest', $this, $this->request->data));
 		}
@@ -186,6 +188,8 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 			}
 			$this->set(compact('plugins_need_admin'));
 		}
+
+    debug($this->Util->password('motdepasse', 'Eywek'));
 
 		/* === Variables === */
 

@@ -1,11 +1,11 @@
 <?php
 App::uses('CakeEventListener', 'Event');
 
-class VoteRewardsListener implements CakeEventListener {
+class VoteRewardsEventListener implements CakeEventListener {
 
     public function implementedEvents() {
         return array(
-            'requestPage' => 'checkRewardsWaiting',
+            'requestPage' => 'checkRewardsWaiting'
         );
     }
 

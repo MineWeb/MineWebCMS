@@ -32,7 +32,12 @@ class UtilComponent extends Object {
   // Encoder un mot de passe
 
   public function password($password, $username) {
-    $this->controller->getEventManager()->dispatch(new CakeEvent('beforeEncodePassword', $this, array('password' => $password, 'username' => $username)));
+    $event = new CakeEvent('beforeEncodePassword', $this, array('password' => $password, 'username' => $username));
+    $this->controller->getEventManager()->dispatch($event);
+    if($event->isStopped()) {
+      return $event->result;
+    }
+    //var_dump($event);
 
     return hash('sha256', $password);
   }
@@ -120,7 +125,11 @@ class UtilComponent extends Object {
 		$this->Email->emailFormat('html');
     $this->Email->theme($this->controller->Configuration->getKey('theme'));
 
-    $this->controller->getEventManager()->dispatch(new CakeEvent('beforeSendMail', $this, array('emailConfig' => $this->Email, 'message' => $this->message)));
+    $event = new CakeEvent('beforeSendMail', $this, array('emailConfig' => $this->Email, 'message' => $this->message));
+    $this->controller->getEventManager()->dispatch($event);
+    if($event->isStopped()) {
+      return $event->result;
+    }
 
 		return $this->Email->send($this->message);
 
@@ -185,7 +194,11 @@ class UtilComponent extends Object {
   }
 
   public function uploadImage($request, $name) {
-    $this->controller->getEventManager()->dispatch(new CakeEvent('beforeUploadImage', $this, array('request' => $request, 'name' => $name)));
+    $event = new CakeEvent('beforeUploadImage', $this, array('request' => $request, 'name' => $name));
+    $this->controller->getEventManager()->dispatch($event);
+    if($event->isStopped()) {
+      return $event->result;
+    }
 
     $folders = explode('/', $name);
     $folders = end($folders);

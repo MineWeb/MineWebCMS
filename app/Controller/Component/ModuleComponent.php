@@ -57,7 +57,7 @@ class ModuleComponent extends Object {
                 eval('$'.$key.' = \''.addslashes($value).'\';');
                 eval('$'.$key.' = unserialize(stripslashes($'.$key.'));');
             } else {
-                eval('$'.$key.' = '.$value.';');
+                eval('$'.$key.' = "'.$value.'";');
             }
         }
     }
