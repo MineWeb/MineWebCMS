@@ -86,6 +86,12 @@ class NewsController extends AppController {
 			if($this->Permissions->can('COMMENT_NEWS')) {
 				if(!empty($this->request->data['content']) && !empty($this->request->data['news_id'])) {
 
+					$event = new CakeEvent('beforeAddComment', $this, array('content' => $this->request->data['content'], 'news_id' => $this->request->data['news_id'], 'user' => $this->User->getAllFromCurrentUser()));
+			    $this->getEventManager()->dispatch($event);
+			    if($event->isStopped()) {
+			      return $event->result;
+			    }
+
 					$this->loadModel('Comment');
 					$this->Comment->create();
 					$this->Comment->set(array(
@@ -114,6 +120,13 @@ class NewsController extends AppController {
 				$this->loadModel('Like');
 				$already = $this->Like->find('all', array('conditions' => array('news_id' => $this->request->data['id'], 'user_id' => $this->User->getKey('id'))));
 				if(empty($already)) {
+
+					$event = new CakeEvent('beforeLike', $this, array('news_id' => $this->request->data['id'], 'user' => $this->User->getAllFromCurrentUser()));
+			    $this->getEventManager()->dispatch($event);
+			    if($event->isStopped()) {
+			      return $event->result;
+			    }
+
 					$this->Like->read(null, null);
 					$this->Like->set(array('news_id' => $this->request->data['id'], 'user_id' => $this->User->getKey('id')));
 					$this->Like->save();
@@ -129,6 +142,13 @@ class NewsController extends AppController {
 				$this->loadModel('Like');
 				$already = $this->Like->find('all', array('conditions' => array('news_id' => $this->request->data['id'], 'user_id' => $this->User->getKey('id'))));
 				if(!empty($already)) {
+
+					$event = new CakeEvent('beforeDislike', $this, array('news_id' => $this->request->data['id'], 'user' => $this->User->getAllFromCurrentUser()));
+			    $this->getEventManager()->dispatch($event);
+			    if($event->isStopped()) {
+			      return $event->result;
+			    }
+
 					$this->Like->deleteAll(array('Like.news_id' => $this->request->data['id'], 'Like.user_id' => $this->User->getKey('id')));
 				}
 			}
@@ -142,6 +162,13 @@ class NewsController extends AppController {
         $search = $this->Comment->find('all', array('conditions' => array('id' => $this->request->data['id'])));
         if($this->Permissions->can('DELETE_COMMENT') OR $this->Permissions->can('DELETE_HIS_COMMENT') AND $this->User->getKey('pseudo') == $search[0]['Comment']['author']) {
             if($this->request->is('post')) {
+
+							$event = new CakeEvent('beforeDeleteComment', $this, array('comment_id' => $this->request->data['id'], 'news_id' => $search[0]['Comment']['news_id'], 'user' => $this->User->getAllFromCurrentUser()));
+					    $this->getEventManager()->dispatch($event);
+					    if($event->isStopped()) {
+					      return $event->result;
+					    }
+
                 $this->Comment->delete($this->request->data['id']);
                 echo 'true';
             } else {
@@ -168,6 +195,12 @@ class NewsController extends AppController {
 	function admin_delete($id = false) {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NEWS')) {
 			if($id != false) {
+
+				$event = new CakeEvent('beforeDeleteNews', $this, array('news_id' => $id, 'user' => $this->User->getAllFromCurrentUser()));
+				$this->getEventManager()->dispatch($event);
+				if($event->isStopped()) {
+					return $event->result;
+				}
 
 				$this->loadModel('News');
 				if($this->News->delete($id)) {
@@ -205,6 +238,13 @@ class NewsController extends AppController {
 
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['title']) AND !empty($this->request->data['content']) AND !empty($this->request->data['slug'])) {
+
+					$event = new CakeEvent('beforeAddNews', $this, array('news' => $this->request->data, 'user' => $this->User->getAllFromCurrentUser()));
+			    $this->getEventManager()->dispatch($event);
+			    if($event->isStopped()) {
+			      return $event->result;
+			    }
+
 					$this->loadModel('News');
 					$this->News->read(null, null);
 					$this->News->set(array(
@@ -261,6 +301,13 @@ class NewsController extends AppController {
 			if($this->request->is('post')) {
 
 				if(!empty($this->request->data['title']) AND !empty($this->request->data['content']) AND !empty($this->request->data['id']) AND !empty($this->request->data['slug'])) {
+
+					$event = new CakeEvent('beforeEditNews', $this, array('news' => $this->request->data, 'news_id' => $this->request->data['id'], 'user' => $this->User->getAllFromCurrentUser()));
+			    $this->getEventManager()->dispatch($event);
+			    if($event->isStopped()) {
+			      return $event->result;
+			    }
+
 					$this->loadModel('News');
 					$this->News->read(null, $this->request->data['id']);
 					$this->News->set(array(

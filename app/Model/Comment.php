@@ -13,15 +13,4 @@ class Comment extends AppModel {
         'foreignKey' => 'news_id'
     )
   );
-
-	public function afterSave($created, $options = array()) {
-		if($created) {
-			// nouvel enregistrement
-			$this->getEventManager()->dispatch(new CakeEvent('afterAddComment', $this));
-		}
-	}
-
-	public function afterDelete($cascade = true) {
-		$this->getEventManager()->dispatch(new CakeEvent('afterDeleteComment', $this));
-	}
 }

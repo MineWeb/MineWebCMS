@@ -82,8 +82,6 @@ class User extends AppModel {
 					return 'USER__MSG_NOT_CONFIRMED_EMAIL';
 				}
 
-				$this->getEventManager()->dispatch(new CakeEvent('onLogin', $data));
-
 				return array('status' => true, 'session' => $search_user['User']['id']);
 
 			} else {
@@ -126,6 +124,12 @@ class User extends AppModel {
 				$this->Lostpassword = ClassRegistry::init('Lostpassword');
 				$Lostpassword = $this->Lostpassword->find('all', array('conditions' => array('email' => $data['email'])));
 				if(!empty($Lostpassword)) {
+
+					$event = new CakeEvent('beforeResetPassword', $this, array('user_id' => $search['User']['id'], 'new_password' => $data['password']));
+					$this->getEventManager()->dispatch($event);
+					if($event->isStopped()) {
+						return $event->result;
+					}
 
 					$this->Lostpassword->delete($Lostpassword[0]['Lostpassword']['id']);
 
@@ -269,20 +273,6 @@ class User extends AppModel {
     		$this->set(array($key => $value));
     		return $this->save();
   	}
-	}
-
-	public function afterSave($created, $options = array()) {
-		if($created) {
-			// nouvel enregistrement
-			$this->getEventManager()->dispatch(new CakeEvent('afterAddUser', $this));
-		} else {
-			// modification d'un enregistrement
-			$this->getEventManager()->dispatch(new CakeEvent('afterEditUser', $this));
-		}
-	}
-
-	public function afterDelete($cascade = true) {
-		$this->getEventManager()->dispatch(new CakeEvent('afterDeleteUser', $this));
 	}
 
 }

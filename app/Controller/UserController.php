@@ -53,6 +53,12 @@ class UserController extends AppController {
 					$isValid = $this->User->validRegister($this->request->data, $this->Util);
 					if($isValid === true) { // on vérifie si y'a aucune erreur
 
+						$event = new CakeEvent('beforeRegister', $this, array('data' => $this->request->data));
+						$this->getEventManager()->dispatch($event);
+						if($event->isStopped()) {
+							return $event->result;
+						}
+
 						// on enregistre
 						$userSession = $this->User->register($this->request->data, $this->Util);
 
@@ -87,7 +93,12 @@ class UserController extends AppController {
 						if(!$this->Configuration->getKey('confirm_mail_signup_block')) { // si on doit pas bloquer le compte si non confirmé
 							// on prépare la connexion
 							$this->Session->write('user', $userSession);
-							$this->getEventManager()->dispatch(new CakeEvent('onLogin', array($this->request->data, $userSession, 'register' => true)));
+
+							$event = new CakeEvent('onLogin', $this, array('user' => $this->User->getAllFromCurrentUser(), 'register' => true));
+					    $this->getEventManager()->dispatch($event);
+					    if($event->isStopped()) {
+					      return $event->result;
+					    }
 						}
 
 						// on dis que c'est bon
@@ -117,9 +128,13 @@ class UserController extends AppController {
 				$login = $this->User->login($this->request->data, $need_confirmed_email, $this->Util);
 				if(isset($login['status']) && $login['status'] === true) {
 
-					$this->Session->write('user', $login['session']);
+					$event = new CakeEvent('onLogin', $this, array('user' => $this->User->getAllFromCurrentUser()));
+					$this->getEventManager()->dispatch($event);
+					if($event->isStopped()) {
+						return $event->result;
+					}
 
-					$this->getEventManager()->dispatch(new CakeEvent('afterLogin', $this));
+					$this->Session->write('user', $login['session']);
 
 					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN')));
 
@@ -143,6 +158,12 @@ class UserController extends AppController {
 
 			if(!empty($find)) {
 
+				$event = new CakeEvent('beforeConfirmAccount', $this, array('user_id' => $find['User']['id']));
+				$this->getEventManager()->dispatch($event);
+				if($event->isStopped()) {
+					return $event->result;
+				}
+
 				$this->User->read(null, $find['User']['id']);
 				$this->User->set(array('confirmed' => date('Y-m-d H:i:s')));
 				$this->User->save();
@@ -150,7 +171,12 @@ class UserController extends AppController {
 				$userSession = $find['User']['id'];
 
 				$this->Session->write('user', $userSession);
-				$this->getEventManager()->dispatch(new CakeEvent('onLogin', array($find, $userSession, 'confirmEmail' => true)));
+
+				$event = new CakeEvent('onLogin', $this, array('user' => $this->User->getAllFromCurrentUser(), 'confirmAccount' => true));
+				$this->getEventManager()->dispatch($event);
+				if($event->isStopped()) {
+					return $event->result;
+				}
 
 				$this->redirect(array('action' => 'profile'));
 
@@ -178,6 +204,15 @@ class UserController extends AppController {
 						$to = $this->request->data['email'];
 						$subject = $this->Lang->get('USER__PASSWORD_RESET_LINK').' | '.$this->Configuration->getKey('name').'';
 						$message = $this->Lang->email_reset($this->request->data['email'], $search['User']['pseudo'], $key);
+
+
+						$event = new CakeEvent('beforeSendResetPassMail', $this, array('user_id' => $search['User']['id'], 'key' => $key));
+						$this->getEventManager()->dispatch($event);
+						if($event->isStopped()) {
+							return $event->result;
+						}
+
+
 						if($this->Util->prepareMail($to, $subject, $message)->sendMail()) {
 							$this->Lostpassword->create();
 							$this->Lostpassword->set(array(
@@ -228,8 +263,15 @@ class UserController extends AppController {
 
 	function logout() {
 		$this->autoRender = false;
+
+		$event = new CakeEvent('onLogout', $this, array('session' => $this->Session->read('user')));
+		$this->getEventManager()->dispatch($event);
+		if($event->isStopped()) {
+			return $event->result;
+		}
+
 		$this->Session->delete('user');
-     	$this->redirect($this->referer());
+    $this->redirect($this->referer());
 	}
 
 	function uploadSkin() {
@@ -379,6 +421,13 @@ class UserController extends AppController {
 					$password = $this->Util->password($this->request->data['password'], $this->User->getKey('pseudo'));
 					$password_confirmation = $this->Util->password($this->request->data['password_confirmation'], $this->User->getKey('pseudo'));
 					if($password == $password_confirmation) {
+
+						$event = new CakeEvent('beforeUpdatePassword', $this, array('user' => $this->User->getAllFromCurrentUser(), 'new_password' => $this->request->data['password']));
+						$this->getEventManager()->dispatch($event);
+						if($event->isStopped()) {
+							return $event->result;
+						}
+
 						$this->User->setKey('password', $password);
 						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__PASSWORD_UPDATE_SUCCESS')));
 					} else {
@@ -402,6 +451,13 @@ class UserController extends AppController {
 				if(!empty($this->request->data['email']) AND !empty($this->request->data['email_confirmation'])) {
 					if($this->request->data['email'] == $this->request->data['email_confirmation']) {
 						if(filter_var($this->request->data['email'], FILTER_VALIDATE_EMAIL)) {
+
+							$event = new CakeEvent('beforeUpdateEmail', $this, array('user' => $this->User->getAllFromCurrentUser(), 'new_email' => $this->request->data['email']));
+							$this->getEventManager()->dispatch($event);
+							if($event->isStopped()) {
+								return $event->result;
+							}
+
 							$this->User->setKey('email', $this->request->data['email']);
 							echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EMAIL_UPDATE_SUCCESS')));
 						} else {
@@ -431,6 +487,13 @@ class UserController extends AppController {
 						if($how > 0) {
 							$money_user = $this->User->getKey('money') - $how;
 							if($money_user >= 0) {
+
+								$event = new CakeEvent('beforeSendPoints', $this, array('user' => $this->User->getAllFromCurrentUser(), 'new_user_sold' => $money_user, 'to' => $this->request->data['to'], 'how' => $this->request->data['how']));
+								$this->getEventManager()->dispatch($event);
+								if($event->isStopped()) {
+									return $event->result;
+								}
+
 								$this->User->setKey('money', $money_user);
 								$to_money = $this->User->getFromUser('money', $this->request->data['to']) + $how;
 								$this->User->setToUser('money', $to_money, $this->request->data['to']);
@@ -593,6 +656,12 @@ class UserController extends AppController {
 
 			if(!empty($find)) {
 
+				$event = new CakeEvent('beforeConfirmAccount', $this, array('user_id' => $find['User']['id'], 'manual' => true));
+				$this->getEventManager()->dispatch($event);
+				if($event->isStopped()) {
+					return $event->result;
+				}
+
 				$this->User->read(null, $find['User']['id']);
 				$this->User->set(array('confirmed' => date('Y-m-d H:i:s')));
 				$this->User->save();
@@ -636,6 +705,9 @@ class UserController extends AppController {
 
 					if(!empty($this->request->data['password'])) {
 						$data['password'] = $this->Util->password($this->request->data['password'], $findUser['User']['pseudo']);
+						$password_updated = true;
+					} else {
+						$password_updated = false;
 					}
 
 					if($this->EyPlugin->isInstalled('eywek.shop.1')) {
@@ -644,6 +716,12 @@ class UserController extends AppController {
 
 					if($this->EyPlugin->isInstalled('eywek.vote.3')) {
 						$data['vote'] = $this->request->data['vote'];
+					}
+
+					$event = new CakeEvent('beforeEditUser', $this, array('user_id' => $findUser['User']['id'], 'data' => $data, 'password_updated' => $password_updated));
+					$this->getEventManager()->dispatch($event);
+					if($event->isStopped()) {
+						return $event->result;
 					}
 
 					$this->User->read(null, $findUser['User']['id']);
@@ -671,6 +749,13 @@ class UserController extends AppController {
 				$this->loadModel('User');
 				$find = $this->User->find('all', array('conditions' => array('id' => $id)));
 				if(!empty($find)) {
+
+					$event = new CakeEvent('beforeDeleteUser', $this, array('user' => $find['User']));
+					$this->getEventManager()->dispatch($event);
+					if($event->isStopped()) {
+						return $event->result;
+					}
+
 					$this->User->delete($id);
 					$this->History->set('DELETE_USER', 'user');
 					$this->Session->setFlash($this->Lang->get('USER__DELETE_SUCCESS'), 'default.success');
