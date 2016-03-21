@@ -22,6 +22,7 @@
 class DiscountVoucherComponent extends Object {
 
   static private $items;
+  static private $categories;
 
   private $controller;
 
@@ -65,6 +66,17 @@ class DiscountVoucherComponent extends Object {
     return self::$items[$id];
   }
 
+  function getCategoryNameById($id) {
+    if(empty(self::$items)) {
+      $this->Category = ClassRegistry::init('Shop.Category');
+      $categories = $this->Category->find('all');
+      foreach ($categories as $key => $value) {
+        self::$categories[$value['Category']['id']] = $value['Category']['name'];
+      }
+    }
+    return self::$categories[$id];
+  }
+
   function get_vouchers() { // affiche dans une alert info les promotions en cours si elle doivent être affichées
     $this->Lang = $this->controller->Lang;
     $this->Configuration = $this->controller->Configuration;
@@ -85,10 +97,10 @@ class DiscountVoucherComponent extends Object {
 
               if(count($voucher['effective_on']['value']) == 1) { // combien de catégories concernée ?
                 $langMSG = 'SHOP__VOUCHER_MSG_ONE_CATEGORY'; // plusieurs
-                $langVars['{CATEGORY}'] = '"'.$voucher['effective_on']['value'][0].'"';
+                $langVars['{CATEGORY}'] = '"'.$this->getCategoryNameById($voucher['effective_on']['value'][0]).'"';
               } else {
                 $langMSG = 'SHOP__VOUCHER_MSG_MANY_CATEGORIES'; // plusieurs
-                $langVars['{CATEGORIES}'] = '"'.implode('", "', $voucher['effective_on']['value']).'"';
+                $langVars['{CATEGORIES}'] = '"'.implode('", "', $this->getCategoryNameById($voucher['effective_on']['value'])).'"';
               }
 
             } elseif ($voucher['effective_on']['type'] == 'items') { // si cela concerne un article
