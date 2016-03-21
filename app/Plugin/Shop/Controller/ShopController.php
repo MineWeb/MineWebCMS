@@ -308,8 +308,23 @@ class ShopController extends ShopAppController {
 						// Traitement du prix avec le code promotionnel
 							$total_price_before_voucher = $total_price;
 							/*
-									!!!!!	PROMO ICI  !!!!!
+								On parcours tous les articles si y'a un code promo
 							*/
+							if(!empty($this->request->data['code'])) {
+								$i = 0;
+								foreach ($items as $key => $value) {
+
+									$getVoucherPrice = $this->DiscountVoucher->getNewPrice($value['id'], $this->request->data['code']);
+
+									if($getVoucherPrice['status']) {
+										$total_price = ($i==0) ? $getVoucherPrice['price'] : $total_price+$getVoucherPrice['price'];
+									} else {
+										$total_price = $total_price; // erreur
+									}
+
+									$i++;
+								}
+							}
 
 						// On va vérifier que l'utilisateur a assez d'argent
 						if($this->User->getKey('money') >= $total_price) {

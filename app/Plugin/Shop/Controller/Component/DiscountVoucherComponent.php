@@ -67,7 +67,7 @@ class DiscountVoucherComponent extends Object {
   }
 
   function getCategoryNameById($id) {
-    if(empty(self::$items)) {
+    if(empty(self::$categories)) {
       $this->Category = ClassRegistry::init('Shop.Category');
       $categories = $this->Category->find('all');
       foreach ($categories as $key => $value) {
@@ -100,7 +100,12 @@ class DiscountVoucherComponent extends Object {
                 $langVars['{CATEGORY}'] = '"'.$this->getCategoryNameById($voucher['effective_on']['value'][0]).'"';
               } else {
                 $langMSG = 'SHOP__VOUCHER_MSG_MANY_CATEGORIES'; // plusieurs
-                $langVars['{CATEGORIES}'] = '"'.implode('", "', $this->getCategoryNameById($voucher['effective_on']['value'])).'"';
+
+                foreach ($voucher['effective_on']['value'] as $key => $value) {
+                  $voucher['effective_on']['value'][$key] = $this->getCategoryNameById($value);
+                }
+
+                $langVars['{CATEGORIES}'] = '"'.implode('", "', $voucher['effective_on']['value']).'"';
               }
 
             } elseif ($voucher['effective_on']['type'] == 'items') { // si cela concerne un article
