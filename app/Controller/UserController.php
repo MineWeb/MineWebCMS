@@ -53,7 +53,9 @@ class UserController extends AppController {
 					$isValid = $this->User->validRegister($this->request->data, $this->Util);
 					if($isValid === true) { // on vérifie si y'a aucune erreur
 
-						$event = new CakeEvent('beforeRegister', $this, array('data' => $this->request->data));
+						$eventData = $this->request->data;
+						$eventData['password'] = $this->Util->password($this->request->data['password'], $this->request->data['pseudo']);
+						$event = new CakeEvent('beforeRegister', $this, array('data' => $eventData));
 						$this->getEventManager()->dispatch($event);
 						if($event->isStopped()) {
 							return $event->result;

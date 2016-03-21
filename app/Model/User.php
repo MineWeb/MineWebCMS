@@ -125,15 +125,15 @@ class User extends AppModel {
 				$Lostpassword = $this->Lostpassword->find('all', array('conditions' => array('email' => $data['email'])));
 				if(!empty($Lostpassword)) {
 
-					$event = new CakeEvent('beforeResetPassword', $this, array('user_id' => $search['User']['id'], 'new_password' => $data['password']));
+					$data_to_save['password'] = $UtilComponent->password($data['password'], $search['0']['User']['pseudo']);
+
+					$event = new CakeEvent('beforeResetPassword', $this, array('user_id' => $search['User']['id'], 'new_password' => $data_to_save['password']));
 					$this->getEventManager()->dispatch($event);
 					if($event->isStopped()) {
 						return $event->result;
 					}
 
 					$this->Lostpassword->delete($Lostpassword[0]['Lostpassword']['id']);
-
-					$data_to_save['password'] = $UtilComponent->password($data['password'], $search['0']['User']['pseudo']);
 
 					$this->read(null, $search['0']['User']['id']);
 					$this->set($data_to_save);

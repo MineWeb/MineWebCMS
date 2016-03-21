@@ -189,8 +189,6 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 			$this->set(compact('plugins_need_admin'));
 		}
 
-    debug($this->Util->password('motdepasse', 'Eywek'));
-
 		/* === Variables === */
 
 			// Navbar
@@ -322,7 +320,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 
   	$csrfToken = $this->Session->read('_Token')['key'];
     if(empty($csrfToken)) {
-      $this->Session->renew();
+      $this->Security->generateToken($this->request);
       $csrfToken = $this->Session->read('_Token')['key'];
     }
 
