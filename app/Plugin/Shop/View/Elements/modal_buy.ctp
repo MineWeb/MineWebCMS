@@ -16,6 +16,6 @@
   </div>
   [/IF MULTIPLE_BUY]
   [IF ADD_TO_CART]
-  <button type="button" class="btn btn-default add-to-cart" data-item-id="{ITEM_ID}" id="btn-buy">{LANG-SHOP__BUY_ADD_TO_CART}</button>
+  <button type="button" class="btn btn-default add-to-cart" data-item-id="{ITEM_ID}" id="btn-cart">{LANG-SHOP__BUY_ADD_TO_CART}</button>
   [/IF ADD_TO_CART]
   <button type="button" class="btn btn-primary buy-item" data-item-id="{ITEM_ID}" id="btn-buy">{LANG-SHOP__BUY}</button>

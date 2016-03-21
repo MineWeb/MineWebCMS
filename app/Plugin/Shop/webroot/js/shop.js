@@ -88,6 +88,9 @@ $('.display-item').click(function(e) {
 
           $('input[id="code-voucher"]').keyup(function(e) {
 
+            $("#buy-modal .modal-footer").find('#total-price').html('<small>'+LOADING_MSG.substr(0, 4)+'...</small>');
+            $("#buy-modal .modal-footer").find('#btn-buy').addClass('disabled').attr('disabled', true);
+
             var code = $(this).val();
             var quantity = $("input[name='quantity']").val();
 
@@ -97,11 +100,16 @@ $('.display-item').click(function(e) {
                 if(data.price !== undefined) {
                   $("#buy-modal .modal-body").find('#total-price').html(data.price);
                 }
+
+                $("#buy-modal .modal-footer").find('#btn-buy').removeClass('disabled').attr('disabled', false);
               });
 
             } else { // y'a pas de code
               var new_price = item_infos['price'] * quantity;
               $("#buy-modal .modal-body").find('#total-price').html(new_price);
+
+              $("#buy-modal .modal-footer").find('#btn-buy').removeClass('disabled').attr('disabled', false);
+
             }
           });
 
@@ -254,7 +262,7 @@ $(window).load(function() {
 
     var post = {};
     post['items'] = items;
-    post['code'] = $('#cart-voucher').val();;
+    post['code'] = $('#cart-voucher').val();
     post["data[_Token][key]"] = CSRF_TOKEN;
 
     $.ajax({
@@ -393,4 +401,53 @@ function refreshCart() {
     newCart = undefined;
 
   });
+
+  // on gère le code promo
+  $("input[name='cart-voucher']").unbind('keyup');
+  $("input[name='cart-voucher']").on('keyup', function(e) {
+
+    var code = $('input[name="cart-voucher"]').val();
+
+    $("#cart-modal .modal-footer").find('#cart-total-price').html('<small>'+LOADING_MSG+'...</small>');
+    $("#cart-modal .modal-footer").find('#buy-cart').addClass('disabled').attr('disabled', true);
+
+    if(code.length == 0) { //si y'a pas de code promo
+
+      var total_price = 0;
+      var cartContent = $.cookie('cart');
+      for (var key in cartContent) {
+        i++;
+        total_price += cartContent[key]['item_price'] * cartContent[key]['quantity'];
+      }
+
+      $("#cart-modal .modal-footer").find('#buy-cart').removeClass('disabled').attr('disabled', false);
+
+      $("#cart-modal .modal-footer").find('#cart-total-price').html(total_price);
+    } else { // si y'a un code promo - on re-calcule le prix selon la quantité
+
+      var cartContent = $.cookie('cart');
+      var ids = '';
+      var quantities = '';
+      var i = 0;
+      for (var key in cartContent) {
+        i++;
+        ids += cartContent[key]['item_id'];
+        quantities += cartContent[key]['quantity'];
+        if(i < cartContent.length) {
+          ids += ',';
+          quantities += ',';
+        }
+      }
+
+      $.get(VOUCHER_CHECK_URL+code+'/'+ids+'/'+quantities, function(data) {
+        if(data.price !== undefined) {
+          $("#cart-modal .modal-footer").find('#cart-total-price').html(data.price);
+        }
+        $("#cart-modal .modal-footer").find('#buy-cart').removeClass('disabled').attr('disabled', false);
+      });
+
+    }
+
+  });
+
 }

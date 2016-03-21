@@ -169,42 +169,51 @@ class ShopController extends ShopAppController {
 	* ======== Achat d'un article depuis le modal ===========
 	*/
 
-		public function checkVoucher($code = null, $item_id = null, $quantity = 1) {
+		public function checkVoucher($code = null, $items_id = null, $quantities = 1) {
 			$this->autoRender = false;
 			$this->response->type('json');
 
-			if(!empty($code) && !empty($item_id)) {
+			if(!empty($code) && !empty($items_id)) {
 
 				$this->loadModel('Shop.Item');
-				$findItem = $this->Item->find('first', array('conditions' => array('id' => $item_id)));
 
-				if(!empty($findItem)) {
+				$items_id = explode(',', $items_id);
+				$quantities = explode(',', $quantities);
+				$items = array_combine($items_id, $quantities);
+				$total_price = 0;
+				$new_price = 0;
 
-					$total_price = $findItem['Item']['price']*$quantity;
-					$new_price = 0;
+				foreach ($items as $item_id => $quantity) {
 
-					$i = 0;
-					while ($i < $quantity) {
+					$findItem = $this->Item->find('first', array('conditions' => array('id' => $item_id)));
 
-						$getVoucherPrice = $this->DiscountVoucher->getNewPrice($findItem['Item']['id'], $code);
+					if(!empty($findItem)) {
 
-						if($getVoucherPrice['status']) {
-							$new_price = $new_price+$getVoucherPrice['price'];
-						} else {
-							$new_price = $new_price+$findItem['Item']['price']; // erreur
+						$total_price += $findItem['Item']['price']*$quantity;
+
+						$i = 0;
+						while ($i < $quantity) {
+
+							$getVoucherPrice = $this->DiscountVoucher->getNewPrice($findItem['Item']['id'], $code);
+
+							if($getVoucherPrice['status']) {
+								$new_price = $new_price+$getVoucherPrice['price'];
+							} else {
+								$new_price = $new_price+$findItem['Item']['price']; // erreur
+							}
+
+							$i++;
 						}
 
-						$i++;
+
+						if($new_price == 0) {
+							$new_price = $total_price;
+						}
+
 					}
-
-
-					if($new_price == 0) {
-						$new_price = $total_price;
-					}
-
-					echo json_encode(array('price' => $new_price));
-
 				}
+
+				echo json_encode(array('price' => $new_price));
 
 			}
 
