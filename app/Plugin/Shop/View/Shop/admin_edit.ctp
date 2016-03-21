@@ -57,6 +57,13 @@
             </div>
 
             <div class="form-group">
+              <div class="checkbox">
+                <input name="cart" type="checkbox"<?= (isset($item['cart']) && $item['cart']) ? ' checked=""' : '' ?>>
+                <label><?= $Lang->get('SHOP__ITEM_CART') ?></label>
+              </div>
+            </div>
+
+            <div class="form-group">
               <label><?= $Lang->get('SHOP__ITEM_IMG_URL') ?></label>
               <input name="img_url" class="form-control" value="<?= $item['img_url'] ?>" type="text">
             </div>

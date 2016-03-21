@@ -112,6 +112,8 @@
   "SHOP__ITEM_CHECKBOX_DISPLAY":"Afficher l'article sur la boutique",
   "SHOP__ITEM_MULTIPLE_BUY":"Autoriser que cet article soit acheté plusieurs fois (en 1 seul achat)",
   "SHOP__ITEM_CANT_BUY_MULTIPLE":"Vous ne pouvez pas acheter cet article (<i>{ITEM_NAME}</i>) plus d'une fois",
+  "SHOP__ITEM_CART":"Autoriser l'ajout au panier de cet article",
+  "SHOP__ITEM_CANT_ADDED_TO_CART":"Vous ne pouvez acheter l'article <i>{ITEM_NAME}</i> avec un panier.",
   "SHOP__ITEM_BROADCAST_GLOBAL":"Effectuer la commande globale lors de l'achat de cet article",
 
   "SHOP__CATEGORIES": "Cat\u00e9gories",

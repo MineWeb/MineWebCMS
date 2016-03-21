@@ -97,7 +97,7 @@ class ShopController extends ShopAppController {
 				$affich_server = (!empty($search_item[0]['Item']['servers']) && $search_item[0]['Item']['display_server']) ? true : false;
 				$multiple_buy = (!empty($search_item[0]['Item']['multiple_buy']) && $search_item[0]['Item']['multiple_buy']) ? true : false;
 
-				$add_to_cart = true;
+				$add_to_cart = (!empty($search_item[0]['Item']['cart']) && $search_item[0]['Item']['cart']) ? true : false;
 
 				//On récupére l'element
 				if(file_exists(APP.DS.'View'.DS.'Themed'.DS.$this->Configuration->getKey('theme').DS.'Elements'.DS.'modal_buy.ctp')) {
@@ -241,6 +241,11 @@ class ShopController extends ShopAppController {
 
 										if(isset($value['quantity']) && $value['quantity'] > 1 && (empty($findItem['Item']['multiple_buy']) || !$findItem['Item']['multiple_buy'])) {
 											echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__ITEM_CANT_BUY_MULTIPLE', array('{ITEM_NAME}' => $findItem['Item']['name']))));
+											return;
+										}
+
+										if(count($this->request->data['items']) > 1 && (empty($findItem['Item']['multiple_buy']) || $findItem['Item']['multiple_buy'] == 0)) {
+											echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__ITEM_CANT_ADDED_TO_CART', array('{ITEM_NAME}' => $findItem['Item']['name']))));
 											return;
 										}
 
@@ -608,7 +613,8 @@ class ShopController extends ShopAppController {
 							'need_connect' => $this->request->data['need_connect'],
 							'display' => $this->request->data['display'],
 							'multiple_buy' => $this->request->data['multiple_buy'],
-							'broadcast_global' => $this->request->data['broadcast_global']
+							'broadcast_global' => $this->request->data['broadcast_global'],
+							'cart' => $this->request->data['cart']
 						));
 						$this->Item->save();
 						$this->Session->setFlash($this->Lang->get('SHOP__ITEM_EDIT_SUCCESS'), 'default.success');
@@ -697,7 +703,8 @@ class ShopController extends ShopAppController {
 							'need_connect' => $this->request->data['need_connect'],
 							'display' => $this->request->data['display'],
 							'multiple_buy' => $this->request->data['multiple_buy'],
-							'broadcast_global' => $this->request->data['broadcast_global']
+							'broadcast_global' => $this->request->data['broadcast_global'],
+							'cart' => $this->request->data['broadcast_global']
 						));
 						$this->Item->save();
 						$this->History->set('ADD_ITEM', 'shop');

@@ -686,7 +686,7 @@ class UserController extends AppController {
 		if($this->isConnected && $this->User->isAdmin()) {
 			if($this->request->is('post')) {
 				$this->loadModel('User');
-				if(!empty($this->request->data['id']) && !empty($this->request->data['email']) && !empty($this->request->data['rank'])) {
+				if(!empty($this->request->data['id']) && !empty($this->request->data['email']) && (!empty($this->request->data['rank']) || $this->request->data['rank'] == 0)) {
 
 					$findUser = $this->User->find('first', array('conditions' => array('id' => intval($this->request->data['id']))));
 
