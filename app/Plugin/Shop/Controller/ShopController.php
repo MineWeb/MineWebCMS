@@ -94,8 +94,51 @@ class ShopController extends ShopAppController {
 					}
 				}
 
+				$item_price = $search_item['0']['Item']['price'];
+
 				$affich_server = (!empty($search_item[0]['Item']['servers']) && $search_item[0]['Item']['display_server']) ? true : false;
 				$multiple_buy = (!empty($search_item[0]['Item']['multiple_buy']) && $search_item[0]['Item']['multiple_buy']) ? true : false;
+				$reductional_items_func = (!empty($search_item[0]['Item']['reductional_items']) && !is_bool(unserialize($search_item[0]['Item']['reductional_items']))) ? true : false;
+				$reductional_items = false;
+				if($reductional_items_func) {
+
+					$this->loadModel('History');
+
+					$reductional_items_list = unserialize($search_item[0]['Item']['reductional_items']);
+					$reductional_items_list_display = array();
+					// on parcours tous les articles pour voir si ils ont été achetés
+						$reductional_items = true; // de base on dis que c'est okay
+						$reduction = 0; // 0 de réduction
+					foreach ($reductional_items_list as $key => $value) {
+
+						$findItem = $this->Item->find('first', array('conditions' => array('id' => $value)));
+						if(empty($findItem)) {
+							$reductional_items = false;
+							break;
+						}
+
+						$findHistory = $this->History->find('first', array('conditions' => array('action' => 'BUY_ITEM', 'other' => $findItem['Item']['name'])));
+						if(empty($findHistory)) {
+							$reductional_items = false;
+							break;
+						}
+
+						$reduction =+ $findItem['Item']['price'];
+						$reductional_items_list_display[] = $findItem['Item']['name'];
+
+						unset($findItem);
+
+					}
+
+					if($reductional_items) {
+						$item_price = $item_price - $reduction;
+
+						$reduction = $reduction.' '.$this->Configuration->getMoneyName();
+						$reductional_items_list = '<i>'.implode('</i>, <i>', $reductional_items_list_display).'</i>';
+						$reductional_items_list = $this->Lang->get('SHOP__ITEM_REDUCTIONAL_ITEMS_LIST', array('{ITEMS_LIST}' => $reductional_items_list, '{REDUCTION}' => $reduction));
+
+					}
+				}
 
 				$add_to_cart = (!empty($search_item[0]['Item']['cart']) && $search_item[0]['Item']['cart']) ? true : false;
 
@@ -127,7 +170,7 @@ class ShopController extends ShopAppController {
 					'{ITEM_NAME}' => $search_item['0']['Item']['name'],
 					'{ITEM_DESCRIPTION}' => nl2br($search_item['0']['Item']['description']),
 					'{ITEM_SERVERS}' => $servers,
-					'{ITEM_PRICE}' => $search_item['0']['Item']['price'],
+					'{ITEM_PRICE}' => $item_price,
 					'{SITE_MONEY}' => $money,
 					'{ITEM_ID}' => $search_item['0']['Item']['id']
 				);
@@ -154,8 +197,18 @@ class ShopController extends ShopAppController {
 				$search_add_to_cart = '[IF ADD_TO_CART]'.$element_explode_for_add_to_cart.'[/IF ADD_TO_CART]';
 				$element_content = ($add_to_cart) ? str_replace($search_add_to_cart, $element_explode_for_add_to_cart, $element_content) : str_replace($search_add_to_cart, '', $element_content);
 
+				// La condition d'affichage du message de réduction de prix si articles achetés
+				$element_explode_for_reductional_items = explode('[IF REDUCTIONAL_ITEMS]', $element_content);
+				$element_explode_for_reductional_items = explode('[/IF REDUCTIONAL_ITEMS]', $element_explode_for_reductional_items[1])[0];
 
-				echo json_encode(array('statut' => true, 'html' => $element_content, 'item_infos' => array('id' => $search_item['0']['Item']['id'], 'name' => $search_item['0']['Item']['name'], 'price' => $search_item['0']['Item']['price'])));
+				$search_reductional_items = '[IF REDUCTIONAL_ITEMS]'.$element_explode_for_reductional_items.'[/IF REDUCTIONAL_ITEMS]';
+				$element_content = ($reductional_items) ? str_replace($search_reductional_items, $element_explode_for_reductional_items, $element_content) : str_replace($search_reductional_items, '', $element_content);
+				if($reductional_items) {
+					$element_content = str_replace('{REDUCTIONAL_ITEMS_LIST}', $reductional_items_list, $element_content);
+				}
+
+
+				echo json_encode(array('statut' => true, 'html' => $element_content, 'item_infos' => array('id' => $search_item['0']['Item']['id'], 'name' => $search_item['0']['Item']['name'], 'price' => $item_price)));
 
 			} else {
 				echo json_encode(array('statut' => false, 'html' => '<div class="alert alert-danger">'.$this->Lang->get('USER__ERROR_MUST_BE_LOGGED').'</div>')); // si il n'est pas connecté

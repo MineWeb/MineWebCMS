@@ -121,6 +121,7 @@
   "SHOP__ITEM_PREREQUISITES_TYPE_2":"Oui, le joueur doit avoir acheté au moins un des articles suivants",
   "SHOP__ITEM_PREREQUISITES_ITEMS":"Articles disponibles",
   "SHOP__ITEM_CHECKBOX_REDUCTIONAL_ITEMS":"Activer la réduction du prix si un ou plusieurs des articles suivant est/sont acheté(s)",
+  "SHOP__ITEM_REDUCTIONAL_ITEMS_LIST":"Une réduction est appliqué sur cet article ({REDUCTION}) car vous avez déjà acheté les articles suivants {ITEMS_LIST}.",
 
   "SHOP__CATEGORIES": "Cat\u00e9gories",
   "SHOP__CATEGORY": "Cat\u00e9gorie",
