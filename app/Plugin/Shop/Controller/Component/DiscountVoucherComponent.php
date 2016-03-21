@@ -147,7 +147,7 @@ class DiscountVoucherComponent extends Object {
     }
   }
 
-  private $vouchersUsed = array();
+  public $vouchersUsed = array();
 
   private function checkIfAlreadyUsed($voucherID, $limit, $usedBy) {
 
@@ -158,12 +158,12 @@ class DiscountVoucherComponent extends Object {
       $this->User = ClassRegistry::init('User');
       $user_id = $this->User->getKey('id');
 
-      if(!empty($usedBy)) { // Déjà utilisé
+      if(!empty($usedBy) || isset($this->vouchersUsed[$voucherID])) { // Déjà utilisé ou déjà check
 
-        if(!isset($vouchersUsed[$voucherID][$user_id])) {
+        if(!isset($this->vouchersUsed[$voucherID][$user_id])) {
           $how_used = array_count_values($usedBy);
         } else {
-          $how_used = intval($vouchersUsed[$voucherID][$user_id]) + 1;// On rajoute 1 à chaque fois (si plusieurs check pour la quantité)
+          $how_used[$user_id] = intval($this->vouchersUsed[$voucherID][$user_id]) + 1;// On rajoute 1 à chaque fois (si plusieurs check pour la quantité)
         }
 
         if(isset($how_used[$user_id])) { // Déjà utilisé
@@ -171,7 +171,7 @@ class DiscountVoucherComponent extends Object {
           $how_used = $how_used[$user_id];
           if($how_used < $limit) {
 
-            $vouchersUsed[$voucherID][$user_id] = $how_used;
+            $this->vouchersUsed[$voucherID][$user_id] = $how_used;
             return array(true, $how_used);
 
           } else {
@@ -179,10 +179,12 @@ class DiscountVoucherComponent extends Object {
           }
 
         } else { // Jamais utilisé
+          $this->vouchersUsed[$voucherID][$user_id] = 0;
           return array(true, 0);
         }
 
       } else {  //Personne l'a utilisé
+        $this->vouchersUsed[$voucherID][$user_id] = 0;
         return array(true, 0);
       }
 
@@ -270,13 +272,17 @@ class DiscountVoucherComponent extends Object {
     }
   }
 
-  function set_used($user_id, $code) {
+  function set_used($user_id, $code, $voucher_used_count = 1) {
     $this->Voucher = ClassRegistry::init('Shop.Voucher');
     $search_vouchers = $this->Voucher->find('all', array('conditions' => array('code' => $code)));
     if(!empty($search_vouchers)) {
 
       $used = unserialize($search_vouchers[0]['Voucher']['used']);
-      $used[] = $user_id;
+      $i = 0;
+      while ($i < $voucher_used_count) {
+        $used[] = $user_id;
+        $i++;
+      }
       $used = serialize($used);
 
       $this->Voucher->read(null, $search_vouchers[0]['Voucher']['id']);

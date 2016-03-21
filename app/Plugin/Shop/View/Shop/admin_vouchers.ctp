@@ -63,7 +63,6 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                 <tr>
                   <th><?= $Lang->get('SHOP__VOUCHER_CODE') ?></th>
                   <th>Pseudo</th>
-                  <th><?= $Lang->get('SHOP__ITEM') ?></th>
                   <th><?= $Lang->get('SHOP__VOUCHER_REDUCTION', array('{MONEY_NAME}' => $Configuration->getMoneyName())) ?></th>
                   <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
                 </tr>
@@ -73,7 +72,6 @@ $this->DiscountVoucher = new DiscountVoucherComponent;
                   <tr>
                     <td><?= $value['VouchersHistory']['code'] ?></td>
                     <td><?= (isset($usersByID[$value['VouchersHistory']['user_id']])) ? $usersByID[$value['VouchersHistory']['user_id']] : $value['VouchersHistory']['user_id'] ?></td>
-                    <td><?= (isset($itemsByID[$value['VouchersHistory']['item_id']])) ? $itemsByID[$value['VouchersHistory']['item_id']] : $value['VouchersHistory']['item_id'] ?></td>
                     <td><?= $value['VouchersHistory']['reduction'] ?> <?= $Configuration->getMoneyName() ?></td>
                     <td><?= $Lang->date($value['VouchersHistory']['created']) ?></td>
                   </tr>

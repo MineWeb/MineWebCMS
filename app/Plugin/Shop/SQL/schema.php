@@ -1,4 +1,4 @@
-<?php 
+<?php
 class ShopAppSchema extends CakeSchema {
 
 	public $file = 'schema.php';
@@ -190,7 +190,6 @@ class ShopAppSchema extends CakeSchema {
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
 		'code' => array('type' => 'string', 'null' => false, 'length' => 20, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'user_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
-		'item_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
 		'reduction' => array('type' => 'string', 'null' => false, 'length' => 3, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'indexes' => array(
