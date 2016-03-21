@@ -169,7 +169,7 @@ class ShopController extends ShopAppController {
 	* ======== Achat d'un article depuis le modal ===========
 	*/
 
-		public function checkVoucher($code = null, $item_id = null) {
+		public function checkVoucher($code = null, $item_id = null, $quantity = 1) {
 			$this->autoRender = false;
 			$this->response->type('json');
 
@@ -180,12 +180,21 @@ class ShopController extends ShopAppController {
 
 				if(!empty($findItem)) {
 
-					$new_price = $voucher_reduc = $this->DiscountVoucher->get_new_price(
-						$findItem['Item']['price'],
-						$findItem['Item']['category'],
-						$findItem['Item']['id'],
-						$code
-					);
+					$new_price = $findItem['Item']['price']*$quantity;
+
+					$i = 0;
+					while ($i < $quantity) {
+
+						$getVoucherPrice = $this->DiscountVoucher->getNewPrice($findItem['Item']['id'], $code);
+
+						if($getVoucherPrice['status']) {
+							$new_price = ($i==0) ? $getVoucherPrice['price'] : $new_price+$getVoucherPrice['price'];
+						} else {
+							$new_price = $new_price; // erreur
+						}
+
+						$i++;
+					}
 
 					echo json_encode(array('price' => $new_price));
 
@@ -911,7 +920,7 @@ class ShopController extends ShopAppController {
 				$this->loadModel('Shop.Category');
 				$search_categories = $this->Category->find('all', array('fields' => array('name', 'id')));
 				foreach ($search_categories as $v) {
-					$categories[$v['Category']['name']] = $v['Category']['name'];
+					$categories[$v['Category']['id']] = $v['Category']['name'];
 				}
 				$this->set(compact('categories'));
 				$this->loadModel('Shop.Item');

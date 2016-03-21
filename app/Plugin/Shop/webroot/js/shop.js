@@ -61,8 +61,23 @@ $('.display-item').click(function(e) {
           $("input[name='quantity']").unbind('change');
 
           $("input[name='quantity']").on('change', function(e) {
-            var new_price = item_infos['price'] * $(this).val();
-            $("#buy-modal .modal-body").find('#total-price').html(new_price);
+
+            var code = $('input[id="code-voucher"]').val();
+
+            if(code.length == 0) { //si y'a pas de code promo
+              var new_price = item_infos['price'] * $(this).val();
+              $("#buy-modal .modal-body").find('#total-price').html(new_price);
+            } else { // si y'a un code promo - on re-calcule le prix selon la quantité
+
+              var quantity = $(this).val();
+              $.get(VOUCHER_CHECK_URL+code+'/'+id+'/'+quantity, function(data) {
+                if(data.price !== undefined) {
+                  $("#buy-modal .modal-body").find('#total-price').html(data.price);
+                }
+              });
+
+            }
+
           });
 
           /*
@@ -74,13 +89,20 @@ $('.display-item').click(function(e) {
           $('input[id="code-voucher"]').keyup(function(e) {
 
             var code = $(this).val();
-            code = (code.length == 0) ? 'undefined' : code;
+            var quantity = $("input[name='quantity']").val();
 
-            $.get(VOUCHER_CHECK_URL+code+'/'+id, function(data) {
-              if(data.price !== undefined) {
-                $("#buy-modal .modal-body").find('#total-price').html(data.price);
-              }
-            });
+            if(code.length > 0) {
+
+              $.get(VOUCHER_CHECK_URL+code+'/'+id+'/'+quantity, function(data) {
+                if(data.price !== undefined) {
+                  $("#buy-modal .modal-body").find('#total-price').html(data.price);
+                }
+              });
+
+            } else { // y'a pas de code
+              var new_price = item_infos['price'] * quantity;
+              $("#buy-modal .modal-body").find('#total-price').html(new_price);
+            }
           });
 
           /*
