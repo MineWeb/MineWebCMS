@@ -115,6 +115,12 @@
   "SHOP__ITEM_CART":"Autoriser l'ajout au panier de cet article",
   "SHOP__ITEM_CANT_ADDED_TO_CART":"Vous ne pouvez acheter l'article <i>{ITEM_NAME}</i> avec un panier.",
   "SHOP__ITEM_BROADCAST_GLOBAL":"Effectuer la commande globale lors de l'achat de cet article",
+  "SHOP__ITEM_PREREQUISITES":"Voulez-vous activer les pré-requis ?",
+  "SHOP__ITEM_PREREQUISITES_TYPE_0":"Non",
+  "SHOP__ITEM_PREREQUISITES_TYPE_1":"Oui, le joueur doit avoir acheté tous les articles suivants",
+  "SHOP__ITEM_PREREQUISITES_TYPE_2":"Oui, le joueur doit avoir acheté au moins un des articles suivants",
+  "SHOP__ITEM_PREREQUISITES_ITEMS":"Articles disponibles",
+  "SHOP__ITEM_CHECKBOX_REDUCTIONAL_ITEMS":"Activer la réduction du prix si un ou plusieurs des articles suivant est/sont acheté(s)",
 
   "SHOP__CATEGORIES": "Cat\u00e9gories",
   "SHOP__CATEGORY": "Cat\u00e9gorie",

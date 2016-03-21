@@ -46,12 +46,16 @@
               <input name="price" class="form-control" type="text">
             </div>
 
+            <hr>
+
             <div class="form-group">
               <div class="checkbox">
                 <input name="multiple_buy" type="checkbox">
                 <label><?= $Lang->get('SHOP__ITEM_MULTIPLE_BUY') ?></label>
               </div>
             </div>
+
+            <hr>
 
             <div class="form-group">
               <div class="checkbox">
@@ -60,10 +64,14 @@
               </div>
             </div>
 
+            <hr>
+
             <div class="form-group">
               <label><?= $Lang->get('SHOP__ITEM_IMG_URL') ?></label>
               <input name="img_url" class="form-control" type="text">
             </div>
+
+            <hr>
 
             <div class="form-group">
               <label><?= $Lang->get('SERVER__TITLE') ?></label>
@@ -107,6 +115,8 @@
               </div>
             </div>
 
+            <hr>
+
             <div class="form-group">
               <label><?= $Lang->get('SHOP__ITEM_TIMED_COMMAND') ?></label>
               <div class="radio">
@@ -135,11 +145,71 @@
               </div>
             </div>
 
+            <hr>
+
             <div class="form-group">
               <div class="checkbox">
                 <input name="display" type="checkbox">
                 <label><?= $Lang->get('SHOP__ITEM_CHECKBOX_DISPLAY') ?></label>
               </div>
+            </div>
+
+            <hr>
+
+            <div class="form-group">
+              <label><?= $Lang->get('SHOP__ITEM_PREREQUISITES') ?></label>
+              <select class="form-control" name="prerequisites_type">
+                <option value="0"><?= $Lang->get('SHOP__ITEM_PREREQUISITES_TYPE_0') ?></option>
+                <option value="1"><?= $Lang->get('SHOP__ITEM_PREREQUISITES_TYPE_1') ?></option>
+                <option value="2"><?= $Lang->get('SHOP__ITEM_PREREQUISITES_TYPE_2') ?></option>
+              </select>
+            </div>
+
+            <script type="text/javascript">
+              $('select[name="prerequisites_type"]').on('change', function(e) {
+                if($(this).val() == '1' || $(this).val() == '2') {
+                  $('#prerequisites').slideDown();
+                } else {
+                  $('#prerequisites').slideUp();
+                }
+              });
+            </script>
+
+            <div class="form-group" style="display:none;" id="prerequisites">
+              <label><?= $Lang->get('SHOP__ITEM_PREREQUISITES_ITEMS') ?></label>
+              <select class="form-control" name="prerequisites" multiple>
+                <?php foreach ($items_available as $key => $value) { ?>
+                    <option value="<?= $key ?>"><?= $value ?></option>
+                <?php } ?>
+              </select>
+            </div>
+
+            <hr>
+
+            <div class="form-group">
+              <div class="checkbox">
+                <input id="reductional_items_checkbox" type="checkbox">
+                <label><?= $Lang->get('SHOP__ITEM_CHECKBOX_REDUCTIONAL_ITEMS') ?></label>
+              </div>
+            </div>
+
+            <script type="text/javascript">
+              $('#reductional_items_checkbox').on('change', function(e) {
+                if($('#reductional_items_checkbox:checked').length > 0) {
+                  $('#reductional_items').slideDown();
+                } else {
+                  $('#reductional_items').slideUp();
+                }
+              });
+            </script>
+
+            <div class="form-group" style="display:none;" id="reductional_items">
+              <label><?= $Lang->get('SHOP__ITEM_PREREQUISITES_ITEMS') ?></label>
+              <select class="form-control" name="reductional_items" multiple>
+                <?php foreach ($items_available as $key => $value) { ?>
+                    <option value="<?= $key ?>"><?= $value ?></option>
+                <?php } ?>
+              </select>
             </div>
 
             <div class="pull-right">

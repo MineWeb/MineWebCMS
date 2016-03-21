@@ -49,12 +49,16 @@
               <input name="price" class="form-control" value="<?= $item['price'] ?>" type="text">
             </div>
 
+            <hr>
+
             <div class="form-group">
               <div class="checkbox">
                 <input name="multiple_buy" type="checkbox"<?= (isset($item['multiple_buy']) && $item['multiple_buy']) ? ' checked=""' : '' ?>>
                 <label><?= $Lang->get('SHOP__ITEM_MULTIPLE_BUY') ?></label>
               </div>
             </div>
+
+            <hr>
 
             <div class="form-group">
               <div class="checkbox">
@@ -63,10 +67,14 @@
               </div>
             </div>
 
+            <hr>
+
             <div class="form-group">
               <label><?= $Lang->get('SHOP__ITEM_IMG_URL') ?></label>
               <input name="img_url" class="form-control" value="<?= $item['img_url'] ?>" type="text">
             </div>
+
+            <hr>
 
             <div class="form-group">
               <label><?= $Lang->get('SERVER__TITLE') ?></label>
@@ -124,6 +132,8 @@
               </div>
             </div>
 
+            <hr>
+
             <div class="form-group">
               <label><?= $Lang->get('SHOP__ITEM_TIMED_COMMAND') ?></label>
               <div class="radio">
@@ -152,11 +162,71 @@
               </div>
             </div>
 
+            <hr>
+
             <div class="form-group">
               <div class="checkbox">
                 <input name="display" type="checkbox"<?= ((isset($item['display']) && $item['display']) || @empty($item['display'])) ? ' checked=""' : '' ?>>
                 <label><?= $Lang->get('SHOP__ITEM_CHECKBOX_DISPLAY') ?></label>
               </div>
+            </div>
+
+            <hr>
+
+            <div class="form-group">
+              <label><?= $Lang->get('SHOP__ITEM_PREREQUISITES') ?></label>
+              <select class="form-control" name="prerequisites_type">
+                <option value="0"<?= (!isset($item['prerequisites_type']) || empty($item['prerequisites_type']) || $item['prerequisites_type'] == '0') ? ' checked' : '' ?>><?= $Lang->get('SHOP__ITEM_PREREQUISITES_TYPE_0') ?></option>
+                <option value="1"<?= ($item['prerequisites_type'] == '1') ? ' checked' : '' ?>><?= $Lang->get('SHOP__ITEM_PREREQUISITES_TYPE_1') ?></option>
+                <option value="2"<?= ($item['prerequisites_type'] == '2') ? ' checked' : '' ?>><?= $Lang->get('SHOP__ITEM_PREREQUISITES_TYPE_2') ?></option>
+              </select>
+            </div>
+
+            <script type="text/javascript">
+              $('select[name="prerequisites_type"]').on('change', function(e) {
+                if($(this).val() == '1' || $(this).val() == '2') {
+                  $('#prerequisites').slideDown();
+                } else {
+                  $('#prerequisites').slideUp();
+                }
+              });
+            </script>
+
+            <div class="form-group" style="display:<?= ($item['prerequisites_type'] == '2' || $item['prerequisites_type'] == '1') ? 'block' : 'none' ?>;" id="prerequisites">
+              <label><?= $Lang->get('SHOP__ITEM_PREREQUISITES_ITEMS') ?></label>
+              <select class="form-control" name="prerequisites" multiple>
+                <?php foreach ($items_available as $id => $name) { ?>
+                    <option value="<?= $id ?>"<?= (in_array($id, $item['prerequisites'])) ? ' selected' : '' ?>><?= $name ?></option>
+                <?php } ?>
+              </select>
+            </div>
+
+            <hr>
+
+            <div class="form-group">
+              <div class="checkbox">
+                <input id="reductional_items_checkbox" name="reductional_items_checkbox" type="checkbox"<?= ((isset($item['reductional_items']) && !empty($item['reductional_items']))) ? ' checked=""' : '' ?>>
+                <label><?= $Lang->get('SHOP__ITEM_CHECKBOX_REDUCTIONAL_ITEMS') ?></label>
+              </div>
+            </div>
+
+            <script type="text/javascript">
+              $('#reductional_items_checkbox').on('change', function(e) {
+                if($('#reductional_items_checkbox:checked').length > 0) {
+                  $('#reductional_items').slideDown();
+                } else {
+                  $('#reductional_items').slideUp();
+                }
+              });
+            </script>
+
+            <div class="form-group" style="display:<?= (isset($item['reductional_items']) && !empty($item['reductional_items'])) ? 'block' : 'none' ?>;" id="reductional_items">
+              <label><?= $Lang->get('SHOP__ITEM_PREREQUISITES_ITEMS') ?></label>
+              <select class="form-control" name="reductional_items" multiple>
+                <?php foreach ($items_available as $id => $name) { ?>
+                    <option value="<?= $id ?>"<?= (in_array($id, $item['reductional_items'])) ? ' selected' : '' ?>><?= $name ?></option>
+                <?php } ?>
+              </select>
             </div>
 
             <div class="pull-right">

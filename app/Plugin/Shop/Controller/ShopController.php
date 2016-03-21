@@ -569,6 +569,12 @@ class ShopController extends ShopAppController {
 						}
 						$this->set(compact('categories'));
 
+						$search_items = $this->Item->find('all', array('fields' => array('name', 'id')));
+						foreach ($search_items as $v) {
+							$items_available[$v['Item']['id']] = $v['Item']['name'];
+						}
+						$this->set(compact('items_available'));
+
 						$this->loadModel('Server');
 
 						$servers = $this->Server->findSelectableServers(true);
@@ -590,6 +596,15 @@ class ShopController extends ShopAppController {
 						$commands = explode('[{+}]', $commands);
 						unset($item['commands']);
 						$item['commands'] = $commands;
+
+						$item['prerequisites'] = unserialize($item['prerequisites']);
+						if(is_bool($item['prerequisites'])) {
+							$item['prerequisites'] = array();
+						}
+						$item['reductional_items'] = unserialize($item['reductional_items']);
+						if(is_bool($item['reductional_items'])) {
+							$item['reductional_items'] = array();
+						}
 
 						$this->set(compact('item'));
 
@@ -637,6 +652,9 @@ class ShopController extends ShopAppController {
 							return $event->result;
 						}
 
+						$prerequisites = (isset($this->request->data['prerequisites'])) ? serialize($this->request->data['prerequisites']) : NULL;
+						$reductional_items = (isset($this->request->data['reductional_items']) && $this->request->data['reductional_items_checkbox']) ? serialize($this->request->data['reductional_items']) : NULL;
+
 						$this->loadModel('Shop.Item');
 						$this->Item->read(null, $this->request->data['id']);
 						$this->Item->set(array(
@@ -655,7 +673,10 @@ class ShopController extends ShopAppController {
 							'display' => $this->request->data['display'],
 							'multiple_buy' => $this->request->data['multiple_buy'],
 							'broadcast_global' => $this->request->data['broadcast_global'],
-							'cart' => $this->request->data['cart']
+							'cart' => $this->request->data['cart'],
+							'prerequisites_type' => $this->request->data['prerequisites_type'],
+							'prerequisites' => $prerequisites,
+							'reductional_items' => $reductional_items
 						));
 						$this->Item->save();
 						$this->Session->setFlash($this->Lang->get('SHOP__ITEM_EDIT_SUCCESS'), 'default.success');
@@ -727,6 +748,9 @@ class ShopController extends ShopAppController {
 							return $event->result;
 						}
 
+						$prerequisites = (isset($this->request->data['prerequisites'])) ? serialize($this->request->data['prerequisites']) : NULL;
+						$reductional_items = (isset($this->request->data['reductional_items']) && $this->request->data['reductional_items_checkbox']) ? serialize($this->request->data['reductional_items']) : NULL;
+
 						$this->loadModel('Shop.Item');
 						$this->Item->read(null, null);
 						$this->Item->set(array(
@@ -745,7 +769,10 @@ class ShopController extends ShopAppController {
 							'display' => $this->request->data['display'],
 							'multiple_buy' => $this->request->data['multiple_buy'],
 							'broadcast_global' => $this->request->data['broadcast_global'],
-							'cart' => $this->request->data['broadcast_global']
+							'cart' => $this->request->data['broadcast_global'],
+							'prerequisites_type' => $this->request->data['prerequisites_type'],
+							'prerequisites' => $prerequisites,
+							'reductional_items' => $reductional_items
 						));
 						$this->Item->save();
 						$this->History->set('ADD_ITEM', 'shop');
