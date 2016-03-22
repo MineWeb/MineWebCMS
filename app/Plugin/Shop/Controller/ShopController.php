@@ -102,7 +102,7 @@ class ShopController extends ShopAppController {
 				$reductional_items = false;
 				if($reductional_items_func) {
 
-					$this->loadModel('History');
+					$this->loadModel('Shop.ItemsBuyHistory');
 
 					$reductional_items_list = unserialize($search_item[0]['Item']['reductional_items']);
 					$reductional_items_list_display = array();
@@ -117,7 +117,7 @@ class ShopController extends ShopAppController {
 							break;
 						}
 
-						$findHistory = $this->History->find('first', array('conditions' => array('action' => 'BUY_ITEM', 'other' => $findItem['Item']['name'])));
+						$findHistory = $this->ItemsBuyHistory->find('first', array('conditions' => array('user_id' => $this->User->getKey('id'), 'item_id' => $findItem['Item']['id'])));
 						if(empty($findHistory)) {
 							$reductional_items = false;
 							break;
@@ -450,10 +450,8 @@ class ShopController extends ShopAppController {
 										// On l'ajoute à l'historique (préparation)
 											//$this->History->set('BUY_ITEM', 'shop', $value['name']);
 											$history[] = array(
-												'action' => 'BUY_ITEM',
-												'category' => 'shop',
 												'user_id' => $this->User->getKey('id'),
-												'other' => $value['name']
+												'item_id' => $value['id']
 											);
 
 										// On execute les commandes
@@ -500,8 +498,8 @@ class ShopController extends ShopAppController {
 									}
 
 								//On le met dans l'historique
-									$this->loadModel('History');
-									$this->History->saveMany($history);
+									$this->loadModel('Shop.ItemsBuyHistory');
+									$this->ItemsBuyHistory->saveMany($history);
 
 								echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOP__BUY_SUCCESS')));
 
@@ -540,6 +538,10 @@ class ShopController extends ShopAppController {
 
 				$this->loadModel('Shop.Item');
 				$search_items = $this->Item->find('all');
+				$items = array();
+				foreach ($search_items as $key => $value) {
+					$items[$value['Item']['id']] = $value['Item']['name'];
+				}
 
 				$this->loadModel('Shop.Category');
 				$search_categories = $this->Category->find('all');
@@ -547,14 +549,20 @@ class ShopController extends ShopAppController {
 					$categories[$v['Category']['id']]['name'] = $v['Category']['name'];
 				}
 
-				$this->loadModel('History');
-				$histories_buy = $this->History->find('all', array('conditions' => array('action' => 'BUY_ITEM'), 'order' => 'id DESC'));
+				$this->loadModel('Shop.ItemsBuyHistory');
+				$histories_buy = $this->ItemsBuyHistory->find('all', array('order' => 'id DESC'));
 
 				$this->loadModel('Shop.ItemsConfig');
 				$findConfig = $this->ItemsConfig->find('first');
 				$config = (!empty($findConfig)) ? $findConfig['ItemsConfig'] : array();
 
-				$this->set(compact('categories', 'search_categories', 'search_items', 'histories_buy', 'config'));
+				$search_users = $this->User->find('all');
+				$users = array();
+				foreach ($search_users as $key => $value) {
+					$users[$value['User']['id']] = $value['User']['pseudo'];
+				}
+
+				$this->set(compact('categories', 'search_categories', 'search_items', 'histories_buy', 'config', 'items', 'users'));
 
 			} else {
 				$this->redirect('/');

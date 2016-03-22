@@ -129,9 +129,9 @@
               <tbody>
                 <?php foreach ($histories_buy as $value => $v) { ?>
                   <tr>
-                    <td><?= $v['History']['other'] ?></td>
-                    <td><?= $v['History']['author'] ?></td>
-                    <td><?= $Lang->date($v['History']['created']) ?></td>
+                    <td><?= (isset($items[$v['ItemsBuyHistory']['item_id']])) ? $items[$v['ItemsBuyHistory']['item_id']] : $items[$v['ItemsBuyHistory']['item_id']] ?></td>
+                    <td><?= (isset($users[$v['ItemsBuyHistory']['user_id']])) ? $users[$v['ItemsBuyHistory']['user_id']] : $users[$v['ItemsBuyHistory']['user_id']] ?></td>
+                    <td><?= $Lang->date($v['ItemsBuyHistory']['created']) ?></td>
                   </tr>
                 <?php } ?>
               </tbody>
