@@ -341,6 +341,49 @@ class ShopController extends ShopAppController {
 											}
 										}
 
+										/*
+											On vérifie si y'a une réduction (articles déjà achetés)
+										*/
+										$reductional_items_func = (!empty($findItem['Item']['reductional_items']) && !is_bool(unserialize($findItem['Item']['reductional_items']))) ? true : false;
+										$reductional_items = false;
+										if($reductional_items_func) {
+
+											$this->loadModel('Shop.ItemsBuyHistory');
+
+											$reductional_items_list = unserialize($findItem['Item']['reductional_items']);
+											// on parcours tous les articles pour voir si ils ont été achetés
+												$reductional_items = true; // de base on dis que c'est okay
+												$reduction = 0; // 0 de réduction
+											foreach ($reductional_items_list as $key => $value) {
+
+												$findItem = $this->Item->find('first', array('conditions' => array('id' => $value)));
+												if(empty($findItem)) {
+													$reductional_items = false;
+													break;
+												}
+
+												$findHistory = $this->ItemsBuyHistory->find('first', array('conditions' => array('user_id' => $this->User->getKey('id'), 'item_id' => $findItem['Item']['id'])));
+												if(empty($findHistory)) {
+													$reductional_items = false;
+													break;
+												}
+
+												$reduction =+ $findItem['Item']['price'];
+
+												unset($findItem);
+
+											}
+
+											// on effectue la reduction
+											if($reductional_items) {
+												$items[$i]['price'] = $items[$i]['price'] - $reduction;
+											}
+
+										}
+										/*
+										===
+										*/
+
 										$total_price += $items[$i]['price'];
 
 										$servers = array_merge($servers, $items[$i]['servers']);
