@@ -161,6 +161,7 @@ class DiscountVoucherComponent extends Object {
       if(!empty($usedBy) || isset($this->vouchersUsed[$voucherID])) { // Déjà utilisé ou déjà check
 
         if(!isset($this->vouchersUsed[$voucherID][$user_id])) {
+          $usedBy = unserialize($usedBy);
           $how_used = array_count_values($usedBy);
         } else {
           $how_used[$user_id] = intval($this->vouchersUsed[$voucherID][$user_id]) + 1;// On rajoute 1 à chaque fois (si plusieurs check pour la quantité)

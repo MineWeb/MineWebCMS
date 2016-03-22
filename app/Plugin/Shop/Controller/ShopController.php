@@ -440,6 +440,7 @@ class ShopController extends ShopAppController {
 								}
 							}
 
+
 						// On va vérifier que l'utilisateur a assez d'argent
 						if($this->User->getKey('money') >= $total_price) {
 
@@ -470,7 +471,7 @@ class ShopController extends ShopAppController {
 										// On le met dans l'historique
 											$this->loadModel('Shop.VouchersHistory');
 											$this->VouchersHistory->create();
-											$diff = $total_price - $total_price_before_voucher;
+											$diff = $total_price_before_voucher - $total_price;
 											$this->VouchersHistory->set(array(
 												'code' => $voucher_code,
 												'user_id' => $this->User->getKey('id'),
