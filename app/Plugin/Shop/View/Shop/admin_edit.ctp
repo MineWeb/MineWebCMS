@@ -176,9 +176,9 @@
             <div class="form-group">
               <label><?= $Lang->get('SHOP__ITEM_PREREQUISITES') ?></label>
               <select class="form-control" name="prerequisites_type">
-                <option value="0"<?= (!isset($item['prerequisites_type']) || empty($item['prerequisites_type']) || $item['prerequisites_type'] == '0') ? ' checked' : '' ?>><?= $Lang->get('SHOP__ITEM_PREREQUISITES_TYPE_0') ?></option>
-                <option value="1"<?= ($item['prerequisites_type'] == '1') ? ' checked' : '' ?>><?= $Lang->get('SHOP__ITEM_PREREQUISITES_TYPE_1') ?></option>
-                <option value="2"<?= ($item['prerequisites_type'] == '2') ? ' checked' : '' ?>><?= $Lang->get('SHOP__ITEM_PREREQUISITES_TYPE_2') ?></option>
+                <option value="0"<?= (!isset($item['prerequisites_type']) || empty($item['prerequisites_type']) || $item['prerequisites_type'] == 0) ? ' selected' : '' ?>><?= $Lang->get('SHOP__ITEM_PREREQUISITES_TYPE_0') ?></option>
+                <option value="1"<?= ($item['prerequisites_type'] == 1) ? ' selected' : '' ?>><?= $Lang->get('SHOP__ITEM_PREREQUISITES_TYPE_1') ?></option>
+                <option value="2"<?= ($item['prerequisites_type'] == 2) ? ' selected' : '' ?>><?= $Lang->get('SHOP__ITEM_PREREQUISITES_TYPE_2') ?></option>
               </select>
             </div>
 

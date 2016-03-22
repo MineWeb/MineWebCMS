@@ -122,6 +122,8 @@
   "SHOP__ITEM_PREREQUISITES_ITEMS":"Articles disponibles",
   "SHOP__ITEM_CHECKBOX_REDUCTIONAL_ITEMS":"Activer la réduction du prix si un ou plusieurs des articles suivant est/sont acheté(s)",
   "SHOP__ITEM_REDUCTIONAL_ITEMS_LIST":"Une réduction est appliqué sur cet article ({REDUCTION}) car vous avez déjà acheté les articles suivants {ITEMS_LIST}.",
+  "SHOP__ITEM_CANT_BUY_PREREQUISITES_1":"Vous ne pouvez pas acheter cet article sans avoir acheté tous les articles suivants : {ITEMS}",
+  "SHOP__ITEM_CANT_BUY_PREREQUISITES_2":"Vous ne pouvez pas acheter cet article sans avoir acheté au moins un des articles suivants : {ITEMS}",
 
   "SHOP__CATEGORIES": "Cat\u00e9gories",
   "SHOP__CATEGORY": "Cat\u00e9gorie",
