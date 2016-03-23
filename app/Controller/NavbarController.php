@@ -128,7 +128,7 @@ class NavbarController extends AppController {
 			$url_plugins = $this->EyPlugin->getPluginsActive();
 			foreach ($url_plugins as $key => $value) {
 				$DBid = $value->DBid;
-				$url_plugins2[$DBid] = $value->name;
+				$url_plugins2[$DBid] = strtolower($value->name);
 			}
 			if(!empty($url_plugins2)) {
 				$url_plugins = $url_plugins2;
@@ -223,7 +223,7 @@ class NavbarController extends AppController {
 					$url_plugins = $this->EyPlugin->getPluginsActive();
 					foreach ($url_plugins as $key => $value) {
 						$DBid = $value->DBid;
-						$url_plugins2[$DBid] = $value->name;
+						$url_plugins2[$DBid] = strtolower($value->name);
 					}
 					if(!empty($url_plugins2)) {
 						$url_plugins = $url_plugins2;
