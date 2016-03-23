@@ -236,7 +236,6 @@ class VoterController extends VoteAppController {
                             }
 
                             $this->User->set($data);
-                            $this->User->save();
 
                             // on cast l'event
                             $event = new CakeEvent('onVote', $this, array('when' => $when, 'website' => $this->Session->read('vote.website'), 'config' => $config['VoteConfiguration'], 'user' => $userData));
@@ -252,11 +251,13 @@ class VoterController extends VoteAppController {
 
 															if(!$rewardStatus['status']) {
 																echo json_encode(array('statut' => false, 'msg' => $this->Lang->get($rewardStatus['msg'])));
-                                exit;
+                                return;
 															}
+                              $this->User->save(); // on sauvegarde le vote
 															echo json_encode(array('statut' => true, 'msg' => $rewardStatus['msg']));
 
                             } else { // si c'est plus tard
+                              $this->User->save(); // on sauvegarde le vote
                               echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('VOTE__STEP_4_REWARD_SUCCESS_SAVE')));
                             }
 
@@ -354,7 +355,7 @@ class VoterController extends VoteAppController {
 				$server = $this->executeServerReward($config, $user, $rewards[$reward]);
 				if($server) {
 
-					return array('status' => true, 'msg' => $this->Lang->get('VOTE__VOTE_SUCCESS').' ! '.$this->Lang->get('VOTE__MESSAGE_VOTE_SUCCESS_REWARD').' : <b>'.$rewards[$reward]['name'].'</b>.|true');
+					return array('status' => true, 'msg' => $this->Lang->get('VOTE__VOTE_SUCCESS').' ! '.$this->Lang->get('VOTE__MESSAGE_VOTE_SUCCESS_REWARD').' : <b>'.$rewards[$reward]['name'].'</b>.');
 
 				} else {
 					return array('status' => false, 'msg' => $server);
