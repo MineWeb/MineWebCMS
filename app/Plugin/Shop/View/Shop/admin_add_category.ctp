@@ -15,6 +15,8 @@
               <input name="name" class="form-control"type="text">
             </div>
 
+            <input type="hidden" name="data[_Token][key]" value="<?= $csrfToken ?>">
+
             <div class="pull-right">
               <a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
               <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
