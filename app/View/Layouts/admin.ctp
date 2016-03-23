@@ -45,7 +45,7 @@
                 </a>
               </li>
               <li>
-                <a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'logout', 'admin' => false)); ?>"><i class="fa fa-power-off"></i> <?= $Lang->get('USER__LOGOUT') ?></a>
+                <a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'logout', 'admin' => false, 'plugin' => false)); ?>"><i class="fa fa-power-off"></i> <?= $Lang->get('USER__LOGOUT') ?></a>
               </li>
             </ul>
           </div>

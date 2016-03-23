@@ -54,7 +54,7 @@ class UserController extends AppController {
 					if($isValid === true) { // on vérifie si y'a aucune erreur
 
 						$eventData = $this->request->data;
-						$eventData['password'] = $this->Util->password($this->request->data['password'], $this->request->data['pseudo']);
+						$eventData['password'] = $this->Util->password($eventData['password'], $eventData['pseudo']);
 						$event = new CakeEvent('beforeRegister', $this, array('data' => $eventData));
 						$this->getEventManager()->dispatch($event);
 						if($event->isStopped()) {
@@ -70,7 +70,7 @@ class UserController extends AppController {
 							$confirmCode = substr(md5(uniqid()), 0, 12);
 
 							$emailMsg = $this->Lang->get('EMAIL__CONTENT_CONFIRM_MAIL', array(
-								'{LINK}' => Router::url('/user/confirm/').$confirmCode,
+								'{LINK}' => Router::url('/user/confirm/', true).$confirmCode,
 								'{IP}' => $this->Util->getIP(),
 								'{USERNAME}' => $this->request->data['pseudo'],
 								'{DATE}' => $this->Lang->date(date('Y-m-d H:i:s'))
@@ -205,7 +205,11 @@ class UserController extends AppController {
 
 						$to = $this->request->data['email'];
 						$subject = $this->Lang->get('USER__PASSWORD_RESET_LINK').' | '.$this->Configuration->getKey('name').'';
-						$message = $this->Lang->email_reset($this->request->data['email'], $search['User']['pseudo'], $key);
+						$message = $this->Lang->get('USER__PASSWORD_RESET_EMAIL_CONTENT', array(
+							'{EMAIL}' => $this->request->data['email'],
+							'{PSEUDO}' => $search['User']['pseudo'],
+							'{LINK}' => Router::url('/?resetpasswd_'.$key, true)
+						));
 
 
 						$event = new CakeEvent('beforeSendResetPassMail', $this, array('user_id' => $search['User']['id'], 'key' => $key));
@@ -245,8 +249,8 @@ class UserController extends AppController {
 		if($this->request->is('ajax')) {
 			if(!empty($this->request->data['password']) AND !empty($this->request->data['password2']) AND !empty($this->request->data['email'])) {
 
-				$reset = $this->User->resetPass($this->request->data, $this->Util);
-				if($reset['status'] && $reset['status'] === true) {
+				$reset = $this->User->resetPass($this->request->data, $this);
+				if(isset($reset['status']) && $reset['status'] === true) {
 					$this->Session->write('user', $reset['session']);
 
 					$this->History->set('RESET_PASSWORD', 'user');
@@ -424,7 +428,7 @@ class UserController extends AppController {
 					$password_confirmation = $this->Util->password($this->request->data['password_confirmation'], $this->User->getKey('pseudo'));
 					if($password == $password_confirmation) {
 
-						$event = new CakeEvent('beforeUpdatePassword', $this, array('user' => $this->User->getAllFromCurrentUser(), 'new_password' => $this->request->data['password']));
+						$event = new CakeEvent('beforeUpdatePassword', $this, array('user' => $this->User->getAllFromCurrentUser(), 'new_password' => $password));
 						$this->getEventManager()->dispatch($event);
 						if($event->isStopped()) {
 							return $event->result;
@@ -629,7 +633,7 @@ class UserController extends AppController {
 						$options_ranks[$value['Rank']['rank_id']] = $value['Rank']['name'];
 					}
 
-					if($this->Configuration->getKey('confirm_mail_signup') && !empty($search_user['confirmed']) && date('Y-m-d H:i:s', strtotime($user['confirmed'])) != $user['confirmed']) {
+					if($this->Configuration->getKey('confirm_mail_signup') && !empty($search_user['confirmed']) && date('Y-m-d H:i:s', strtotime($search_user['confirmed'])) != $search_user['confirmed']) {
 						$search_user['confirmed'] = false;
 					} else {
 						$search_user['confirmed'] = true;

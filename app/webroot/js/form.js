@@ -132,12 +132,12 @@ function initForms() {
             grecaptcha.reset();
           }
 
-          div_msg.html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b>'+ERROR_MSG+' :</b> '+INTERNAL_ERROR_MSG+'</i></div>');
+          div_msg.html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="fa fa-times"></i> <b>'+ERROR_MSG+' :</b> '+INTERNAL_ERROR_MSG+'</i></div>');
           submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
         }
         if(json.statut === true) {
           if(form.attr('data-success-msg') === undefined || form.attr('data-success-msg') == "true") {
-            div_msg.html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b>'+SUCCESS_MSG+' :</b> '+json.msg+'</i></div>').fadeIn(500);
+            div_msg.html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="fa fa-exclamation"></i> <b>'+SUCCESS_MSG+' :</b> '+json.msg+'</i></div>').fadeIn(500);
           }
           if(form.attr('data-callback-function') !== undefined) {
             window[form.attr('data-callback-function')](inputs, json);
@@ -152,7 +152,7 @@ function initForms() {
             grecaptcha.reset();
           }
 
-          div_msg.html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b>'+ERROR_MSG+' :</b> '+json.msg+'</i></div>').fadeIn(500);
+          div_msg.html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="fa fa-times"></i> <b>'+ERROR_MSG+' :</b> '+json.msg+'</i></div>').fadeIn(500);
           submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
         } else {
 
@@ -160,7 +160,7 @@ function initForms() {
             grecaptcha.reset();
           }
 
-          div_msg.html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b>'+ERROR_MSG+' :</b> '+INTERNAL_ERROR_MSG+'</i></div>');
+          div_msg.html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="fa fa-times"></i> <b>'+ERROR_MSG+' :</b> '+INTERNAL_ERROR_MSG+'</i></div>');
           submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
         }
       },
@@ -170,9 +170,9 @@ function initForms() {
         }
 
         if(xhr.status == "403") {
-          div_msg.html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b>'+ERROR_MSG+' :</b> '+FORBIDDEN_ERROR_MSG+'</i></div>');
+          div_msg.html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="fa fa-times"></i> <b>'+ERROR_MSG+' :</b> '+FORBIDDEN_ERROR_MSG+'</i></div>');
         } else {
-          div_msg.html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b>'+ERROR_MSG+' :</b> '+INTERNAL_ERROR_MSG+'</i></div>');
+          div_msg.html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="fa fa-times"></i> <b>'+ERROR_MSG+' :</b> '+INTERNAL_ERROR_MSG+'</i></div>');
         }
         submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
       }

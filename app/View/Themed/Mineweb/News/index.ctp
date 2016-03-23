@@ -88,8 +88,11 @@
     });
 
     function comment_delete(e) {
-        var id = $(e).attr("id");
-        $.post("<?= $this->Html->url(array('controller' => 'news', 'action' => 'ajax_comment_delete')) ?>", { id : id }, function(data) {
+      var inputs = {};
+      var id = $(e).attr("id");
+      inputs["id"] = id;
+      inputs["data[_Token][key]"] = '<?= $csrfToken ?>';
+      $.post("<?= $this->Html->url(array('controller' => 'news', 'action' => 'ajax_comment_delete')) ?>", inputs, function(data) {
           if(data == 'true') {
             $('#comment-'+id).fadeOut(500);
           } else {

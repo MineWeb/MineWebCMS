@@ -115,7 +115,8 @@ class User extends AppModel {
 		}
 	}
 
-	public function resetPass($data, $UtilComponent) {
+	public function resetPass($data, $controller) {
+		$UtilComponent = $controller->Util;
 		if($data['password'] == $data['password2']) {
 			unset($data['password2']);
 			$search = $this->find('all', array('conditions' => array('email' => $data['email'])));
@@ -128,7 +129,7 @@ class User extends AppModel {
 					$data_to_save['password'] = $UtilComponent->password($data['password'], $search['0']['User']['pseudo']);
 
 					$event = new CakeEvent('beforeResetPassword', $this, array('user_id' => $search['User']['id'], 'new_password' => $data_to_save['password']));
-					$this->getEventManager()->dispatch($event);
+					$controller->getEventManager()->dispatch($event);
 					if($event->isStopped()) {
 						return $event->result;
 					}
@@ -212,13 +213,13 @@ class User extends AppModel {
   	if(CakeSession::check('user')) {
     		$search_user = $this->getDataBySession(CakeSession::read('user'));
     		if($search_user) {
-      		$this->read(null, $search_user['User']['id']);
-      		$this->set(array($key => $value));
+      		$this->id = $search_user['User']['id'];
+      		$save = $this->saveField($key, $value);
 
 					// on reset les données
-					$userData = null;
+					$this->userData = null;
 
-      		return $this->save();
+      		return $save;
     		}
   	}
 	}
@@ -269,9 +270,8 @@ class User extends AppModel {
     		'conditions' => $conditions
   	));
   	if($search_user) {
-    		$this->read(null, $search_user['0']['User']['id']);
-    		$this->set(array($key => $value));
-    		return $this->save();
+    		$this->id = $search_user['0']['User']['id'];
+    		return $this->saveField($key, $value);
   	}
 	}
 

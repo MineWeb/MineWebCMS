@@ -6,7 +6,7 @@
   "SHOP__CONFIG_SORT_BY_SERVER": "Classer les articles et catégories par serveur",
   "SHOP__CONFIG_BROADCAST_GLOBAL": "Commande global effectuée à chaque achat",
   "SHOP__CONFIG_EXPLAIN_TITLE":"Explications",
-  "SHOP__CONFIG_EXPLAIN":"La commande globale sera effectué sur tous les serveurs selectionnés de l'article acheté, vous pouvez désactiver ce message global pour un article lors de sa création ou de sa modification.",
+  "SHOP__CONFIG_EXPLAIN":"La commande globale sera effectuée sur tous les serveurs sélectionnés de l'article acheté, vous pouvez désactiver ce message global pour un article lors de sa création ou de sa modification.",
   "SHOP__CONFIG_VARIABLES":"Variables diponibles",
   "SHOP__CONFIG_VARIABLE_ITEM":"Nom de l'article acheté",
   "SHOP__CONFIG_VARIABLE_QUANTITY":"Quantité de l'article acheté",
@@ -20,7 +20,7 @@
   "SHOP__PAYPAL_RETURN_MSG":"Retourner sur {WEBSITE_NAME} pour récupérer les points",
 
   "SHOP__VOUCHERS_MANAGE": "G\u00e9rer les codes promotionnels",
-  "SHOP__VOUCHERS_HISTORIES":"Historique des utilisations de code promotionnels",
+  "SHOP__VOUCHERS_HISTORIES":"Historique des utilisations de codes promotionnels",
   "SHOP__VOUCHER_END_DATE": "Date de fin",
   "SHOP__VOUCHER_VALUE_LABEL": "R\u00e9duction",
   "SHOP__VOUCHER_VALUE_INPUT":"En {MONEY_NAME} ou en pourcentage",

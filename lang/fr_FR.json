@@ -128,8 +128,8 @@
         "PLUGIN__ADMIN_PAGE":"Administration des plugins",
         "PLUGIN__LOADED":"Chargé",
 
-        "CONFIG__GENERAL_PREFERENCES": "Pr\u00e9f\u00e9rences g\u00e9n\u00e9ral",
-        "CONFIG__SOCIAL_PREFERENCES": "Pr\u00e9f\u00e9rences social",
+        "CONFIG__GENERAL_PREFERENCES": "Pr\u00e9f\u00e9rences g\u00e9n\u00e9rales",
+        "CONFIG__SOCIAL_PREFERENCES": "Pr\u00e9f\u00e9rences sociales",
         "CONFIG__OTHER_PREFERENCES": "Pr\u00e9f\u00e9rences autres",
         "CONFIG__EDIT_SUCCESS":"Configuration modifi\u00e9 avec succ\u00e8s !",
         "CONFIG__KEY_NAME": "Nom du site",
@@ -216,7 +216,7 @@
         "NEWS__POSTED_ON": "Post\u00e9 le",
         "NEWS__COMMENT_TITLE": "Laissez un commentaire",
         "NEWS__NOT_FOUND": "Cette nouveaut\u00e9e n'existe pas.",
-        "NEWS__COMMENTS_NBR":"Nombres de commentaires",
+        "NEWS__COMMENTS_NBR":"Nombre de commentaires",
         "NEWS__LIKES_NBR":"Nombre de mentions j'aime",
         "NEWS__LIKES": "Mentions j'aime",
         "NEWS__LIKE_THIS_NEWS":"Vous aimez bien cette news ? Alors aimez l\u00e0 !",
@@ -265,6 +265,7 @@
         "FORM__CAPTCHA_LABEL":"Entrez le code ci-dessus",
         "FORM__INVALID_CAPTCHA": "Code de s\u00e9curit\u00e9 invalide",
         "FORM__RELOAD_CAPTCHA": "Recharger le code de s\u00e9curit\u00e9",
+        "FORM__ERROR_WHEN_UPLOAD":"Une erreur est survenue lors de l'enregistrement de l'image",
 
         "LOGIN__BLOCKED": "Vous avez \u00e9t\u00e9 bloqu\u00e9 ! Vous avez tent\u00e9 de vous connecter sans succ\u00e8s 10 fois, veuillez patientez pour pouvoir r\u00e9\u00e9ssayer.",
 
@@ -425,6 +426,7 @@
         "SERVER__SUCCESS_SWITCH":"Vous avez bien changé l'état de la fonctionnalité serveur.",
         "SERVER__DISABLE_SERVER":"Désactiver la fonctionnalité",
         "SERVER__ENABLE_SERVER":"Activer la fonctionnalité",
+        "SERVER__SUCCESS_CACHE_SWITCH":"Vous avez bien changé l'état de la fonctionnalité cache.",
 
         "UPDATE__CHECK_STATUS": "V\u00e9rifier si une mise \u00e0 jour est disponible",
         "UPDATE__VIEW_CHANGELOG": "Voir les modifications",
