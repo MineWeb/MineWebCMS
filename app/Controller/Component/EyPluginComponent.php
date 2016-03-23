@@ -772,7 +772,7 @@ class EyPluginComponent extends Object {
                   foreach ($compare[$table]['add'] as $column => $structure) {
 
                       // si cela ne concerne pas notre plugin, on s'en fou
-                      if(explode('__', $column)[0] != $slug) {
+                      if(explode('-', $column)[0] != strtolower($slug)) {
                           unset($compare[$table]['add'][$column]);
                       }
                   }
