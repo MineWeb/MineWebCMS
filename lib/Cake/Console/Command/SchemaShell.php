@@ -175,9 +175,9 @@ class SchemaShell extends AppShell {
 
 				foreach ($tableStructure as $columnName => $columnStructure) {
 
-					if(explode('__', $tableName)[0] != $plugin) {
+					if(explode('__', $tableName)[0] != $plugin) { // si c'est une table du CMS
 
-						if(explode('__', $columnName)[0] != $plugin) { // on supprime les colonnes qui non pas le prefix du plugin comme nom
+						if(explode('-', $columnName)[0] != $plugin) { // on supprime les colonnes qui non pas le prefix du plugin comme nom
 							unset($content['tables'][$tableName][$columnName]);
 						} else {
 							$tableHaveUpdate = true; // on a une nouvelle colonne utile au plugin
