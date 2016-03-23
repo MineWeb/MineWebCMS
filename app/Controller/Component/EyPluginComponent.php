@@ -21,6 +21,8 @@ class EyPluginComponent extends Object {
 
   private $controller;
 
+  private $CmsSqlTables = array();
+
   function __construct() {
     $this->pluginsFolder = ROOT.DS.'app'.DS.'Plugin';
   }
@@ -55,6 +57,28 @@ class EyPluginComponent extends Object {
       debug(CakePlugin::loaded());
       die();*/
 
+    }
+
+  // Retourne toutes les tables du CMS
+
+    private function getCmsSqlTables() {
+      if(empty($this->CmsSqlTables)) {
+        require_once ROOT.DS.'app'.DS.'Config'.DS.'Schema'.DS.'schema.php';
+        if(class_exists('AppSchema')) { // on peut load la class
+          $class = new AppSchema();
+
+          $tables = get_class_vars(get_class($class));
+
+          $ignoredVars = array('name', 'path', 'file', 'connection', 'plugin', 'tables');
+          foreach ($tables as $key => $value) {
+            if(!in_array($key, $ignoredVars)) {
+              $this->CmsSqlTables[] = $key;
+            }
+          }
+
+        }
+      }
+      return $this->CmsSqlTables;
     }
 
   // Retourne la config JSON d'un plugin
@@ -307,12 +331,16 @@ class EyPluginComponent extends Object {
 
                     if(!in_array($key, $ignoredVars)) {
 
-                      $valueExploded = explode('__', $key); // on explode le nom
+                      // On vérifie que le nom de la table ne soit pas parmis ceux du CMS de base
+                      $CmsSqlTables = $this->getCmsSqlTables();
+                      if(!in_array($key, $CmsSqlTables)) {
+                        $valueExploded = explode('__', $key); // on explode le nom
 
-                      if(count($valueExploded) <= 1 || $valueExploded[0] != strtolower($slug)) { // si c'est un array de moins d'une key (donc pas de prefix) OU que la première clé n'est pas le slug
-                        $this->log('File : '.$slug.' is not a valid plugin! SQL tables need to be prefixed by slug.'); // ce n'est pas un dossier
-                        $this->alreadyCheckValid[$slug] = false;
-                        return false;
+                        if(count($valueExploded) <= 1 || $valueExploded[0] != strtolower($slug)) { // si c'est un array de moins d'une key (donc pas de prefix) OU que la première clé n'est pas le slug
+                          $this->log('File : '.$slug.' is not a valid plugin! SQL tables need to be prefixed by slug.'); // ce n'est pas un dossier
+                          $this->alreadyCheckValid[$slug] = false;
+                          return false;
+                        }
                       }
 
                     }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 class ShopAppSchema extends CakeSchema {
 
 	public $file = 'schema.php';
