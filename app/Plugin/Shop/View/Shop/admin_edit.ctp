@@ -135,6 +135,22 @@
             <hr>
 
             <div class="form-group">
+              <div class="checkbox">
+                <input name="give_skin" type="checkbox"<?= (isset($item['give_skin']) && $item['give_skin']) ? ' checked=""' : '' ?>>
+                <label><?= $Lang->get('SHOP__ITEM_GIVE_SKIN') ?></label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="checkbox">
+                <input name="give_cape" type="checkbox"<?= (isset($item['give_cape']) && $item['give_cape']) ? ' checked=""' : '' ?>>
+                <label><?= $Lang->get('SHOP__ITEM_GIVE_CAPE') ?></label>
+              </div>
+            </div>
+
+            <hr>
+
+            <div class="form-group">
               <label><?= $Lang->get('SHOP__ITEM_TIMED_COMMAND') ?></label>
               <div class="radio">
                 <input name="timedCommand" type="radio" value="true"<?= ($item['timedCommand']) ? ' checked=""' : ''; ?>>

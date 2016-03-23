@@ -294,6 +294,9 @@ class ShopController extends ShopAppController {
 							$total_price = 0;
 							$servers = array();
 
+							$give_skin = false;
+							$give_cape = false;
+
 							$voucher_code = (isset($this->request->data['code']) && !empty($this->request->data['code'])) ? $this->request->data['code'] : NULL;
 
 							$broadcasts_global = array(); //Les commandes a effectuer en plus globalement
@@ -379,6 +382,13 @@ class ShopController extends ShopAppController {
 
 										$items[$i] = $findItem['Item'];
 										$items[$i]['servers'] = (is_array(unserialize($items[$i]['servers']))) ? unserialize($items[$i]['servers']) : array();
+
+										if($findItem['Item']['give_skin']) {
+											$give_skin = true;
+										}
+										if($findItem['Item']['give_cape']) {
+											$give_cape = true;
+										}
 
 										if(!isset($findItem['Item']['broadcast_global']) || $findItem['Item']['broadcast_global']) {
 											// Donc si on doit broadcast
@@ -527,6 +537,14 @@ class ShopController extends ShopAppController {
 								// On enlève les crédits à l'utilisateur
 									$new_sold = $this->User->getKey('money') - $total_price;
 									$this->User->setKey('money', $new_sold);
+
+								// On lui donne éventuellement skin/cape
+								if($give_skin) {
+									$this->User->setKey('skin', 1);
+								}
+								if($give_cape) {
+									$this->User->setKey('cape', 1);
+								}
 
 								// On prépare l'historique a add
 									$history = array();
@@ -825,7 +843,9 @@ class ShopController extends ShopAppController {
 							'cart' => $this->request->data['cart'],
 							'prerequisites_type' => $this->request->data['prerequisites_type'],
 							'prerequisites' => $prerequisites,
-							'reductional_items' => $reductional_items
+							'reductional_items' => $reductional_items,
+							'give_skin' => $this->request->data['give_skin'],
+							'give_cape' => $this->request->data['give_cape']
 						));
 						$this->Item->save();
 						$this->Session->setFlash($this->Lang->get('SHOP__ITEM_EDIT_SUCCESS'), 'default.success');
@@ -921,7 +941,9 @@ class ShopController extends ShopAppController {
 							'cart' => $this->request->data['broadcast_global'],
 							'prerequisites_type' => $this->request->data['prerequisites_type'],
 							'prerequisites' => $prerequisites,
-							'reductional_items' => $reductional_items
+							'reductional_items' => $reductional_items,
+							'give_skin' => $this->request->data['give_skin'],
+							'give_cape' => $this->request->data['give_cape']
 						));
 						$this->Item->save();
 						$this->History->set('ADD_ITEM', 'shop');
