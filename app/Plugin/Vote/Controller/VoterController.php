@@ -175,6 +175,7 @@ class VoterController extends VoteAppController {
     public function getRewards() {
         $when = (isset($this->request->data['when'])) ? $this->request->data['when'] : 'now';
         $this->autoRender = false;
+        $this->response->type('json');
         if($this->request->is('ajax')) {
             if($this->Session->check('vote.website') && $this->Session->check('vote.pseudo')) {
                 $this->loadModel('Vote.VoteConfiguration');
@@ -226,9 +227,15 @@ class VoterController extends VoteAppController {
                             $userData = $this->User->find('first', array('conditions' => array('pseudo' => $this->Session->read('vote.pseudo'))));
                             $vote_nbr = $userData['User']['vote'] + 1;
                             $this->User->read(null, $userData['User']['id']);
-                            $this->User->set(array(
+                            $data = array(
                                 'vote' => $vote_nbr
-                            ));
+                            );
+
+                            if($when != 'now') {
+                              $data['rewards_waited'] = intval($userData['User']['rewards_waited']) + 1;
+                            }
+
+                            $this->User->set($data);
                             $this->User->save();
 
                             // on cast l'event
@@ -250,26 +257,25 @@ class VoterController extends VoteAppController {
 															echo json_encode(array('statut' => true, 'msg' => $rewardStatus['msg']));
 
                             } else { // si c'est plus tard
-                              $this->User->setKey('rewards_waited', (intval($this->User->getKey('rewards_waited')) + 1));
-                              echo $this->Lang->get('VOTE__STEP_4_REWARD_SUCCESS_SAVE').'|true';
+                              echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('VOTE__STEP_4_REWARD_SUCCESS_SAVE')));
                             }
 
                             $this->Session->delete('vote');
 
                         } else {
-                          echo $this->Lang->get('VOTE__VOTE_ERROR_WAIT').'|false';
+                          echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('VOTE__VOTE_ERROR_WAIT')));
 
                           $this->Session->delete('vote');
                         }
                     } else {
-                        echo $this->Lang->get('VOTE__VOTE_ERROR_WAIT').'|false';
+                        echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('VOTE__VOTE_ERROR_WAIT')));
                     }
 
                 } else {
-                    echo $this->Lang->get('VOTE__STEP_3_ERROR').'|false';
+                    echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('VOTE__STEP_3_ERROR')));
                 }
             } else {
-                echo $this->Lang->get('VOTE__VOTE_ERROR_USER_UNKNOWN').'|false';
+                echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('VOTE__VOTE_ERROR_USER_UNKNOWN')));
             }
         } else {
             throw new InternalErrorException();
@@ -320,8 +326,8 @@ class VoterController extends VoteAppController {
 
 				$return = $this->Lang->get('VOTE__VOTE_SUCCESS').' ! ';
 			 	if(!empty($success_msg)) {
-					$return += $this->Lang->get('VOTE__REWARDS_TITLE').' : ';
-					$return += '<b>'.implode('</b>, <b>', $rewardsSended).'</b>.';
+					$return .= $this->Lang->get('VOTE__REWARDS_TITLE').' : ';
+					$return .= '<b>'.implode('</b>, <b>', $rewardsSended).'</b>.';
 			 }
 
 			 return array('status' =>true, 'msg' => $return);
@@ -389,7 +395,7 @@ class VoterController extends VoteAppController {
 				if(empty($config['servers'])) { // si on a pas de liste, on prend celui par défaut
 
           if($reward['need_connect_on_server'] == "true") {
-            $call = $this->Server->call(array('isConnected' => $user['pseudo']), false, true);
+            $call = $this->Server->call(array('isConnected' => $user['pseudo']), true, false);
             if($call['isConnected'] != 'true') {
               return 'VOTE__ERROR_NEED_CONNECT_ON_SERVER';
             }
@@ -400,7 +406,7 @@ class VoterController extends VoteAppController {
 					foreach ($config['servers'] as $k2 => $v2) { // on parcours les serveurs
 
             if($reward['need_connect_on_server'] == "true") {
-              $call = $this->Server->call(array('isConnected' => $user['pseudo']), $v2, true);
+              $call = $this->Server->call(array('isConnected' => $user['pseudo']), true, $v2);
               if($call['isConnected'] == 'true') {
                 $continue = true;
                 break;

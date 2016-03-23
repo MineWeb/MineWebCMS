@@ -274,18 +274,15 @@
 		inputs['when'] = $(this).attr('id');
 		inputs["data[_Token][key]"] = '<?= $csrfToken ?>'
 		$.post("<?= $this->Html->url(array('plugin' => 'vote', 'controller' => 'voter', 'action' => 'getRewards')) ?>", inputs, function(data) {
-			data2 = data.split("|");
-				if(data.indexOf('true') != -1) {
+				if(data.statut) {
 					$('#icon_step4').css("display", "");
 					$('.step4').css("opacity", "0.7");
 					$('.step4 .response_step4').css("opacity", "");
 					$('.btn-step4').addClass('disabled');
-						$('.response_step4').html('<div class="panel-footer"><div class="alert alert-success" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__SUCCESS') ?> : </b>'+data2[0]+'</div></div>');
+						$('.response_step4').html('<div class="panel-footer"><div class="alert alert-success" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__SUCCESS') ?> : </b>'+data.msg+'</div></div>');
 						$('#script_step4').remove();
-				} else if(data.indexOf('false') != -1) {
-					$('.response_step4').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b>'+data2[0]+'</div></div>');
 				} else {
-					$('.response_step4').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b><?= $Lang->get('ERROR__INTERNAL_ERROR') ?></div></div>');
+					$('.response_step4').html('<div class="panel-footer"><div class="alert alert-danger" style="margin-bottom:0px;"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b>'+data.msg+'</div></div>');
 				}
 		});
 	});
