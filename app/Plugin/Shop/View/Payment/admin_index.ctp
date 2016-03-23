@@ -23,9 +23,11 @@ table tr td:last-child > div.btn-group {
               <li class=""><a href="#tab_psc" data-toggle="tab" aria-expanded="false">PaySafeCard</a></li>
               <li class=""><a href="#tab_dedipass" data-toggle="tab" aria-expanded="false">Dédipass</a></li>
               <li class=""><a href="#tab_points_transfer" data-toggle="tab" aria-expanded="false"><?= $Lang->get('SHOP__USER_POINTS_TRANSFER_ADMIN') ?></a></li>
+              <?= $Module->loadModules('shop_payments_modal_admin_tab') ?>
               <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
             </ul>
             <div class="tab-content">
+              <?= $Module->loadModules('shop_payments_modal_admin_tab_content') ?>
               <div class="tab-pane active" id="tab_starpass">
 
                 <h3><?= $Lang->get('SHOP__STARPASS_OFFERS') ?> <a href="<?= $this->Html->url(array('controller' => 'payment', 'action' => 'add_starpass', 'admin' => true)) ?>" class="btn btn-success pull-right"><?= $Lang->get('GLOBAL__ADD') ?></a></h3>
