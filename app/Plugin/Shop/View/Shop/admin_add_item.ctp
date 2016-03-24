@@ -279,4 +279,13 @@
 
   });
 
+  $('.delete-cmd').on('click', function(e) {
+
+    var id = $(this).attr('data-id');
+
+    $('#'+id).slideUp(150, function() {
+      $('#'+id).remove();
+    });
+  });
+
 </script>

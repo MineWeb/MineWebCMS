@@ -1,4 +1,4 @@
-<?php
+<?php 
 class ShopAppSchema extends CakeSchema {
 
 	public $file = 'schema.php';
@@ -65,6 +65,8 @@ class ShopAppSchema extends CakeSchema {
 		'prerequisites_type' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 1, 'unsigned' => false, 'comment' => '1= tous les articles, 2 = au moins 1 des articles'),
 		'prerequisites' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'reductional_items' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+		'give_skin' => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 1, 'unsigned' => false),
+		'give_cape' => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 1, 'unsigned' => false),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),

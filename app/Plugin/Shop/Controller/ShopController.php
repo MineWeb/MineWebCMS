@@ -299,8 +299,6 @@ class ShopController extends ShopAppController {
 
 							$voucher_code = (isset($this->request->data['code']) && !empty($this->request->data['code'])) ? $this->request->data['code'] : NULL;
 
-							$broadcasts_global = array(); //Les commandes a effectuer en plus globalement
-
 						// On récupère le broadcast global
 							$this->loadModel('Shop.ItemsConfig');
 							$config = $this->ItemsConfig->find('first');
@@ -324,7 +322,7 @@ class ShopController extends ShopAppController {
 											return;
 										}
 
-										if(count($this->request->data['items']) > 1 && (empty($findItem['Item']['multiple_buy']) || $findItem['Item']['multiple_buy'] == 0)) {
+										if(count($this->request->data['items']) > 1 && (empty($findItem['Item']['cart']) || $findItem['Item']['cart'] == 0)) {
 											echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__ITEM_CANT_ADDED_TO_CART', array('{ITEM_NAME}' => $findItem['Item']['name']))));
 											return;
 										}
@@ -397,7 +395,7 @@ class ShopController extends ShopAppController {
 												$quantity = (isset($value['quantity'])) ? $value['quantity'] : 1;
 												$msg = str_replace('{QUANTITY}', $quantity, $msg);
 												$msg = str_replace('{ITEM_NAME}', $findItem['Item']['name'], $msg);
-												$items[$i]['commands'] .= '[{+}]'.$msg;
+												$items[$i]['broadcast'] .= $msg;
 												unset($msg);
 											}
 										}
@@ -551,6 +549,7 @@ class ShopController extends ShopAppController {
 
 
 								// Si il y a des commandes à faire
+									$items_broadcasted = array();
 									foreach ($items as $key => $value) {
 
 										// On l'ajoute à l'historique (préparation)
@@ -563,12 +562,23 @@ class ShopController extends ShopAppController {
 										// On execute les commandes
 											if(empty($value['servers'])) {
 
+												if(!in_array($value['id'], $items_broadcasted)) {
+													$value['commands'] .= '[{+}]'.$value['broadcast'];
+													$items_broadcasted[] = $value['id'];
+												}
+
 												$this->Server->commands($value['commands']);
 
 
 											} else {
 
 												foreach ($value['servers'] as $k => $server_id) {
+
+													if(!in_array($value['id'], $items_broadcasted)) {
+														$value['commands'] .= '[{+}]'.$value['broadcast'];
+														$items_broadcasted[] = $value['id'];
+													}
+
 													$this->Server->commands($value['commands'], $server_id);
 
 												}

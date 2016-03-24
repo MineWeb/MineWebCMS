@@ -33,7 +33,13 @@
                               <h4 class="pull-right"><?= $v['Item']['price'] ?><?php if($v['Item']['price'] == 1) { echo  ' '.$singular_money; } else { echo  ' '.$plural_money; } ?></h4>
                               <h4><a href="#"><?= before_display($v['Item']['name']) ?></a>
                               </h4>
-                              <p><?= substr($v['Item']['description'], 0, 140); ?><?php if(strlen($v['Item']['description']) > "140") { echo '...'; } ?></p>
+                              <p><?=
+                              $this->Text->truncate(
+                                strip_tags($v['Item']['description']), 
+                                140,
+                                array('ellipsis' => '...', 'html' => true)
+                              )
+                              ?></p>
                               <?php if($isConnected AND $Permissions->can('CAN_BUY')) { ?><button class="btn btn-success pull-right display-item" data-item-id="<?= $v['Item']['id'] ?>"><?= $Lang->get('SHOP__BUY') ?></button> <?php } ?>
                           </div>
                       </div>
