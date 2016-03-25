@@ -41,28 +41,32 @@ class PaymentController extends ShopAppController {
         // On récupére tous les historiques
 
           $histories = array();
+          $usersToFind = array();
 
           $this->loadModel('Shop.StarpassHistory', array('order' => 'id DESC'));
           $histories['starpass'] = $this->StarpassHistory->find('all');
+          foreach ($histories['starpass'] as $key => $value) {
+            $usersToFind[] = $value['StarpassHistory']['user_id'];
+          }
 
           $this->loadModel('Shop.PaypalHistory', array('order' => 'id DESC'));
           $histories['paypal'] = $this->PaypalHistory->find('all');
+          foreach ($histories['paypal'] as $key => $value) {
+            $usersToFind[] = $value['PaypalHistory']['user_id'];
+          }
 
           $this->loadModel('Shop.PaysafecardHistory', array('order' => 'id DESC'));
           $histories['paysafecard'] = $this->PaysafecardHistory->find('all');
+          foreach ($histories['paysafecard'] as $key => $value) {
+            $usersToFind[] = $value['PaysafecardHistory']['user_id'];
+          }
 
           $this->loadModel('Shop.DedipassHistory', array('order' => 'id DESC'));
           $histories['dedipass'] = $this->DedipassHistory->find('all');
-
-
-        // On récupère tous les utilisateurs pour afficher leur pseudo
-
-          $usersByID = array();
-
-          $findUsers = $this->User->find('all');
-          foreach ($findUsers as $key => $value) {
-            $usersByID[$value['User']['id']] = $value['User']['pseudo'];
+          foreach ($histories['dedipass'] as $key => $value) {
+            $usersToFind[] = $value['DedipassHistory']['user_id'];
           }
+
 
         // Les PaySafeCards c'est différents
 
@@ -71,6 +75,18 @@ class PaymentController extends ShopAppController {
     			$paysafecardsStatus = (empty($findPaysafecardsStatus)) ? true : false;
 
           $paysafecards = $this->Paysafecard->find('all');
+          foreach ($paysafecards as $key => $value) {
+            $usersToFind[] = $value['Paysafecard']['user_id'];
+          }
+
+        // On récupère tous les utilisateurs pour afficher leur pseudo
+
+          $usersByID = array();
+
+          $findUsers = $this->User->find('all', array('conditions' => array('id' => $usersToFind)));
+          foreach ($findUsers as $key => $value) {
+            $usersByID[$value['User']['id']] = $value['User']['pseudo'];
+          }
 
         // Config de dédipass
 

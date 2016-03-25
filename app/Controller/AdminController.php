@@ -35,19 +35,35 @@ class AdminController extends AppController {
 
 			if($this->EyPlugin->isInstalled('eywek.shop.1')) {
 
-				$purchase = $this->History->get('shop', false, false, 'BUY_ITEM');
-				$purchase = count($purchase);
-				$purchase_today = $this->History->get('shop', false, date('Y-m-d'), 'BUY_ITEM');
-				$purchase_today = count($purchase_today);
+				$this->loadModel('Shop.ItemsBuyHistory');
+				$purchase = $this->ItemsBuyHistory->find('count', array('order' => 'id DESC'));
+				$purchase_today = $this->ItemsBuyHistory->find('count', array('conditions' => array('created LIKE' => date('Y-m-d').'%'), 'order' => 'id DESC'));
 
-				$this->loadModel('History');
-			  $items_solded = $this->History->find('all', array(
-					'fields' => 'other,COUNT(*)',
-		    	'order' => 'COUNT(other) DESC',
-		    	'conditions' => array('action' => 'BUY_ITEM'),
-			    'limit' => '5',
-			    'group' => 'other',
+				$this->loadModel('Shop.Item');
+				$findItems = $this->Item->find('all');
+				$itemsNameByID = array();
+				foreach ($findItems as $key => $value) {
+					$itemsNameByID[$value['Item']['id']] = $value['Item']['name'];
+				}
+
+				$find_items_solded = $this->ItemsBuyHistory->find('all', array(
+					'fields' => 'COUNT(*),item_id',
+					'order' => 'COUNT(id) DESC',
+					'group' => 'item_id',
+					'limit' => 5
 				));
+				$items_solded = array();
+				$i = 0;
+
+				foreach ($find_items_solded as $key => $value) {
+
+					$items_solded[$i]['count'] = $value[0]['COUNT(*)'];
+					$items_solded[$i]['item_name'] = @$itemsNameByID[$value['ItemsBuyHistory']['item_id']];
+
+					$i++;
+
+				}
+
 			}
 
 			$this->loadModel('Server');

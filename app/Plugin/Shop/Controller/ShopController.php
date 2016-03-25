@@ -51,13 +51,13 @@ class ShopController extends ShopAppController {
 			$money = 0;
 			if($this->isConnected) {
 				$money = $this->User->getKey('money') . ' ';
-	        	$money += ($this->User->getKey('money') == 1 OR $this->User->getKey('money') == 0) ? $this->Configuration->getMoneyName(false) : $this->Configuration->getMoneyName();
-	        }
+	      $money += ($this->User->getKey('money') == 1 OR $this->User->getKey('money') == 0) ? $this->Configuration->getMoneyName(false) : $this->Configuration->getMoneyName();
+	    }
 
-	        $vouchers = $this->DiscountVoucher;
+      $vouchers = $this->DiscountVoucher;
 
-	        $singular_money = $this->Configuration->getMoneyName(false);
-	        $plural_money = $this->Configuration->getMoneyName();
+      $singular_money = $this->Configuration->getMoneyName(false);
+      $plural_money = $this->Configuration->getMoneyName();
 
 			$this->set(compact('dedipass', 'paysafecard_enabled', 'money', 'starpass_offers', 'paypal_offers', 'search_first_category', 'search_categories', 'search_items', 'title_for_layout', 'vouchers', 'singular_money', 'plural_money'));
 		}
@@ -668,11 +668,16 @@ class ShopController extends ShopAppController {
 				$this->loadModel('Shop.ItemsBuyHistory');
 				$histories_buy = $this->ItemsBuyHistory->find('all', array('order' => 'id DESC'));
 
+				$usersToFind = array();
+				foreach ($histories_buy as $key => $value) {
+					$usersToFind[] = $value['ItemsBuyHistory']['user_id'];
+				}
+
 				$this->loadModel('Shop.ItemsConfig');
 				$findConfig = $this->ItemsConfig->find('first');
 				$config = (!empty($findConfig)) ? $findConfig['ItemsConfig'] : array();
 
-				$search_users = $this->User->find('all');
+				$search_users = $this->User->find('all', array('conditions' => array('id' => $usersToFind)));
 				$users = array();
 				foreach ($search_users as $key => $value) {
 					$users[$value['User']['id']] = $value['User']['pseudo'];
@@ -698,7 +703,8 @@ class ShopController extends ShopAppController {
 
 					$this->loadModel('Shop.ItemsConfig');
 
-					if(empty($this->ItemsConfig->find('first'))) {
+					$ItemsConfig = $this->ItemsConfig->find('first');
+					if(empty($ItemsConfig)) {
 						$this->ItemsConfig->create();
 					} else {
 						$this->ItemsConfig->read(null, 1);

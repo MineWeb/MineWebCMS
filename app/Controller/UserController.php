@@ -410,7 +410,8 @@ class UserController extends AppController {
 
 			$this->set(compact('skin_width_max', 'skin_height_max', 'cape_width_max', 'cape_height_max'));
 
-			if($this->Configuration->getKey('confirm_mail_signup') && !empty($this->User->getKey('confirmed')) && date('Y-m-d H:i:s', strtotime($this->User->getKey('confirmed'))) != $this->User->getKey('confirmed')) { // si ca ne correspond pas à une date -> compte non confirmé
+			$confirmed = $this->User->getKey('confirmed');
+			if($this->Configuration->getKey('confirm_mail_signup') && !empty($confirmed) && date('Y-m-d H:i:s', strtotime($confirmed)) != $confirmed) { // si ca ne correspond pas à une date -> compte non confirmé
 				$this->Session->setFlash($this->Lang->get('USER__MSG_NOT_CONFIRMED_EMAIL'), 'default.warning');
 			}
 

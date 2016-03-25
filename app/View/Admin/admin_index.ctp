@@ -182,29 +182,29 @@
                     var pieChart = new Chart(pieChartCanvas);
                     var PieData = [
                       {
-                        value: <?= $items_solded['0'][0]['COUNT(*)'] ?>,
+                        value: <?= $items_solded[0]['count'] ?>,
                         color:"#1abc9c",
-                        label : '<?= addslashes($items_solded[0]['History']['other']) ?>'
+                        label : '<?= addslashes($items_solded[0]['item_name']) ?>'
                       },
                       {
-                        value : <?= $items_solded['1'][0]['COUNT(*)'] ?>,
+                        value : <?= $items_solded['1']['count'] ?>,
                         color : "#2ecc71",
-                        label : '<?= addslashes($items_solded[1]['History']['other']) ?>'
+                        label : '<?= addslashes($items_solded[1]['item_name']) ?>'
                       },
                       {
-                        value : <?= $items_solded['2'][0]['COUNT(*)'] ?>,
+                        value : <?= $items_solded['2']['count'] ?>,
                         color : "#3498db",
-                        label : '<?= addslashes($items_solded[2]['History']['other']) ?>'
+                        label : '<?= addslashes($items_solded[2]['item_name']) ?>'
                       },
                       {
-                        value : <?= $items_solded['3'][0]['COUNT(*)'] ?>,
+                        value : <?= $items_solded['3']['count'] ?>,
                         color : "#e67e22",
-                        label : '<?= addslashes($items_solded[3]['History']['other']) ?>'
+                        label : '<?= addslashes($items_solded[3]['item_name']) ?>'
                       },
                       {
-                        value : <?= $items_solded['4'][0]['COUNT(*)'] ?>,
+                        value : <?= $items_solded['4']['count'] ?>,
                         color : "#e74c3c",
-                        label : '<?= addslashes($items_solded[4]['History']['other']) ?>'
+                        label : '<?= addslashes($items_solded[4]['item_name']) ?>'
                       }
                     ];
                     var pieOptions = {
@@ -241,11 +241,11 @@
                 </div>
                 <div class="col-md-4">
                   <ul class="chart-legend clearfix">
-                    <li><i class="fa fa-circle-o" style="color:#1abc9c;"></i> <?= $items_solded['0']['History']['other'] ?> (<?= $items_solded['0']['0']['COUNT(*)'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)</li>
-                    <li><i class="fa fa-circle-o" style="color:#2ecc71;"></i> <?= $items_solded['1']['History']['other'] ?> (<?= $items_solded['1']['0']['COUNT(*)'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)</li>
-                    <li><i class="fa fa-circle-o" style="color:#3498db;"></i> <?= $items_solded['2']['History']['other'] ?> (<?= $items_solded['2']['0']['COUNT(*)'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)</li>
-                    <li><i class="fa fa-circle-o" style="color:#e67e22;"></i> <?= $items_solded['3']['History']['other'] ?> (<?= $items_solded['3']['0']['COUNT(*)'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)</li>
-                    <li><i class="fa fa-circle-o" style="color:#e74c3c;"></i> <?= $items_solded['4']['History']['other'] ?> (<?= $items_solded['4']['0']['COUNT(*)'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)</li>
+                    <li><i class="fa fa-circle-o" style="color:#1abc9c;"></i> <?= $items_solded[0]['item_name'] ?> (<?= $items_solded[0]['count'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)</li>
+                    <li><i class="fa fa-circle-o" style="color:#2ecc71;"></i> <?= $items_solded[1]['item_name'] ?> (<?= $items_solded[1]['count'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)</li>
+                    <li><i class="fa fa-circle-o" style="color:#3498db;"></i> <?= $items_solded[2]['item_name'] ?> (<?= $items_solded[2]['count'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)</li>
+                    <li><i class="fa fa-circle-o" style="color:#e67e22;"></i> <?= $items_solded[3]['item_name'] ?> (<?= $items_solded[3]['count'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)</li>
+                    <li><i class="fa fa-circle-o" style="color:#e74c3c;"></i> <?= $items_solded[4]['item_name'] ?> (<?= $items_solded[4]['count'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)</li>
                   </ul>
                 </div>
               </div>

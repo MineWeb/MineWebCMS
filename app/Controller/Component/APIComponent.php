@@ -104,6 +104,9 @@ class APIComponent extends Object {
 		$rendered = imagecreatetruecolor(240, 480);
 		$source = @imagecreatefrompng($filename);
 		if(!$source) {
+			$source = @imagecreatefromstring(file_get_contents($filename));
+		}
+		if(!$source) {
 			$source = imagecreatefromstring(base64_decode('iVBORw0KGgoAAAANSUhEUgAAAEAAAAAgCAMAAACVQ462AAAABGdBTUEAALGPC/xhBQAAAwBQTFRF
 AAAAHxALIxcJJBgIJBgKJhgLJhoKJxsLJhoMKBsKKBsLKBoNKBwLKRwMKh0NKx4NKx4OLR0OLB4O
 Lx8PLB4RLyANLSAQLyIRMiMQMyQRNCUSOigUPyoVKCgoPz8/JiFbMChyAFtbAGBgAGhoAH9/Qh0K
@@ -175,6 +178,9 @@ SUVORK5CYII='));
 		}
 
 		$src = @imagecreatefrompng($filename);
+		if(!$src) {
+			@imagecreatefromstring(file_get_contents($filename));
+		}
 		if(!$src) {
 			$src = imagecreatefromstring(base64_decode('iVBORw0KGgoAAAANSUhEUgAAAEAAAAAgCAMAAACVQ462AAAABGdBTUEAALGPC/xhBQAAAwBQTFRF
 AAAAHxALIxcJJBgIJBgKJhgLJhoKJxsLJhoMKBsKKBsLKBoNKBwLKRwMKh0NKx4NKx4OLR0OLB4O

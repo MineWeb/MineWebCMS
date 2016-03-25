@@ -49,15 +49,22 @@ class ModuleComponent extends Object {
     $this->Html = new HtmlHelper(new View());
 
 		if(!empty(self::$vars) && is_array(self::$vars)) {
-        foreach (self::$vars as $key => $value) {
+			$vars = array_merge(self::$vars, $this->controller->viewVars);
+		} else {
+			$vars = $this->controller->viewVars;
+		}
+
+		if(!empty($vars) && is_array($vars)) {
+        foreach ($vars as $key => $value) {
             if(is_bool($value)) {
                 $value = ($value) ? 'true' : 'false';
+								eval('$'.$key.' = '.$value.';');
             } elseif(is_array($value)) {
                 $value = serialize($value);
                 eval('$'.$key.' = \''.addslashes($value).'\';');
                 eval('$'.$key.' = unserialize(stripslashes($'.$key.'));');
-            } else {
-                eval('$'.$key.' = "'.$value.'";');
+            } elseif(is_string($value) && !empty($value)) {
+                eval('$'.$key.' = stripslashes("'.addslashes($value).'");');
             }
         }
     }

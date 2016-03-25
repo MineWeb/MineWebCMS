@@ -400,6 +400,8 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
     } else {
         $servers = $server_id;
         $online[] = false;
+				$return['getPlayerMax'] = 0;
+				$return['getPlayerCount'] = 0;
         foreach ($servers as $key => $value) {
           if($this->online($value)) {
 						$online[] = true;

@@ -901,7 +901,8 @@ class EyPluginComponent extends Object {
   // Vérifier si un plguin est installé
 
     public function isInstalled($id) { // on le recherche avec son ID (auteur.name.apiid)
-      return (!empty($this->findPluginByID($id)) && isset($this->findPluginByID($id)->isValid) && $this->findPluginByID($id)->isValid);
+      $find = $this->findPluginByID($id);
+      return (!empty($find) && isset($find->isValid) && $find->isValid);
     }
 
   // Récupérer les plugins ou la navbar est activé (pour la nav)
