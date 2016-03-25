@@ -126,6 +126,7 @@
   "SHOP__ITEM_CANT_BUY_PREREQUISITES_2":"Vous ne pouvez pas acheter cet article sans avoir acheté au moins un des articles suivants : {ITEMS}",
   "SHOP__ITEM_GIVE_SKIN":"Donner l'autorisation de changer skin à l'achat de cet article",
   "SHOP__ITEM_GIVE_CAPE":"Donner l'autorisation de changer cape à l'achat de cet article",
+  "SHOP__ITEM_CANT_BUY_NOT_CONNECTED":"Vous devez être connecté pour acheter l'article <b>{ITEM_NAME}</b> !",
 
   "SHOP__CATEGORIES": "Cat\u00e9gories",
   "SHOP__CATEGORY": "Cat\u00e9gorie",
