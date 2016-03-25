@@ -438,7 +438,23 @@ class ShopController extends ShopAppController {
 
 										$total_price += $items[$i]['price'];
 
-										$servers = array_merge($servers, $items[$i]['servers']);
+										foreach ($items[$i]['servers'] as $k => $server_id) {
+											if(!in_array($server_id, $servers)) {
+												$servers[] = $server_id;
+											}
+										}
+
+										if($items[$i]['need_connect']) {
+											foreach ($items[$i]['servers'] as $k => $server_id) {
+
+												$call = $this->Server->call(array('isConnected' => $this->User->getKey('pseudo')), true, $server_id);
+							          if($call['isConnected'] != 'true') {
+													echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__ITEM_CANT_BUY_NOT_CONNECTED', array('{ITEM_NAME}' => $items[$i]['name']))));
+													return;
+												}
+
+											}
+										}
 
 										if(isset($value['quantity']) && $value['quantity'] > 1) { //si y'en a plusieurs
 											$duplicate = 1;
@@ -1128,9 +1144,14 @@ class ShopController extends ShopAppController {
 				$this->loadModel('Shop.VouchersHistory');
 				$vouchers_histories = $this->VouchersHistory->find('all', array('order' => 'id DESC'));
 
+				$usersToFind = array();
+				foreach ($vouchers_histories as $key => $value) {
+					$usersToFind[] = $vouchers_histories['VouchersHistory']['user_id'];
+				}
+
 				$usersByID = array();
 
-				$findUsers = $this->User->find('all');
+				$findUsers = $this->User->find('all', array('conditions' => array('id' => $usersToFind)));
 				foreach ($findUsers as $key => $value) {
 					$usersByID[$value['User']['id']] = $value['User']['pseudo'];
 				}
