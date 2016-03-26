@@ -109,7 +109,7 @@ function initForms() {
           grecaptcha.reset();
         }
 
-        div_msg.html('<div class="alert alert-danger"><b>'+ERROR_MSG+' : </b>'+data.msg+'</div>');
+        div_msg.html('<div class="alert alert-danger"><b>'+ERROR_MSG+' : </b>'+check.msg+'</div>');
         submit.html(submit_btn_content).attr('disabled', false).fadeIn(500);
         return;
       }

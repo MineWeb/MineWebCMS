@@ -885,7 +885,8 @@ class PaymentController extends ShopAppController {
 
             $this->loadModel('Shop.DedipassConfig');
 
-            if(empty($this->DedipassConfig->find('first'))) {
+            $dedipassConfig = $this->DedipassConfig->find('first');
+            if(empty($dedipassConfig)) {
               $this->DedipassConfig->create();
             } else {
               $this->DedipassConfig->read(null, 1);

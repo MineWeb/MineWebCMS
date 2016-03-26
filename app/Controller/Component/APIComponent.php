@@ -179,7 +179,7 @@ SUVORK5CYII='));
 
 		$src = @imagecreatefrompng($filename);
 		if(!$src) {
-			@imagecreatefromstring(file_get_contents($filename));
+			$src = @imagecreatefromstring(file_get_contents($filename));
 		}
 		if(!$src) {
 			$src = imagecreatefromstring(base64_decode('iVBORw0KGgoAAAANSUhEUgAAAEAAAAAgCAMAAACVQ462AAAABGdBTUEAALGPC/xhBQAAAwBQTFRF
