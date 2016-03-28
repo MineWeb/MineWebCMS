@@ -86,6 +86,10 @@ class User extends AppModel {
 
 			} else {
 
+				if(strtotime('+2 hours', strtotime($findRetryWithIP['LoginRetry']['modified'])) < time()) { //on reset à 0
+					$findRetryWithIP['LoginRetry']['count'] = 0;
+				}
+
 				if(empty($findRetryWithIP)) { // si il avais rien fail encore
 
 					$LoginRetryTable->create();

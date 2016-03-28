@@ -182,7 +182,7 @@
 
             <div class="form-group">
               <div class="checkbox">
-                <input name="display" type="checkbox"<?= ((isset($item['display']) && $item['display']) || @empty($item['display'])) ? ' checked=""' : '' ?>>
+                <input name="display" type="checkbox"<?= ((isset($item['display']) && $item['display'])) ? ' checked=""' : '' ?>>
                 <label><?= $Lang->get('SHOP__ITEM_CHECKBOX_DISPLAY') ?></label>
               </div>
             </div>

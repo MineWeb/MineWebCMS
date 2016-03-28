@@ -58,7 +58,7 @@ class PaymentController extends ShopAppController {
           $this->loadModel('Shop.PaysafecardHistory', array('order' => 'id DESC'));
           $histories['paysafecard'] = $this->PaysafecardHistory->find('all');
           foreach ($histories['paysafecard'] as $key => $value) {
-            $usersToFind[] = $value['PaysafecardHistory']['user_id'];
+            $usersToFind[] = $value['PaysafecardHistory']['author_id'];
           }
 
           $this->loadModel('Shop.DedipassHistory', array('order' => 'id DESC'));
@@ -226,7 +226,7 @@ class PaymentController extends ShopAppController {
   					$this->loadModel('Shop.PaysafecardMessage');
   					$this->PaysafecardMessage->read(null, null);
   					$this->PaysafecardMessage->set(array(
-  						'to' => $search['0']['Paysafecard']['author'],
+  						'to' => $search['0']['Paysafecard']['user_id'],
   						'type' => 0,
   						'amount' => $search['0']['Paysafecard']['amount'],
   						'added_points' => 0
