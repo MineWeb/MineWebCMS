@@ -81,10 +81,7 @@ class News extends AppModel {
 	}
 
 	public function afterSave($created, $options = array()) {
-		if(!$created) {
-			// on supprime le cache
-			Cache::delete('news', 'data');
-		}
+		Cache::delete('news', 'data');
 	}
 
 	public function afterDelete($cascade = true) {
