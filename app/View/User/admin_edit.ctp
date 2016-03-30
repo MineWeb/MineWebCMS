@@ -71,6 +71,8 @@
               <input class="form-control" value="<?= $search_user['created'] ?>" type="text" disabled="">
             </div>
 
+            <?= $Module->loadModules('admin_user_edit_form') ?>
+
             <div class="pull-right">
               <a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
               <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
