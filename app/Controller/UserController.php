@@ -130,7 +130,7 @@ class UserController extends AppController {
 				$login = $this->User->login($this->request->data, $need_confirmed_email, $this->Util);
 				if(isset($login['status']) && $login['status'] === true) {
 
-					$event = new CakeEvent('onLogin', $this, array('user' => $this->User->getAllFromCurrentUser()));
+					$event = new CakeEvent('onLogin', $this, array('user' => $this->User->getAllFromUser($this->request->data['pseudo'])));
 					$this->getEventManager()->dispatch($event);
 					if($event->isStopped()) {
 						return $event->result;

@@ -258,6 +258,19 @@ class User extends AppModel {
   	}
 	}
 
+	public function getAllFromUser($id_or_pseudo = null) {
+		$find = $this->find('first', array('conditions' => array(
+			'OR' => array(
+				'id' => $id_or_pseudo,
+				'pseudo' => $id_or_pseudo
+			)
+		)));
+  	if(!empty($find)) {
+    		return ($find) ? $find['User'] : NULL;
+  	}
+		return array();
+	}
+
 	public function setToUser($key, $value, $username) {
 
 		if(intval($username) > 0) {
