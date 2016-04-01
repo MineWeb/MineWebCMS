@@ -188,15 +188,20 @@ class User extends AppModel {
       }
 	}
 
-	public function exist($id_or_pseudo) { //username || id
-		$search_user = $this->find('all', array(
-				'conditions' => array(
-					'OR' => array(
-						'id' => $id_or_pseudo,
-						'username' => $id_or_pseudo
-					)
-				)
-		));
+	public function __makeCondition($search) {
+		if((string)(int)$search == $search) {
+			return array(
+				'id' => intval($search)
+			);
+		} else {
+			return array(
+				'pseudo' => $search
+			);
+		}
+	}
+
+	public function exist($search) { //username || id
+		$search_user = $this->find('first', array('conditions' => $this->__makeCondition($search)));
   	return (!empty($search_user));
 	}
 
@@ -227,15 +232,8 @@ class User extends AppModel {
     return (!empty($search_user)) ? $search_user['User']['pseudo'] : '';
   }
 
-	public function getFromUser($key, $id_or_pseudo) {
-		$search_user = $this->find('all', array(
-				'conditions' => array(
-					'OR' => array(
-						'id' => $id_or_pseudo,
-						'username' => $id_or_pseudo
-					)
-				)
-		));
+	public function getFromUser($key, $search) {
+		$search_user = $this->find('first', array('conditions' => $this->__makeCondition($search)));
   	return (!empty($search_user)) ? $search_user['User'][$key] : NULL;
 	}
 
@@ -246,30 +244,18 @@ class User extends AppModel {
   	}
 	}
 
-	public function getAllFromUser($id_or_pseudo = null) {
-		$find = $this->find('first', array('conditions' => array(
-			'OR' => array(
-				'id' => $id_or_pseudo,
-				'pseudo' => $id_or_pseudo
-			)
-		)));
+	public function getAllFromUser($search = null) {
+		$search_user = $this->find('first', array('conditions' => $this->__makeCondition($search)));
   	if(!empty($find)) {
     		return ($find) ? $find['User'] : NULL;
   	}
 		return array();
 	}
 
-	public function setToUser($key, $value, $id_or_pseudo) {
-  	$search_user = $this->find('all', array(
-    		'conditions' => array(
-					'OR' => array(
-						'id' => $id_or_pseudo,
-						'username' => $id_or_pseudo
-					)
-				)
-  	));
+	public function setToUser($key, $value, $search) {
+  	$search_user = $this->find('first', array('conditions' => $this->__makeCondition($search)));
   	if($search_user) {
-    		$this->id = $search_user['0']['User']['id'];
+    		$this->id = $search_user['User']['id'];
     		return $this->saveField($key, $value);
   	}
 	}
