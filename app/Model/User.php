@@ -188,21 +188,15 @@ class User extends AppModel {
       }
 	}
 
-	public function exist($search) { //username || id
-
-		if(intval($search) > 0) {
-			$conditions = array(
-					'id' => intval($search),
-			);
-		} else {
-			$conditions = array(
-					'pseudo' => $search,
-			);
-		}
-
-  	$search_user = $this->find('all', array(
-      	'conditions' => $conditions
-  	));
+	public function exist($id_or_pseudo) { //username || id
+		$search_user = $this->find('all', array(
+				'conditions' => array(
+					'OR' => array(
+						'id' => $id_or_pseudo,
+						'username' => $id_or_pseudo
+					)
+				)
+		));
   	return (!empty($search_user));
 	}
 
@@ -233,21 +227,15 @@ class User extends AppModel {
     return (!empty($search_user)) ? $search_user['User']['pseudo'] : '';
   }
 
-	public function getFromUser($key, $username) {
-
-		if(intval($username) > 0) {
-			$conditions = array(
-					'id' => intval($username),
-			);
-		} else {
-			$conditions = array(
-					'pseudo' => $username,
-			);
-		}
-
-  	$search_user = $this->find('first', array(
-    		'conditions' => $conditions
-  	));
+	public function getFromUser($key, $id_or_pseudo) {
+		$search_user = $this->find('all', array(
+				'conditions' => array(
+					'OR' => array(
+						'id' => $id_or_pseudo,
+						'username' => $id_or_pseudo
+					)
+				)
+		));
   	return (!empty($search_user)) ? $search_user['User'][$key] : NULL;
 	}
 
@@ -271,20 +259,14 @@ class User extends AppModel {
 		return array();
 	}
 
-	public function setToUser($key, $value, $username) {
-
-		if(intval($username) > 0) {
-			$conditions = array(
-					'id' => intval($username),
-			);
-		} else {
-			$conditions = array(
-					'pseudo' => $username,
-			);
-		}
-
+	public function setToUser($key, $value, $id_or_pseudo) {
   	$search_user = $this->find('all', array(
-    		'conditions' => $conditions
+    		'conditions' => array(
+					'OR' => array(
+						'id' => $id_or_pseudo,
+						'username' => $id_or_pseudo
+					)
+				)
   	));
   	if($search_user) {
     		$this->id = $search_user['0']['User']['id'];
