@@ -169,7 +169,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 		}
 
 		if($this->isConnected) {
-			if($this->User->getKey('rank') == 5 AND $this->params['controller'] != "maintenance") {
+			if($this->User->getKey('rank') == 5 AND $this->params['controller'] != "maintenance" AND $this->params['action'] != "logout") {
 				$this->redirect(array('controller' => 'maintenance', 'action' => 'index/banned', 'plugin' => false, 'admin' => false));
 			}
 		}
