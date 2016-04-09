@@ -18,17 +18,12 @@ class HelpController extends AppController {
 
       if($this->request->is('ajax')) {
 
-        //$lang = 'fr_FR';
-        //$get = @file_get_contents('http://mineweb.org/api/v1/getFAQ/'.$lang);
-        if(/*$get && json_decode($get)*/1==1) {
+        $lang = $this->Lang->lang['path'];
+        $get = @file_get_contents('http://mineweb.org/api/v1/getFAQ/'.$lang);
 
-          //echo $data;
-          $data = array(
-            array('id' => 1, 'question' => 'Suis-je intelligent ?', 'answer' => 'Non, tu es totalement débile jeune garçon.'),
-            array('id' => 2, 'question' => 'Suis-je intelligent (2) ?', 'answer' => 'Oui, vraiment très intelligent jeune garçon.'),
-            array('id' => 3, 'question' => 'Suis-je intelligent (3) ?', 'answer' => 'Peut-être, je ne sais pas trop jeune garçon.')
-          );
-          echo json_encode($data);
+        if($get && json_decode($get)) {
+
+          echo $get;
 
         }
 
@@ -50,7 +45,7 @@ class HelpController extends AppController {
           if(!empty($this->request->data['title']) && !empty($this->request->data['content'])) {
 
             if($this->sendTicketToAPI($this->request->data)) {
-              echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('HELP__TICKET_ADD_SUCCESS')));
+              echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('HELP__TICKET_ADD_SUCCESS')));
             } else {
               echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__INTERNAL_ERROR')));
             }

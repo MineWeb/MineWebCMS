@@ -363,13 +363,11 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
       $infos['general']['created'] = $this->Configuration->getInstalledDate();
       $infos['general']['url'] = Router::url('/', true);
       $config = $this->Configuration->getAll();
-      foreach ($config as $key => $value) {
-        foreach ($value as $k => $v) {
-          if(($k == "smtpPassword" && !empty($v)) || ($k == "smtpUsername" && !empty($v))) {
-            $infos['general']['config'][$k] = '********';
-          } else {
-            $infos['general']['config'][$k] = $v;
-          }
+      foreach ($config as $k => $v) {
+        if(($k == "smtpPassword" && !empty($v)) || ($k == "smtpUsername" && !empty($v))) {
+          $infos['general']['config'][$k] = '********';
+        } else {
+          $infos['general']['config'][$k] = $v;
         }
       }
 
@@ -481,6 +479,8 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
       return false;
     }
 
+    $secure = $this->getSecure();
+
     $return = $this->sendToAPI(
                 array(
                   'debug' => json_encode($this->apiCall($secure['key'], true, true)),
@@ -542,9 +542,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
     return json_decode($secure, true);
   }
 
-  public function sendToAPI($data, $url, $encode = false, $addSecure = true, $timeout = 5) {
-
-		$postfields = $data;
+  public function sendToAPI($data, $url, $addSecure = true, $timeout = 5) {
 
     if($addSecure) {
       $secure = $this->getSecure();
@@ -552,10 +550,9 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
       $postfields['id'] = $secure['id'];
       $postfields['key'] = $secure['key'];
       $postfields['domain'] = Router::url('/', true);
-    }
 
-    if($encode) {
       $postfields = json_encode($postfields);
+
 			$post[0] = rsa_encrypt($postfields, '-----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvFK7LMlAnF8Hzmku9WGbHqYNb
 ehNueKDbF/j4yYwf8WqIizB7k+S++SznqPw3KzeHOshiPfeCcifGzp0kI43grWs+
@@ -566,14 +563,15 @@ WCqkx22behAGZq6rhwIDAQAB
       $postfields = $post;
     }
 
-    $curl = curl_init();
+    $postfields = $postfields + $data;
 
+    $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL, 'http://mineweb.org/api/v1/'.$url);
+    //curl_setopt($curl, CURLOPT_URL, 'http://localhost/PEC/Mineweb/org/api/v1/'.$url);
     curl_setopt($curl, CURLOPT_COOKIESESSION, true);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_POST, true);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $postfields);
-
     curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
 
     $return = curl_exec($curl);
