@@ -27,8 +27,8 @@ class PermissionsComponent extends Object {
         return true;
       } else {
         $this->Perm = ClassRegistry::init('Permission');
-        $search_perm = $this->Perm->find('all', array('conditions' => array('rank' => $this->userModel->getKey('rank'))));
-        $search_perm = unserialize($search_perm[0]['Permission']['permissions']);
+        $search_perm = $this->Perm->find('first', array('conditions' => array('rank' => $this->userModel->getKey('rank'))));
+        $search_perm = is_array(unserialize($search_perm['Permission']['permissions'])) ? unserialize($search_perm['Permission']['permissions']) : array();
         return in_array($perm, $search_perm);
       }
     }
@@ -40,9 +40,9 @@ class PermissionsComponent extends Object {
       return 'true';
     } else {
       $this->Perm = ClassRegistry::init('Permission');
-      $search_perm = $this->Perm->find('all', array('conditions' => array('rank' => $rank)));
+      $search_perm = $this->Perm->find('first', array('conditions' => array('rank' => $rank)));
       if(!empty($search_perm)) {
-        $search_perm = unserialize($search_perm[0]['Permission']['permissions']);
+        $search_perm = (is_array(unserialize($search_perm['Permission']['permissions']))) ? unserialize($search_perm['Permission']['permissions']) : array();
         return (in_array($perm, $search_perm)) ? 'true' : 'false';
       }
     }

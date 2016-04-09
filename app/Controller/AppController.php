@@ -85,7 +85,7 @@ a74v71JjOJZznmWs9sC5DcrCoSgZTtJ+bHYijMmZcbZ7Pe/hFR/4SWsUU5UTG0Mh
 jP3lq81IDMx/Ui1ksQJBAO4hTKBstrDNlUPkUr0i/2Pb/edVSgZnJ9t3V94OAD+Z
 wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 -----END RSA PRIVATE KEY-----');
-    $last_check = unserialize($last_check);
+    $last_check = @unserialize($last_check);
     $last_check_domain = $last_check['domain'];
     $last_check = $last_check['time'];
 		if($last_check) {
@@ -567,7 +567,6 @@ WCqkx22behAGZq6rhwIDAQAB
 
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL, 'http://mineweb.org/api/v1/'.$url);
-    //curl_setopt($curl, CURLOPT_URL, 'http://localhost/PEC/Mineweb/org/api/v1/'.$url);
     curl_setopt($curl, CURLOPT_COOKIESESSION, true);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_POST, true);
