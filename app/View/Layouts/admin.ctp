@@ -175,6 +175,7 @@
       <div class="content-wrapper">
         <div style="padding: 15px;">
           <?= $Update->available() ?>
+          <?= (isset($admin_custom_message['messageHTML'])) ? $admin_custom_message['messageHTML'] : '' ?>
           <?php echo $this->Session->flash(); ?>
         </div>
 

@@ -55,22 +55,25 @@ class AppController extends Controller {
 
 	public function beforeFilter() {
 
-    if($this->Util->getIP() == '51.255.40.103' && $this->request->is('post') && !empty($this->request->data['call']) && $this->request->data['call'] == 'api' && !empty($this->request->data['key'])) {
-      $this->apiCall($this->request->data['key'], $this->request->data['isForDebug']);
-      return;
-    }
+    /*
+      === DEBUG ===
+    */
 
-    $this->loadModel('Configuration');
-    $this->set('Configuration', $this->Configuration);
+      if($this->Util->getIP() == '51.255.40.103' && $this->request->is('post') && !empty($this->request->data['call']) && $this->request->data['call'] == 'api' && !empty($this->request->data['key'])) {
+        $this->apiCall($this->request->data['key'], $this->request->data['isForDebug']);
+        return;
+      }
 
-		$this->Security->blackHoleCallback = 'blackhole';
-		$this->Security->validatePost = false;
-		$this->Security->csrfUseOnce = false;
+	  /*
+      === Check de la licence ===
+    */
+	    if($this->params['controller'] != "install") {
 
-	/* VERIFICATION API-CMS */
-	if($this->params['controller'] != "install") {
-		$last_check = @file_get_contents(ROOT.'/config/last_check');
-		$last_check = @rsa_decrypt($last_check, '-----BEGIN RSA PRIVATE KEY-----
+        // On récupère le time encodé du dernier check
+        $last_check = @file_get_contents(ROOT.'/config/last_check');
+
+        // On le décode
+		    $last_check = @rsa_decrypt($last_check, '-----BEGIN RSA PRIVATE KEY-----
 MIICXAIBAAKBgQDGKSGFj8368AmYYiJ9fp1bsu3mzIiUfU7T2uhWXULe9YFqSvs9
 AA/PqTiOgGj8hid2KDamUvzI9UH5RWI83mwAMsj5mxk+ujuoR6WuZykO+A1XN6n4
 I3MWhBe1ZYWRwwgMgoDDe7DDbT2Y6xMxh6sbgdqxeKmkd4RtVB7+UwyuSwIDAQAB
@@ -85,252 +88,99 @@ a74v71JjOJZznmWs9sC5DcrCoSgZTtJ+bHYijMmZcbZ7Pe/hFR/4SWsUU5UTG0Mh
 jP3lq81IDMx/Ui1ksQJBAO4hTKBstrDNlUPkUr0i/2Pb/edVSgZnJ9t3V94OAD+Z
 wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 -----END RSA PRIVATE KEY-----');
-    $last_check = @unserialize($last_check);
-    $last_check_domain = $last_check['domain'];
-    $last_check = $last_check['time'];
-		if($last_check) {
-			$last_check = strtotime('+4 hours', $last_check);
-		} else {
-			$last_check = '0';
-		}
 
-    $secure = file_get_contents(ROOT.'/config/secure');
-    $secure = json_decode($secure, true);
+        // On le récupère sous forme d'array
+        $last_check = @unserialize($last_check);
 
-		if($last_check < time() || $last_check_domain != Router::url('/', true)) { // si le domain a changé entre temps
-			$plugins = $this->EyPlugin->loadPlugins();
+        // On vérifie qu'on a pu le décodé
+    		if($last_check !== false) {
 
-      $return = $this->sendToAPI(
-                  array('version' => $this->Configuration->getKey('version')),
-                  'key_verif',
-                  true
-                );
+          // On récupère les données
+          $last_check_domain = $last_check['domain'];
+          $last_check = $last_check['time'];
+    			$last_check = strtotime('+4 hours', $last_check);
 
-      if($return['error'] == 6) {
-        throw new LicenseException('MINEWEB_DOWN');
-      }
+    		} else {
+          // Sinon on met une valeur à 0
+    			$last_check = '0';
+    		}
 
-			if($return['code'] == 200) {
-        $return = json_decode($return['content'], true);
-        if($return['status'] == "success") {
-        	file_put_contents(ROOT.'/config/last_check', $return['time']);
-        } elseif($return['status'] == "error") {
-        	throw new LicenseException($return['msg']);
-        }
-			} else {
-        $this->log('ApiLicense : '.$return['code']);
-      }
-		}
-	}
+        // On récupère les données secrètes
+        $secure = $this->getSecure();
 
-  $this->loadModel('User');
-  $this->isConnected = $this->User->isConnected();
-  $this->set('isConnected', $this->isConnected);
+        // On vérifie que le temps du dernier check est > 4H ou que l'URL a changé entre temps.
+		    if($last_check < time() || $last_check_domain != Router::url('/', true)) {
 
+          // On envoie la vérification
+          $return = $this->sendToAPI(
+                      array('version' => $this->Configuration->getKey('version')),
+                      'key_verif',
+                      true
+                    );
 
-
-		/* Charger les components des plugins si ils s'appellent "EventsConpoment.php" */
-		$plugins = $this->EyPlugin->getPluginsActive();
-
-		// Chargement de tout les fichiers Events des plugins
-
-		foreach ($plugins as $key => $value) { // on les parcours tous
-
-			if($value->useEvents) { // si ils utilisent les events
-
-				$slugFormated = ucfirst(strtolower($value->slug)); // le slug au format Mmm
-
-				$eventFolder = $this->EyPlugin->pluginsFolder.DS.$value->slug.DS.'Event'; // l'endroit du dossier event
-
-				$path = $eventFolder.DS.$slugFormated.'*EventListener.php'; // la ou get les fichiers
-
-				foreach(glob($path) as $eventFile) { // on récupére tout les fichiers SlugName.php dans le dossier du plugin Events/
-
-		            // get only the class name
-		            $className = str_replace(".php", "", basename($eventFile));
-
-		            App::uses($className, 'Plugin/'.DS.$value->slug.DS.'Event');
-
-		            // then instantiate the file and attach it to the event manager
-		            $this->getEventManager()->attach(new $className($this->request, $this->response, $this));
-		        }
-
-			}
-
-		}
-
-		/* ---- */
-
-    $event = new CakeEvent('requestPage', $this, $this->request->data);
-    $this->getEventManager()->dispatch($event);
-
-		if($this->request->is('post')) {
-			$this->getEventManager()->dispatch(new CakeEvent('onPostRequest', $this, $this->request->data));
-		}
-
-		if($this->isConnected) {
-			if($this->User->getKey('rank') == 5 AND $this->params['controller'] != "maintenance" AND $this->params['action'] != "logout" AND $this->params['controller'] != "api") {
-				$this->redirect(array('controller' => 'maintenance', 'action' => 'index/banned', 'plugin' => false, 'admin' => false));
-			}
-		}
-
-		if($this->params['prefix'] == "admin") {
-			$plugins_need_admin = $this->EyPlugin->getPluginsActive();
-			foreach ($plugins_need_admin as $key => $value) {
-				if($value->admin) {
-					$plugins_admin[] = array('name' => $value->name, 'slug' => $value->slug);
-				}
-			}
-			if(!empty($plugins_admin)) {
-				$plugins_need_admin = $plugins_admin;
-			} else {
-				$plugins_need_admin = null;
-			}
-			$this->set(compact('plugins_need_admin'));
-		}
-
-		/* === Variables === */
-
-			// Navbar
-			$this->loadModel('Navbar');
-			$nav = $this->Navbar->find('all', array('order' => 'order'));
-			if(!empty($nav)) {
-
-        $this->loadModel('Page');
-        $pages = $this->Page->find('all', array('fields' => array('id', 'slug')));
-        foreach ($pages as $key => $value) {
-          $pages_listed[$value['Page']['id']] = $value['Page']['slug'];
-        }
-
-        foreach ($nav as $key => $value) {
-
-          if($value['Navbar']['url']['type'] == "plugin") {
-
-            $plugin = $this->EyPlugin->findPluginByDBid($value['Navbar']['url']['id']);
-            if(is_object($plugin)) {
-              $nav[$key]['Navbar']['url'] = Router::url('/'.$plugin->slug);
-            } else {
-              $nav[$key]['Navbar']['url'] = '#';
-            }
-
-          } elseif($value['Navbar']['url']['type'] == "page") {
-
-            if(isset($pages_listed[$value['Navbar']['url']['id']])) {
-              $nav[$key]['Navbar']['url'] = Router::url('/p/'.$pages_listed[$value['Navbar']['url']['id']]);
-            } else {
-              $nav[$key]['Navbar']['url'] = '#';
-            }
-
-          } elseif($value['Navbar']['url']['type'] == "custom") {
-
-            $nav[$key]['Navbar']['url'] = $value['Navbar']['url']['url'];
-
+          // Si MineWeb n'est pas disponible on arrête ici.
+          if($return['error'] == 6) {
+            throw new LicenseException('MINEWEB_DOWN');
           }
 
-        }
+          // On traite la requête si elle a bien été traitée
+    			if($return['code'] == 200) {
 
-        unset($pages);
-        unset($pages_listed);
+            // On récupère la réponse
+            $return = json_decode($return['content'], true);
 
-			} else {
-				$nav = false;
-			}
+            // On vérifie le statut
+            if($return['status'] == "success") {
 
-			/*$navbar = '';
-            if(!empty($nav)) {
-              	$i = 0;
-              	foreach ($nav as $key => $value) {
-                	if(empty($value['Navbar']['submenu'])) {
-                  		$navbar += '<li class="li-nav';
-                  		$navbar += ($this->params['controller'] == $value['Navbar']['name']) ? ' actived' : '';
-                  		$navbar += '">';
-                  		$navbar += '<a href="'.$value['Navbar']['url'].'">'.$value['Navbar']['name'].'</a>';
-                  		$navbar += '</li>';
-                	} else {
-                		$navbar += '<li class="dropdown">';
-						$navbar += '<li class="dropdown">'
-                    	$navbar += '<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">'.$value['Navbar']['name'].' <span class="caret"></span></a>';
-                    	$navbar += '<ul class="dropdown-menu" role="menu">';
+              // On enregistre le check si tout va bien
+            	file_put_contents(ROOT.'/config/last_check', $return['time']);
 
-                    	$submenu = json_decode($value['Navbar']['submenu']);
-                    	foreach ($submenu as $k => $v) {
-                      		$navbar += '<li><a href="'.rawurldecode($v).'">'.rawurldecode(str_replace('+', ' ', $k)).'</a></li>';
-                    	}
-                    	$navbar += '</ul>';
-                  		$navbar += '</li>';
-                	}
-              	$i++;
-            	}
-          	}*/
+            } elseif($return['status'] == "error") {
 
-			// Configuration Thème/Générale
-			$website_name = $this->Configuration->getKey('name');
+              // On a rencontré une erreur critique
+            	throw new LicenseException($return['msg']);
+            }
 
-			$theme_name = $this->Configuration->getKey('theme');
+    			} else {
+            // On arrête tout pour éviter le bypass
+            throw new LicenseException('MINEWEB_DOWN');
+          }
+		    }
+	    }
 
-			if(strtolower($theme_name) == "default") {
-				$theme_config = file_get_contents(ROOT.'/config/theme.default.json');
-        $theme_config = json_decode($theme_config, true);
-			} else {
-				$theme_config = $this->Theme->getCustomData($theme_name)[1];
-			}
+    unset($last_check);
+    unset($last_check_domain);
+    unset($return);
 
-			// Info serveur
-			if($this->params['prefix'] !== "admin") {
-				$banner_server = $this->Configuration->getKey('banner_server');
-	    	if(empty($banner_server)) {
-	      	if($this->Server->online()) {
-	        		//$banner_server = $this->Lang->banner_server($this->Server->banner_infos());
-              $server_infos = $this->Server->banner_infos();
-              $banner_server = $this->Lang->get('SERVER__STATUS_MESSAGE', array(
-                '{MOTD}' => @$server_infos['getMOTD'],
-                '{VERSION}' => @$server_infos['getVersion'],
-                '{ONLINE}' => @$server_infos['getPlayerCount'],
-                '{ONLINE_LIMIT}' => @$server_infos['getPlayerMax']
-              ));
-	      	} else {
-	        		$banner_server = false;
-	      	}
-	    	} else {
-	      	$banner_server = unserialize($banner_server);
-	      	if(count($banner_server) == 1) {
-	        	$server_infos = $this->Server->banner_infos($banner_server[0]);
-	      	} else {
-	        	$server_infos = $this->Server->banner_infos($banner_server);
-	      	}
-	      	if(isset($server_infos['getPlayerMax']) && isset($server_infos['getPlayerCount'])) {
-	      		//$banner_server = $this->Lang->banner_server($server_infos);
-            $banner_server = $this->Lang->get('SERVER__STATUS_MESSAGE', array(
-              '{MOTD}' => @$server_infos['getMOTD'],
-              '{VERSION}' => @$server_infos['getVersion'],
-              '{ONLINE}' => @$server_infos['getPlayerCount'],
-              '{ONLINE_LIMIT}' => @$server_infos['getPlayerMax']
-            ));
-	      	} else {
-	        		$banner_server = false;
-	      	}
-	    	}
-			}
+  /*
+    Chargement de la configuration et des données importantes
+  */
 
-  	// infos user
-  	$user = ($this->isConnected) ? $this->User->getAllFromCurrentUser() : array();
-    if(!empty($user)) {
-      $user['isAdmin'] = $this->User->isAdmin();
+    // configuration générale
+    $this->loadModel('Configuration');
+    $this->set('Configuration', $this->Configuration);
+
+    $website_name = $this->Configuration->getKey('name');
+    $theme_name = $this->Configuration->getKey('theme');
+
+    // thèmes
+    if(strtolower($theme_name) == "default") {
+      $theme_config = file_get_contents(ROOT.'/config/theme.default.json');
+      $theme_config = json_decode($theme_config, true);
+    } else {
+      $theme_config = $this->Theme->getCustomData($theme_name)[1];
     }
+    Configure::write('theme', $theme_name);
+		$this->__setTheme();
 
-  	$csrfToken = $this->Session->read('_Token')['key'];
-    if(empty($csrfToken)) {
-      $this->Security->generateToken($this->request);
-      $csrfToken = $this->Session->read('_Token')['key'];
-    }
 
-  	// socials links
-  	$facebook_link = $this->Configuration->getKey('facebook');
+    // partie sociale
+    $facebook_link = $this->Configuration->getKey('facebook');
   	$skype_link = $this->Configuration->getKey('skype');
   	$youtube_link = $this->Configuration->getKey('youtube');
   	$twitter_link = $this->Configuration->getKey('twitter');
 
-    // Config
+    // Variables
     $google_analytics = $this->Configuration->getKey('google_analytics');
     $configuration_end_code = $this->Configuration->getKey('end_layout_code');
 
@@ -340,16 +190,240 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
     $reCaptcha['type'] = ($this->Configuration->getKey('captcha_type') == '2') ? 'google' : 'default';
     $reCaptcha['siteKey'] = $this->Configuration->getKey('captcha_google_sitekey');
 
-			// on set tout
-			$this->set(compact('nav', 'reCaptcha', 'website_name', 'theme_config', 'banner_server', 'user', 'csrfToken', 'facebook_link', 'skype_link', 'youtube_link', 'twitter_link', 'findSocialButtons', 'google_analytics', 'configuration_end_code'));
+    // utilisateur
+    $this->loadModel('User');
+    $this->isConnected = $this->User->isConnected();
+    $this->set('isConnected', $this->isConnected);
 
-		if($this->params['controller'] == "user" OR $this->params['controller'] == "maintenance" OR $this->Configuration->getKey('maintenance') == '0' OR $this->isConnected AND $this->User->isAdmin()) {
+    $user = ($this->isConnected) ? $this->User->getAllFromCurrentUser() : array();
+    if(!empty($user)) {
+      $user['isAdmin'] = $this->User->isAdmin();
+    }
+
+  /*
+    === Récupération du message customisé ===
+  */
+
+    $customMessageStocked = ROOT.DS.'app'.DS.'tmp'.DS.'cache'.DS.'api_custom_message.cache';
+    $timeToCacheCustomMessage = '+4 hours';
+
+    if(!file_exists($customMessageStocked) || strtotime($timeToCacheCustomMessage, filemtime($customMessageStocked)) < time()) {
+      // On le récupère
+      $get = $this->sendToAPI(array(), 'getCustomMessage');
+
+      if($get['code'] == 200) {
+        file_put_contents($customMessageStocked, $get['content']);
+      }
+    }
+
+    if(file_exists($customMessageStocked)) {
+
+      $customMessage = file_get_contents($customMessageStocked);
+      $customMessage = @json_decode($customMessage, true);
+      if(!is_bool($customMessage) && !empty($customMessage)) {
+
+        if($customMessage['type'] == 2) {
+          throw new MinewebCustomMessageException($customMessage);
+        } elseif($customMessage['type'] == 1 && $this->params['prefix'] == "admin") {
+          $this->set('admin_custom_message', $customMessage);
+        }
+
+      }
+    }
+
+    unset($customMessage);
+    unset($get);
+    unset($customMessageStocked);
+    unset($timeToCacheCustomMessage);
+
+  /*
+    === Protection CSRF ===
+  */
+
+  	$this->Security->blackHoleCallback = 'blackhole';
+  	$this->Security->validatePost = false;
+  	$this->Security->csrfUseOnce = false;
+
+  	$csrfToken = $this->Session->read('_Token')['key'];
+    if(empty($csrfToken)) {
+      $this->Security->generateToken($this->request);
+      $csrfToken = $this->Session->read('_Token')['key'];
+    }
+
+  /*
+    === Gestion des plugins ===
+  */
+
+    // Les évents
+  		/* Charger les components des plugins si ils s'appellent "EventsConpoment.php" */
+  		$plugins = $this->EyPlugin->getPluginsActive();
+
+  		// Chargement de tout les fichiers Events des plugins
+
+  		foreach ($plugins as $key => $value) { // on les parcours tous
+
+  			if($value->useEvents) { // si ils utilisent les events
+
+  				$slugFormated = ucfirst(strtolower($value->slug)); // le slug au format Mmm
+
+  				$eventFolder = $this->EyPlugin->pluginsFolder.DS.$value->slug.DS.'Event'; // l'endroit du dossier event
+
+  				$path = $eventFolder.DS.$slugFormated.'*EventListener.php'; // la ou get les fichiers
+
+  				foreach(glob($path) as $eventFile) { // on récupére tout les fichiers SlugName.php dans le dossier du plugin Events/
+
+  		            // get only the class name
+  		            $className = str_replace(".php", "", basename($eventFile));
+
+  		            App::uses($className, 'Plugin/'.DS.$value->slug.DS.'Event');
+
+  		            // then instantiate the file and attach it to the event manager
+  		            $this->getEventManager()->attach(new $className($this->request, $this->response, $this));
+  		        }
+
+  			}
+
+  		}
+
+  /*
+    === Gestion de la barre de navigation (normal ou admin) ===
+  */
+
+	if($this->params['prefix'] == "admin") {
+
+    // Partie ADMIN
+		$plugins_need_admin = $this->EyPlugin->getPluginsActive();
+		foreach ($plugins_need_admin as $key => $value) {
+			if($value->admin) {
+				$plugins_admin[] = array('name' => $value->name, 'slug' => $value->slug);
+			}
+		}
+		if(!empty($plugins_admin)) {
+			$plugins_need_admin = $plugins_admin;
 		} else {
+			$plugins_need_admin = null;
+		}
+		$this->set(compact('plugins_need_admin'));
+
+	} else {
+
+    // Partie NORMALE
+    $this->loadModel('Navbar');
+    $nav = $this->Navbar->find('all', array('order' => 'order'));
+    if(!empty($nav)) {
+
+      $this->loadModel('Page');
+      $pages = $this->Page->find('all', array('fields' => array('id', 'slug')));
+      foreach ($pages as $key => $value) {
+        $pages_listed[$value['Page']['id']] = $value['Page']['slug'];
+      }
+
+      foreach ($nav as $key => $value) {
+
+        if($value['Navbar']['url']['type'] == "plugin") {
+
+          $plugin = $this->EyPlugin->findPluginByDBid($value['Navbar']['url']['id']);
+          if(is_object($plugin)) {
+            $nav[$key]['Navbar']['url'] = Router::url('/'.$plugin->slug);
+          } else {
+            $nav[$key]['Navbar']['url'] = '#';
+          }
+
+        } elseif($value['Navbar']['url']['type'] == "page") {
+
+          if(isset($pages_listed[$value['Navbar']['url']['id']])) {
+            $nav[$key]['Navbar']['url'] = Router::url('/p/'.$pages_listed[$value['Navbar']['url']['id']]);
+          } else {
+            $nav[$key]['Navbar']['url'] = '#';
+          }
+
+        } elseif($value['Navbar']['url']['type'] == "custom") {
+
+          $nav[$key]['Navbar']['url'] = $value['Navbar']['url']['url'];
+
+        }
+
+      }
+
+      unset($pages);
+      unset($pages_listed);
+
+    } else {
+      $nav = false;
+    }
+
+  }
+
+  /*
+    === Gestion de la bannière du serveur ===
+  */
+
+		if($this->params['prefix'] !== "admin") {
+			$banner_server = $this->Configuration->getKey('banner_server');
+    	if(empty($banner_server)) {
+      	if($this->Server->online()) {
+        		//$banner_server = $this->Lang->banner_server($this->Server->banner_infos());
+            $server_infos = $this->Server->banner_infos();
+            $banner_server = $this->Lang->get('SERVER__STATUS_MESSAGE', array(
+              '{MOTD}' => @$server_infos['getMOTD'],
+              '{VERSION}' => @$server_infos['getVersion'],
+              '{ONLINE}' => @$server_infos['getPlayerCount'],
+              '{ONLINE_LIMIT}' => @$server_infos['getPlayerMax']
+            ));
+      	} else {
+        		$banner_server = false;
+      	}
+    	} else {
+      	$banner_server = unserialize($banner_server);
+      	if(count($banner_server) == 1) {
+        	$server_infos = $this->Server->banner_infos($banner_server[0]);
+      	} else {
+        	$server_infos = $this->Server->banner_infos($banner_server);
+      	}
+      	if(isset($server_infos['getPlayerMax']) && isset($server_infos['getPlayerCount'])) {
+      		//$banner_server = $this->Lang->banner_server($server_infos);
+          $banner_server = $this->Lang->get('SERVER__STATUS_MESSAGE', array(
+            '{MOTD}' => @$server_infos['getMOTD'],
+            '{VERSION}' => @$server_infos['getVersion'],
+            '{ONLINE}' => @$server_infos['getPlayerCount'],
+            '{ONLINE_LIMIT}' => @$server_infos['getPlayerMax']
+          ));
+      	} else {
+        		$banner_server = false;
+      	}
+    	}
+		}
+
+  /*
+    === Gestion des events globaux ===
+  */
+    $event = new CakeEvent('requestPage', $this, $this->request->data);
+    $this->getEventManager()->dispatch($event);
+
+		if($this->request->is('post')) {
+			$this->getEventManager()->dispatch(new CakeEvent('onPostRequest', $this, $this->request->data));
+		}
+
+  /*
+    === Gestion de la maintenance & bans ===
+  */
+
+		if($this->isConnected) {
+			if($this->User->getKey('rank') == 5 AND $this->params['controller'] != "maintenance" AND $this->params['action'] != "logout" AND $this->params['controller'] != "api") {
+				$this->redirect(array('controller' => 'maintenance', 'action' => 'index/banned', 'plugin' => false, 'admin' => false));
+			}
+		}
+
+    if($this->params['controller'] != "user" && $this->params['controller'] != "maintenance" && $this->Configuration->getKey('maintenance') != '0' && !$this->User->isAdmin()) {
 			$this->redirect(array('controller' => 'maintenance', 'action' => 'index', 'plugin' => false, 'admin' => false));
 		}
 
-		Configure::write('theme', $theme_name);
-		$this->__setTheme();
+
+  /*
+    === On envoie tout à la vue ===
+  */
+		$this->set(compact('nav', 'reCaptcha', 'website_name', 'theme_config', 'banner_server', 'user', 'csrfToken', 'facebook_link', 'skype_link', 'youtube_link', 'twitter_link', 'findSocialButtons', 'google_analytics', 'configuration_end_code'));
+
 	}
 
   function apiCall($key, $debug = false, $return = false) { // appelé pour récupérer des données

@@ -637,4 +637,16 @@ class LicenseException extends CakeException {
 		}
 	parent::__construct($message, $code);
 	}
-};
+}
+
+class MinewebCustomMessageException extends CakeException {
+
+	protected $_messageTemplate = 'Custom message error';
+
+	public function __construct($message = null, $code = 500) {
+		if (empty($message)) {
+			$message = 'Custom message error';
+		}
+	parent::__construct($message, $code);
+	}
+}
