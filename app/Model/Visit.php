@@ -7,15 +7,27 @@ class Visit extends AppModel {
     return $data;
   }
 
+  function getVisitRange($limit) {
+    $data = array();
+
+    $search = $this->find('all', array('fields' => 'DATE(created),COUNT(*)', 'group' => 'DATE(created)', 'order' => 'id DESC', 'limit' => $limit));
+
+    foreach ($search as $key => $value) {
+      $data[$value[0]['DATE(created)']] = $value[0]['COUNT(*)'];
+    }
+
+    return $data;
+  }
+
   function getVisitsByDay($day) { // $day au format : date('Y-m-d')
     $data = $this->find('all', array('conditions' => array('created LIKE' => $day.'%')));
     $data['count'] = count($data);
     return $data;
   }
 
-  function get($groupBy, $limit = false, $order = 'DESC') {
+  function getGrouped($groupBy, $limit = false, $order = 'DESC') {
     $data = array();
-    
+
     $search = $this->find('all', array('fields' => $groupBy.',COUNT(*)', 'group' => $groupBy, 'order' => 'id '.$order, 'limit' => $limit));
     foreach ($search as $key => $value) {
 

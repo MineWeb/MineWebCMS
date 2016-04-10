@@ -27,7 +27,7 @@ class AdminController extends AppController {
 			$registered_users_today = $this->User->find('count', array('conditions' => array('created LIKE' => date('Y-m-d').'%')));
 
 			$this->loadModel('Visit');
-			$count_visits = $this->Visit->getVisits(4)['count'];
+			$count_visits = $this->Visit->getVisits()['count'];
 			$count_visits_before_before_yesterday = $this->Visit->getVisitsByDay(date('Y-m-d', strtotime('-3 day')))['count'];
 			$count_visits_before_yesterday = $this->Visit->getVisitsByDay(date('Y-m-d', strtotime('-2 day')))['count'];
 			$count_visits_yesterday = $this->Visit->getVisitsByDay(date('Y-m-d', strtotime('-1 day')))['count'];

@@ -11,9 +11,9 @@ class StatisticsController extends AppController {
 			$this->layout = 'admin';
 
 			$this->loadModel('Visit');
-			$this->set('referers', $this->Visit->get('referer'));
-			$this->set('pages', $this->Visit->get('page'));
-			$this->set('language', $this->Visit->get('lang'));
+			$this->set('referers', $this->Visit->getGrouped('referer'));
+			$this->set('pages', $this->Visit->getGrouped('page'));
+			$this->set('language', $this->Visit->getGrouped('lang'));
 
 		} else {
 			$this->redirect('/');
@@ -28,29 +28,17 @@ class StatisticsController extends AppController {
 			$this->autoRender = false;
 			$this->loadModel('Visit');
 
-			$visits = $this->Visit->getVisits(15);
+			$visits = $this->Visit->getVisitRange(15);
 
 			foreach ($visits as $key => $value) {
 
-				if($key != "count") {
+				$date = strtotime($key);
+				$date = $date * 1000;
 
-					$date = $value['Visit']['created'];
-					$date = explode(' ', $date)[0];
-					$date = strtotime($date);
-					$date = $date * 1000;
-
-
-					if(isset($visitsToFormatte[$date])) {
-						$visitsToFormatte[$date]++;
-					} else {
-						$visitsToFormatte[$date] = 1;
-					}
-
-				}
+				$visitsToFormatte[$date] = intval($value);
 
 			}
 
-			$limit = 15;
 			$i = 0;
 			foreach ($visitsToFormatte as $key => $value) {
 				$visitsFormatted[] = array($key, $value);
