@@ -11,9 +11,9 @@ class StatisticsController extends AppController {
 			$this->layout = 'admin';
 
 			$this->loadModel('Visit');
-			$this->set('referers', $this->Visit->getGrouped('referer'));
-			$this->set('pages', $this->Visit->getGrouped('page'));
-			$this->set('language', $this->Visit->getGrouped('lang'));
+			$this->set('referers', $this->Visit->getGrouped('referer', 10));
+			$this->set('pages', $this->Visit->getGrouped('page', 10));
+			$this->set('language', $this->Visit->getGrouped('lang', 10));
 
 		} else {
 			$this->redirect('/');

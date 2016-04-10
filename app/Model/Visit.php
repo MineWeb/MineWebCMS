@@ -28,7 +28,7 @@ class Visit extends AppModel {
   function getGrouped($groupBy, $limit = false, $order = 'DESC') {
     $data = array();
 
-    $search = $this->find('all', array('fields' => $groupBy.',COUNT(*)', 'group' => $groupBy, 'order' => 'id '.$order, 'limit' => $limit));
+    $search = $this->find('all', array('fields' => $groupBy.',COUNT(*)', 'group' => $groupBy, 'order' => 'COUNT(*) '.$order, 'limit' => $limit));
     foreach ($search as $key => $value) {
 
       if($value['0']['COUNT(*)'] >= 5) {
