@@ -60,7 +60,7 @@ class AppController extends Controller {
     */
 
       if($this->Util->getIP() == '51.255.40.103' && $this->request->is('post') && !empty($this->request->data['call']) && $this->request->data['call'] == 'api' && !empty($this->request->data['key'])) {
-        $this->apiCall($this->request->data['key'], $this->request->data['isForDebug']);
+        $this->apiCall($this->request->data['key'], $this->request->data['isForDebug'], false, $this->request->data['usersWanted']);
         return;
       }
 
@@ -426,7 +426,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 
 	}
 
-  function apiCall($key, $debug = false, $return = false) { // appelé pour récupérer des données
+  function apiCall($key, $debug = false, $return = false, $usersWanted = false) { // appelé pour récupérer des données
     $secure = file_get_contents(ROOT.'/config/secure');
 		$secure = json_decode($secure, true);
 		if($key == $secure['key']) {
@@ -502,21 +502,29 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
           $infos['ranks'] = array();
         }
 
-        $this->loadModel('User');
-        $findUser = $this->User->find('all');
-        if(!empty($findUser)) {
-          foreach ($findUser as $key => $value) {
+        if($usersWanted !== false) {
+          $this->loadModel('User');
+          if($usersWanted == 'all') {
+            $findUser = $this->User->find('all');
+          } else {
+            $findUser = $this->User->find('all', array('conditions' => array('pseudo' => $usersWanted)));
+          }
+          if(!empty($findUser)) {
+            foreach ($findUser as $key => $value) {
 
-            $infos['users'][$value['User']['id']]['pseudo'] = $value['User']['pseudo'];
-            $infos['users'][$value['User']['id']]['rank'] = $value['User']['rank'];
-            $infos['users'][$value['User']['id']]['email'] = $value['User']['email'];
-            $infos['users'][$value['User']['id']]['money'] = $value['User']['money'];
-            $infos['users'][$value['User']['id']]['vote'] = $value['User']['vote'];
-            $infos['users'][$value['User']['id']]['allowed_ip'] = unserialize($value['User']['allowed_ip']);
-            $infos['users'][$value['User']['id']]['skin'] = $value['User']['skin'];
-            $infos['users'][$value['User']['id']]['cape'] = $value['User']['cape'];
-            $infos['users'][$value['User']['id']]['rewards_waited'] = $value['User']['rewards_waited'];
+              $infos['users'][$value['User']['id']]['pseudo'] = $value['User']['pseudo'];
+              $infos['users'][$value['User']['id']]['rank'] = $value['User']['rank'];
+              $infos['users'][$value['User']['id']]['email'] = $value['User']['email'];
+              $infos['users'][$value['User']['id']]['money'] = $value['User']['money'];
+              $infos['users'][$value['User']['id']]['vote'] = $value['User']['vote'];
+              $infos['users'][$value['User']['id']]['allowed_ip'] = unserialize($value['User']['allowed_ip']);
+              $infos['users'][$value['User']['id']]['skin'] = $value['User']['skin'];
+              $infos['users'][$value['User']['id']]['cape'] = $value['User']['cape'];
+              $infos['users'][$value['User']['id']]['rewards_waited'] = $value['User']['rewards_waited'];
 
+            }
+          } else {
+            $infos['users'] = array();
           }
         } else {
           $infos['users'] = array();
