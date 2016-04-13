@@ -96,7 +96,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
     		if($last_check !== false) {
 
           // On récupère les données
-          $last_check_domain = $last_check['domain'];
+          $last_check_domain = parse_url($last_check['domain'], PHP_URL_HOST);
           $last_check = $last_check['time'];
     			$last_check = strtotime('+4 hours', $last_check);
 
@@ -109,7 +109,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
         $secure = $this->getSecure();
 
         // On vérifie que le temps du dernier check est > 4H ou que l'URL a changé entre temps.
-		    if($last_check < time() || $last_check_domain != Router::url('/', true)) {
+		    if($last_check < time() || $last_check_domain != parse_url(Router::url('/', true), PHP_URL_HOST)) {
 
           // On envoie la vérification
           $return = $this->sendToAPI(
