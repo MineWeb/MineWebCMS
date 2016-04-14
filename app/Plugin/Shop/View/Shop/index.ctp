@@ -23,30 +23,40 @@
       <div class="col-md-9">
         <div class="row">
           <?= $vouchers->get_vouchers() // Les promotions en cours ?>
+        </div>
 
-          <?php foreach ($search_items as $k => $v) { ?>
-              <?php if(!isset($category) AND $v['Item']['category'] == $search_first_category OR isset($category) AND $v['Item']['category'] == $category) { ?>
-                  <div class="col-sm-4 col-lg-4 col-md-4">
-                      <div class="thumbnail">
-                          <?php if(isset($v['Item']['img_url'])) { ?><img src="<?= $v['Item']['img_url'] ?>" alt=""><?php } ?>
-                          <div class="caption" style="height:auto;">
-                              <h4 class="pull-right"><?= $v['Item']['price'] ?><?php if($v['Item']['price'] == 1) { echo  ' '.$singular_money; } else { echo  ' '.$plural_money; } ?></h4>
-                              <h4><a href="#"><?= before_display($v['Item']['name']) ?></a>
-                              </h4>
-                              <p><?=
-                              $this->Text->truncate(
-                                strip_tags($v['Item']['description']), 
-                                140,
-                                array('ellipsis' => '...', 'html' => true)
-                              )
-                              ?></p>
-                              <?php if($isConnected AND $Permissions->can('CAN_BUY')) { ?><button class="btn btn-success pull-right display-item" data-item-id="<?= $v['Item']['id'] ?>"><?= $Lang->get('SHOP__BUY') ?></button> <?php } ?>
-                          </div>
-                      </div>
-                  </div>
-              <?php } ?>
+        <div class="row">
+          <?php
+          $col = 4;
+          $i = 0;
+          foreach ($search_items as $k => $v) {
+            if(!isset($category) AND $v['Item']['category'] == $search_first_category OR isset($category) AND $v['Item']['category'] == $category) {
+              $i++;
+              $newRow = ( ( $i % ( (12 / $col) +1 ) ) == 0);
+          ?>
+              <?= ($newRow) ? '</div>' : '' ?>
+              <?= ($newRow) ? '<div class="row">' : '' ?>
+                <div class="col-sm-<?= $col ?> col-lg-<?= $col ?> col-md-<?= $col ?>">
+                    <div class="thumbnail">
+                        <?php if(isset($v['Item']['img_url'])) { ?><img src="<?= $v['Item']['img_url'] ?>" alt=""><?php } ?>
+                        <div class="caption" style="height:auto;">
+                            <h4 class="pull-right"><?= $v['Item']['price'] ?><?php if($v['Item']['price'] == 1) { echo  ' '.$singular_money; } else { echo  ' '.$plural_money; } ?></h4>
+                            <h4><a href="#"><?= before_display($v['Item']['name']) ?></a>
+                            </h4>
+                            <p><?=
+                            $this->Text->truncate(
+                              strip_tags($v['Item']['description']),
+                              140,
+                              array('ellipsis' => '...', 'html' => true)
+                            )
+                            ?></p>
+                            <?php if($isConnected AND $Permissions->can('CAN_BUY')) { ?><button class="btn btn-success pull-right display-item" data-item-id="<?= $v['Item']['id'] ?>"><?= $Lang->get('SHOP__BUY') ?></button> <?php } ?>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
           <?php } ?>
-      </div>
+        </div>
     </div>
   </div>
 </div>

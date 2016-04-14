@@ -31,25 +31,37 @@
 
 						<div role="tabpanel" class="tab-pane<?php if($i == 1) { echo ' active'; } ?>" id="<?= $v['Category']['id'] ?>">
 
-							<?php foreach ($search_items as $key => $value) { ?>
+              <div class="row">
+  							<?php
+                $col = 3;
+                $i = 0;
+                foreach ($search_items as $key => $value) { ?>
 
-								<?php if($value['Item']['category'] == $v['Category']['id']) { ?>
+  								<?php
+                  if($value['Item']['category'] == $v['Category']['id']) {
+                    $i++;
+                    $newRow = ( ( $i % ( (12 / $col) +1 ) ) == 0);
+                  ?>
 
-									<div class="col-sm-3 col-lg-3 col-md-3">
-                    <div class="thumbnail">
-                    	<h4><?= before_display($value['Item']['name']) ?></h4>
-                    	<div class="caption">
-                        	<?php if(isset($value['Item']['img_url'])) { ?><img src="<?= $value['Item']['img_url'] ?>" alt=""><?php } ?>
-                        </div>
-                        <span class="info pull-left"><?= $value['Item']['price'] ?><?php if($value['Item']['price'] == 1) { echo  ' '.$singular_money; } else { echo  ' '.$plural_money; } ?></span>
-                        <?php if($isConnected AND $Permissions->can('CAN_BUY')) { ?><button class="btn btn-primary btn-clear pull-right display-item" data-item-id="<?= $value['Item']['id'] ?>"><?= $Lang->get('SHOP__BUY') ?></button> <?php } ?>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
+                    <?= ($newRow) ? '</div>' : '' ?>
+                    <?= ($newRow) ? '<div class="row">' : '' ?>
 
-								<?php } ?>
+  									<div class="col-sm-3 col-lg-3 col-md-3">
+                      <div class="thumbnail">
+                      	<h4><?= before_display($value['Item']['name']) ?></h4>
+                      	<div class="caption">
+                          	<?php if(isset($value['Item']['img_url'])) { ?><img src="<?= $value['Item']['img_url'] ?>" alt=""><?php } ?>
+                          </div>
+                          <span class="info pull-left"><?= $value['Item']['price'] ?><?php if($value['Item']['price'] == 1) { echo  ' '.$singular_money; } else { echo  ' '.$plural_money; } ?></span>
+                          <?php if($isConnected AND $Permissions->can('CAN_BUY')) { ?><button class="btn btn-primary btn-clear pull-right display-item" data-item-id="<?= $value['Item']['id'] ?>"><?= $Lang->get('SHOP__BUY') ?></button> <?php } ?>
+                          <div class="clearfix"></div>
+                      </div>
+                  </div>
 
-							<?php } ?>
+  								<?php } ?>
+
+  							<?php } ?>
+              </div>
 
 						</div>
 
