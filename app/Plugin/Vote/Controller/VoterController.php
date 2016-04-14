@@ -149,16 +149,20 @@ class VoterController extends VoteAppController {
           curl_setopt($ch, CURLOPT_RETURNTRANSFER,1); // stock la response dans une variable
           curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
           curl_setopt($ch, CURLOPT_PORT, 80); // set port 80
-          curl_setopt($ch, CURLOPT_TIMEOUT, 15); //  timeout curl à 15 secondes.
+          curl_setopt($ch, CURLOPT_TIMEOUT, 2); //  timeout curl à 15 secondes.
 
           curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
+
+
           $result=curl_exec($ch);
+          $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+          curl_close($ch);
 
           $str = substr($result, strpos($result, 'Clic Sortant'), 20);
           $out = filter_var($str, FILTER_SANITIZE_NUMBER_INT);
           $array = array($out, $out-1, $out-2, $out-3, $out+1, $out+2, $out+3);
 
-          if(in_array($this->request->data['out'], $array)) {
+          if(in_array($this->request->data['out'], $array) || $code != 200) {
 
             $this->Session->write('vote.out', true);
             echo json_encode(array('statut' => true, 'msg' =>$this->Lang->get('VOTE__STEP_3_SUCCESS')));
@@ -303,7 +307,7 @@ class VoterController extends VoteAppController {
 					if($value['type'] == 'server') { // si c'est une commande serveur
 
 						$server = $this->executeServerReward($config, $user, $value);
-						if($server) {
+						if($server === true) {
 
 							$rewardsSended[] = $value['name'];
 
@@ -353,7 +357,7 @@ class VoterController extends VoteAppController {
 			if($rewards[$reward]['type'] == 'server') { // si c'est une commande serveur
 
 				$server = $this->executeServerReward($config, $user, $rewards[$reward]);
-				if($server) {
+				if($server === true) {
 
 					return array('status' => true, 'msg' => $this->Lang->get('VOTE__VOTE_SUCCESS').' ! '.$this->Lang->get('VOTE__MESSAGE_VOTE_SUCCESS_REWARD').' : <b>'.$rewards[$reward]['name'].'</b>.');
 
@@ -529,7 +533,9 @@ class VoterController extends VoteAppController {
 
             if($this->request->is('post')) {
                 if(!empty($this->request->data['servers']) AND !empty($this->request->data['website'][0]['page_vote']) AND !empty($this->request->data['website'][0]['time_vote']) AND !empty($this->request->data['website'][0]['website_type']) AND $this->request->data['rewards_type'] == '0' OR $this->request->data['rewards_type'] == '1') {
-                    if(!empty($this->request->data['rewards'][0]['name']) && $this->request->data['rewards'][0]['name'] != "undefined" && !empty($this->request->data['rewards'][0]['type']) && $this->request->data['rewards'][0]['type'] != "undefined") {
+
+                    $firstReward = @key($this->request->data['rewards']);
+                    if(isset($this->request->data['rewards']) && is_array($this->request->data['rewards']) && !empty($this->request->data['rewards']) && !empty($this->request->data['rewards'][$firstReward]['name']) && $this->request->data['rewards'][$firstReward]['name'] != "undefined" && !empty($this->request->data['rewards'][$firstReward]['type']) && $this->request->data['rewards'][$firstReward]['type'] != "undefined") {
                         $this->loadModel('Vote.VoteConfiguration');
                         /*
                         REWARDS -> serialize();
@@ -548,8 +554,8 @@ class VoterController extends VoteAppController {
                         if($this->request->data['rewards_type'] == 0) {
                             foreach ($this->request->data['rewards'] as $key => $value) {
                                 if(!isset($value['proba']) || empty($value['proba'])) {
-                                    echo $this->Lang->get('ERROR__FILL_ALL_FIELDS').'|false';
-                                    die();
+                                    echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+                                    return;
                                 }
                             }
                         }

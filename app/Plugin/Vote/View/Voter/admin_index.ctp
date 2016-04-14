@@ -331,13 +331,17 @@
   $('.delete').click(function(e) {
     e.preventDefault();
     var id = $(this).attr('id');
-    $('#reward-'+id).slideUp(500).empty();
+    $('#reward-'+id).slideUp(500, function() {
+      $(this).remove();
+    });
   });
 
   $('.delete_website').click(function(e) {
     e.preventDefault();
     var id = $(this).attr('id');
-    $('#website-'+id).slideUp(500).empty();
+    $('#website-'+id).slideUp(500, function() {
+      $(this).remove();
+    });
   });
 
 
@@ -370,6 +374,13 @@
           add +='<label><?= $Lang->get('VOTE__CONFIG_REWARD_VALUE') ?></label>';
           add +='<input type="text" name="reward_value" class="form-control reward_value" placeholder="<?= $Lang->get('VOTE__CONFIG_COMMAND_OR_MONEY') ?>">';
         add +='</div>';
+        add += '<small>';
+          add += '<b>{PLAYER}</b> = Pseudo <br>';
+          add += '<b>{REWARD}</b> = <?= $Lang->get('VOTE__REWARD_NAME') ?> <br>';
+          add += '<b>{PROBA}</b> = <?= $Lang->get('VOTE__CONFIG_REWARD_PROBABILITY') ?> <br>';
+          add += '<b>[{+}]</b> <?= $Lang->get('SERVER__PARSE_NEW_COMMAND') ?> <br>';
+          add += '<b><?= $Lang->get('GLOBAL__EXAMPLE') ?>:</b> <i>give {PLAYER} 1 1[{+}]broadcast {PLAYER} ...</i>';
+        add += '</small>';
         add +='<div class="form-group reward_proba_container" style="display:'+display_proba+';">';
           add +='<label><?= $Lang->get('VOTE__CONFIG_REWARD_PROBABILITY') ?></label>';
           add +='<input type="text" name="reward_proba" class="form-control reward_proba" placeholder="<?= addslashes($Lang->get('VOTE__CONFIG_REWARD_PERCENTAGE')) ?>">';
