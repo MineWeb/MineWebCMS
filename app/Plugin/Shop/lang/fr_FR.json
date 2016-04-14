@@ -87,6 +87,7 @@
   "SHOP__USER_POINTS_TRANSFER_WHO": "\u00c0 qui ?",
   "SHOP__USER_POINTS_TRANSFER_HOW_MANY": "Combien ?",
   "SHOP__USER_POINTS_TRANSFER_ERROR_EMPTY": "Vous ne pouvez pas ne rien envoyer",
+  "SHOP__USER_POINTS_TRANSFER_ERROR_YOURSELF":"Vous ne pouvez pas transférer des crédits à vous-même",
   "SHOP__USER_POINTS_TRANSFER_SUCCESS": "L'argent \u00e0 bien \u00e9t\u00e9 envoy\u00e9 !",
 
   "SHOP__ITEM":"Article",
