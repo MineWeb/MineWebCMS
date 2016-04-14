@@ -583,21 +583,11 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
   }
 
 	function beforeRender() {
-		$event = $this->getEventManager()->dispatch(new CakeEvent('onLoadPage', $this, $this->request->data));
+    $event = $this->getEventManager()->dispatch(new CakeEvent('onLoadPage', $this, $this->request->data));
 
 		if($this->params['prefix'] == "admin") {
 			$this->getEventManager()->dispatch(new CakeEvent('onLoadAdminPanel', $this, $this->request->data));
 		}
-
-    // Message flash
-    $flash_messages = null;
-    if($this->params['prefix'] != "admin") {
-      App::uses('SessionHelper', 'View/Helper');
-      $SessionHelper = new SessionHelper(new View());
-      $flash = $SessionHelper->flash();
-      $flash_messages = (!empty($flash)) ? '<div>'.html_entity_decode($flash).'</div>' : '';
-    }
-    $this->set(compact('flash_messages'));
 	}
 
 	function __setTheme() {

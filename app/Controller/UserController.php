@@ -412,12 +412,45 @@ class UserController extends AppController {
 
 			$confirmed = $this->User->getKey('confirmed');
 			if($this->Configuration->getKey('confirm_mail_signup') && !empty($confirmed) && date('Y-m-d H:i:s', strtotime($confirmed)) != $confirmed) { // si ca ne correspond pas à une date -> compte non confirmé
-				$this->Session->setFlash($this->Lang->get('USER__MSG_NOT_CONFIRMED_EMAIL'), 'default.warning');
+				$this->Session->setFlash($this->Lang->get('USER__MSG_NOT_CONFIRMED_EMAIL', array('{URL_RESEND_EMAIL}' => Router::url(array('action' => 'resend_confirmation')))), 'default.warning');
 			}
 
 		} else {
 			$this->redirect('/');
 		}
+	}
+
+	function resend_confirmation() {
+		if($this->isConnected) {
+
+			$confirmed = $this->User->getKey('confirmed');
+			if($this->Configuration->getKey('confirm_mail_signup') && !empty($confirmed) && date('Y-m-d H:i:s', strtotime($confirmed)) != $confirmed) {
+
+				$emailMsg = $this->Lang->get('EMAIL__CONTENT_CONFIRM_MAIL', array(
+					'{LINK}' => Router::url('/user/confirm/', true).$confirmed,
+					'{IP}' => $this->Util->getIP(),
+					'{USERNAME}' => $this->User->getKey('pseudo'),
+					'{DATE}' => $this->Lang->date(date('Y-m-d H:i:s'))
+				));
+
+				$email = $this->Util->prepareMail(
+					$this->User->getKey('email'),
+					$this->Lang->get('EMAIL__TITLE_CONFIRM_MAIL'),
+					$emailMsg
+				)->sendMail();
+
+				if($email) {
+					$this->Session->setFlash($this->Lang->get('USER__CONFIRM_EMAIL_RESEND_SUCCESS'), 'default.success');
+				} else {
+					$this->Session->setFlash($this->Lang->get('USER__CONFIRM_EMAIL_RESEND_FAIL'), 'default.error');
+				}
+
+				$this->redirect(array('action' => 'profile'));
+			}
+
+		}
+
+		throw new NotFoundException();
 	}
 
 	function change_pw() {

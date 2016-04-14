@@ -119,34 +119,39 @@ class SessionHelper extends AppHelper {
 		$out = false;
 
 		if (CakeSession::check('Message.' . $key)) {
-			$flash = CakeSession::read('Message.' . $key);
-			$message = $flash['message'];
-			unset($flash['message']);
+			$out = '';
+			$flashs = CakeSession::read('Message.' . $key);
+			foreach ($flashs as $k => $flash) {
 
-			if (!empty($attrs)) {
-				$flash = array_merge($flash, $attrs);
-			}
+				$message = $flash['message'];
+				unset($flash['message']);
 
-			if ($flash['element'] === 'default') {
-				$class = 'message';
-				if (!empty($flash['params']['class'])) {
-					$class = $flash['params']['class'];
+				if (!empty($attrs)) {
+					$flash = array_merge($flash, $attrs);
 				}
-				$out = '<div id="' . $key . 'Message" class="' . $class . '">' . $message . '</div>';
-			} elseif (!$flash['element']) {
-				$out = $message;
-			} else {
-				$options = array();
-				if (isset($flash['params']['plugin'])) {
-					$options['plugin'] = $flash['params']['plugin'];
+
+				if ($flash['element'] === 'default') {
+					$class = 'message';
+					if (!empty($flash['params']['class'])) {
+						$class = $flash['params']['class'];
+					}
+					$out .= '<div id="' . $key . 'Message" class="' . $class . '">' . $message . '</div>';
+				} elseif (!$flash['element']) {
+					$out .= $message;
+				} else {
+					$options = array();
+					if (isset($flash['params']['plugin'])) {
+						$options['plugin'] = $flash['params']['plugin'];
+					}
+					$tmpVars = $flash['params'];
+					$tmpVars['message'] = $message;
+					$out .= $this->_View->element($flash['element'], $tmpVars, $options);
+
 				}
-				$tmpVars = $flash['params'];
-				$tmpVars['message'] = $message;
-				$out = $this->_View->element($flash['element'], $tmpVars, $options);
 			}
 			CakeSession::delete('Message.' . $key);
 		}
-		return $out;
+		return html_entity_decode($out);
 	}
 
 /**

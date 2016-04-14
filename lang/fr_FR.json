@@ -20,7 +20,7 @@
         "GLOBAL__CUSTOMIZE": "Personalisation",
         "GLOBAL__SUCCESS":"Succès",
         "GLOBAL__INFO":"Information",
-        "GLOBAL__WARNING":"Danger",
+        "GLOBAL__WARNING":"Attention",
         "GLOBAL__TODAY":"Aujourd'hui",
         "GLOBAL__DELETE":"Supprimer",
         "GLOBAL__IN_PROGRESS":"En cours...",
@@ -269,7 +269,7 @@
 
         "LOGIN__BLOCKED": "Vous avez \u00e9t\u00e9 bloqu\u00e9 ! Vous avez tent\u00e9 de vous connecter sans succ\u00e8s 10 fois, veuillez patientez pour pouvoir r\u00e9\u00e9ssayer.",
 
-        "USER__MSG_NOT_CONFIRMED_EMAIL": "Votre email n'est pas confirm\u00e9 ! Vous avez re\u00e7u un email contenant un lien de confirmation.",
+        "USER__MSG_NOT_CONFIRMED_EMAIL": "Votre email n'est pas confirm\u00e9 ! Vous avez re\u00e7u un email contenant un lien de confirmation. <a style=\"text-decoration:underline;\" class=\"text-warning pull-right\" href=\"{URL_RESEND_EMAIL}\">Renvoyer l'email</a>",
         "USER__EMAIL_CONFIRMED": "Email confirm\u00e9",
         "USER__CONFIRM_EMAIL": "Confirmer son email",
         "USER__HIS_HISTORIES": "Son historique",
@@ -336,6 +336,8 @@
         "USER__IMG_UPLOAD_WIDTH_MAX": "Maximum {PIXELS} pixels de largeur",
         "USER__IMG_UPLOAD_HEIGHT_MAX": "Maximum {PIXELS} pixels de hauteur",
         "USER__IMG_UPLOAD_TYPE_PNG": "Doit \u00eatre au format PNG",
+        "USER__CONFIRM_EMAIL_RESEND_SUCCESS":"L'email de confirmation vous a bien été renvoyé !",
+        "USER__CONFIRM_EMAIL_RESEND_FAIL":"L'email de confirmation n'a pas pu être envoyé ! Rééssayez plus tard.",
 
         "HISTORY__CATEGORY_SHOP": "Boutique",
         "HISTORY__CATEGORY_NEWS": "News",

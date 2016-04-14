@@ -17,7 +17,6 @@
         		<div class="ribbon-stitches-bottom"></div>
         	</div>
 			<div class="profile-content">
-				<?= $flash_messages ?>
 				<?= $Module->loadModules('user_profile_messages') ?>
 				<div class="section">
 					<p><b><?= $Lang->get('USER__USERNAME') ?> :</b> <?= $user['pseudo'] ?></p>

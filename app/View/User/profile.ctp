@@ -7,7 +7,6 @@
 		<div class="panel panel-default">
 		 	<div class="panel-body">
 
-				<?= $flash_messages ?>
 				<?= $Module->loadModules('user_profile_messages') ?>
 
 			  	<div class="section">

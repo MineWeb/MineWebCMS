@@ -113,7 +113,9 @@
     </nav>
   <?php } ?>
     <div class="nav-hop"></div>
-    <?php if(isset($flash_messages) && !empty($flash_messages)) {
+    <?php
+    $flash_messages = $this->Session->flash();
+    if(!empty($flash_messages)) {
       echo '<div class="container">'.$flash_messages.'</div>';
     } ?>
     <?= $this->fetch('content'); ?>
