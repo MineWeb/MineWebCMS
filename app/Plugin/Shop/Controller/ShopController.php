@@ -1214,38 +1214,44 @@ class ShopController extends ShopAppController {
 			if($this->isConnected AND $this->User->isAdmin()) {
 				if($this->request->is('post')) {
 					if(!empty($this->request->data['code']) AND !empty($this->request->data['effective_on']) AND !empty($this->request->data['type']) AND !empty($this->request->data['reduction']) AND !empty($this->request->data['end_date'])) {
-						if($this->request->data['effective_on'] == "categories") {
-							$effective_on_value = array('type' => 'categories', 'value' => $this->request->data['effective_on_categorie']);
-						}
-						if($this->request->data['effective_on'] == "items") {
-							$effective_on_value = array('type' => 'items', 'value' => $this->request->data['effective_on_item']);
-						}
-						if($this->request->data['effective_on'] == "all") {
-							$effective_on_value = array('type' => 'all');
-						}
+						if(preg_match('/^[a-zA-Z0-9#]{0,20}$/', $this->request->data['code'])) {
 
-						$this->request->data['effective_on'] = $effective_on_value;
-						$event = new CakeEvent('beforeAddVoucher', $this, array('data' => $this->request->data, 'user' => $this->User->getAllFromCurrentUser()));
-						$this->getEventManager()->dispatch($event);
-						if($event->isStopped()) {
-							return $event->result;
-						}
+							if($this->request->data['effective_on'] == "categories") {
+								$effective_on_value = array('type' => 'categories', 'value' => $this->request->data['effective_on_categorie']);
+							}
+							if($this->request->data['effective_on'] == "items") {
+								$effective_on_value = array('type' => 'items', 'value' => $this->request->data['effective_on_item']);
+							}
+							if($this->request->data['effective_on'] == "all") {
+								$effective_on_value = array('type' => 'all');
+							}
 
-						$this->loadModel('Shop.Voucher');
-						$this->Voucher->read(null, null);
-						$this->Voucher->set(array(
-							'code' => $this->request->data['code'],
-							'effective_on' => serialize($effective_on_value),
-							'type' => intval($this->request->data['type']),
-							'reduction' => $this->request->data['reduction'],
-							'limit_per_user' => $this->request->data['limit_per_user'],
-							'end_date' => $this->request->data['end_date'],
-							'affich' => $this->request->data['affich'],
-						));
-						$this->Voucher->save();
-						$this->History->set('ADD_VOUCHER', 'shop');
-						$this->Session->setFlash($this->Lang->get('SHOP__VOUCHER_ADD_SUCCESS'), 'default.success');
-						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOP__VOUCHER_ADD_SUCCESS')));
+							$this->request->data['effective_on'] = $effective_on_value;
+							$event = new CakeEvent('beforeAddVoucher', $this, array('data' => $this->request->data, 'user' => $this->User->getAllFromCurrentUser()));
+							$this->getEventManager()->dispatch($event);
+							if($event->isStopped()) {
+								return $event->result;
+							}
+
+							$this->loadModel('Shop.Voucher');
+							$this->Voucher->read(null, null);
+							$this->Voucher->set(array(
+								'code' => $this->request->data['code'],
+								'effective_on' => serialize($effective_on_value),
+								'type' => intval($this->request->data['type']),
+								'reduction' => $this->request->data['reduction'],
+								'limit_per_user' => $this->request->data['limit_per_user'],
+								'end_date' => $this->request->data['end_date'],
+								'affich' => $this->request->data['affich'],
+							));
+							$this->Voucher->save();
+							$this->History->set('ADD_VOUCHER', 'shop');
+							$this->Session->setFlash($this->Lang->get('SHOP__VOUCHER_ADD_SUCCESS'), 'default.success');
+							echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOP__VOUCHER_ADD_SUCCESS')));
+
+						} else {
+							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__VOUCHER_ADD_ERROR_CODE_INVALID')));
+						}
 					} else {
 						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
 					}
