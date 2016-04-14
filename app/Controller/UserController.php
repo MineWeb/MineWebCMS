@@ -656,7 +656,7 @@ class UserController extends AppController {
 					$search_user = $find[0]['User'];
 					$this->loadModel('History');
 					$findHistory = $this->History->getLastFromUser($id);
-					$search_user['History'] = $this->History->format($findHistory);
+					$search_user['History'] = $this->History->format($findHistory, $this->Lang);
 
 					$options_ranks = array(
 						0 => $this->Lang->get('USER__RANK_MEMBER'),

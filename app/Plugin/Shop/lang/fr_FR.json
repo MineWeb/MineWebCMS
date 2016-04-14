@@ -185,5 +185,29 @@
   "SHOP__HISTORY_PURCHASES_MONEY":"Historique des achats de {MONEY_NAME}",
 
   "PERMISSIONS__CREDIT_ACCOUNT": "Cr\u00e9diter son compte",
-  "PERMISSIONS__CAN_BUY": "Acheter"
+  "PERMISSIONS__CAN_BUY": "Acheter",
+
+  "HISTORY__CATEGORY_SHOP": "Boutique",
+  "HISTORY__CATEGORY_CREDIT_SHOP": "Cr\u00e9ditation boutique",
+  "HISTORY__ACTION_VALID_PAYSAFECARD":"Validation d'une PaySafeCard",
+  "HISTORY__ACTION_ADD_PAYSAFECARD":"Ajout d'une PaySafeCard",
+  "HISTORY__ACTION_DELETE_VOUCHER":"Suppresion d'un code promotionnel",
+  "HISTORY__ACTION_ADD_VOUCHER":"Ajout d'un code promotionnel",
+  "HISTORY__ACTION_BUY_MONEY_DEDIPASS":"Achat de crédits par Dédipass",
+  "HISTORY__ACTION_EDIT_DEDIPASS_CONFIG":"Modification de la configuration de Dédipass",
+  "HISTORY__ACTION_DELETE_ITEM":"Suppression d'un article sur la boutique",
+  "HISTORY__ACTION_ADD_ITEM":"Ajout d'un article sur la boutique",
+  "HISTORY__ACTION_ADD_CATEGORY":"Ajout d'une catégorie sur la boutique",
+  "HISTORY__ACTION_BUY_ITEM": "Achat de",
+  "HISTORY__ACTION_BUY_MONEY": "Achat de points boutique",
+  "HISTORY__ACTION_SEND_MONEY": "Envoie d'argent",
+  "HISTORY__ACTION_ADD_PAYPAL_OFFER":"Ajout d'une offre PayPal",
+  "HISTORY__ACTION_ADD_STARPASS_OFFER":"Ajout d'une offre StarPass",
+  "HISTORY__ACTION_DELETE_PAYPAL_OFFER":"Suppression d'une offre PayPal",
+  "HISTORY__ACTION_DELETE_STARPASS_OFFER":"Suppression d'une offre StarPass",
+  "HISTORY__ACTION_EDIT_PAYPAL_OFFER":"Modification d'une offre PayPal",
+  "HISTORY__ACTION_EDIT_STARPASS_OFFER":"Modification d'une offre StarPass",
+  "HISTORY__ACTION_ENABLE_PAYSAFECARD":"Activation du mode de paiement PaySafeCard",
+  "HISTORY__ACTION_DISABLE_PAYSAFECARD":"Désactivation du mode de paiement PaySafeCard",
+  "HISTORY__ACTION_ADD_PAYSAFECARD":"Ajout d'une PaySafeCard"
 }

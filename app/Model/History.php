@@ -9,7 +9,7 @@ class History extends AppModel {
 		return $this->find('all', array('conditions' => array('user_id' => $user_id), 'limit' => '50', 'order' => 'id DESC'));
 	}
 
-	public function format($data) {
+	public function format($data, $lang) {
 
 		if(empty($data)) {
 			return array();
@@ -17,8 +17,7 @@ class History extends AppModel {
 
 		$return = array();
 
-		App::import('Component', 'LangComponent');
-		$this->Lang = new LangComponent();
+		$this->Lang = $lang;
 
 		foreach ($data as $key => $value) {
 

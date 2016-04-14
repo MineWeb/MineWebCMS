@@ -24,7 +24,7 @@
 
               <div class="form-group">
                 <label><?= $Lang->get('GLOBAL__SEARCH') ?></label>
-                <input type="text" name="search" placeholder="Pseudo..." class="form-control">
+                <input type="text" name="search" placeholder="Pseudo..." autocomplete="off" class="form-control">
                 <div class="list-group" style="display:none;">
                 </div>
               </div>

@@ -15,9 +15,10 @@
 
             <div class="form-group">
               <div class="checkbox">
-                <input name="sort_by_server" type="checkbox"<?= (isset($config['sort_by_server']) && $config['sort_by_server']) ? ' checked=""' : '' ?>>
+                <input name="disabled-sort_by_server" type="checkbox"<?= (isset($config['sort_by_server']) && $config['sort_by_server']) ? ' checked=""' : '' ?> disabled>
                 <label><?= $Lang->get('SHOP__CONFIG_SORT_BY_SERVER') ?></label>
               </div>
+              <small><?= $Lang->get('GLOBAL__TEMPORALY_DISABLED') ?></small>
             </div>
 
             <div class="form-group">
