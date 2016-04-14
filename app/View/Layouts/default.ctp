@@ -155,15 +155,17 @@
     var CSRF_TOKEN = "<?= $csrfToken ?>";
     </script>
 
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    <?php if(isset($google_analytics) && !empty($google_analytics)) { ?>
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-      ga('create', '<?= (isset($google_analytics)) ? $google_analytics : '' ?>', 'auto');
-      ga('send', 'pageview');
-    </script>
+        ga('create', '<?= $google_analytics ?>', 'auto');
+        ga('send', 'pageview');
+      </script>
+    <?php } ?>
     <?= (isset($configuration_end_code)) ? $configuration_end_code : '' ?>
   <?php } ?>
 </body>

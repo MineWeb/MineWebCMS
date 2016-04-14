@@ -91,6 +91,57 @@ class ExceptionRenderer {
 	public function __construct(Exception $exception) {
 		$this->controller = $this->_getController($exception);
 
+		/*
+			CUSTOM
+		*/
+		$this->controller->theme = $this->controller->Configuration->getKey('theme');
+
+		$this->controller->loadModel('Configuration');
+    $this->controller->set('Configuration', $this->controller->Configuration);
+
+    $website_name = $this->controller->Configuration->getKey('name');
+    $theme_name = $this->controller->Configuration->getKey('theme');
+
+    // thèmes
+    if(strtolower($theme_name) == "default") {
+      $theme_config = file_get_contents(ROOT.'/config/theme.default.json');
+      $theme_config = json_decode($theme_config, true);
+    } else {
+      $theme_config = $this->controller->Theme->getCustomData($theme_name)[1];
+    }
+
+		// partie sociale
+    $facebook_link = $this->controller->Configuration->getKey('facebook');
+  	$skype_link = $this->controller->Configuration->getKey('skype');
+  	$youtube_link = $this->controller->Configuration->getKey('youtube');
+  	$twitter_link = $this->controller->Configuration->getKey('twitter');
+
+    // Variables
+    $google_analytics = $this->controller->Configuration->getKey('google_analytics');
+    $configuration_end_code = $this->controller->Configuration->getKey('end_layout_code');
+
+    $this->controller->loadModel('SocialButton');
+    $findSocialButtons = $this->controller->SocialButton->find('all');
+
+    $reCaptcha['type'] = ($this->controller->Configuration->getKey('captcha_type') == '2') ? 'google' : 'default';
+    $reCaptcha['siteKey'] = $this->controller->Configuration->getKey('captcha_google_sitekey');
+
+    // utilisateur
+    $this->controller->loadModel('User');
+    $this->controller->isConnected = $this->controller->User->isConnected();
+    $this->controller->set('isConnected', $this->controller->isConnected);
+
+    $user = ($this->controller->isConnected) ? $this->controller->User->getAllFromCurrentUser() : array();
+    if(!empty($user)) {
+      $user['isAdmin'] = $this->controller->User->isAdmin();
+    }
+
+		$this->controller->set(compact('nav', 'reCaptcha', 'website_name', 'theme_config', 'banner_server', 'user', 'csrfToken', 'facebook_link', 'skype_link', 'youtube_link', 'twitter_link', 'findSocialButtons', 'google_analytics', 'configuration_end_code'));
+
+		/*
+			====
+		*/
+
 		if (method_exists($this->controller, 'appError')) {
 			$this->controller->appError($exception);
 			return;
@@ -176,6 +227,56 @@ class ExceptionRenderer {
 			call_user_func_array(array($this, $this->method), array($this->error));
 		}
 	}
+
+
+
+	public function license($error) {
+		$message = $error->getMessage();
+		$url = $this->controller->request->here();
+		$this->controller->response->statusCode(500);
+		$this->controller->set(array(
+			'name' => h($message),
+			'message' => h($message),
+			'url' => h($url),
+			'error' => $error,
+			'_serialize' => array('name', 'message', 'url')
+		));
+		$this->_outputMessage('license');
+	}
+
+	public function minewebCustomMessage($error) {
+		$message = $error->getAttributes();
+		$url = $this->controller->request->here();
+		$this->controller->response->statusCode(500);
+		$this->controller->set(array(
+			'name' => h($message),
+			'message' => h($message),
+			'messageTitle' => $message['messageTitle'],
+			'messageHTML' => $message['messageHTML'],
+			'url' => h($url),
+			'error' => $error,
+			'_serialize' => array('name', 'message', 'url')
+		));
+		$this->_outputMessage('mineweb_custom_message');
+	}
+
+	public function forbidden($error) {
+		$message = $error->getMessage();
+		if (!Configure::read('debug') && $error instanceof CakeException) {
+			$message = __d('cake', 'Forbidden');
+		}
+		$url = $this->controller->request->here();
+		$this->controller->response->statusCode(403);
+		$this->controller->set(array(
+			'name' => h($message),
+			'message' => h($message),
+			'url' => h($url),
+			'error' => $error,
+			'_serialize' => array('name', 'message', 'url')
+		));
+		$this->_outputMessage('error403');
+	}
+
 
 /**
  * Generic handler for the internal framework errors CakePHP can generate.

@@ -323,7 +323,7 @@ class UserController extends AppController {
 			}
 
 		} else {
-			new ForbiddenException();
+			throw new ForbiddenException();
 		}
 	}
 
@@ -370,7 +370,7 @@ class UserController extends AppController {
 			}
 
 		} else {
-			new ForbiddenException();
+			throw new ForbiddenException();
 		}
 	}
 

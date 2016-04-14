@@ -106,6 +106,8 @@
         "ERROR__INTERNAL_ERROR":"Erreur, veuillez r\u00e9\u00e9sayer",
         "ERROR__404_LABEL": "Page introuvable",
         "ERROR__404_CONTENT": "La page <b>{URL}<\/b> n'a pas \u00e9t\u00e9 touv\u00e9e ! Celle-ci a s\u00fbrement \u00e9t\u00e9 supprim\u00e9e ou d\u00e9plac\u00e9e",
+        "ERROR__403_LABEL": "Accès interdit",
+        "ERROR__403_CONTENT": "Tu n'as pas la permission d'accèder à la page <b>{URL}<\/b> !",
         "ERROR__500_LABEL": "Erreur 500",
 
         "LICENSE_ERROR__ID_OR_KEY_INVALID": "Licence inconnue",

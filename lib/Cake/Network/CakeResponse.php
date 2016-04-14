@@ -73,7 +73,9 @@ class CakeResponse {
 		502 => 'Bad Gateway',
 		503 => 'Service Unavailable',
 		504 => 'Gateway Time-out',
-		505 => 'Unsupported Version'
+		505 => 'Unsupported Version',
+		900 => 'License exception',
+		901 => 'Mineweb custom message exception'
 	);
 
 /**

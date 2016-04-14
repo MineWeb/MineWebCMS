@@ -631,7 +631,7 @@ class LicenseException extends CakeException {
 
 	protected $_messageTemplate = 'Error with your license';
 
-	public function __construct($message = null, $code = 500) {
+	public function __construct($message = null, $code = 900) {
 		if (empty($message)) {
 			$message = 'Error with you license';
 		}
@@ -641,9 +641,9 @@ class LicenseException extends CakeException {
 
 class MinewebCustomMessageException extends CakeException {
 
-	protected $_messageTemplate = 'Custom message error';
+	protected $_messageTemplate = 'Disabled by mineweb.org with custom message';
 
-	public function __construct($message = null, $code = 500) {
+	public function __construct($message = null, $code = 901) {
 		if (empty($message)) {
 			$message = 'Custom message error';
 		}
