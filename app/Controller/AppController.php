@@ -46,7 +46,7 @@ function rsa_decrypt($data, $privateKey) {
  */
 class AppController extends Controller {
 
-	var $components = array('Util', 'Module', 'Session', 'Security', 'EyPlugin', 'Theme', 'History', 'Statistics', 'Permissions', 'Lang', 'Update', 'Server');
+	var $components = array('Util', 'Module', 'Session', 'Security', 'Lang', 'EyPlugin', 'Theme', 'History', 'Statistics', 'Permissions', 'Update', 'Server');
 	var $helpers = array('Session');
 
 	var $view = 'Theme';
