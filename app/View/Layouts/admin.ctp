@@ -132,7 +132,7 @@
                     </a>
                     <ul class="treeview-menu">
                       <?php foreach ($plugins_need_admin as $key => $value) { ?>
-                        <li><a href="<?= $this->Html->url(array('controller' => $value['slug'], 'action' => 'index', 'admin' => true, 'plugin' => $value['slug'])) ?>"><i class="fa fa-circle-o"></i> <?= $value['name'] ?></a></li>
+                        <li><a href="<?= $this->Html->url($value['slug']) ?>"><i class="fa fa-circle-o"></i> <?= $value['name'] ?></a></li>
                       <?php } ?>
                     </ul>
                   </li>

@@ -295,7 +295,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 		$plugins_need_admin = $this->EyPlugin->getPluginsActive();
 		foreach ($plugins_need_admin as $key => $value) {
 			if($value->admin) {
-				$plugins_admin[] = array('name' => $value->name, 'slug' => $value->slug);
+				$plugins_admin[] = array('name' => $value->admin_name, 'slug' => $value->admin_route);
 			}
 		}
 		if(!empty($plugins_admin)) {
