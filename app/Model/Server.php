@@ -3,7 +3,7 @@ class Server extends AppModel {
 
   public function findSelectableServers($bungee = false) {
 
-    $conditions = ($bungee) ? array('type !=' => '2') : array('type !=' => '2,1');
+    $conditions = ($bungee) ? array('type !=' => 2) : array('type !=' => array(2, 1));
 
     $search_servers = $this->find('all', array('conditions' => $conditions));
     if(!empty($search_servers)) {

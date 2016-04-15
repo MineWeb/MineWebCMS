@@ -272,14 +272,14 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 
   				foreach(glob($path) as $eventFile) { // on récupére tout les fichiers SlugName.php dans le dossier du plugin Events/
 
-  		            // get only the class name
-  		            $className = str_replace(".php", "", basename($eventFile));
+            // get only the class name
+            $className = str_replace(".php", "", basename($eventFile));
 
-  		            App::uses($className, 'Plugin/'.DS.$value->slug.DS.'Event');
+            App::uses($className, 'Plugin'.DS.$value->slug.DS.'Event');
 
-  		            // then instantiate the file and attach it to the event manager
-  		            $this->getEventManager()->attach(new $className($this->request, $this->response, $this));
-  		        }
+            // then instantiate the file and attach it to the event manager
+            $this->getEventManager()->attach(new $className($this->request, $this->response, $this));
+  		    }
 
   			}
 
