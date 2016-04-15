@@ -138,6 +138,11 @@ class FileLog extends BaseLog {
 		}
 
 		$pathname = $this->_path . $filename;
+
+		if(!is_dir($this->_path)) {
+			mkdir($this->_path, 0755, true);
+		}
+
 		if (empty($this->_config['mask'])) {
 			return file_put_contents($pathname, $output, FILE_APPEND);
 		}
