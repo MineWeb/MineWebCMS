@@ -1,0 +1,12 @@
+[submodule "app/Plugin/Shop"]
+	path = app/Plugin/Shop
+	url = https://gitlab.com/mineweb-plugins/shop.git
+[submodule "app/Plugin/Support"]
+	path = app/Plugin/Support
+	url = https://gitlab.com/mineweb-plugins/support.git
+[submodule "app/Plugin/Vote"]
+	path = app/Plugin/Vote
+	url = https://gitlab.com/mineweb-plugins/vote.git
+[submodule "app/Plugin/FactionRanking"]
+	path = app/Plugin/FactionRanking
+	url = https://gitlab.com/mineweb-plugins/faction-ranking.git
