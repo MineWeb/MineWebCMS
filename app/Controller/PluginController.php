@@ -80,7 +80,9 @@ class PluginController extends AppController{
 		if($this->isConnected AND $this->User->isAdmin()) {
 			if($apiID != false AND $slug != false) {
 
-				if($this->EyPlugin->download($apiID, $slug, true)) {
+				$installed = $this->EyPlugin->download($apiID, $slug, true);
+
+				if($installed === true) {
 					$this->History->set('INSTALL_PLUGIN', 'plugin');
 
 					$this->loadModel('Plugin');
@@ -97,12 +99,10 @@ class PluginController extends AppController{
 						)
 					));
 				} else {
-					echo json_encode(array('statut' => 'error', 'msg' => $this->Session->read('Message.flash.message')));
-					$this->Session->delete('Message.flash');
+					echo json_encode(array('statut' => 'error', 'msg' => $this->Lang->get($installed)));
 				}
 			} else {
-				echo json_encode(array('statut' => 'error', 'msg' => $this->Session->read('Message.flash.message')));
-				$this->Session->delete('Message.flash');
+				echo json_encode(array('statut' => 'error', 'msg' => $this->Lang->get($installed)));
 			}
 		} else {
 			throw new ForbiddenException();
@@ -113,11 +113,14 @@ class PluginController extends AppController{
 		if($this->isConnected AND $this->User->isAdmin()) {
 			if($plugin_id != false AND $plugin_name != false) {
 
-				if($this->EyPlugin->update($plugin_id, $plugin_name)) {
+				$updated = $this->EyPlugin->update($plugin_id, $plugin_name);
+
+				if($updated === true) {
 					$this->History->set('UPDATE_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN__UPDATE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				} else {
+					$this->Session->setFlash($this->Lang->get($updated, 'default.error'));
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				}
 			} else {

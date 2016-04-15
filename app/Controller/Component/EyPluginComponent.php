@@ -560,32 +560,26 @@ class EyPluginComponent extends Object {
           $zip = $return;
         } elseif($return_json['status'] == "error") {
 
-          $LangComponent = $this->controller->Lang;
-          SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_CANT_BE_DOWNLOADED'), 'default.error');
+          return 'ERROR__PLUGIN_CANT_BE_DOWNLOADED';
 
           return false;
         }
       } else {
 
-        $LangComponent = $this->controller->Lang;
-        SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_CANT_BE_DOWNLOADED'), 'default.error');
+        return 'ERROR__PLUGIN_CANT_BE_DOWNLOADED';
 
         return false;
       }
 
       if($install) {
         if(unzip($zip, $this->pluginsFolder, 'install-zip', true)) { // on dé-zip tout
-          $this->install($slug, true);
-          return;
+          return $this->install($slug, true);
         }
       } else {
         return $zip;
       }
 
-      $LangComponent = $this->controller->Lang;
-      SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_CANT_BE_DOWNLOADED'), 'default.error');
-
-      return false;
+      return 'ERROR__PLUGIN_CANT_BE_DOWNLOADED';
     }
 
   // Fonction d'installation
@@ -601,9 +595,7 @@ class EyPluginComponent extends Object {
             if($addTables['status']) {
               $tablesName = $addTables['tables'];
             } else {
-              $LangComponent = $this->controller->Lang;
-              SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_SQL_INSTALLATION'), 'default.error');
-              return false;
+              return 'ERROR__PLUGIN_SQL_INSTALLATION';
             }
 
             // On récupére la configuration & les noms des tables ajoutées
@@ -635,6 +627,8 @@ class EyPluginComponent extends Object {
 
             CakePlugin::load(array($slug => array('routes' => true, 'bootstrap' => true))); // On load sur cake
 
+            return true;
+
         } else {
           if($downloaded) {
             clearDir($this->pluginsFolder.DS.$slug); // On supprime ce qu'on a dl
@@ -642,8 +636,7 @@ class EyPluginComponent extends Object {
             CakePlugin::unload($slug); // On unload sur cake
             Cache::clear(false, '_cake_core_'); // On clear le cache
 
-            $LangComponent = $this->controller->Lang;
-            SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_REQUIREMENTS'), 'default.error');
+            return 'ERROR__PLUGIN_REQUIREMENTS';
           }
         }
 
@@ -654,8 +647,7 @@ class EyPluginComponent extends Object {
           CakePlugin::unload($slug); // On unload sur cake
           Cache::clear(false, '_cake_core_'); // On clear le cache
 
-          $LangComponent = $this->controller->Lang;
-          SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_NOT_VALID'), 'default.error');
+          return 'ERROR__PLUGIN_NOT_VALID';
         }
       }
     }
@@ -696,9 +688,7 @@ class EyPluginComponent extends Object {
               $pluginTables = unserialize($searchPlugin['tables']);
               $pluginTables = $addTables['tables']; // on ajoute si y'en a en plus
             } else {
-              $LangComponent = $this->controller->Lang;
-              SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_SQL_INSTALLATION'), 'default.error');
-              return false;
+              return 'ERROR__PLUGIN_SQL_INSTALLATION';
             }
 
             // On update dans la base de donnée
@@ -723,15 +713,14 @@ class EyPluginComponent extends Object {
             Cache::clear(false, '_cake_core_'); // vidons le cache
             CakePlugin::load(array($slug => array('routes' => true, 'bootstrap' => true))); // On load sur cake
 
+            return true;
+
           }
         } else {
-          $LangComponent = $this->controller->Lang;
-          SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_PERMISSIONS'), 'default.error');
+          return 'ERROR__PLUGIN_PERMISSIONS';
         }
-        return false;
       } else {
-        $LangComponent = $this->controller->Lang;
-        SessionComponent::setFlash($LangComponent->get('ERROR__PLUGIN_REQUIREMENTS'), 'default.error');
+        return 'ERROR__PLUGIN_REQUIREMENTS';
       }
     }
 

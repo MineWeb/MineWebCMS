@@ -145,16 +145,16 @@
 
           if(data.statut == "success") {
             // on met le message
-            $('.ajax').empty().html('<div class="alert alert-success"><b><?= $Lang->get('GLOBAL__SUCCESS') ?> : <?= $Lang->get('PLUGIN__INSTALL_SUCCESS') ?></b></div>').fadeIn(500);
+            $('.ajax').empty().html('<div class="alert alert-success"><b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> <?= $Lang->get('PLUGIN__INSTALL_SUCCESS') ?></div>').fadeIn(500);
 
             // on bouge le plugin dans le tableau dans les plugins installés
             $('table#plugin-not-installed').find('tr[plugin-apiID="'+apiID+'"]').slideUp(250);
             $('table#plugin-installed tr:last').after('<tr><td>'+data.plugin.name+'</td><td>'+data.plugin.author+'</td><td>'+data.plugin.dateformatted+'</td><td>'+data.plugin.version+'</td><td><span class="label label-success"><?= $Lang->get('GLOBAL__ENABLED') ?></span></td><td><a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'disable', 'admin' => true)) ?>'+data.plugin.DBid+'" class="btn btn-info"><?= $Lang->get('GLOBAL__DISABLED') ?></a><a onClick="confirmDel(\'<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete', 'admin' => true)) ?>'+data.plugin.DBid+'\')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a></td></tr>');
 
           } else if(data.statut == "error") {
-            $('.ajax').empty().html('<div class="alert alert-error"><b><?= $Lang->get('GLOBAL__ERROR') ?> : '+data.msg+'</b></div>').fadeIn(500);
+            $('.ajax').empty().html('<div class="alert alert-error"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b>'+data.msg+'</div>').fadeIn(500);
           } else {
-            $('.ajax').empty().html('<div class="alert alert-error"><b><?= $Lang->get('GLOBAL__ERROR') ?> : <?= addslashes($Lang->get('ERROR__INTERNAL_ERROR')) ?></b></div>').fadeIn(500);
+            $('.ajax').empty().html('<div class="alert alert-error"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b><?= addslashes($Lang->get('ERROR__INTERNAL_ERROR')) ?></div>').fadeIn(500);
           }
 
         }
