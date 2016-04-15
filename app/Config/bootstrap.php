@@ -188,8 +188,8 @@ if(!file_exists(ROOT.DS.'config'.DS.'install.txt')) {
 									$db->execute($query);
 							} catch (PDOException $e) {
 									$error[] = $table . ': ' . $e->getMessage();
-									file_put_contents(ROOT.DS.'tmp'.DS.'logs'.DS.'db.log',
-										file_get_contents(ROOT.DS.'tmp'.DS.'logs'.DS.'db.log').
+									file_put_contents(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'db.log',
+										file_get_contents(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'db.log').
 										"\n".$e->getMessage()
 									);
 							}

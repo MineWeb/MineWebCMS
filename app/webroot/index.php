@@ -75,7 +75,7 @@ if (!defined('WWW_ROOT')) {
 	define('WWW_ROOT', dirname(__FILE__) . DS);
 }
 
-require 'install.php';
+require 'verif-install.php';
 if((!file_exists(ROOT.DS.'config'.DS.'install.txt') && $needDisplayDatabase) || $needAffichCompatibility) {
 	require ROOT.DS.'app'.DS.'View'.DS.'Install'.DS.'first.ctp';
 	die();
