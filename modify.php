@@ -86,14 +86,14 @@ function remove_column($table, $name) {
   }
 }
 $users = array();
-function author_to_userid($table) {
+function author_to_userid($table, $column) {
 
   global $db;
   global $users;
   $verif = $db->query('SHOW COLUMNS FROM '.$table.';');
   $execute = false;
   foreach ($verif as $k => $v) {
-    if($v['COLUMNS']['Field'] == 'author') {
+    if($v['COLUMNS']['Field'] == $column) {
       $execute = true;
       break;
     }
@@ -104,7 +104,7 @@ function author_to_userid($table) {
     foreach ($data as $key => $value) {
 
       $table_author_id = $value[$table]['id'];
-      $author_name = $value[$table]['author'];
+      $author_name = $value[$table][$column];
 
       if(isset($users[$author_name])) {
         $author_id = $users[$author_name];
@@ -128,6 +128,8 @@ function author_to_userid($table) {
 
     }
     unset($data);
+
+    remove_column($table, $column);
 
   }
 }
