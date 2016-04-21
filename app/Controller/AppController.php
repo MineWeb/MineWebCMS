@@ -362,7 +362,6 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 			$banner_server = $this->Configuration->getKey('banner_server');
     	if(empty($banner_server)) {
       	if($this->Server->online()) {
-        		//$banner_server = $this->Lang->banner_server($this->Server->banner_infos());
             $server_infos = $this->Server->banner_infos();
             $banner_server = $this->Lang->get('SERVER__STATUS_MESSAGE', array(
               '{MOTD}' => @$server_infos['getMOTD'],
@@ -422,7 +421,23 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
   /*
     === On envoie tout à la vue ===
   */
-		$this->set(compact('nav', 'reCaptcha', 'website_name', 'theme_config', 'banner_server', 'user', 'csrfToken', 'facebook_link', 'skype_link', 'youtube_link', 'twitter_link', 'findSocialButtons', 'google_analytics', 'configuration_end_code'));
+		$this->set(compact(
+      'nav',
+      'reCaptcha',
+      'website_name',
+      'theme_config',
+      'server_infos',
+      'banner_server',
+      'user',
+      'csrfToken',
+      'facebook_link',
+      'skype_link',
+      'youtube_link',
+      'twitter_link',
+      'findSocialButtons',
+      'google_analytics',
+      'configuration_end_code'
+    ));
 
 	}
 

@@ -218,10 +218,10 @@ class PagesController extends AppController {
 				$this->set(compact('page'));
 				$this->set('title_for_layout', $page['title']);
 			} else {
-				$this->redirect('/');
+				throw new NotFoundException();
 			}
 		} else {
-			$this->redirect('/');
+			throw new NotFoundException();
 		}
 	}
 

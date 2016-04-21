@@ -277,6 +277,23 @@ class ExceptionRenderer {
 		$this->_outputMessage('error403');
 	}
 
+	public function notfound($error) {
+		$message = $error->getMessage();
+		if (!Configure::read('debug') && $error instanceof CakeException) {
+			$message = __d('cake', 'Not Found');
+		}
+		$url = $this->controller->request->here();
+		$this->controller->response->statusCode(404);
+		$this->controller->set(array(
+			'name' => h($message),
+			'message' => h($message),
+			'url' => h($url),
+			'error' => $error,
+			'_serialize' => array('name', 'message', 'url')
+		));
+		$this->_outputMessage('error404');
+	}
+
 
 /**
  * Generic handler for the internal framework errors CakePHP can generate.
