@@ -84,12 +84,13 @@ class LangComponent extends Object {
     		}
       } else { // config
     		$this->Configuration = $this->controller->Configuration;
-    		$language = $this->Configuration->getKey('lang');
+        try {
+    		  $language = $this->Configuration->getKey('lang');
+        } catch(Exception $e) {}
       }
 
       // Si la langue existe bien
-
-      if(empty($language) || !isset($this->languages[$language])) {
+      if(!isset($language) || empty($language) || !isset($this->languages[$language])) {
         $language = 'fr_FR'; // sinon on met en français de base
       }
 
@@ -110,9 +111,11 @@ class LangComponent extends Object {
 
       $this->EyPlugin = $this->controller->EyPlugin;
 
-      $plugins = $this->EyPlugin->getPluginsActive();
+      try {
+        $plugins = $this->EyPlugin->getPluginsActive();
+      } catch(Exception $e) {}
 
-      if(!empty($plugins)) {
+      if(isset($plugins) && !empty($plugins)) {
 
         foreach ($plugins as $key => $value) {
           $name = $value->slug;

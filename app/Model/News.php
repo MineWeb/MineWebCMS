@@ -70,7 +70,7 @@ class News extends AppModel {
 							}
 							if(isset($result[$index][$key]['Comment'])) {
 								foreach ($result[$index][$key]['Comment'] as $k => $v) {
-									$result[$index][$key]['Comment'][$k]['author'] = $users[$v['user_id']];
+									$result[$index][$key]['Comment'][$k]['author'] = $this->getUserFromID($v['user_id']);
 								}
 							}
 						}
