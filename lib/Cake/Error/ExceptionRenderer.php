@@ -93,6 +93,19 @@ class ExceptionRenderer {
 		/*
 			CUSTOM
 		*/
+
+		$reCaptcha = null;
+		$website_name = null;
+		$theme_config = null;
+		$user = array();
+		$facebook_link = null;
+		$skype_link = null;
+		$youtube_link = null;
+		$twitter_link = null;
+		$google_analytics = null;
+		$configuration_end_code = null;
+		$isConnected = false;
+
 		$this->controller->Lang = $this->controller->Components->load('Lang');
 		if(get_class($exception) != "MissingConnectionException") {
 			$this->controller->loadModel('Configuration');
@@ -130,15 +143,26 @@ class ExceptionRenderer {
 	    // utilisateur
 	    $this->controller->loadModel('User');
 	    $this->controller->isConnected = $this->controller->User->isConnected();
-	    $this->controller->set('isConnected', $this->controller->isConnected);
+	    $isConnected = $this->controller->isConnected;
 
 	    $user = ($this->controller->isConnected) ? $this->controller->User->getAllFromCurrentUser() : array();
 	    if(!empty($user)) {
 	      $user['isAdmin'] = $this->controller->User->isAdmin();
 	    }
-
-			$this->controller->set(compact('nav', 'reCaptcha', 'website_name', 'theme_config', 'banner_server', 'user', 'csrfToken', 'facebook_link', 'skype_link', 'youtube_link', 'twitter_link', 'findSocialButtons', 'google_analytics', 'configuration_end_code'));
 		}
+		$this->controller->set(compact(
+			'reCaptcha',
+			'website_name',
+			'theme_config',
+			'user',
+			'facebook_link',
+			'skype_link',
+			'youtube_link',
+			'twitter_link',
+			'google_analytics',
+			'configuration_end_code',
+			'isConnected'
+		));
 		/*
 			====
 		*/

@@ -179,7 +179,7 @@ function author_to_userid($table, $column) {
       `created` datetime NOT NULL,
       `modified` datetime NOT NULL,
       PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;")
+    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;");
 
   // Navbar
     add_column('navbars', 'open_new_tab', "int(1) DEFAULT '0'");
