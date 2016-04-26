@@ -88,7 +88,7 @@ function remove_column($table, $name) {
   }
 }
 $_SESSION['users'] = array();
-function author_to_userid($table, $column = 'user_id') {
+function author_to_userid($table, $column = 'author') {
 
   //global $db;
 	$db = ConnectionManager::getDataSource('default');
