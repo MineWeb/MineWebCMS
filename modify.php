@@ -168,7 +168,7 @@ function author_to_userid($table, $column = 'user_id') {
     add_column('configurations', 'confirm_mail_signup_block', "int(1) DEFAULT '0'");
     add_column('configurations', 'member_page_type', "int(1) NOT NULL DEFAULT '0'");
 
-		@$db->query('UPDATE configurations SET theme=\'default\' WHERE id=1')
+		@$db->query('UPDATE configurations SET theme=\'default\' WHERE id=1');
 
   // Histories
     add_column('histories', 'user_id', 'int(20) NOT NULL');
