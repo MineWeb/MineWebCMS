@@ -80,6 +80,7 @@
         "GLOBAL__DATE_R_MINUTES": "minutes",
         "GLOBAL__DATE_R_SECONDS": "secondes",
         "GLOBAL__SAVE": "Sauvegarder",
+        "GLOBAL__CATEGORY": "Catégorie",
         "GLOBAL__TEMPORALY_DISABLED":"Temporairement désactivé",
 
         "HELP__TITLE":"J'ai besoin d'aide",

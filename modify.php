@@ -55,7 +55,8 @@ if($execute_04) {
 
 function add_column($table, $name, $sql) {
 
-  global $db;
+  //global $db;
+	$db = ConnectionManager::getDataSource('default');
 
   $verif = $db->query('SHOW COLUMNS FROM '.$table.';');
   $execute = true;
@@ -71,7 +72,8 @@ function add_column($table, $name, $sql) {
 }
 function remove_column($table, $name) {
 
-  global $db;
+  //global $db;
+	$db = ConnectionManager::getDataSource('default');
 
   $verif = $db->query('SHOW COLUMNS FROM '.$table.';');
   $execute = false;
@@ -85,11 +87,14 @@ function remove_column($table, $name) {
     @$query = $db->query('ALTER TABLE `'.$table.'` DROP COLUMN `'.$name.'`;');
   }
 }
-$users = array();
-function author_to_userid($table, $column) {
+$_SESSION['users'] = array();
+function author_to_userid($table, $column = 'user_id') {
 
-  global $db;
-  global $users;
+  //global $db;
+	$db = ConnectionManager::getDataSource('default');
+
+	$users = $_SESSION['users'];
+  //global $users;
   $verif = $db->query('SHOW COLUMNS FROM '.$table.';');
   $execute = false;
   foreach ($verif as $k => $v) {
@@ -112,7 +117,7 @@ function author_to_userid($table, $column) {
         // on le cherche
         $search_author = $db->query('SELECT id FROM users WHERE pseudo=\''.$author_name.'\'');
         if(!empty($search_author)) {
-          $author_id = $users[$author_name] = $search_author[0]['users']['id'];
+          $author_id = $_SESSION['users'][$author_name] = $search_author[0]['users']['id'];
         } else {
           $author_id = $users[$author_name] = 0;
         }
@@ -163,6 +168,8 @@ function author_to_userid($table, $column) {
     add_column('configurations', 'confirm_mail_signup_block', "int(1) DEFAULT '0'");
     add_column('configurations', 'member_page_type', "int(1) NOT NULL DEFAULT '0'");
 
+		@$db->query('UPDATE configurations SET theme=\'default\' WHERE id=1')
+
   // Histories
     add_column('histories', 'user_id', 'int(20) NOT NULL');
     author_to_userid('histories');
@@ -179,7 +186,7 @@ function author_to_userid($table, $column) {
       `created` datetime NOT NULL,
       `modified` datetime NOT NULL,
       PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;");
+    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;"); // ICI
 
   // Navbar
     add_column('navbars', 'open_new_tab', "int(1) DEFAULT '0'");
@@ -231,4 +238,5 @@ function author_to_userid($table, $column) {
 // Général
 @clearFolder(ROOT.'/app/tmp/cache/models/');
 @clearFolder(ROOT.'/app/tmp/cache/persistent/');
+@unlink(ROOT.DS.'lang'.DS.'fr.json');
 ?>

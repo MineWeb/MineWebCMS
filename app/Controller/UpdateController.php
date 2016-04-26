@@ -30,14 +30,22 @@ class UpdateController extends AppController {
 		}
 	}
 
-	public function admin_update() {
+	public function admin_update($componentUpdated = '0') {
 		if($this->isConnected AND $this->User->isAdmin()) {
+			$this->response->type('json');
 			$this->autoRender = false;
-			if($this->Update->update($this->Update->update['version'])) {
-				echo $this->Lang->get('UPDATE__SUCCESS').'|true';
+
+			$componentUpdated = boolval($componentUpdated);
+			if($this->Update->updateCMS($componentUpdated)) {
+				if($componentUpdated == '1') {
+					echo json_encode(array('statut' => 'success', 'msg' => $this->Lang->get('UPDATE__SUCCESS')));
+				} else {
+					echo json_encode(array('statut' => 'continue', 'msg' => ''));
+				}
 			} else {
-				echo $this->Lang->get('UPDATE__FAILED').'|false';
+				echo json_encode(array('statut' => 'error', 'msg' => $this->Lang->get('UPDATE__FAILED')));
 			}
+
 		} else {
 			$this->redirect('/');
 		}

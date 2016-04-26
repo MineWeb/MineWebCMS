@@ -57,38 +57,44 @@
   </div>
 </section>
 <script>
+  function callMAJ(updaterUpdated) {
+    var inputs = {};
+    inputs["data[_Token][key]"] = '<?= $csrfToken ?>';
+
+    if(updaterUpdated === undefined || updaterUpdated.length == 0) {
+      updaterUpdated = '0';
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: '<?= $this->Html->url(array('action' => 'update')) ?>/'+updaterUpdated,
+      data: inputs,
+      success: function(data) {
+
+        if(data.statut == "success") {
+          $('#update-msg').empty().html('<div class="alert alert-success" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data.msg+'</i></div>').fadeIn(500);
+          $('#update').remove();
+          $("#log-update").load("<?= $this->Html->url(array('action' => 'index')) ?> #log-update").fadeIn(500);
+        } else if(data.statut == "continue") {
+          callMAJ('1');
+        } else if(data.statut == "error") {
+          $('#update-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data.msg+'</i></div>').fadeIn(500);
+        } else {
+          alert('Error!');
+        }
+
+      },
+      error: function() {
+        alert('Error!');
+      }
+    });
+  }
+
   $('#update').click(function() {
     $('#update').attr('disabled', 'disabled');
     $('#update-msg').html('<br><div class="alert alert-info"><?= $Lang->get('UPDATE__LOADING') ?></div>').fadeIn(500);
 
-    var inputs = {};
-    inputs["data[_Token][key]"] = '<?= $csrfToken ?>';
-
-    $.ajax({
-      xhr: function() {
-            $('.progress').css('display', 'block');
-            var xhr = new window.XMLHttpRequest();
-            xhr.addEventListener('progress', function(e) {
-                if (e.lengthComputable) {
-                    $('.progress .bar').css('width', '' + (100 * e.loaded / e.total) + '%');
-                }
-            });
-            return xhr;
-        },
-      type: 'POST',
-      url: '<?= $this->Html->url(array('controller' => 'update', 'action' => 'update', 'admin' => true)) ?>',
-      data: inputs,
-      complete: function(response, status, xhr) {
-        data2 = response['responseText'].split("|");
-        if(data2.indexOf('true') != -1) {
-          $('#update-msg').empty().html('<div class="alert alert-success" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-            $('#update').remove();
-            $("#log-update").load("<?= $this->Html->url(array('controller' => 'update', 'action' => 'index', 'admin' => true)) ?> #log-update").fadeIn(500);
-        } else if(data2.indexOf('false') != -1) {
-          $('#update-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-        }
-        $('.progress').remove();
-      }
-    });
+    callMAJ();
   });
+
 </script>

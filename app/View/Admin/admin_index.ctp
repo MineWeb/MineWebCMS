@@ -270,7 +270,7 @@
             <tbody>
               <tr>
                 <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
-                <th><?= $Lang->get('SHOP__CATEGORY') ?></th>
+                <th><?= $Lang->get('GLOBAL__CATEGORY') ?></th> <!-- ICI -->
                 <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
                 <th><?= $Lang->get('GLOBAL__AUTHOR') ?></th>
             </tr>
