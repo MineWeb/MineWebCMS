@@ -16,11 +16,15 @@ class UpdateController extends AppController {
             	}
         	}
 
+				if(empty($files)) {
         	arsort($files);
         	$files = array_keys($files);
         	$logs = array_shift($files);
         	$logs = file_get_contents(ROOT.'/app/tmp/logs/update/'.$logs);
         	$logs = json_decode($logs, true);
+				} else {
+					$logs = array();
+				}
       } else {
       	$logs = array();
       }

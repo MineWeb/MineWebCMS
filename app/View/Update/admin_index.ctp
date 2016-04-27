@@ -39,8 +39,17 @@
                   <?php if(!empty($logs['update'])) { ?>
                     <?php foreach ($logs['update'] as $k => $v) { ?>
                     <tr>
-                      <td><?= $Lang->get('UPDATE__ACTION_'.key($v)) ?></td>
-                      <td><?= $Lang->get(strtoupper($v[key($v)]['statut'])) ?></td>
+                      <td><?= $Lang->get('UPDATE__LOGS_'.key($v)) ?></td>
+                      <td>
+                        <?php
+                          $status = strtoupper($v[key($v)]['statut']);
+                          echo '<div class="label label-';
+                          echo ($status == "SUCCESS") ? 'success' : 'danger';
+                          echo '">';
+                            echo $Lang->get('GLOBAL__'.$status);
+                          echo '</div>';
+                        ?>
+                      </td>
                       <td><?= $v[key($v)]['arg'] ?></td>
                       <td></td>
                     </tr>
