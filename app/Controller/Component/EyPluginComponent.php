@@ -124,7 +124,7 @@ class EyPluginComponent extends Object {
 
           $pluginList->$id = (object) array(); // on initialize les données
           $pluginList->$id = $config; // On met l'object config dedans
-          $pluginList->$id->slug = ucfirst($pluginList->$id->slug);
+          $pluginList->$id->slug = $v['name'];
           $pluginList->$id->DBid = $v['id']; // on met l'id de la base de donnée
           $pluginList->$id->DBinstall = $v['created']; // on met quand on l'a installé sur la bdd
           $pluginList->$id->active = ($v['state']) ? true : false; // On met l'object config dedans
@@ -697,13 +697,14 @@ class EyPluginComponent extends Object {
 
   // Fonction d'update
 
-    public function update($apiID, $slug) {
+    public function update($apiID) {
 
       // on récup la config du plugin qu'on veux installé
       $config = $this->getPluginFromAPI($apiID);
+      $slug = $config['slug'];
 
       // les requirements
-      if(!empty($config) && !empty($slug) && $config !== false && $this->requirements($slug, $config)) { // si on a bien les pré-requis
+      if(!empty($config) && $config !== false && $this->requirements($slug, $config)) { // si on a bien les pré-requis
 
         $download = $this->download($apiID, $slug);
         if($download !== false) { // si on à bien dl
@@ -1261,7 +1262,14 @@ class EyPluginComponent extends Object {
       $url = @file_get_contents('http://mineweb.org/api/v'.$this->apiVersion.'/getAllPlugins'); // On get tout les plugins
       if($url !== false) {
         $JSON = json_decode($url, true);
-        $pluginInfo = ($JSON !== false && isset($JSON[$apiID])) ? $JSON[$apiID] : array();
+        if($JSON !== false) {
+          foreach ($JSON as $key => $value) {
+            if($value['apiID'] == $apiID) {
+              $pluginInfo = $value;
+              break;
+            }
+          }
+        }
       }
       return $pluginInfo;
     }

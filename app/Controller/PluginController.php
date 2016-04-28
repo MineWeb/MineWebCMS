@@ -109,11 +109,11 @@ class PluginController extends AppController{
 		}
 	}
 
-	function admin_update($plugin_id, $plugin_name) {
+	function admin_update($plugin_id) {
 		if($this->isConnected AND $this->User->isAdmin()) {
-			if($plugin_id != false AND $plugin_name != false) {
+			if($plugin_id != false) {
 
-				$updated = $this->EyPlugin->update($plugin_id, $plugin_name);
+				$updated = $this->EyPlugin->update($plugin_id);
 
 				if($updated === true) {
 					$this->History->set('UPDATE_PLUGIN', 'plugin');
