@@ -91,7 +91,7 @@ class PluginController extends AppController{
 					echo json_encode(array(
 						'statut' => 'success',
 						'plugin' => array(
-							'name' => $this->EyPlugin->findPluginByApiID($search['Plugin']['apiID'])->name,
+							'name' => $this->EyPlugin->findPluginByApiID($apiID)->name,
 							'DBid' => $search['Plugin']['id'],
 							'author' => $search['Plugin']['author'],
 							'dateformatted' => $this->Lang->date($search['Plugin']['created']),

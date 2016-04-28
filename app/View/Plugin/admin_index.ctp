@@ -32,9 +32,8 @@
                   foreach ($pluginList as $key => $value) {
 
                     if(!isset($value->apiID)) {
-                      $value->apiID = $value->plugin_id;
+                      $value->apiID = $value->plugin_id; // ICI
                     }
-
                   ?>
                   <tr>
                     <td><?= $value->name ?></td>
@@ -55,7 +54,7 @@
                        <?php } ?>
                       <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete/'.$value->DBid, 'admin' => true)) ?>')" class="btn btn-danger delete"><?= $Lang->get('GLOBAL__DELETE') ?></a>
                       <?php if($value->version != $EyPlugin->getPluginLastVersion($value->apiID)) { ?>
-                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'update', $value->apiID, $value->slug, 'admin' => true)) ?>" class="btn btn-warning update"><?= $Lang->get('GLOBAL__UPDATE') ?></a>
+                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'update', $value->apiID, $value->slug, 'admin' => true)) ?>" class="btn btn-warning update"><?= $Lang->get('GLOBAL__UPDATE') ?></a> <!-- ICI -->
                       <?php } ?>
                     </td>
                   </tr>
@@ -155,7 +154,23 @@
 
             // on bouge le plugin dans le tableau dans les plugins installés
             $('table#plugin-not-installed').find('tr[plugin-apiID="'+apiID+'"]').slideUp(250);
-            $('table#plugin-installed tr:last').after('<tr><td>'+data.plugin.name+'</td><td>'+data.plugin.author+'</td><td>'+data.plugin.dateformatted+'</td><td>'+data.plugin.version+'</td><td><span class="label label-success"><?= $Lang->get('GLOBAL__ENABLED') ?></span></td><td><a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'disable', 'admin' => true)) ?>'+data.plugin.DBid+'" class="btn btn-info"><?= $Lang->get('GLOBAL__DISABLED') ?></a><a onClick="confirmDel(\'<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete', 'admin' => true)) ?>'+data.plugin.DBid+'\')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a></td></tr>');
+
+            var tr = '';
+            tr += '<tr>';
+              tr += '<td>'+data.plugin.name+'</td>';
+              tr += '<td>'+data.plugin.author+'</td>';
+              tr += '<td>'+data.plugin.dateformatted+'</td>';
+              tr += '<td>'+data.plugin.version+'</td>';
+              tr += '<td><span class="label label-success"><?= $Lang->get('GLOBAL__YES') ?></span></td>';
+              tr += '<td><span class="label label-success"><?= $Lang->get('GLOBAL__ENABLED') ?></span></td>';
+              tr += '<td>';
+                tr += '<a href="<?= $this->Html->url(array('action' => 'disable')) ?>'+data.plugin.DBid+'" class="btn btn-info"><?= $Lang->get('GLOBAL__DISABLED') ?></a>';
+                tr += "\n";
+                tr += '<a onClick="confirmDel(\'<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete', 'admin' => true)) ?>'+data.plugin.DBid+'\')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>';
+              tr += '</td>';
+            tr += '</tr>';
+
+            $('table#plugin-installed tr:last').after(tr);
 
           } else if(data.statut == "error") {
             $('.ajax').empty().html('<div class="alert alert-error"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b>'+data.msg+'</div>').fadeIn(500);

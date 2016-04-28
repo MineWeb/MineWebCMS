@@ -108,6 +108,7 @@ class EyPluginComponent extends Object {
       $PluginModel = ClassRegistry::init('Plugin');
 
       // On cherche tout les plugins installés en db
+      $PluginModel->cacheQueries = false;
       $dbPlugins = $PluginModel->find('all');
 
       $pluginList = (object) array(); // On met ça en object vide pour l'instant
@@ -494,6 +495,7 @@ class EyPluginComponent extends Object {
       $SchemaShell = new SchemaShell();
 
       $db = ConnectionManager::getDataSource($this->Schema->connection);
+      $db->cacheSources = false;
 
       $options = array(
           'name' => $this->Schema->name,
@@ -552,6 +554,9 @@ class EyPluginComponent extends Object {
               }
           }
       }
+
+      Cache::clearGroup(false, '_cake_core_');
+      Cache::clearGroup(false, '_cake_model_');
 
       return (empty($error)) ? array('status' => true) : array('status' => false, 'error' => $error);
 
@@ -648,7 +653,7 @@ class EyPluginComponent extends Object {
             $this->addPermissions($config->permissions); // On ajoute les permissions
 
             // On récupére le modal
-            $PluginModel = ClassRegistry::init('Plugins');
+            $PluginModel = ClassRegistry::init('Plugin');
 
             // On l'ajoute dans la base de données
             $PluginModel->create();
@@ -716,10 +721,10 @@ class EyPluginComponent extends Object {
           $pluginVersion = $pluginConfig['version']; // récupére la nouvelle version
 
           // On récupére le modal
-          $PluginModel = ClassRegistry::init('Plugins');
+          $PluginModel = ClassRegistry::init('Plugin');
 
           // On récup l'ID du plugin
-          $searchPlugin = $PluginModel->find('first', array('name' => $slug))['Plugin'];
+          $searchPlugin = $PluginModel->find('first', array('conditions' => array('apiID' => $apiID)))['Plugin'];
           $pluginDBID = $searchPlugin['id'];
 
           // Si y'a un fichier d'update à faire, on l'éxécute
