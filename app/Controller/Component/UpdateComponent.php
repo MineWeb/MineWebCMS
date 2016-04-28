@@ -299,51 +299,6 @@ class UpdateComponent extends Object {
         }
     }
 
-  /*
-    Mise à jour des plugins
-  */
-
-    public function plugin($filesContent, $name, $id) {
-
-      $filename = ROOT.DS.'app'.DS.'tmp'.DS.'plugin-'.$name.'-'.$id.'.zip';
-
-      // On écris le zip
-        $file = fopen($filename, 'w+');
-        if(!fwrite($file, $filesContent['content'])) {
-          $this->log('[Update/Install Plugin] Save files failed.');  
-          return false;
-        }
-        fclose($file);
-
-      // On fais l'update
-        $zip = new ZipArchive;
-        $res = $zip->open($filename, ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE );
-
-        // Il a bien été ouvert
-        if ($res === TRUE) {
-          $zip->extractTo(ROOT.DS.'app'.DS.'Plugin'.DS);
-          $zip->close();
-          unlink($filename);
-
-          return true;
-        }
-
-			/*
-			ZIPARCHIVE::ER_EXISTS - 10
-			ZIPARCHIVE::ER_INCONS - 21
-			ZIPARCHIVE::ER_INVAL - 18
-			ZIPARCHIVE::ER_MEMORY - 14
-			ZIPARCHIVE::ER_NOENT - 9
-			ZIPARCHIVE::ER_NOZIP - 19
-			ZIPARCHIVE::ER_OPEN - 11
-			ZIPARCHIVE::ER_READ - 5
-			ZIPARCHIVE::ER_SEEK - 4
-			*/
-
-			$this->log('[Update/Install Plugin] Update files failed. Error code :'.$res);
-      return false;
-
-    }
 
   /*
       Met à jour la base de données

@@ -118,23 +118,25 @@ class EyPluginComponent extends Object {
 
         $config = $this->getPluginConfig($v['name']); // On charge la config
 
-        $id = strtolower($v['author'].'.'.$v['name'].'.'.$config->apiID); // on fais l'id - tout en minuscule
+        if(is_object($config)) {
 
-        $pluginList->$id = (object) array(); // on initialize les données
-        $pluginList->$id = $config; // On met l'object config dedans
-        $pluginList->$id->slug = ucfirst($pluginList->$id->slug);
-        $pluginList->$id->DBid = $v['id']; // on met l'id de la base de donnée
-        $pluginList->$id->DBinstall = $v['created']; // on met quand on l'a installé sur la bdd
-        $pluginList->$id->active = ($v['state']) ? true : false; // On met l'object config dedans
-        $pluginList->$id->tables = unserialize($v['tables']);
-        $pluginList->$id->isValid = $this->isValid($pluginList->$id->slug);
+          $id = strtolower($v['author'].'.'.$v['name'].'.'.$config->apiID); // on fais l'id - tout en minuscule
 
-        /*if($pluginList->$id->isValid && $pluginList->$id->active) {
-          CakePlugin::load($pluginList->$id->slug, array('bootstrap' => true,'routes' => true));
-          CakePlugin::routes($pluginList->$id->slug);
-        }*/
-        if(!$pluginList->$id->isValid || !$pluginList->$id->active) {
-          CakePlugin::unload($pluginList->$id->slug);
+          $pluginList->$id = (object) array(); // on initialize les données
+          $pluginList->$id = $config; // On met l'object config dedans
+          $pluginList->$id->slug = ucfirst($pluginList->$id->slug);
+          $pluginList->$id->DBid = $v['id']; // on met l'id de la base de donnée
+          $pluginList->$id->DBinstall = $v['created']; // on met quand on l'a installé sur la bdd
+          $pluginList->$id->active = ($v['state']) ? true : false; // On met l'object config dedans
+          $pluginList->$id->tables = unserialize($v['tables']);
+          $pluginList->$id->isValid = $this->isValid($pluginList->$id->slug);
+
+          if(!$pluginList->$id->isValid || !$pluginList->$id->active) {
+            CakePlugin::unload($pluginList->$id->slug);
+          }
+
+        } else {
+          CakePlugin::unload($v['name']);
         }
 
       }
@@ -416,13 +418,12 @@ class EyPluginComponent extends Object {
           foreach ($diff as $key => $value) { // on parcours les différences
 
             // On peux le supprimer du coup
-
               $this->delete($value, true); // On lance la fonction de suppression
 
           }
 
           $this->refreshPermissions(); // On refresh les perms pour ne mettre que celle qu'on à besoin
-          Cache::clear(false, '_cake_core_'); // On clear le cache
+          Cache::clearGroup(false, '_cake_core_'); // On clear le cache
 
         }
 
@@ -434,41 +435,53 @@ class EyPluginComponent extends Object {
   // Fonction de suppression
 
     public function delete($slug, $isForced = false) {
-      // Si y'a un MainComponent
-      if(file_exists($this->pluginsFolder.$slug.DS.'Controller'.DS.'Component'.DS.'MainComponent.php')) { // On fais le onDisable si il existe
-        App::uses('MainComponent', 'Plugin'.DS.$slug.DS.'Controller'.DS.'Component');
-        $this->Main = new MainComponent();
-        $this->Main->onDisable(); // on le lance
-      }
 
-      // On récupére le modal
-      $PluginModel = ClassRegistry::init('Plugin');
+      if(!empty($slug)) {
 
-      $search = $PluginModel->find('first', array('conditions' => array('name' => $slug))); // on le cherche pour récupérer les tables
-      if(!empty($search)) {
-
-        $tables = unserialize($search['Plugin']['tables']); // pour récupérer les tables installées
-
-        App::import('Model', 'ConnectionManager');
-        $con = new ConnectionManager;             // charger la db principal
-        $cn = $con->getDataSource('default');
-
-
-        foreach ($tables as $k => $v) { // on les parcours et on les supprimes
-          if(!empty($v)) {
-            $cn->query("DROP TABLE IF EXISTS ".$v); // on les supprimes
-          }
+        // Si y'a un MainComponent
+        if(file_exists($this->pluginsFolder.$slug.DS.'Controller'.DS.'Component'.DS.'MainComponent.php')) { // On fais le onDisable si il existe
+          App::uses('MainComponent', 'Plugin'.DS.$slug.DS.'Controller'.DS.'Component');
+          $this->Main = new MainComponent();
+          $this->Main->onDisable(); // on le lance
         }
 
-        $this->updateDBSchema($slug); // pour supprimer les colonnes maintenant
+        // On récupére le modal
+        $PluginModel = ClassRegistry::init('Plugin');
 
-        $PluginModel->delete($search['Plugin']['id']); // On supprime le plugin de la db
+        $search = $PluginModel->find('first', array('conditions' => array('name' => $slug))); // on le cherche pour récupérer les tables
+        if(!empty($search)) {
 
-        clearDir($this->pluginsFolder.DS.$slug);
-        CakePlugin::unload($slug); // On unload sur cake
-        Cache::clear(false, '_cake_core_'); // On clear le cache
+          $tables = unserialize($search['Plugin']['tables']); // pour récupérer les tables installées
 
-        return true;
+          App::import('Model', 'ConnectionManager');
+          $con = new ConnectionManager;             // charger la db principal
+          $cn = $con->getDataSource('default');
+
+
+          foreach ($tables as $k => $v) { // on les parcours et on les supprimes
+            if(!empty($v)) {
+
+              try {
+                $cn->query("DROP TABLE IF EXISTS ".$v); // on les supprimes
+              } catch (Exception $e) {
+                $this->log('Error when delete plugin '.$slug.' : '.$e->getMessage());
+              }
+
+            }
+          }
+
+          $this->updateDBSchema($slug); // pour supprimer les colonnes maintenant
+
+          $PluginModel->delete($search['Plugin']['id']); // On supprime le plugin de la db
+
+          clearDir($this->pluginsFolder.DS.$slug);
+          CakePlugin::unload($slug); // On unload sur cake
+          Cache::clearGroup(false, '_cake_core_'); // On clear le cache
+          Cache::clearGroup(false, '_cake_model_');
+
+          return true;
+        }
+
       }
 
     }
@@ -548,37 +561,67 @@ class EyPluginComponent extends Object {
 
     public function download($apiID, $slug, $install = false) {
         // get du zip sur mineweb.org
-      $return = $this->controller->sendToAPI(
-                  array(),
-                  'get_plugin/'.$apiID,
-                  true
-                );
+      $return = $this->controller->sendToAPI(array(), 'get_plugin/'.$apiID, true);
 
       if($return['code'] == 200) {
         $return_json = json_decode($return['content'], true);
         if(!$return_json) {
-          $zip = $return;
+          $zip = $return['content'];
         } elseif($return_json['status'] == "error") {
 
+          $this->log('[Install plugin] Can\'t be downloaded (Error code: 1)');
           return 'ERROR__PLUGIN_CANT_BE_DOWNLOADED';
 
           return false;
         }
       } else {
 
+        $this->log('[Install plugin] Can\'t be downloaded (Error code: 2)');
         return 'ERROR__PLUGIN_CANT_BE_DOWNLOADED';
 
         return false;
       }
 
-      if($install) {
-        if(unzip($zip, $this->pluginsFolder, 'install-zip', true)) { // on dé-zip tout
-          return $this->install($slug, true);
-        }
-      } else {
-        return $zip;
-      }
+      $filename = ROOT.DS.'app'.DS.'tmp'.DS.'plugin-'.$slug.'-'.$apiID.'.zip';
 
+      // On écris le zip
+        $file = fopen($filename, 'w+');
+        if(!fwrite($file, $zip)) {
+          $this->log('[Install/Update Plugin] Save files failed.');
+          return false;
+        }
+        fclose($file);
+
+      // On fais l'update
+        $zip = new ZipArchive;
+        $res = $zip->open($filename);
+
+      // Il a bien été ouvert
+        if ($res === TRUE) {
+          $zip->extractTo($this->pluginsFolder.DS);
+          $zip->close();
+          unlink($filename);
+
+          App::uses('Folder', 'Utility');
+          $folder = new Folder($this->pluginsFolder.DS.'__MACOSX');
+          $folder->delete();
+
+          return ($install) ? $this->install($slug, true) : true;
+        }
+
+      /*
+      ZIPARCHIVE::ER_EXISTS - 10
+      ZIPARCHIVE::ER_INCONS - 21
+      ZIPARCHIVE::ER_INVAL - 18
+      ZIPARCHIVE::ER_MEMORY - 14
+      ZIPARCHIVE::ER_NOENT - 9
+      ZIPARCHIVE::ER_NOZIP - 19
+      ZIPARCHIVE::ER_OPEN - 11
+      ZIPARCHIVE::ER_READ - 5
+      ZIPARCHIVE::ER_SEEK - 4
+      */
+
+      $this->log('[Install/Update plugin] Can\'t be downloaded (Error code: 3) - ZipErrorCode: '.$res);
       return 'ERROR__PLUGIN_CANT_BE_DOWNLOADED';
     }
 
@@ -634,7 +677,7 @@ class EyPluginComponent extends Object {
             clearDir($this->pluginsFolder.DS.$slug); // On supprime ce qu'on a dl
 
             CakePlugin::unload($slug); // On unload sur cake
-            Cache::clear(false, '_cake_core_'); // On clear le cache
+            Cache::clearGroup(false, '_cake_core_'); // On clear le cache
 
             return 'ERROR__PLUGIN_REQUIREMENTS';
           }
@@ -645,7 +688,7 @@ class EyPluginComponent extends Object {
           clearDir($this->pluginsFolder.DS.$slug); // On supprime ce qu'on a dl
 
           CakePlugin::unload($slug); // On unload sur cake
-          Cache::clear(false, '_cake_core_'); // On clear le cache
+          Cache::clearGroup(false, '_cake_core_'); // On clear le cache
 
           return 'ERROR__PLUGIN_NOT_VALID';
         }
@@ -660,62 +703,59 @@ class EyPluginComponent extends Object {
       $config = $this->getPluginFromAPI($apiID);
 
       // les requirements
-      if(!empty($config) && $config !== false && $this->requirements($slug, $config)) { // si on a bien les pré-requis
+      if(!empty($config) && !empty($slug) && $config !== false && $this->requirements($slug, $config)) { // si on a bien les pré-requis
 
         $download = $this->download($apiID, $slug);
         if($download !== false) { // si on à bien dl
 
           CakePlugin::unload($slug); // On unload sur cake pour éviter des erreurs
 
-          $this->Update = $this->controller->Update;         // On importe le composant Update
-          if($this->Update->plugin($download, $slug, $apiID)) {
+          $pluginConfig = json_decode(file_get_contents($this->pluginsFolder.DS.$slug.DS.'config.json'), true);
 
-            $pluginConfig = json_decode(file_get_contents($this->pluginsFolder.DS.$slug.DS.'config.json'), true);
+          $pluginVersion = $pluginConfig['version']; // récupére la nouvelle version
 
-            $pluginVersion = $pluginConfig['version']; // récupére la nouvelle version
+          // On récupére le modal
+          $PluginModel = ClassRegistry::init('Plugins');
 
-            // On récupére le modal
-            $PluginModel = ClassRegistry::init('Plugins');
+          // On récup l'ID du plugin
+          $searchPlugin = $PluginModel->find('first', array('name' => $slug))['Plugin'];
+          $pluginDBID = $searchPlugin['id'];
 
-            // On récup l'ID du plugin
-            $searchPlugin = $PluginModel->find('first', array('name' => $slug))['Plugin'];
-            $$pluginDBID = $searchPlugin['id'];
-
-            // Etape base de données
-            $addTables = $this->addTables($slug, true); // On ajoute les tables
-
-            if($addTables['status']) {
-              $pluginTables = unserialize($searchPlugin['tables']);
-              $pluginTables = $addTables['tables']; // on ajoute si y'en a en plus
-            } else {
-              return 'ERROR__PLUGIN_SQL_INSTALLATION';
+          // Si y'a un fichier d'update à faire, on l'éxécute
+          if(file_exists($this->pluginsFolder.DS.$slug.DS.$slug.'_update.php')) {
+            // on l'inclue pour l'exec
+            try {
+              include($this->pluginsFolder.DS.$slug.DS.$slug.'_update.php');
+            } catch(Exception $e) {
+              // y'a eu une erreur
+              $this->log('Error on plugin update ('.$slug.') - '.$e->getMessage());
             }
-
-            // On update dans la base de donnée
-            $PluginModel->read(null, $pluginDBID);
-            $PluginModel->set(array('version' => $pluginVersion, 'tables' => serialize($pluginTables)));
-            $PluginModel->save();
-
-            // Si y'a un fichier d'update à faire, on l'éxécute
-            if(file_exists(ROOT.DS.'temp'.DS.$slug.'_update.php')) {
-              // on l'inclue pour l'exec
-              try {
-                include(ROOT.DS.'temp'.DS.$slug.'_update.php');
-              } catch(Exception $e) {
-                // y'a eu une erreur
-                $this->log('Error on plugin update ('.$slug.') - '.$e->getMessage());
-              }
-              unlink(ROOT.DS.'temp'.DS.$slug.'_update.php'); // on le supprime
-            }
-
-            $this->refreshPermissions(); // On met les jours les permissions
-
-            Cache::clear(false, '_cake_core_'); // vidons le cache
-            CakePlugin::load(array($slug => array('routes' => true, 'bootstrap' => true))); // On load sur cake
-
-            return true;
-
+            unlink($this->pluginsFolder.DS.$slug.DS.$slug.'_update.php'); // on le supprime
           }
+
+          // Etape base de données
+          $addTables = $this->addTables($slug, true); // On ajoute les tables
+
+          if($addTables['status']) {
+            $pluginTables = unserialize($searchPlugin['tables']);
+            $pluginTables = $addTables['tables']; // on ajoute si y'en a en plus
+          } else {
+            return 'ERROR__PLUGIN_SQL_INSTALLATION';
+          }
+
+          // On update dans la base de donnée
+          $PluginModel->read(null, $pluginDBID);
+          $PluginModel->set(array('version' => $pluginVersion, 'tables' => serialize($pluginTables)));
+          $PluginModel->save();
+
+          $this->refreshPermissions(); // On met les jours les permissions
+
+          Cache::clearGroup(false, '_cake_core_'); // vidons le cache
+          Cache::clearGroup(false, '_cake_model_');
+          CakePlugin::load(array($slug => array('routes' => true, 'bootstrap' => true))); // On load sur cake
+
+          return true;
+
         } else {
           return 'ERROR__PLUGIN_PERMISSIONS';
         }
@@ -735,6 +775,7 @@ class EyPluginComponent extends Object {
       $SchemaShell = new SchemaShell();
 
       $db = ConnectionManager::getDataSource($this->Schema->connection);
+      $db->cacheSources = false;
 
       $options = array(
           'name' => $this->Schema->name,
@@ -814,6 +855,14 @@ class EyPluginComponent extends Object {
       }
 
       $this->Schema->after(array(), !$update, $updateEntries);
+
+      if(!empty($error)) {
+        foreach ($error as $key => $value) {
+          if(strpos($value, 'Base table or view already exists')) {
+            unset($error[$key]);
+          }
+        }
+      }
 
       return (empty($error)) ? array('status' => true, 'tables' => $pluginTables) : array('status' => false, 'error' => $error);
 
@@ -954,7 +1003,7 @@ class EyPluginComponent extends Object {
 
       CakePlugin::unload($pluginName); // On unload sur cake
 
-      Cache::clear(false, '_cake_core_'); // vidons le cache
+      Cache::clearGroup(false, '_cake_core_'); // vidons le cache
 
       return true;
 
@@ -1078,8 +1127,10 @@ class EyPluginComponent extends Object {
       foreach ($this->loadPlugins() as $id => $data) { // On parcours tout les plugins (actualiser) pour récupérer leurs permissions
 
         // on parcours les permissions par défaut
-        foreach ($data->permissions->available as $key => $permission) {
-          $pluginsPermissions[] = $permission; // on ajoute la permissions à la liste des permissions par défaut
+        if(isset($data->permissions->available)) {
+          foreach ($data->permissions->available as $key => $permission) {
+            $pluginsPermissions[] = $permission; // on ajoute la permissions à la liste des permissions par défaut
+          }
         }
 
       }
