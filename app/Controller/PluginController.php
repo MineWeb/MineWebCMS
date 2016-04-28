@@ -120,7 +120,7 @@ class PluginController extends AppController{
 					$this->Session->setFlash($this->Lang->get('PLUGIN__UPDATE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				} else {
-					$this->Session->setFlash($this->Lang->get($updated, 'default.error'));
+					$this->Session->setFlash($this->Lang->get($updated), 'default.error');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				}
 			} else {

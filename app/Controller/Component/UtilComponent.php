@@ -200,11 +200,8 @@ class UtilComponent extends Object {
       return $event->result;
     }
 
-    $folders = explode('/', $name);
-    $folders = end($folders);
-    $key = key($folders);
-    unset($folders[$key]); //on supprime le nom du fichier du path
-    $path = implode('/', $folders);
+    $path = pathinfo($name);
+    $path = $path['dirname'];
     if(!is_dir($path)) {
       if(!mkdir($path, 0755, true)) {
         return false;

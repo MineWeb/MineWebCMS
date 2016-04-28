@@ -29,7 +29,13 @@
               </thead>
               <tbody>
                 <?php
-                  foreach ($pluginList as $key => $value) { ?>
+                  foreach ($pluginList as $key => $value) {
+
+                    if(!isset($value->apiID)) {
+                      $value->apiID = $value->plugin_id;
+                    }
+
+                  ?>
                   <tr>
                     <td><?= $value->name ?></td>
                     <td><?= $value->author ?></td>
@@ -49,7 +55,7 @@
                        <?php } ?>
                       <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete/'.$value->DBid, 'admin' => true)) ?>')" class="btn btn-danger delete"><?= $Lang->get('GLOBAL__DELETE') ?></a>
                       <?php if($value->version != $EyPlugin->getPluginLastVersion($value->apiID)) { ?>
-                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'update/'.$value->apiID.'/'.$value->slug, 'admin' => true)) ?>" class="btn btn-warning update"><?= $Lang->get('GLOBAL__UPDATE') ?></a>
+                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'update', $value->apiID, $value->slug, 'admin' => true)) ?>" class="btn btn-warning update"><?= $Lang->get('GLOBAL__UPDATE') ?></a>
                       <?php } ?>
                     </td>
                   </tr>

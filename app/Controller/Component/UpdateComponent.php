@@ -30,15 +30,28 @@ class UpdateComponent extends Object {
 		$this->check();
 
     // Si il n'y a pas de cache ou qu'il est outdated
-		if(!file_exists(ROOT.'/config/update') OR strtotime('+5 hours', filemtime(ROOT.'/config/update')) < time()) {
+		//if(!file_exists(ROOT.'/config/update') OR strtotime('+5 hours', filemtime(ROOT.'/config/update')) < time()) {
 
 			if($this->update['status']) {
         // Si elle est forcé on l'éxecute
 				if($this->update['type'] == "forced") {
-					$this->updateCMS($this->update['version']);
+
+					// On update l'updater
+					if(!file_exists(ROOT.DS.'update_forced_inprogress')) {
+						$this->updateCMS(false); // Première fois qu'elle est lancée
+						file_put_contents(ROOT.DS.'update_forced_inprogress', '1');
+						$this->controller->redirect($this->controller->request->here); // on le redirige à la même page
+					} else {
+
+					// On update le CMS
+						$this->updateCMS(true);
+						unlink(ROOT.DS.'update_forced_inprogress');
+						$this->controller->redirect($this->controller->request->here);
+					}
+
 				}
 			}
-		}
+		//}
 	}
 
   /*
@@ -132,6 +145,9 @@ class UpdateComponent extends Object {
   */
 
 		public function updateCMS($componentUpdated = false) {
+      // On initialise les logs
+        $this->updateLog();
+
       //
         $error = false;
 
@@ -156,9 +172,6 @@ class UpdateComponent extends Object {
                   return false;
                 }
             }
-
-					// On initialise les logs
-		        $this->updateLog();
 
           // On ouvre le zip
             $updateFiles = zip_open(ROOT.DS.'app'.DS.'tmp'.DS.$this->update['version'].'.zip');
@@ -189,10 +202,10 @@ class UpdateComponent extends Object {
                     // On créé le dossier récursivement
                     if(mkdir (ROOT.DS.$folder, 0755, true)) {
                       // On log
-                      $this->updateLog('CREATE_FOLDER', 'success', $folder);
+                      $this->updateLog('UPDATE__LOGS_CREATE_FOLDER', 'success', $folder);
                     } else {
                       // On log
-                      $this->updateLog('CREATE_FOLDER', 'error', $folder);
+                      $this->updateLog('UPDATE__LOGS_CREATE_FOLDER', 'error', $folder);
                       $error = true;
                     }
                   }
@@ -218,15 +231,15 @@ class UpdateComponent extends Object {
                         if(file_exists($filename)) {
 
             							$fileRessourceMD5 = md5($fileContent);
-            							$fileMD5 = md5_file(ROOT.DS.$filename);
+            							$fileMD5 = md5_file(ROOT.DS.$thisFileName);
 
                           // On compare les md5
             							if($fileRessourceMD5 != $fileMD5) {
 
                             if(file_put_contents(ROOT.DS.$filename, $fileContent)) {
-                              $this->updateLog('UPDATE_FILE', 'success', $filename);
+                              $this->updateLog('UPDATE__LOGS_UPDATE_FILE', 'success', $filename);
                             } else {
-                              $this->updateLog('UPDATE_FILE', 'error', $filename);
+                              $this->updateLog('UPDATE__LOGS_UPDATE_FILE', 'error', $filename);
                               $error = true;
                             }
 
@@ -235,9 +248,9 @@ class UpdateComponent extends Object {
                         } else {
                           // Le fichier n'existe pas, on le créé sans problèmes
                           if(file_put_contents(ROOT.DS.$filename, $fileContent)) {
-                            $this->updateLog('CREATE_FILE', 'success', $filename);
+                            $this->updateLog('UPDATE__LOGS_CREATE_FILE', 'success', $filename);
                           } else {
-                            $this->updateLog('CREATE_FILE', 'error', $filename);
+                            $this->updateLog('UPDATE__LOGS_CREATE_FILE', 'error', $filename);
                             $error = true;
                           }
                         }
@@ -290,31 +303,44 @@ class UpdateComponent extends Object {
     Mise à jour des plugins
   */
 
-    public function plugin($zip, $name, $id) {
+    public function plugin($filesContent, $name, $id) {
 
       $filename = ROOT.DS.'app'.DS.'tmp'.DS.'plugin-'.$name.'-'.$id.'.zip';
 
       // On écris le zip
         $file = fopen($filename, 'w+');
-        if(!fwrite($write, $filesContent)) {
-          $this->log('[Update] Save files failed.');
+        if(!fwrite($file, $filesContent['content'])) {
+          $this->log('[Update/Install Plugin] Save files failed.');  
           return false;
         }
-        fclose($write);
+        fclose($file);
 
       // On fais l'update
         $zip = new ZipArchive;
-        $res = $zip->open($filename);
+        $res = $zip->open($filename, ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE );
 
         // Il a bien été ouvert
         if ($res === TRUE) {
           $zip->extractTo(ROOT.DS.'app'.DS.'Plugin'.DS);
           $zip->close();
-          unlink($new_file);
+          unlink($filename);
 
           return true;
         }
 
+			/*
+			ZIPARCHIVE::ER_EXISTS - 10
+			ZIPARCHIVE::ER_INCONS - 21
+			ZIPARCHIVE::ER_INVAL - 18
+			ZIPARCHIVE::ER_MEMORY - 14
+			ZIPARCHIVE::ER_NOENT - 9
+			ZIPARCHIVE::ER_NOZIP - 19
+			ZIPARCHIVE::ER_OPEN - 11
+			ZIPARCHIVE::ER_READ - 5
+			ZIPARCHIVE::ER_SEEK - 4
+			*/
+
+			$this->log('[Update/Install Plugin] Update files failed. Error code :'.$res);
       return false;
 
     }
@@ -417,8 +443,6 @@ class UpdateComponent extends Object {
   			$header = json_encode(array('head' => array('date' => date('d/m/Y H:i:s'), 'version' => $this->update['version'])), JSON_PRETTY_PRINT);
   			fwrite($write, $header);
   			fclose($write);
-
-				return true;
       }
 
       // On log

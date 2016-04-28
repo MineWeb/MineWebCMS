@@ -324,7 +324,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 
           $plugin = $this->EyPlugin->findPluginByDBid($value['Navbar']['url']['id']);
           if(is_object($plugin)) {
-            $nav[$key]['Navbar']['url'] = Router::url('/'.$plugin->slug);
+            $nav[$key]['Navbar']['url'] = Router::url('/'.strtolower($plugin->slug));
           } else {
             $nav[$key]['Navbar']['url'] = '#';
           }
