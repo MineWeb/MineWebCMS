@@ -324,7 +324,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 
           $plugin = $this->EyPlugin->findPluginByDBid($value['Navbar']['url']['id']);
           if(is_object($plugin)) {
-            $nav[$key]['Navbar']['url'] = Router::url('/'.strtolower($plugin->slug));
+            $nav[$key]['Navbar']['url'] = Router::url('/'.$plugin->slug);
           } else {
             $nav[$key]['Navbar']['url'] = '#';
           }
@@ -629,13 +629,17 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
     return json_decode($secure, true);
   }
 
-  public function sendToAPI($data, $url, $addSecure = true, $timeout = 5) {
+  public function sendToAPI($data, $url, $addSecure = true, $timeout = 5, $secureUpdated = array()) {
 
     if($addSecure) {
       $secure = $this->getSecure();
 
       $postfields['id'] = $secure['id'];
-      $postfields['key'] = $secure['key'];
+      if(isset($secureUpdated['key'])) {
+        $postfields['key'] = $secureUpdated['key'];
+      } else {
+        $postfields['key'] = $secure['key'];
+      }
       $postfields['domain'] = Router::url('/', true);
 
       $postfields = json_encode($postfields);

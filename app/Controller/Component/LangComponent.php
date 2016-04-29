@@ -143,6 +143,10 @@ class LangComponent extends Object {
 
     	$language = $this->lang;
 
+      if(!is_array($vars)) {
+        $vars = array();
+      }
+
 	  	if(isset($language['messages'][$msg])) { // et si le msg existe
 			  return strtr($language['messages'][$msg], $vars); // je retourne le msg config et les variables sont remplacés si contenu
 		  }
