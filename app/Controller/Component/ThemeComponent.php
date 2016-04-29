@@ -41,8 +41,8 @@ class ThemeComponent extends Object {
 
     public function getThemesInstalled($api = true) {
 
-      if(!empty($this->themesInstalled)) {
-        return $this->themesInstalled;
+      if(!empty($this->themesInstalled[$api])) {
+        return $this->themesInstalled[$api];
       }
 
       // On set le dossier & on le scan
@@ -75,14 +75,14 @@ class ThemeComponent extends Object {
             $themesList->$id->supported = (empty($checkSupported)) ? true : false;
             $themesList->$id->supportedErrors = $checkSupported;
 
-            if(isset($this->themesAvailable[$id])) {
-              $themesList->$id->lastVersion = $this->themesAvailable[$id]['version'];
+            if(isset($this->themesAvailable['all'][$id])) {
+              $themesList->$id->lastVersion = $this->themesAvailable['all'][$id]['version'];
             }
 
           }
         }
 
-        $this->themesInstalled = $themesList;
+        $this->themesInstalled[$api] = $themesList;
         return $themesList;
 
       } else {
@@ -318,17 +318,24 @@ class ThemeComponent extends Object {
 
       if($return['code'] == 200) {
         $return_json = json_decode($return['content'], true);
-        if(!$return_json) {
+        if($return_json !== false && $return_json !== NULL) {
+          $this->log('[Install theme] Couldn\'t download files, json returned.');
           return false;
         }
       } else {
+        $this->log('[Install theme] Couldn\'t download files, error code (http) : '.$return['code']);
         return false;
       }
 
-      if(unzip($return_json, $this->themesFolder, 'install-theme-'.$apiID.'-zip', true)) {
-        clearDir($this->themesFolder.DS.'__MACOSX');
+      if(unzip($return['content'], $this->themesFolder, 'install-theme-'.$apiID.'-zip', true)) {
+
+        App::uses('Folder', 'Utility');
+        $folder = new Folder($this->themesFolder.DS.'__MACOSX');
+        $folder->delete();
+
         return true;
       } else {
+        $this->log('[Install theme] Couldn\'t unzip files.');
         return false;
       }
 
@@ -346,17 +353,25 @@ class ThemeComponent extends Object {
 
       if($return['code'] == 200) {
         $return_json = json_decode($return['content'], true);
-        if(!$return_json) {
+        if($return_json !== false & $return_json !== NULL) {
+          $this->log('[Update theme] Couldn\'t download files, json returned.');
           return false;
         }
       } else {
+        $this->log('[Update theme] Couldn\'t download files, error code (http) : '.$return['code']);
         return false;
       }
 
-      if(unzip($return_json, $this->themesFolder, 'update-theme-'.$apiID.'-zip', true)) {
+      if(unzip($return['content'], $this->themesFolder, 'update-theme-'.$apiID.'-zip', true)) {
+
+        App::uses('Folder', 'Utility');
+        $folder = new Folder($this->themesFolder.DS.'__MACOSX');
+        $folder->delete();
+
         return true;
-        clearDir($this->themesFolder.DS.'__MACOSX');
+
       } else {
+        $this->log('[Update theme] Couldn\'t unzip files.');
         return false;
       }
 

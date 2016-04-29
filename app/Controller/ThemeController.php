@@ -117,7 +117,7 @@ class ThemeController extends AppController{
 				}
 
 				if($slug != "default") {
-					$this->render(DS.'Themed'.DS.$slug.DS.'config'.DS.'view');
+					$this->render(DS.'Themed'.DS.$slug.DS.'Config'.DS.'view');
 				}
 			} else {
 				$this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));

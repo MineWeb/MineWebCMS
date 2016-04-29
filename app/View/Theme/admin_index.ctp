@@ -11,6 +11,7 @@
             <thead>
                 <tr>
                   <th><?= $Lang->get('GLOBAL__NAME') ?></th>
+                  <th><?= $Lang->get('GLOBAL__VERSION') ?></th>
                   <th><?= $Lang->get('GLOBAL__STATUS') ?></th>
                   <th><?= $Lang->get('THEME__SUPPORTED_STATUS') ?></th>
                   <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
@@ -19,6 +20,7 @@
               <tbody>
                 <tr>
                   <td>Bootstrap</td>
+                  <td>N/A</td>
                   <td>
                     <?php
                     if('default' == $Configuration->getKey('theme')) {
@@ -42,6 +44,7 @@
                   <?php foreach ($themesInstalled as $key => $value) { ?>
                     <tr>
                       <td><?= $value->name ?></td>
+                      <td><?= $value->version ?></td>
                       <td>
                         <?php
                         if($value->slug == $Configuration->getKey('theme')) {
@@ -66,12 +69,12 @@
                           <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable/'.$value->slug, 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ENABLED') ?></a>
                         <?php } ?>
                           <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'theme', 'action' => 'delete/'.$value->slug, 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
-                        <?php if(file_exists(ROOT.'/app/View/Themed/'.$value->slug.'/config/config.json')) { ?>
+                        <?php if(file_exists(ROOT.'/app/View/Themed/'.$value->slug.'/Config/config.json')) { ?>
                           <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom/'.$value->slug, 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('THEME__CUSTOMIZATION') ?></a>
                         <?php } ?>
                         <?php if(isset($value->lastVersion)) { ?>
                           <?php if($value->version !== $value->lastVersion) { ?>
-                            <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'update', 'admin' => true, $value->id)) ?>" class="btn btn-warning"><?= $Lang->get('GLOBAL__UPDATE') ?></a>
+                            <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'update', 'admin' => true, $value->apiID)) ?>" class="btn btn-warning"><?= $Lang->get('GLOBAL__UPDATE') ?></a>
                           <?php } ?>
                         <?php } ?>
                       </td>
@@ -110,7 +113,7 @@
                 <td><?= $value['author'] ?></td>
                 <td><?= $value['version'] ?></td>
                 <td>
-                  <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'install', 'admin' => true, $value['theme_id'])) ?>" class="btn btn-success"><?= $Lang->get('INSTALL__INSTALL') ?></a>
+                  <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'install', 'admin' => true, $value['apiID'])) ?>" class="btn btn-success"><?= $Lang->get('INSTALL__INSTALL') ?></a>
                 </td>
               </tr>
               <?php } ?>
