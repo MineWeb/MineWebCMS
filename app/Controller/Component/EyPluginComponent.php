@@ -673,6 +673,9 @@ class EyPluginComponent extends Object {
               $this->Main->onEnable(); // on le lance
             }
 
+            Cache::clearGroup(false, '_cake_core_');
+            Cache::clearGroup(false, '_cake_model_');
+
             CakePlugin::load(array($slug => array('routes' => true, 'bootstrap' => true))); // On load sur cake
 
             return true;
