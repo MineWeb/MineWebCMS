@@ -1,242 +1,231 @@
 <!DOCTYPE html>
-<html lang="fr">
-
-<head>
-
+<html>
+  <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Eywek">
+    <title><?= $title_for_layout ?> | Admin</title>
 
-    <title><?= $title_for_layout; ?> - MineWeb</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
-    <?= $this->Html->css('bootstrap.css') ?>
-    <?= $this->Html->css('install.css') ?>
-    <?= $this->Html->css('custom.css') ?>
-    <?= $this->Html->css('prettify.css') ?>
+    <?= $this->Html->css('bootstrap.min.css'); ?>
+    <?= $this->Html->css('font-awesome.min.css') ?>
+    <?= $this->Html->css('jquery-jvectormap-1.2.2.css'); ?>
+    <?= $this->Html->css('AdminLTE.min.css'); ?>
+    <?= $this->Html->css('skin-blue.min.css'); ?>
 
-    <?= $this->Html->css("install/bootstrap.install.min.css") ?>
-    <?= $this->Html->css("install/flat.css") ?>
-    <?= $this->Html->css("install/animate.min.css") ?>
-    <?= $this->Html->css("install/install.css") ?>
+    <?= $this->Html->css('dataTables.bootstrap.css'); ?>
 
-</head>
-<body>
-<div class="page-container">
+    <?= $this->Html->css('admin.css'); ?>
 
-    <div class="container">
-      <div class="row row-offcanvas row-offcanvas-left">
+    <!-- jQuery 2.1.4 -->
+    <?= $this->Html->script('jQuery-2.1.4.min.js') ?>
+    <!-- ChartJS 1.0.1 -->
+    <?= $this->Html->script('Chart.min.js') ?>
 
-        <br>
+  <?= $this->Html->script('jquery-ui.min.js') ?>
+  </head>
+  <body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
 
-		<?php if($this->params['action'] == 'end') { ?>
-		<ul class="nav nav-tabs nav-pills nav-stacked col-xs-6 col-sm-3" style="max-width: 300px;">
+      <header class="main-header">
+        <a href="<?= $this->Html->url('/') ?>" class="logo">
+          <span class="logo-mini">DB</span>
+          <span class="logo-lg">Dashboard</span>
+        </a>
+        <nav class="navbar navbar-static-top" role="navigation">
+          <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+          </a>
 
-			<li role="presentation"><a title="<?= $Lang->get('INSTALL__NO_SKIP') ?>"><?= $Lang->get('INSTALL__STEP_1_TITLE') ?></a></li>
-			<li role="presentation"><a title="<?= $Lang->get('INSTALL__NO_SKIP') ?>"><?= $Lang->get('INSTALL__STEP_2_TITLE') ?></a></li>
-			<li role="presentation" class="active"><a title="<?= $Lang->get('INSTALL__NO_SKIP') ?>"><?= $Lang->get('INSTALL__STEP_3_TITLE') ?></a></li>
-		</ul>
-		<?php } else { ?>
-		<div id="tabsleft" class="tabbable tabs-left">
-			<ul class="nav nav-tabs nav-pills nav-stacked col-xs-6 col-sm-3" style="max-width: 300px;">
-				<li role="presentation" class="active"><a href="#tabsleft-tab1" data-toggle="tab" title="<?= $Lang->get('INSTALL__NO_SKIP') ?>"><?= $Lang->get('INSTALL__STEP_1_TITLE') ?></a></li>
-				<li role="presentation" class=""><a href="#tabsleft-tab2" data-toggle="tab" data-toggle="tab" title="<?= $Lang->get('INSTALL__NO_SKIP') ?>"><?= $Lang->get('INSTALL__STEP_2_TITLE') ?></a></li>
-				<li role="presentation" class=""><a href="#tabsleft-tab3" data-toggle="tab" title="<?= $Lang->get('INSTALL__NO_SKIP') ?>"><?= $Lang->get('INSTALL__STEP_3_TITLE') ?></a></li>
-			</ul>
-		<?php } ?>
+          <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+              <li class="user user-menu">
+                <a href="#">
+                  <span class="hidden-xs"><?= $user['pseudo'] ?></span>
+                </a>
+              </li>
+              <li>
+                <a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'logout', 'admin' => false, 'plugin' => false)); ?>"><i class="fa fa-power-off"></i> <?= $Lang->get('USER__LOGOUT') ?></a>
+              </li>
+            </ul>
+          </div>
 
-			<?= $this->Session->flash() ?>
+        </nav>
+      </header>
+      <aside class="main-sidebar">
+        <section class="sidebar">
+          <ul class="sidebar-menu">
 
-			<?= $this->fetch('content'); ?>
+            <li>
+              <a href="<?= $this->Html->url(array('controller' => 'admin', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>">
+                <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+              </a>
+            </li>
 
-    </div><!--/.row-->
-  </div><!--/.container-->
-</div><!--/.page-container-->
-	<!-- script references -->
-	<?= $this->Html->script('jquery-1.11.0.js') ?>
-    <?= $this->Html->script('bootstrap.js') ?>
-    <?= $this->Html->script('jquery.bootstrap.wizard.min.js') ?>
-    <?= $this->Html->script('prettify.js') ?>
-    <script type="text/javascript">
-    	$(document).ready(function() {
-    		$('#tabsleft').bootstrapWizard({
+            <li class="treeview">
+              <a href="#">
+                <i class="fa fa-cogs"></i> <span><?= $Lang->get('GLOBAL__ADMIN_GENERAL') ?></span> <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-users"></i> <?= $Lang->get('USER__USERS') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'permissions', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-user"></i> <?= $Lang->get('PERMISSIONS__LABEL') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'configuration', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-cog"></i> <?= $Lang->get('CONFIG__GENERAL_PREFERENCES') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-bars"></i> <?= $Lang->get('NAVBAR__TITLE') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'slider', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-picture-o"></i> <?= $Lang->get('SLIDER__TITLE') ?></a></li>
+              </ul>
+            </li>
 
-    			'tabClass': 'nav nav-tabs',
+            <li class="treeview">
+              <a href="#">
+                <i class="fa fa-files-o"></i>
+                <span><?= $Lang->get('GLOBAL__CUSTOMIZE') ?></span> <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-pencil"></i> <?= $Lang->get('NEWS__TITLE') ?></a></li>
+                <?php if($EyPlugin->isInstalled('eywek.shop.1')) { ?>
+                  <li class="treeview">
+                    <a href="#">
+                      <i class="fa fa-shopping-cart"></i> <span><?= $Lang->get('SHOP__TITLE') ?></span> <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                      <li><a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true, 'plugin' => 'shop')) ?>"><i class="fa fa-shopping-basket"></i> <?= $Lang->get('SHOP__ADMIN_MANAGE_ITEMS') ?></a></li>
+                      <li><a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'vouchers', 'admin' => true, 'plugin' => 'shop')) ?>"><i class="fa fa-percent"></i> <?= $Lang->get('SHOP__ADMIN_MANAGE_VOUCHERS') ?></a></li>
+                      <li><a href="<?= $this->Html->url(array('controller' => 'payment', 'action' => 'index', 'admin' => true, 'plugin' => 'shop')) ?>"><i class="fa fa-credit-card"></i> <?= $Lang->get('SHOP__ADMIN_MANAGE_PAYMENT') ?></a></li>
+                    </ul>
+                  </li>
+                <?php } ?>
+                <?php if($EyPlugin->isInstalled('eywek.vote.3')) { ?>
+                  <li><a href="<?= $this->Html->url(array('controller' => 'voter', 'plugin' => 'vote', 'admin' => true, 'plugin' => 'vote')) ?>"><i class="fa fa-external-link"></i> <?= $Lang->get('VOTE__TITLE_ACTION') ?></a></li>
+                <?php } ?>
+                <li><a href="<?= $this->Html->url(array('controller' => 'pages', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-file-text-o"></i> <?= $Lang->get('PAGE__TITLE') ?></a></li>
+              </ul>
+            </li>
 
-    			'debug': false,
+            <li class="treeview">
+              <a href="#">
+                <i class="fa fa-server"></i>
+                <span><?= $Lang->get('SERVER__TITLE') ?></span> <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'link', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-arrows-h"></i> <?= $Lang->get('SERVER__LINK') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'banlist', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-ban"></i> <?= $Lang->get('SERVER__BANLIST') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'whitelist', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-list"></i> <?= $Lang->get('SERVER__WHITELIST') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'online', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-list-ul"></i> <?= $Lang->get('SERVER__ONLINE_PLAYERS') ?></a></li>
+              </ul>
+            </li>
 
-    			onNext: function(tab, navigation, index) {
-    				if(index==1) {
+            <li class="treeview">
+              <a href="#">
+                <i class="fa fa-folder-o"></i>
+                <span><?= $Lang->get('GLOBAL__ADMIN_OTHER_TITLE') ?></span> <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-plus"></i> <?= $Lang->get('PLUGIN__TITLE') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-mobile"></i> <?= $Lang->get('THEME__TITLE') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'API', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-sitemap"></i> <?= $Lang->get('API__LABEL') ?></a></li>
 
-              var $form = $('#step1');
-              if($form.find("input[name='step1']").val() == "true") {
+                <?php if(!empty($plugins_need_admin)) { ?>
+                  <li class="treeview">
+                    <a href="#">
+                      <i class="fa fa-share"></i> <span><?= $Lang->get('PLUGIN__ADMIN_PAGE') ?></span>
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                      <?php foreach ($plugins_need_admin as $key => $value) { ?>
+                        <li><a href="<?= $this->Html->url($value['slug']) ?>"><i class="fa fa-circle-o"></i> <?= $value['name'] ?></a></li>
+                      <?php } ?>
+                    </ul>
+                  </li>
+                <?php } ?>
+              </ul>
+            </li>
 
-              	return true;
+            <li>
+              <a href="<?= $this->Html->url(array('controller' => 'statistics', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>">
+                <i class="fa fa-bar-chart-o"></i>
+                <span><?= $Lang->get('STATS__TITLE') ?></span>
+              </a>
+            </li>
 
-              } else {
+            <li>
+              <a href="<?= $this->Html->url(array('controller' => 'maintenance', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>">
+                <i class="fa fa-hand-paper-o"></i>
+                <span><?= $Lang->get('MAINTENANCE__TITLE') ?></span>
+              </a>
+            </li>
 
-                var inputs = {};
-                inputs['key'] = $form.find("input[name='key']").val();
-                inputs['data[_Token][key]'] = "<?= $this->Session->read('_Token')['key'] ?>";
+            <li>
+              <a href="<?= $this->Html->url(array('controller' => 'update', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>">
+                <i class="fa fa-wrench"></i>
+                <span><?= $Lang->get('GLOBAL__UPDATE') ?></span>
+              </a>
+            </li>
 
-                $('input').each(function() {
-                  $(this).addClass('disabled').attr('disabled', true);
-                });
-                $('li.next a').each(function() {
-                  $(this).addClass('disabled').attr('disabled', true);
-                });
-                $('.ajax-msg-step1').empty().html('<div class="alert alert-info">Chargement...</div>');
+            <li>
+              <a href="<?= $this->Html->url(array('controller' => 'help', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>">
+                <i class="fa fa-question"></i>
+                <span><?= $Lang->get('HELP__TITLE') ?></span>
+              </a>
+            </li>
 
-							  var step1success = false;
-		            $.ajax({
-							 	  type : 'POST',
-							 	  url : "<?= $this->Html->url(array('controller' => 'install', 'action' => 'step_1')) ?>",
-							 	  data : inputs,
-                  dataType: 'JSON',
-                  async: false,
-							 	  success : function(data) {
+          </ul>
+        </section>
+      </aside>
 
-                    $('input').each(function() {
-                      $(this).removeClass('disabled').attr('disabled', false);
-                    });
-                    $('li.next a').each(function() {
-                      $(this).removeClass('disabled').attr('disabled', false);
-                    });
+      <div class="content-wrapper">
+        <div style="padding: 15px;">
+          <?= $Update->available() ?>
+          <?= (isset($admin_custom_message['messageHTML'])) ? $admin_custom_message['messageHTML'] : '' ?>
+          <?php echo $this->Session->flash(); ?>
+        </div>
 
+        <?php echo $this->fetch('content'); ?>
+      </div>
 
-                    if(data.statut) {
-                      $('.ajax-msg-step1').empty().html('<div class="alert alert-success"><b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data.msg+'</div>').fadeIn(500);
-                      step1success = true;
-                      return true;
-                    } else {
-                      $('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data.msg+'</div>').fadeIn(500);
-                      step1success = false;
-                      return false;
-                    }
+      <footer class="main-footer text-center">
+        <?= $Lang->get('GLOBAL__FOOTER_ADMIN') ?>
+        Credits <a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong>
+      </footer>
+      <style>
+      footer li {
+        display:inline;
+        padding:0 2px
+      }
+      </style>
 
-              	  },
-              	  error : function(data){
+    </div>
 
-                    $('input').each(function() {
-                      $(this).removeClass('disabled').attr('disabled', false);
-                    });
-                    $('li.next a').each(function() {
-                      $(this).removeClass('disabled').attr('disabled', false);
-                    });
+    <!-- Bootstrap 3.3.5 -->
+    <?= $this->Html->script('bootstrap.min.js') ?>
 
-              		  $('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></div>');
-    					      var step1success = false;
-    					      return false;
-              	  },
-							  });
+    <?= $this->Html->script('jquery.dataTables.min.js') ?>
+    <?= $this->Html->script('dataTables.bootstrap.min.js') ?>
+    <!-- FastClick -->
+    <?= $this->Html->script('fastclick.min.js') ?>
+    <!-- AdminLTE App -->
+    <?= $this->Html->script('app.min.js') ?>
+    <!-- Sparkline -->
+    <?= $this->Html->script('jquery.sparkline.min.js') ?>
+    <!-- jvectormap -->
+    <?= $this->Html->script('jquery-jvectormap-1.2.2.min.js') ?>
+    <?= $this->Html->script('jquery-jvectormap-world-mill-en.js') ?>
+    <!-- SlimScroll 1.3.0 -->
+    <?= $this->Html->script('jquery.slimscroll.min.js') ?>
 
-                return step1success;
+     <?= $this->Html->script('mineweb_admin.js') ?>
 
-						  }
-					} else if(index==2) {
+     <?= $this->Html->script('form.js') ?>
+     <script type="text/javascript">
+       var LOADING_MSG = "<?= $Lang->get('GLOBAL__LOADING') ?>";
+       var ERROR_MSG = "<?= $Lang->get('GLOBAL__ERROR') ?>";
+       var INTERNAL_ERROR_MSG = "<?= $Lang->get('ERROR__INTERNAL_ERROR') ?>";
+       var FORBIDDEN_ERROR_MSG = "<?= $Lang->get('ERROR__FORBIDDEN') ?>"
+       var SUCCESS_MSG = "<?= $Lang->get('GLOBAL__SUCCESS') ?>";
 
-            var $form = $('#step3');
-            if($form.find("input[name='step3']").val() == "true") {
+       var CSRF_TOKEN = "<?= $csrfToken ?>";
+     </script>
 
-            	return true;
+    <?= $this->element('mineweb_admin_js'); ?>
 
-            } else {
-
-              $('input').each(function() {
-                $(this).addClass('disabled').attr('disabled', true);
-              });
-              $('li.next a').each(function() {
-                $(this).addClass('disabled').attr('disabled', true);
-              });
-              $('.ajax-msg-step3').empty().html('<div class="alert alert-info">Chargement...</div>');
-
-              var inputs = {};
-              inputs['data[_Token][key]'] = "<?= $this->Session->read('_Token')['key'] ?>";
-              inputs['pseudo'] = $form.find("input[name='pseudo']").val();
-              inputs['password'] = $form.find("input[name='password']").val();
-              inputs['password_confirmation'] = $form.find("input[name='password_confirmation']").val();
-              inputs['email'] = $form.find("input[name='email']").val();
-
-              var step3Success = false;
-
-              $.ajax({
-							 	type : 'POST',
-							 	url : "<?= $this->Html->url(array('action' => 'step_3')) ?>",
-							 	data : inputs,
-                dataType: 'JSON',
-                async: false,
-							 	success : function(data){
-
-                  $('input').each(function() {
-                    $(this).removeClass('disabled').attr('disabled', false);
-                  });
-                  $('li.next a').each(function() {
-                    $(this).removeClass('disabled').attr('disabled', false);
-                  });
-
-							  	if(data.statut) {
-			          		$('.ajax-msg-step3').empty().html('<div class="alert alert-success"><b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data.msg+'</div>').fadeIn(500);
-			          		step3Success = true;
-			          		return true;
-			          	} else {
-			            	$('.ajax-msg-step3').empty().html('<div class="alert alert-danger"><b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data.msg+'</div>').fadeIn(500);
-			            	step3Success = false;
-			            	return false;
-							    }
-
-		            },
-              	error : function(data){
-
-                  $('input').each(function() {
-                    $(this).removeClass('disabled').attr('disabled', false);
-                  });
-                  $('li.next a').each(function() {
-                    $(this).removeClass('disabled').attr('disabled', false);
-                  });
-
-              		$('.ajax-msg-step3').empty().html('<div class="alert alert-danger"><b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></div>');
-								  var step3Success = false;
-								  return false;
-
-		            }
-							});
-
-              return step3Success;
-						}
-					}
-
-				},
-
-    			onTabClick: function(tab, navigation, index) {
-					alert('<?= $Lang->get('INSTALL__NO_SKIP') ?>');
-					return false;
-				},
-
-				onTabShow: function(tab, navigation, index) {
-					var $total = navigation.find('li').length;
-					var $current = index+1;
-					var $percent = ($current/$total) * 100;
-					$('#tabsleft').find('.progress-bar').css({width:$percent+'%'});
-
-					// If it's the last tab then hide the last button and show the finish instead
-					if($current >= $total) {
-						$('#tabsleft').find('.pager .next').hide();
-						$('#tabsleft').find('.pager .finish').show();
-						$('#tabsleft').find('.pager .finish').removeClass('disabled');
-						$('#tabsleft').find('.pager .finish').removeClass('hidden');
-					} else {
-						$('#tabsleft').find('.pager .next').show();
-						$('#tabsleft').find('.pager .finish').hide();
-					}
-
-				}
-			});
-
-			$('#tabsleft .finish').click(function() {
-				document.location.href="<?= $this->Html->url(array('controller' => 'install', 'action' => 'end')) ?>";
-			});
-		});
-    </script>
-	</body>
+  </body>
 </html>

@@ -1,4 +1,3 @@
-<?php   ?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -17,23 +16,14 @@
     <?= $this->Html->css('custom.css') ?>
     <?= $this->Html->css('prettify.css') ?>
 
+    <?= $this->Html->css("install/bootstrap.install.min.css") ?>
+    <?= $this->Html->css("install/flat.css") ?>
+    <?= $this->Html->css("install/animate.min.css") ?>
+    <?= $this->Html->css("install/install.css") ?>
+
 </head>
 <body>
 <div class="page-container">
-
-	<!-- top navbar -->
-    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-       <div class="container">
-    	<div class="navbar-header">
-           <button type="button" class="navbar-toggle" data-toggle="offcanvas" data-target=".sidebar-nav">
-             <span class="icon-bar"></span>
-             <span class="icon-bar"></span>
-             <span class="icon-bar"></span>
-           </button>
-           <a class="navbar-brand" href="#"><?= $Lang->get('INSTALL__INSTALL') ?></a>
-    	</div>
-       </div>
-    </div>
 
     <div class="container">
       <div class="row row-offcanvas row-offcanvas-left">
@@ -78,91 +68,141 @@
 
     			onNext: function(tab, navigation, index) {
     				if(index==1) {
+
               var $form = $('#step1');
               if($form.find("input[name='step1']").val() == "true") {
+
               	return true;
+
               } else {
+
                 var inputs = {};
                 inputs['key'] = $form.find("input[name='key']").val();
                 inputs['data[_Token][key]'] = "<?= $this->Session->read('_Token')['key'] ?>";
-							var step1success = false;
-		                    $.ajax({
-							 	type : 'POST',
-							 	url : "<?= $this->Html->url(array('controller' => 'install', 'action' => 'step_1')) ?>",
-							 	data : inputs,
-							 	success : function(data){
-		              data2 = data.split("|");
-							  	if(data.indexOf('true') != -1) {
-					          		$('.ajax-msg-step1').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-					          		step1success = true;
-					          		return true;
-					          	} else if(data.indexOf('false') != -1) {
-					            	$('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-					            	step1success = false;
-					            	return false;
-						        } else {
-							    	$('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></i></div>');
-							    	step1success = false;
-							    	return false;
-							    }
-              	},
-              	error : function(data){
-              		$('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></i></div>');
-    					    var step1success = false;
-    					    return false;
-              	},
-              	async: false
-							});
-							if(step1success == true) {
-								return true;
-							} else {
-								return false;
-							}
-						}
+
+                $('input').each(function() {
+                  $(this).addClass('disabled').attr('disabled', true);
+                });
+                $('li.next a').each(function() {
+                  $(this).addClass('disabled').attr('disabled', true);
+                });
+                $('.ajax-msg-step1').empty().html('<div class="alert alert-info">Chargement...</div>');
+
+							  var step1success = false;
+		            $.ajax({
+							 	  type : 'POST',
+							 	  url : "<?= $this->Html->url(array('controller' => 'install', 'action' => 'step_1')) ?>",
+							 	  data : inputs,
+                  dataType: 'JSON',
+                  async: false,
+							 	  success : function(data) {
+
+                    $('input').each(function() {
+                      $(this).removeClass('disabled').attr('disabled', false);
+                    });
+                    $('li.next a').each(function() {
+                      $(this).removeClass('disabled').attr('disabled', false);
+                    });
+
+
+                    if(data.statut) {
+                      $('.ajax-msg-step1').empty().html('<div class="alert alert-success"><b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data.msg+'</div>').fadeIn(500);
+                      step1success = true;
+                      return true;
+                    } else {
+                      $('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data.msg+'</div>').fadeIn(500);
+                      step1success = false;
+                      return false;
+                    }
+
+              	  },
+              	  error : function(data){
+
+                    $('input').each(function() {
+                      $(this).removeClass('disabled').attr('disabled', false);
+                    });
+                    $('li.next a').each(function() {
+                      $(this).removeClass('disabled').attr('disabled', false);
+                    });
+
+              		  $('.ajax-msg-step1').empty().html('<div class="alert alert-danger"><b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></div>');
+    					      var step1success = false;
+    					      return false;
+              	  },
+							  });
+
+                return step1success;
+
+						  }
 					} else if(index==2) {
+
             var $form = $('#step3');
             if($form.find("input[name='step3']").val() == "true") {
+
             	return true;
+
             } else {
+
+              $('input').each(function() {
+                $(this).addClass('disabled').attr('disabled', true);
+              });
+              $('li.next a').each(function() {
+                $(this).addClass('disabled').attr('disabled', true);
+              });
+              $('.ajax-msg-step3').empty().html('<div class="alert alert-info">Chargement...</div>');
+
               var inputs = {};
               inputs['data[_Token][key]'] = "<?= $this->Session->read('_Token')['key'] ?>";
               inputs['pseudo'] = $form.find("input[name='pseudo']").val();
               inputs['password'] = $form.find("input[name='password']").val();
               inputs['password_confirmation'] = $form.find("input[name='password_confirmation']").val();
               inputs['email'] = $form.find("input[name='email']").val();
+
               var step3Success = false;
+
               $.ajax({
 							 	type : 'POST',
-							 	url : "<?= $this->Html->url(array('controller' => 'install', 'action' => 'step_3')) ?>",
+							 	url : "<?= $this->Html->url(array('action' => 'step_3')) ?>",
 							 	data : inputs,
+                dataType: 'JSON',
+                async: false,
 							 	success : function(data){
-		              data2 = data.split("|");
-							  	if(data.indexOf('true') != -1) {
-					          		$('.ajax-msg-step3').empty().html('<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><i class="icon icon-exclamation"></i> <b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-					          		step3Success = true;
-					          		return true;
-					          	} else if(data.indexOf('false') != -1) {
-					            	$('.ajax-msg-step3').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data2[0]+'</i></div>').fadeIn(500);
-					            	step3Success = false;
-					            	return false;
-						        } else {
-							    	$('.ajax-msg-step3').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></i></div>');
-							    	step3Success = false;
-							    	return false;
+
+                  $('input').each(function() {
+                    $(this).removeClass('disabled').attr('disabled', false);
+                  });
+                  $('li.next a').each(function() {
+                    $(this).removeClass('disabled').attr('disabled', false);
+                  });
+
+							  	if(data.statut) {
+			          		$('.ajax-msg-step3').empty().html('<div class="alert alert-success"><b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data.msg+'</div>').fadeIn(500);
+			          		step3Success = true;
+			          		return true;
+			          	} else {
+			            	$('.ajax-msg-step3').empty().html('<div class="alert alert-danger"><b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> '+data.msg+'</div>').fadeIn(500);
+			            	step3Success = false;
+			            	return false;
 							    }
+
 		            },
               	error : function(data){
-              		$('.ajax-msg-step3').empty().html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></i></div>');
+
+                  $('input').each(function() {
+                    $(this).removeClass('disabled').attr('disabled', false);
+                  });
+                  $('li.next a').each(function() {
+                    $(this).removeClass('disabled').attr('disabled', false);
+                  });
+
+              		$('.ajax-msg-step3').empty().html('<div class="alert alert-danger"><b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></div>');
 								  var step3Success = false;
 								  return false;
-		            },
-		            async: false
+
+		            }
 							});
-							if(step3Success == true) {
-								return true;
-							} else {
-								return false;
-							}
+
+              return step3Success;
 						}
 					}
 
