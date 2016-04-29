@@ -16,7 +16,7 @@ class UpdateController extends AppController {
             	}
         	}
 
-				if(empty($files)) {
+				if(!empty($files)) {
         	arsort($files);
         	$files = array_keys($files);
         	$logs = array_shift($files);
