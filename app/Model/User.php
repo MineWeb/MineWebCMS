@@ -254,9 +254,9 @@ class User extends AppModel {
 
 	public function setToUser($key, $value, $search) {
   	$search_user = $this->find('first', array('conditions' => $this->__makeCondition($search)));
-  	if($search_user) {
-    		$this->id = $search_user['User']['id'];
-    		return $this->saveField($key, $value);
+  	if(!empty($search_user)) {
+    	$this->id = $search_user['User']['id'];
+    	return $this->saveField($key, $value);
   	}
 	}
 
