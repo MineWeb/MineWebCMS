@@ -288,6 +288,9 @@ class UpdateComponent extends Object {
         					}
         					unlink(ROOT.DS.'modify.php'); // on le supprime
         				}
+								
+								Cache::clearGroup(false, '_cake_core_'); // On clear le cache
+			          Cache::clearGroup(false, '_cake_model_');
 
                 return true;
               } else {

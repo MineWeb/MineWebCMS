@@ -132,9 +132,11 @@ $compatible['openZip'] = function_exists('zip_open');
 
 $compatible['openSSL'] = function_exists('openssl_pkey_new');
 
-$compatible['allowGetURL'] = @file_get_contents('http://mineweb.org/api/v1/getFreeThemes');
-if($compatible['allowGetURL']) {
-    $compatible['allowGetURL'] = true;
+//allow_url_fopen
+if(function_exists('ini_get') && ini_get('allow_url_fopen') == "1") {
+  $compatible['allowGetURL'] = true;
+} elseif(file_exists(ROOT.DS.'config'.DS.'installed.txt') || @file_get_contents('http://mineweb.org/api/v1/getFreeThemes')) {
+  $compatible['allowGetURL'] = true;
 }
 
 $compatible['ionCube'] = ((function_exists('ioncube_loader_version') && ioncube_loader_version() >= 5.0) || (function_exists('ioncube_loader_iversion') && ioncube_loader_iversion() >= 5.0));
