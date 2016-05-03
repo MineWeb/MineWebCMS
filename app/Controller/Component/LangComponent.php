@@ -248,9 +248,11 @@ class LangComponent extends Object {
 
           $JSON['MESSAGES'] = $messages;
 
-    			$fp = fopen($this->langFolder.DS.$path.'.json',"w+");
-    			fwrite($fp, json_encode($JSON, JSON_PRETTY_PRINT));
-    			fclose($fp);
+    			$fp = @fopen($this->langFolder.DS.$path.'.json',"w+");
+          if($fp !== false) {
+      			fwrite($fp, json_encode($JSON, JSON_PRETTY_PRINT));
+      			fclose($fp);
+          }
 
         } else { // plugin
 

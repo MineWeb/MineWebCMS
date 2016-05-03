@@ -18,6 +18,8 @@ class PluginController extends AppController{
 				$slug = $this->Plugin->find('first', array('conditions' => array('id' => $id)));
 
 				if(isset($slug['Plugin']['name']) && $this->EyPlugin->delete($slug['Plugin']['name'])) {
+					Cache::clearGroup('_cake_core_');
+					Cache::clearGroup('_cake_model_');
 					$this->History->set('DELETE_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN__DELETE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
@@ -38,6 +40,8 @@ class PluginController extends AppController{
 			if($id != false) {
 
 				if($this->EyPlugin->enable($id)) {
+					Cache::clearGroup('_cake_core_');
+					Cache::clearGroup('_cake_model_');
 					$this->History->set('ENABLE_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN__ENABLE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
@@ -58,6 +62,8 @@ class PluginController extends AppController{
 			if($id != false) {
 
 				if($this->EyPlugin->disable($id)) {
+					Cache::clearGroup('_cake_core_');
+					Cache::clearGroup('_cake_model_');
 					$this->History->set('DISABLE_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN__DISABLE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
@@ -88,6 +94,9 @@ class PluginController extends AppController{
 					$this->loadModel('Plugin');
 					$search = $this->Plugin->find('first', array('conditions' => array('apiID' => $apiID)));
 
+					Cache::clearGroup('_cake_core_');
+					Cache::clearGroup('_cake_model_');
+
 					echo json_encode(array(
 						'statut' => 'success',
 						'plugin' => array(
@@ -116,6 +125,8 @@ class PluginController extends AppController{
 				$updated = $this->EyPlugin->update($plugin_id);
 
 				if($updated === true) {
+					Cache::clearGroup('_cake_core_');
+					Cache::clearGroup('_cake_model_');
 					$this->History->set('UPDATE_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN__UPDATE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));

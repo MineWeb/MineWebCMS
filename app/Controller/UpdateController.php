@@ -43,6 +43,8 @@ class UpdateController extends AppController {
 			if($this->Update->updateCMS($componentUpdated)) {
 				if($componentUpdated == '1') {
 					echo json_encode(array('statut' => 'success', 'msg' => $this->Lang->get('UPDATE__SUCCESS')));
+					Cache::clearGroup('_cake_core_');
+					Cache::clearGroup('_cake_model_');
 				} else {
 					echo json_encode(array('statut' => 'continue', 'msg' => ''));
 				}
