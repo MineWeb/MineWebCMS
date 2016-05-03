@@ -39,7 +39,7 @@ class UpdateController extends AppController {
 			$this->response->type('json');
 			$this->autoRender = false;
 
-			$componentUpdated = boolval($componentUpdated);
+			$componentUpdated = ($componentUpdated) ? true : false;
 			if($this->Update->updateCMS($componentUpdated)) {
 				if($componentUpdated == '1') {
 					echo json_encode(array('statut' => 'success', 'msg' => $this->Lang->get('UPDATE__SUCCESS')));
