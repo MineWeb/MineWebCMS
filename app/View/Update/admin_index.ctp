@@ -11,6 +11,7 @@
             <p class="text-center"><?= $Lang->get('UPDATE__LAST_VERSION') ?> : <?= $Update->update['version'] ?></p>
             <div class="btn-group">
               <button id="update" class="btn btn-large btn-primary"><?= $Lang->get('GLOBAL__UPDATE') ?></button>
+              <a class="btn btn-warning" href="<?= $this->Html->url(array('action' => 'clear_cache')) ?>"><?= $Lang->get('UPDATE__CLEAR_CACHE') ?></a>
               <a href="<?= $this->Html->url(array('action' => 'check')) ?>" class="btn btn-large btn-info"><?= $Lang->get('UPDATE__CHECK_STATUS') ?></a>
               <a href="http://mineweb.org/changelog" target="_blank" class="btn btn-large btn-default"><?= $Lang->get('UPDATE__VIEW_CHANGELOG') ?></a>
             </div>
@@ -78,6 +79,7 @@
       type: 'POST',
       url: '<?= $this->Html->url(array('action' => 'update')) ?>/'+updaterUpdated,
       data: inputs,
+      dataType: 'JSON',
       success: function(data) {
 
         if(data.statut == "success") {

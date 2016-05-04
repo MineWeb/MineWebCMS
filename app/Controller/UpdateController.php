@@ -34,6 +34,20 @@ class UpdateController extends AppController {
 		}
 	}
 
+	public function admin_clear_cache() {
+		if($this->isConnected && $this->User->isAdmin()) {
+			$this->autoRender = false;
+
+			App::uses('Folder', 'Utility');
+			$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
+			$folder->delete();
+
+			$this->redirect(array('action' => 'index'));
+		} else {
+			throw new ForbiddenException();
+		}
+	}
+
 	public function admin_update($componentUpdated = '0') {
 		if($this->isConnected AND $this->User->isAdmin()) {
 			$this->response->type('json');
@@ -42,9 +56,13 @@ class UpdateController extends AppController {
 			$componentUpdated = ($componentUpdated) ? true : false;
 			if($this->Update->updateCMS($componentUpdated)) {
 				if($componentUpdated == '1') {
+
+					App::uses('Folder', 'Utility');
+					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
+					$folder->delete();
+					
+					$this->Configuration->setKey('version', $this->Update->update['version']);
 					echo json_encode(array('statut' => 'success', 'msg' => $this->Lang->get('UPDATE__SUCCESS')));
-					Cache::clearGroup('_cake_core_');
-					Cache::clearGroup('_cake_model_');
 				} else {
 					echo json_encode(array('statut' => 'continue', 'msg' => ''));
 				}

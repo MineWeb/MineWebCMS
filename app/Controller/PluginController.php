@@ -20,6 +20,11 @@ class PluginController extends AppController{
 				if(isset($slug['Plugin']['name']) && $this->EyPlugin->delete($slug['Plugin']['name'])) {
 					Cache::clearGroup('_cake_core_');
 					Cache::clearGroup('_cake_model_');
+
+					App::uses('Folder', 'Utility');
+					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
+					$folder->delete();
+
 					$this->History->set('DELETE_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN__DELETE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
@@ -42,6 +47,11 @@ class PluginController extends AppController{
 				if($this->EyPlugin->enable($id)) {
 					Cache::clearGroup('_cake_core_');
 					Cache::clearGroup('_cake_model_');
+
+					App::uses('Folder', 'Utility');
+					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
+					$folder->delete();
+
 					$this->History->set('ENABLE_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN__ENABLE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
@@ -64,6 +74,11 @@ class PluginController extends AppController{
 				if($this->EyPlugin->disable($id)) {
 					Cache::clearGroup('_cake_core_');
 					Cache::clearGroup('_cake_model_');
+
+					App::uses('Folder', 'Utility');
+					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
+					$folder->delete();
+
 					$this->History->set('DISABLE_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN__DISABLE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
@@ -97,6 +112,10 @@ class PluginController extends AppController{
 					Cache::clearGroup('_cake_core_');
 					Cache::clearGroup('_cake_model_');
 
+					App::uses('Folder', 'Utility');
+					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
+					$folder->delete();
+
 					echo json_encode(array(
 						'statut' => 'success',
 						'plugin' => array(
@@ -127,6 +146,11 @@ class PluginController extends AppController{
 				if($updated === true) {
 					Cache::clearGroup('_cake_core_');
 					Cache::clearGroup('_cake_model_');
+
+					App::uses('Folder', 'Utility');
+					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
+					$folder->delete();
+
 					$this->History->set('UPDATE_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN__UPDATE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));

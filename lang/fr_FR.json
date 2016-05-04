@@ -17,7 +17,7 @@
         "GLOBAL__INFORMATIONS":"Informations",
         "GLOBAL__UPDATED":"Derni\u00e8re mise \u00e0 jour",
         "GLOBAL__CLOSE": "Fermer",
-        "GLOBAL__CUSTOMIZE": "Personalisation",
+        "GLOBAL__CUSTOMIZE": "Personnalisation",
         "GLOBAL__SUCCESS":"Succès",
         "GLOBAL__INFO":"Information",
         "GLOBAL__WARNING":"Attention",
@@ -443,6 +443,7 @@
         "UPDATE__FAILED": "La mise \u00e0 jour \u00e0 \u00e9chou\u00e9e",
         "UPDATE__SUCCESS": "La mise \u00e0 jour s'est bien d\u00e9roul\u00e9e",
         "UPDATE__LOADING": "Mise \u00e0 jour en cours ...",
+        "UPDATE__CLEAR_CACHE":"Supprimer le cache (conseillé)",
 
         "STATS__TITLE":"Statistiques",
         "STATS__NBR_VISITS":"Nombre de visites",
