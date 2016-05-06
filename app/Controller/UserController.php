@@ -628,10 +628,10 @@ class UserController extends AppController {
 				foreach ($find as $key => $value) {
 
 					$username = $value['User']['pseudo'];
-					$date = 'Le'.$this->Lang->date($value['User']['created']);
+					$date = 'Le '.$this->Lang->date($value['User']['created']);
 					$rank = '<span class="label label-'.$available_ranks[$value['User']['rank']]['label'].'">'.$available_ranks[$value['User']['rank']]['name'].'</span>';
 					$btns = '<a href="'.Router::url(array('controller' => 'user', 'action' => 'edit/'.$value["User"]["id"], 'admin' => true)).'" class="btn btn-info">'.$this->Lang->get('GLOBAL__EDIT').'</a>';
-					$btns .= '&nbsp;<a onClick="confirmDel('.Router::url(array('controller' => 'user', 'action' => 'delete/'.$value["User"]["id"], 'admin' => true)).')" class="btn btn-danger">'.$this->Lang->get('GLOBAL__DELETE').'</button>';
+					$btns .= '&nbsp;<a onClick="confirmDel(\''.Router::url(array('controller' => 'user', 'action' => 'delete/'.$value["User"]["id"], 'admin' => true)).'\')" class="btn btn-danger">'.$this->Lang->get('GLOBAL__DELETE').'</button>';
 
 					$data['data'][] = array($username, $date, $rank, $btns);
 
@@ -643,14 +643,14 @@ class UserController extends AppController {
 		}
 	}
 
-	function admin_edit($id = false) {
+	function admin_edit($search = false) {
 		if($this->isConnected AND $this->User->isAdmin()) {
-			if($id != false) {
+			if($search != false) {
 
 				$this->layout = 'admin';
 				$this->set('title_for_layout',$this->Lang->get('USER__EDIT_TITLE'));
 				$this->loadModel('User');
-				$find = $this->User->find('all', array('conditions' => array('id' => $id)));
+				$find = $this->User->find('all', array('conditions' => $this->User->__makeCondition($search)));
 
 				if(!empty($find)) {
 					$search_user = $find[0]['User'];
@@ -681,11 +681,10 @@ class UserController extends AppController {
 
 					$this->set(compact('search_user'));
 				} else {
-					$this->Session->setFlash($this->Lang->get('UNKNOWN_ID'), 'default.error');
-					$this->redirect(array('controller' => 'user', 'action' => 'index', 'admin' => true));
+					throw new NotFoundException();
 				}
 			} else {
-				$this->redirect(array('controller' => 'user', 'action' => 'index', 'admin' => true));
+				throw new NotFoundException();
 			}
 		} else {
 			$this->redirect('/');

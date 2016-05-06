@@ -196,9 +196,12 @@ class ExceptionRenderer {
 		if ($isNotDebug && $method === '_cakeError') {
 			$method = 'error400';
 		}
-		if ($isNotDebug && $code == 500) {
+		if ($isNotDebug && $code == 500 && get_class($exception) != "MissingConnectionException") {
 			$method = 'error500';
+		} elseif(get_class($exception) == "MissingConnectionException") {
+			$method = 'missingConnection';
 		}
+
 		$this->template = $template;
 		$this->method = $method;
 		$this->error = $exception;
@@ -318,6 +321,24 @@ class ExceptionRenderer {
 		));
 		$this->_outputMessage('error404');
 	}
+
+	function missingConnection($error) { 
+		$message = $error->getMessage();
+		if (!Configure::read('debug')) {
+			$message = __d('cake', 'Database problem.');
+		}
+		$url = $this->controller->request->here();
+		$this->controller->response->statusCode(500);
+		$this->controller->set(array(
+			'name' => h($message),
+			'message' => h($message),
+			'url' => h($url),
+			'error' => $error,
+			'_serialize' => array('name', 'message', 'url')
+		));
+		$this->_outputMessage('missing_connection');
+	}
+
 
 
 /**

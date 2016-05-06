@@ -16,6 +16,8 @@
     <?= $this->Html->css('custom.css') ?>
     <?= $this->Html->css('prettify.css') ?>
 
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+
     <?= $this->Html->css("install/bootstrap.install.min.css") ?>
     <?= $this->Html->css("install/flat.css") ?>
     <?= $this->Html->css("install/animate.min.css") ?>

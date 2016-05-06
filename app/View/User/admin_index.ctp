@@ -53,6 +53,12 @@
 <?php } else { ?>
   $('form[method="search"]').each(function(e) {
 
+    $(this).on('submit', function(e) {
+      e.preventDefault();
+      var val = $(this).find('input[name="search"]').val();
+      window.location = '<?= $this->Html->url(array('action' => 'edit')) ?>/'+val;
+    });
+
     var url = $(this).attr('action');
     var form = $(this);
 

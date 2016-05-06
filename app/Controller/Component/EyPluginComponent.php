@@ -154,7 +154,7 @@ class EyPluginComponent extends Object {
       $pluginList = (object) array(); // On met ça en object vide pour l'instant
 
       foreach ($plugins as $key => $value) {
-        if($value->active) { // si il est activé
+        if($value->active && $value->isValid) { // si il est activé
           $pluginList->$key = $value; // on ajoute dans la liste
         }
       }
