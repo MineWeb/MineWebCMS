@@ -17,6 +17,10 @@ class LangComponent extends Object {
     function __construct() {
       // on set le dossier de langue
       $this->langFolder = ROOT.DS.'lang';
+
+      if(!is_dir(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang')) {
+        mkdir(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang', 0775, true);
+      }
     }
 
 	  function shutdown(&$controller) {}
