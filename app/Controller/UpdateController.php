@@ -38,6 +38,11 @@ class UpdateController extends AppController {
 		if($this->isConnected && $this->User->isAdmin()) {
 			$this->autoRender = false;
 
+			Cache::clearGroup('persistent');
+			Cache::clearGroup('models');
+
+			Cache::clear(false);
+
 			App::uses('Folder', 'Utility');
 			$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
 			$folder->delete();
@@ -56,11 +61,6 @@ class UpdateController extends AppController {
 			$componentUpdated = ($componentUpdated) ? true : false;
 			if($this->Update->updateCMS($componentUpdated)) {
 				if($componentUpdated == '1') {
-
-					App::uses('Folder', 'Utility');
-					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-					$folder->delete();
-					
 					$this->Configuration->setKey('version', $this->Update->update['version']);
 					echo json_encode(array('statut' => 'success', 'msg' => $this->Lang->get('UPDATE__SUCCESS')));
 				} else {
@@ -69,6 +69,15 @@ class UpdateController extends AppController {
 			} else {
 				echo json_encode(array('statut' => 'error', 'msg' => $this->Lang->get('UPDATE__FAILED')));
 			}
+
+			Cache::clearGroup('persistent');
+			Cache::clearGroup('models');
+
+			Cache::clear(false);
+
+			App::uses('Folder', 'Utility');
+			$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
+			$folder->delete();
 
 		} else {
 			$this->redirect('/');

@@ -18,8 +18,11 @@ class PluginController extends AppController{
 				$slug = $this->Plugin->find('first', array('conditions' => array('id' => $id)));
 
 				if(isset($slug['Plugin']['name']) && $this->EyPlugin->delete($slug['Plugin']['name'])) {
-					Cache::clearGroup('_cake_core_');
-					Cache::clearGroup('_cake_model_');
+
+					Cache::clearGroup('persistent');
+					Cache::clearGroup('models');
+
+					Cache::clear(false);
 
 					App::uses('Folder', 'Utility');
 					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
@@ -29,6 +32,16 @@ class PluginController extends AppController{
 					$this->Session->setFlash($this->Lang->get('PLUGIN__DELETE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				} else {
+
+					Cache::clearGroup('persistent');
+					Cache::clearGroup('models');
+
+					Cache::clear(false);
+
+					App::uses('Folder', 'Utility');
+					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
+					$folder->delete();
+
 					$this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				}
@@ -45,8 +58,10 @@ class PluginController extends AppController{
 			if($id != false) {
 
 				if($this->EyPlugin->enable($id)) {
-					Cache::clearGroup('_cake_core_');
-					Cache::clearGroup('_cake_model_');
+					Cache::clearGroup('persistent');
+					Cache::clearGroup('models');
+
+					Cache::clear(false);
 
 					App::uses('Folder', 'Utility');
 					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
@@ -56,6 +71,16 @@ class PluginController extends AppController{
 					$this->Session->setFlash($this->Lang->get('PLUGIN__ENABLE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				} else {
+
+					Cache::clearGroup('persistent');
+					Cache::clearGroup('models');
+
+					Cache::clear(false);
+
+					App::uses('Folder', 'Utility');
+					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
+					$folder->delete();
+
 					$this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				}
@@ -72,8 +97,10 @@ class PluginController extends AppController{
 			if($id != false) {
 
 				if($this->EyPlugin->disable($id)) {
-					Cache::clearGroup('_cake_core_');
-					Cache::clearGroup('_cake_model_');
+					Cache::clearGroup('persistent');
+					Cache::clearGroup('models');
+
+					Cache::clear(false);
 
 					App::uses('Folder', 'Utility');
 					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
@@ -83,6 +110,16 @@ class PluginController extends AppController{
 					$this->Session->setFlash($this->Lang->get('PLUGIN__DISABLE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				} else {
+
+					Cache::clearGroup('persistent');
+					Cache::clearGroup('models');
+
+					Cache::clear(false);
+
+					App::uses('Folder', 'Utility');
+					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
+					$folder->delete();
+
 					$this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				}
@@ -109,8 +146,10 @@ class PluginController extends AppController{
 					$this->loadModel('Plugin');
 					$search = $this->Plugin->find('first', array('conditions' => array('apiID' => $apiID)));
 
-					Cache::clearGroup('_cake_core_');
-					Cache::clearGroup('_cake_model_');
+					Cache::clearGroup('persistent');
+					Cache::clearGroup('models');
+
+					Cache::clear(false);
 
 					App::uses('Folder', 'Utility');
 					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
@@ -132,6 +171,15 @@ class PluginController extends AppController{
 			} else {
 				echo json_encode(array('statut' => 'error', 'msg' => $this->Lang->get($installed)));
 			}
+
+			Cache::clearGroup('persistent');
+			Cache::clearGroup('models');
+
+			Cache::clear(false);
+
+			App::uses('Folder', 'Utility');
+			$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
+			$folder->delete();
 		} else {
 			throw new ForbiddenException();
 		}
@@ -144,8 +192,10 @@ class PluginController extends AppController{
 				$updated = $this->EyPlugin->update($plugin_id);
 
 				if($updated === true) {
-					Cache::clearGroup('_cake_core_');
-					Cache::clearGroup('_cake_model_');
+					Cache::clearGroup('persistent');
+					Cache::clearGroup('models');
+
+					Cache::clear(false);
 
 					App::uses('Folder', 'Utility');
 					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
@@ -155,6 +205,16 @@ class PluginController extends AppController{
 					$this->Session->setFlash($this->Lang->get('PLUGIN__UPDATE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				} else {
+
+					Cache::clearGroup('persistent');
+					Cache::clearGroup('models');
+
+					Cache::clear(false);
+
+					App::uses('Folder', 'Utility');
+					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
+					$folder->delete();
+
 					$this->Session->setFlash($this->Lang->get($updated), 'default.error');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				}
