@@ -158,6 +158,7 @@
 					    <label><?= $Lang->get('FORM__BROWSE') ?></label>
 					    <input name="image" type="file">
 					  </div>
+						<input name="data[_Token][key]" value="<?= $csrfToken ?>" type="hidden">
 					  <button type="submit" class="btn btn-default"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
 					  <div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;</div>
 					  <div class="form-group">

@@ -246,8 +246,8 @@ class User extends AppModel {
 
 	public function getAllFromUser($search = null) {
 		$search_user = $this->find('first', array('conditions' => $this->__makeCondition($search)));
-  	if(!empty($find)) {
-    		return ($find) ? $find['User'] : NULL;
+  	if(!empty($search_user)) {
+    		return ($search_user) ? $search_user['User'] : NULL;
   	}
 		return array();
 	}

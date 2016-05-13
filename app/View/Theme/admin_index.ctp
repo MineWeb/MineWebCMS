@@ -35,7 +35,7 @@
                   </td>
                   <td>
                      <?php if('default' != $Configuration->getKey('theme')) { ?>
-                      <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable/default', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ENABLED') ?></a>
+                      <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable/default', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ENABLE') ?></a>
                      <?php } ?>
                      <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom/default', 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('THEME__CUSTOMIZATION') ?></a>
                   </td>
@@ -66,7 +66,7 @@
                       </td>
                       <td>
                         <?php if($value->slug != $Configuration->getKey('theme')) { ?>
-                          <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable/'.$value->slug, 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ENABLED') ?></a>
+                          <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable/'.$value->slug, 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ENABLE') ?></a>
                         <?php } ?>
                           <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'theme', 'action' => 'delete/'.$value->slug, 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
                         <?php if(file_exists(ROOT.'/app/View/Themed/'.$value->slug.'/Config/config.json')) { ?>

@@ -162,7 +162,8 @@ class PagesController extends AppController {
 				$page = $search[0]['Page'];
 
 				// Parser variables
-				$this->loadModel('User');
+
+				$page['author'] = $this->User->getFromUser('pseudo', $page['user_id']);
 
 
 				$page['content'] = str_replace('{username}', $this->User->getKey('pseudo'), $page['content']);
