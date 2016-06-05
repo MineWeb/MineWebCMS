@@ -11,7 +11,7 @@
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-					<?php 
+					<?php
 					$msg = $Lang->get('ERROR__404_CONTENT');
 					$msg = str_replace('{URL}', $url, $msg);
 					echo $msg;
