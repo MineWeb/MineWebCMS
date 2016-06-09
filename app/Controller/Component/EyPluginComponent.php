@@ -113,6 +113,8 @@ class EyPluginComponent extends Object {
 
       $pluginList = (object) array(); // On met ça en object vide pour l'instant
 
+      $loadedCakePlugins = CakePlugin::loaded();
+
       foreach ($dbPlugins as $key => $value) { // On les parcours tous
 
         $v = $value['Plugin']; // On met ça comme ça pour plus de simplicité
@@ -129,6 +131,9 @@ class EyPluginComponent extends Object {
           $pluginList->$id->DBid = $v['id']; // on met l'id de la base de donnée
           $pluginList->$id->DBinstall = $v['created']; // on met quand on l'a installé sur la bdd
           $pluginList->$id->active = ($v['state']) ? true : false; // On met l'object config dedans
+          if(!in_array($value['Plugin']['name'], $loadedCakePlugins)) {
+            $pluginList->$id->active = false;
+          }
           $pluginList->$id->tables = unserialize($v['tables']);
           $pluginList->$id->isValid = $this->isValid($pluginList->$id->slug);
 
@@ -949,7 +954,7 @@ class EyPluginComponent extends Object {
 
     public function isInstalled($id) { // on le recherche avec son ID (auteur.name.apiid)
       $find = $this->findPluginByID($id);
-      return (!empty($find) && isset($find->isValid) && $find->isValid);
+      return (!empty($find) && isset($find->isValid) && $find->isValid && isset($find->active) && $find->active);
     }
 
   // Récupérer les plugins ou la navbar est activé (pour la nav)
