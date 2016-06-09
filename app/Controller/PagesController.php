@@ -263,7 +263,7 @@ class PagesController extends AppController {
 					$this->Page->set(array(
 						'title' => $this->request->data['title'],
 						'content' => $this->request->data['content'],
-						'author' => $this->User->getKey('pseudo'),
+						'user_id' => $this->User->getKey('id'),
 						'slug' => $this->request->data['slug'],
 						'updated' => date('Y-m-d H:i:s'),
 					));
