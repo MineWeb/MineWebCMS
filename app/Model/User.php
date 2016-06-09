@@ -132,7 +132,7 @@ class User extends AppModel {
 
 					$data_to_save['password'] = $UtilComponent->password($data['password'], $search['0']['User']['pseudo']);
 
-					$event = new CakeEvent('beforeResetPassword', $this, array('user_id' => $search['User']['id'], 'new_password' => $data_to_save['password']));
+					$event = new CakeEvent('beforeResetPassword', $this, array('user_id' => $search[0]['User']['id'], 'new_password' => $data_to_save['password']));
 					$controller->getEventManager()->dispatch($event);
 					if($event->isStopped()) {
 						return $event->result;

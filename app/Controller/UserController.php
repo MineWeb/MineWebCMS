@@ -523,7 +523,7 @@ class UserController extends AppController {
 			if($this->request->is('ajax')) {
 				if(!empty($this->request->data['to']) AND !empty($this->request->data['how'])) {
 					if($this->User->exist($this->request->data['to'])) {
-						if($this->User->getKey('pseudo') != $this->request->data['to'] && $this->User->getKey('id') != $this->request->data['to']) {
+						if(strtolower($this->User->getKey('pseudo')) != strtolower($this->request->data['to']) && $this->User->getKey('id') != $this->request->data['to']) {
 							$how = intval($this->request->data['how']);
 							if($how > 0) {
 								$money_user = $this->User->getKey('money') - $how;
