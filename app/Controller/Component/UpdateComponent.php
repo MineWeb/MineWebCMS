@@ -379,7 +379,7 @@ class UpdateComponent extends Object {
       }
 
       $updateEntries = array();
-      include ROOT.DS.'Config'.DS.'Schema'.DS.'update-entries.php';
+      include ROOT.DS.'app'.DS.'Config'.DS.'Schema'.DS.'update-entries.php';
 
       $this->Schema->after(array(), false, $updateEntries);
 
