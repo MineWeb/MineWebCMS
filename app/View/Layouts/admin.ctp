@@ -136,7 +136,7 @@
                   <li><a href="<?= $this->Html->url($value['slug']) ?>"><i class="fa fa-circle-o"></i> <?= $value['name'] ?></a></li>
                 <?php } ?>
 
-                <?php if(!empty($plugins_need_admin)) { ?>
+                <?php if(!empty($plugins_need_admin['default'])) { ?>
                   <li class="treeview">
                     <a href="#">
                       <i class="fa fa-share"></i> <span><?= $Lang->get('PLUGIN__ADMIN_PAGE') ?></span>
