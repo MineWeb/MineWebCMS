@@ -137,7 +137,7 @@
             <input type="password" class="form-control" name="password" placeholder="Ex: root">
           </div>
 
-          <button type="submit" class="btn btn-success saveDB pull-right">Tester et enregister</button>
+          <button type="submit" class="btn btn-success saveDB pull-right">Tester et enregistrer</button>
         </form>
       </div>
 

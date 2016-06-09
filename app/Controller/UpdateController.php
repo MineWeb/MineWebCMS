@@ -45,7 +45,9 @@ class UpdateController extends AppController {
 
 			App::uses('Folder', 'Utility');
 			$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-			$folder->delete();
+			if(!empty($folder->path)) {
+				$folder->delete();
+			}
 
 			$this->redirect(array('action' => 'index'));
 		} else {
@@ -77,7 +79,9 @@ class UpdateController extends AppController {
 
 			App::uses('Folder', 'Utility');
 			$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-			$folder->delete();
+			if(!empty($folder->path)) {
+				$folder->delete();
+			}
 
 		} else {
 			$this->redirect('/');

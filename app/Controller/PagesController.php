@@ -233,6 +233,9 @@ class PagesController extends AppController {
 			$this->layout = 'admin';
 			$this->loadModel('Page');
 			$pages = $this->Page->find('all');
+			foreach ($pages as $pageid => $page) {
+				$pages[$pageid]['Page']['author'] = $this->User->getFromUser('pseudo', $page['Page']['user_id']);
+			}
 			$this->set(compact('pages'));
 		} else {
 			$this->redirect('/');

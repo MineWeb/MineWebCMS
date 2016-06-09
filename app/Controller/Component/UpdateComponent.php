@@ -378,8 +378,20 @@ class UpdateComponent extends Object {
           }
       }
 
+			App::uses('Folder', 'Utility');
+			$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
+			if(!empty($folder->path)) {
+				$folder->delete();
+			}
+
       $updateEntries = array();
       include ROOT.DS.'app'.DS.'Config'.DS.'Schema'.DS.'update-entries.php';
+
+			App::uses('Folder', 'Utility');
+			$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
+			if(!empty($folder->path)) {
+				$folder->delete();
+			}
 
       $this->Schema->after(array(), false, $updateEntries);
 

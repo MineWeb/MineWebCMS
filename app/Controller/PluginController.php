@@ -26,7 +26,9 @@ class PluginController extends AppController{
 
 					App::uses('Folder', 'Utility');
 					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-					$folder->delete();
+					if(!empty($folder->path)) {
+						$folder->delete();
+					}
 
 					$this->History->set('DELETE_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN__DELETE_SUCCESS'), 'default.success');
@@ -40,7 +42,9 @@ class PluginController extends AppController{
 
 					App::uses('Folder', 'Utility');
 					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-					$folder->delete();
+					if(!empty($folder->path)) {
+						$folder->delete();
+					}
 
 					$this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
@@ -65,7 +69,9 @@ class PluginController extends AppController{
 
 					App::uses('Folder', 'Utility');
 					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-					$folder->delete();
+					if(!empty($folder->path)) {
+						$folder->delete();
+					}
 
 					$this->History->set('ENABLE_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN__ENABLE_SUCCESS'), 'default.success');
@@ -79,7 +85,9 @@ class PluginController extends AppController{
 
 					App::uses('Folder', 'Utility');
 					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-					$folder->delete();
+					if(!empty($folder->path)) {
+						$folder->delete();
+					}
 
 					$this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
@@ -104,7 +112,9 @@ class PluginController extends AppController{
 
 					App::uses('Folder', 'Utility');
 					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-					$folder->delete();
+					if(!empty($folder->path)) {
+						$folder->delete();
+					}
 
 					$this->History->set('DISABLE_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN__DISABLE_SUCCESS'), 'default.success');
@@ -118,7 +128,9 @@ class PluginController extends AppController{
 
 					App::uses('Folder', 'Utility');
 					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-					$folder->delete();
+					if(!empty($folder->path)) {
+						$folder->delete();
+					}
 
 					$this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
@@ -153,7 +165,9 @@ class PluginController extends AppController{
 
 					App::uses('Folder', 'Utility');
 					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-					$folder->delete();
+					if(!empty($folder->path)) {
+						$folder->delete();
+					}
 
 					echo json_encode(array(
 						'statut' => 'success',
@@ -179,7 +193,9 @@ class PluginController extends AppController{
 
 			App::uses('Folder', 'Utility');
 			$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-			$folder->delete();
+			if(!empty($folder->path)) {
+				$folder->delete();
+			}
 		} else {
 			throw new ForbiddenException();
 		}
@@ -199,7 +215,9 @@ class PluginController extends AppController{
 
 					App::uses('Folder', 'Utility');
 					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-					$folder->delete();
+					if(!empty($folder->path)) {
+						$folder->delete();
+					}
 
 					$this->History->set('UPDATE_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN__UPDATE_SUCCESS'), 'default.success');
@@ -213,7 +231,9 @@ class PluginController extends AppController{
 
 					App::uses('Folder', 'Utility');
 					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-					$folder->delete();
+					if(!empty($folder->path)) {
+						$folder->delete();
+					}
 
 					$this->Session->setFlash($this->Lang->get($updated), 'default.error');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
