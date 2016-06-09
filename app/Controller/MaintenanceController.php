@@ -5,11 +5,12 @@ class MaintenanceController extends AppController {
 	public $components = array('Session');
 
 	public function index($banned = false) {
-		if(!$banned) {
+		if($this->Configuration->getKey('maintenance') != '0') {
 			$msg = $this->Configuration->getKey('maintenance');
-		} else {
-
+		} elseif($banned) {
 			$msg = $this->Lang->get('USER__BANNED_MSG');
+		} else {
+			$this->redirect('/');
 		}
 		$this->set(compact('msg'));
 	}
