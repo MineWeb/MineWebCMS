@@ -47,6 +47,7 @@ class PermissionsController extends AppController {
 	function admin_add_rank() {
 		if($this->isConnected && $this->User->isAdmin()) {
 			$this->autoRender = false;
+			$this->response->type('json');
 			if($this->request->is('ajax')) {
 
 				if(!empty($this->request->data['name'])) {
@@ -70,14 +71,14 @@ class PermissionsController extends AppController {
 					$this->History->set('ADD_RANK', 'permissions');
 
 					$this->Session->setFlash($this->Lang->get('USER__RANK_ADD_SUCCESS'), 'default.success');
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__RANK_ADD_SUCCESS')));
+					$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__RANK_ADD_SUCCESS'))));
 
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 				}
 
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
 			}
 		} else {
 			$this->redirect('/');

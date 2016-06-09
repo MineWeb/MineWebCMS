@@ -146,6 +146,7 @@ class PluginController extends AppController{
 	function admin_install($apiID = false, $slug = false) {
 
 		$this->autoRender = false;
+		$this->response->type('json');
 
 		if($this->isConnected AND $this->User->isAdmin()) {
 			if($apiID != false AND $slug != false) {
@@ -169,7 +170,7 @@ class PluginController extends AppController{
 						$folder->delete();
 					}
 
-					echo json_encode(array(
+					$this->response->body(json_encode(array(
 						'statut' => 'success',
 						'plugin' => array(
 							'name' => $this->EyPlugin->findPluginByApiID($apiID)->name,
@@ -178,12 +179,12 @@ class PluginController extends AppController{
 							'dateformatted' => $this->Lang->date($search['Plugin']['created']),
 							'version' => $search['Plugin']['version'],
 						)
-					));
+					)));
 				} else {
-					echo json_encode(array('statut' => 'error', 'msg' => $this->Lang->get($installed)));
+					$this->response->body(json_encode(array('statut' => 'error', 'msg' => $this->Lang->get($installed)));)
 				}
 			} else {
-				echo json_encode(array('statut' => 'error', 'msg' => $this->Lang->get($installed)));
+				$this->response->body(json_encode(array('statut' => 'error', 'msg' => $this->Lang->get($installed)));)
 			}
 
 			Cache::clearGroup('persistent');

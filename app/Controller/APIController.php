@@ -6,15 +6,17 @@ class APIController extends AppController {
 
 	public function mineguard() {
 		$this->autoRender = false;
+		$this->response->type('json');
 		$username = $_GET['user'];
 		$ip = $_GET['ip'];
-		echo json_encode($this->API->verifIp($username, $ip));
+		$this->response->body(json_encode($this->API->verifIp($username, $ip)));
 	}
 
 	public function launcher($username, $password, $args = null) {
 		$this->autoRender = false;
+		$this->response->type('json');
 		$args = explode(',', $args);
-		echo json_encode($this->API->get($username, $password, $args));
+		$this->response->body(json_encode($this->API->get($username, $password, $args)));
 	}
 
 	public function delete_ip() {
@@ -24,44 +26,44 @@ class APIController extends AppController {
     		if($this->request->is('post')) {
     			if(isset($this->request->data['ip'])) {
     				if($this->API->removeIp($this->User->getKey('pseudo'), $this->request->data['ip'])) {
-							echo json_encode(array('statut' => true, 'msg' => ''));
+							$this->response->body(json_encode(array('statut' => true, 'msg' => '')));
     				} else {
-    					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__INTERNAL_ERROR')));
+    					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__INTERNAL_ERROR'))));
     				}
     			} else {
-    				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+    				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
     			}
     		} else {
-    			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+    			$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
     		}
     	} else {
-    		echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED')));
+    		$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED'))));
     	}
 	}
 
 	public function add_ip() {
 		$this->autoRender = false;
-		//$this->response->type('json');
+		$this->response->type('json');
       if($this->isConnected) {
     		if($this->request->is('post')) {
     			if(!empty($this->request->data['ip'])) {
     				if(filter_var($this->request->data['ip'], FILTER_VALIDATE_IP)) {
 	    				if($this->API->setIp($this->User->getKey('pseudo'), $this->request->data['ip'])) {
-	    					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__IP_ADD_SUCCESS')));
+	    					$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__IP_ADD_SUCCESS'))));
 	    				} else {
-	    					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__INTERNAL_ERROR')));
+	    					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__INTERNAL_ERROR'))));
 	    				}
 	    			} else {
-	    				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('API__IP_INVALID')));
+	    				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('API__IP_INVALID'))));
 	    			}
     			} else {
-    				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+    				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
     			}
     		} else {
-    			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+    			$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
     		}
     	} else {
-    		echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED')));
+    		$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED'))));
     	}
 	}
 
@@ -73,13 +75,13 @@ class APIController extends AppController {
 
     			$this->User->setKey('allowed_ip', '0');
 
-    			echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__MINEGUARD_DISABLE_SUCCESS')));
+    			$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__MINEGUARD_DISABLE_SUCCESS'))));
 
     		} else {
-    			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+    			$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
     		}
     	} else {
-    		echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED')));
+    		$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED'))));
     	}
 	}
 
@@ -91,13 +93,13 @@ class APIController extends AppController {
 
     			$this->User->setKey('allowed_ip', serialize(array()));
 
-    			echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__MINEGUARD_ENABLE_SUCCESS')));
+    			$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__MINEGUARD_ENABLE_SUCCESS'))));
 
     		} else {
-    			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+    			$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
     		}
     	} else {
-    		echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED')));
+    		$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED'))));
     	}
 	}
 

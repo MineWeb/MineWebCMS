@@ -44,7 +44,7 @@ class StatisticsController extends AppController {
 				$visitsFormatted[] = array($key, $value);
 			}
 
-			echo json_encode($visitsFormatted);
+			$this->response->body(json_encode($visitsFormatted));
 
 		} else {
 			throw new ForbiddenException();

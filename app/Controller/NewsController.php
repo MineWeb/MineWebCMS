@@ -34,6 +34,7 @@ class NewsController extends AppController {
 	function api() {
 
 		$this->autoRender = false;
+		$this->response->type('json');
 
 		// récupérage des news
 		$this->loadModel('News'); // on charge le model
@@ -43,7 +44,7 @@ class NewsController extends AppController {
 			$search_news[$key]['News']['absolute_url'] = Router::url('/blog/'.$model['News']['slug'], true);
 		}
 
-		echo json_encode($search_news);
+		$this->response->body(json_encode($search_news));
 	}
 
 	function index($slug) {
@@ -82,6 +83,7 @@ class NewsController extends AppController {
 
 	function add_comment() {
 		$this->autoRender = false;
+		$this->response->type('json');
 		if($this->request->is('post')) {
 			if($this->Permissions->can('COMMENT_NEWS')) {
 				if(!empty($this->request->data['content']) && !empty($this->request->data['news_id'])) {
@@ -101,15 +103,15 @@ class NewsController extends AppController {
 					));
 					$this->Comment->save();
 
-					echo json_encode(array('statut' => true, 'msg' => 'success'));
+					$this->response->body(json_encode(array('statut' => true, 'msg' => 'success')));
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED')));
+				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED'))));
 			}
 		} else {
-			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+			$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
 		}
 	}
 
@@ -234,6 +236,7 @@ class NewsController extends AppController {
 
 	function admin_add_ajax() {
 		$this->autoRender = false;
+		$this->response->type('json');
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NEWS')) {
 
 			if($this->request->is('post')) {
@@ -260,13 +263,13 @@ class NewsController extends AppController {
 					));
 					$this->News->save();
 					$this->History->set('ADD_NEWS', 'news');
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('NEWS__SUCCESS_ADD')));
+					$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('NEWS__SUCCESS_ADD'))));
 					$this->Session->setFlash($this->Lang->get('NEWS__SUCCESS_ADD'), 'default.success');
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
 			}
 		} else {
 			throw new ForbiddenException();
@@ -296,6 +299,7 @@ class NewsController extends AppController {
 
 	function admin_edit_ajax() {
 		$this->autoRender = false;
+		$this->response->type('json');
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NEWS')) {
 
 			if($this->request->is('post')) {
@@ -319,13 +323,13 @@ class NewsController extends AppController {
 					));
 					$this->News->save();
 					$this->History->set('EDIT_NEWS', 'news');
-				echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('NEWS__SUCCESS_EDIT')));
+					$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('NEWS__SUCCESS_EDIT'))));
 					$this->Session->setFlash($this->Lang->get('NEWS__SUCCESS_EDIT'), 'default.success');
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
 			}
 		} else {
 			throw new ForbiddenException();

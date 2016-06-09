@@ -32,6 +32,7 @@ class UserController extends AppController {
 
 	function ajax_register() {
 		$this->autoRender = false;
+		$this->response->type('json');
 		if($this->request->is('Post')) { // si la requête est bien un post
 			if(!empty($this->request->data['pseudo']) && !empty($this->request->data['password']) && !empty($this->request->data['password_confirmation']) && !empty($this->request->data['email'])) { // si tout les champs sont bien remplis
 
@@ -104,24 +105,25 @@ class UserController extends AppController {
 						}
 
 						// on dis que c'est bon
-						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_SUCCESS')));
+						$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_SUCCESS'))));
 
 					} else { // si c'est pas bon, on envoie le message d'erreur retourné par l'étape de validation
-						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get($isValid)));
+						$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get($isValid))));
 					}
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__INVALID_CAPTCHA')));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__INVALID_CAPTCHA'))));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 			}
 		} else {
-			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+			$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
 		}
 	}
 
 	function ajax_login() {
 		$this->autoRender = false;
+		$this->response->type('json');
 		if($this->request->is('Post')) {
 			if(!empty($this->request->data['pseudo']) && !empty($this->request->data['password'])) {
 
@@ -138,17 +140,17 @@ class UserController extends AppController {
 
 					$this->Session->write('user', $login['session']);
 
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN')));
+					$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN'))));
 
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get($login)));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get($login))));
 				}
 
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 			}
 		} else {
-			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+			$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
 		}
 	}
 
@@ -194,6 +196,7 @@ class UserController extends AppController {
 	function ajax_lostpasswd() {
 		$this->layout = null;
 		$this->autoRender = false;
+		$this->response->type('json');
 		if($this->request->is('ajax')) {
 			if(!empty($this->request->data['email'])) {
 				$this->loadModel('User');
@@ -226,26 +229,27 @@ class UserController extends AppController {
 								'key' => $key
 							));
 							$this->Lostpassword->save();
-							echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__PASSWORD_FORGOT_EMAIL_SUCCESS')));
+							$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__PASSWORD_FORGOT_EMAIL_SUCCESS'))));
 						} else {
-							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__INTERNAL_ERROR')));
+							$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__INTERNAL_ERROR'))));
 						}
 					} else {
-						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_NOT_FOUND')));
+						$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_NOT_FOUND'))));
 					}
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID')));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID'))));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 			}
 		} else {
-			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+			$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
 		}
 	}
 
 	function ajax_resetpasswd() {
 		$this->autoRender = false;
+		$this->response->type('json');
 		if($this->request->is('ajax')) {
 			if(!empty($this->request->data['password']) AND !empty($this->request->data['password2']) AND !empty($this->request->data['email'])) {
 
@@ -255,15 +259,15 @@ class UserController extends AppController {
 
 					$this->History->set('RESET_PASSWORD', 'user');
 
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__PASSWORD_RESET_SUCCESS')));
+					$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__PASSWORD_RESET_SUCCESS'))));
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get($reset)));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get($reset))));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 			}
 		} else {
-			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+			$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
 		}
 	}
 
@@ -282,6 +286,7 @@ class UserController extends AppController {
 
 	function uploadSkin() {
 		$this->autoRender = false;
+		$this->response->type('json');
 
 		if($this->isConnected && $this->API->can_skin()) {
 			if($this->request->is('post')) {
@@ -307,18 +312,18 @@ class UserController extends AppController {
 				$isValidImg = $this->Util->isValidImage($this->request, array('png'), $width_max, $height_max, $skin_max_size);
 
 				if(!$isValidImg['status']) {
-					echo json_encode(array('statut' => false, 'msg' => $isValidImg['msg']));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $isValidImg['msg'])));
 					exit;
 				} else {
 					$infos = $isValidImg['infos'];
 				}
 
 				if(!$this->Util->uploadImage($this->request, $target.$filename)) {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD')));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD'))));
 					exit;
 				}
 
-	     echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__UPLOAD_SKIN_SUCCESS')));
+	     $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__UPLOAD_SKIN_SUCCESS'))));
 
 			}
 
@@ -329,6 +334,7 @@ class UserController extends AppController {
 
 	function uploadCape() {
 		$this->autoRender = false;
+		$this->response->type('json');
 
 		if($this->isConnected && $this->API->can_cape()) {
 			if($this->request->is('post')) {
@@ -354,18 +360,18 @@ class UserController extends AppController {
 				$isValidImg = $this->Util->isValidImage($this->request, array('png'), $width_max, $height_max, $cape_max_size);
 
 				if(!$isValidImg['status']) {
-					echo json_encode(array('statut' => false, 'msg' => $isValidImg['msg']));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $isValidImg['msg'])));
 					exit;
 				} else {
 					$infos = $isValidImg['infos'];
 				}
 
 				if(!$this->Util->uploadImage($this->request, $target.$filename)) {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD')));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD'))));
 					exit;
 				}
 
-	     echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__UPLOAD_CAPE_SUCCESS')));
+	     $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__UPLOAD_CAPE_SUCCESS'))));
 
 			}
 
@@ -455,6 +461,7 @@ class UserController extends AppController {
 
 	function change_pw() {
 		$this->autoRender = false;
+		$this->response->type('json');
 		if($this->isConnected) {
 			if($this->request->is('ajax')) {
 				if(!empty($this->request->data['password']) AND !empty($this->request->data['password_confirmation'])) {
@@ -469,23 +476,24 @@ class UserController extends AppController {
 						}
 
 						$this->User->setKey('password', $password);
-						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__PASSWORD_UPDATE_SUCCESS')));
+						$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__PASSWORD_UPDATE_SUCCESS'))));
 					} else {
-						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_PASSWORDS_NOT_SAME')));
+						$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_PASSWORDS_NOT_SAME'))));
 					}
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
 			}
 		} else {
-			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED')));
+			$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED'))));
 		}
 	}
 
 	function change_email() {
 		$this->autoRender = false;
+		$this->response->type('json');
 		if($this->isConnected && $this->Permissions->can('EDIT_HIS_EMAIL')) {
 			if($this->request->is('ajax')) {
 				if(!empty($this->request->data['email']) AND !empty($this->request->data['email_confirmation'])) {
@@ -499,18 +507,18 @@ class UserController extends AppController {
 							}
 
 							$this->User->setKey('email', $this->request->data['email']);
-							echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EMAIL_UPDATE_SUCCESS')));
+							$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EMAIL_UPDATE_SUCCESS'))));
 						} else {
-							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID')));
+							$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID'))));
 						}
 					} else {
-						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_SAME')));
+						$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_SAME'))));
 					}
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
 			}
 		} else {
 			throw new ForbiddenException();
@@ -519,6 +527,7 @@ class UserController extends AppController {
 
 	function send_points() {
 		$this->autoRender = false;
+		$this->response->type('json');
 		if($this->isConnected) {
 			if($this->request->is('ajax')) {
 				if(!empty($this->request->data['to']) AND !empty($this->request->data['how'])) {
@@ -539,27 +548,27 @@ class UserController extends AppController {
 									$to_money = $this->User->getFromUser('money', $this->request->data['to']) + $how;
 									$this->User->setToUser('money', $to_money, $this->request->data['to']);
 									$this->History->set('SEND_MONEY', 'shop', $this->request->data['to'].'|'.$how);
-									echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOP__USER_POINTS_TRANSFER_SUCCESS')));
+									$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOP__USER_POINTS_TRANSFER_SUCCESS'))));
 								} else {
-									echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__BUY_ERROR_NO_ENOUGH_MONEY')));
+									$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__BUY_ERROR_NO_ENOUGH_MONEY'))));
 								}
 							} else {
-								echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__USER_POINTS_TRANSFER_ERROR_EMPTY')));
+								$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__USER_POINTS_TRANSFER_ERROR_EMPTY'))));
 							}
 						} else {
-							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__USER_POINTS_TRANSFER_ERROR_YOURSELF')));
+							$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__USER_POINTS_TRANSFER_ERROR_YOURSELF'))));
 						}
 					} else {
-						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_NOT_FOUND')));
+						$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_NOT_FOUND'))));
 					}
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
 			}
 		} else {
-			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED')));
+			$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED'))));
 		}
 	}
 
@@ -591,13 +600,14 @@ class UserController extends AppController {
 
 				}
 
-				echo (empty($result)) ? json_encode(array('status' => false)) : json_encode(array('status' => true, 'data' => $users));
+				$response = (empty($result)) ? array('status' => false) : array('status' => true, 'data' => $users);
+				$this->response->body($response);
 
 			} else {
-				echo json_encode(array('status' => false));
+				$this->response->body(json_encode(array('status' => false)));
 			}
 		} else {
-			echo json_encode(array('status' => false));
+			$this->response->body(json_encode(array('status' => false)));
 		}
 	}
 
@@ -641,7 +651,7 @@ class UserController extends AppController {
 
 				}
 
-				echo json_encode($data);
+				$this->response->body(json_encode($data));
 
 			}
 		}
@@ -728,6 +738,7 @@ class UserController extends AppController {
 
 	function admin_edit_ajax() {
 		$this->autoRender = false;
+		$this->response->type('json');
 		if($this->isConnected && $this->User->isAdmin()) {
 			if($this->request->is('post')) {
 				$this->loadModel('User');
@@ -736,12 +747,12 @@ class UserController extends AppController {
 					$findUser = $this->User->find('first', array('conditions' => array('id' => intval($this->request->data['id']))));
 
 					if(empty($findUser)) {
-						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EDIT_ERROR_UNKNOWN')));
+						$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EDIT_ERROR_UNKNOWN'))));
 						exit;
 					}
 
 					if($findUser['User']['id'] == $this->User->getKey('id') && $this->request->data['rank'] != $this->User->getKey('rank')) {
-						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EDIT_ERROR_YOURSELF')));
+						$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EDIT_ERROR_YOURSELF'))));
 						exit;
 					}
 
@@ -777,15 +788,15 @@ class UserController extends AppController {
 
 					$this->History->set('EDIT_USER', 'user');
 					$this->Session->setFlash($this->Lang->get('USER__EDIT_SUCCESS'), 'default.success');
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EDIT_SUCCESS')));
+					$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EDIT_SUCCESS'))));
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST' ,$language)));
+				throw new NotFoundException();
 			}
 		} else {
-			$this->redirect('/');
+			throw new ForbiddenException();
 		}
 	}
 

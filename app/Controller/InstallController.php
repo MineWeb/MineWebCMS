@@ -53,24 +53,24 @@ class InstallController extends AppController {
 
 	        	file_put_contents(ROOT.'/config/last_check', $return['time']);
 	        	file_put_contents(ROOT.'/config/secure', json_encode(array('id' => $secure['id'], 'key' => $this->request->data['key'])));
-	        	echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('INSTALL__API_CONNECT_SUCCESS')));
+	        	$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('INSTALL__API_CONNECT_SUCCESS'))));
 
 	        } elseif($return['status'] == "error") {
 
-	        	echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('LICENSE_ERROR__'.$return['msg'])));
+	        	$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('LICENSE_ERROR__'.$return['msg']))));
 
 	        }
 
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('LICENSE_ERROR__MINEWEB_DOWN')));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('LICENSE_ERROR__MINEWEB_DOWN'))));
 				}
 
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 			}
 
 		} else {
-			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+			$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
 		}
 	}
 
@@ -93,19 +93,19 @@ class InstallController extends AppController {
 						$this->User->set($this->request->data);
 						$this->User->save();
 
-						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_SUCCESS')));
+						$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_SUCCESS'))));
 
 					} else {
-						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID')));
+						$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID'))));
 					}
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_PASSWORDS_NOT_SAME')));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_PASSWORDS_NOT_SAME'))));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 			}
 		} else {
-			echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+			$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
 		}
 
 	}

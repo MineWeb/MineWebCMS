@@ -41,6 +41,7 @@ class ServerController extends AppController {
 
 	public function admin_editBannerMsg() {
 		$this->autoRender = false;
+		$this->response->type('json');
 
 		if($this->isConnected AND $this->User->isAdmin()) {
 
@@ -48,7 +49,7 @@ class ServerController extends AppController {
 
 				$this->Lang->set('SERVER__STATUS_MESSAGE', $this->request->data['msg']);
 
-				echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SERVER__EDIT_BANNER_MSG_SUCCESS')));
+				$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('SERVER__EDIT_BANNER_MSG_SUCCESS'))));
 
 			} else {
 				throw new NotFoundException();
@@ -144,6 +145,7 @@ class ServerController extends AppController {
 
 	public function admin_config() {
 		$this->autoRender = false;
+		$this->response->type('json');
 		if($this->isConnected AND $this->User->isAdmin()) {
 
 			$this->layout = null;
@@ -152,15 +154,15 @@ class ServerController extends AppController {
 					if(filter_var($this->request->data['timeout'], FILTER_VALIDATE_FLOAT)) {
 						$this->Configuration->setKey('server_timeout', $this->request->data['timeout']);
 
-						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SERVER__TIMEOUT_SAVE_SUCCESS')));
+						$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('SERVER__TIMEOUT_SAVE_SUCCESS'))));
 					} else {
-						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__INVALID_TIMEOUT')));
+						$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__INVALID_TIMEOUT'))));
 					}
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST' ,$language)));
+				throw new NotFoundException();
 			}
 		} else {
 			throw new ForbiddenException();
@@ -169,6 +171,7 @@ class ServerController extends AppController {
 
 	public function admin_link_ajax() {
 		$this->autoRender = false;
+		$this->response->type('json');
 		if($this->isConnected AND $this->User->isAdmin()) {
 			if($this->request->is('ajax')) {
 
@@ -180,21 +183,21 @@ class ServerController extends AppController {
 							$timeout = $this->Configuration->getKey('server_timeout');
 							if(!empty($timeout)) {
 								if(!$this->Server->check('connection', array('host' => $this->request->data['host'], 'port' => $this->request->data['port'], 'timeout' => $timeout, 'secret_key' => $secret_key))) {
-									echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED')));
+									$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED'))));
 									exit;
 								}
 							} else {
-								echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__TIMEOUT_UNDEFINED')));
+								$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__TIMEOUT_UNDEFINED'))));
 								exit;
 							}
 						} else {
-							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED')));
+							$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED'))));
 							exit;
 						}
 					} elseif($this->request->data['type'] == 2) {
 						$ping = $this->Server->ping(array('ip' => $this->request->data['host'], 'port' => $this->request->data['port']));
 						if(!$ping) {
-							echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED')));
+							$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED'))));
 							exit;
 						}
 					}
@@ -215,13 +218,13 @@ class ServerController extends AppController {
 					if($this->request->data['type'] != '2' && isset($secret_key)) {
 						$this->Configuration->setKey('server_secretkey', $secret_key);
 					}
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('SERVER__LINK_SUCCESS')));
+					$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('SERVER__LINK_SUCCESS'))));
 
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
 			}
 		} else {
 			$this->redirect('/');

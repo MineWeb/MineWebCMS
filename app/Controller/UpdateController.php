@@ -64,12 +64,12 @@ class UpdateController extends AppController {
 			if($this->Update->updateCMS($componentUpdated)) {
 				if($componentUpdated == '1') {
 					$this->Configuration->setKey('version', $this->Update->update['version']);
-					echo json_encode(array('statut' => 'success', 'msg' => $this->Lang->get('UPDATE__SUCCESS')));
+					$this->response->body(json_encode(array('statut' => 'success', 'msg' => $this->Lang->get('UPDATE__SUCCESS'))));
 				} else {
-					echo json_encode(array('statut' => 'continue', 'msg' => ''));
+					$this->response->body(json_encode(array('statut' => 'continue', 'msg' => '')));
 				}
 			} else {
-				echo json_encode(array('statut' => 'error', 'msg' => $this->Lang->get('UPDATE__FAILED')));
+				$this->response->body(json_encode(array('statut' => 'error', 'msg' => $this->Lang->get('UPDATE__FAILED'))));
 			}
 
 			Cache::clearGroup('persistent');

@@ -156,6 +156,7 @@ class NavbarController extends AppController {
 
 	public function admin_add_ajax() {
 		$this->autoRender = false;
+		$this->response->type('json');
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NAV')) {
 
 			if($this->request->is('post')) {
@@ -197,17 +198,17 @@ class NavbarController extends AppController {
 
 						$this->History->set('ADD_NAV', 'navbar');
 
-						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('NAVBAR__ADD_SUCCESS')));
+						$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('NAVBAR__ADD_SUCCESS'))));
 						$this->Session->setFlash($this->Lang->get('NAVBAR__ADD_SUCCESS'), 'default.success');
 
 					} else {
-						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+						$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 					}
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
 			}
 		} else {
 			throw new ForbiddenException();
@@ -263,6 +264,7 @@ class NavbarController extends AppController {
 
 	public function admin_edit_ajax($id) {
 		$this->autoRender = false;
+		$this->response->type('json');
 		if($this->isConnected AND $this->Permissions->can('MANAGE_NAV')) {
 
 			if($this->request->is('post')) {
@@ -294,17 +296,17 @@ class NavbarController extends AppController {
 
 						$this->History->set('ADD_NAV', 'navbar');
 
-						echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('NAVBAR__EDIT_SUCCESS')));
+						$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('NAVBAR__EDIT_SUCCESS'))));
 						$this->Session->setFlash($this->Lang->get('NAVBAR__EDIT_SUCCESS'), 'default.success');
 
 					} else {
-						echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+						$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 					}
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
 			}
 		} else {
 			throw new ForbiddenException();

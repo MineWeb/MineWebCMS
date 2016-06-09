@@ -254,6 +254,7 @@ class PagesController extends AppController {
 
 	public function admin_add_ajax() {
 		$this->autoRender = false;
+		$this->response->type('json');
 		if($this->isConnected AND $this->Permissions->can('MANAGE_PAGE')) {
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['title']) AND !empty($this->request->data['slug']) AND !empty($this->request->data['content'])) {
@@ -269,13 +270,13 @@ class PagesController extends AppController {
 					));
 					$this->Page->save();
 					$this->History->set('ADD_PAGE', 'page');
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('PAGE__ADD_SUCCESS')));
+					$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('PAGE__ADD_SUCCESS'))));
 					$this->Session->setFlash($this->Lang->get('PAGE__ADD_SUCCESS'), 'default.success');
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')));
+				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
 			}
 		} else {
 			throw new ForbiddenException();
@@ -327,6 +328,7 @@ class PagesController extends AppController {
 
 	public function admin_edit_ajax() {
 		$this->autoRender = false;
+		$this->response->type('json');
 		if($this->isConnected AND $this->Permissions->can('MANAGE_PAGE')) {
 			if($this->request->is('post')) {
 				if(!empty($this->request->data['id']) AND !empty($this->request->data['title']) AND !empty($this->request->data['slug']) AND !empty($this->request->data['content'])) {
@@ -340,13 +342,13 @@ class PagesController extends AppController {
 					));
 					$this->Page->save();
 					$this->History->set('EDIT_PAGE', 'page');
-					echo json_encode(array('statut' => true, 'msg' => $this->Lang->get('PAGE__EDIT_SUCCESS')));
+					$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('PAGE__EDIT_SUCCESS'))));
 					$this->Session->setFlash($this->Lang->get('PAGE__EDIT_SUCCESS'), 'default.success');
 				} else {
-					echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')));
+					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 				}
 			} else {
-				echo json_encode(array('statut' => false, 'msg' => $this->Lang->get('NOT_POST' ,$language)));
+				throw new NotFoundException();
 			}
 		} else {
 			throw new ForbiddenException();
