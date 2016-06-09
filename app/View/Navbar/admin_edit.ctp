@@ -73,7 +73,7 @@
                     </div>
                     <div class="form-group">
                       <label><?= $Lang->get('URL') ?></label>
-                      <input type="text" class="form-control url_of_nav" value="<?= $url ?>" placeholder="<?= $Lang->get('NAVBAR__CUSTOM_URL') ?>" name="url">
+                      <input type="text" class="form-control url_of_nav" value="<?= urldecode(urldecode($url)) ?>" placeholder="<?= $Lang->get('NAVBAR__CUSTOM_URL') ?>" name="url">
                     </div>
                   </div>
                 <?php } ?>

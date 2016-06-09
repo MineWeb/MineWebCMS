@@ -25,8 +25,12 @@
               <li id="<?= $value['Navbar']['name'] ?>-<?= $i ?>">
                 <tr style="cursor:move;" id="<?= $value['Navbar']['name'] ?>-<?= $i ?>">
                   <td><?= $value['Navbar']['name'] ?></td>
-                  <?php if($value['Navbar']['url'] != '#') { ?>
+                  <?php if($value['Navbar']['url'] != '#' && $value['Navbar']['url'] !== false) { ?>
                     <td><a href="<?= $value['Navbar']['url'] ?>"><?= $value['Navbar']['url'] ?></a></td>
+                  <?php } elseif($value['Navbar']['url'] === false) { ?>
+                    <td>
+                      <span class="label label-danger"><?= $Lang->get('PLUGIN__ERROR_UNINSTALLED') ?></span>
+                    </td>
                   <?php } else { ?>
                     <td><a href="#"><?= $Lang->get('NAVBAR__LINK_TYPE_DROPDOWN') ?></a></td>
                   <?php } ?>

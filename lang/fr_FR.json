@@ -56,7 +56,7 @@
         "GLOBAL__UPDATE":"Mettre à jour",
         "GLOBAL__SLUG":"URL personnalisée",
         "GLOBAL__GENERATE":"Générer",
-        "GLOBAL__TYPE":"Classique",
+        "GLOBAL__TYPE":"Type",
         "GLOBAL__TYPE_NORMAL":"Classique",
         "GLOBAL__DEFAULT": "Par d\u00e9faut",
         "GLOBAL__JOIN_US":"Rejoignez-nous !",
@@ -92,6 +92,7 @@
         "HELP__POST_TICKET_TITLE":"Problème non résolu ?",
         "HELP__POST_TICKET_EXPLAIN":"Postez directement votre question au support. Le suivi du ticket se fera sur mineweb.org. Un rapport complet de votre CMS sera envoyé à nos serveurs en même temps que le ticket.<br> Vos tickets déjà ouverts ne s'affichent pas ici, tout cela se passe sur <a href=\"http://mineweb.org/help\" target=\"_blank\">le support</a>.",
         "HELP__POST_TICKET_TITLE":"Titre",
+        "HELP__POST_TICKET_TITLE_BOX":"Demander de l'aide",
         "HELP__POST_TICKET_CONTENT":"Expliquez le plus clairement possible votre problème",
 
         "ERROR__PLUGIN_CANT_BE_DOWNLOADED": "Le plugin ne peux pas \u00eatre t\u00e9l\u00e9charg\u00e9.",
@@ -131,6 +132,7 @@
         "PLUGIN__NONE_AVAILABLE":"Aucun plugin disponible",
         "PLUGIN__ADMIN_PAGE":"Administration des plugins",
         "PLUGIN__LOADED":"Chargé",
+        "PLUGIN__ERROR_UNINSTALLED":"Le plugin est désinstallé",
 
         "CONFIG__GENERAL_PREFERENCES": "Pr\u00e9f\u00e9rences g\u00e9n\u00e9rales",
         "CONFIG__SOCIAL_PREFERENCES": "Pr\u00e9f\u00e9rences sociales",

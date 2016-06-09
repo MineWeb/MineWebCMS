@@ -23,7 +23,11 @@ class NavbarController extends AppController {
 				if($value['Navbar']['url']['type'] == "plugin") {
 
 					$plugin = $this->EyPlugin->findPluginByDBid($value['Navbar']['url']['id']);
-					$navbars[$key]['Navbar']['url'] = Router::url('/'.strtolower($plugin->slug));
+					if(!empty($plugin)) {
+						$navbars[$key]['Navbar']['url'] = Router::url('/'.strtolower($plugin->slug));
+					} else {
+						$navbars[$key]['Navbar']['url'] = false;
+					}
 
 				} elseif($value['Navbar']['url']['type'] == "page") {
 
@@ -127,8 +131,10 @@ class NavbarController extends AppController {
 			$this->set('title_for_layout', $this->Lang->get('NAVBAR__ADD_LINK'));
 			$url_plugins = $this->EyPlugin->getPluginsActive();
 			foreach ($url_plugins as $key => $value) {
-				$DBid = $value->DBid;
-				$url_plugins2[$DBid] = $value->name;
+				if($value->nav) {
+					$DBid = $value->DBid;
+					$url_plugins2[$DBid] = $value->name;
+				}
 			}
 			if(!empty($url_plugins2)) {
 				$url_plugins = $url_plugins2;
@@ -222,8 +228,10 @@ class NavbarController extends AppController {
 
 					$url_plugins = $this->EyPlugin->getPluginsActive();
 					foreach ($url_plugins as $key => $value) {
-						$DBid = $value->DBid;
-						$url_plugins2[$DBid] = $value->name;
+						if($value->nav) {
+							$DBid = $value->DBid;
+							$url_plugins2[$DBid] = $value->name;
+						}
 					}
 					if(!empty($url_plugins2)) {
 						$url_plugins = $url_plugins2;
