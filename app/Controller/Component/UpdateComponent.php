@@ -347,7 +347,7 @@ class UpdateComponent extends Object {
                   foreach ($compare[$table]['drop'] as $column => $structure) {
 
                       // vérifions que cela ne correspond pas à une colonne de plugin
-                      if(count(explode('__', $column)) > 1) {
+                      if(count(explode('-', $column)) > 1) {
                           unset($compare[$table]['drop'][$column]);
                       }
                   }
