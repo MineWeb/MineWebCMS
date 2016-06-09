@@ -293,9 +293,18 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 
     // Partie ADMIN
 		$plugins_need_admin = $this->EyPlugin->getPluginsActive();
+    $plugins_admin = array(
+      'general' => array(),
+      'customisation' => array(),
+      'server' => array(),
+      'other' => array(),
+      'default' => array()
+    );
 		foreach ($plugins_need_admin as $key => $value) {
 			if($value->admin) {
-				$plugins_admin[] = array('name' => $value->admin_name, 'slug' => $value->admin_route);
+        $group_menu = (isset($value->admin_group_menu)) ? $value->admin_group_menu : 'default';
+
+				$plugins_admin[$group_menu][] = array('name' => $value->admin_name, 'slug' => $value->admin_route);
 			}
 		}
 		if(!empty($plugins_admin)) {
