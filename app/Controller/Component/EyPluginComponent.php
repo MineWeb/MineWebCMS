@@ -1227,7 +1227,7 @@ class EyPluginComponent extends Object {
       return $pluginVersion;
     }
 
-    public function getFreePlugins() {
+    public function getFreePlugins($all = false) { // si $all == false -> on récupère pas les plugins déjà installés
       // On gère les plugins gratuits de base
         $pluginList = array(); // Pour ne pas rien retourner au cas où
         $url = @file_get_contents('http://mineweb.org/api/v'.$this->apiVersion.'/getFreePlugins'); // On get tout les plugins
@@ -1256,10 +1256,10 @@ class EyPluginComponent extends Object {
         }
 
       // on supprime les plugins qu'on a déjà
-        if(!empty($pluginList)) {
+        if(!empty($pluginList) && !$all) {
           $dbPlugins = $this->getPluginsInDB();
           foreach ($pluginList as $key => $value) {
-            if(in_array($value['name'], $dbPlugins)) {
+            if(in_array($value['slug'], $dbPlugins)) {
               unset($pluginList[$key]);
             }
           }

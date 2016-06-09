@@ -93,7 +93,7 @@ class ThemeComponent extends Object {
 
   // Récupérer les thèmes sur MineWeb.org
 
-    public function getThemesOnAPI($all = true) {
+    public function getThemesOnAPI($all = true, $deleteInstalledThemes = false) {
 
       $type = ($all) ? 'all' : 'free';
 
@@ -119,6 +119,16 @@ class ThemeComponent extends Object {
           $getAllThemes += $getPurchasedThemes['success'];
         }
 
+      }
+
+      if($deleteInstalledThemes) {
+        $installed = $this->getThemesInstalled();
+
+        foreach ($getAllThemes as $themeid => $themedata) {
+          if(isset($installed->$themeid)) {
+            unset($getAllThemes[$themeid]);
+          }
+        }
       }
 
       $this->themesAvailable[$type] = $getAllThemes;

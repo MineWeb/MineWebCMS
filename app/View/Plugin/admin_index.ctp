@@ -29,14 +29,11 @@
               </thead>
               <tbody>
                 <?php
-                  $pluginsInstalled = array();
                   foreach ($pluginList as $key => $value) {
 
                     if(!isset($value->apiID)) {
                       $value->apiID = $value->plugin_id;
                     }
-
-                    $pluginsInstalled[$value->slug] = true;
                   ?>
                   <tr>
                     <td><?= $value->name ?></td>
@@ -92,7 +89,6 @@
               </thead>
               <tbody>
                 <?php foreach ($free_plugins as $key => $value) {
-                  if(!isset($pluginsInstalled[$value['slug']])) {
                 ?>
                   <tr plugin-apiID="<?= $value['apiID'] ?>">
                     <td><?= $value['name'] ?></td>
@@ -102,7 +98,7 @@
                       <btn class="btn btn-success install" apiID="<?= $value['apiID'] ?>" slug="<?= $value['slug'] ?>"><?= $Lang->get('PLUGIN__INSTALL') ?></btn>
                     </td>
                   </tr>
-                <?php } } ?>
+                <?php } ?>
               </tbody>
             </table>
           <?php } else { ?>
