@@ -37,9 +37,18 @@ class UtilComponent extends Object {
     if($event->isStopped()) {
       return $event->result;
     }
-    //var_dump($event);
 
-    return hash('sha256', $password);
+    $hash = $this->controller->Configuration->getKey('passwords_hash');
+    $salt = $this->controller->Configuration->getKey('passwords_salt');
+
+    if(!isset($hash) || empty($hash)) {
+      $hash = 'sha256';
+    }
+    if(!isset($salt) || empty($salt)) {
+      $salt = false;
+    }
+
+    return Security::hash($password, $hash, $salt);
   }
 
   // Pour gérer les temps d'attente ou autre

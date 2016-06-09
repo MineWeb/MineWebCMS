@@ -85,6 +85,42 @@
                   </div>
                 </div>
 
+                <hr>
+
+                <div class="form-group">
+                  <label><?= $Lang->get('CONFIG__KEY_PASSWORDS_HASH') ?></label>
+                  <div class="form-group">
+                    <?= $this->Form->input(false, array(
+                      'div' => false,
+                      'data-live-search' => 'true',
+                      'name' => 'lang',
+                      'class' => 'selectpicker',
+                      'options' => array(
+                        'sha256', 'sha1', 'sha386', 'sha512'
+                      ),
+                      'selected' => $config['passwords_hash']
+                    )); ?>
+                  </div>
+                  <div class="form-group">
+                    <div class="checkbox">
+                      <input name="passwords_salt" type="checkbox"<?= ($config['passwords_salt']) ? ' checked=""' : ''; ?> value="<?= ($config['passwords_salt']) ? '1' : '0'; ?>">
+                      <label><?= $Lang->get('CONFIG__KEY_PASSWORDS_SALT') ?></label>
+                    </div>
+                  </div>
+                  <script type="text/javascript">
+                    $('input[name="passwords_salt"]').on('change', function(e) {
+                      if($(this).val() == 'on') {
+                        $(this).val('1');
+                      } else {
+                        $(this).val('0');
+                      }
+                    });
+                  </script>
+                  <small class="text-danger"><?= $Lang->get('CONFIG__KEY_PASSWORDS_ADVERTISSEMENT') ?></small>
+                </div>
+
+                <hr>
+
                 <div class="form-group">
                   <label><?= $Lang->get('CONFIG__KEY_VERSION') ?></label>
                     <input type="text" value="<?= $config['version'] ?>" class="form-control disabled" disabled>

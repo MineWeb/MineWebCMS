@@ -180,6 +180,9 @@
         "CONFIG__LANG_LABEL": "Langage",
         "CONFIG__LANG_AVAILABLE_VARIABLES": "Variables disponibles",
         "CONFIG__EDIT_LANG_SUCCESS": "Langage sauvegard\u00e9 avec succ\u00e8s !",
+        "CONFIG__KEY_PASSWORDS_HASH":"Hachage des mots de passes",
+        "CONFIG__KEY_PASSWORDS_SALT":"Voulez-vous utiliser un salt ?",
+        "CONFIG__KEY_PASSWORDS_ADVERTISSEMENT":"Attention ! En modifiant ces réglages, les mots de passes actuels de votre site ne seront plus bon. Et forcera vos utilisateurs à utiliser la fonction 'mot de passe oublié'.",
 
         "EMAIL__TITLE_CONFIRM_MAIL": "Confirmer votre email",
         "EMAIL__CONTENT_CONFIRM_MAIL": "Salut {USERNAME} ! <br> Tu t'es inscris le {DATE} avec l'IP <b>{IP}<\/b>, tu dois confirmer ton email en te rendant sur ce lien <a href=\"{LINK}\">{LINK}<\/a>.<br><br><br>Cet email est automatique, inutile d'y r\u00e9pondre.",
