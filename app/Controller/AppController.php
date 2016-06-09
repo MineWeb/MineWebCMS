@@ -490,7 +490,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
           $infos['servers'][$value['Server']['id']]['isOnlineDebug'] = $this->ServerComponent->online($value['Server']['id'], true);
 
           $infos['servers'][$value['Server']['id']]['callTests']['getPlayerCount'] = $this->ServerComponent->call('getPlayerCount', false, $value['Server']['id'], true);
-          $infos['servers'][$value['Server']['id']]['callTests']['getPlayerLimit'] = $this->ServerComponent->call('getPlayerLimit', false, $value['Server']['id'], true);
+          $infos['servers'][$value['Server']['id']]['callTests']['getPlayerMax'] = $this->ServerComponent->call('getPlayerMax', false, $value['Server']['id'], true);
 
         }
 

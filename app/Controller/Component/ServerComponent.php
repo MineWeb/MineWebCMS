@@ -82,6 +82,7 @@ class ServerComponent extends Object {
             } else {
                 $url = $this->getUrl($server_id, true).'&'.$method;
             }
+						$url = urlencode($url);
             $opts = array('http' => array('timeout' => $this->getTimeout()));
             $get = @file_get_contents($url, false, stream_context_create($opts));
 
@@ -356,7 +357,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 		$ModelConfig = ClassRegistry::init('Configuration')->find('first');
 		if(isset($ModelConfig['Configuration']['server_cache'])) {
 			if($ModelConfig['Configuration']['server_cache']) {
-				$cacheFolder = ROOT.DS.'tmp'.DS.'cache'.DS;
+				$cacheFolder = ROOT.DS.'app'.DS.'tmp'.DS.'cache'.DS;
 				$cacheFile = $cacheFolder.'server.cache';
 				if(is_array($server_id)) {
 					$server_id_implode = implode('-', $server_id);
