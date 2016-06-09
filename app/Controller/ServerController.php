@@ -184,21 +184,21 @@ class ServerController extends AppController {
 							if(!empty($timeout)) {
 								if(!$this->Server->check('connection', array('host' => $this->request->data['host'], 'port' => $this->request->data['port'], 'timeout' => $timeout, 'secret_key' => $secret_key))) {
 									$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED'))));
-									exit;
+									return;
 								}
 							} else {
 								$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__TIMEOUT_UNDEFINED'))));
-								exit;
+								return;
 							}
 						} else {
 							$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED'))));
-							exit;
+							return;
 						}
 					} elseif($this->request->data['type'] == 2) {
 						$ping = $this->Server->ping(array('ip' => $this->request->data['host'], 'port' => $this->request->data['port']));
 						if(!$ping) {
 							$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED'))));
-							exit;
+							return;
 						}
 					}
 

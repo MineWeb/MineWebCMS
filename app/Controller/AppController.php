@@ -574,7 +574,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
       }
 
       $this->response->body(json_encode($infos));
-
+      $this->response->send();
       exit;
     }
   }
@@ -633,7 +633,8 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 			if($this->request->is('ajax')) {
         $this->response->type('json');
 				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__CSRF'))));
-				exit();
+				$this->response->send();
+        exit;
 			} else {
 				$this->Session->setFlash($this->Lang->get('ERROR__CSRF'), 'default.error');
 				$this->redirect($this->referer());

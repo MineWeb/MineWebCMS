@@ -77,7 +77,7 @@ class SliderController extends AppController {
 
 						if(!$isValidImg['status']) {
 							$this->response->body(json_encode(array('statut' => false, 'msg' => $isValidImg['msg'])));
-							exit;
+							return;
 						} else {
 							$infos = $isValidImg['infos'];
 						}
@@ -88,7 +88,7 @@ class SliderController extends AppController {
 
 						if(!$this->Util->uploadImage($this->request, $url_img)) {
 							$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD'))));
-							exit;
+							return;
 						}
 
 						$url_img = Router::url('/').'img'.DS.'uploads'.DS.'slider'.DS.$time.'.'.$infos['extension'];
@@ -149,7 +149,7 @@ class SliderController extends AppController {
 
 					if(!$isValidImg['status']) {
 						$this->response->body(json_encode(array('statut' => false, 'msg' => $isValidImg['msg'])));
-						exit;
+						return;
 					} else {
 						$infos = $isValidImg['infos'];
 					}
@@ -160,7 +160,7 @@ class SliderController extends AppController {
 
 					if(!$this->Util->uploadImage($this->request, $url_img)) {
 						$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD'))));
-						exit;
+						return;
 					}
 
 					$url_img = Router::url('/').'img'.DS.'uploads'.DS.'slider'.DS.$time.'.'.$infos['extension'];

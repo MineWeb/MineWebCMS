@@ -313,14 +313,14 @@ class UserController extends AppController {
 
 				if(!$isValidImg['status']) {
 					$this->response->body(json_encode(array('statut' => false, 'msg' => $isValidImg['msg'])));
-					exit;
+					return;
 				} else {
 					$infos = $isValidImg['infos'];
 				}
 
 				if(!$this->Util->uploadImage($this->request, $target.$filename)) {
 					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD'))));
-					exit;
+					return;
 				}
 
 	     $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__UPLOAD_SKIN_SUCCESS'))));
@@ -361,14 +361,14 @@ class UserController extends AppController {
 
 				if(!$isValidImg['status']) {
 					$this->response->body(json_encode(array('statut' => false, 'msg' => $isValidImg['msg'])));
-					exit;
+					return;
 				} else {
 					$infos = $isValidImg['infos'];
 				}
 
 				if(!$this->Util->uploadImage($this->request, $target.$filename)) {
 					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD'))));
-					exit;
+					return;
 				}
 
 	     $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__UPLOAD_CAPE_SUCCESS'))));
@@ -748,12 +748,12 @@ class UserController extends AppController {
 
 					if(empty($findUser)) {
 						$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EDIT_ERROR_UNKNOWN'))));
-						exit;
+						return;
 					}
 
 					if($findUser['User']['id'] == $this->User->getKey('id') && $this->request->data['rank'] != $this->User->getKey('rank')) {
 						$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EDIT_ERROR_YOURSELF'))));
-						exit;
+						return;
 					}
 
 					$data = array(
