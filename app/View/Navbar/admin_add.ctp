@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('NEWS__ADD_NEWS') ?></h3>
+          <h3 class="box-title"><?= $Lang->get('NAVBAR__ADD_TITLE') ?></h3>
         </div>
         <div class="box-body">
           <form method="post" action="<?= $this->Html->url(array('action' => 'add_ajax')) ?>" data-ajax="true" data-redirect-url="<?= $this->Html->url(array('action' => 'index')) ?>" data-custom-function="formatteData">

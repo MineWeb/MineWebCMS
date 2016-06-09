@@ -90,7 +90,7 @@ class User extends AppModel {
 					$findRetryWithIP['LoginRetry']['count'] = 0;
 				}
 
-				if(empty($findRetryWithIP)) { // si il avais rien fail encore
+				if(empty($findRetryWithIP) || !isset($findRetryWithIP['LoginRetry']['id'])) { // si il avais rien fail encore
 
 					$LoginRetryTable->create();
 					$LoginRetryTable->set(array(

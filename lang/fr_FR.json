@@ -242,6 +242,7 @@
         "NAVBAR__TITLE":"Barre de navigation",
         "NAVBAR__OPEN_IN_NEW_TAB": "Ouvrir dans un nouvel onglet",
         "NAVBAR__EDIT_TITLE": "Modifier un lien",
+        "NAVBAR__ADD_TITLE":"Ajouter un lien",
         "NAVBAR__SAVE_IN_PROGRESS":"Sauvegarde automatique...",
         "NAVBAR__SAVE_SUCCESS":"Sauvegardé !",
         "NAVBAR__ADD_SUCCESS":"Lien ajouté avec succès !",

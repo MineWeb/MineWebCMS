@@ -17,7 +17,7 @@
               <label><?= $Lang->get('GLOBAL__TYPE') ?></label>
               <div class="radio">
                 <input type="radio" id="normal" name="type" value="normal"<?= ($nav['type'] == "1") ? ' checked=""' : '' ?>>
-                <label><?= $Lang->get('NAVBAR__LINK_NAME') ?></label>
+                <label><?= $Lang->get('NAVBAR__LINK_TYPE_DEFAULT') ?></label>
               </div>
               <div class="radio">
                 <input type="radio" id="dropdown" name="type" value="dropdown"<?= ($nav['type'] == "2") ? ' checked=""' : '' ?>>
