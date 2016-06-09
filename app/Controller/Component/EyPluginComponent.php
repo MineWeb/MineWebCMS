@@ -40,7 +40,7 @@ class EyPluginComponent extends Object {
       $this->controller =& $controller;
       $this->controller->set('EyPlugin', $this);
 
-    // Initialisation des variables importantes
+      // Initialisation des variables importantes
       $this->pluginsInFolder = $this->getPluginsInFolder();
       $this->pluginsInDB = $this->getPluginsInDB();
 
@@ -1154,10 +1154,13 @@ class EyPluginComponent extends Object {
 
         $permissions = unserialize($value['Permission']['permissions']);
         $permissionsBeforeCheck = $permissions;
+
+        $permissionsChecked = array();
         foreach ($permissions as $k2 => $perm) { // on parcours toutes les permissions
-          if(!in_array($perm, $defaultPermissions) && !in_array($perm, $pluginsPermissions)) { // si la perm n'est pas dans celles par défaut ou celles des plugins installés
+          if((!in_array($perm, $defaultPermissions) && !in_array($perm, $pluginsPermissions)) || (in_array($perm, $permissionsChecked))) { // si la perm n'est pas dans celles par défaut ou celles des plugins installés OU qu'elle est en double
             unset($permissions[$k2]); // elle n'a rien à faire ici alors on la supprime
           }
+          $permissionsChecked[] = $perm;
         }
 
         if(count($permissions) != count($permissionsBeforeCheck)) { // si les permissions ont changé entre temps (certaines supprimé), on update
