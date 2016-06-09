@@ -113,6 +113,10 @@
         "ERROR__403_CONTENT": "Tu n'as pas la permission d'accèder à la page <b>{URL}<\/b> !",
         "ERROR__500_LABEL": "Erreur 500",
 
+        "GALLERY__MODAL_TITLE":"Galerie d'images déjà envoyées",
+        "GALLERY__CHOOSE":"Choisir cette image",
+        "GALLERY__PARAGRAPH":"Vous avez ci-dessous la liste des images ayant déjà été enregistrée sur votre site, vous pouvez les ré-utiliser.",
+
         "LICENSE_ERROR__ID_OR_KEY_INVALID": "Licence inconnue",
         "LICENSE_ERROR__INVALID_URL": "Site d'installation non valide",
         "LICENSE_ERROR__LICENSE_DISABLED": "Licence d\u00e9sactiv\u00e9e",

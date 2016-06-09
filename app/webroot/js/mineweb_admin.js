@@ -67,6 +67,18 @@ $(document).ready( function() {
     }
 
   });
+
+  $('.choose-from-gallery-img').on('click', function(e) {
+    e.preventDefault();
+
+    var path = $(this).attr('data-path');
+
+    $('#img-form').attr('src', path);
+    $('#img-name').html($(this).attr('data-filename'));
+
+    $('#galery').modal('hide');
+  });
+
 });
 
 $('form #delete_upload_file').on('click', function(e) {
