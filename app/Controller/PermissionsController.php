@@ -5,7 +5,7 @@ class PermissionsController extends AppController {
 	public $components = array('Session', 'History');
 
 	function admin_index() {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_PERMISSIONS')) {
 
 			$this->set('title_for_layout', $this->Lang->get('PERMISSIONS__LABEL'));
 			$this->layout = 'admin';
@@ -35,7 +35,7 @@ class PermissionsController extends AppController {
 					$this->Permissions->save();
 				}
 
-				$this->Session->setFlash($this->Lang->get('PERMISSIONS_SUCCESS_SAVE'), 'default.success');
+				$this->Session->setFlash($this->Lang->get('PERMISSIONS__SUCCESS_SAVE'), 'default.success');
 
 			}
 
@@ -45,7 +45,7 @@ class PermissionsController extends AppController {
 	}
 
 	function admin_add_rank() {
-		if($this->isConnected && $this->User->isAdmin()) {
+		if($this->isConnected && $this->Permissions->can('MANAGE_PERMISSIONS')) {
 			$this->autoRender = false;
 			$this->response->type('json');
 			if($this->request->is('ajax')) {
@@ -86,7 +86,7 @@ class PermissionsController extends AppController {
 	}
 
 	function admin_delete_rank($id = false) {
-		if($this->isConnected && $this->User->isAdmin()) {
+		if($this->isConnected && $this->Permissions->can('MANAGE_PERMISSIONS')) {
 			$this->autoRender = false;
 
 			$this->loadModel('Rank');

@@ -1,7 +1,26 @@
 <?php
 class PermissionsComponent extends Object {
 
-  public $permissions = array('COMMENT_NEWS', 'LIKE_NEWS', 'DELETE_HIS_COMMENT', 'DELETE_COMMENT', 'EDIT_HIS_EMAIL', 'ACCESS_DASHBOARD', 'MANAGE_NEWS', 'MANAGE_SLIDER', 'MANAGE_PAGE', 'MANAGE_NAV');
+  public $permissions = array(
+    'COMMENT_NEWS',
+    'LIKE_NEWS',
+    'DELETE_HIS_COMMENT',
+    'DELETE_COMMENT',
+    'EDIT_HIS_EMAIL',
+    'ACCESS_DASHBOARD',
+    'MANAGE_NEWS',
+    'MANAGE_SLIDER',
+    'MANAGE_PAGE',
+    'MANAGE_NAV',
+    'BYPASS_MAINTENANCE',
+    'MANAGE_MAINTENANCE',
+    'MANAGE_CONFIGURATION',
+    'USE_ADMIN_HELP',
+    'MANAGE_PERMISSIONS',
+    'MANAGE_PLUGINS',
+    'MANAGE_API',
+    'MANAGE_SERVERS'
+  );
 
   public $components = array('Session');
 

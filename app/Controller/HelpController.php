@@ -3,7 +3,7 @@
 class HelpController extends AppController {
 
   public function admin_index() {
-    if($this->isConnected AND $this->User->isAdmin()) {
+    if($this->isConnected AND $this->Permissions->can('USE_ADMIN_HELP')) {
       $this->layout = 'admin';
       $this->set('title_for_layout', $this->Lang->get('HELP__TITLE'));
     } else {
@@ -12,7 +12,7 @@ class HelpController extends AppController {
   }
 
   public function admin_getQuestionsAndAnswers() {
-    if($this->isConnected AND $this->User->isAdmin()) {
+    if($this->isConnected AND $this->Permissions->can('USE_ADMIN_HELP')) {
       $this->autoRender = false;
       $this->response->type('json');
 
@@ -37,7 +37,7 @@ class HelpController extends AppController {
   }
 
   public function admin_submitTicket() {
-    if($this->isConnected AND $this->User->isAdmin()) {
+    if($this->isConnected AND $this->Permissions->can('USE_ADMIN_HELP')) {
         $this->autoRender = false;
         $this->response->type('json');
 

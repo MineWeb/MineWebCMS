@@ -16,7 +16,7 @@ class MaintenanceController extends AppController {
 	}
 
 	public function admin_index() {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_MAINTENANCE')) {
 			$this->layout = "admin";
 
 			$this->set('title_for_layout',$this->Lang->get('MAINTENANCE__TITLE'));

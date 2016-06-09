@@ -5,7 +5,7 @@ class ConfigurationController extends AppController {
 	public $components = array('Session', 'RequestHandler', 'Util');
 
 	public function admin_index() {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_CONFIGURATION')) {
 			$this->layout = "admin";
 
 			$data = array();
@@ -116,7 +116,7 @@ class ConfigurationController extends AppController {
 	}
 
 	public function admin_editLang() {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_CONFIGURATION')) {
 
 			$this->layout = 'admin';
 

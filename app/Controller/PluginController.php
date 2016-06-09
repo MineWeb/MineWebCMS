@@ -2,7 +2,7 @@
 class PluginController extends AppController{
 
 	function admin_index() {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_PLUGINS')) {
 
 			$this->set('title_for_layout',$this->Lang->get('PLUGIN__LIST'));
 			$this->layout = 'admin';
@@ -12,7 +12,7 @@ class PluginController extends AppController{
 	}
 
 	function admin_delete($id = false) {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_PLUGINS')) {
 			if($id != false) {
 
 				$slug = $this->Plugin->find('first', array('conditions' => array('id' => $id)));
@@ -58,7 +58,7 @@ class PluginController extends AppController{
 	}
 
 	function admin_enable($id = false) {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_PLUGINS')) {
 			if($id != false) {
 
 				if($this->EyPlugin->enable($id)) {
@@ -101,7 +101,7 @@ class PluginController extends AppController{
 	}
 
 	function admin_disable($id = false) {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_PLUGINS')) {
 			if($id != false) {
 
 				if($this->EyPlugin->disable($id)) {
@@ -148,7 +148,7 @@ class PluginController extends AppController{
 		$this->autoRender = false;
 		$this->response->type('json');
 
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_PLUGINS')) {
 			if($apiID != false AND $slug != false) {
 
 				$installed = $this->EyPlugin->download($apiID, $slug, true);
@@ -203,7 +203,7 @@ class PluginController extends AppController{
 	}
 
 	function admin_update($plugin_id) {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_PLUGINS')) {
 			if($plugin_id != false) {
 
 				$updated = $this->EyPlugin->update($plugin_id);

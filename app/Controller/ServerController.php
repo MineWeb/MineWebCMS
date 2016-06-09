@@ -6,7 +6,7 @@ class ServerController extends AppController {
 
 
 	public function admin_link() {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_SERVERS')) {
 			$this->layout = "admin";
 
 			$this->set('title_for_layout',$this->Lang->get('SERVER__LINK'));
@@ -43,7 +43,7 @@ class ServerController extends AppController {
 		$this->autoRender = false;
 		$this->response->type('json');
 
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_SERVERS')) {
 
 			if($this->request->is('ajax')) {
 
@@ -59,7 +59,7 @@ class ServerController extends AppController {
 	}
 
 	public function admin_switchState() {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_SERVERS')) {
 
 			$this->autoRender = false;
 
@@ -76,7 +76,7 @@ class ServerController extends AppController {
 	}
 
 	public function admin_switchCacheState() {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_SERVERS')) {
 
 			$this->autoRender = false;
 
@@ -94,7 +94,7 @@ class ServerController extends AppController {
 
 	public function admin_switchBanner($id = false) {
 		$this->autoRender = false;
-		if($this->isConnected && $this->User->isAdmin()) {
+		if($this->isConnected && $this->Permissions->can('MANAGE_SERVERS')) {
 			if($id) {
 
 				$banner = unserialize($this->Configuration->getKey('banner_server'));
@@ -124,7 +124,7 @@ class ServerController extends AppController {
 
 	public function admin_delete($id = false) {
 		$this->autoRender = false;
-		if($this->isConnected && $this->User->isAdmin()) {
+		if($this->isConnected && $this->Permissions->can('MANAGE_SERVERS')) {
 			if($id) {
 				$this->loadModel('Server');
 				if($this->Server->delete($id)) {
@@ -146,7 +146,7 @@ class ServerController extends AppController {
 	public function admin_config() {
 		$this->autoRender = false;
 		$this->response->type('json');
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_SERVERS')) {
 
 			$this->layout = null;
 			if($this->request->is('ajax')) {
@@ -172,7 +172,7 @@ class ServerController extends AppController {
 	public function admin_link_ajax() {
 		$this->autoRender = false;
 		$this->response->type('json');
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_SERVERS')) {
 			if($this->request->is('ajax')) {
 
 				if(!empty($this->request->data['host']) AND !empty($this->request->data['port']) AND !empty($this->request->data['name']) AND isset($this->request->data['type']) && ($this->request->data['type'] == 0 || $this->request->data['type'] == 1 || $this->request->data['type'] == 2)) {
@@ -232,7 +232,7 @@ class ServerController extends AppController {
 	}
 
 	public function admin_banlist($server_id = false) {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_SERVERS')) {
 
 			if(!$server_id) {
 				$server_id = $this->Server->getFirstServerID();
@@ -261,7 +261,7 @@ class ServerController extends AppController {
 	}
 
 	public function admin_whitelist($server_id = false) {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_SERVERS')) {
 
 			if(!$server_id) {
 				$server_id = $this->Server->getFirstServerID();
@@ -290,7 +290,7 @@ class ServerController extends AppController {
 	}
 
 	public function admin_online($server_id = false) {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_SERVERS')) {
 
 			if(!$server_id) {
 				$server_id = $this->Server->getFirstServerID();
