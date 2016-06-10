@@ -47,7 +47,15 @@
       "info": false,
       "autoWidth": false,
       'searching': true,
-      'ajax': '<?= $this->Html->url(array('action' => 'get_users')) ?>',
+      "bProcessing": true,
+      "bServerSide": true,
+      "sAjaxSource": "<?= $this->Html->url(array('action' => 'get_users')) ?>",
+      "aoColumns": [
+          {mData:"User.pseudo"},
+          {mData:"User.created"},
+          {mData:"User.rank"},
+          {mData:"User.actions"}
+      ],
     });
   });
 <?php } else { ?>

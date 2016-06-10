@@ -631,10 +631,10 @@ class UserController extends AppController {
 					$available_ranks[$value['Rank']['rank_id']] = array('label' => 'info', 'name' => $value['Rank']['name']);
 				}
 
-				$find = $this->User->find('all');
+				//$find = $this->User->find('all');
 
-				$data['data'] = array();
-
+				//$data['data'] = array();
+/*
 				foreach ($find as $key => $value) {
 
 					$username = $value['User']['pseudo'];
@@ -650,8 +650,43 @@ class UserController extends AppController {
 					$data['data'][] = array($username, $date, $rank, $btns);
 
 				}
+*/
 
-				$this->response->body(json_encode($data));
+				$this->DataTable = $this->Components->load('DataTable');
+				$this->modelClass = 'User';
+				$this->DataTable->initialize($this);
+				$this->paginate = array(
+			  'fields' => array('User.id','User.pseudo','User.created','User.rank'),
+				);
+        $this->DataTable->mDataProp = true;
+
+				$response = $this->DataTable->getResponse();
+
+				$users = $response['aaData'];
+				foreach ($users as $key => $value) {
+
+					$username = $value['User']['pseudo'];
+					$date = 'Le '.$this->Lang->date($value['User']['created']);
+
+					$rank_label = (isset($available_ranks[$value['User']['rank']])) ? $available_ranks[$value['User']['rank']]['label'] : $available_ranks[0]['label'];
+					$rank_name = (isset($available_ranks[$value['User']['rank']])) ? $available_ranks[$value['User']['rank']]['name'] : $available_ranks[0]['name'];
+					$rank = '<span class="label label-'.$rank_label.'">'.$rank_name.'</span>';
+
+					$btns = '<a href="'.Router::url(array('controller' => 'user', 'action' => 'edit/'.$value["User"]["id"], 'admin' => true)).'" class="btn btn-info">'.$this->Lang->get('GLOBAL__EDIT').'</a>';
+					$btns .= '&nbsp;<a onClick="confirmDel(\''.Router::url(array('controller' => 'user', 'action' => 'delete/'.$value["User"]["id"], 'admin' => true)).'\')" class="btn btn-danger">'.$this->Lang->get('GLOBAL__DELETE').'</button>';
+
+					$data[]['User'] = array(
+						'pseudo' => $username,
+						'created' => $date,
+						'rank' => $rank,
+						'actions' => $btns
+					);
+
+				}
+
+				$response['aaData'] = $data;
+
+				$this->response->body(json_encode($response));
 
 			}
 		}
