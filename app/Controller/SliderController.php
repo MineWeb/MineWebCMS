@@ -73,25 +73,34 @@ class SliderController extends AppController {
 
 					if(!isset($this->request->data['img_edit'])) {
 
-						$isValidImg = $this->Util->isValidImage($this->request, array('png', 'jpg', 'jpeg'));
+						$checkIfImageAlreadyUploaded = (isset($this->request->data['img-uploaded']));
+						if($checkIfImageAlreadyUploaded) {
 
-						if(!$isValidImg['status']) {
-							$this->response->body(json_encode(array('statut' => false, 'msg' => $isValidImg['msg'])));
-							return;
+							$url_img = Router::url('/').'img'.DS.'uploads'.$this->request->data['img-uploaded'];
+
 						} else {
-							$infos = $isValidImg['infos'];
+
+							$isValidImg = $this->Util->isValidImage($this->request, array('png', 'jpg', 'jpeg'));
+
+							if(!$isValidImg['status']) {
+								$this->response->body(json_encode(array('statut' => false, 'msg' => $isValidImg['msg'])));
+								return;
+							} else {
+								$infos = $isValidImg['infos'];
+							}
+
+							$time = date('Y-m-d_His');
+
+							$url_img = WWW_ROOT.'img'.DS.'uploads'.DS.'slider'.DS.$time.'.'.$infos['extension'];
+
+							if(!$this->Util->uploadImage($this->request, $url_img)) {
+								$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD'))));
+								return;
+							}
+
+							$url_img = Router::url('/').'img'.DS.'uploads'.DS.'slider'.DS.$time.'.'.$infos['extension'];
+
 						}
-
-						$time = date('Y-m-d_His');
-
-						$url_img = WWW_ROOT.'img'.DS.'uploads'.DS.'slider'.DS.$time.'.'.$infos['extension'];
-
-						if(!$this->Util->uploadImage($this->request, $url_img)) {
-							$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD'))));
-							return;
-						}
-
-						$url_img = Router::url('/').'img'.DS.'uploads'.DS.'slider'.DS.$time.'.'.$infos['extension'];
 
 						$data = array(
 							'title' => $this->request->data['title'],
@@ -145,35 +154,45 @@ class SliderController extends AppController {
 
 				if(!empty($this->request->data['title']) AND !empty($this->request->data['subtitle'])) {
 
-					$isValidImg = $this->Util->isValidImage($this->request, array('png', 'jpg', 'jpeg'));
+					$checkIfImageAlreadyUploaded = (isset($this->request->data['img-uploaded']));
+					if($checkIfImageAlreadyUploaded) {
 
-					if(!$isValidImg['status']) {
-						$this->response->body(json_encode(array('statut' => false, 'msg' => $isValidImg['msg'])));
-						return;
+						$url_img = Router::url('/').'img'.DS.'uploads'.DS.'slider'.DS.$this->request->data['img-uploaded'];
+
 					} else {
-						$infos = $isValidImg['infos'];
+
+						$isValidImg = $this->Util->isValidImage($this->request, array('png', 'jpg', 'jpeg'));
+
+						if(!$isValidImg['status']) {
+							$this->response->body(json_encode(array('statut' => false, 'msg' => $isValidImg['msg'])));
+							return;
+						} else {
+							$infos = $isValidImg['infos'];
+						}
+
+						$time = date('Y-m-d_His');
+
+						$url_img = WWW_ROOT.'img'.DS.'uploads'.DS.'slider'.DS.$time.'.'.$infos['extension'];
+
+						if(!$this->Util->uploadImage($this->request, $url_img)) {
+							$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD'))));
+							return;
+						}
+
+						$url_img = Router::url('/').'img'.DS.'uploads'.DS.'slider'.DS.$time.'.'.$infos['extension'];
+
 					}
 
-					$time = date('Y-m-d_His');
-
-					$url_img = WWW_ROOT.'img'.DS.'uploads'.DS.'slider'.DS.$time.'.'.$infos['extension'];
-
-					if(!$this->Util->uploadImage($this->request, $url_img)) {
-						$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD'))));
-						return;
-					}
-
-					$url_img = Router::url('/').'img'.DS.'uploads'.DS.'slider'.DS.$time.'.'.$infos['extension'];
-
-					$this->loadModel('Slider');
-					$this->Slider->read(null, null);
+					$this->Slider->create();
 					$this->Slider->set(array(
 						'title' => $this->request->data['title'],
 						'subtitle' => $this->request->data['subtitle'],
 						'url_img' => $url_img
 					));
 					$this->Slider->save();
+
 					$this->History->set('ADD_SLIDER', 'slider');
+
 					$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('SLIDER__ADD_SUCCESS'))));
 					$this->Session->setFlash($this->Lang->get('SLIDER__ADD_SUCCESS'), 'default.success');
 				} else {

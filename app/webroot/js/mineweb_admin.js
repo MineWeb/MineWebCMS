@@ -72,9 +72,17 @@ $(document).ready( function() {
     e.preventDefault();
 
     var path = $(this).attr('data-path');
+    var filename = $(this).attr('data-filename');
+    var basename = $(this).attr('data-basename');
 
-    $('#img-form').attr('src', path);
-    $('#img-name').html($(this).attr('data-filename'));
+    $('#image_preview').find('.thumbnail img').attr('src', path);
+    $('#img-name').html(filename);
+
+    if($('input[name="img-uploaded"]').length == 0) {
+      $('#image_preview').append('<input type="hidden" name="img-uploaded" value="'+basename+'">');
+    } else {
+      $('input[name="img-uploaded"]').val(basename);
+    }
 
     $('#galery').modal('hide');
   });

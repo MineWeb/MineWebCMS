@@ -456,30 +456,41 @@ class ThemeComponent extends Object {
       // On traite les données
 
         if(!isset($request->data['img_edit'])) {
-          $isValidImg = $this->Util->isValidImage($request, array('png', 'jpg', 'jpeg'));
 
-          if(!$isValidImg['status'] && $isValidImg['msg'] != $this->Lang->get('FORM__EMPTY_IMG')) {
-            $this->Session->setFlash($isValidImg['msg'], 'default.error');
-            return false;
+          $checkIfImageAlreadyUploaded = (isset($request->data['img-uploaded']));
+          if($checkIfImageAlreadyUploaded) {
+
+            $request->data['logo'] = Router::url('/').'img'.DS.'uploads'.$request->data['img-uploaded'];
+            unset($request->data['img-uploaded']);
+
           } else {
-            if(isset($isValidImg['infos'])) {
-              $infos = $isValidImg['infos'];
-            } else {
-              $infos = false;
-            }
-          }
 
-          if($infos) {
-            $url_img = WWW_ROOT.'img'.DS.'uploads'.DS.'theme_logo.'.$infos['extension'];
+            $isValidImg = $this->Util->isValidImage($request, array('png', 'jpg', 'jpeg'));
 
-            if(!$this->Util->uploadImage($request, $url_img)) {
-              $this->Session->setFlash($this->Lang->get('FORM__ERROR_WHEN_UPLOAD'), 'default.error');
+            if(!$isValidImg['status'] && $isValidImg['msg'] != $this->Lang->get('FORM__EMPTY_IMG')) {
+              $this->Session->setFlash($isValidImg['msg'], 'default.error');
               return false;
+            } else {
+              if(isset($isValidImg['infos'])) {
+                $infos = $isValidImg['infos'];
+              } else {
+                $infos = false;
+              }
             }
 
-            $request->data['logo'] = Router::url('/').'img'.DS.'uploads'.DS.'theme_logo.'.$infos['extension'];
-          } else {
-            $request->data['logo'] = false;
+            if($infos) {
+              $url_img = WWW_ROOT.'img'.DS.'uploads'.DS.'theme_logo.'.$infos['extension'];
+
+              if(!$this->Util->uploadImage($request, $url_img)) {
+                $this->Session->setFlash($this->Lang->get('FORM__ERROR_WHEN_UPLOAD'), 'default.error');
+                return false;
+              }
+
+              $request->data['logo'] = Router::url('/').'img'.DS.'uploads'.DS.'theme_logo.'.$infos['extension'];
+            } else {
+              $request->data['logo'] = false;
+            }
+
           }
         } else {
           $request->data['logo'] = $config['logo'];

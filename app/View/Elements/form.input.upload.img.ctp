@@ -36,13 +36,15 @@
         $files = array_merge($dir->findRecursive('.*\.png'), $dir->findRecursive('.*\.jpg'), $dir->findRecursive('.*\.jpeg'), $dir->findRecursive('.*\.gif'));
         foreach ($files as $path) {
           $file = new File($path);
+          $basename = substr($path, strlen(ROOT.DS.'app'.DS.'webroot'.DS.'img'.DS.'uploads'));
+
           echo '<hr><div class="row" style="margin-top:10px;margin-bottom:10px;">';
             echo '<div class="col-md-4">';
               echo '<img class="img-thumbnail img-rounded" src="data:image/'.$file->ext().';base64,'.base64_encode($file->read()).'" style="width:100%;">';
             echo '</div>';
             echo '<div class="col-md-8">';
               echo '<p>'.$file->name.'</p>';
-              echo '<button data-filename="'.$file->info()['basename'].'" data-path="'.$this->Html->url('/').'img/uploads/slider/'.$file->info()['basename'].'" class="btn btn-primary choose-from-gallery-img">'.$Lang->get('GALLERY__CHOOSE').'</button>';
+              echo '<button data-basename="'.$basename.'" data-filename="'.$file->name.'" data-path="'.$this->Html->url('/').'img/uploads/'.$basename.'" class="btn btn-primary choose-from-gallery-img">'.$Lang->get('GALLERY__CHOOSE').'</button>';
             echo '</div>';
           echo '</div>';
         }
