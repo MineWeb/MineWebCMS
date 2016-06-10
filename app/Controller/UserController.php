@@ -138,6 +138,10 @@ class UserController extends AppController {
 						return $event->result;
 					}
 
+					if($this->request->data['remember_me']) {
+						$this->Cookie->write('remember_me', array('pseudo' => $this->request->data['pseudo'], 'password' => $this->User->getFromUser('password', $this->request->data['pseudo'])), true, '1 week');
+					}
+
 					$this->Session->write('user', $login['session']);
 
 					$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN'))));
@@ -278,6 +282,10 @@ class UserController extends AppController {
 		$this->getEventManager()->dispatch($event);
 		if($event->isStopped()) {
 			return $event->result;
+		}
+
+		if($this->Cookie->read('remember_me')) {
+			$this->Cookie->delete('remember_me');
 		}
 
 		$this->Session->delete('user');

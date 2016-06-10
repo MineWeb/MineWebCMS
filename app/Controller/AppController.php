@@ -46,7 +46,7 @@ function rsa_decrypt($data, $privateKey) {
  */
 class AppController extends Controller {
 
-	var $components = array('Util', 'Module', 'Session', 'Security', 'Lang', 'EyPlugin', 'Theme', 'History', 'Statistics', 'Permissions', 'Update', 'Server');
+	var $components = array('Util', 'Module', 'Session', 'Cookie', 'Security', 'Lang', 'EyPlugin', 'Theme', 'History', 'Statistics', 'Permissions', 'Update', 'Server');
 	var $helpers = array('Session');
 
 	var $view = 'Theme';
@@ -192,6 +192,25 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 
     // utilisateur
     $this->loadModel('User');
+
+    if(!$this->User->isConnected() && $this->Cookie->read('remember_me')) {
+
+      $cookie = $this->Cookie->read('remember_me');
+
+     	$user = $this->User->find('first', array(
+        'conditions' => array(
+          'pseudo' => $cookie['pseudo'],
+          'password' => $cookie['password']
+        )
+     	));
+
+      if(!empty($user)) {
+        $this->Session->write('user', $user['User']['id']);
+      }
+
+    }
+
+
     $this->isConnected = $this->User->isConnected();
     $this->set('isConnected', $this->isConnected);
 

@@ -8,18 +8,32 @@
       </div>
       <div class="modal-body">
         <form class="form-horizontal" method="POST" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'admin' => false, 'controller' => 'user', 'action' => 'ajax_login')) ?>" data-redirect-url="?">
+
           <div class="form-group">
             <label for="inputEmail3" class="col-sm-2 control-label"><?= $Lang->get('USER__USERNAME') ?></label>
             <div class="col-sm-10">
               <input type="text" class="form-control" name="pseudo" id="inputEmail3" placeholder="<?= $Lang->get('USER__USERNAME_LABEL') ?>">
             </div>
           </div>
+
           <div class="form-group">
             <label class="col-sm-2 control-label"><?= $Lang->get('USER__PASSWORD') ?></label>
             <div class="col-sm-10">
               <input type="password" class="form-control" name="password" placeholder="<?= $Lang->get('USER__PASSWORD_LABEL') ?>">
             </div>
           </div>
+
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="remember_me">
+                  <?= $Lang->get('USER__REMEMBER_ME') ?>
+                </label>
+              </div>
+            </div>
+          </div>
+
           <center><a data-dismiss="modal" href="#" data-toggle="modal" data-target="#lostpasswd"><?= $Lang->get('USER__PASSWORD_FORGOT_LABEL') ?></a></center>
       </div>
       <div class="modal-footer">
