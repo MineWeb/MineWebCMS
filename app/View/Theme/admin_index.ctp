@@ -35,9 +35,10 @@
                   </td>
                   <td>
                      <?php if('default' != $Configuration->getKey('theme')) { ?>
-                      <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable/default', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ENABLE') ?></a>
+                      <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable', 'default', 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ENABLE') ?></a>
                      <?php } ?>
-                     <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom/default', 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('THEME__CUSTOMIZATION') ?></a>
+                     <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom', 'default', 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('THEME__CUSTOMIZATION') ?></a>
+                     <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom_files', 'default', 'admin' => true)) ?>" class="btn btn-primary"><?= $Lang->get('THEME__CUSTOM_FILES') ?></a>
                   </td>
                 </tr>
                 <?php if(!empty($themesInstalled)) { ?>
@@ -66,12 +67,13 @@
                       </td>
                       <td>
                         <?php if($value->slug != $Configuration->getKey('theme')) { ?>
-                          <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable/'.$value->slug, 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ENABLE') ?></a>
+                          <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable', $value->slug, 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ENABLE') ?></a>
                         <?php } ?>
-                          <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'theme', 'action' => 'delete/'.$value->slug, 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
-                        <?php if(file_exists(ROOT.'/app/View/Themed/'.$value->slug.'/Config/config.json')) { ?>
-                          <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom/'.$value->slug, 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('THEME__CUSTOMIZATION') ?></a>
+                          <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'theme', 'action' => 'delete', $value->slug, 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
+                        <?php if(file_exists(ROOT.'/app/View/Themed/'.$value->slug.'/Config/view.ctp')) { ?>
+                          <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom', $value->slug, 'admin' => true)) ?>" class="btn btn-info"><?= $Lang->get('THEME__CUSTOMIZATION') ?></a>
                         <?php } ?>
+                        <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom_files', $value->slug, 'admin' => true)) ?>" class="btn btn-primary"><?= $Lang->get('THEME__CUSTOM_FILES') ?></a>
                         <?php if(isset($value->lastVersion)) { ?>
                           <?php if($value->version !== $value->lastVersion) { ?>
                             <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'update', 'admin' => true, $value->apiID)) ?>" class="btn btn-warning"><?= $Lang->get('GLOBAL__UPDATE') ?></a>

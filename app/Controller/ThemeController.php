@@ -127,4 +127,97 @@ class ThemeController extends AppController{
 		}
 	}
 
+	public function admin_custom_files($slug) {
+		if($this->isConnected AND $this->User->isAdmin()) {
+			$this->layout = 'admin';
+
+
+			App::uses('Folder', 'Utility');
+			App::uses('File', 'Utility');
+
+			if($slug == "default") {
+				$CSSfolder = ROOT.DS.'app'.DS.'webroot'.DS.'css';
+			} else {
+				$CSSfolder = ROOT.DS.'app'.DS.'View'.DS.'Themed'.DS.$slug.DS.'webroot'.DS.'css';
+			}
+
+			$dir = new Folder($CSSfolder);
+
+			$files = $dir->findRecursive('.*\.css');
+
+			foreach ($files as $path) {
+
+				$file = new File($path);
+				$basename = substr($path, strlen($CSSfolder));
+
+				$css_files[] = array(
+					'basename' => $basename,
+					'name' => $file->name
+				);
+			}
+
+			$this->set(compact('slug', 'css_files'));
+		} else {
+			throw new ForbiddenException();
+		}
+	}
+
+	public function admin_get_custom_file($slug) {
+		if($this->isConnected AND $this->User->isAdmin()) {
+
+			$this->autoRender = false;
+
+			$file = func_get_args();
+			unset($file[0]);
+
+			$file = implode(DS, $file);
+			$ext = pathinfo($file, PATHINFO_EXTENSION);
+
+			if($slug == "default") {
+				$CSSfolder = ROOT.DS.'app'.DS.'webroot'.DS.'css';
+			} else {
+				$CSSfolder = ROOT.DS.'app'.DS.'View'.DS.'Themed'.DS.$slug.DS.'webroot'.DS.'css';
+			}
+
+			if(!file_exists($CSSfolder.DS.$file) || $ext != 'css') {
+				throw new NotFoundException();
+			}
+
+			$get = @file_get_contents($CSSfolder.DS.$file);
+
+			$this->response->body($get);
+
+		} else {
+			throw new ForbiddenException();
+		}
+	}
+
+	public function admin_save_custom_file($slug) {
+		if($this->isConnected AND $this->User->isAdmin()) {
+
+			$this->autoRender = false;
+
+			$file = $this->request->data['file'];
+			$ext = pathinfo($file, PATHINFO_EXTENSION);
+			$content = $this->request->data['content'];
+
+			if($slug == "default") {
+				$CSSfolder = ROOT.DS.'app'.DS.'webroot'.DS.'css';
+			} else {
+				$CSSfolder = ROOT.DS.'app'.DS.'View'.DS.'Themed'.DS.$slug.DS.'webroot'.DS.'css';
+			}
+
+			if(!file_exists($CSSfolder.DS.$file) || $ext != 'css') {
+				throw new NotFoundException();
+			}
+
+			@file_put_contents($CSSfolder.DS.$file, $content);
+
+			$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('THEME__CUSTOM_FILES_FILE_CONTENT_SAVE_SUCCESS'))));
+
+		} else {
+			throw new ForbiddenException();
+		}
+	}
+
 }
