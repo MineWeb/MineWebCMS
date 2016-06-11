@@ -132,6 +132,7 @@
                 <li><a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-plus"></i> <?= $Lang->get('PLUGIN__TITLE') ?></a></li>
                 <li><a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-mobile"></i> <?= $Lang->get('THEME__TITLE') ?></a></li>
                 <li><a href="<?= $this->Html->url(array('controller' => 'API', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-sitemap"></i> <?= $Lang->get('API__LABEL') ?></a></li>
+                <li><a href="<?= $this->Html->url(array('controller' => 'notifications', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-flag"></i> <?= $Lang->get('NOTIFICATION__TITLE') ?></a></li>
                 <?php foreach ($plugins_need_admin['other'] as $key => $value) { ?>
                   <li><a href="<?= $this->Html->url($value['slug']) ?>"><i class="fa fa-circle-o"></i> <?= $value['name'] ?></a></li>
                 <?php } ?>

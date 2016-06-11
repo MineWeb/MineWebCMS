@@ -4,10 +4,7 @@ class Notification extends AppModel {
   public function getFromUser($user_id) {
     $query = $this->find('all', array(
       'conditions' => array(
-        'user_id' => array(
-          $user_id,
-          NULL
-        )
+        'user_id' => $user_id
       )
     ));
 
@@ -43,8 +40,8 @@ class Notification extends AppModel {
     FROM: INT or NULL (for all)
     CONTENT: TEXT LIMIT 255
   */
-  public function setToUser($content, $user_id = NULL, $from = NULL) {
-    if(empty($content) || strlen($content) > 255) {
+  public function setToUser($content, $user_id, $from = NULL) {
+    if(empty($content) || strlen($content) > 255 || empty($user_id)) {
       return false;
     }
 
