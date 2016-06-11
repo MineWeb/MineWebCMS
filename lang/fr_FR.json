@@ -96,6 +96,8 @@
         "HELP__POST_TICKET_TITLE_BOX":"Demander de l'aide",
         "HELP__POST_TICKET_CONTENT":"Expliquez le plus clairement possible votre problème",
 
+        "NOTIFICATION__SUCCESS_SET":"La notification a bien été envoyée !",
+
         "ERROR__PLUGIN_CANT_BE_DOWNLOADED": "Le plugin ne peux pas \u00eatre t\u00e9l\u00e9charg\u00e9.",
         "ERROR__PLUGIN_REQUIREMENTS": "Les pr\u00e9-requis du plugins ne sont pas remplis, celui-ci ne peux pas \u00eatre install\u00e9.",
         "ERROR__PLUGIN_NOT_VALID": "Le plugin n'est pas valide, celui-ci ne peux pas \u00eatre install\u00e9.",
@@ -421,6 +423,7 @@
         "PERMISSIONS__MANAGE_PLUGINS":"Gérer les plugins du site",
         "PERMISSIONS__MANAGE_API":"Pouvoir configurer la partie API",
         "PERMISSIONS__MANAGE_SERVERS":"Gérer les serveurs (liaison, voir les joueurs en lignes...) sur le panel admin",
+        "PERMISSIONS__MANAGE_NOTIFICATIONS":"Gérer les notifications (voir la liste, en envoyer, en supprimer)",
 
         "SERVER__TITLE":"Serveur",
         "SERVER__LINK": "Lier serveur-site",

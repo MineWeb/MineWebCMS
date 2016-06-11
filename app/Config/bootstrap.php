@@ -117,6 +117,8 @@ CakeLog::config('error', array(
 	'file' => 'error',
 ));
 
+setlocale(LC_MESSAGES, 'fr_FR');
+setlocale(LC_ALL, 'fr_FR');
 
 /*
 DATABASE

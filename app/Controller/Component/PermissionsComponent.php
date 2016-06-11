@@ -19,7 +19,8 @@ class PermissionsComponent extends Object {
     'MANAGE_PERMISSIONS',
     'MANAGE_PLUGINS',
     'MANAGE_API',
-    'MANAGE_SERVERS'
+    'MANAGE_SERVERS',
+    'MANAGE_NOTIFICATIONS'
   );
 
   public $components = array('Session');
