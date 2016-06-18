@@ -30,6 +30,18 @@ class NotificationsController extends AppController {
       $this->response->body(json_encode(array('status' => $notifications)));
     }
   }
+  public function markAsSeen($id = 0) {
+    if($this->isConnected) {
+      $notifications = $this->Notification->markAsSeenFromUser($id, $this->User->getKey('id'));
+      $this->response->body(json_encode(array('status' => $notifications)));
+    }
+  }
+  public function markAllAsSeen() {
+    if($this->isConnected) {
+      $notifications = $this->Notification->markAllAsSeenFromUser($this->User->getKey('id'));
+      $this->response->body(json_encode(array('status' => $notifications)));
+    }
+  }
 
   public function admin_index() {
     if($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
@@ -162,5 +174,40 @@ class NotificationsController extends AppController {
       throw new ForbiddenException();
     }
   }
+
+  public function admin_markAsSeenFromUser($id, $user_id) {
+    if($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
+      $notifications = $this->Notification->markAsSeenFromUser($id, $user_id);
+      $this->response->body(json_encode(array('status' => $notifications)));
+    } else {
+      throw new ForbiddenException();
+    }
+  }
+  public function admin_markAllAsSeenFromUser($user_id) {
+    if($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
+      $notifications = $this->Notification->markAllAsSeenFromUser($user_id);
+      $this->response->body(json_encode(array('status' => $notifications)));
+    } else {
+      throw new ForbiddenException();
+    }
+  }
+
+  public function admin_markAsSeenFromAllUsers($id) {
+    if($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
+      $notifications = $this->Notification->markAsSeenFromAllUsers($id);
+      $this->response->body(json_encode(array('status' => $notifications)));
+    } else {
+      throw new ForbiddenException();
+    }
+  }
+  public function admin_markAllAsSeenFromAllUsers() {
+    if($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
+      $notifications = $this->Notification->markAllAsSeenFromAllUsers();
+      $this->response->body(json_encode(array('status' => $notifications)));
+    } else {
+      throw new ForbiddenException();
+    }
+  }
+
 
 }

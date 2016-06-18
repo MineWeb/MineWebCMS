@@ -26,7 +26,8 @@ class Notification extends AppModel {
         'id' => intval($notification['Notification']['id']),
         'from' => $from,
         'content' => $notification['Notification']['content'],
-        'time' => CakeTime::timeAgoInWords($notification['Notification']['created'])
+        'time' => CakeTime::timeAgoInWords($notification['Notification']['created']),
+        'seen' => ($notification['Notification']['seen'] == 1)
       );
 
     }
@@ -58,13 +59,25 @@ class Notification extends AppModel {
   public function clearAllFromUser($user_id) {
     return $this->deleteAll(array('user_id' => $user_id));
   }
+  public function markAsSeenFromUser($id, $user_id) {
+    return $this->updateAll(array('seen' => 1), array('user_id' => $user_id, 'id' => $id));
+  }
+  public function markAllAsSeenFromUser($user_id) {
+    return $this->updateAll(array('seen' => 1), array('user_id' => $user_id));
+  }
 
   public function clearFromAllUsers($id) {
     return $this->deleteAll(array('id' => $id));
   }
+  public function markAsSeenFromAllUsers($id) {
+    return $this->deleteAll(array('seen' => 1), array('id' => $id));
+  }
 
   public function clearAllFromAllUsers() {
     return $this->deleteAll(array('1' => '1'));
+  }
+  public function markAllAsSeenFromAllUsers() {
+    return $this->deleteAll(array('seen' => 1), array('1' => '1'));
   }
 
 }
