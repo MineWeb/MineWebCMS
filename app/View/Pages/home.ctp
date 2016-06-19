@@ -70,22 +70,33 @@
         <ol id="pagination"></ol>
         <?php } else { echo '<center><h3>'.$Lang->get('NEWS__NONE_PUBLISHED').'</h3></center>'; } ?>
     </div>
-    <div class="row btn-socials">
+    <div class="row btn-socials text-center">
       <?php
+        $howManyBtns = 0;
+        $howManyBtns += (!empty($facebook_link));
+        $howManyBtns += (!empty($twitter_link));
+        $howManyBtns += (!empty($youtube_link));
+        $howManyBtns += (!empty($skype_link));
+        $howManyBtns += count($findSocialButtons);
+
+        $maxBtnsByLine = 4;
+        $howManyBtnsDivided = ceil( $howManyBtns / ceil( $howManyBtns / $maxBtnsByLine ) );
+        $col = 12 / $howManyBtnsDivided;
+
         if(!empty($facebook_link)) {
-          echo '<div class="col-md-3 text-center"><a href="'.$facebook_link.'" target="_blank" class="btn btn-lg btn-primary"><i class="fa fa-facebook-square"></i> '.$Lang->get('GLOBAL__JOIN_US_SOCIAL').' Facebook</a></div>';
+          echo '<div class="col-md-'.$col.' text-center"><a href="'.$facebook_link.'" target="_blank" class="btn btn-lg btn-block btn-primary"><i class="fa fa-facebook-square"></i> '.$Lang->get('GLOBAL__JOIN_US_SOCIAL').' Facebook</a></div>';
         }
         if(!empty($twitter_link)) {
-          echo '<div class="col-md-3 text-center"><a href="'.$twitter_link.'" target="_blank" class="btn btn-lg btn-info"><i class="fa fa-twitter"></i> '.$Lang->get('GLOBAL__JOIN_US_SOCIAL').' Twitter</a></div>';
+          echo '<div class="col-md-'.$col.' text-center"><a href="'.$twitter_link.'" target="_blank" class="btn btn-lg btn-block btn-info"><i class="fa fa-twitter"></i> '.$Lang->get('GLOBAL__JOIN_US_SOCIAL').' Twitter</a></div>';
         }
         if(!empty($youtube_link)) {
-          echo '<div class="col-md-3 text-center"><a href="'.$youtube_link.'" target="_blank" class="btn btn-lg btn-danger"><i class="fa fa-youtube"></i> '.$Lang->get('GLOBAL__JOIN_US_SOCIAL').' YouTube</a></div>';
+          echo '<div class="col-md-'.$col.' text-center"><a href="'.$youtube_link.'" target="_blank" class="btn btn-lg btn-block btn-danger"><i class="fa fa-youtube"></i> '.$Lang->get('GLOBAL__JOIN_US_SOCIAL').' YouTube</a></div>';
         }
         if(!empty($skype_link)) {
-          echo '<div class="col-md-3 text-center"><a href="'.$skype_link.'" target="_blank" class="btn btn-lg btn-info"><i class="fa fa-skype"></i> '.$Lang->get('GLOBAL__JOIN_US_SOCIAL').' Skype</a></div>';
+          echo '<div class="col-md-'.$col.' text-center"><a href="'.$skype_link.'" target="_blank" class="btn btn-lg btn-block btn-info"><i class="fa fa-skype"></i> '.$Lang->get('GLOBAL__JOIN_US_SOCIAL').' Skype</a></div>';
         }
         foreach ($findSocialButtons as $key => $value) {
-          echo '<div class="col-md-3 text-center"><a class="btn btn-default" style="background-color:'.$value['SocialButton']['color'].';color:white;font-size:18px;" target="_blank" href="'.$value['SocialButton']['url'].'">';
+          echo '<div class="col-md-'.$col.' text-center"><a class="btn btn-default btn-block btn-lg" style="background-color:'.$value['SocialButton']['color'].';color:white;font-size:18px;" target="_blank" href="'.$value['SocialButton']['url'].'">';
           if(!empty($value['SocialButton']['img'])) {
             echo '<img src="'.$value['SocialButton']['img'].'">';
           }
