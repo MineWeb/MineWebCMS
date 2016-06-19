@@ -440,6 +440,9 @@
         "PERMISSIONS__MANAGE_API":"Pouvoir configurer la partie API",
         "PERMISSIONS__MANAGE_SERVERS":"Gérer les serveurs (liaison, voir les joueurs en lignes...) sur le panel admin",
         "PERMISSIONS__MANAGE_NOTIFICATIONS":"Gérer les notifications (voir la liste, en envoyer, en supprimer)",
+        "PERMISSIONS__VIEW_STATISTICS": "Voir les statistiques sur le panel admin",
+        "PERMISSIONS__MANAGE_THEMES":"Gérer les thèmes du site (activation, désactivation, suppression, installation, customisation)",
+        "PERMISSIONS__MANAGE_USERS":"Gérer les utilisateurs (suppression, édition, voir la liste)",
 
         "SERVER__TITLE":"Serveur",
         "SERVER__LINK": "Lier serveur-site",

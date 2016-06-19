@@ -581,7 +581,7 @@ class UserController extends AppController {
 	}
 
 	function admin_index() {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_USERS')) {
 
 			$this->set('title_for_layout',$this->Lang->get('USER__TITLE'));
 			$this->layout = 'admin';
@@ -596,7 +596,7 @@ class UserController extends AppController {
 	function admin_liveSearch($query = false) {
 		$this->autoRender = false;
 		$this->response->type('json');
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_USERS')) {
 			if($query != false) {
 
 				$result = $this->User->find('all', array('conditions' => array('pseudo LIKE' => $query.'%')));
@@ -620,7 +620,7 @@ class UserController extends AppController {
 	}
 
 	public function admin_get_users() {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_USERS')) {
 			$this->autoRender = false;
 			$this->response->type('json');
 
@@ -680,7 +680,7 @@ class UserController extends AppController {
 	}
 
 	function admin_edit($search = false) {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_USERS')) {
 			if($search != false) {
 
 				$this->layout = 'admin';
@@ -729,7 +729,7 @@ class UserController extends AppController {
 
 	function admin_confirm($user_id = false) {
 		$this->autoRender = false;
-		if(isset($user_id) && $this->isConnected AND $this->User->isAdmin()) {
+		if(isset($user_id) && $this->isConnected AND $this->Permissions->can('MANAGE_USERS')) {
 
 			$find = $this->User->find('first', array('conditions' => array('id' => $user_id)));
 
@@ -761,7 +761,7 @@ class UserController extends AppController {
 	function admin_edit_ajax() {
 		$this->autoRender = false;
 		$this->response->type('json');
-		if($this->isConnected && $this->User->isAdmin()) {
+		if($this->isConnected && $this->Permissions->can('MANAGE_USERS')) {
 			if($this->request->is('post')) {
 				$this->loadModel('User');
 				if(!empty($this->request->data['id']) && !empty($this->request->data['email']) && (!empty($this->request->data['rank']) || $this->request->data['rank'] == 0)) {
@@ -824,7 +824,7 @@ class UserController extends AppController {
 
 	function admin_delete($id = false) {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_USERS')) {
 			if($id != false) {
 				$this->loadModel('User');
 				$find = $this->User->find('all', array('conditions' => array('id' => $id)));

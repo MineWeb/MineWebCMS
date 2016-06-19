@@ -3,7 +3,7 @@
 class ThemeController extends AppController{
 
 	function admin_index() {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_THEMES')) {
 
 			$this->set('title_for_layout',$this->Lang->get('THEME__LIST'));
 			$this->layout = 'admin';
@@ -17,7 +17,7 @@ class ThemeController extends AppController{
 	}
 
 	function admin_enable($slug = false) {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_THEMES')) {
 			if($slug != false) {
 
 				$this->layout = null;
@@ -34,7 +34,7 @@ class ThemeController extends AppController{
 	}
 
 	function admin_delete($slug = false) {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_THEMES')) {
 			if($slug != false) {
 
 				$this->layout = null;
@@ -57,7 +57,7 @@ class ThemeController extends AppController{
 
 	function admin_install($apiID = false) {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_THEMES')) {
 			if($apiID != false) {
 
 				$install = $this->Theme->install($apiID);
@@ -80,7 +80,7 @@ class ThemeController extends AppController{
 
 	function admin_update($apiID = false) {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_THEMES')) {
 			if($apiID != false) {
 
 				$update = $this->Theme->update($apiID);
@@ -101,7 +101,7 @@ class ThemeController extends AppController{
 	}
 
 	function admin_custom($slug = false) {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_THEMES')) {
 			if($slug != false) {
 				$this->set('title_for_layout',$this->Lang->get('THEME__CUSTOMIZATION'));
 				$this->layout = 'admin';
@@ -128,7 +128,7 @@ class ThemeController extends AppController{
 	}
 
 	public function admin_custom_files($slug) {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_THEMES')) {
 			$this->layout = 'admin';
 
 
@@ -163,7 +163,7 @@ class ThemeController extends AppController{
 	}
 
 	public function admin_get_custom_file($slug) {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_THEMES')) {
 
 			$this->autoRender = false;
 
@@ -193,7 +193,7 @@ class ThemeController extends AppController{
 	}
 
 	public function admin_save_custom_file($slug) {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('MANAGE_THEMES')) {
 
 			$this->autoRender = false;
 

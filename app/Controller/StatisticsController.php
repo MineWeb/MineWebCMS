@@ -5,7 +5,7 @@ class StatisticsController extends AppController {
 	public $components = array('Session', 'History');
 
 	function admin_index() {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('VIEW_STATISTICS')) {
 
 			$this->set('title_for_layout', $this->Lang->get('STATS__TITLE'));
 			$this->layout = 'admin';
@@ -21,7 +21,7 @@ class StatisticsController extends AppController {
 	}
 
 	function admin_get_visits() {
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('VIEW_STATISTICS')) {
 
 			$this->response->type('json');
 
@@ -53,7 +53,7 @@ class StatisticsController extends AppController {
 
 	function admin_reset() {
 		$this->autoRender = false;
-		if($this->isConnected AND $this->User->isAdmin()) {
+		if($this->isConnected AND $this->Permissions->can('VIEW_STATISTICS')) {
 			$this->loadModel('Visit');
 			$this->Visit->deleteAll(array('1 = 1'));
 

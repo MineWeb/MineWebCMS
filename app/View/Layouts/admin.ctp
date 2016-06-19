@@ -67,13 +67,25 @@
                 <i class="fa fa-cogs"></i> <span><?= $Lang->get('GLOBAL__ADMIN_GENERAL') ?></span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-users"></i> <?= $Lang->get('USER__USERS') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'permissions', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-user"></i> <?= $Lang->get('PERMISSIONS__LABEL') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'configuration', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-cog"></i> <?= $Lang->get('CONFIG__GENERAL_PREFERENCES') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-bars"></i> <?= $Lang->get('NAVBAR__TITLE') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'slider', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-picture-o"></i> <?= $Lang->get('SLIDER__TITLE') ?></a></li>
-                <?php foreach ($plugins_need_admin['general'] as $key => $value) { ?>
-                  <li><a href="<?= $this->Html->url($value['slug']) ?>"><i class="fa fa-circle-o"></i> <?= $value['name'] ?></a></li>
+                <?php if($Permissions->can('MANAGE_USERS')) { ?>
+                  <li><a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-users"></i> <?= $Lang->get('USER__USERS') ?></a></li>
+                <?php } ?>
+                <?php if($Permissions->can('MANAGE_PERMISSIONS')) { ?>
+                  <li><a href="<?= $this->Html->url(array('controller' => 'permissions', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-user"></i> <?= $Lang->get('PERMISSIONS__LABEL') ?></a></li>
+                <?php } ?>
+                <?php if($Permissions->can('MANAGE_CONFIGURATION')) { ?>
+                  <li><a href="<?= $this->Html->url(array('controller' => 'configuration', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-cog"></i> <?= $Lang->get('CONFIG__GENERAL_PREFERENCES') ?></a></li>
+                <?php } ?>
+                <?php if($Permissions->can('MANAGE_NAV')) { ?>
+                  <li><a href="<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-bars"></i> <?= $Lang->get('NAVBAR__TITLE') ?></a></li>
+                <?php } ?>
+                <?php if($Permissions->can('MANAGE_SLIDER')) { ?>
+                  <li><a href="<?= $this->Html->url(array('controller' => 'slider', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-picture-o"></i> <?= $Lang->get('SLIDER__TITLE') ?></a></li>
+                <?php } ?>
+                <?php if($Permissions->can('MANAGE_PLUGINS')) { ?>
+                  <?php foreach ($plugins_need_admin['general'] as $key => $value) { ?>
+                    <li><a href="<?= $this->Html->url($value['slug']) ?>"><i class="fa fa-circle-o"></i> <?= $value['name'] ?></a></li>
+                  <?php } ?>
                 <?php } ?>
               </ul>
             </li>
@@ -84,7 +96,9 @@
                 <span><?= $Lang->get('GLOBAL__CUSTOMIZE') ?></span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-pencil"></i> <?= $Lang->get('NEWS__TITLE') ?></a></li>
+                <?php if($Permissions->can('MANAGE_NEWS')) { ?>
+                  <li><a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-pencil"></i> <?= $Lang->get('NEWS__TITLE') ?></a></li>
+                <?php } ?>
                 <?php if($EyPlugin->isInstalled('eywek.shop.1')) { ?>
                   <li class="treeview">
                     <a href="#">
@@ -100,28 +114,37 @@
                 <?php if($EyPlugin->isInstalled('eywek.vote.3')) { ?>
                   <li><a href="<?= $this->Html->url(array('controller' => 'voter', 'plugin' => 'vote', 'admin' => true, 'plugin' => 'vote')) ?>"><i class="fa fa-external-link"></i> <?= $Lang->get('VOTE__TITLE_ACTION') ?></a></li>
                 <?php } ?>
-                <li><a href="<?= $this->Html->url(array('controller' => 'pages', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-file-text-o"></i> <?= $Lang->get('PAGE__TITLE') ?></a></li>
-                <?php foreach ($plugins_need_admin['customisation'] as $key => $value) { ?>
-                  <li><a href="<?= $this->Html->url($value['slug']) ?>"><i class="fa fa-circle-o"></i> <?= $value['name'] ?></a></li>
+                <?php if($Permissions->can('MANAGE_PAGE')) { ?>
+                  <li><a href="<?= $this->Html->url(array('controller' => 'pages', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-file-text-o"></i> <?= $Lang->get('PAGE__TITLE') ?></a></li>
+                <?php } ?>
+
+                <?php if($Permissions->can('MANAGE_PLUGINS')) { ?>
+                  <?php foreach ($plugins_need_admin['customisation'] as $key => $value) { ?>
+                    <li><a href="<?= $this->Html->url($value['slug']) ?>"><i class="fa fa-circle-o"></i> <?= $value['name'] ?></a></li>
+                  <?php } ?>
                 <?php } ?>
               </ul>
             </li>
 
-            <li class="treeview">
-              <a href="#">
-                <i class="fa fa-server"></i>
-                <span><?= $Lang->get('SERVER__TITLE') ?></span> <i class="fa fa-angle-left pull-right"></i>
-              </a>
-              <ul class="treeview-menu">
-                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'link', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-arrows-h"></i> <?= $Lang->get('SERVER__LINK') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'banlist', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-ban"></i> <?= $Lang->get('SERVER__BANLIST') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'whitelist', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-list"></i> <?= $Lang->get('SERVER__WHITELIST') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'online', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-list-ul"></i> <?= $Lang->get('SERVER__ONLINE_PLAYERS') ?></a></li>
-                <?php foreach ($plugins_need_admin['server'] as $key => $value) { ?>
-                  <li><a href="<?= $this->Html->url($value['slug']) ?>"><i class="fa fa-circle-o"></i> <?= $value['name'] ?></a></li>
-                <?php } ?>
-              </ul>
-            </li>
+            <?php if($Permissions->can('MANAGE_SERVERS')) { ?>
+              <li class="treeview">
+                <a href="#">
+                  <i class="fa fa-server"></i>
+                  <span><?= $Lang->get('SERVER__TITLE') ?></span> <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                  <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'link', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-arrows-h"></i> <?= $Lang->get('SERVER__LINK') ?></a></li>
+                  <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'banlist', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-ban"></i> <?= $Lang->get('SERVER__BANLIST') ?></a></li>
+                  <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'whitelist', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-list"></i> <?= $Lang->get('SERVER__WHITELIST') ?></a></li>
+                  <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'online', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-list-ul"></i> <?= $Lang->get('SERVER__ONLINE_PLAYERS') ?></a></li>
+                  <?php if($Permissions->can('MANAGE_PLUGINS')) { ?>
+                    <?php foreach ($plugins_need_admin['server'] as $key => $value) { ?>
+                      <li><a href="<?= $this->Html->url($value['slug']) ?>"><i class="fa fa-circle-o"></i> <?= $value['name'] ?></a></li>
+                    <?php } ?>
+                  <?php } ?>
+                </ul>
+              </li>
+            <?php } ?>
 
             <li class="treeview">
               <a href="#">
@@ -129,15 +152,25 @@
                 <span><?= $Lang->get('GLOBAL__ADMIN_OTHER_TITLE') ?></span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-plus"></i> <?= $Lang->get('PLUGIN__TITLE') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-mobile"></i> <?= $Lang->get('THEME__TITLE') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'API', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-sitemap"></i> <?= $Lang->get('API__LABEL') ?></a></li>
-                <li><a href="<?= $this->Html->url(array('controller' => 'notifications', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-flag"></i> <?= $Lang->get('NOTIFICATION__TITLE') ?></a></li>
-                <?php foreach ($plugins_need_admin['other'] as $key => $value) { ?>
-                  <li><a href="<?= $this->Html->url($value['slug']) ?>"><i class="fa fa-circle-o"></i> <?= $value['name'] ?></a></li>
+                <?php if($Permissions->can('MANAGE_PLUGINS')) { ?>
+                  <li><a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-plus"></i> <?= $Lang->get('PLUGIN__TITLE') ?></a></li>
+                <?php } ?>
+                <?php if($Permissions->can('MANAGE_THEMES')) { ?>
+                  <li><a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-mobile"></i> <?= $Lang->get('THEME__TITLE') ?></a></li>
+                <?php } ?>
+                <?php if($Permissions->can('MANAGE_API')) { ?>
+                  <li><a href="<?= $this->Html->url(array('controller' => 'API', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-sitemap"></i> <?= $Lang->get('API__LABEL') ?></a></li>
+                <?php } ?>
+                <?php if($Permissions->can('MANAGE_NOTIFICATIONS')) { ?>
+                  <li><a href="<?= $this->Html->url(array('controller' => 'notifications', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-flag"></i> <?= $Lang->get('NOTIFICATION__TITLE') ?></a></li>
+                <?php } ?>
+                <?php if($Permissions->can('MANAGE_PLUGINS')) { ?>
+                  <?php foreach ($plugins_need_admin['other'] as $key => $value) { ?>
+                    <li><a href="<?= $this->Html->url($value['slug']) ?>"><i class="fa fa-circle-o"></i> <?= $value['name'] ?></a></li>
+                  <?php } ?>
                 <?php } ?>
 
-                <?php if(!empty($plugins_need_admin['default'])) { ?>
+                <?php if(!empty($plugins_need_admin['default']) && $Permissions->can('MANAGE_PLUGINS')) { ?>
                   <li class="treeview">
                     <a href="#">
                       <i class="fa fa-share"></i> <span><?= $Lang->get('PLUGIN__ADMIN_PAGE') ?></span>
@@ -153,33 +186,41 @@
               </ul>
             </li>
 
-            <li>
-              <a href="<?= $this->Html->url(array('controller' => 'statistics', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>">
-                <i class="fa fa-bar-chart-o"></i>
-                <span><?= $Lang->get('STATS__TITLE') ?></span>
-              </a>
-            </li>
+            <?php if($Permissions->can('VIEW_STATISTICS')) { ?>
+              <li>
+                <a href="<?= $this->Html->url(array('controller' => 'statistics', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>">
+                  <i class="fa fa-bar-chart-o"></i>
+                  <span><?= $Lang->get('STATS__TITLE') ?></span>
+                </a>
+              </li>
+            <?php } ?>
 
-            <li>
-              <a href="<?= $this->Html->url(array('controller' => 'maintenance', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>">
-                <i class="fa fa-hand-paper-o"></i>
-                <span><?= $Lang->get('MAINTENANCE__TITLE') ?></span>
-              </a>
-            </li>
+            <?php if($Permissions->can('MANAGE_MAINTENANCE')) { ?>
+              <li>
+                <a href="<?= $this->Html->url(array('controller' => 'maintenance', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>">
+                  <i class="fa fa-hand-paper-o"></i>
+                  <span><?= $Lang->get('MAINTENANCE__TITLE') ?></span>
+                </a>
+              </li>
+            <?php } ?>
 
-            <li>
-              <a href="<?= $this->Html->url(array('controller' => 'update', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>">
-                <i class="fa fa-wrench"></i>
-                <span><?= $Lang->get('GLOBAL__UPDATE') ?></span>
-              </a>
-            </li>
+            <?php if($user['isAdmin']) { ?>
+              <li>
+                <a href="<?= $this->Html->url(array('controller' => 'update', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>">
+                  <i class="fa fa-wrench"></i>
+                  <span><?= $Lang->get('GLOBAL__UPDATE') ?></span>
+                </a>
+              </li>
+            <?php } ?>
 
-            <li>
-              <a href="<?= $this->Html->url(array('controller' => 'help', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>">
-                <i class="fa fa-question"></i>
-                <span><?= $Lang->get('HELP__TITLE') ?></span>
-              </a>
-            </li>
+            <?php if($Permissions->can('USE_ADMIN_HELP')) { ?>
+              <li>
+                <a href="<?= $this->Html->url(array('controller' => 'help', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>">
+                  <i class="fa fa-question"></i>
+                  <span><?= $Lang->get('HELP__TITLE') ?></span>
+                </a>
+              </li>
+            <?php } ?>
 
           </ul>
         </section>
