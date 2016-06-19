@@ -64,6 +64,11 @@ class AppController extends Controller {
         return;
       }
 
+      if($this->Util->getIP() == '51.255.40.103' && $this->request->is('post') && !empty($this->request->data['call']) && $this->request->data['call'] == 'removeCache' && !empty($this->request->data['key'])) {
+        $this->removeCache($this->request->data['key']);
+        return;
+      }
+
 	  /*
       === Check de la licence ===
     */
@@ -475,6 +480,29 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
     ));
 
 	}
+
+  function removeCache($key) {
+    $this->response->type('json');
+    $secure = file_get_contents(ROOT.'/config/secure');
+		$secure = json_decode($secure, true);
+		if($key == $secure['key']) {
+      $this->autoRender = false;
+
+      Cache::clearGroup('persistent');
+      Cache::clearGroup('models');
+
+      Cache::clear(false);
+
+      App::uses('Folder', 'Utility');
+      $folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
+      if(!empty($folder->path)) {
+        $folder->delete();
+      }
+
+      echo json_encode(array('status' => true));
+
+    }
+  }
 
   function apiCall($key, $debug = false, $return = false, $usersWanted = false) { // appelé pour récupérer des données
     $this->response->type('json');
