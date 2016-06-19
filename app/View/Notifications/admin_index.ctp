@@ -29,7 +29,7 @@
         </div>
         <div class="box-body">
 
-          <form action="<?= $this->Html->url(array('action' => 'setTo')) ?>" method="post" data-ajax="true" data-callback="afterSubmitTicket">
+          <form action="<?= $this->Html->url(array('action' => 'setTo')) ?>" method="post" data-ajax="true" data-callback-function="afterSendNotification">
 
             <div class="form-group">
               <label><?= $Lang->get('NOTIFICATION__CONTENT') ?></label>
@@ -74,14 +74,15 @@
         </div>
       </div>
     </div>
-    <div class="col-md-4 pull-right">
+    <div class="col-md-4 col-sm-12 col-xs-12 pull-right">
       <div class="box">
         <div class="box-header with-border">
           <h3 class="box-title"><?= $Lang->get('NOTIFICATION__OTHER_ACTIONS') ?></h3>
         </div>
         <div class="box-body">
 
-          <button type="button" class="btn btn-danger btn-block"><?= $Lang->get('NOTIFICATION__DELETE_ALL_FROM_ALL_USERS') ?></button>
+          <a href="<?= $this->Html->url(array('action' => 'clearAllFromAllUsers')) ?>" class="btn btn-danger btn-block" id="delete-all"><?= $Lang->get('NOTIFICATION__DELETE_ALL_FROM_ALL_USERS') ?></a>
+          <a href="<?= $this->Html->url(array('action' => 'markAllAsSeenFromAllUsers')) ?>" class="btn btn-default btn-block" id="mark-all-as-seen"><?= $Lang->get('NOTIFICATION__MARK_ALL_AS_SEEN_FROM_ALL_USERS') ?></a>
 
         </div>
       </div>
@@ -109,5 +110,118 @@ $(document).ready(function() {
         {mData:"Notification.actions"}
     ],
   });
+
+  var table = $('table').DataTable();
+
+  $('table tbody').on('click', '.delete-notification', function(e) {
+
+    e.preventDefault();
+
+    var notification = $(this);
+    var url = notification.attr('href');
+
+    $.ajax({
+      url: url,
+      method: 'GET',
+      dataType: 'JSON',
+      success: function(data) {
+        if(data.status) {
+          table
+            .row(notification.parents('tr'))
+            .remove()
+            .draw();
+        } else {
+          alert('Error!');
+          console.log(data);
+        }
+      },
+      error: function() {
+        alert('Error!');
+      }
+    });
+
+  });
+
+  $('table tbody').on('click', '.mark-as-seen', function(e) {
+
+    e.preventDefault();
+
+    var btn = $(this);
+    var url = btn.attr('href');
+
+    $.ajax({
+      url: url,
+      method: 'GET',
+      dataType: 'JSON',
+      success: function(data) {
+        if(data.status) {
+          btn.addClass('disabled').addClass('active').attr('disabled', true).attr('href', '#').html(btn.attr('data-seen'));
+        } else {
+          alert('Error!');
+          console.log(data);
+        }
+      },
+      error: function() {
+        alert('Error!');
+      }
+    });
+
+  });
+
+  $('#delete-all').on('click', function(e) {
+    e.preventDefault();
+
+    var btn = $(this);
+    var url = btn.attr('href');
+
+    $.ajax({
+      url: url,
+      method: 'GET',
+      dataType: 'JSON',
+      success: function(data) {
+        if(data.status) {
+          table.ajax.reload();
+        } else {
+          alert('Error!');
+          console.log(data);
+        }
+      },
+      error: function() {
+        alert('Error!');
+      }
+    });
+
+  });
+
+  $('#mark-all-as-seen').on('click', function(e) {
+    e.preventDefault();
+
+    var btn = $(this);
+    var url = btn.attr('href');
+
+    $.ajax({
+      url: url,
+      method: 'GET',
+      dataType: 'JSON',
+      success: function(data) {
+        if(data.status) {
+          table.ajax.reload();
+        } else {
+          alert('Error!');
+          console.log(data);
+        }
+      },
+      error: function() {
+        alert('Error!');
+      }
+    });
+
+  });
+
 });
+
+function afterSendNotification() {
+  var table = $('table').DataTable();
+  table.ajax.reload();
+}
 </script>

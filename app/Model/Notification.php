@@ -70,14 +70,14 @@ class Notification extends AppModel {
     return $this->deleteAll(array('id' => $id));
   }
   public function markAsSeenFromAllUsers($id) {
-    return $this->deleteAll(array('seen' => 1), array('id' => $id));
+    return $this->updateAll(array('seen' => 1), array('id' => $id));
   }
 
   public function clearAllFromAllUsers() {
     return $this->deleteAll(array('1' => '1'));
   }
   public function markAllAsSeenFromAllUsers() {
-    return $this->deleteAll(array('seen' => 1), array('1' => '1'));
+    return $this->updateAll(array('seen' => 1), array('1' => '1'));
   }
 
 }

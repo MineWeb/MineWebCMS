@@ -57,7 +57,7 @@ class NotificationsController extends AppController {
       $this->modelClass = 'Notification';
       $this->DataTable->initialize($this);
       $this->paginate = array(
-      'fields' => array('Notification.id','Notification.user_id','Notification.from','Notification.content','Notification.created'),
+      'fields' => array('Notification.id','Notification.user_id','Notification.from','Notification.content','Notification.seen','Notification.created'),
       );
       $this->DataTable->mDataProp = true;
 
@@ -74,12 +74,21 @@ class NotificationsController extends AppController {
 
         $pseudo = $this->User->getFromUser('pseudo', $notification['Notification']['user_id']);
 
+        $actions = '<div class="btn btn-group">';
+          if($notification['Notification']['seen']) {
+            $actions .= '<btn class="btn btn-default disabled active" disabled>'.$this->Lang->get('NOTICATION__SEEN').'</btn>';
+          } else {
+            $actions .= '<a class="btn btn-default mark-as-seen" data-seen="'.$this->Lang->get('NOTICATION__SEEN').'" href="'.Router::url(array('action' => 'markAsSeenFromUser', $notification['Notification']['id'], $notification['Notification']['user_id'])).'">'.$this->Lang->get('NOTIFICATION__MARK_AS_SEEN').'</a>';
+          }
+          $actions .= '<a class="btn btn-danger delete-notification" href="'.Router::url(array('action' => 'clearFromUser', $notification['Notification']['id'], $notification['Notification']['user_id'])).'">'.$this->Lang->get('GLOBAL__DELETE').'</a>';
+        $actions .= '</div>';
+
         $data[]['Notification'] = array(
           'pseudo' => $pseudo,
           'from' => $from,
           'content' => $notification['Notification']['content'],
           'created' => $notification['Notification']['created'],
-          'actions' => '<a class="btn btn-danger" href="'.Router::url(array('action' => 'clearFromUser', $notification['Notification']['id'], $notification['Notification']['user_id'])).'">'.$this->Lang->get('GLOBAL__DELETE').'</a>'
+          'actions' => $actions
         );
 
       }
