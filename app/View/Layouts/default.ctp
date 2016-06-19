@@ -89,6 +89,7 @@
                           <?php } ?>
                           <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
                             <span class="caret"></span>
+                            <span id="notification-indicator"></span>
                             <span class="sr-only">Toggle Dropdown</span>
                           </button>
                           <ul class="dropdown-menu" role="menu">
@@ -140,7 +141,19 @@
 
     <?= $this->Html->script('app.js') ?>
     <?= $this->Html->script('form.js') ?>
+    <?= $this->Html->script('notification.js') ?>
     <script>
+    // Notifications
+      var notification = new $.Notification({
+        'url': {
+          'get': '<?= $this->Html->url(array('controller' => 'notifications', 'action' => 'getAll')) ?>',
+          'clear': '<?= $this->Html->url(array('controller' => 'notifications', 'action' => 'clear', 'NOTIF_ID')) ?>',
+          'clearAll': '<?= $this->Html->url(array('controller' => 'notifications', 'action' => 'clearAll')) ?>',
+          'markAsSeen': '<?= $this->Html->url(array('controller' => 'notifications', 'action' => 'markAsSeen', 'NOTIF_ID')) ?>',
+          'markAllAsSeen': '<?= $this->Html->url(array('controller' => 'notifications', 'action' => 'markAllAsSeen')) ?>'
+        }
+      });
+
     // Config FORM/APP.JS
 
     var LIKE_URL = "<?= $this->Html->url(array('controller' => 'news', 'action' => 'like')) ?>";
