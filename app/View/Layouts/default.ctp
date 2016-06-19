@@ -89,12 +89,16 @@
                           <?php } ?>
                           <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
                             <span class="caret"></span>
-                            <span id="notification-indicator"></span>
+                            <span class="notification-indicator"></span>
                             <span class="sr-only">Toggle Dropdown</span>
                           </button>
                           <ul class="dropdown-menu" role="menu">
                             <?php if($isConnected) { ?>
                               <li><a href="<?= $this->Html->url(array('controller' => 'profile', 'action' => 'index', 'plugin' => false)) ?>"><?= $Lang->get('USER__PROFILE') ?></a></li>
+                              <li style="position:relative;">
+                                <a href="#notifications_modal" onclick="notification.markAllAsSeen(2)" data-toggle="modal"><?= $Lang->get('NOTIFICATIONS__LIST') ?></a>
+                                <span class="notification-indicator"></span>
+                              </li>
                               <?php if($Permissions->can('ACCESS_DASHBOARD')) { ?>
                                 <li class="divider"></li>
                                     <li><a href="<?= $this->Html->url(array('controller' => 'admin', 'action' => 'index', 'plugin' => false, 'admin' => true)) ?>"><?= $Lang->get('GLOBAL__ADMIN_PANEL') ?></a></li>
@@ -143,16 +147,22 @@
     <?= $this->Html->script('form.js') ?>
     <?= $this->Html->script('notification.js') ?>
     <script>
-    // Notifications
-      var notification = new $.Notification({
-        'url': {
-          'get': '<?= $this->Html->url(array('controller' => 'notifications', 'action' => 'getAll')) ?>',
-          'clear': '<?= $this->Html->url(array('controller' => 'notifications', 'action' => 'clear', 'NOTIF_ID')) ?>',
-          'clearAll': '<?= $this->Html->url(array('controller' => 'notifications', 'action' => 'clearAll')) ?>',
-          'markAsSeen': '<?= $this->Html->url(array('controller' => 'notifications', 'action' => 'markAsSeen', 'NOTIF_ID')) ?>',
-          'markAllAsSeen': '<?= $this->Html->url(array('controller' => 'notifications', 'action' => 'markAllAsSeen')) ?>'
-        }
-      });
+    <?php if($isConnected) { ?>
+      // Notifications
+        var notification = new $.Notification({
+          'url': {
+            'get': '<?= $this->Html->url(array('plugin' => false, 'controller' => 'notifications', 'action' => 'getAll')) ?>',
+            'clear': '<?= $this->Html->url(array('plugin' => false, 'controller' => 'notifications', 'action' => 'clear', 'NOTIF_ID')) ?>',
+            'clearAll': '<?= $this->Html->url(array('plugin' => false, 'controller' => 'notifications', 'action' => 'clearAll')) ?>',
+            'markAsSeen': '<?= $this->Html->url(array('plugin' => false, 'controller' => 'notifications', 'action' => 'markAsSeen', 'NOTIF_ID')) ?>',
+            'markAllAsSeen': '<?= $this->Html->url(array('plugin' => false, 'controller' => 'notifications', 'action' => 'markAllAsSeen')) ?>'
+          },
+          'messages': {
+            'markAsSeen': '<?= $Lang->get('NOTIFICATION__MARK_AS_SEEN') ?>',
+            'notifiedBy': '<?= $Lang->get('NOTIFICATION__NOTIFIED_BY') ?>'
+          }
+        });
+    <?php } ?>
 
     // Config FORM/APP.JS
 

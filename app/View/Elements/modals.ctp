@@ -180,3 +180,25 @@
     <?php } ?>
   });
 </script>
+
+<?php if($isConnected) { ?>
+  <div class="modal modal-medium fade" id="notifications_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"><?= $Lang->get('GLOBAL__CLOSE') ?></span></button>
+          <h4 class="modal-title"><?= $Lang->get('NOTIFICATIONS__LIST') ?></h4>
+        </div>
+        <div class="modal-body" style="padding:0;">
+
+          <div class="notifications-list"></div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" onclick="notification.markAllAsSeen()" data-dismiss="modal"><?= $Lang->get('NOTIFICATIONS__MARK_ALL_AS_SEEN') ?></button>
+          <button type="submit" class="btn btn-danger" onclick="notification.clearAll()" data-dismiss="modal"><?= $Lang->get('NOTIFICATIONS__CLEAR_ALL') ?></button>
+        </div>
+      </div>
+    </div>
+  </div>
+<?php } ?>

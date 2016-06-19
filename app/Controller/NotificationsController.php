@@ -76,9 +76,9 @@ class NotificationsController extends AppController {
 
         $actions = '<div class="btn btn-group">';
           if($notification['Notification']['seen']) {
-            $actions .= '<btn class="btn btn-default disabled active" disabled>'.$this->Lang->get('NOTICATION__SEEN').'</btn>';
+            $actions .= '<btn class="btn btn-default disabled active" disabled>'.$this->Lang->get('NOTIFICATION__SEEN').'</btn>';
           } else {
-            $actions .= '<a class="btn btn-default mark-as-seen" data-seen="'.$this->Lang->get('NOTICATION__SEEN').'" href="'.Router::url(array('action' => 'markAsSeenFromUser', $notification['Notification']['id'], $notification['Notification']['user_id'])).'">'.$this->Lang->get('NOTIFICATION__MARK_AS_SEEN').'</a>';
+            $actions .= '<a class="btn btn-default mark-as-seen" data-seen="'.$this->Lang->get('NOTIFICATION__SEEN').'" href="'.Router::url(array('action' => 'markAsSeenFromUser', $notification['Notification']['id'], $notification['Notification']['user_id'])).'">'.$this->Lang->get('NOTIFICATION__MARK_AS_SEEN').'</a>';
           }
           $actions .= '<a class="btn btn-danger delete-notification" href="'.Router::url(array('action' => 'clearFromUser', $notification['Notification']['id'], $notification['Notification']['user_id'])).'">'.$this->Lang->get('GLOBAL__DELETE').'</a>';
         $actions .= '</div>';
