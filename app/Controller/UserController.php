@@ -178,6 +178,9 @@ class UserController extends AppController {
 
 				$userSession = $find['User']['id'];
 
+				$this->loadModel('Notification');
+				$this->Notification->setToUser($this->Lang->get('USER__CONFIRM_NOTIFICATION'), $find['User']['id']);
+
 				$this->Session->write('user', $userSession);
 
 				$event = new CakeEvent('onLogin', $this, array('user' => $this->User->getAllFromCurrentUser(), 'confirmAccount' => true));
