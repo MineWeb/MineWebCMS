@@ -327,8 +327,19 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 		foreach ($plugins_need_admin as $key => $value) {
 			if($value->admin) {
         $group_menu = (isset($value->admin_group_menu)) ? $value->admin_group_menu : 'default';
+        $icon = (isset($value->admin_icon)) ? $value->admin_icon : 'circle-o';
+        $permission = (isset($value->admin_permission)) ? $value->admin_permission : null;
 
-				$plugins_admin[$group_menu][] = array('name' => $value->admin_name, 'slug' => $value->admin_route);
+        if(!isset($value->admin_menus) && isset($value->admin_route)) {
+				  $plugins_admin[$group_menu][] = array('name' => $value->admin_name, 'icon' => $icon, 'permission' => $permission, 'slug' => $value->admin_route);
+        } elseif(isset($value->admin_menus)) {
+          $plugins_admin[$group_menu][] = array(
+            'name' => $value->admin_name,
+            'icon' => $icon,
+            'submenu' => $value->admin_menus
+          );
+        }
+
 			}
 		}
 		if(!empty($plugins_admin)) {

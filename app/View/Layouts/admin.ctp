@@ -1,3 +1,45 @@
+<?php
+function getAdminNav($section, $plugins_need_admin, $context, $Permissions) {
+
+  foreach ($plugins_need_admin[$section] as $menu) {
+
+    if(is_array($menu) && isset($menu['submenu'])) {
+
+      $submenus = '';
+      foreach ($menu['submenu'] as $submenu) {
+
+        if((isset($submenu->permission) && $Permissions->can($submenu->permission)) || (!isset($submenu->permission))) {
+          $submenus .= '<li><a href="'.$context->Html->url($submenu->url).'"><i class="fa fa-'.$submenu->icon.'"></i> '.$submenu->name.'</a></li>';
+        }
+
+      }
+
+      if(!empty($submenus)) {
+        echo '<li class="treeview">';
+          echo '<a href="#">';
+            echo '<i class="fa fa-'.$menu['icon'].'"></i> <span>'.$menu['name'].'</span> <i class="fa fa-angle-left pull-right"></i>';
+          echo '</a>';
+          echo '<ul class="treeview-menu">';
+
+            echo $submenus;
+
+          echo '</ul>';
+        echo '</li>';
+      }
+
+    } else {
+      if((isset($menu['permission']) && !empty($menu['permission']) && $Permissions->can($menu['permission'])) || (!isset($menu['permission']) && $Permissions->can('MANAGE_PLUGINS'))) {
+        echo '<li>';
+          echo '<a href="'.$context->Html->url($menu['slug']).'">';
+            echo '<i class="fa fa-'.$menu['icon'].'"></i> '.$menu['name'];
+          echo '</a>';
+        echo '</li>';
+      }
+    }
+
+  }
+}
+?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -82,11 +124,7 @@
                 <?php if($Permissions->can('MANAGE_SLIDER')) { ?>
                   <li><a href="<?= $this->Html->url(array('controller' => 'slider', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-picture-o"></i> <?= $Lang->get('SLIDER__TITLE') ?></a></li>
                 <?php } ?>
-                <?php if($Permissions->can('MANAGE_PLUGINS')) { ?>
-                  <?php foreach ($plugins_need_admin['general'] as $key => $value) { ?>
-                    <li><a href="<?= $this->Html->url($value['slug']) ?>"><i class="fa fa-circle-o"></i> <?= $value['name'] ?></a></li>
-                  <?php } ?>
-                <?php } ?>
+                <?php getAdminNav('general', $plugins_need_admin, $this, $Permissions) ?>
               </ul>
             </li>
 
@@ -99,30 +137,12 @@
                 <?php if($Permissions->can('MANAGE_NEWS')) { ?>
                   <li><a href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-pencil"></i> <?= $Lang->get('NEWS__TITLE') ?></a></li>
                 <?php } ?>
-                <?php if($EyPlugin->isInstalled('eywek.shop.1')) { ?>
-                  <li class="treeview">
-                    <a href="#">
-                      <i class="fa fa-shopping-cart"></i> <span><?= $Lang->get('SHOP__TITLE') ?></span> <i class="fa fa-angle-left pull-right"></i>
-                    </a>
-                    <ul class="treeview-menu">
-                      <li><a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'index', 'admin' => true, 'plugin' => 'shop')) ?>"><i class="fa fa-shopping-basket"></i> <?= $Lang->get('SHOP__ADMIN_MANAGE_ITEMS') ?></a></li>
-                      <li><a href="<?= $this->Html->url(array('controller' => 'shop', 'action' => 'vouchers', 'admin' => true, 'plugin' => 'shop')) ?>"><i class="fa fa-percent"></i> <?= $Lang->get('SHOP__ADMIN_MANAGE_VOUCHERS') ?></a></li>
-                      <li><a href="<?= $this->Html->url(array('controller' => 'payment', 'action' => 'index', 'admin' => true, 'plugin' => 'shop')) ?>"><i class="fa fa-credit-card"></i> <?= $Lang->get('SHOP__ADMIN_MANAGE_PAYMENT') ?></a></li>
-                    </ul>
-                  </li>
-                <?php } ?>
-                <?php if($EyPlugin->isInstalled('eywek.vote.3')) { ?>
-                  <li><a href="<?= $this->Html->url(array('controller' => 'voter', 'plugin' => 'vote', 'admin' => true, 'plugin' => 'vote')) ?>"><i class="fa fa-external-link"></i> <?= $Lang->get('VOTE__TITLE_ACTION') ?></a></li>
-                <?php } ?>
                 <?php if($Permissions->can('MANAGE_PAGE')) { ?>
                   <li><a href="<?= $this->Html->url(array('controller' => 'pages', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-file-text-o"></i> <?= $Lang->get('PAGE__TITLE') ?></a></li>
                 <?php } ?>
 
-                <?php if($Permissions->can('MANAGE_PLUGINS')) { ?>
-                  <?php foreach ($plugins_need_admin['customisation'] as $key => $value) { ?>
-                    <li><a href="<?= $this->Html->url($value['slug']) ?>"><i class="fa fa-circle-o"></i> <?= $value['name'] ?></a></li>
-                  <?php } ?>
-                <?php } ?>
+                <?php getAdminNav('customisation', $plugins_need_admin, $this, $Permissions) ?>
+
               </ul>
             </li>
 
@@ -137,11 +157,7 @@
                   <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'banlist', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-ban"></i> <?= $Lang->get('SERVER__BANLIST') ?></a></li>
                   <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'whitelist', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-list"></i> <?= $Lang->get('SERVER__WHITELIST') ?></a></li>
                   <li><a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'online', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-list-ul"></i> <?= $Lang->get('SERVER__ONLINE_PLAYERS') ?></a></li>
-                  <?php if($Permissions->can('MANAGE_PLUGINS')) { ?>
-                    <?php foreach ($plugins_need_admin['server'] as $key => $value) { ?>
-                      <li><a href="<?= $this->Html->url($value['slug']) ?>"><i class="fa fa-circle-o"></i> <?= $value['name'] ?></a></li>
-                    <?php } ?>
-                  <?php } ?>
+                  <?php getAdminNav('server', $plugins_need_admin, $this, $Permissions) ?>
                 </ul>
               </li>
             <?php } ?>
@@ -164,22 +180,16 @@
                 <?php if($Permissions->can('MANAGE_NOTIFICATIONS')) { ?>
                   <li><a href="<?= $this->Html->url(array('controller' => 'notifications', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-flag"></i> <?= $Lang->get('NOTIFICATION__TITLE') ?></a></li>
                 <?php } ?>
-                <?php if($Permissions->can('MANAGE_PLUGINS')) { ?>
-                  <?php foreach ($plugins_need_admin['other'] as $key => $value) { ?>
-                    <li><a href="<?= $this->Html->url($value['slug']) ?>"><i class="fa fa-circle-o"></i> <?= $value['name'] ?></a></li>
-                  <?php } ?>
-                <?php } ?>
+                <?php getAdminNav('other', $plugins_need_admin, $this, $Permissions) ?>
 
-                <?php if(!empty($plugins_need_admin['default']) && $Permissions->can('MANAGE_PLUGINS')) { ?>
+                <?php if(!empty($plugins_need_admin['default'])) { ?>
                   <li class="treeview">
                     <a href="#">
                       <i class="fa fa-share"></i> <span><?= $Lang->get('PLUGIN__ADMIN_PAGE') ?></span>
                       <i class="fa fa-angle-left pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
-                      <?php foreach ($plugins_need_admin['default'] as $key => $value) { ?>
-                        <li><a href="<?= $this->Html->url($value['slug']) ?>"><i class="fa fa-circle-o"></i> <?= $value['name'] ?></a></li>
-                      <?php } ?>
+                      <?php getAdminNav('default', $plugins_need_admin, $this, $Permissions) ?>
                     </ul>
                   </li>
                 <?php } ?>
