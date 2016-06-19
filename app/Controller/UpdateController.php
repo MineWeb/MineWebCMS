@@ -34,6 +34,19 @@ class UpdateController extends AppController {
 		}
 	}
 
+	public function admin_switchForceUpdates() {
+		if($this->isConnected && $this->User->isAdmin()) {
+			$this->autoRender = false;
+
+			$status = ($this->Configuration->getKey('forced_updates') === false || $this->Configuration->getKey('forced_updates')) ? 0 : 1;
+
+			$this->Configuration->setKey('forced_updates', $status);
+
+		} else {
+			throw new ForbiddenException();
+		}
+	}
+
 	public function admin_clear_cache() {
 		if($this->isConnected && $this->User->isAdmin()) {
 			$this->autoRender = false;

@@ -34,7 +34,7 @@ class UpdateComponent extends Object {
 
 			if($this->update['status']) {
         // Si elle est forcé on l'éxecute
-				if($this->update['type'] == "forced") {
+				if($this->update['type'] == "forced" && ($this->controller->Configuration->getKey('forced_updates') === false || $this->controller->Configuration->getKey('forced_updates'))) {
 
 					// On update l'updater
 					if(!file_exists(ROOT.DS.'update_forced_inprogress')) {

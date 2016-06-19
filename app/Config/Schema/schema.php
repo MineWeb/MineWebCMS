@@ -91,7 +91,8 @@ class AppSchema extends CakeSchema {
 				'confirm_mail_signup_block' => 0,
 				'member_page_type' => 0,
 				'passwords_hash' => 'sha256',
-				'passwords_salt' => 0
+				'passwords_salt' => 0,
+				'forced_updates' => 1
 			));
 
 	    $configuration->save();
@@ -218,6 +219,7 @@ class AppSchema extends CakeSchema {
 		'member_page_type' => array('type' => 'integer', 'null' => false, 'default' => 0, 'length' => 1, 'unsigned' => false),
 		'passwords_hash' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 10, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'passwords_salt' => array('type' => 'integer', 'null' => true, 'default' => 0, 'length' => 1, 'unsigned' => false),
+		'forced_updates' => array('type' => 'integer', 'null' => true, 'default' => 1, 'length' => 1, 'unsigned' => false),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),

@@ -494,6 +494,8 @@
         "UPDATE__SUCCESS": "La mise \u00e0 jour s'est bien d\u00e9roul\u00e9e",
         "UPDATE__LOADING": "Mise \u00e0 jour en cours ...",
         "UPDATE__CLEAR_CACHE":"Supprimer le cache (conseillé)",
+        "UPDATE__AUTHORIZE_FORCED_UPDATE":"Autoriser les mises à jours forcées",
+        "UPDATE__AUTHORIZE_FORCED_UPDATE_EXPLAIN":"Permet des mises à jours automatique si une faille de sécurité a été trouvée ou un problème important.",
 
         "STATS__TITLE":"Statistiques",
         "STATS__NBR_VISITS":"Nombre de visites",

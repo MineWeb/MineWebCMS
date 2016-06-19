@@ -3,7 +3,12 @@
     <div class="col-md-12">
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('GLOBAL__UPDATE') ?></h3>
+          <h3 class="box-title" style="width:100%;">
+            <?= $Lang->get('GLOBAL__UPDATE') ?>
+            <small class="pull-right">
+              <input id="forced_updates" type="checkbox" name="name" <?= ($Configuration->getKey('forced_updates') === false || $Configuration->getKey('forced_updates')) ? 'checked' : '' ?>>&nbsp;&nbsp;<abbr title="<?= $Lang->get('UPDATE__AUTHORIZE_FORCED_UPDATE_EXPLAIN') ?>"><?= $Lang->get('UPDATE__AUTHORIZE_FORCED_UPDATE') ?></abbr>
+            </small>
+          </h3>
         </div>
         <div class="box-body">
 
@@ -106,6 +111,13 @@
     $('#update-msg').html('<br><div class="alert alert-info"><?= $Lang->get('UPDATE__LOADING') ?></div>').fadeIn(500);
 
     callMAJ();
+  });
+
+  $('#forced_updates').on('change', function(e) {
+    e.preventDefault();
+
+    $.get('<?= $this->Html->url(array('action' => 'switchForceUpdates')) ?>');
+
   });
 
 </script>

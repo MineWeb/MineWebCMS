@@ -19,7 +19,7 @@ class Configuration extends AppModel {
   }
 
   public function getKey($key) {
-    return $this->getData()[$key];
+    return (isset($this->getData()[$key])) ? $this->getData()[$key] : false;
   }
 
   public function setKey($key, $value) {
