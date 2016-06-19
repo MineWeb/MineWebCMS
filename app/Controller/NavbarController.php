@@ -136,7 +136,7 @@ class NavbarController extends AppController {
 					$url_plugins2[$DBid] = $value->name;
 				}
 			}
-			if(!empty($url_plugins2)) {
+			if(isset($url_plugins2)) {
 				$url_plugins = $url_plugins2;
 			} else {
 				$url_plugins = array();
@@ -146,7 +146,7 @@ class NavbarController extends AppController {
 			foreach ($url_pages as $key => $value) {
 				$url_pages2[$value['Page']['id']] = $value['Page']['title'];
 			}
-			$url_pages = @$url_pages2;
+			$url_pages = (isset($url_pages2)) ? $url_pages2 : array();
 			$this->set(compact('url_plugins'));
 			$this->set(compact('url_pages'));
 		} else {
@@ -234,7 +234,7 @@ class NavbarController extends AppController {
 							$url_plugins2[$DBid] = $value->name;
 						}
 					}
-					if(!empty($url_plugins2)) {
+					if(isset($url_plugins2)) {
 						$url_plugins = $url_plugins2;
 					} else {
 						$url_plugins = array();
@@ -245,7 +245,7 @@ class NavbarController extends AppController {
 					foreach ($url_pages as $key => $value) {
 						$url_pages2[$value['Page']['id']] = $value['Page']['title'];
 					}
-					$url_pages = @$url_pages2;
+					$url_pages = (isset($url_pages2)) ? $url_pages2 : array();
 
 
 					$this->set(compact('url_pages', 'url_plugins', 'nav'));

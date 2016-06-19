@@ -508,7 +508,7 @@
                     <label><?= $Lang->get('CONFIG__KEY_SMTP_PASSWORD') ?></label>
                       <?= $this->Form->input(false, array(
                         'div' => false,
-                        'type' => 'text',
+                        'type' => 'password',
                         'name' => 'smtpPassword',
                         'class' => 'form-control',
                         'value' => $config['smtpPassword']

@@ -15,6 +15,10 @@
               <input class="form-control" value="<?= $search_user['pseudo'] ?>" type="text" disabled="" autocomplete="off">
            	</div>
 
+            <input id="fake_user_name" name="fake_user[name]" style="position:absolute; top:-100px;" type="text" value="Safari Autofill Me">
+            <input id="fake_user_email" name="fake_user[email]" style="position:absolute; top:-100px;" type="email" value="Safari Autofill Me">
+            <input id="fake_password" name="fake_user[password]" style="position:absolute; top:-100px;" type="password" value="Safari Autofill Me">
+
             <?php if(!$Configuration->getKey('confirm_mail_signup')) { ?>
               <div class="form-group">
                 <label><?= $Lang->get('USER__EMAIL') ?></label>

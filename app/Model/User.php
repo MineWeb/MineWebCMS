@@ -86,7 +86,7 @@ class User extends AppModel {
 
 			} else {
 
-				if(strtotime('+2 hours', strtotime($findRetryWithIP['LoginRetry']['modified'])) < time()) { //on reset à 0
+				if(!isset($findRetryWithIP['LoginRetry']) || strtotime('+2 hours', strtotime($findRetryWithIP['LoginRetry']['modified'])) < time()) { //on reset à 0
 					$findRetryWithIP['LoginRetry']['count'] = 0;
 				}
 
