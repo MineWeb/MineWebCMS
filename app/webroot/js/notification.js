@@ -34,6 +34,9 @@
         $.get($.Notification.defaultOptions.url.get+'/'+$.Notification.defaultOptions.notification_type, function(data) {
 
           for (var i = 0; i < data.length; i++) {
+            if($.Notification.defaultOptions.limit > 0 && $.Notification.defaultOptions.limit == i) {
+              break;
+            }
             self.notifications[data[i]['id']] = data[i];
           }
 
@@ -56,11 +59,11 @@
 
         if(count > 0) {
           $($.Notification.defaultOptions.indicator.element).each(function() {
-            $(this).html(self.createIndicator(count));
+            $(this).html($.Notification.defaultOptions.indicator.defaultContent+self.createIndicator(count).outerHTML);
           });
         } else {
           $($.Notification.defaultOptions.indicator.element).each(function() {
-            $(this).html('');
+            $(this).html($.Notification.defaultOptions.indicator.defaultContent);
           });
         }
 
@@ -104,21 +107,25 @@
             if(self.notifications[id].seen) {
               var btn_seen = el.querySelector($.Notification.defaultOptions.list.notification.seen.btn.element);
 
-              btn_seen.style.cssText += ' '+$.Notification.defaultOptions.list.notification.seen.btn.style
-              btn_seen.className += ' '+$.Notification.defaultOptions.list.notification.seen.btn.class;
+              if(btn_seen != null && typeof btn_seen == "object" && Object.keys(btn_seen).length == 1) {
 
-              for (var i = 0; i < $.Notification.defaultOptions.list.notification.seen.btn.attr.length; i++) {
+                btn_seen.style.cssText += ' '+$.Notification.defaultOptions.list.notification.seen.btn.style
+                btn_seen.className += ' '+$.Notification.defaultOptions.list.notification.seen.btn.class;
 
-                for (var attr in $.Notification.defaultOptions.list.notification.seen.btn.attr[i]) {
+                for (var i = 0; i < $.Notification.defaultOptions.list.notification.seen.btn.attr.length; i++) {
 
-                  btn_seen.setAttribute(attr, $.Notification.defaultOptions.list.notification.seen.btn.attr[i][attr]);
+                  for (var attr in $.Notification.defaultOptions.list.notification.seen.btn.attr[i]) {
+
+                    btn_seen.setAttribute(attr, $.Notification.defaultOptions.list.notification.seen.btn.attr[i][attr]);
+
+                  }
 
                 }
 
               }
             }
 
-            if(self.notifications[id].from != null) {
+            if(self.notifications[id].from != null && $.Notification.defaultOptions.list.notification.from.type.length > 0) {
 
               var from_element = document.createElement($.Notification.defaultOptions.list.notification.from.type);
               from_element.style.cssText = $.Notification.defaultOptions.list.notification.from.style;
@@ -211,6 +218,7 @@
 
     $.Notification.defaultOptions = {
       'notification_type': 'user',
+      'limit': 0,
       'indicator': {
         'element': '.notification-indicator',
         'style': {
@@ -218,7 +226,8 @@
           'top': '-5px',
           'borderRadius': '30px'
         },
-        'class': 'label label-danger'
+        'class': 'label label-danger',
+        'defaultContent': ''
       },
       'messages': {
         'markAsSeen': '#',

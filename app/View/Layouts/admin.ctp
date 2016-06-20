@@ -81,6 +81,76 @@ function getAdminNav($section, $plugins_need_admin, $context, $Permissions) {
 
           <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
+
+              <li class="dropdown notifications-menu">
+                <a href="#" onclick="notification.markAllAsSeen(1)" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" id="notification-indicator">
+                  <i class="fa fa-bell-o"></i>
+                </a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div id="notification-container" class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto;"></div>
+                  </li>
+                </ul>
+              </li>
+
+              <?= $this->Html->script('notification.js') ?>
+              <script type="text/javascript">
+              // Notifications
+                var notification = new $.Notification({
+                  'notification_type': 'admin',
+                  'limit': 5,
+                  'url': {
+                    'get': '<?= $this->Html->url(array('plugin' => false, 'admin' => false, 'controller' => 'notifications', 'action' => 'getAll')) ?>',
+                    'clear': '<?= $this->Html->url(array('plugin' => false, 'admin' => false, 'controller' => 'notifications', 'action' => 'clear', 'NOTIF_ID')) ?>',
+                    'clearAll': '<?= $this->Html->url(array('plugin' => false, 'admin' => false, 'controller' => 'notifications', 'action' => 'clearAll')) ?>',
+                    'markAsSeen': '<?= $this->Html->url(array('plugin' => false, 'admin' => false, 'controller' => 'notifications', 'action' => 'markAsSeen', 'NOTIF_ID')) ?>',
+                    'markAllAsSeen': '<?= $this->Html->url(array('plugin' => false, 'admin' => false, 'controller' => 'notifications', 'action' => 'markAllAsSeen')) ?>'
+                  },
+                  'messages': {
+                    'markAsSeen': '<?= $Lang->get('NOTIFICATION__MARK_AS_SEEN') ?>',
+                    'notifiedBy': '<?= $Lang->get('NOTIFICATION__NOTIFIED_BY') ?>'
+                  },
+                  'indicator': {
+                    'element': '#notification-indicator',
+                    'class': 'label label-warning',
+                    'style': {},
+                    'defaultContent': '<i class="fa fa-bell-o"></i>'
+                  },
+                  'list': {
+                    'element': '#notification-container',
+                    'container': {
+                      'type': 'ul',
+                      'class': 'menu',
+                      'style': 'overflow: hidden; width: 100%;'
+                    },
+                    'notification': {
+                      'type': 'li',
+                      'class': '',
+                      'style': '',
+                      'content':'<a href="#">{CONTENT}</a>',
+                      'from': {
+                        'type': '',
+                        'class': '',
+                        'style': '',
+                        'content': ''
+                      },
+                      'seen': {
+                        'element': {
+                          'style': '',
+                          'class': ''
+                        },
+                        'btn': {
+                          'element': '.mark-as-seen',
+                          'style': '',
+                          'class': 'hidden',
+                          'attr': [{'onclick': ''}],
+                        }
+                      }
+                    }
+                  }
+                });
+              </script>
+
               <li class="user user-menu">
                 <a href="#">
                   <span class="hidden-xs"><?= $user['pseudo'] ?></span>
