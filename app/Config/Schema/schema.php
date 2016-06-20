@@ -307,6 +307,7 @@ class AppSchema extends CakeSchema {
 		'user_id' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
 		'from' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
 		'content' => array('type' => 'string', 'null' => false, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+		'type' => array('type' => 'string', 'length' => 5, 'null' => false, 'default' => 'user', 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'seen' => array('type' => 'integer', 'length' => 1, 'null' => false, 'default' => 0, 'unsigned' => false),
 		'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
 		'indexes' => array(

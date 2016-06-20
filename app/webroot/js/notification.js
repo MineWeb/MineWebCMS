@@ -31,7 +31,7 @@
         var self = this;
         self.notifications = {};
 
-        $.get($.Notification.defaultOptions.url.get, function(data) {
+        $.get($.Notification.defaultOptions.url.get+'/'+$.Notification.defaultOptions.notification_type, function(data) {
 
           for (var i = 0; i < data.length; i++) {
             self.notifications[data[i]['id']] = data[i];
@@ -76,14 +76,16 @@
           container.className = $.Notification.defaultOptions.list.container.class;
 
         // On parcours les notifications et on créé un élement par notif
+          var self = this;
+          Object.keys(this.notifications).sort().reverse().forEach(function(id) {
 
-          for (var id in this.notifications) {
+            id = parseInt(id);
 
             var el = document.createElement($.Notification.defaultOptions.list.notification.type);
             el.style.cssText = $.Notification.defaultOptions.list.notification.style;
             el.className = $.Notification.defaultOptions.list.notification.class;
 
-            if(this.notifications[id].seen) {
+            if(self.notifications[id].seen) {
 
               el.style.cssText += ' '+$.Notification.defaultOptions.list.notification.seen.element.style
               el.className += ' '+$.Notification.defaultOptions.list.notification.seen.element.class;
@@ -93,13 +95,13 @@
             var content = $.Notification.defaultOptions.list.notification.content;
             content = content.replace('{ID}', id);
             content = content.replace('{ID}', id);
-            content = content.replace('{CONTENT}', this.notifications[id].content);
-            content = content.replace('{TIME}', this.notifications[id].time);
+            content = content.replace('{CONTENT}', self.notifications[id].content);
+            content = content.replace('{TIME}', self.notifications[id].time);
             content = content.replace('{MARK_AS_SEEN}', $.Notification.defaultOptions.messages.markAsSeen);
 
             el.innerHTML = content;
 
-            if(this.notifications[id].seen) {
+            if(self.notifications[id].seen) {
               var btn_seen = el.querySelector($.Notification.defaultOptions.list.notification.seen.btn.element);
 
               btn_seen.style.cssText += ' '+$.Notification.defaultOptions.list.notification.seen.btn.style
@@ -116,7 +118,7 @@
               }
             }
 
-            if(this.notifications[id].from != null) {
+            if(self.notifications[id].from != null) {
 
               var from_element = document.createElement($.Notification.defaultOptions.list.notification.from.type);
               from_element.style.cssText = $.Notification.defaultOptions.list.notification.from.style;
@@ -124,7 +126,7 @@
 
               var from_content = $.Notification.defaultOptions.list.notification.from.content;
               from_content = from_content.replace('{NOTIFIED_BY}', $.Notification.defaultOptions.messages.notifiedBy);
-              from_content = from_content.replace('{FROM}', this.notifications[id].from);
+              from_content = from_content.replace('{FROM}', self.notifications[id].from);
 
               from_element.innerHTML = from_content;
 
@@ -137,7 +139,7 @@
             // On l'ajoute au container
               container.appendChild(el);
 
-          }
+          });
 
         // On met dans l'HTML
 
@@ -208,6 +210,7 @@
     };
 
     $.Notification.defaultOptions = {
+      'notification_type': 'user',
       'indicator': {
         'element': '.notification-indicator',
         'style': {

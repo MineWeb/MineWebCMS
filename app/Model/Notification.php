@@ -1,11 +1,13 @@
 <?php
 class Notification extends AppModel {
 
-  public function getFromUser($user_id) {
+  public function getFromUser($user_id, $type) {
     $query = $this->find('all', array(
       'conditions' => array(
-        'user_id' => $user_id
-      )
+        'user_id' => $user_id,
+        'type' => $type
+      ),
+      'order' => 'id DESC'
     ));
 
     $data = array();

@@ -117,6 +117,9 @@
         "NOTIFICATIONS__CLEAR_ALL":"Supprimer toutes mes notifications",
         "NOTIFICATIONS__MARK_ALL_AS_SEEN":"Marquer toutes mes notifications comme lue",
         "NOTIFICATION__NOTIFIED_BY":"Notifié par",
+        "NOTIFICATION__TYPE":"Type",
+        "NOTIFICATION__TYPE_USER":"Utilisateur",
+        "NOTIFICATION__TYPE_ADMIN":"Administrateur",
 
         "ERROR__PLUGIN_CANT_BE_DOWNLOADED": "Le plugin ne peux pas \u00eatre t\u00e9l\u00e9charg\u00e9.",
         "ERROR__PLUGIN_REQUIREMENTS": "Les pr\u00e9-requis du plugins ne sont pas remplis, celui-ci ne peux pas \u00eatre install\u00e9.",

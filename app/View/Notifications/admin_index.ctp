@@ -12,6 +12,7 @@
                 <th><?= $Lang->get('USER__USERNAME') ?></th>
                 <th><?= $Lang->get('NOTIFICATION__FROM') ?></th>
                 <th><?= $Lang->get('NOTIFICATION__CONTENT') ?></th>
+                <th><?= $Lang->get('NOTIFICATION__TYPE') ?></th>
                 <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
                 <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
               </tr>
@@ -106,6 +107,7 @@ $(document).ready(function() {
         {mData:"Notification.pseudo"},
         {mData:"Notification.from"},
         {mData:"Notification.content"},
+        {mData:"Notification.type"},
         {mData:"Notification.created"},
         {mData:"Notification.actions"}
     ],

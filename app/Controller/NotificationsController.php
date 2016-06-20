@@ -11,9 +11,9 @@ class NotificationsController extends AppController {
     }
   }
 
-  public function getAll() {
+  public function getAll($type = 'user') {
     if($this->isConnected) {
-      $notifications = $this->Notification->getFromUser($this->User->getKey('id'));
+      $notifications = $this->Notification->getFromUser($this->User->getKey('id'), $type);
       $this->response->body(json_encode($notifications));
     }
   }
@@ -57,7 +57,7 @@ class NotificationsController extends AppController {
       $this->modelClass = 'Notification';
       $this->DataTable->initialize($this);
       $this->paginate = array(
-      'fields' => array('Notification.id','Notification.user_id','Notification.from','Notification.content','Notification.seen','Notification.created'),
+      'fields' => array('Notification.id','Notification.user_id','Notification.from','Notification.content','Notification.seen','Notification.type','Notification.created'),
       );
       $this->DataTable->mDataProp = true;
 
@@ -83,10 +83,17 @@ class NotificationsController extends AppController {
           $actions .= '<a class="btn btn-danger delete-notification" href="'.Router::url(array('action' => 'clearFromUser', $notification['Notification']['id'], $notification['Notification']['user_id'])).'">'.$this->Lang->get('GLOBAL__DELETE').'</a>';
         $actions .= '</div>';
 
+        if($notification['Notification']['type'] == "admin") {
+          $type = '<span class="label label-danger">'.$this->Lang->get('NOTIFICATION__TYPE_ADMIN').'</span>';
+        } else {
+          $type = '<span class="label label-success">'.$this->Lang->get('NOTIFICATION__TYPE_USER').'</span>'; 
+        }
+
         $data[]['Notification'] = array(
           'pseudo' => $pseudo,
           'from' => $from,
           'content' => $notification['Notification']['content'],
+          'type' => $type,
           'created' => $notification['Notification']['created'],
           'actions' => $actions
         );
