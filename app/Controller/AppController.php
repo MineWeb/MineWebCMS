@@ -499,11 +499,6 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 		if($key == $secure['key']) {
       $this->autoRender = false;
 
-      Cache::clearGroup('persistent');
-      Cache::clearGroup('models');
-
-      Cache::clear(false);
-
       App::uses('Folder', 'Utility');
       $folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
       if(!empty($folder->path)) {

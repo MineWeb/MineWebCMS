@@ -19,32 +19,24 @@ class PluginController extends AppController{
 
 				if(isset($slug['Plugin']['name']) && $this->EyPlugin->delete($slug['Plugin']['name'])) {
 
-					Cache::clearGroup('persistent');
-					Cache::clearGroup('models');
-
-					Cache::clear(false);
-
+					Configure::write('Cache.disable', true);
 					App::uses('Folder', 'Utility');
-					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-					if(!empty($folder->path)) {
+          $folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
+          if(!empty($folder->path)) {
 						$folder->delete();
-					}
+          }
 
 					$this->History->set('DELETE_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN__DELETE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				} else {
 
-					Cache::clearGroup('persistent');
-					Cache::clearGroup('models');
-
-					Cache::clear(false);
-
+					Configure::write('Cache.disable', true);
 					App::uses('Folder', 'Utility');
-					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-					if(!empty($folder->path)) {
-						$folder->delete();
-					}
+          $folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
+          if(!empty($folder->path)) {
+            $folder->delete();
+          }
 
 					$this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
@@ -62,32 +54,11 @@ class PluginController extends AppController{
 			if($id != false) {
 
 				if($this->EyPlugin->enable($id)) {
-					Cache::clearGroup('persistent');
-					Cache::clearGroup('models');
-
-					Cache::clear(false);
-
-					App::uses('Folder', 'Utility');
-					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-					if(!empty($folder->path)) {
-						$folder->delete();
-					}
 
 					$this->History->set('ENABLE_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN__ENABLE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				} else {
-
-					Cache::clearGroup('persistent');
-					Cache::clearGroup('models');
-
-					Cache::clear(false);
-
-					App::uses('Folder', 'Utility');
-					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-					if(!empty($folder->path)) {
-						$folder->delete();
-					}
 
 					$this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
@@ -105,32 +76,11 @@ class PluginController extends AppController{
 			if($id != false) {
 
 				if($this->EyPlugin->disable($id)) {
-					Cache::clearGroup('persistent');
-					Cache::clearGroup('models');
-
-					Cache::clear(false);
-
-					App::uses('Folder', 'Utility');
-					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-					if(!empty($folder->path)) {
-						$folder->delete();
-					}
 
 					$this->History->set('DISABLE_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN__DISABLE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				} else {
-
-					Cache::clearGroup('persistent');
-					Cache::clearGroup('models');
-
-					Cache::clear(false);
-
-					App::uses('Folder', 'Utility');
-					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-					if(!empty($folder->path)) {
-						$folder->delete();
-					}
 
 					$this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
@@ -159,16 +109,12 @@ class PluginController extends AppController{
 					$this->loadModel('Plugin');
 					$search = $this->Plugin->find('first', array('conditions' => array('apiID' => $apiID)));
 
-					Cache::clearGroup('persistent');
-					Cache::clearGroup('models');
-
-					Cache::clear(false);
-
+					Configure::write('Cache.disable', true);
 					App::uses('Folder', 'Utility');
-					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-					if(!empty($folder->path)) {
-						$folder->delete();
-					}
+          $folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
+          if(!empty($folder->path)) {
+            $folder->delete();
+          }
 
 					$this->response->body(json_encode(array(
 						'statut' => 'success',
@@ -181,21 +127,10 @@ class PluginController extends AppController{
 						)
 					)));
 				} else {
-					$this->response->body(json_encode(array('statut' => 'error', 'msg' => $this->Lang->get($installed)));)
+					$this->response->body(json_encode(array('statut' => 'error', 'msg' => $this->Lang->get($installed))));
 				}
 			} else {
-				$this->response->body(json_encode(array('statut' => 'error', 'msg' => $this->Lang->get($installed)));)
-			}
-
-			Cache::clearGroup('persistent');
-			Cache::clearGroup('models');
-
-			Cache::clear(false);
-
-			App::uses('Folder', 'Utility');
-			$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-			if(!empty($folder->path)) {
-				$folder->delete();
+				$this->response->body(json_encode(array('statut' => 'error', 'msg' => $this->Lang->get($installed))));
 			}
 		} else {
 			throw new ForbiddenException();
@@ -209,32 +144,11 @@ class PluginController extends AppController{
 				$updated = $this->EyPlugin->update($plugin_id);
 
 				if($updated === true) {
-					Cache::clearGroup('persistent');
-					Cache::clearGroup('models');
-
-					Cache::clear(false);
-
-					App::uses('Folder', 'Utility');
-					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-					if(!empty($folder->path)) {
-						$folder->delete();
-					}
 
 					$this->History->set('UPDATE_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN__UPDATE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
 				} else {
-
-					Cache::clearGroup('persistent');
-					Cache::clearGroup('models');
-
-					Cache::clear(false);
-
-					App::uses('Folder', 'Utility');
-					$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-					if(!empty($folder->path)) {
-						$folder->delete();
-					}
 
 					$this->Session->setFlash($this->Lang->get($updated), 'default.error');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));

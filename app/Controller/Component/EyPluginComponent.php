@@ -52,11 +52,6 @@ class EyPluginComponent extends Object {
 
       $this->pluginsLoaded = $this->loadPlugins();
 
-      /*debug($this->pluginsLoaded);
-      debug($this->alreadyCheckValid);
-      debug(CakePlugin::loaded());
-      die();*/
-
     }
 
   // Retourne toutes les tables du CMS
@@ -482,8 +477,6 @@ class EyPluginComponent extends Object {
 
           clearDir($this->pluginsFolder.DS.$slug);
           CakePlugin::unload($slug); // On unload sur cake
-          Cache::clearGroup(false, '_cake_core_'); // On clear le cache
-          Cache::clearGroup(false, '_cake_model_');
 
           return true;
         }
@@ -570,69 +563,76 @@ class EyPluginComponent extends Object {
   // Fonction de download (pré-installation)
 
     public function download($apiID, $slug, $install = false) {
+
+      // On vérifie les requirements avant
+      $config = $this->getPluginFromAPI($apiID);
+      if($this->requirements($slug, $config)) {
+
         // get du zip sur mineweb.org
-      $return = $this->controller->sendToAPI(array(), 'get_plugin/'.$apiID, true);
+        $return = $this->controller->sendToAPI(array(), 'get_plugin/'.$apiID, true);
 
-      if($return['code'] == 200) {
-        $return_json = json_decode($return['content'], true);
-        if(!$return_json) {
-          $zip = $return['content'];
-        } elseif($return_json['status'] == "error") {
+        if($return['code'] == 200) {
+          $return_json = json_decode($return['content'], true);
+          if(!$return_json) {
+            $zip = $return['content'];
+          } elseif($return_json['status'] == "error") {
 
-          $this->log('[Install plugin] Can\'t be downloaded (Error code: 1)');
+            $this->log('[Install plugin] Can\'t be downloaded (Error code: 1)');
+            return 'ERROR__PLUGIN_CANT_BE_DOWNLOADED';
+
+          }
+        } else {
+
+          $this->log('[Install plugin] Can\'t be downloaded (Error code: 2)');
           return 'ERROR__PLUGIN_CANT_BE_DOWNLOADED';
 
-          return false;
         }
-      } else {
 
-        $this->log('[Install plugin] Can\'t be downloaded (Error code: 2)');
+        $filename = ROOT.DS.'app'.DS.'tmp'.DS.'plugin-'.$slug.'-'.$apiID.'.zip';
+
+        // On écris le zip
+          $file = fopen($filename, 'w+');
+          if(!fwrite($file, $zip)) {
+            $this->log('[Install/Update Plugin] Save files failed.');
+            return false;
+          }
+          fclose($file);
+
+        // On fais l'update
+          $zip = new ZipArchive;
+          $res = $zip->open($filename);
+
+        // Il a bien été ouvert
+          if ($res === TRUE) {
+            $zip->extractTo($this->pluginsFolder.DS);
+            $zip->close();
+            unlink($filename);
+
+            App::uses('Folder', 'Utility');
+            $folder = new Folder($this->pluginsFolder.DS.'__MACOSX');
+            $folder->delete();
+
+            return ($install) ? $this->install($slug, true) : true;
+          }
+
+        /*
+        ZIPARCHIVE::ER_EXISTS - 10
+        ZIPARCHIVE::ER_INCONS - 21
+        ZIPARCHIVE::ER_INVAL - 18
+        ZIPARCHIVE::ER_MEMORY - 14
+        ZIPARCHIVE::ER_NOENT - 9
+        ZIPARCHIVE::ER_NOZIP - 19
+        ZIPARCHIVE::ER_OPEN - 11
+        ZIPARCHIVE::ER_READ - 5
+        ZIPARCHIVE::ER_SEEK - 4
+        */
+
+        $this->log('[Install/Update plugin] Can\'t be downloaded (Error code: 3) - ZipErrorCode: '.$res);
         return 'ERROR__PLUGIN_CANT_BE_DOWNLOADED';
 
-        return false;
+      } else {
+        return 'ERROR__PLUGIN_REQUIREMENTS';
       }
-
-      $filename = ROOT.DS.'app'.DS.'tmp'.DS.'plugin-'.$slug.'-'.$apiID.'.zip';
-
-      // On écris le zip
-        $file = fopen($filename, 'w+');
-        if(!fwrite($file, $zip)) {
-          $this->log('[Install/Update Plugin] Save files failed.');
-          return false;
-        }
-        fclose($file);
-
-      // On fais l'update
-        $zip = new ZipArchive;
-        $res = $zip->open($filename);
-
-      // Il a bien été ouvert
-        if ($res === TRUE) {
-          $zip->extractTo($this->pluginsFolder.DS);
-          $zip->close();
-          unlink($filename);
-
-          App::uses('Folder', 'Utility');
-          $folder = new Folder($this->pluginsFolder.DS.'__MACOSX');
-          $folder->delete();
-
-          return ($install) ? $this->install($slug, true) : true;
-        }
-
-      /*
-      ZIPARCHIVE::ER_EXISTS - 10
-      ZIPARCHIVE::ER_INCONS - 21
-      ZIPARCHIVE::ER_INVAL - 18
-      ZIPARCHIVE::ER_MEMORY - 14
-      ZIPARCHIVE::ER_NOENT - 9
-      ZIPARCHIVE::ER_NOZIP - 19
-      ZIPARCHIVE::ER_OPEN - 11
-      ZIPARCHIVE::ER_READ - 5
-      ZIPARCHIVE::ER_SEEK - 4
-      */
-
-      $this->log('[Install/Update plugin] Can\'t be downloaded (Error code: 3) - ZipErrorCode: '.$res);
-      return 'ERROR__PLUGIN_CANT_BE_DOWNLOADED';
     }
 
   // Fonction d'installation
@@ -640,68 +640,51 @@ class EyPluginComponent extends Object {
     public function install($slug, $downloaded = false) {
       if($this->isValid($slug)) { // Si le plugin est valide
 
-        if($this->requirements($slug)) { // Si tout les pré-requis sont réunis pour le plugins
+        // On peux l'installer du coup
+        $addTables = $this->addTables($slug); // On ajoute les tables
 
-          // On peux l'installer du coup
-            $addTables = $this->addTables($slug); // On ajoute les tables
-
-            if($addTables['status']) {
-              $tablesName = $addTables['tables'];
-            } else {
-              return 'ERROR__PLUGIN_SQL_INSTALLATION';
-            }
-
-            // On récupére la configuration & les noms des tables ajoutées
-            $config = json_decode(file_get_contents($this->pluginsFolder.DS.$slug.DS.'config.json'));
-
-            // On ajoute les permissions
-            $this->addPermissions($config->permissions); // On ajoute les permissions
-
-            // On récupére le modal
-            $PluginModel = ClassRegistry::init('Plugin');
-
-            // On l'ajoute dans la base de données
-            $PluginModel->create();
-            $PluginModel->set(array(
-              'apiID' => $config->apiID,
-              'name' => $slug,
-              'author' => $config->author,
-              'version' => $config->version,
-              'tables' => serialize($tablesName)
-            ));
-            $PluginModel->save(); // On sauvegarde le tout
-
-            // Si y'a un MainComponent
-            if(file_exists($this->pluginsFolder.$slug.DS.'Controller'.DS.'Component'.DS.'MainComponent.php')) { // On fais le onEnable si il existe
-              App::uses('MainComponent', 'Plugin'.DS.$slug.DS.'Controller'.DS.'Component');
-              $this->Main = new MainComponent();
-              $this->Main->onEnable(); // on le lance
-            }
-
-            Cache::clearGroup(false, '_cake_core_');
-            Cache::clearGroup(false, '_cake_model_');
-
-            CakePlugin::load(array($slug => array('routes' => true, 'bootstrap' => true))); // On load sur cake
-
-            return true;
-
+        if($addTables['status']) {
+          $tablesName = $addTables['tables'];
         } else {
-          if($downloaded) {
-            clearDir($this->pluginsFolder.DS.$slug); // On supprime ce qu'on a dl
-
-            CakePlugin::unload($slug); // On unload sur cake
-            Cache::clearGroup(false, '_cake_core_'); // On clear le cache
-
-            return 'ERROR__PLUGIN_REQUIREMENTS';
-          }
+          return 'ERROR__PLUGIN_SQL_INSTALLATION';
         }
+
+        // On récupére la configuration & les noms des tables ajoutées
+        $config = json_decode(file_get_contents($this->pluginsFolder.DS.$slug.DS.'config.json'));
+
+        // On ajoute les permissions
+        $this->addPermissions($config->permissions); // On ajoute les permissions
+
+        // On récupére le modal
+        $PluginModel = ClassRegistry::init('Plugin');
+
+        // On l'ajoute dans la base de données
+        $PluginModel->create();
+        $PluginModel->set(array(
+          'apiID' => $config->apiID,
+          'name' => $slug,
+          'author' => $config->author,
+          'version' => $config->version,
+          'tables' => serialize($tablesName)
+        ));
+        $PluginModel->save(); // On sauvegarde le tout
+
+        // Si y'a un MainComponent
+        if(file_exists($this->pluginsFolder.$slug.DS.'Controller'.DS.'Component'.DS.'MainComponent.php')) { // On fais le onEnable si il existe
+          App::uses('MainComponent', 'Plugin'.DS.$slug.DS.'Controller'.DS.'Component');
+          $this->Main = new MainComponent();
+          $this->Main->onEnable(); // on le lance
+        }
+
+        CakePlugin::load(array($slug => array('routes' => true, 'bootstrap' => true))); // On load sur cake
+
+        return true;
 
       } else {
         if($downloaded) {
           clearDir($this->pluginsFolder.DS.$slug); // On supprime ce qu'on a dl
 
           CakePlugin::unload($slug); // On unload sur cake
-          Cache::clearGroup(false, '_cake_core_'); // On clear le cache
 
           return 'ERROR__PLUGIN_NOT_VALID';
         }

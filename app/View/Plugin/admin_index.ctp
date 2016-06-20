@@ -146,7 +146,9 @@
 
       // On lance la requête
       $.get('<?= $this->Html->url(array('action' => 'install')) ?>/'+apiID+'/'+slug, function(data) {
-        data = JSON.parse(data);
+        if(typeof data != 'object') {
+          data = JSON.parse(data);
+        }
         if(data !== false) {
 
           if(data.statut == "success") {
@@ -165,9 +167,9 @@
               tr += '<td><span class="label label-success"><?= $Lang->get('GLOBAL__YES') ?></span></td>';
               tr += '<td><span class="label label-success"><?= $Lang->get('GLOBAL__ENABLED') ?></span></td>';
               tr += '<td>';
-                tr += '<a href="<?= $this->Html->url(array('action' => 'disable')) ?>'+data.plugin.DBid+'" class="btn btn-info"><?= $Lang->get('GLOBAL__DISABLED') ?></a>';
+                tr += '<a href="<?= $this->Html->url(array('action' => 'disable')) ?>/'+data.plugin.DBid+'" class="btn btn-info"><?= $Lang->get('GLOBAL__DISABLED') ?></a>';
                 tr += "\n";
-                tr += '<a onClick="confirmDel(\'<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete', 'admin' => true)) ?>'+data.plugin.DBid+'\')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>';
+                tr += '<a onClick="confirmDel(\'<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete', 'admin' => true)) ?>/'+data.plugin.DBid+'\')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>';
               tr += '</td>';
             tr += '</tr>';
 
