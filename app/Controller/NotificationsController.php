@@ -86,7 +86,7 @@ class NotificationsController extends AppController {
         if($notification['Notification']['type'] == "admin") {
           $type = '<span class="label label-danger">'.$this->Lang->get('NOTIFICATION__TYPE_ADMIN').'</span>';
         } else {
-          $type = '<span class="label label-success">'.$this->Lang->get('NOTIFICATION__TYPE_USER').'</span>'; 
+          $type = '<span class="label label-success">'.$this->Lang->get('NOTIFICATION__TYPE_USER').'</span>';
         }
 
         $data[]['Notification'] = array(
@@ -117,19 +117,8 @@ class NotificationsController extends AppController {
           $from = ($this->request->data['from']) ? $this->User->getKey('id') : null;
 
           if($this->request->data['user_id'] == 'all') {
-            $users = $this->User->find('all');
 
-            $notifications = array();
-
-            foreach ($users as $user) {
-              $notifications[] = array(
-                'content' => $this->request->data['content'],
-                'user_id' => $user['User']['id'],
-                'from' => $from
-              );
-            }
-
-            $this->Notification->saveMany($notifications);
+            $this->Notification->setToAll($this->request->data['content'], $from);
 
           } else {
             $user_id = $this->User->getFromUser('id', $this->request->data['user_pseudo']);

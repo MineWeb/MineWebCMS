@@ -43,7 +43,7 @@ class Notification extends AppModel {
     FROM: INT or NULL (for all)
     CONTENT: TEXT LIMIT 255
   */
-  public function setToUser($content, $user_id, $from = NULL) {
+  public function setToUser($content, $user_id, $from = NULL, $type = 'user') {
     if(empty($content) || strlen($content) > 255 || empty($user_id)) {
       return false;
     }
@@ -51,23 +51,42 @@ class Notification extends AppModel {
     return $this->save(array(
       'content' => $content,
       'user_id' => $user_id,
-      'from' => $from
+      'from' => $from,
+      'type' => $type
     ));
   }
 
-  public function setToRank($content, $rank_id, $from = NULL) {
+  public function setToRank($content, $rank_id, $from = NULL, $type = 'user') {
 
     $UserModel = ClassRegistry::init('User');
     $usersToNotify = $UserModel->find('all', array('conditions' => array('rank' => $rank_id)));
 
     foreach ($usersToNotify as $user) {
-      $this->setToUser($content, $user['User']['id'], $from);
+      $this->setToUser($content, $user['User']['id'], $from, $type);
     }
 
   }
   public function setToAdmin($content, $from = NULL) {
-    $this->setToRank($content, 4, $from);
-    $this->setToRank($content, 3, $from);
+    $this->setToRank($content, 4, $from, 'admin');
+    $this->setToRank($content, 3, $from, 'admin');
+  }
+
+  public function setToAll($content, $from = NULL) {
+    $UserModel = ClassRegistry::init('User');
+    $users = $UserModel->find('all');
+
+    $notifications = array();
+
+    foreach ($users as $user) {
+      $notifications[] = array(
+        'content' => $content,
+        'user_id' => $user['User']['id'],
+        'from' => $from,
+        'type' => 'user'
+      );
+    }
+
+    $this->saveMany($notifications);
   }
 
   public function clearFromUser($id, $user_id) {
