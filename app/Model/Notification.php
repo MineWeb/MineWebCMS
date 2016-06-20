@@ -55,6 +55,21 @@ class Notification extends AppModel {
     ));
   }
 
+  public function setToRank($content, $rank_id, $from = NULL) {
+
+    $UserModel = ClassRegistry::init('User');
+    $usersToNotify = $UserModel->find('all', array('conditions' => array('rank' => $rank_id)));
+
+    foreach ($usersToNotify as $user) {
+      $this->setToUser($content, $user['User']['id'], $from);
+    }
+
+  }
+  public function setToAdmin($content, $from = NULL) {
+    $this->setToRank($content, 4, $from);
+    $this->setToRank($content, 3, $from);
+  }
+
   public function clearFromUser($id, $user_id) {
     return $this->deleteAll(array('user_id' => $user_id, 'id' => $id));
   }
