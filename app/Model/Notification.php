@@ -48,12 +48,14 @@ class Notification extends AppModel {
       return false;
     }
 
-    return $this->save(array(
+    $this->create();
+    $this->set(array(
       'content' => $content,
       'user_id' => $user_id,
       'from' => $from,
       'type' => $type
     ));
+    return $this->save();
   }
 
   public function setToRank($content, $rank_id, $from = NULL, $type = 'user') {

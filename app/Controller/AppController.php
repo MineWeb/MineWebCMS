@@ -468,7 +468,6 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 			$this->redirect(array('controller' => 'maintenance', 'action' => 'index', 'plugin' => false, 'admin' => false));
 		}
 
-
   /*
     === On envoie tout à la vue ===
   */
