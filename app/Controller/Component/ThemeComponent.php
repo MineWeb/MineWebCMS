@@ -493,7 +493,7 @@ class ThemeComponent extends Object {
 
           }
         } else {
-          $request->data['logo'] = $config['logo'];
+          $request->data['logo'] = $config->logo;
         }
 
         $json = json_decode(file_get_contents($this->themesFolder.DS.$slug.DS.'Config'.DS.'config.json'));

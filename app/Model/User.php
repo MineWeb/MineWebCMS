@@ -20,7 +20,7 @@ class User extends AppModel {
 	);
 
 	public function validRegister($data, $UtilComponent) {
-		if(preg_match('`^([a-zA-Z0-9-_]{2,16})$`', $data['pseudo'])) {
+		if(preg_match('`^([a-zA-Z0-9_]{2,16})$`', $data['pseudo'])) {
 			$data['password'] = $UtilComponent->password($data['password'], $data['pseudo']);
 			$data['password_confirmation'] = $UtilComponent->password($data['password_confirmation'], $data['pseudo']);
 			if($data['password'] == $data['password_confirmation']) {
