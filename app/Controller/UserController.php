@@ -536,53 +536,6 @@ class UserController extends AppController {
 		}
 	}
 
-	function send_points() {
-		$this->autoRender = false;
-		$this->response->type('json');
-		if($this->isConnected) {
-			if($this->request->is('ajax')) {
-				if(!empty($this->request->data['to']) AND !empty($this->request->data['how'])) {
-					if($this->User->exist($this->request->data['to'])) {
-						if(strtolower($this->User->getKey('pseudo')) != strtolower($this->request->data['to']) && $this->User->getKey('id') != $this->request->data['to']) {
-							$how = intval($this->request->data['how']);
-							if($how > 0) {
-								$money_user = $this->User->getKey('money') - $how;
-								if($money_user >= 0) {
-
-									$event = new CakeEvent('beforeSendPoints', $this, array('user' => $this->User->getAllFromCurrentUser(), 'new_user_sold' => $money_user, 'to' => $this->request->data['to'], 'how' => $this->request->data['how']));
-									$this->getEventManager()->dispatch($event);
-									if($event->isStopped()) {
-										return $event->result;
-									}
-
-									$this->User->setKey('money', $money_user);
-									$to_money = $this->User->getFromUser('money', $this->request->data['to']) + $how;
-									$this->User->setToUser('money', $to_money, $this->request->data['to']);
-									$this->History->set('SEND_MONEY', 'shop', $this->request->data['to'].'|'.$how);
-									$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOP__USER_POINTS_TRANSFER_SUCCESS'))));
-								} else {
-									$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__BUY_ERROR_NO_ENOUGH_MONEY'))));
-								}
-							} else {
-								$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__USER_POINTS_TRANSFER_ERROR_EMPTY'))));
-							}
-						} else {
-							$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SHOP__USER_POINTS_TRANSFER_ERROR_YOURSELF'))));
-						}
-					} else {
-						$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_NOT_FOUND'))));
-					}
-				} else {
-					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
-				}
-			} else {
-				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
-			}
-		} else {
-			$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED'))));
-		}
-	}
-
 	function admin_index() {
 		if($this->isConnected AND $this->Permissions->can('MANAGE_USERS')) {
 

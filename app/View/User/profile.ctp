@@ -81,7 +81,7 @@
 
 					<h3><?= $Lang->get('SHOP__USER_POINTS_TRANSFER') ?></h3>
 
-					<form method="post" class="form-inline" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'controller' => 'user', 'action' => 'send_points')) ?>">
+					<form method="post" class="form-inline" data-ajax="true" action="<?= $this->Html->url(array('plugin' => 'shop', 'controller' => 'payment', 'action' => 'transfer_points')) ?>">
 						<div class="form-group">
 							<input type="text" class="form-control" name="to" placeholder="<?= $Lang->get('SHOP__USER_POINTS_TRANSFER_WHO') ?>">
 						</div>
