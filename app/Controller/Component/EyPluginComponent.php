@@ -1180,6 +1180,10 @@ class EyPluginComponent extends Object {
 
             $rankPermissions = unserialize($searchRank['Permission']['permissions']); // On récupére ses permissions déjà configurées
 
+            if(!is_array($rankPermissions)) {
+              $rankPermissions = array();
+            }
+
             foreach ($rankPermissions as $k2 => $v2) { // on les parcours
               foreach ($value as $kp => $perm) {
                 $rankPermissions[] = $perm; // on ajoute les perms
