@@ -193,6 +193,7 @@
         "CONFIG__KEY_YOUTUBE": "YouTube",
         "CONFIG__KEY_FACEBOOK": "Facebook",
         "CONFIG__KEY_MINEGUARD": "MineGuard",
+        "CONFIG__KEY_MINEGUARD_EXPLAIN":"MineGuard est une protection supplémentaire pour vos serveurs qui permet à vos joueurs de régler une IP précise pour se connecter à votre serveur. Cela évite les hacks, si un joueur essaye de se connecter à votre serveur avec une IP différente qui est enregistré sur le site, cela le kickera.",
         "CONFIG__KEY_EMAIL_SEND_TYPE": "Comment voulez-vous envoyer vos emails ?",
         "CONFIG__KEY_SMTP_HOST": "H\u00e9bergeur SMTP",
         "CONFIG__KEY_SMTP_USERNAME": "Nom d'utilisateur SMTP",

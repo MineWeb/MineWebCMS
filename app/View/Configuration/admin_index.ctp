@@ -434,7 +434,7 @@
                 <hr>
 
                 <div class="form-group">
-                  <label><?= $Lang->get('CONFIG__KEY_MINEGUARD') ?></label>
+                  <label><abbr title="<?= $Lang->get('CONFIG__KEY_MINEGUARD_EXPLAIN') ?>"><?= $Lang->get('CONFIG__KEY_MINEGUARD') ?></abbr></label>
                   <div class="radio">
                     <input type="radio" name="mineguard" value="true" <?= ($config['mineguard'] == 'true') ? 'checked=""' : '' ?>>
                     <label><?= $Lang->get('GLOBAL__ENABLED') ?></label>
