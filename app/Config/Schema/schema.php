@@ -92,7 +92,8 @@ class AppSchema extends CakeSchema {
 				'member_page_type' => 0,
 				'passwords_hash' => 'sha256',
 				'passwords_salt' => 0,
-				'forced_updates' => 1
+				'forced_updates' => 1,
+				'session_type' => 'php'
 			));
 
 	    $configuration->save();
@@ -171,6 +172,13 @@ class AppSchema extends CakeSchema {
 		'tableParameters' => array('charset' => 'latin1', 'collate' => 'latin1_swedish_ci', 'engine' => 'InnoDB')
 	);
 
+	public $cake_sessions = array(
+		'id' => array('type' => 'string', 'null' => false, 'key' => 'primary'),
+		'data' => array('type' => 'text', 'null' => true, 'default' => null),
+		'expires' => array('type' => 'integer', 'null' => true, 'default' => null),
+		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1))
+	);
+
 	public $comments = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'),
 		'content' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
@@ -220,6 +228,7 @@ class AppSchema extends CakeSchema {
 		'passwords_hash' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 10, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'passwords_salt' => array('type' => 'integer', 'null' => true, 'default' => 0, 'length' => 1, 'unsigned' => false),
 		'forced_updates' => array('type' => 'integer', 'null' => true, 'default' => 1, 'length' => 1, 'unsigned' => false),
+		'session_type' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 10, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),

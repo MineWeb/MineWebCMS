@@ -179,6 +179,16 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 		$this->__setTheme();
 
 
+    // Session
+    $session_type = $this->Configuration->getKey('session_type');
+    if(!$session_type) {
+      $session_type = 'php';
+    }
+    Configure::write('Session', array(
+  		'defaults' => $session_type
+  	));
+
+
     // partie sociale
     $facebook_link = $this->Configuration->getKey('facebook');
   	$skype_link = $this->Configuration->getKey('skype');

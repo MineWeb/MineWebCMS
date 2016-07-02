@@ -93,10 +93,13 @@
                     <?= $this->Form->input(false, array(
                       'div' => false,
                       'data-live-search' => 'true',
-                      'name' => 'lang',
+                      'name' => 'passwords_hash',
                       'class' => 'selectpicker',
                       'options' => array(
-                        'sha256', 'sha1', 'sha386', 'sha512'
+                        'sha256' => 'sha256',
+                        'sha1' => 'sha1',
+                        'sha386' => 'sha386',
+                        'sha512' => 'sha512'
                       ),
                       'selected' => $config['passwords_hash']
                     )); ?>
@@ -117,6 +120,26 @@
                     });
                   </script>
                   <small class="text-danger"><?= $Lang->get('CONFIG__KEY_PASSWORDS_ADVERTISSEMENT') ?></small>
+                </div>
+
+                <hr>
+
+                <div class="form-group">
+                  <label><?= $Lang->get('CONFIG__KEY_SESSION_TYPE') ?></label>
+                  <div class="form-group">
+                    <?= $this->Form->input(false, array(
+                      'div' => false,
+                      'data-live-search' => 'true',
+                      'name' => 'session_type',
+                      'class' => 'selectpicker',
+                      'options' => array(
+                        'php' => $Lang->get('CONFIG__KEY_SESSION_TYPE_PHP'),
+                        'database' => $Lang->get('CONFIG__KEY_SESSION_TYPE_DB')
+                      ),
+                      'selected' => (!$config['session_type']) ? 'php' : $config['session_type']
+                    )); ?>
+                  </div>
+                  <small class="text-info"><?= $Lang->get('CONFIG__KEY_SESSION_TYPE_INFO') ?></small>
                 </div>
 
                 <hr>
@@ -196,7 +219,7 @@
 
                       echo '<div class="form-group">';
                       echo '<label>'.$Lang->get('CONFIG__TITLE_SOCIAL_BTN').'</label>';
-                      echo '<input type="text" value="'.$value['SocialButton']['title'].'" name="social_btn_edited['.$i.'][title]" class="form-control">';
+                      echo '<input type="text" value="'.htmlentities($value['SocialButton']['title']).'" name="social_btn_edited['.$i.'][title]" class="form-control">';
                       echo '</div>';
 
                       echo '<div class="form-group">';
