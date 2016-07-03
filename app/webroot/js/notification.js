@@ -74,9 +74,13 @@
       generateNotificationsList: function() {
 
         // On créé le container
-          var container = document.createElement($.Notification.defaultOptions.list.container.type);
-          container.style.cssText = $.Notification.defaultOptions.list.container.style;
-          container.className = $.Notification.defaultOptions.list.container.class;
+          if($.Notification.defaultOptions.list.container.type.length > 0) {
+            var container = document.createElement($.Notification.defaultOptions.list.container.type);
+            container.style.cssText = $.Notification.defaultOptions.list.container.style;
+            container.className = $.Notification.defaultOptions.list.container.class;
+          } else {
+            var container = '';
+          }
 
         // On parcours les notifications et on créé un élement par notif
           var self = this;
@@ -144,7 +148,11 @@
             }
 
             // On l'ajoute au container
-              container.appendChild(el);
+              if($.Notification.defaultOptions.list.container.type.length > 0) {
+                container.appendChild(el);
+              } else {
+                container += el.outerHTML;
+              }
 
           });
 
@@ -251,7 +259,7 @@
           'type': 'li',
           'class': 'list-group-item',
           'style': 'border-top-left-radius:0;border-top-right-radius:0;',
-          'content': '<p>{CONTENT}<small class="pull-right"><em>{TIME}</em></small></p>{FROM}<div class="btn-group pull-right" style="margin-top:-5px;"><button type="button" class="btn btn-default btn-sm mark-as-seen" onClick="notification.markAsSeen({ID})" name="button"><abbr title="{MARK_AS_SEEN}"><i class="fa fa-check"></i></abbr></button><button type="button" class="btn btn-danger btn-sm" onClick="notification.clear({ID})" name="button"><i class="fa fa-times"></i></button></div><div class="clearfix"></div>',
+          'content': '<p>{CONTENT}<small class="pull-left"><em>{TIME}</em></small></p>{FROM}<div class="btn-group pull-right" style="margin-top:-5px;"><button type="button" class="btn btn-default btn-sm mark-as-seen" onClick="notification.markAsSeen({ID})" name="button"><abbr title="{MARK_AS_SEEN}"><i class="fa fa-check"></i></abbr></button><button type="button" class="btn btn-danger btn-sm" onClick="notification.clear({ID})" name="button"><i class="fa fa-times"></i></button></div><div class="clearfix"></div>',
           'from': {
             'type': 'small',
             'class': 'text-muted',
