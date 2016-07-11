@@ -719,19 +719,31 @@ class EyPluginComponent extends Object {
           $pluginDBID = $searchPlugin['id'];
 
           // Si y'a un fichier d'update à faire, on l'éxécute
-          if(file_exists($this->pluginsFolder.DS.$slug.DS.$slug.'_update.php')) {
+          if(file_exists($this->pluginsFolder.DS.$slug.DS.'Update'.DS.'beforeSchema.php')) {
             // on l'inclue pour l'exec
             try {
-              include($this->pluginsFolder.DS.$slug.DS.$slug.'_update.php');
+              include($this->pluginsFolder.DS.$slug.DS.'Update'.DS.'beforeSchema.php');
             } catch(Exception $e) {
               // y'a eu une erreur
               $this->log('Error on plugin update ('.$slug.') - '.$e->getMessage());
             }
-            unlink($this->pluginsFolder.DS.$slug.DS.$slug.'_update.php'); // on le supprime
+            unlink($this->pluginsFolder.DS.$slug.DS.'Update'.DS.'beforeSchema.php'); // on le supprime
           }
 
           // Etape base de données
           $addTables = $this->addTables($slug, true); // On ajoute les tables
+
+          // Si y'a un fichier d'update à faire, on l'éxécute
+          if(file_exists($this->pluginsFolder.DS.$slug.DS.'Update'.DS.'afterSchema.php')) {
+            // on l'inclue pour l'exec
+            try {
+              include($this->pluginsFolder.DS.$slug.DS.'Update'.DS.'afterSchema.php');
+            } catch(Exception $e) {
+              // y'a eu une erreur
+              $this->log('Error on plugin update ('.$slug.') - '.$e->getMessage());
+            }
+            unlink($this->pluginsFolder.DS.$slug.DS.'Update'.DS.'afterSchema.php'); // on le supprime
+          }
 
           if($addTables['status']) {
             $pluginTables = unserialize($searchPlugin['tables']);
