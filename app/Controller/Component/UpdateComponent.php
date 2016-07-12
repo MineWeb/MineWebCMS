@@ -279,6 +279,9 @@ class UpdateComponent extends Object {
                 @unlink(ROOT.DS.'app'.DS.'tmp'.DS.$this->update['version'].'.zip');
                 @unlink(ROOT.'/config/update');
 
+								Cache::clearGroup(false, '_cake_core_');
+		            Cache::clearGroup(false, '_cake_model_');
+
                 // On met à jour la base de données
                 $this->updateDb();
 
@@ -294,9 +297,6 @@ class UpdateComponent extends Object {
         					}
         					unlink(ROOT.DS.'modify.php'); // on le supprime
         				}
-
-								Cache::clearGroup(false, '_cake_core_');
-		            Cache::clearGroup(false, '_cake_model_');
 
                 return true;
               } else {
