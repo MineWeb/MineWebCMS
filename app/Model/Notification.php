@@ -74,21 +74,7 @@ class Notification extends AppModel {
   }
 
   public function setToAll($content, $from = NULL) {
-    $UserModel = ClassRegistry::init('User');
-    $users = $UserModel->find('all');
-
-    $notifications = array();
-
-    foreach ($users as $user) {
-      $notifications[] = array(
-        'content' => $content,
-        'user_id' => $user['User']['id'],
-        'from' => $from,
-        'type' => 'user'
-      );
-    }
-
-    $this->saveMany($notifications);
+    $this->query("INSERT INTO notifications (`user_id`, `from`, `content`, `type`, `created`) SELECT id, $from, '$content', 'user', '".date('Y-m-d H:i:s')."' FROM users");
   }
 
   public function clearFromUser($id, $user_id) {
