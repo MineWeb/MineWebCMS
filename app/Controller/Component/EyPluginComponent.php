@@ -520,7 +520,7 @@ class EyPluginComponent extends Object {
                   foreach ($compare[$table]['drop'] as $column => $structure) {
 
                       // si cela ne concerne pas notre plugin, on s'en fou
-                      if(explode('__', $column)[0] != $slug) {
+                      if(explode('-', $column)[0] != $slug) {
                           unset($compare[$table]['drop'][$column]);
                       }
                   }
@@ -779,7 +779,7 @@ class EyPluginComponent extends Object {
     private function addTables($slug, $update = false) {
 
       App::uses('CakeSchema', 'Model');
-      $this->Schema = new CakeSchema(array('name' => ucfirst(strtolower($slug)).'App', 'path' => ROOT.DS.'app'.DS.'Plugin'.DS.$slug.DS.'SQL', 'file' => 'schema.php', 'connection' => 'default', 'plugin' => null));
+      $this->Schema = new CakeSchema(array('name' => ucfirst(strtolower($slug)).'App', 'path' => ROOT.DS.'app'.DS.'Plugin'.DS.$slug.DS.'SQL', 'file' => 'schema.php', 'connection' => 'default', 'plugin' => null, 'models' => false));
 
       App::uses('SchemaShell', 'Console/Command');
       $SchemaShell = new SchemaShell();
@@ -793,6 +793,7 @@ class EyPluginComponent extends Object {
           'file' => $this->Schema->file,
           'plugin' => null,
           'connection' => $this->Schema->connection,
+          'models' => false
       );
       $Schema = $this->Schema->load($options);
 
@@ -809,12 +810,14 @@ class EyPluginComponent extends Object {
               // on vérifie que ce soit le plugin dont on veux supprimer les modifications
               if(isset($compare[$table]['add'])) { // si ca concerne un ajout de colonne
 
-                  foreach ($compare[$table]['add'] as $column => $structure) {
+                  if(explode('__', $table)[0] != strtolower($slug)) { // Si c'est pas une table du plugin
+                    foreach ($compare[$table]['add'] as $column => $structure) {
 
-                      // si cela ne concerne pas notre plugin, on s'en fou
-                      if(explode('-', $column)[0] != strtolower($slug)) {
-                          unset($compare[$table]['add'][$column]);
-                      }
+                        // si cela ne concerne pas notre plugin, on s'en fou
+                        if(explode('-', $column)[0] != strtolower($slug)) {
+                            unset($compare[$table]['add'][$column]);
+                        }
+                    }
                   }
 
                   if(count($compare[$table]['add']) <= 0) {
