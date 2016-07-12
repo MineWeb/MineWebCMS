@@ -53,7 +53,9 @@
                         <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'enable/'.$value->DBid, 'admin' => true)) ?>" class="btn btn-info enable"><?= $Lang->get('GLOBAL__ENABLE') ?></a>
                        <?php } ?>
                       <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete/'.$value->DBid, 'admin' => true)) ?>')" class="btn btn-danger delete"><?= $Lang->get('GLOBAL__DELETE') ?></a>
-                      <?php if($value->version != $EyPlugin->getPluginLastVersion($value->apiID)) { ?>
+                      <?php
+                      $lastVersion = $EyPlugin->getPluginLastVersion($value->apiID);
+                      if($value->version != $lastVersion && $lastVersion != '0.0.0') { ?>
                         <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'update', $value->apiID, $value->slug, 'admin' => true)) ?>" class="btn btn-warning update"><?= $Lang->get('GLOBAL__UPDATE') ?></a> <!-- ICI -->
                       <?php } ?>
                     </td>
