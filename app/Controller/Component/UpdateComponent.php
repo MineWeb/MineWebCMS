@@ -315,7 +315,7 @@ class UpdateComponent extends Object {
 
     public function updateDb() {
       App::uses('CakeSchema', 'Model');
-      $this->Schema = new CakeSchema(array('name' => 'App', 'path' => ROOT.DS.'app'.DS.'Config'.DS.'Schema', 'file' => 'schema.php', 'connection' => 'default', 'plugin' => null));
+      $this->Schema = new CakeSchema(array('name' => 'App', 'path' => ROOT.DS.'app'.DS.'Config'.DS.'Schema', 'file' => 'schema.php', 'connection' => 'default', 'plugin' => null, 'models' => false));
 
       App::uses('SchemaShell', 'Console/Command');
       $SchemaShell = new SchemaShell();
@@ -328,6 +328,7 @@ class UpdateComponent extends Object {
           'file' => $this->Schema->file,
           'plugin' => null,
           'connection' => $this->Schema->connection,
+					'models' => false
       );
       $Schema = $this->Schema->load($options);
 

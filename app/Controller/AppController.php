@@ -246,7 +246,14 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
       $get = $this->sendToAPI(array(), 'getCustomMessage');
 
       if($get['code'] == 200) {
-        file_put_contents($customMessageStocked, $get['content']);
+
+        $path = pathinfo($name);
+        $path = $path['dirname'];
+        if(!is_dir($path)) {
+          mkdir($path, 0755, true);
+        }
+
+        @file_put_contents($customMessageStocked, $get['content']);
       }
     }
 

@@ -51,11 +51,6 @@ class UpdateController extends AppController {
 		if($this->isConnected && $this->User->isAdmin()) {
 			$this->autoRender = false;
 
-			Cache::clearGroup('persistent');
-			Cache::clearGroup('models');
-
-			Cache::clear(false);
-
 			App::uses('Folder', 'Utility');
 			$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
 			if(!empty($folder->path)) {
@@ -83,17 +78,6 @@ class UpdateController extends AppController {
 				}
 			} else {
 				$this->response->body(json_encode(array('statut' => 'error', 'msg' => $this->Lang->get('UPDATE__FAILED'))));
-			}
-
-			Cache::clearGroup('persistent');
-			Cache::clearGroup('models');
-
-			Cache::clear(false);
-
-			App::uses('Folder', 'Utility');
-			$folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-			if(!empty($folder->path)) {
-				$folder->delete();
 			}
 
 		} else {
