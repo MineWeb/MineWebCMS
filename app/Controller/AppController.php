@@ -247,7 +247,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 
       if($get['code'] == 200) {
 
-        $path = pathinfo($name);
+        $path = pathinfo($customMessageStocked);
         $path = $path['dirname'];
         if(!is_dir($path)) {
           mkdir($path, 0755, true);

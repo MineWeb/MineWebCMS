@@ -259,7 +259,7 @@
           'type': 'li',
           'class': 'list-group-item',
           'style': 'border-top-left-radius:0;border-top-right-radius:0;',
-          'content': '<p>{CONTENT}<small class="pull-left"><em>{TIME}</em></small></p>{FROM}<div class="btn-group pull-right" style="margin-top:-5px;"><button type="button" class="btn btn-default btn-sm mark-as-seen" onClick="notification.markAsSeen({ID})" name="button"><abbr title="{MARK_AS_SEEN}"><i class="fa fa-check"></i></abbr></button><button type="button" class="btn btn-danger btn-sm" onClick="notification.clear({ID})" name="button"><i class="fa fa-times"></i></button></div><div class="clearfix"></div>',
+          'content': '<p>{CONTENT}<small class="pull-right"><em>{TIME}</em></small></p>{FROM}<div class="btn-group pull-right" style="margin-top:-5px;"><button type="button" class="btn btn-default btn-sm mark-as-seen" onClick="notification.markAsSeen({ID})" name="button"><abbr title="{MARK_AS_SEEN}"><i class="fa fa-check"></i></abbr></button><button type="button" class="btn btn-danger btn-sm" onClick="notification.clear({ID})" name="button"><i class="fa fa-times"></i></button></div><div class="clearfix"></div>',
           'from': {
             'type': 'small',
             'class': 'text-muted',
