@@ -82,7 +82,6 @@ class ServerComponent extends Object {
             } else {
                 $url = $this->getUrl($server_id, true).'&'.$method;
             }
-						$url = urlencode($url);
             $opts = array('http' => array('timeout' => $this->getTimeout()));
             $get = @file_get_contents($url, false, stream_context_create($opts));
 
