@@ -487,7 +487,7 @@ class EyPluginComponent extends Object {
 
     private function updateDBSchema($slug) {
       App::uses('CakeSchema', 'Model');
-      $this->Schema = new CakeSchema(array('name' => ucfirst(strtolower($slug)).'App', 'path' => ROOT.DS.'app'.DS.'Plugin'.DS.$slug.DS.'SQL', 'file' => 'schema.php', 'connection' => 'default', 'plugin' => null));
+      $this->Schema = new CakeSchema(array('name' => ucfirst(strtolower($slug)).'App', 'path' => ROOT.DS.'app'.DS.'Plugin'.DS.$slug.DS.'SQL', 'file' => 'schema.php', 'connection' => 'default', 'plugin' => null, 'models' => false));
 
       App::uses('SchemaShell', 'Console/Command');
       $SchemaShell = new SchemaShell();
@@ -501,6 +501,7 @@ class EyPluginComponent extends Object {
           'file' => $this->Schema->file,
           'plugin' => null,
           'connection' => $this->Schema->connection,
+          'models' => false
       );
       $Schema = $this->Schema->load($options);
 

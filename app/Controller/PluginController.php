@@ -145,6 +145,12 @@ class PluginController extends AppController{
 
 				if($updated === true) {
 
+					App::uses('Folder', 'Utility');
+          $folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
+          if(!empty($folder->path)) {
+            $folder->delete();
+          }
+
 					$this->History->set('UPDATE_PLUGIN', 'plugin');
 					$this->Session->setFlash($this->Lang->get('PLUGIN__UPDATE_SUCCESS'), 'default.success');
 					$this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
