@@ -91,6 +91,7 @@
           $('#update-msg').empty().html('<div class="alert alert-success" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data.msg+'</i></div>').fadeIn(500);
           $('#update').remove();
           $("#log-update").load("<?= $this->Html->url(array('action' => 'index')) ?> #log-update").fadeIn(500);
+          window.location = '<?= $this->Html->url(array('action' => 'clear_cache')) ?>';
         } else if(data.statut == "continue") {
           callMAJ('1');
         } else if(data.statut == "error") {

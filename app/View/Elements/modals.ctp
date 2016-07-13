@@ -80,7 +80,7 @@
         </div>
         <div class="modal-body">
           <form class="form-horizontal" method="POST" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'admin' => false, 'controller' => 'user', 'action' => 'ajax_resetpasswd')) ?>" data-redirect-url="?">
-            <input type="hidden" name="pseudo" value="<?= $resetpsswd['pseudo'] ?>">
+            <input type="hidden" name="key" value="<?= $resetpsswd['key'] ?>">
             <input type="hidden" name="email" value="<?= $resetpsswd['email'] ?>">
             <div class="form-group">
               <label  class="col-sm-2 control-label"><?= $Lang->get('USER__PASSWORD') ?></label>

@@ -58,13 +58,11 @@ class PagesController extends AppController {
 			if(isset($passwd[0]) AND $passwd[0] == "resetpasswd") { // si c'est pour reset le password
 				if(!empty($passwd[1])) {
 					$this->loadModel('Lostpassword');
-					$search = $this->Lostpassword->find('all', array('conditions' => array('key' => $passwd[1]))); // on cherche la key de reset password
+					$search = $this->Lostpassword->find('first', array('conditions' => array('key' => $passwd[1]))); // on cherche la key de reset password
 					if(!empty($search)) { // si elle existe
-						if(strtotime(date('Y-m-d H:i:s', strtotime($search[0]['Lostpassword']['created'])).' +1 hour') >= time()) { // si le lien ne date pas de plus d'1 heure
-							$resetpsswd['email'] = $search[0]['Lostpassword']['email'];
-							$this->loadModel('User');
-							$search = $this->User->find('all', array('conditions' => array('email' => $resetpsswd['email'])));
-							$resetpsswd['pseudo'] = $search[0]['User']['pseudo'];
+						if(strtotime(date('Y-m-d H:i:s', strtotime($search['Lostpassword']['created'])).' +1 hour') >= time()) { // si le lien ne date pas de plus d'1 heure
+							$resetpsswd['email'] = $search['Lostpassword']['email'];
+							$resetpsswd['key'] = $search['Lostpassword']['key'];
 							$this->set(compact('resetpsswd'));
 						}
 					}

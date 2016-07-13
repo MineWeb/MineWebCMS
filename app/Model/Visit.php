@@ -7,6 +7,10 @@ class Visit extends AppModel {
     return $data;
   }
 
+  function getVisitsCount($limit = false, $order = 'DESC') {
+    return $this->find('count', array('limit' => $limit, 'order' => 'id '.$order));
+  }
+
   function getVisitRange($limit) {
     $data = array();
 

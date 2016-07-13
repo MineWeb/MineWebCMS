@@ -127,8 +127,8 @@ class User extends AppModel {
 			if(!empty($search)) {
 
 				$this->Lostpassword = ClassRegistry::init('Lostpassword');
-				$Lostpassword = $this->Lostpassword->find('all', array('conditions' => array('email' => $data['email'])));
-				if(!empty($Lostpassword)) {
+				$Lostpassword = $this->Lostpassword->find('all', array('conditions' => array('email' => $data['email'], 'key' => $data['key'])));
+				if(!empty($Lostpassword) && strtotime('+1 hour', strtotime($Lostpassword[0]['Lostpassword']['created'])) >= time()) {
 
 					$data_to_save['password'] = $UtilComponent->password($data['password'], $search['0']['User']['pseudo']);
 

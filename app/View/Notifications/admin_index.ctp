@@ -6,7 +6,7 @@
           <h3 class="box-title"><?= $Lang->get('NOTIFICATION__NOTIFICATIONS_LIST') ?></h3>
         </div>
         <div class="box-body">
-          <table class="table">
+          <table class="table" style="table-layout: fixed;word-wrap: break-word;">
             <thead>
               <tr>
                 <th><?= $Lang->get('USER__USERNAME') ?></th>

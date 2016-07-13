@@ -258,7 +258,7 @@ class UserController extends AppController {
 		$this->autoRender = false;
 		$this->response->type('json');
 		if($this->request->is('ajax')) {
-			if(!empty($this->request->data['password']) AND !empty($this->request->data['password2']) AND !empty($this->request->data['email'])) {
+			if(!empty($this->request->data['password']) AND !empty($this->request->data['password2']) AND !empty($this->request->data['email']) && !empty($this->request->data['key'])) {
 
 				$reset = $this->User->resetPass($this->request->data, $this);
 				if(isset($reset['status']) && $reset['status'] === true) {
@@ -599,13 +599,14 @@ class UserController extends AppController {
 				$this->modelClass = 'User';
 				$this->DataTable->initialize($this);
 				$this->paginate = array(
-			  'fields' => array('User.id','User.pseudo','User.created','User.rank'),
+			  'fields' => array('User.id','User.pseudo','User.email','User.created','User.rank'),
 				);
         $this->DataTable->mDataProp = true;
 
 				$response = $this->DataTable->getResponse();
 
 				$users = $response['aaData'];
+				$data = array();
 				foreach ($users as $key => $value) {
 
 					$username = $value['User']['pseudo'];
@@ -618,10 +619,13 @@ class UserController extends AppController {
 					$btns = '<a href="'.Router::url(array('controller' => 'user', 'action' => 'edit/'.$value["User"]["id"], 'admin' => true)).'" class="btn btn-info">'.$this->Lang->get('GLOBAL__EDIT').'</a>';
 					$btns .= '&nbsp;<a onClick="confirmDel(\''.Router::url(array('controller' => 'user', 'action' => 'delete/'.$value["User"]["id"], 'admin' => true)).'\')" class="btn btn-danger">'.$this->Lang->get('GLOBAL__DELETE').'</button>';
 
-					$data[]['User'] = array(
-						'pseudo' => $username,
-						'created' => $date,
-						'rank' => $rank,
+					$data[] = array(
+						'User' => array(
+							'pseudo' => $username,
+							'email' => $value['User']['email'],
+							'created' => $date,
+							'rank' => $rank
+						),
 						'actions' => $btns
 					);
 
