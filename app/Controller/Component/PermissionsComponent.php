@@ -8,6 +8,7 @@ class PermissionsComponent extends Object {
     'DELETE_COMMENT',
     'EDIT_HIS_EMAIL',
     'ACCESS_DASHBOARD',
+    'SEND_SERVER_COMMAND_FROM_DASHBOARD',
     'MANAGE_NEWS',
     'MANAGE_SLIDER',
     'MANAGE_PAGE',

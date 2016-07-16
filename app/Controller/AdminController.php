@@ -69,7 +69,7 @@ class AdminController extends AppController {
 			$this->loadModel('Server');
 			$servers = $this->Server->find('all');
 
-			if($this->request->is('post')) {
+			if($this->request->is('post') && $this->Permissions->can('SEND_SERVER_COMMAND_FROM_DASHBOARD')) {
 				if(!empty($this->request->data['cmd']) && !empty($this->request->data['server_id'])) {
 					$this->ServerComponent = $this->Components->load('Server');
 					$call = $this->ServerComponent->call(array('performCommand' => $this->request->data['cmd']), true, $this->request->data['server_id']);
@@ -87,19 +87,6 @@ class AdminController extends AppController {
 				'servers'
 			));
 
-		} else {
-			$this->redirect('/');
-		}
-	}
-
-	function admin_stop() {
-		if($this->isConnected AND $this->Permissions->can('ACCESS_DASHBOARD')) {
-			if($this->Server->online()) {
-				$this->layout = null;
-				$this->Server->call(array('performCommand' => 'save-all'), true);
-				$this->Server->call(array('performCommand' => 'stop'), true);
-				$this->redirect(array('controller' => 'admin', 'action' => 'index', 'admin' => true));
-			}
 		} else {
 			$this->redirect('/');
 		}

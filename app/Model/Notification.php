@@ -74,6 +74,9 @@ class Notification extends AppModel {
   }
 
   public function setToAll($content, $from = NULL) {
+    if(empty($from)) {
+      $from = 'NULL';
+    }
     $this->query("INSERT INTO notifications (`user_id`, `from`, `content`, `type`, `created`) SELECT id, $from, '$content', 'user', '".date('Y-m-d H:i:s')."' FROM users");
   }
 

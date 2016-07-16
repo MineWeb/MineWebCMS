@@ -298,7 +298,7 @@
 
             <div class="well">
               <?php if($Server->online($value['Server']['id'])) { ?>
-                <?php if($value['Server']['type'] != 2) { ?>
+                <?php if($value['Server']['type'] != 2 && $Permissions->can('SEND_SERVER_COMMAND_FROM_DASHBOARD')) { ?>
                   <div class="row-fluid text-center">
                     <button class="btn" type="button" data-toggle="modal" onClick="$('#server_id').val(<?= $value['Server']['id'] ?>)" data-target="#executeCommand" style="padding: 4px 12px;margin-right: 8px;"><i class="fa fa-terminal"></i> <?= $Lang->get('SERVER__COMMAND') ?></button>
                   </div>
