@@ -126,13 +126,16 @@ class EyPluginComponent extends Object {
           $pluginList->$id->DBid = $v['id']; // on met l'id de la base de donnée
           $pluginList->$id->DBinstall = $v['created']; // on met quand on l'a installé sur la bdd
           $pluginList->$id->active = ($v['state']) ? true : false; // On met l'object config dedans
-          if(!in_array($value['Plugin']['name'], $loadedCakePlugins)) {
-            $pluginList->$id->active = false;
-          }
           $pluginList->$id->tables = unserialize($v['tables']);
           $pluginList->$id->isValid = $this->isValid($pluginList->$id->slug);
+          $pluginList->$id->loaded = false;
+
+          if(in_array($value['Plugin']['name'], $loadedCakePlugins)) {
+            $pluginList->$id->loaded = true;
+          }
 
           if(!$pluginList->$id->isValid || !$pluginList->$id->active) {
+            $pluginList->$id->loaded = false;
             CakePlugin::unload($pluginList->$id->slug);
           }
 

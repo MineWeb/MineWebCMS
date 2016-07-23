@@ -41,7 +41,7 @@
                     <td><?= $Lang->date($value->DBinstall) ?></td>
                     <td><?= $value->version ?></td>
                     <td>
-                      <?= ($value->isValid) ? '<span class="label label-success">'.$Lang->get('GLOBAL__YES').'</span>' : '<span class="label label-danger">'.$Lang->get('GLOBAL__NO').'</span>' ?>
+                      <?= ($value->loaded) ? '<span class="label label-success">'.$Lang->get('GLOBAL__YES').'</span>' : '<span class="label label-danger">'.$Lang->get('GLOBAL__NO').'</span>' ?>
                     </td>
                     <td>
                       <?= ($value->active) ? '<span class="label label-success">'.$Lang->get('GLOBAL__ENABLED').'</span>' : '<span class="label label-danger">'.$Lang->get('GLOBAL__DISABLED').'</span>' ?>

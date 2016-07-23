@@ -245,7 +245,12 @@ class LangComponent extends Object {
 
               $log['update'][$key] = date('Y-m-d H:i:s');
 
-              file_put_contents(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang'.DS.$path.'.log.json', json_encode($log, JSON_PRETTY_PRINT));
+              if(!is_dir(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang'.DS)) {
+                if(!mkdir(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang'.DS, 0755, true)) {
+                  $this->log('Cannot create language log folder');
+                }
+              }
+              @file_put_contents(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'update'.DS.'lang'.DS.$path.'.log.json', json_encode($log, JSON_PRETTY_PRINT));
 
             }
           }
