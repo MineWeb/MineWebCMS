@@ -26,7 +26,7 @@ class UtilComponent extends Object {
   // Get ip (support cloudfare)
 
   public function getIP() {
-    return isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? $_SERVER["HTTP_CF_CONNECTING_IP"] : $_SERVER["REMOTE_ADDR"];
+    return isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? htmlentities($_SERVER["HTTP_CF_CONNECTING_IP"]) : $_SERVER["REMOTE_ADDR"];
   }
 
   // Encoder un mot de passe

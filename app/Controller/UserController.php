@@ -517,7 +517,7 @@ class UserController extends AppController {
 								return $event->result;
 							}
 
-							$this->User->setKey('email', $this->request->data['email']);
+							$this->User->setKey('email', htmlentities($this->request->data['email']));
 							$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EMAIL_UPDATE_SUCCESS'))));
 						} else {
 							$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID'))));
