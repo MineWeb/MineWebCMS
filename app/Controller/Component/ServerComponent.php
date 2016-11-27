@@ -288,63 +288,53 @@ class ServerComponent extends Object {
 	}
 
 	function get($type) {
-		if($type == "secret_key") {
+		if($type !== "secret_key") return false;
 
-			$return = $this->controller->sendToAPI(
-                  array(),
-                  'get_secret_key',
-                  true
-                );
+		$return = $this->controller->sendToAPI(array(), 'key', true);
+    if ($return['code'] !== 200) return false;
 
-			if($return['code'] == 200) {
-        $return = json_decode($return['content'], true);
-        if($return['status'] == "success") {
-        	$key = @rsa_decrypt($return['secret_key'], '-----BEGIN RSA PRIVATE KEY-----
-MIICXAIBAAKBgQDGKSGFj8368AmYYiJ9fp1bsu3mzIiUfU7T2uhWXULe9YFqSvs9
-AA/PqTiOgGj8hid2KDamUvzI9UH5RWI83mwAMsj5mxk+ujuoR6WuZykO+A1XN6n4
-I3MWhBe1ZYWRwwgMgoDDe7DDbT2Y6xMxh6sbgdqxeKmkd4RtVB7+UwyuSwIDAQAB
-AoGAbuXz6bBqIUaWyB4bmUnzvK7tbx4GTbu3Et9O6Y517xtMWvUtl5ziPGBC05VP
-rAtUKE8nDnwhFkITsvI+oTwFCjZOEC4t7B39xtRgzICi3KkR1ICB/k+I6gsadGdU
-GY3Xf7slY5MEYwpvq6wiczxeMYuxkDzeOkPy1U1FgGBcTukCQQD18+M3Sfoko/Kw
-TiVFNk8rDvre/0iOiU1o/Yvi8AU/NXJbPOlm8hVfdXBNH35L+WYmt74uBI7Mxrmb
-YrUUvc7XAkEAzkFyPjcnaL9wnX5oRLgk8j3cAzAiiUFbk/KnFEHTjmdcF00hSyrB
-aQKyqnWAeFFzLIDdXzC3M07fzHR3RP1xrQJAH4sAx/V33D0egdfz1bWKX7ZTHEhX
-MNiREfb6esdXlOyw1tyv/mDrtstj9LAmTW4V2L9V56bz/XU7Fp+JI7jYDwJARbQQ
-a74v71JjOJZznmWs9sC5DcrCoSgZTtJ+bHYijMmZcbZ7Pe/hFR/4SWsUU5UTG0Mh
-jP3lq81IDMx/Ui1ksQJBAO4hTKBstrDNlUPkUr0i/2Pb/edVSgZnJ9t3V94OAD+Z
-wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
------END RSA PRIVATE KEY-----');
-        	return $key;
-        } elseif($return['status'] == "error") {
-        	return false;
-        }
-			}
-		} else {
-			return false;
-		}
+    $return = json_decode($return['content'], true);
+    if ($return['status'] !== "success" || $return['status'] == "error") return false;
+      
+    return @rsa_decrypt($return['secret_key']);
 	}
 
-	function check($type, $value) {
-		if($type == 'connection') {
-			if(!empty($value) AND is_array($value)) {
-				$url = 'http://'.$value['host'].':'.$value['port'].'?key='.sha1($value['secret_key']).'&domain='.rawurlencode(Router::url('/', true));
-				$opts = array('http' => array('timeout' => $value['timeout']));
-				@$get = file_get_contents($url, false, stream_context_create($opts));
-				if($get != false) {
-					$response = json_decode($get, true);
-					if(isset($response['REQUEST']) AND $response['REQUEST'] == 'INSTALLATION_COMPLETED') {
-						return true; // response
-					} else {
-						$this->log('Server connection result : '.json_encode($response));
-						return false;
-					}
-				} else {
-					$this->log('Server connection failed');
-					return false; // timeout
-				}
+	function check($info) {
+		if(empty($info) OR !is_array($value)) return false;
+
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, 'http://localhost:3000/api/v2/' . $path);
+    curl_setopt($curl, CURLOPT_COOKIESESSION, true);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(                                                                          
+      'Content-Type: application/json',                                                                                
+      'Content-Length: ' . strlen($data))                                                                       
+    );
+
+    $return = curl_exec($curl);
+    $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    $error = curl_errno($curl);
+    curl_close($curl);
+
+	  $url = 'http://' . $value['host'] . ':' . $value['port'] . '?key=' . sha1($value['secret_key']).'&domain='.rawurlencode(Router::url('/', true));
+		$opts = array('http' => array('timeout' => $value['timeout']));
+
+		@$get = file_get_contents($url, false, stream_context_create($opts));
+		if($get != false) {
+			$response = json_decode($get, true);
+			if(isset($response['REQUEST']) AND $response['REQUEST'] == 'INSTALLATION_COMPLETED') {
+				return true; // response
+			} else {
+				$this->log('Server connection result : '.json_encode($response));
+				return false;
 			}
 		} else {
-			return false;
+			$this->log('Server connection failed');
+			return false; // timeout
 		}
 	}
 

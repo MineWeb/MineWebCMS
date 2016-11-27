@@ -21,17 +21,25 @@
 define('TIMESTAMP_DEBUT', microtime(true));
 App::uses('Controller', 'Controller');
 require ROOT.'/config/function.php';
+define('API_KEY', '-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyFhLTY/xkuEyZtgTZo6w
+SnP8WibeHo35JXjaHdsZGHT9DylzOFzHrcGyyS5Ee13GsutJFxs18YOF1vB6CIFn
+DKYLOJ3ZoWV8C2K+fic9U/T4gjKe8RjeF1jOXxoRw3JQ0KLt0m4/5ntqSQoKFcFv
+s9gaNl91qitYuuJovi8SgyJTf/094+cucEzRIWhX3ax2+NL3pP4/zg3SQ2z/8/KQ
+p3VdUHs+d8JCiDA7MRXASNcVHaLHJaoIh2S8LlUquvmzO8X0MjazaSckFjPaflFd
+KBqcg4LcIEeKVzf62OsH8hvdOrtZgvSGlOaIxnnGnQiPnWNhqRMnG5H+ffSEoww9
+YwIDAQAB
+-----END PUBLIC KEY-----');
 
-function rsa_encrypt($data, $publicKey) {
-    $encrypted = '';
-    $r = openssl_public_encrypt($data, $encrypted, $publicKey);
-    return $r ? base64_encode($encrypted) : false;
+function rsa_encrypt($data) {
+    $r = openssl_public_encrypt($data, $encrypted, API_KEY, OPENSSL_PKCS1_OAEP_PADDING);
+    return $r ? base64_encode($encrypted) : $r;
 }
 
-function rsa_decrypt($data, $privateKey) {
+function rsa_decrypt($data) {
     $decrypted = '';
-    $r = openssl_private_decrypt(base64_decode($data), $decrypted, $privateKey);
-    return $r ? $decrypted : false;
+    $r = openssl_public_decrypt(base64_decode($data), $decrypted, API_KEY, OPENSSL_PKCS1_OAEP_PADDING);
+    return $r ? $decrypted : $r;
 }
 
 
@@ -75,24 +83,10 @@ class AppController extends Controller {
 	    if($this->params['controller'] != "install") {
 
         // On récupère le time encodé du dernier check
-        $last_check = @file_get_contents(ROOT.'/config/last_check');
+        $last_check = @file_get_contents(ROOT . '/config/last_check');
 
         // On le décode
-		    $last_check = @rsa_decrypt($last_check, '-----BEGIN RSA PRIVATE KEY-----
-MIICXAIBAAKBgQDGKSGFj8368AmYYiJ9fp1bsu3mzIiUfU7T2uhWXULe9YFqSvs9
-AA/PqTiOgGj8hid2KDamUvzI9UH5RWI83mwAMsj5mxk+ujuoR6WuZykO+A1XN6n4
-I3MWhBe1ZYWRwwgMgoDDe7DDbT2Y6xMxh6sbgdqxeKmkd4RtVB7+UwyuSwIDAQAB
-AoGAbuXz6bBqIUaWyB4bmUnzvK7tbx4GTbu3Et9O6Y517xtMWvUtl5ziPGBC05VP
-rAtUKE8nDnwhFkITsvI+oTwFCjZOEC4t7B39xtRgzICi3KkR1ICB/k+I6gsadGdU
-GY3Xf7slY5MEYwpvq6wiczxeMYuxkDzeOkPy1U1FgGBcTukCQQD18+M3Sfoko/Kw
-TiVFNk8rDvre/0iOiU1o/Yvi8AU/NXJbPOlm8hVfdXBNH35L+WYmt74uBI7Mxrmb
-YrUUvc7XAkEAzkFyPjcnaL9wnX5oRLgk8j3cAzAiiUFbk/KnFEHTjmdcF00hSyrB
-aQKyqnWAeFFzLIDdXzC3M07fzHR3RP1xrQJAH4sAx/V33D0egdfz1bWKX7ZTHEhX
-MNiREfb6esdXlOyw1tyv/mDrtstj9LAmTW4V2L9V56bz/XU7Fp+JI7jYDwJARbQQ
-a74v71JjOJZznmWs9sC5DcrCoSgZTtJ+bHYijMmZcbZ7Pe/hFR/4SWsUU5UTG0Mh
-jP3lq81IDMx/Ui1ksQJBAO4hTKBstrDNlUPkUr0i/2Pb/edVSgZnJ9t3V94OAD+Z
-wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
------END RSA PRIVATE KEY-----');
+		    $last_check = @rsa_decrypt($last_check);
 
         // On le récupère sous forme d'array
         $last_check = @unserialize($last_check);
@@ -117,11 +111,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 		    if($last_check < time() || $last_check_domain != parse_url(Router::url('/', true), PHP_URL_HOST)) {
 
           // On envoie la vérification
-          $return = $this->sendToAPI(
-                      array('version' => $this->Configuration->getKey('version')),
-                      'key_verif',
-                      true
-                    );
+          $return = $this->sendToAPI(array('version' => $this->Configuration->getKey('version')), 'authentication', true);
 
           // Si MineWeb n'est pas disponible on arrête ici.
           if($return['error'] == 6) {
@@ -138,7 +128,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
             if($return['status'] == "success") {
 
               // On enregistre le check si tout va bien
-            	file_put_contents(ROOT.'/config/last_check', $return['time']);
+            	file_put_contents(ROOT . '/config/last_check', $return['time']);
 
             } elseif($return['status'] == "error") {
 
@@ -241,7 +231,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
     $customMessageStocked = ROOT.DS.'app'.DS.'tmp'.DS.'cache'.DS.'api_custom_message.cache';
     $timeToCacheCustomMessage = '+4 hours';
 
-    if(!file_exists($customMessageStocked) || strtotime($timeToCacheCustomMessage, filemtime($customMessageStocked)) < time()) {
+    if(! file_exists($customMessageStocked) || strtotime($timeToCacheCustomMessage, filemtime($customMessageStocked)) < time()) {
       // On le récupère
       $get = $this->sendToAPI(array(), 'getCustomMessage');
 
@@ -419,10 +409,10 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
     === Gestion de la bannière du serveur ===
   */
 
-		if($this->params['prefix'] !== "admin") {
+		if ($this->params['prefix'] !== "admin") {
 			$banner_server = $this->Configuration->getKey('banner_server');
-    	if(empty($banner_server)) {
-      	if($this->Server->online()) {
+    	if (empty($banner_server)) {
+      	if ($this->Server->online()) {
             $server_infos = $this->Server->banner_infos();
             $banner_server = $this->Lang->get('SERVER__STATUS_MESSAGE', array(
               '{MOTD}' => @$server_infos['getMOTD'],
@@ -430,17 +420,15 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
               '{ONLINE}' => @$server_infos['getPlayerCount'],
               '{ONLINE_LIMIT}' => @$server_infos['getPlayerMax']
             ));
-      	} else {
-        		$banner_server = false;
       	}
-    	} else {
+        else 
+        	$banner_server = false;
+    	}
+      else {
       	$banner_server = unserialize($banner_server);
-      	if(count($banner_server) == 1) {
-        	$server_infos = $this->Server->banner_infos($banner_server[0]);
-      	} else {
-        	$server_infos = $this->Server->banner_infos($banner_server);
-      	}
-      	if(isset($server_infos['getPlayerMax']) && isset($server_infos['getPlayerCount'])) {
+        $server_infos = count($banner_server) == 1 ? $this->Server->banner_infos($banner_server[0]) : $this->Server->banner_infos($banner_server);
+      	
+      	if (isset($server_infos['getPlayerMax']) && isset($server_infos['getPlayerCount'])) {
       		//$banner_server = $this->Lang->banner_server($server_infos);
           $banner_server = $this->Lang->get('SERVER__STATUS_MESSAGE', array(
             '{MOTD}' => @$server_infos['getMOTD'],
@@ -448,9 +436,9 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
             '{ONLINE}' => @$server_infos['getPlayerCount'],
             '{ONLINE_LIMIT}' => @$server_infos['getPlayerMax']
           ));
-      	} else {
-        		$banner_server = false;
       	}
+        else 
+        		$banner_server = false;
     	}
 		}
 
@@ -459,31 +447,25 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
   */
     $event = new CakeEvent('requestPage', $this, $this->request->data);
     $this->getEventManager()->dispatch($event);
-    if($event->isStopped()) {
+    if ($event->isStopped()) 
       return $event->result;
-    }
+    
 
-		if($this->request->is('post')) {
+		if ($this->request->is('post')) {
       $event = new CakeEvent('onPostRequest', $this, $this->request->data);
 			$this->getEventManager()->dispatch($event);
-      if($event->isStopped()) {
+      if ($event->isStopped()) 
         return $event->result;
-      }
 		}
 
   /*
     === Gestion de la maintenance & bans ===
   */
 
-		if($this->isConnected) {
-			if($this->User->getKey('rank') == 5 AND $this->params['controller'] != "maintenance" AND $this->params['action'] != "logout" AND $this->params['controller'] != "api") {
-				$this->redirect(array('controller' => 'maintenance', 'action' => 'index/banned', 'plugin' => false, 'admin' => false));
-			}
-		}
-
-    if($this->params['controller'] != "user" && $this->params['controller'] != "maintenance" && $this->Configuration->getKey('maintenance') != '0' && !$this->Permissions->can('BYPASS_MAINTENANCE')) {
+		if ($this->isConnected AND $this->User->getKey('rank') == 5 AND $this->params['controller'] != "maintenance" AND $this->params['action'] != "logout" AND $this->params['controller'] != "api") 
+			$this->redirect(array('controller' => 'maintenance', 'action' => 'index/banned', 'plugin' => false, 'admin' => false));
+    if ($this->params['controller'] != "user" && $this->params['controller'] != "maintenance" && $this->Configuration->getKey('maintenance') != '0' && !$this->Permissions->can('BYPASS_MAINTENANCE'))
 			$this->redirect(array('controller' => 'maintenance', 'action' => 'index', 'plugin' => false, 'admin' => false));
-		}
 
   /*
     === On envoie tout à la vue ===
@@ -517,21 +499,21 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 
       App::uses('Folder', 'Utility');
       $folder = new Folder(ROOT.DS.'app'.DS.'tmp'.DS.'cache');
-      if(!empty($folder->path)) {
+      if (!empty($folder->path)) {
         $folder->delete();
       }
 
       echo json_encode(array('status' => true));
-
     }
   }
 
-  function apiCall($key, $debug = false, $return = false, $usersWanted = false) { // appelé pour récupérer des données
+   // appelé pour récupérer des données
+  function apiCall($key, $debug = false, $return = false, $usersWanted = false) {
     $this->response->type('json');
     $secure = file_get_contents(ROOT.'/config/secure');
 		$secure = json_decode($secure, true);
-		if($key == $secure['key']) {
-
+    
+		if ($key == $secure['key']) {
       $this->autoRender = false;
 
       $infos['general']['first_administrator'] = $this->Configuration->getFirstAdministrator();
@@ -539,7 +521,7 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
       $infos['general']['url'] = Router::url('/', true);
       $config = $this->Configuration->getAll();
       foreach ($config as $k => $v) {
-        if(($k == "smtpPassword" && !empty($v)) || ($k == "smtpUsername" && !empty($v))) {
+        if (($k == "smtpPassword" && !empty($v)) || ($k == "smtpUsername" && !empty($v))) {
           $infos['general']['config'][$k] = '********';
         } else {
           $infos['general']['config'][$k] = $v;
@@ -554,13 +536,11 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
       $findServers = $this->Server->find('all');
 
       foreach ($findServers as $key => $value) {
-
         $infos['servers'][$value['Server']['id']]['name'] = $value['Server']['name'];
         $infos['servers'][$value['Server']['id']]['ip'] = $value['Server']['ip'];
         $infos['servers'][$value['Server']['id']]['port'] = $value['Server']['port'];
 
-        if($debug) {
-
+        if ($debug) {
           $this->ServerComponent = $this->Components->load('Server');
           $infos['servers'][$value['Server']['id']]['config'] = $this->ServerComponent->getConfig($value['Server']['id']);
           $infos['servers'][$value['Server']['id']]['url'] = $this->ServerComponent->getUrl($value['Server']['id']);
@@ -570,49 +550,39 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 
           $infos['servers'][$value['Server']['id']]['callTests']['getPlayerCount'] = $this->ServerComponent->call('getPlayerCount', false, $value['Server']['id'], true);
           $infos['servers'][$value['Server']['id']]['callTests']['getPlayerMax'] = $this->ServerComponent->call('getPlayerMax', false, $value['Server']['id'], true);
-
         }
-
       }
 
-      if($debug) {
-
+      if ($debug) {
         $this->loadModel('Permission');
         $findPerms = $this->Permission->find('all');
-        if(!empty($findPerms)) {
+        if (!empty($findPerms)) {
           foreach ($findPerms as $key => $value) {
-
             $infos['permissions'][$value['Permission']['id']]['rank'] = $value['Permission']['rank'];
             $infos['permissions'][$value['Permission']['id']]['permissions'] = unserialize($value['Permission']['permissions']);
-
           }
-        } else {
-          $infos['permissions'] = array();
         }
+        else
+          $infos['permissions'] = array();
+        
 
         $this->loadModel('Rank');
         $findRanks = $this->Rank->find('all');
-        if(!empty($findRanks)) {
+        if (!empty($findRanks)) {
           foreach ($findRanks as $key => $value) {
-
             $infos['ranks'][$value['Rank']['id']]['rank_id'] = $value['Rank']['rank_id'];
             $infos['ranks'][$value['Rank']['id']]['name'] = $value['Rank']['name'];
-
           }
-        } else {
-          $infos['ranks'] = array();
         }
+        else 
+          $infos['ranks'] = array();
 
-        if($usersWanted !== false) {
+        if ($usersWanted !== false) {
           $this->loadModel('User');
-          if($usersWanted == 'all') {
-            $findUser = $this->User->find('all');
-          } else {
-            $findUser = $this->User->find('all', array('conditions' => array('pseudo' => $usersWanted)));
-          }
-          if(!empty($findUser)) {
+          $findUser = $usersWanted == 'all' ? $this->User->find('all') : $this->User->find('all', array('conditions' => array('pseudo' => $usersWanted)));
+          
+          if (!empty($findUser)) {
             foreach ($findUser as $key => $value) {
-
               $infos['users'][$value['User']['id']]['pseudo'] = $value['User']['pseudo'];
               $infos['users'][$value['User']['id']]['rank'] = $value['User']['rank'];
               $infos['users'][$value['User']['id']]['email'] = $value['User']['email'];
@@ -622,14 +592,13 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
               $infos['users'][$value['User']['id']]['skin'] = $value['User']['skin'];
               $infos['users'][$value['User']['id']]['cape'] = $value['User']['cape'];
               $infos['users'][$value['User']['id']]['rewards_waited'] = $value['User']['rewards_waited'];
-
             }
-          } else {
+          } 
+          else 
             $infos['users'] = array();
-          }
-        } else {
-          $infos['users'] = array();
         }
+        else 
+          $infos['users'] = array();
       }
 
       if($this->EyPlugin->isInstalled('eywek.vote.3')) {
@@ -644,12 +613,10 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
         $configVote['servers'] = unserialize($configVote['servers']);
 
         $infos['plugins']->$pl->config = $configVote;
-
       }
 
-      if($return) {
+      if ($return)
         return $infos;
-      }
 
       $this->response->body(json_encode($infos));
       $this->response->send();
@@ -658,49 +625,37 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
   }
 
   protected function sendTicketToAPI($data) {
-    if(!isset($data['title']) || !isset($data['content'])) {
+    if (!isset($data['title']) || !isset($data['content']))
       return false;
-    }
+  
+    $return = $this->sendToAPI(array(
+      'debug' => json_encode($this->apiCall($this->getSecure()['key'], true, true)),
+      'title' => $data['title'],
+      'content' => $data['content']
+    ), 'ticket/add');
 
-    $secure = $this->getSecure();
+    if($return['code'] !== 200) 
+      $this->log('SendTicketToAPI : '. $return['code']);
 
-    $return = $this->sendToAPI(
-                array(
-                  'debug' => json_encode($this->apiCall($secure['key'], true, true)),
-                  'title' => $data['title'],
-                  'content' => $data['content']
-                ),
-                'addTicket'
-              );
-
-    $status = ($return['code'] == 200) ? true : false;
-
-    if(!$status) {
-      $this->log('SendTicketToAPI : '.$return['code']);
-    }
-
-
-    return $status;
+    return $return['code'] === 200;
   }
 
 	function beforeRender() {
     $event = new CakeEvent('onLoadPage', $this, $this->request->data);
     $this->getEventManager()->dispatch($event);
-    if($event->isStopped()) {
+    if ($event->isStopped()) 
       return $event->result;
-    }
 
-		if($this->params['prefix'] == "admin") {
+		if ($this->params['prefix'] === "admin") {
       $event = new CakeEvent('onLoadAdminPanel', $this, $this->request->data);
 			$this->getEventManager()->dispatch($event);
-      if($event->isStopped()) {
+      if($event->isStopped()) 
         return $event->result;
-      }
 		}
 	}
 
 	function __setTheme() {
-		if(!isset($this->params['prefix']) OR $this->params['prefix'] != "admin") {
+		if(!isset($this->params['prefix']) OR $this->params['prefix'] !== "admin") {
       $this->theme = Configure::read('theme');
     }
   }
@@ -721,44 +676,36 @@ wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
 	}
 
   protected function getSecure() {
-    $secure = file_get_contents(ROOT.'/config/secure');
-    return json_decode($secure, true);
+    return json_decode(file_get_contents(ROOT . '/config/secure'), true);
   }
 
-  public function sendToAPI($data, $url, $addSecure = true, $timeout = 5, $secureUpdated = array()) {
+  public function sendToAPI($data, $path, $addSecure = true, $timeout = 5, $secureUpdated = array()) {
 
-    if($addSecure) {
+    if ($addSecure) {
       $secure = $this->getSecure();
+      $signed = array();
+      $signed['id'] = $secure['id'];
+      $signed['key'] = isset($secureUpdated['key']) ? $secureUpdated['key'] : $secure['key'];
+      $signed['domain'] = Router::url('/', true);
 
-      $postfields['id'] = $secure['id'];
-      if(isset($secureUpdated['key'])) {
-        $postfields['key'] = $secureUpdated['key'];
-      } else {
-        $postfields['key'] = $secure['key'];
-      }
-      $postfields['domain'] = Router::url('/', true);
-
-      $postfields = json_encode($postfields);
-
-			$post[0] = rsa_encrypt($postfields, '-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvFK7LMlAnF8Hzmku9WGbHqYNb
-ehNueKDbF/j4yYwf8WqIizB7k+S++SznqPw3KzeHOshiPfeCcifGzp0kI43grWs+
-nuScYjSuZw9FEvjDjEZL3La00osWxLJx57zNiEX4Wt+M+9RflMjxtvejqXkQoEr/
-WCqkx22behAGZq6rhwIDAQAB
------END PUBLIC KEY-----');
-      unset($postfields);
-      $postfields = $post;
+      // stringify post data and encrypt it
+			$signed = rsa_encrypt(json_encode($signed));
+      $data['signed'] = $signed;
     }
-
-    $postfields = $postfields + $data;
-
+    
+    $data = json_encode($data);
     $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, 'http://mineweb.org/api/v1/'.$url);
+    curl_setopt($curl, CURLOPT_URL, 'http://localhost:3000/api/v2/' . $path);
     curl_setopt($curl, CURLOPT_COOKIESESSION, true);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $postfields);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
     curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(                                                                          
+      'Content-Type: application/json',                                                                                
+      'Content-Length: ' . strlen($data))                                                                       
+    );
 
     $return = curl_exec($curl);
     $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
@@ -767,5 +714,4 @@ WCqkx22behAGZq6rhwIDAQAB
 
     return array('content' => $return, 'code' => $code, 'error' => $error);
   }
-
 }
