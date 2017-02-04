@@ -42,7 +42,7 @@ class InstallController extends AppController {
 
 			if(!empty($this->request->data['key'])) {
 
-				$return = $this->sendToAPI(array(), 'key_verif', true, 5, array('key' => $this->request->data['key']));
+				$return = $this->sendToAPI(array(), 'authentication', true, 5, array('key' => $this->request->data['key']));
 
 				if($return['code'] == 200) {
 

@@ -57,52 +57,48 @@ class ServerComponent extends Object {
 
 			}
 
-        // method example : $method = array('getPlayerLimit' => 'server', 'getPlayer' => 'Eywek');
+        // method example : $method = array('getPlayerLimit' => array(), 'getPlayer' => array('Eywek'));
         // or $method = 'getPlayerLimit';
         if($method != false) {
-            if(is_array($method)) {
-                foreach ($method as $key => $value) {
-                    if(is_array($value)) {
-                        $value = implode('|', $value);
-                    }
-                    $list_method[$key] = $value;
-                }
-                $list_method = implode('&', array_map(
-                    function ($v, $k) {
-                        return sprintf("%s=%s", $k, rawurlencode($v));
-                    },
-                    $list_method, array_keys($list_method)
-                ));
-            } else {
-                $list_method = $method.'=server';
-            }
-            $method = $list_method;
-            if(!$needsecretkey) {
-                $url = $this->getUrl($server_id).$method;
-            } else {
-                $url = $this->getUrl($server_id, true).'&'.$method;
-            }
-            $opts = array('http' => array('timeout' => $this->getTimeout()));
-            $get = @file_get_contents($url, false, stream_context_create($opts));
+            if(!is_array($method))
+              $method = array($method => array());
+            $url = $this->getUrl($server_id);
+            $data = $this->encryptWithKey(json_encode($method));
 
-						if($debug) {
-							if(json_decode($get) != false) {
-								$get = json_decode($get);
-							}
-							return array('get' => $url, 'return' => $get);
-						}
+            // request
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_COOKIESESSION, true);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($curl, CURLOPT_TIMEOUT, $this->getTimeout());
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+              'Content-Type: application/json',
+              'Content-Length: ' . strlen($data))
+            );
 
-            if($get) {
-	            $result = json_decode($get, true);
-							if(isset($result['REQUEST']) && $result['REQUEST'] == "IP_NOT_ALLOWED") {
-								return array('status' => 'error', 'code' => '4', 'msg' => 'Request not allowed');
-							}
-							if(isset($result['REQUEST']) && $result['REQUEST'] == "NEED_PARAMATER_FOR_INSTALLATION") {
-								return array('status' => 'error', 'code' => '5', 'msg' => 'Plugin not installed');
-							}
-	            return $result;
+            $return = curl_exec($curl);
+            $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            $error = curl_errno($curl);
+            curl_close($curl);
+
+            // response
+            if ($debug) {
+              if (json_decode($return) != false)
+                $return = json_decode($return);
+              return array('get' => $url, 'return' => $return);
+            }
+
+            if ($return && $code === 200) {
+              return $this->decryptWithKey(@json_decode($return, true));
+            else if ($code === 403)
+              return array('status' => 'error', 'code' => '4', 'msg' => 'Request not allowed.');
+            else if ($code === 400)
+              return array('status' => 'error', 'code' => '5', 'msg' => 'Plugin not installed or bad request.');
 	        } else {
-	        	return array('status' => 'error', 'code' => '3', 'msg' => 'Request timeout');
+	        	return array('status' => 'error', 'code' => '3', 'msg' => 'Request timeout.');
 	        }
         } else {
             return array('status' => 'error', 'code' => '2', 'msg' => 'This method doesn\'t exist');
@@ -111,6 +107,22 @@ class ServerComponent extends Object {
         return array('status' => 'error', 'code' => '1', 'msg' => 'This server is not online');
     }
 	}
+
+  public function encryptWithKey($data) {
+    if (!isset($this->key))
+      $this->key = ClassRegistry::init('Configuration')->find('first')['Configuration']['secret_key'];
+    $iv_size = mcrypt_get_iv_size(AES_256, MCRYPT_MODE_CBC);
+    $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+    return mcrypt_encrypt(AES_256, $this->key, $data, MCRYPT_MODE_CBC, $iv);
+  }
+
+  public function decryptWithKey($data) {
+    if (!isset($this->key))
+      $this->key = ClassRegistry::init('Configuration')->find('first')['Configuration']['secret_key'];
+    $iv_size = mcrypt_get_iv_size(AES_256, MCRYPT_MODE_CBC);
+    $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+    return mcrypt_decrypt(AES_256, $this->key, $data, MCRYPT_MODE_CBC, $iv);
+  }
 
 	public function getFirstServerID() {
 		$get = ClassRegistry::init('Server')->find('first');
@@ -185,23 +197,13 @@ class ServerComponent extends Object {
 
 	}
 
-	public function getUrl($server_id, $key = false) {
-	    if(!empty($server_id)) {
-	        $config = $this->getConfig($server_id);
-	        if($config) {
-	            if($key) {
-	                $this->Configuration = ClassRegistry::init('Configuration');
-	                $key = $this->Configuration->find('first')['Configuration']['server_secretkey'];
-	                return 'http://'.$config['ip'].':'.$config['port'].'?'.'key='.sha1($key);
-	            } else {
-	                return 'http://'.$config['ip'].':'.$config['port'].'?';
-	            }
-	        } else {
-	            return false;
-	        }
-	    } else {
-	        return false;
-	    }
+  public function getUrl($server_id) {
+    if(empty($server_id)) return false;
+
+    $config = $this->getConfig($server_id);
+    if (!$config) return false;
+
+    return 'http://'.$config['ip'].':'.$config['port'].'?';
 	}
 
 	public function online($server_id = false, $debug = false) {
@@ -287,64 +289,65 @@ class ServerComponent extends Object {
 	}
 
 	function get($type) {
-		if($type == "secret_key") {
+		if($type !== "secret_key") return false;
 
-			$return = $this->controller->sendToAPI(
-                  array(),
-                  'get_secret_key',
-                  true
-                );
+		$return = $this->controller->sendToAPI(array(), 'key', true);
+    if ($return['code'] !== 200) return false;
 
-			if($return['code'] == 200) {
-        $return = json_decode($return['content'], true);
-        if($return['status'] == "success") {
-        	$key = @rsa_decrypt($return['secret_key'], '-----BEGIN RSA PRIVATE KEY-----
-MIICXAIBAAKBgQDGKSGFj8368AmYYiJ9fp1bsu3mzIiUfU7T2uhWXULe9YFqSvs9
-AA/PqTiOgGj8hid2KDamUvzI9UH5RWI83mwAMsj5mxk+ujuoR6WuZykO+A1XN6n4
-I3MWhBe1ZYWRwwgMgoDDe7DDbT2Y6xMxh6sbgdqxeKmkd4RtVB7+UwyuSwIDAQAB
-AoGAbuXz6bBqIUaWyB4bmUnzvK7tbx4GTbu3Et9O6Y517xtMWvUtl5ziPGBC05VP
-rAtUKE8nDnwhFkITsvI+oTwFCjZOEC4t7B39xtRgzICi3KkR1ICB/k+I6gsadGdU
-GY3Xf7slY5MEYwpvq6wiczxeMYuxkDzeOkPy1U1FgGBcTukCQQD18+M3Sfoko/Kw
-TiVFNk8rDvre/0iOiU1o/Yvi8AU/NXJbPOlm8hVfdXBNH35L+WYmt74uBI7Mxrmb
-YrUUvc7XAkEAzkFyPjcnaL9wnX5oRLgk8j3cAzAiiUFbk/KnFEHTjmdcF00hSyrB
-aQKyqnWAeFFzLIDdXzC3M07fzHR3RP1xrQJAH4sAx/V33D0egdfz1bWKX7ZTHEhX
-MNiREfb6esdXlOyw1tyv/mDrtstj9LAmTW4V2L9V56bz/XU7Fp+JI7jYDwJARbQQ
-a74v71JjOJZznmWs9sC5DcrCoSgZTtJ+bHYijMmZcbZ7Pe/hFR/4SWsUU5UTG0Mh
-jP3lq81IDMx/Ui1ksQJBAO4hTKBstrDNlUPkUr0i/2Pb/edVSgZnJ9t3V94OAD+Z
-wJKpVWIREC/PMQD8uTHOtdxftEyPoXMLCySqMBjY58w=
------END RSA PRIVATE KEY-----');
-        	return $key;
-        } elseif($return['status'] == "error") {
-        	return false;
-        }
-			}
-		} else {
-			return false;
-		}
+    $return = json_decode($return['content'], true);
+    if ($return['status'] !== "success" || $return['status'] == "error") return false;
+
+    return @rsa_decrypt($return['secret_key']);
 	}
 
-	function check($type, $value) {
-		if($type == 'connection') {
-			if(!empty($value) AND is_array($value)) {
-				$url = 'http://'.$value['host'].':'.$value['port'].'?key='.sha1($value['secret_key']).'&domain='.rawurlencode(Router::url('/', true));
-				$opts = array('http' => array('timeout' => $value['timeout']));
-				@$get = file_get_contents($url, false, stream_context_create($opts));
-				if($get != false) {
-					$response = json_decode($get, true);
-					if(isset($response['REQUEST']) AND $response['REQUEST'] == 'INSTALLATION_COMPLETED') {
-						return true; // response
-					} else {
-						$this->log('Server connection result : '.json_encode($response));
-						return false;
-					}
-				} else {
-					$this->log('Server connection failed');
-					return false; // timeout
-				}
-			}
-		} else {
-			return false;
-		}
+	function check($info, $value) {
+		if(empty($info) OR !is_array($value)) return false;
+
+    $path = 'http://' . $value['host'] . ':' . $value['port'];
+    $secure = $this->getSecure();
+    $data = json_encode(array(
+      'license_id' =>  $secure['id'],
+      'license_key' => $secure['key'],
+      'domain' => Router::url('/', true)
+    ));
+
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $path);
+    curl_setopt($curl, CURLOPT_COOKIESESSION, true);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($curl, CURLOPT_TIMEOUT, $value['timeout']);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+      'Content-Type: application/json',
+      'Content-Length: ' . strlen($data))
+    );
+
+    $return = curl_exec($curl);
+    $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    $error = curl_errno($curl);
+    curl_close($curl);
+
+    if ($return && $code === 200)
+      return true;
+
+    switch ($code) {
+      case 500:
+        $this->log('Link server: MineWeb API down');
+        break;
+      case 403:
+        $this->log('Link server: Already link');
+        break;
+      case 400:
+        $this->log('Link server: Invalid params');
+        break;
+
+      default:
+        $this->log('Server connection failed');
+        break;
+    }
+    return false;
 	}
 
 	function banner_infos($server_id = false) { // On précise l'ID du serveur ou vont veux les infos, ou alors on envoie "all" qui va aller chercher les infos sur tout les serveurs
