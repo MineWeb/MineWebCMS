@@ -91,15 +91,14 @@ class ServerComponent extends Object {
               return array('get' => $url, 'return' => $return);
             }
 
-            if ($return && $code === 200) {
+            if ($return && $code === 200) 
               return $this->decryptWithKey(@json_decode($return, true));
             else if ($code === 403)
               return array('status' => 'error', 'code' => '4', 'msg' => 'Request not allowed.');
             else if ($code === 400)
               return array('status' => 'error', 'code' => '5', 'msg' => 'Plugin not installed or bad request.');
-	        } else {
-	        	return array('status' => 'error', 'code' => '3', 'msg' => 'Request timeout.');
-	        }
+	          else 
+	        	  return array('status' => 'error', 'code' => '3', 'msg' => 'Request timeout.');
         } else {
             return array('status' => 'error', 'code' => '2', 'msg' => 'This method doesn\'t exist');
         }
@@ -303,11 +302,11 @@ class ServerComponent extends Object {
 	function check($info, $value) {
 		if(empty($info) OR !is_array($value)) return false;
 
-    $path = 'http://' . $value['host'] . ':' . $value['port'];
-    $secure = $this->getSecure();
+    $path = 'http://' . $value['host'] . ':' . $value['port'] . "/handshake";
+    $secure = json_decode(file_get_contents(ROOT . '/config/secure'), true);
     $data = json_encode(array(
-      'license_id' =>  $secure['id'],
-      'license_key' => $secure['key'],
+      'licenseId' =>  $secure['id'],
+      'licenseKey' => $secure['key'],
       'domain' => Router::url('/', true)
     ));
 
@@ -342,9 +341,8 @@ class ServerComponent extends Object {
       case 400:
         $this->log('Link server: Invalid params');
         break;
-
       default:
-        $this->log('Server connection failed');
+        $this->log('Server connection failed : ' . $code);
         break;
     }
     return false;
