@@ -4,12 +4,14 @@ class ServerComponent extends Object {
 	private $timeout = NULL;
 	private $config = NULL;
 	private $online = NULL;
-  private $methods = array(
+  private $methods = array( // old methods => plugin methods
     'getMOTD' => 'GET_MOTD',
     'getPlayerCount' => 'GET_PLAYER_COUNT',
     'getVersion' => 'GET_VERSION',
-    'getPlayerMax' => 'GET_MAX_PLAYERS'
+    'getPlayerMax' => 'GET_MAX_PLAYERS',
+    'isConnected' => 'IS_CONNECTED'
   );
+  public $lastErrorMessage = null;
 
 	public $controller;
   public $components = array('Session', 'Configuration');
@@ -27,18 +29,40 @@ class ServerComponent extends Object {
 
 	function beforeRedirect() {}
 
-	function call($methods = false, $needsecretkey = false, $server_id = false, $debug = false) {
+  private function parseMethods($methods = array()) {
+    $pluginsMethods = array();
+    foreach ($methods as $method => $value) {
+      if (isset($this->methods[$method]))
+        $pluginsMethods[$this->methods[$method]] = $value;
+    }
+    return $pluginsMethods;
+  }
+
+  private function parseResult($methods = array()) {
+    $pluginsMethods = array_flip($this->methods);
+    $result = array();
+    foreach ($methods as $method => $value) {
+      if (isset($pluginsMethods[$method]))
+        $result[$pluginsMethods[$method]] = $value;
+    }
+    return $result;
+  }
+
+	public function call($methods = false, $server_id = false, $debug = false) {
     if (!$server_id)
       $server_id = $this->getFirstServerID();
-    if (!$methods)
-      return array('status' => false, 'error' => 'Unknown method.');
+    if (!$methods) {
+      $this->lastErrorMessage = 'Unknown method.';
+      return false;
+    }
+    if (!is_array($methods)) // transform into array
+      $methods = array($methods => array());
+    $methods = $this->parseMethods($methods); // new methods
 
     $config = $this->getConfig($server_id);
     if ($config['type'] == 1) { // only ping
       // ping
       $ping = $this->ping(array('ip' => $config['ip'], 'port' => $config['port']));
-      if (!is_array($methods)) // 1 method
-        return (isset($ping[$methods])) ? $ping[$methods] : array('status' => false, 'error' => 'Unknown method.');
       // each method
       $result = array();
       foreach ($methods as $method) {
@@ -68,14 +92,17 @@ class ServerComponent extends Object {
     if ($return && $code === 200) {
       $return = @json_decode($return, true);
       $return = $this->decryptWithKey($return['signed'], $return['iv']);
-      return @json_decode($return, true);
+      return $this->parseResult(@json_decode($return, true)); // json decode & set old method name
+    } else if ($code === 403) {
+      $this->lastErrorMessage = 'Request not allowed.';
+      return false;
+    } else if ($code === 400) {
+      $this->lastErrorMessage = 'Plugin not installed or bad request.';
+      return false;
+    } else {
+      $this->lastErrorMessage = 'Request timeout.';
+      return false;
     }
-    else if ($code === 403)
-      return array('status' => false, 'error' => 'Request not allowed.');
-    else if ($code === 400)
-      return array('status' => false, 'error' => 'Plugin not installed or bad request.');
-    else
-      return array('status' => false, 'error' => 'Request timeout.');
 	}
 
   public function request($url, $data, $timeout = false) {
@@ -102,24 +129,24 @@ class ServerComponent extends Object {
     return array($return, $code, $error);
   }
 
-  public function pkcs5_pad($text, $blocksize)  { 
-    $pad = $blocksize - (strlen($text) % $blocksize); 
-    return $text . str_repeat(chr($pad), $pad); 
-  } 
+  public function pkcs5_pad($text, $blocksize)  {
+    $pad = $blocksize - (strlen($text) % $blocksize);
+    return $text . str_repeat(chr($pad), $pad);
+  }
 
-  public function pkcs5_unpad($text) { 
-    $pad = ord($text{strlen($text)-1}); 
-    if ($pad > strlen($text)) return false; 
-    if (strspn($text, chr($pad), strlen($text) - $pad) != $pad) return false; 
-    return substr($text, 0, -1 * $pad); 
+  public function pkcs5_unpad($text) {
+    $pad = ord($text{strlen($text)-1});
+    if ($pad > strlen($text)) return false;
+    if (strspn($text, chr($pad), strlen($text) - $pad) != $pad) return false;
+    return substr($text, 0, -1 * $pad);
   }
 
   public function encryptWithKey($data) {
     if (!isset($this->key))
       $this->key = ClassRegistry::init('Configuration')->find('first')['Configuration']['server_secretkey'];
-    
+
     $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
-    $data = $this->pkcs5_pad($data, mcrypt_get_block_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC)); 
+    $data = $this->pkcs5_pad($data, mcrypt_get_block_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC));
     $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
     $signed = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, substr($this->key, 0, 16), $data, MCRYPT_MODE_CBC, $iv));
     return json_encode(array('signed' => $signed, 'iv' => base64_encode($iv)));
@@ -249,7 +276,7 @@ class ServerComponent extends Object {
     if(empty($info) OR !is_array($value)) return false;
 
     $path = 'http://' . $value['host'] . ':' . $value['port'];
-    $secure = $this->getSecure();
+    $secure = json_decode(ROOT.DS.'config'.DS.'secure');
     $data = json_encode(array(
       'license_id' =>  $secure['id'],
       'license_key' => $secure['key'],
@@ -257,7 +284,9 @@ class ServerComponent extends Object {
     ));
 
     list($return, $code, $error) = $this->request($path, $data, $value['timeout']);
-
+debug($return);
+debug($code);
+die();
     if ($return && $code === 200)
       return true;
 
@@ -279,89 +308,50 @@ class ServerComponent extends Object {
     return false;
 	}
 
-	function banner_infos($server_id = false) { // On précise l'ID du serveur ou vont veux les infos, ou alors on envoie "all" qui va aller chercher les infos sur tout les serveurs
+	function banner_infos($serverId = false) { // On précise l'ID du serveur ou vont veux les infos, ou alors on envoie "all" qui va aller chercher les infos sur tout les serveurs
+    if (!$serverId)
+      $serverId = $this->getFirstServerID();
+    if (!is_array($serverId))
+      $serverId = array($serverId);
 
-		if(!$server_id) {
-			$server_id = $this->getFirstServerID();
-		}
-
-		$ModelConfig = ClassRegistry::init('Configuration')->find('first');
-		if(isset($ModelConfig['Configuration']['server_cache'])) {
-			if($ModelConfig['Configuration']['server_cache']) {
-				$cacheFolder = ROOT.DS.'app'.DS.'tmp'.DS.'cache'.DS;
-				$cacheFile = $cacheFolder.'server.cache';
-				if(is_array($server_id)) {
-					$server_id_implode = implode('-', $server_id);
-				} else {
-					$server_id_implode = $server_id;
-				}
-				if(file_exists($cacheFile) && strtotime('+1 min', filemtime($cacheFile)) > time() && isset(unserialize(file_get_contents($cacheFile))[$server_id_implode])) {
-					return unserialize(file_get_contents($cacheFile))[$server_id_implode];
-				}
-			}
-		} else {
-			return false;
-		}
-
-    if(!is_array($server_id)) {
-
-      if($this->online($server_id)) {
-          $search = $this->call(array('GET_MOTD' => array(), 'GET_VERSION' => array(), 'GET_MAX_PLAYERS' => array(), 'GET_PLAYER_COUNT' => array()), false, $server_id);
-
-					if(isset($search['status']) && $search['status'] == "error") {
-						return false;
-					}
-
-          if($search['GET_PLAYER_COUNT'] == "null") {
-              $search['GET_PLAYER_COUNT'] = 0;
-          }
-
-					if(ClassRegistry::init('Configuration')->find('first')['Configuration']['server_cache']) {
-						if(!is_dir($cacheFolder)) {
-							mkdir($cacheFolder, 0755, true);
-						}
-						if(is_dir($cacheFolder)) {
-							@file_put_contents($cacheFile, serialize(array($server_id => $search)));
-						}
-					}
-
-          return $search;
-      } else {
-        return false;
+    // get configuration
+    $configuration = ClassRegistry::init('Configuration')->find('first')['Configuration'];
+    // setup cache
+    if ($configuration['server_cache']) {
+      $cacheFolder = ROOT.DS.'app'.DS.'tmp'.DS.'cache'.DS;
+      $cacheFile = $cacheFolder.'server.cache';
+      $serverIdString = implode('-', $serverId);
+      // check cache
+      if (file_exists($cacheFile) && strtotime('+1 min', filemtime($cacheFile)) > time()) {
+        $cacheContent = @unserialize(@file_get_contents($cacheFile));
+        if ($cacheContent && isset($cacheContent[$serverIdString]))
+          return $cacheContent[$serverIdString];
       }
-    } else {
-        $servers = $server_id;
-        $online[] = false;
-				$return['GET_MAX_PLAYERS'] = 0;
-				$return['GET_PLAYER_COUNT'] = 0;
-        foreach ($servers as $key => $value) {
-          if($this->online($value)) {
-						$online[] = true;
-            $search = $this->call(array('GET_MAX_PLAYERS' => array(), 'GET_PLAYER_COUNT' => array()), false, $value);
-            if($search['GET_PLAYER_COUNT'] == "null") {
-                $search['GET_PLAYER_COUNT'] = 0;
-            }
-            $return['GET_MAX_PLAYERS'] = $return['GET_MAX_PLAYERS'] + $search['GET_MAX_PLAYERS'];
-            $return['GET_PLAYER_COUNT'] = $return['GET_PLAYER_COUNT'] + $search['GET_PLAYER_COUNT'];
-          }
-        }
-
-				if(in_array(true, $online) && ClassRegistry::init('Configuration')->find('first')['Configuration']['server_cache']) {
-					if(!is_dir($cacheFolder)) {
-						mkdir($cacheFolder, 0755, true);
-					}
-					if(is_dir($cacheFolder)) {
-						$server_id_implode = implode('-', $server_id);
-						@file_put_contents($cacheFile, serialize(array($server_id_implode => $return)));
-					}
-				}
-
-        return (in_array(true, $online)) ? $return : false;
     }
+
+    // request
+    $data = array(
+      'getPlayerCount' => 0,
+      'getPlayerMax' => 0
+    );
+    foreach ($serverId as $id) {
+      $req = $this->call(array('getPlayerCount' => array(), 'getPlayerMax' => array()), $id);
+      if (!$req) continue;
+      $data['getPlayerCount'] += intval($req['getPlayerCount']);
+      $data['getPlayerMax'] += intval($req['getPlayerMax']);
+    }
+
+    // cache
+    if ($configuration['server_cache']) {
+      if (!is_dir($cacheFolder)) mkdir($cacheFolder, 0755, true); // create folder
+      @file_put_contents($cacheFile, serialize(array($serverIdString => $data)));
+    }
+    // return
+    return $data;
 	}
 
 	function send_command($cmd, $server_id = false) {
-    return $this->call(array('performCommand' => $cmd), true, $server_id);
+    return $this->call(array('performCommand' => $cmd), $server_id);
   }
 
 	function commands($commands, $server_id = false) {
@@ -370,7 +360,7 @@ class ServerComponent extends Object {
     $commands = explode('[{+}]', $commands);
     $performCommands = array();
     foreach ($commands as $key => $value) {
-      $result[] = $this->call(array('performCommand' => $value), true, $server_id);
+      $result[] = $this->call(array('performCommand' => $value), $server_id);
     }
     return $result;
 	}
