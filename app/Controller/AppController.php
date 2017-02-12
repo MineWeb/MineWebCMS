@@ -690,7 +690,7 @@ class AppController extends Controller {
 
     $data = json_encode($data);
     $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, 'http://10.18.198.18:3000/api/v2/' . $path);
+    curl_setopt($curl, CURLOPT_URL, 'http://api.mineweb.org/api/v2/' . $path);
     curl_setopt($curl, CURLOPT_COOKIESESSION, true);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
