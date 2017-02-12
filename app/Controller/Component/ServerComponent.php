@@ -34,7 +34,7 @@ class ServerComponent extends Object {
       return array('status' => false, 'error' => 'Unknown method.');
 
     $config = $this->getConfig($server_id);
-    if ($config['type'] == 2) { // only ping
+    if ($config['type'] == 1) { // only ping
       // ping
       $ping = $this->ping(array('ip' => $config['ip'], 'port' => $config['port']));
       if (!is_array($methods)) // 1 method
@@ -64,8 +64,12 @@ class ServerComponent extends Object {
     }
 
     // response
+
     if ($return && $code === 200) {
-      return $this->decryptWithKey(@json_decode($return, true));
+      $return = @json_decode($return, true);
+      $return = $this->decryptWithKey($return['signed'], $return['iv']);
+      return @json_decode($return, true);
+    }
     else if ($code === 403)
       return array('status' => false, 'error' => 'Request not allowed.');
     else if ($code === 400)
@@ -98,20 +102,33 @@ class ServerComponent extends Object {
     return array($return, $code, $error);
   }
 
-  public function encryptWithKey($data) {
-    if (!isset($this->key))
-      $this->key = ClassRegistry::init('Configuration')->find('first')['Configuration']['secret_key'];
-    $iv_size = mcrypt_get_iv_size(AES_256, MCRYPT_MODE_CBC);
-    $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-    return mcrypt_encrypt(AES_256, $this->key, $data, MCRYPT_MODE_CBC, $iv);
+  public function pkcs5_pad($text, $blocksize)  { 
+    $pad = $blocksize - (strlen($text) % $blocksize); 
+    return $text . str_repeat(chr($pad), $pad); 
+  } 
+
+  public function pkcs5_unpad($text) { 
+    $pad = ord($text{strlen($text)-1}); 
+    if ($pad > strlen($text)) return false; 
+    if (strspn($text, chr($pad), strlen($text) - $pad) != $pad) return false; 
+    return substr($text, 0, -1 * $pad); 
   }
 
-  public function decryptWithKey($data) {
+  public function encryptWithKey($data) {
     if (!isset($this->key))
-      $this->key = ClassRegistry::init('Configuration')->find('first')['Configuration']['secret_key'];
-    $iv_size = mcrypt_get_iv_size(AES_256, MCRYPT_MODE_CBC);
+      $this->key = ClassRegistry::init('Configuration')->find('first')['Configuration']['server_secretkey'];
+    
+    $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
+    $data = $this->pkcs5_pad($data, mcrypt_get_block_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC)); 
     $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-    return mcrypt_decrypt(AES_256, $this->key, $data, MCRYPT_MODE_CBC, $iv);
+    $signed = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, substr($this->key, 0, 16), $data, MCRYPT_MODE_CBC, $iv));
+    return json_encode(array('signed' => $signed, 'iv' => base64_encode($iv)));
+  }
+
+  public function decryptWithKey($data, $iv) {
+    if (!isset($this->key))
+      $this->key = ClassRegistry::init('Configuration')->find('first')['Configuration']['server_secretkey'];
+    return $this->pkcs5_unpad(mcrypt_decrypt(MCRYPT_RIJNDAEL_128, substr($this->key, 0, 16), base64_decode($data), MCRYPT_MODE_CBC, base64_decode($iv)));
   }
 
   public function getFirstServerID() {
@@ -120,13 +137,13 @@ class ServerComponent extends Object {
   }
 
   private function getTimeout() {
-    if (!empty($this->timeout)) {
+    if (!empty($this->timeout))
       return $this->timeout;
     return ClassRegistry::init('Configuration')->find('first')['Configuration']['server_timeout'];
   }
 
   public function getConfig($server_id = false) {
-    if (!$server_id) {
+    if (!$server_id)
       $server_id = $this->getFirstServerID();
     if (!empty($this->config[$server_id]))
       return $this->config[$server_id];
@@ -146,7 +163,7 @@ class ServerComponent extends Object {
 	}
 
 	public function ping($config = false) {
-    if(!$config || !isset($config['ip']) || !isset($config['port'])) {
+    if(!$config || !isset($config['ip']) || !isset($config['port']))
       return false;
 
     App::import('Vendor', 'MinecraftPing', array('file' => 'ping-xpaw/MinecraftPing.php'));
@@ -169,7 +186,7 @@ class ServerComponent extends Object {
     $config = $this->getConfig($server_id);
     if (!$config) return false;
 
-    return 'http://'.$config['ip'].':'.$config['port'].'?';
+    return 'http://' . $config['ip'] . ':' . $config['port'] . '/ask';
 	}
 
   public function online($server_id = false, $debug = false) {
@@ -187,12 +204,11 @@ class ServerComponent extends Object {
     if (!$config) // server not found
       return $this->online[$server_id] = false;
 
-    if ($config['type'] == 2) // ping only
+    if ($config['type'] == 1) // ping only
       return ($this->ping(array('ip' => $config['ip'], 'port' => $config['port']))) ? true : false;
 
-    list($return, $code, $error) = $this->request($this->getUrl($server_id), $this->encryptWithKey(json_encode(array())));
-
-    if ($return && $code === 200) {
+    list($return, $code, $error) = $this->request($this->getUrl($server_id), $this->encryptWithKey("{}"));
+    if ($return && $code === 200)
       return $this->online[$server_id] = true;
     else
       return $this->online[$server_id] = false;
@@ -290,14 +306,14 @@ class ServerComponent extends Object {
     if(!is_array($server_id)) {
 
       if($this->online($server_id)) {
-          $search = $this->call(array('getMOTD' => 'server', 'getVersion' => 'server', 'getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $server_id);
+          $search = $this->call(array('GET_MOTD' => array(), 'GET_VERSION' => array(), 'GET_MAX_PLAYERS' => array(), 'GET_PLAYER_COUNT' => array()), false, $server_id);
 
 					if(isset($search['status']) && $search['status'] == "error") {
 						return false;
 					}
 
-          if($search['getPlayerCount'] == "null") {
-              $search['getPlayerCount'] = 0;
+          if($search['GET_PLAYER_COUNT'] == "null") {
+              $search['GET_PLAYER_COUNT'] = 0;
           }
 
 					if(ClassRegistry::init('Configuration')->find('first')['Configuration']['server_cache']) {
@@ -316,17 +332,17 @@ class ServerComponent extends Object {
     } else {
         $servers = $server_id;
         $online[] = false;
-				$return['getPlayerMax'] = 0;
-				$return['getPlayerCount'] = 0;
+				$return['GET_MAX_PLAYERS'] = 0;
+				$return['GET_PLAYER_COUNT'] = 0;
         foreach ($servers as $key => $value) {
           if($this->online($value)) {
 						$online[] = true;
-            $search = $this->call(array('getPlayerMax' => 'server', 'getPlayerCount' => 'server'), false, $value);
-            if($search['getPlayerCount'] == "null") {
-                $search['getPlayerCount'] = 0;
+            $search = $this->call(array('GET_MAX_PLAYERS' => array(), 'GET_PLAYER_COUNT' => array()), false, $value);
+            if($search['GET_PLAYER_COUNT'] == "null") {
+                $search['GET_PLAYER_COUNT'] = 0;
             }
-            $return['getPlayerMax'] = $return['getPlayerMax'] + $search['getPlayerMax'];
-            $return['getPlayerCount'] = $return['getPlayerCount'] + $search['getPlayerCount'];
+            $return['GET_MAX_PLAYERS'] = $return['GET_MAX_PLAYERS'] + $search['GET_MAX_PLAYERS'];
+            $return['GET_PLAYER_COUNT'] = $return['GET_PLAYER_COUNT'] + $search['GET_PLAYER_COUNT'];
           }
         }
 
