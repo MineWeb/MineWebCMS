@@ -4,6 +4,12 @@ class ServerComponent extends Object {
 	private $timeout = NULL;
 	private $config = NULL;
 	private $online = NULL;
+  private $methods = array(
+    'getMOTD' => 'GET_MOTD',
+    'getPlayerCount' => 'GET_PLAYER_COUNT',
+    'getVersion' => 'GET_VERSION',
+    'getPlayerMax' => 'GET_MAX_PLAYERS'
+  );
 
 	public $controller;
   public $components = array('Session', 'Configuration');
@@ -21,92 +27,72 @@ class ServerComponent extends Object {
 
 	function beforeRedirect() {}
 
-	function call($method = false, $needsecretkey = false, $server_id = false, $debug = false) {
+	function call($methods = false, $needsecretkey = false, $server_id = false, $debug = false) {
+    if (!$server_id)
+      $server_id = $this->getFirstServerID();
+    if (!$methods)
+      return array('status' => false, 'error' => 'Unknown method.');
 
-		if(!$server_id) {
-			$server_id = $this->getFirstServerID();
-		}
-
-    if($this->online($server_id)) {
-			$config = $this->getConfig($server_id);
-			if($config['type'] == 2) { // si query
-
-				$authorised_method_for_query = array('getMOTD', 'getPlayerCount', 'getVersion', 'getPlayerMax');
-
-				// si c'est des méthodes autorisés pour le query
-				if(is_array($method)) {
-
-					$result = array();
-					$ping = $this->ping(array('ip' => $config['ip'], 'port' => $config['port']));
-
-					foreach ($method as $key => $value) {
-						if(!in_array($key, $authorised_method_for_query)) {
-							return array('status' => 'error', 'code' => '6', 'msg' => 'This server type can\'t accept this methods');
-						}
-						$result[$key] = $ping[$key];
-					}
-
-					return $result;
-
-				} else {
-					if(!in_array($method, $authorised_method_for_query)) {
-						return array('status' => 'error', 'code' => '6', 'msg' => 'This server type can\'t accept this method');
-					}
-					return $this->ping(array('ip' => $config['ip'], 'port' => $config['port']))[$method];
-				}
-
-			}
-
-        // method example : $method = array('getPlayerLimit' => array(), 'getPlayer' => array('Eywek'));
-        // or $method = 'getPlayerLimit';
-        if($method != false) {
-            if(!is_array($method))
-              $method = array($method => array());
-            $url = $this->getUrl($server_id);
-            $data = $this->encryptWithKey(json_encode($method));
-
-            // request
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_COOKIESESSION, true);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-            curl_setopt($curl, CURLOPT_TIMEOUT, $this->getTimeout());
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-              'Content-Type: application/json',
-              'Content-Length: ' . strlen($data))
-            );
-
-            $return = curl_exec($curl);
-            $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-            $error = curl_errno($curl);
-            curl_close($curl);
-
-            // response
-            if ($debug) {
-              if (json_decode($return) != false)
-                $return = json_decode($return);
-              return array('get' => $url, 'return' => $return);
-            }
-
-            if ($return && $code === 200) {
-              return $this->decryptWithKey(@json_decode($return, true));
-            else if ($code === 403)
-              return array('status' => 'error', 'code' => '4', 'msg' => 'Request not allowed.');
-            else if ($code === 400)
-              return array('status' => 'error', 'code' => '5', 'msg' => 'Plugin not installed or bad request.');
-	        } else {
-	        	return array('status' => 'error', 'code' => '3', 'msg' => 'Request timeout.');
-	        }
-        } else {
-            return array('status' => 'error', 'code' => '2', 'msg' => 'This method doesn\'t exist');
-        }
-    } else {
-        return array('status' => 'error', 'code' => '1', 'msg' => 'This server is not online');
+    $config = $this->getConfig($server_id);
+    if ($config['type'] == 2) { // only ping
+      // ping
+      $ping = $this->ping(array('ip' => $config['ip'], 'port' => $config['port']));
+      if (!is_array($methods)) // 1 method
+        return (isset($ping[$methods])) ? $ping[$methods] : array('status' => false, 'error' => 'Unknown method.');
+      // each method
+      $result = array();
+      foreach ($methods as $method) {
+        $result[$method] = (isset($ping[$method])) ? $ping[$method] : array('status' => false, 'error' => 'Unknown method.');
+      }
+      return $result;
     }
+
+    // plugin
+    if(!is_array($methods))
+      $methods = array($methods => array());
+    $url = $this->getUrl($server_id);
+    $data = $this->encryptWithKey(json_encode($methods));
+
+    // request
+    list($return, $code, $error) = $this->request($url, $data);
+
+    // response
+    if ($debug) {
+      if (json_decode($return) != false)
+        $return = json_decode($return);
+      return array('get' => $url, 'return' => $return);
+    }
+
+    if ($return && $code === 200) {
+      return $this->decryptWithKey(@json_decode($return, true));
+    else if ($code === 403)
+      return array('status' => false, 'error' => 'Request not allowed.');
+    else if ($code === 400)
+      return array('status' => false, 'error' => 'Plugin not installed or bad request.');
+    else
+      return array('status' => false, 'error' => 'Request timeout.');
 	}
+
+  public function request($url, $data) {
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_COOKIESESSION, true);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($curl, CURLOPT_TIMEOUT, $this->getTimeout());
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+      'Content-Type: application/json',
+      'Content-Length: ' . strlen($data))
+    );
+
+    $return = curl_exec($curl);
+    $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    $error = curl_errno($curl);
+    curl_close($curl);
+    return array($return, $code, $error);
+  }
 
   public function encryptWithKey($data) {
     if (!isset($this->key))
@@ -206,66 +192,31 @@ class ServerComponent extends Object {
     return 'http://'.$config['ip'].':'.$config['port'].'?';
 	}
 
-	public function online($server_id = false, $debug = false) {
+  public function online($server_id = false, $debug = false) {
+    if (!$server_id) // first server config
+      $server_id = $this->getFirstServerID();
+    if (ClassRegistry::init('Configuration')->find('first')['Configuration']['server_state'] == '0') // enabled
+      return $this->online[$server_id] = false;
+    if (!empty($this->online[$server_id])) // already called
+      return $this->online[$server_id];
+    if (empty($server_id)) // need id
+      return $this->online[$server_id] = false;
 
-		if(!$server_id) {
-			$server_id = $this->getFirstServerID();
-		}
+    // get config
+    $config = $this->getConfig($server_id);
+    if (!$config) // server not found
+      return $this->online[$server_id] = false;
 
-		if(ClassRegistry::init('Configuration')->find('first')['Configuration']['server_state'] == '0') {
-			$this->online[$server_id] = false;
-			return false;
-		}
+    if ($config['type'] == 2) // ping only
+      return ($this->ping(array('ip' => $config['ip'], 'port' => $config['port']))) ? true : false;
 
-		if(empty($this->online[$server_id])) {
+    list($return, $code, $error) = $this->request($this->getUrl($server_id), $this->encryptWithKey(json_encode(array())));
 
-		    if(!empty($server_id)) {
-		        $config = $this->getConfig($server_id);
-		        if($config) {
-
-							if($config['type'] == 2) {
-								return ($this->ping(array('ip' => $config['ip'], 'port' => $config['port']))) ? true : false;
-							} else {
-		            $url = $this->getUrl($server_id).'getPlayerMax=server';
-		            $opts = array('http' => array('timeout' => $this->getTimeout()));
-		            @$get = file_get_contents($url, false, stream_context_create($opts));
-
-								if($debug) {
-									if(json_decode($get) != false) {
-										$get = json_decode($get);
-									}
-									return array('get' => $url, 'return' => $get);
-								}
-
-		            if($get != false) {
-									$get = json_decode($get, true);
-									if(!$get) {
-										$this->online[$server_id] = false;
-			              return false;
-									}
-									if(isset($get['REQUEST']) && $get['REQUEST'] == "IP_NOT_ALLOWED") {
-										$this->online[$server_id] = false;
-			              return false;
-									}
-		            	$this->online[$server_id] = true;
-		              return true;
-		            } else {
-		            	$this->online[$server_id] = false;
-		                return false;
-		            }
-							}
-		        } else {
-		        	$this->online[$server_id] = false;
-		            return false;
-		        }
-		    } else {
-		    	$this->online[$server_id] = false;
-		        return false;
-		    }
-		} else {
-			return $this->online[$server_id];
-		}
-	}
+    if ($return && $code === 200) {
+      return $this->online[$server_id] = true;
+    else
+      return $this->online[$server_id] = false;
+  }
 
 	function getAllServers() {
     	$this->Server = ClassRegistry::init('Server');
