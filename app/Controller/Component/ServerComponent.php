@@ -57,7 +57,6 @@ class ServerComponent extends Object {
     }
     if (!is_array($methods)) // transform into array
       $methods = array($methods => array());
-    $methods = $this->parseMethods($methods); // new methods
 
     $config = $this->getConfig($server_id);
     if ($config['type'] == 1) { // only ping
@@ -65,15 +64,14 @@ class ServerComponent extends Object {
       $ping = $this->ping(array('ip' => $config['ip'], 'port' => $config['port']));
       // each method
       $result = array();
-      foreach ($methods as $method) {
-        $result[$method] = (isset($ping[$method])) ? $ping[$method] : array('status' => false, 'error' => 'Unknown method.');
+      foreach ($methods as $methodName => $methodValue) {
+        $result[$methodName] = (isset($ping[$methodName])) ? $ping[$methodName] : false;
       }
       return $result;
     }
 
     // plugin
-    if(!is_array($methods))
-      $methods = array($methods => array());
+    $methods = $this->parseMethods($methods); // new methods
     $url = $this->getUrl($server_id);
     $data = $this->encryptWithKey(json_encode($methods));
 
