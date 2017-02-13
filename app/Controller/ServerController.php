@@ -4,40 +4,32 @@ class ServerController extends AppController {
 
 	public $components = array('Session');
 
+  public function admin_link() {
+    if (!$this->isConnected || !$this->Permissions->can('MANAGE_SERVERS'))
+      throw new ForbiddenException();
+    $this->layout = "admin";
+    $this->set('title_for_layout',$this->Lang->get('SERVER__LINK'));
 
-	public function admin_link() {
-		if($this->isConnected AND $this->Permissions->can('MANAGE_SERVERS')) {
-			$this->layout = "admin";
+    $this->loadModel('Server');
+    $servers = $this->Server->find('all');
+    $banner_server = unserialize($this->Configuration->getKey('banner_server'));
 
-			$this->set('title_for_layout',$this->Lang->get('SERVER__LINK'));
+    if($banner_server) {
+      foreach ($servers as $key => $value) {
+        if (in_array($value['Server']['id'], $banner_server))
+          $servers[$key]['Server']['activeInBanner'] = true;
+        else
+          $servers[$key]['Server']['activeInBanner'] = false;
+      }
+    }
 
-			$this->loadModel('Server');
-			$servers = $this->Server->find('all');
+    $bannerMsg = $this->Lang->get('SERVER__STATUS_MESSAGE');
 
-			$banner_server = unserialize($this->Configuration->getKey('banner_server'));
-
-			if($banner_server) {
-				foreach ($servers as $key => $value) {
-					if(in_array($value['Server']['id'], $banner_server)) {
-						$servers[$key]['Server']['activeInBanner'] = true;
-					} else {
-						$servers[$key]['Server']['activeInBanner'] = false;
-					}
-				}
-			}
-
-			$bannerMsg = $this->Lang->get('SERVER__STATUS_MESSAGE');
-
-			$this->set(compact('servers', 'bannerMsg'));
-
-			$this->set('isEnabled', $this->Configuration->getKey('server_state'));
-			$this->set('isCacheEnabled', $this->Configuration->getKey('server_cache'));
-
-			$this->set('timeout', $this->Configuration->getKey('server_timeout'));
-		} else {
-			$this->redirect('/');
-		}
-	}
+    $this->set(compact('servers', 'bannerMsg'));
+    $this->set('isEnabled', $this->Configuration->getKey('server_state'));
+    $this->set('isCacheEnabled', $this->Configuration->getKey('server_cache'));
+    $this->set('timeout', $this->Configuration->getKey('server_timeout'));
+  }
 
 	public function admin_editBannerMsg() {
 		$this->autoRender = false;
@@ -170,51 +162,48 @@ class ServerController extends AppController {
 	}
 
 	public function admin_link_ajax() {
-		$this->autoRender = false;
-		$this->response->type('json');
+    $this->autoRender = false;
+    $this->response->type('json');
 
-		if (!$this->isConnected AND $this->Permissions->can('MANAGE_SERVERS'))
+    if (!$this->isConnected AND $this->Permissions->can('MANAGE_SERVERS'))
       return $this->redirect('/');
     if (!$this->request->is('ajax'))
-			return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
-
-		if(empty($this->request->data['host']) OR empty($this->request->data['port']) OR empty($this->request->data['name'])
-          OR !isset($this->request->data['type'])) {
-			return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
-    }
+      return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
+    if(empty($this->request->data['host']) || empty($this->request->data['port']) || empty($this->request->data['name']) || !isset($this->request->data['type']))
+      return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 
     // default plugin, make the handshake
-		if ($this->request->data['type'] == 0) {
-			$timeout = $this->Configuration->getKey('server_timeout');
-			if (empty($timeout))
-				return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__TIMEOUT_UNDEFINED'))));
-			
-      if(!$this->Server->check('connection', array('host' => $this->request->data['host'], 'port' => $this->request->data['port'], 'timeout' => $timeout))) 
-			  return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED'))));
-		}
+    if ($this->request->data['type'] == 0) {
+      $timeout = $this->Configuration->getKey('server_timeout');
+      if (empty($timeout))
+        return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__TIMEOUT_UNDEFINED'))));
+
+      if(!$this->Server->check('connection', array('host' => $this->request->data['host'], 'port' => $this->request->data['port'], 'timeout' => $timeout)))
+        return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED'))));
+      // get secretKey
+      $secretKey = $this->Server->getSecretKey();
+    }
     // use simple ping to retrieve data from MC protocol
     else if($this->request->data['type'] == 1) {
-			if (!$this->Server->ping(array('ip' => $this->request->data['host'], 'port' => $this->request->data['port'])))
-				return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED'))));
-		}
-    else {
-			return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
+      if (!$this->Server->ping(array('ip' => $this->request->data['host'], 'port' => $this->request->data['port'])))
+        return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED'))));
     }
-      
+    else {
+      return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
+    }
 
     // save the server inside the database/conf
-		$this->Configuration->setKey('server_state', 1);
+    $this->Configuration->setKey('server_state', 1);
     $id = !empty($this->request->data['id']) ? $this->request->data['id'] : null;
-		
-    $this->loadModel('Server');
-		$this->Server->read(null, $id);
-		$this->Server->set(array('name' => $this->request->data['name'], 'ip' => $this->request->data['host'], 'port' => $this->request->data['port'], 'type' => $this->request->data['type']));
-	  $this->Server->save();
 
-		if($this->request->data['type'] != '2' && isset($secret_key)) {
-			$this->Configuration->setKey('server_secretkey', $secret_key);
-		}
-	  
+    $this->loadModel('Server');
+    $this->Server->read(null, $id);
+    $this->Server->set(array('name' => $this->request->data['name'], 'ip' => $this->request->data['host'], 'port' => $this->request->data['port'], 'type' => $this->request->data['type']));
+    $this->Server->save();
+
+    if ($this->request->data['type'] != 1 && $secretKey)
+      $this->Configuration->setKey('server_secretkey', $secretKey);
+
     return $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('SERVER__LINK_SUCCESS'))));
   }
 

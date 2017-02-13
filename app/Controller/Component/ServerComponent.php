@@ -258,9 +258,7 @@ class ServerComponent extends Object {
     return false;
   }
 
-  function get($type) {
-    if($type !== "secret_key") return false;
-
+  function getSecretKey() {
     $return = $this->controller->sendToAPI(array(), 'key', true);
     if ($return['code'] !== 200) return false;
 
