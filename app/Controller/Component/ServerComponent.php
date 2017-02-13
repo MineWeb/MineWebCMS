@@ -1,9 +1,9 @@
 <?php
 class ServerComponent extends Object {
 
-	private $timeout = NULL;
-	private $config = NULL;
-	private $online = NULL;
+  private $timeout = NULL;
+  private $config = NULL;
+  private $online = NULL;
   private $methods = array( // old methods => plugin methods
     'getMOTD' => 'GET_MOTD',
     'getPlayerCount' => 'GET_PLAYER_COUNT',
@@ -13,17 +13,17 @@ class ServerComponent extends Object {
   );
   public $lastErrorMessage = null;
 
-	public $controller;
+  public $controller;
   public $components = array('Session', 'Configuration');
 
-	function initialize(&$controller) {
-	  $this->controller =& $controller;
-		$this->controller->set('Server', $this);
-	}
+  function initialize(&$controller) {
+    $this->controller =& $controller;
+    $this->controller->set('Server', $this);
+  }
 
-	function startup(&$controller) {}
+  function startup(&$controller) {}
 
-	function beforeRender(&$controller) {}
+  function beforeRender(&$controller) {}
 
 	function shutdown(&$controller) {}
 
@@ -48,7 +48,7 @@ class ServerComponent extends Object {
     return $result;
   }
 
-	public function call($methods = false, $server_id = false, $debug = false) {
+  public function call($methods = false, $server_id = false, $debug = false) {
     if (!$server_id)
       $server_id = $this->getFirstServerID();
     if (!$methods) {
@@ -275,18 +275,16 @@ class ServerComponent extends Object {
   function check($info, $value) {
     if(empty($info) OR !is_array($value)) return false;
 
-    $path = 'http://' . $value['host'] . ':' . $value['port'];
-    $secure = json_decode(ROOT.DS.'config'.DS.'secure');
+    $path = 'http://' . $value['host'] . ':' . $value['port'] . '/handshake';
+    $secure = json_decode(file_get_contents(ROOT.DS.'config'.DS.'secure'), true);
     $data = json_encode(array(
-      'license_id' =>  $secure['id'],
-      'license_key' => $secure['key'],
+      'licenseId' =>  $secure['id'],
+      'licenseKey' => $secure['key'],
       'domain' => Router::url('/', true)
     ));
 
     list($return, $code, $error) = $this->request($path, $data, $value['timeout']);
-debug($return);
-debug($code);
-die();
+
     if ($return && $code === 200)
       return true;
 
@@ -302,7 +300,7 @@ die();
         break;
 
       default:
-        $this->log('Server connection failed');
+        $this->log('Server connection failed: ' . $code);
         break;
     }
     return false;
