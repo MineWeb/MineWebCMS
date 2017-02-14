@@ -306,7 +306,7 @@
                 <?php } ?>
                 <button class="btn btn-large btn-block btn-success" type="button"><?= $Lang->get('SERVER__STATUS_ONLINE') ?> <br>
                   <?php
-                  $get = $Server->call(array('getPlayerCount' => array(), 'getPlayerMax' => array()), false, $value['Server']['id']);
+                  $get = $Server->call(array('getPlayerCount' => array(), 'getPlayerMax' => array()), $value['Server']['id']);
                   echo $get['getPlayerCount'].'/'.$get['getPlayerMax'];
                   ?>
                 </button>
