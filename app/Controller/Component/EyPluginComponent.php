@@ -1,21 +1,12 @@
 <?php
-
-/**
-* Class gérant les extensions/plugins MineWeb
-*
-* @author Eywek
-* @version 1.0.0
-*/
-
 class EyPluginComponent extends Object {
 
   public $pluginsInFolder = array();
   public $pluginsInDB = array();
-
   private $alreadyCheckValid = array();
 
   public $pluginsFolder;
-  private $apiVersion = '1';
+  private $apiVersion = '2';
 
   public $pluginsLoaded;
 
@@ -32,188 +23,137 @@ class EyPluginComponent extends Object {
   function beforeRedirect() {}
   function startup(&$controller) {}
 
-  // Initialisation du composant
+  // init
+  function initialize(&$controller) {
+    $this->controller =& $controller;
+    $this->controller->set('EyPlugin', $this);
+    // models
+    if(!class_exists('ClassRegistry')) // cakephp lol
+      App::uses('ClassRegistry', 'Utility');
+    $this->models = (object)array(
+      'Plugin' => ClassRegistry::init('Plugin')
+    );
+    // plugins list
+    $this->pluginsInFolder = $this->getPluginsInFolder();
+    $this->pluginsInDB = $this->getPluginsInDB();
+    // install plugins in folder but not in database
+    $this->checkIfNeedToBeInstalled($this->pluginsInFolder['onlyValid'], $this->pluginsInDB);
+    // delete plugins on db but on in folder
+    $this->checkIfNeedToBeDeleted($this->pluginsInFolder['all'], $this->pluginsInDB);
+    // load plugins (or unload)
+    $this->pluginsLoaded = $this->loadPlugins();
+  }
 
-
-    function initialize(&$controller) {
-
-      $this->controller =& $controller;
-      $this->controller->set('EyPlugin', $this);
-
-      // Initialisation des variables importantes
-      $this->pluginsInFolder = $this->getPluginsInFolder();
-      $this->pluginsInDB = $this->getPluginsInDB();
-
-      // Installons les plugins non installés & présent dans le dossier plugins
-      $this->checkIfNeedToBeInstalled($this->pluginsInFolder['onlyValid'], $this->pluginsInDB);
-
-      // Supprimons les plugins installés en base de données mais plus présent dans le dossier
-      $this->checkIfNeedToBeDeleted($this->pluginsInFolder['all'], $this->pluginsInDB);
-
-      $this->pluginsLoaded = $this->loadPlugins();
-
-    }
-
-  // Retourne toutes les tables du CMS
-
-    private function getCmsSqlTables() {
-      if(empty($this->CmsSqlTables)) {
-        require_once ROOT.DS.'app'.DS.'Config'.DS.'Schema'.DS.'schema.php';
-        if(class_exists('AppSchema')) { // on peut load la class
-          $class = new AppSchema();
-
-          $tables = get_class_vars(get_class($class));
-
-          $ignoredVars = array('name', 'path', 'file', 'connection', 'plugin', 'tables');
-          foreach ($tables as $key => $value) {
-            if(!in_array($key, $ignoredVars)) {
-              $this->CmsSqlTables[] = $key;
-            }
-          }
-
-        }
-      }
-      return $this->CmsSqlTables;
-    }
-
-  // Retourne la config JSON d'un plugin
-
-    public function getPluginConfig($slug) {
-      $config = @file_get_contents($this->pluginsFolder.DS.$slug.DS.'config.json'); // On récup la config JSON
-
-      if($config !== false) { // Si c'est pas false
-
-        return json_decode($config); // On retourne ou le JSON décodé ou false (pour un pb)
-
-      }
-
-      return false;
-    }
-
-  // Chargement des plugins installés et de leurs configuration - Retourne un objet
-
-    public function loadPlugins() {
-
-      // On récupére le modal
-
-      if(!class_exists('ClassRegistry')) {
-        App::uses('ClassRegistry', 'Utility');
-      }
-
-      $PluginModel = ClassRegistry::init('Plugin');
-
-      // On cherche tout les plugins installés en db
-      $PluginModel->cacheQueries = false;
-      $dbPlugins = $PluginModel->find('all');
-
-      $pluginList = (object) array(); // On met ça en object vide pour l'instant
-
-      $loadedCakePlugins = CakePlugin::loaded();
-
-      foreach ($dbPlugins as $key => $value) { // On les parcours tous
-
-        $v = $value['Plugin']; // On met ça comme ça pour plus de simplicité
-
-        $config = $this->getPluginConfig($v['name']); // On charge la config
-
-        if(is_object($config)) {
-
-          $id = strtolower($v['author'].'.'.$v['name'].'.'.$config->apiID); // on fais l'id - tout en minuscule
-
-          $pluginList->$id = (object) array(); // on initialize les données
-          $pluginList->$id = $config; // On met l'object config dedans
-          $pluginList->$id->slug = $v['name'];
-          $pluginList->$id->DBid = $v['id']; // on met l'id de la base de donnée
-          $pluginList->$id->DBinstall = $v['created']; // on met quand on l'a installé sur la bdd
-          $pluginList->$id->active = ($v['state']) ? true : false; // On met l'object config dedans
-          $pluginList->$id->tables = unserialize($v['tables']);
-          $pluginList->$id->isValid = $this->isValid($pluginList->$id->slug);
-          $pluginList->$id->loaded = false;
-
-          if(in_array($value['Plugin']['name'], $loadedCakePlugins)) {
-            $pluginList->$id->loaded = true;
-          }
-
-          if(!$pluginList->$id->isValid || !$pluginList->$id->active) {
-            $pluginList->$id->loaded = false;
-            CakePlugin::unload($pluginList->$id->slug);
-          }
-
-        } else {
-          CakePlugin::unload($v['name']);
-        }
-
-      }
-
-      return $pluginList;
-
-    }
-
-  // Retourner les plugins chargés/installés & activés
-
-    public function getPluginsActive() {
-      $plugins = $this->loadPlugins(); // on prend les plugins installés
-
-      $pluginList = (object) array(); // On met ça en object vide pour l'instant
-
-      foreach ($plugins as $key => $value) {
-        if($value->active && $value->isValid) { // si il est activé
-          $pluginList->$key = $value; // on ajoute dans la liste
-        }
-      }
-
-      return $pluginList; // on retourne la list
-    }
-
-  // Récupération des plugins dans le dossier app/Plugin
-
-    private function getPluginsInFolder() {
-
-      // On set le dossier & on le scan
-      $dir = $this->pluginsFolder;
-      $plugins = scandir($dir);
-      if($plugins !== false) {
-
-        $bypassedFiles = array('.', '..', '.DS_Store', '__MACOSX'); // On met les fichiers que l'on ne considère pas comme un plugin
-        $pluginsList = array('all' => array(), 'onlyValid' => array()); // On dis que de base la liste est vide
-
-        foreach ($plugins as $key => $value) { // On parcours tout ce qu'on à trouvé dans le dossier
-          if(!in_array($value, $bypassedFiles)) { // Si c'est pas un fichier que l'on ne doit pas prendre
-            $pluginsList['all'][] = $value; // On l'ajoute dans la liste
-            if($this->isValid($value)) {
-              $pluginsList['onlyValid'][] = $value;
-            }
-          }
-        }
-
-        return $pluginsList;
-
-      } else {
-        $this->log('Unable to scan plugins folder.'); // on log ça
-        return array(); // Impossible de scanner le dossier
+  // get cms sql tables from schema.php
+  private function getCmsSqlTables() {
+    if (empty($this->CmsSqlTables)) { // cache for this request
+      require_once ROOT.DS.'app'.DS.'Config'.DS.'Schema'.DS.'schema.php';
+      if (!class_exists('AppSchema')) return array(); // error
+      // init class and get vars
+      $class = new AppSchema();
+      $tables = get_class_vars(get_class($class));
+      // remove useless vars
+      $ignoredVars = array('name', 'path', 'file', 'connection', 'plugin', 'tables');
+      foreach ($tables as $key => $value) {
+        if(!in_array($key, $ignoredVars))
+          $this->CmsSqlTables[] = $key;
       }
     }
+    return $this->CmsSqlTables; // return result
+  }
 
-  // Récupération des plugins installés en base de données
+  // get plugin json config from his folder
+  public function getPluginConfig($slug) {
+    $config = @json_decode(@file_get_contents($this->pluginsFolder.DS.$slug.DS.'config.json'));
+    if (!$config) return false; // error
+    return $config;
+  }
 
-    private function getPluginsInDB() {
-
-      // On récupére le modal
-      $PluginModel = ClassRegistry::init('Plugin');
-      // On cherche tout
-      $search = $PluginModel->find('all');
-
-      // De base la liste est vide
-      $pluginsList = array();
-
-      if(!empty($search)) { // si c'est pas vide (pour éviter l'erreur)
-        foreach ($search as $key => $value) { // on parcours tout pour récupérer leurs noms
-          $pluginsList[] = $value['Plugin']['name'];
-        }
+  // unload plugins (disabled or invalid) and list plugins
+  public function loadPlugins() {
+    $dbPlugins = $this->models->Plugin->find('all');
+    // result
+    $pluginList = (object) array();
+    // get cakephp loaded plugins
+    $loadedCakePlugins = CakePlugin::loaded();
+    // each db plugins
+    foreach ($dbPlugins as $plugin) { // On les parcours tous
+      $plugin = $plugin['Plugin'];
+      // get config
+      $config = $this->getPluginConfig($plugin['name']);
+      if (!is_object($config)) // invalid plugin
+        CakePlugin::unload($plugin['name']); // ask to cake to unload it (lol)
+      // set config
+      $id = strtolower($plugin['author'].'.'.$plugin['name'].'.'.$config->apiID); // on fais l'id - tout en minuscule
+      $pluginList->$id = (object) array(); // init
+      $pluginList->$id = $config; // add file config
+      $pluginList->$id->slug = $plugin['name'];
+      $pluginList->$id->DBid = $plugin['id'];
+      $pluginList->$id->DBinstall = $plugin['created'];
+      $pluginList->$id->active = ($plugin['state']) ? true : false;
+      $pluginList->$id->tables = unserialize($plugin['tables']);
+      $pluginList->$id->isValid = $this->isValid($pluginList->$id->slug); // plugin valid
+      $pluginList->$id->loaded = false;
+      // check if loaded
+      if(in_array($plugin['name'], $loadedCakePlugins)) // cakephp have load it ? (or not because fucking cache)
+        $pluginList->$id->loaded = true;
+      // unload if invalid
+      if(!$pluginList->$id->isValid || !$pluginList->$id->active) {
+        $pluginList->$id->loaded = false;
+        CakePlugin::unload($pluginList->$id->slug);
       }
-
-      return $pluginsList;
     }
+    // return list
+    return $pluginList;
+  }
+
+  // get loaded plugins
+  public function getPluginsActive() {
+    $plugins = $this->pluginsLoaded;
+    $pluginList = (object) array(); // result
+
+    foreach ($plugins as $key => $value) {
+      if($value->loaded) // loaded (by cake) + active + valid
+        $pluginList->$key = $value; // on ajoute dans la liste
+    }
+    // result
+    return $pluginList;
+  }
+
+  // get plugins in folder
+  private function getPluginsInFolder() {
+    // config
+    $dir = $this->pluginsFolder;
+    $plugins = scandir($dir);
+    if($plugins === false) { // can't scan folder
+      $this->log('Unable to scan plugins folder.');
+      return array();
+    }
+    $bypassedFiles = array('.', '..', '.DS_Store', '__MACOSX'); // invalid plugins
+    $pluginsList = array('all' => array(), 'onlyValid' => array()); // result var
+    // each files
+    foreach ($plugins as $key => $value) { // On parcours tout ce qu'on à trouvé dans le dossier
+      if (in_array($value, $bypassedFiles)) continue; // invalid plugin
+      $pluginsList['all'][] = $value; // add to list
+      if ($this->isValid($value)) // if valid, add to valid plugins list
+        $pluginsList['onlyValid'][] = $value;
+    }
+    return $pluginsList;
+  }
+
+  // get db plugins
+  private function getPluginsInDB() {
+    // get from database
+    $search = $this->models->Plugin->find('all');
+    if (!empty($search)) return array(); // not plugins
+    // result var
+    $pluginsList = array();
+    // each row, formatting
+    foreach ($search as $key => $value) {
+      $pluginsList[] = $value['Plugin']['name'];
+    }
+    return $pluginsList;
+  }
 
   // Vérifier si le plugin donné (nom/chemin) est bien un dossier contenant tout les pré-requis d'un plugin
 
@@ -839,7 +779,7 @@ class EyPluginComponent extends Object {
       }
 
       // Ajout des tables
-
+      $pluginTables = array();
       foreach ($compare as $table => $changes) {
           if (isset($compare[$table]['create'])) {
               $contents[$table] = $db->createSchema($Schema, $table);
