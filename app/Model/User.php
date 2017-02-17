@@ -228,7 +228,7 @@ class User extends AppModel {
 	}
 
 	public function getUsernameByID($id) {
-  	$search_user = $this->find('first', array('conditons' => array('id' => $id)));
+  	$search_user = $this->find('first', array('conditions' => array('id' => $id)));
     return (!empty($search_user)) ? $search_user['User']['pseudo'] : '';
   }
 

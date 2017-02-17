@@ -21,7 +21,7 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700' rel='stylesheet' type='text/css'>
     <?= $this->Html->script('jquery-1.11.0.js') ?>
     <?= $this->Html->script('easy_paginate.js') ?>
-    <link rel="icon" type="image/png" href="<?= (isset($theme_config)) ? $theme_config['favicon_url'] : '' ?>" />
+    <link rel="icon" type="image/png" href="<?= (isset($theme_config) && isset($theme_config['favicon_url'])) ? $theme_config['favicon_url'] : '' ?>" />
 
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>

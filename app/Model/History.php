@@ -35,10 +35,11 @@ class History extends AppModel {
 			switch ($value['History']['action']) {
 				case 'SEND_MONEY':
 					$other = explode('|', $value['History']['other']);
-					$string .= ' pour un montant de '.$other[1].' à '.$other[0];
+					$string .= ' pour un montant de '.$other[1].' à '.$this->User->getUsernameByID($other[0]);
 					break;
 				case 'BUY_MONEY':
 					$other = explode('|', $value['History']['other']);
+          if (empty($other) || !isset($other[1])) break;
 					$string .= ' pour un montant de '.$other[1];
 					if(isset($other[3])) {
 						$string .= ' (Money : '.$other[3].')';
