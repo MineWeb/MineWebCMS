@@ -182,6 +182,9 @@ if(!file_exists(ROOT.DS.'config'.DS.'install.txt')) {
 			}
 	}
 
+  if (!file_exists(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'db.log'))
+    mkdir(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS, 0755, true);
+  file_put_contents(ROOT.DS.'app'.DS.'tmp'.DS.'logs'.DS.'db.log', '');
 	$error = array();
 	if(!empty($contents)) {
 			foreach ($contents as $table => $query) {

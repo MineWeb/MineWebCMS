@@ -7,7 +7,7 @@ if(!file_exists(ROOT.DS.'config'.DS.'install.txt')) {
 
     if($_GET['action'] == "db" && $needDisplayDatabase) {
 
-      if(!empty($_POST['host']) && !empty($_POST['database']) && !empty($_POST['login']) && !empty($_POST['password'])) {
+      if(!empty($_POST['host']) && !empty($_POST['database']) && !empty($_POST['login'])) {
 
         $sql_host = $_POST['host'];
         $sql_name = $_POST['database'];
@@ -18,7 +18,7 @@ if(!file_exists(ROOT.DS.'config'.DS.'install.txt')) {
             $pdo = new PDO("mysql:host=$sql_host;dbname=$sql_name;", $sql_user, $sql_pass, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
             $sql_error = false;
         }
-        catch(PDOException $ex) {
+        catch(PDOException $mysqlException) {
             $sql_error = true;
         }
         if(!$sql_error) {
@@ -55,7 +55,7 @@ if(!file_exists(ROOT.DS.'config'.DS.'install.txt')) {
           exit;
 
         } else {
-          echo json_encode(array('status' => false, 'msg' => 'Erreur lors de la connexion !'));
+          echo json_encode(array('status' => false, 'msg' => 'Erreur lors de la connexion ! (<em>' . $mysqlException->getMessage() . '</em>)'));
           exit;
         }
 

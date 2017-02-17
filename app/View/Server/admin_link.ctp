@@ -127,9 +127,31 @@ $('.switchBanner').click(function(e) {
 
   return false;
 });
+function initSelectInfos() {
+  $('select[name="type"]').unbind('change')
+  $('select[name="type"]').on('change', function (e) {
+    selectInfos($(this))
+  })
+}
+$('select[name="type"]').each(function () {
+  selectInfos($(this))
+})
+function selectInfos(select) {
+  var type = select.val()
 
+  var infosDiv = select.parent().find('.infos-type')
+  if (infosDiv)
+    infosDiv.remove()
 
-  var i = 0;
+  if (type == 0)
+    var infos = '<div class="alert alert-info"><?= addslashes($Lang->get('SERVER__TYPE_DEFAULT_INFOS')) ?></div>'
+  else
+    var infos = '<div class="alert alert-info"><?= addslashes($Lang->get('SERVER__TYPE_QUERY_INFOS')) ?></div>'
+
+  $('<div class="infos-type"><br>' + infos + '</div>').insertAfter(select)
+}
+
+var i = 0;
 $("#add_server").click(function() {
   i++;
   var new_server = '<div class="row">';
@@ -171,5 +193,7 @@ $("#add_server").click(function() {
   $('#add_server_content').append(new_server);
 
   initForms();
+  initSelectInfos();
 });
+initSelectInfos();
 </script>

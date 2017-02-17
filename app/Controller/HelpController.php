@@ -23,7 +23,7 @@ class HelpController extends AppController {
 
         if($get && json_decode($get)) {
 
-          echo $get;
+          $this->response->body($get);
 
         }
 
