@@ -151,7 +151,7 @@ class EyPluginComponent extends Object {
   private function getPluginsInDB() {
     // get from database
     $search = $this->models->Plugin->find('all');
-    if (!empty($search)) return array(); // not plugins
+    if (empty($search)) return array(); // not plugins
     // result var
     $pluginsList = array();
     // each row, formatting
@@ -255,7 +255,7 @@ class EyPluginComponent extends Object {
     $nameClass = ucfirst(strtolower($slug)).'AppSchema';
     if (!class_exists($nameClass))
       require_once $filenameTables;
-    if (class_exists($nameClass)) {
+    if (!class_exists($nameClass)) {
       $this->log('File : '.$slug.' is not a valid plugin! SQL Schema is not created!'); // ce n'est pas un dossier
       return $this->alreadyCheckValid[$slug] = false;
     }

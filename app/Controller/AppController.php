@@ -368,7 +368,7 @@ class AppController extends Controller {
 
         if($value['Navbar']['url']['type'] == "plugin") {
 
-          $plugin = $this->EyPlugin->findPluginByDBid($value['Navbar']['url']['id']);
+          $plugin = $this->EyPlugin->findPlugin('DBid', $value['Navbar']['url']['id']);
           if(is_object($plugin)) {
             $nav[$key]['Navbar']['url'] = Router::url('/'.strtolower($plugin->slug));
           } else {
