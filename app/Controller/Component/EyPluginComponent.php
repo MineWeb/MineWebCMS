@@ -702,22 +702,20 @@ class EyPluginComponent extends Object {
   }
 
   // Vérifie les pré-requis d'un plugin
+  private function requirements($name, $config = false) {
+    if (!$config) // Get config if not configured
+      $config = $this->getPluginConfig($name);
 
-    private function requirements($name, $config = false) {
+    if (is_object($config))
+      $requirements = (isset($config->requirements) && !empty($config->requirements)) ? $config->requirements : null;
+    else
+      $requirements = (isset($config['requirements']) && !empty($config['requirements'])) ? $config['requirements'] : null;
 
-      if(!$config) { // si on a pas la config qui est set (donnée par l'API)
-        $config = $this->getPluginConfig($name); // on récup la config
-      }
+    if (empty($requirements)) return true; // no requirements
 
-      if(is_object($config)) {
-        $requirements = (isset($config->requirements) && !empty($config->requirements)) ? $config->requirements : null;
-      } else {
-        $requirements = (isset($config['requirements']) && !empty($config['requirements'])) ? $config['requirements'] : null;
-      }
-
-      if(empty($requirements)) {
-        return true;
-      }
+    // Semantic versioning
+    //App::import('Vendor', 'Parser', array('file' => 'Naneau/SemVer/MinecraftPing.php'));
+    //App::import('Vendor', 'Compare', array('file' => 'ping-xpaw/MinecraftPingException.php'));
 
       foreach ($requirements as $type => $version) { // on parcours tout les pré-requis
 
