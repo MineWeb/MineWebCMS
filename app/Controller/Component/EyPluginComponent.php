@@ -39,7 +39,8 @@ class EyPluginComponent extends Object {
     if(!class_exists('ClassRegistry')) // cakephp lol
       App::uses('ClassRegistry', 'Utility');
     $this->models = (object)array(
-      'Plugin' => ClassRegistry::init('Plugin')
+      'Plugin' => ClassRegistry::init('Plugin'),
+      'Permission' => ClassRegistry::init('Permission')
     );
     // plugins list
     $this->pluginsInFolder = $this->getPluginsInFolder();
@@ -790,93 +791,69 @@ class EyPluginComponent extends Object {
     return true; // it's okay
   }
 
-
   // Rafraichi les permssions (ne laisse que celle de base + celles des plugins installés)
+  private function refreshPermissions() {
+    // define permissions
+    $defaultPermissions = $this->controller->Permissions->permissions;
+    $pluginsPermissions = array();
 
-    private function refreshPermissions() {
-
-      // Chargons le component
-      $PermissionsComponent = $this->controller->Permissions;
-
-      $defaultPermissions = $PermissionsComponent->permissions; // les permissions par défaut
-      $pluginsPermissions = array(); // les permissions des plugins installés
-
-      foreach ($this->loadPlugins() as $id => $data) { // On parcours tout les plugins (actualiser) pour récupérer leurs permissions
-
-        // on parcours les permissions par défaut
-        if(isset($data->permissions->available)) {
-          foreach ($data->permissions->available as $key => $permission) {
-            $pluginsPermissions[] = $permission; // on ajoute la permissions à la liste des permissions par défaut
-          }
-        }
-
+    foreach ($this->$pluginsLoaded as $id => $data) {
+      if (!isset($data->permissions->available)) continue; // no permissions on this plugin
+      foreach ($data->permissions->available as $key => $permission) {
+        $pluginsPermissions[] = $permission; // add permission to plugins permissions
       }
-
-      // étape 2 : parcourir les permissions dans la base de donnée et la supprimer si elle ne fais pas partie de celle normale
-
-      $PermissionsModel = ClassRegistry::init('Permission'); // On charge le model
-
-      $searchPermissions = $PermissionsModel->find('all'); // on récupére tout
-
-      foreach ($searchPermissions as $k => $value) { // on parcours tout
-
-        $permissions = unserialize($value['Permission']['permissions']);
-        $permissionsBeforeCheck = $permissions;
-
-        $permissionsChecked = array();
-        foreach ($permissions as $k2 => $perm) { // on parcours toutes les permissions
-          if((!in_array($perm, $defaultPermissions) && !in_array($perm, $pluginsPermissions)) || (in_array($perm, $permissionsChecked))) { // si la perm n'est pas dans celles par défaut ou celles des plugins installés OU qu'elle est en double
-            unset($permissions[$k2]); // elle n'a rien à faire ici alors on la supprime
-          }
-          $permissionsChecked[] = $perm;
-        }
-
-        if(count($permissions) != count($permissionsBeforeCheck)) { // si les permissions ont changé entre temps (certaines supprimé), on update
-
-          $PermissionsModel->read(null, $value['Permission']['id']);
-          $PermissionsModel->set(array('permissions' => serialize($permissions))); // On re-sérialize les permissions et on set
-          $PermissionsModel->save(); // On enregistre le tout
-
-        }
-
-      }
-
     }
 
+    // get permissions on database
+    $searchPermissions = $this->models->Permission->find('all');
+
+    foreach ($searchPermissions as $rank) {
+      $permissions = unserialize($rank['Permission']['permissions']);
+      $permissionsBeforeCheck = $permissions;
+
+      // check each permission for each rank
+      $permissionsChecked = array();
+      foreach ($permissions as $key => $perm) {
+        // remove double or permission of a deleted plugin
+        if((!in_array($perm, $defaultPermissions) && !in_array($perm, $pluginsPermissions)) || (in_array($perm, $permissionsChecked)))
+          unset($permissions[$key]); // remove this permission
+        $permissionsChecked[] = $perm;
+      }
+      // save (optionnal) update
+      if (count($permissions) != count($permissionsBeforeCheck)) {
+          $this->models->Permission->read(null, $rank['Permission']['id']);
+          $this->models->Permission->set(array('permissions' => serialize($permissions)));
+          $this->models->Permission->save();
+      }
+    }
+  }
 
   // Ajoute les permission du plugins avec la config spécifié
+  private function addPermissions($permissionConfig) {
+    if (!isset($permissionConfig->default) || empty($permissionConfig->default))
+      return; // no permissions
 
-    private function addPermissions($config) {
-
-      $this->Permission = ClassRegistry::init('Permission'); // On charge le model
-
-      if(isset($config->default) AND !empty($config->default)) { // On vérifie que ca existe bien & si c'est pas vide
-
-        foreach ($config->default as $key => $value) { // On parcours les permissions par défaut du plugin
-
-          $searchRank = $this->Permission->find('first', array('conditions' => array('rank' => $key))); // je cherche les perms du rank
-
-          if(!empty($searchRank)) { // si on trouve un rank avec cet ID
-
-            $rankPermissions = unserialize($searchRank['Permission']['permissions']); // On récupére ses permissions déjà configurées
-
-            if(!is_array($rankPermissions)) {
-              $rankPermissions = array();
-            }
-
-            foreach ($rankPermissions as $k2 => $v2) { // on les parcours
-              foreach ($value as $kp => $perm) {
-                $rankPermissions[] = $perm; // on ajoute les perms
-              }
-            }
-
-            $this->Permission->read(null, $searchRank['Permission']['id']);
-            $this->Permission->set(array('permissions' => serialize($rankPermissions))); // On sauvegarde les nouvelles permissions
-            $this->Permission->save();
-          } // On trouve pas de rank
+    // each rank
+    foreach ($permissionConfig->default as $rank => $permissions) {
+      // get rank permission
+      $searchRank = $this->models->Permission->find('first', array('conditions' => array('rank' => $rank)));
+      if (empty($searchRank)) continue; // no rank found
+      $rankPermissions = unserialize($searchRank['Permission']['permissions']);
+      if (!is_array($rankPermissions)) // is not an array (wtf?)
+        $rankPermissions = array();
+      // each permissions for each rank
+      foreach ($rankPermissions as $permission) {
+        foreach ($permissions as $perm) {
+          $rankPermissions[] = $perm; // add permission to this rank
         }
-      } // pas de permissions par défaut
+      }
+
+      // save
+      $this->models->Permission->read(null, $searchRank['Permission']['id']);
+      $this->models->Permission->set(array('permissions' => serialize($rankPermissions)));
+      $this->models->Permission->save();
     }
+  }
 
   // Get sur l'API
 
