@@ -855,83 +855,54 @@ class EyPluginComponent extends Object {
     }
   }
 
-  // Get sur l'API
+  // get sur l'API
+  public function getPluginLastVersion($apiID) {
+    $plugin = $this->getPluginFromAPI($apiID);
+    if (!$plugin) return false;
+    return $plugin['version'];
+  }
 
-    public function getPluginLastVersion($apiID) {
-      $pluginVersion = '0.0.0'; // Pour ne pas rien retourner au cas où
-      $url = @file_get_contents('http://mineweb.org/api/v'.$this->apiVersion.'/getAllPlugins'); // On get tout les plugins
-      if($url !== false) {
-        $JSON = json_decode($url, true);
-        if($JSON !== false) {
+  public function getFreePlugins($all = false) {
+    $plugins = array();
+    // get free plugins
+    $plugins = @json_decode(@file_get_contents('http://api.mineweb.org/api/v'.$this->apiVersion.'/plugin/all'));
+    if (!$plugins) return false;
 
-          foreach ($JSON as $key => $value) { // On parcours les plugins
-            if($value['apiID'] == $apiID) { // si le plugin est celui qu'on recherche
-              $pluginVersion = $value['version']; // on set la version
-              break; // on arrête la boucle
-            }
-          }
-
+    // purchased plugins
+    $apiQuery = $this->controller->sendToAPI(array(), '/plugin/purchased', true);
+    if ($apiQuery['code'] === 200 && $response = @json_decode($apiQuery['content'])) { // success
+      if ($response['status'] == 'success') {
+        // each plugin
+        foreach ($response['success'] as $plugin) {
+          $plugins[] = $plugin; // add to list
         }
       }
-      return $pluginVersion;
     }
 
-    public function getFreePlugins($all = false) { // si $all == false -> on récupère pas les plugins déjà installés
-      // On gère les plugins gratuits de base
-        $pluginList = array(); // Pour ne pas rien retourner au cas où
-        $url = @file_get_contents('http://mineweb.org/api/v'.$this->apiVersion.'/getFreePlugins'); // On get tout les plugins
-        if($url !== false) {
-          $JSON = json_decode($url, true);
-          $pluginList = ($JSON !== false) ? $JSON : array();
-        }
-
-      // On gère les plugins payés par l'utilisateur
-        $infos = json_decode(file_get_contents(ROOT.DS.'config'.DS.'secure'), true); // On récupère les infos personnelles
-
-        $url = @file_get_contents('http://mineweb.org/api/v'.$this->apiVersion.'/getPurchasedPlugins/'.$infos['id']); // On get tout les plugins achetés
-        if($url !== false) { // si on a récup quelque chose
-          $purchasedPluginsList = json_decode($url, true);
-          if($purchasedPluginsList !== false && isset($purchasedPluginsList['status'])) { // si on peux décoder (éviter l'erreur 500) & que y'a un status
-            if($purchasedPluginsList['status'] == "success") { // si y'a pas eu d'erreur
-
-              foreach ($purchasedPluginsList['success'] as $key => $value) { // On parcours tout
-                if(!in_array($value['name'], $pluginList)) { // si on a pas déjà mis le plugins dans la liste
-                  $pluginsList[] = $value;
-                }
-              }
-
-            }
-          }
-        }
-
-      // on supprime les plugins qu'on a déjà
-        if(!empty($pluginList) && !$all) {
-          $dbPlugins = $this->getPluginsInDB();
-          foreach ($pluginList as $key => $value) {
-            if(in_array($value['slug'], $dbPlugins)) {
-              unset($pluginList[$key]);
-            }
-          }
-        }
-
-      return $pluginList;
-    }
-
-    public function getPluginFromAPI($apiID) {
-      $pluginInfo = array(); // Pour ne pas rien retourner au cas où
-      $url = @file_get_contents('http://mineweb.org/api/v'.$this->apiVersion.'/getAllPlugins'); // On get tout les plugins
-      if($url !== false) {
-        $JSON = json_decode($url, true);
-        if($JSON !== false) {
-          foreach ($JSON as $key => $value) {
-            if($value['apiID'] == $apiID) {
-              $pluginInfo = $value;
-              break;
-            }
-          }
-        }
+    // remove installed plugins
+    if (!$all) {
+      $installedPlugins = array();
+      foreach ($this->pluginsLoaded as $id => $config) {
+        $installedPlugins[] = $config['slug'];
       }
-      return $pluginInfo;
+      foreach ($plugins as $key => $plugin) {
+        if (in_array($plugin['slug'], $installedPlugins)) // if already installed
+          unset($plugins[$key]); // remove
+      }
     }
+
+    return $pluginList;
+  }
+
+  public function getPluginFromAPI($apiID) {
+    $plugins = @json_decode(@file_get_contents('http://api.mineweb.org/api/v'.$this->apiVersion.'/plugin/all'));
+    if (!$plugins) return false;
+    // each plugin
+    foreach ($plugins as $plugin) {
+      if ($plugin['apiID'] == $apiID)
+        return $plugin;
+    }
+    return false;
+  }
 
 }
