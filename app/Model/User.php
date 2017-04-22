@@ -175,7 +175,7 @@ class User extends AppModel {
  public function isAdmin() {
     $user = $this->getDataBySession();
     if (empty($user)) return false;
-    return ($user['User']['rank'] === 3 || $user['User']['rank'] === 4);
+    return ($user['User']['rank'] == 3 || $user['User']['rank'] == 4);
 	}
 
 	public function __makeCondition($search) {

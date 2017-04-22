@@ -20,6 +20,7 @@
 
 		Router::connect('/api/mineguard', array('controller' => 'API', 'action' => 'mineguard'));
 		Router::connect('/api/mineguard/*', array('controller' => 'API', 'action' => 'mineguard'));
+    Router::connect('/api/:action', array('controller' => 'API'));
 
 		// Admin
 		Configure::write('Routing.prefixes', array('admin'));
