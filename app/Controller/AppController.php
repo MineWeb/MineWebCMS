@@ -51,13 +51,6 @@ function rsa_decrypt($data) {
  * @package		app.Controller
  * @link		http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
-App::import('Vendor', 'load', array('file' => 'phar-io/version-master/load.php'));
-use PharIo\Version\Version;
-use PharIo\Version\VersionConstraintParser;
-$parser = new VersionConstraintParser();
-$caret_constraint = $parser->parse( '^7.0' );
-debug($caret_constraint->complies( new Version( '7.0.17' ) )); // true
-die();
 class AppController extends Controller {
 
 	var $components = array('Util', 'Module', 'Session', 'Cookie', 'Security', 'EyPlugin', 'Lang', 'Theme', 'History', 'Statistics', 'Permissions', 'Update', 'Server');

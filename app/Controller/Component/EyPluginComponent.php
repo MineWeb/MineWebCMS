@@ -855,22 +855,15 @@ class EyPluginComponent extends Object {
     }
   }
 
-  // get sur l'API
-  public function getPluginLastVersion($apiID) {
-    $plugin = $this->getPluginFromAPI($apiID);
-    if (!$plugin) return false;
-    return $plugin['version'];
-  }
-
   public function getFreePlugins($all = false) {
     $plugins = array();
     // get free plugins
-    $plugins = @json_decode(@file_get_contents('http://api.mineweb.org/api/v'.$this->apiVersion.'/plugin/all'));
+    $plugins = @json_decode(@file_get_contents('http://api.mineweb.org/api/v'.$this->apiVersion.'/plugin/free'), true);
     if (!$plugins) return false;
 
     // purchased plugins
     $apiQuery = $this->controller->sendToAPI(array(), '/plugin/purchased', true);
-    if ($apiQuery['code'] === 200 && $response = @json_decode($apiQuery['content'])) { // success
+    if ($apiQuery['code'] === 200 && $response = @json_decode($apiQuery['content'], true)) { // success
       if ($response['status'] == 'success') {
         // each plugin
         foreach ($response['success'] as $plugin) {
@@ -883,26 +876,53 @@ class EyPluginComponent extends Object {
     if (!$all) {
       $installedPlugins = array();
       foreach ($this->pluginsLoaded as $id => $config) {
-        $installedPlugins[] = $config['slug'];
+        $installedPlugins[] = $config->slug;
       }
       foreach ($plugins as $key => $plugin) {
+        $plugins[$key]['apiID'] = $plugin['id'];
         if (in_array($plugin['slug'], $installedPlugins)) // if already installed
           unset($plugins[$key]); // remove
       }
     }
 
-    return $pluginList;
+    return $plugins;
   }
 
-  public function getPluginFromAPI($apiID) {
+  public function getPluginsFromAPI(array $apiID) {
     $plugins = @json_decode(@file_get_contents('http://api.mineweb.org/api/v'.$this->apiVersion.'/plugin/all'));
     if (!$plugins) return false;
     // each plugin
+    $pluginsToFind = array();
     foreach ($plugins as $plugin) {
-      if ($plugin['apiID'] == $apiID)
-        return $plugin;
+      $plugin->apiID = $plugin->id;
+      foreach ($apiID as $id) {
+        if ($plugin->apiID == $id)
+          $pluginsToFind[$plugin->apiID] = $plugin;
+      }
     }
-    return false;
+    return $pluginsToFind;
+  }
+
+  public function getPluginsLastVersion(array $apiID) {
+    $plugins = $this->getPluginsFromAPI($apiID);
+    if ($plugins === false) return false;
+    $versions = array();
+    foreach ($plugins as $plugin) {
+      $versions[$plugin->apiID] = $plugin->version;
+    }
+    return $versions;
+  }
+
+  public function getPluginFromAPI($apiID) {
+    $plugins = $this->getPluginsFromAPI(array($apiID));
+    if (!$plugins || !isset($plugins[$apiID])) return false;
+    return $plugins[$apiID];
+  }
+
+  public function getPluginLastVersion($apiID) {
+    $plugin = $this->getPluginFromAPI($apiID);
+    if (!$plugin) return false;
+    return $plugin->version;
   }
 
 }
