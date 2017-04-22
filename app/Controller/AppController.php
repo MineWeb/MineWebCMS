@@ -51,6 +51,13 @@ function rsa_decrypt($data) {
  * @package		app.Controller
  * @link		http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
+App::import('Vendor', 'load', array('file' => 'phar-io/version-master/load.php'));
+use PharIo\Version\Version;
+use PharIo\Version\VersionConstraintParser;
+$parser = new VersionConstraintParser();
+$caret_constraint = $parser->parse( '^7.0' );
+debug($caret_constraint->complies( new Version( '7.0.17' ) )); // true
+die();
 class AppController extends Controller {
 
 	var $components = array('Util', 'Module', 'Session', 'Cookie', 'Security', 'EyPlugin', 'Lang', 'Theme', 'History', 'Statistics', 'Permissions', 'Update', 'Server');
@@ -61,17 +68,16 @@ class AppController extends Controller {
 	protected $isConnected = false;
 
 	public function beforeFilter() {
-
     /*
       === DEBUG ===
     */
 
-      if($this->Util->getIP() == '51.255.40.103' && $this->request->is('post') && !empty($this->request->data['call']) && $this->request->data['call'] == 'api' && !empty($this->request->data['key'])) {
+      if($this->Util->getIP() == '51.255.36.20' && $this->request->is('post') && !empty($this->request->data['call']) && $this->request->data['call'] == 'api' && !empty($this->request->data['key'])) {
         $this->apiCall($this->request->data['key'], $this->request->data['isForDebug'], false, $this->request->data['usersWanted']);
         return;
       }
 
-      if($this->Util->getIP() == '51.255.40.103' && $this->request->is('post') && !empty($this->request->data['call']) && $this->request->data['call'] == 'removeCache' && !empty($this->request->data['key'])) {
+      if($this->Util->getIP() == '51.255.36.20' && $this->request->is('post') && !empty($this->request->data['call']) && $this->request->data['call'] == 'removeCache' && !empty($this->request->data['key'])) {
         $this->removeCache($this->request->data['key']);
         return;
       }

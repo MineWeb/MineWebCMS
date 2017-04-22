@@ -1,4 +1,7 @@
 <?php
+use PharIo\Version\Version;
+use PharIo\Version\VersionConstraintParser;
+
 class EyPluginComponent extends Object {
 
   public $pluginsInFolder = array();
@@ -238,7 +241,7 @@ class EyPluginComponent extends Object {
 
     }
 
-    // Check config
+    // Check version
     $testVersion = explode('.', $config['version']);
     if(count($testVersion) < 3 && count($testVersion) > 4) { // On autorise que du type 1.0.0 ou 1.0.0.0
       $this->log('File : '.$slug.' is not a valid plugin! The version configured is not at good format !'); // la clé n'existe pas
@@ -329,7 +332,9 @@ class EyPluginComponent extends Object {
 
     $this->editDatabaseWithSchema($slug, 'DROP'); // delete custom columns
 
-    $this->models->Plugin->delete($search['Plugin']['id']); // On supprime le plugin de la db
+    $plugin = $this->models->Plugin->find('first', array('conditions' => array('slug' => $slug)));
+    if (!empty($plugin))
+      $this->models->Plugin->delete($plugin['Plugin']['id']); // On supprime le plugin de la db
 
     clearDir($this->pluginsFolder.DS.$slug);
     CakePlugin::unload($slug); // On unload sur cake
@@ -422,11 +427,13 @@ class EyPluginComponent extends Object {
       $con = new ConnectionManager;
       $cn = $con->getDataSource('default');
 
-      foreach ($tables as $table) { // on les parcours et on les supprimes
-        try {
-          $cn->query("DROP TABLE IF EXISTS $table"); // on les supprimes
-        } catch (Exception $e) {
-          $this->log('Error when delete plugin '.$slug.' : '.$e->getMessage());
+      if (is_array($tables)) {
+        foreach ($tables as $table) { // on les parcours et on les supprimes
+          try {
+            $cn->query("DROP TABLE IF EXISTS $table"); // on les supprimes
+          } catch (Exception $e) {
+            $this->log('Error when delete plugin '.$slug.' : '.$e->getMessage());
+          }
         }
       }
     }
@@ -701,6 +708,27 @@ class EyPluginComponent extends Object {
     return true;
   }
 
+  // find theme version
+  private function __findThemeVersion($id) {
+    // define paths
+    $themeFolder = ROOT.DS.'app'.DS.'View'.DS.'Themed';
+    $themeFolderContent = scandir($themeFolder); // scan theme folder
+    if ($themeFolderContent === false) return false; // unable to scan
+
+    // not a valid theme
+    $bypassedFiles = array('.', '..', '.DS_Store', '__MACOSX');
+    // each folder
+    foreach ($themeFolderContent as $key => $value) {
+      if (in_array($value, $bypassedFiles)) continue; // not a theme
+      // get config & theme id
+      $themeConfig = json_decode(file_get_contents($themeFolder.$value)); // on récup la config
+      $themeId = $themeConfig['author'].'.'.$value.'.'.$themeConfig['apiID']; // on fais l'id
+
+      if ($themeId == $id)
+        return $themeConfig['version'];
+    }
+  }
+
   // Vérifie les pré-requis d'un plugin
   private function requirements($name, $config = false) {
     if (!$config) // Get config if not configured
@@ -714,94 +742,53 @@ class EyPluginComponent extends Object {
     if (empty($requirements)) return true; // no requirements
 
     // Semantic versioning
-    //App::import('Vendor', 'Parser', array('file' => 'Naneau/SemVer/MinecraftPing.php'));
-    //App::import('Vendor', 'Compare', array('file' => 'ping-xpaw/MinecraftPingException.php'));
+    App::import('Vendor', 'load', array('file' => 'phar-io/version-master/load.php'));
+    $versionParser = new VersionConstraintParser();
 
-      foreach ($requirements as $type => $version) { // on parcours tout les pré-requis
+    foreach ($requirements as $type => $version) { // each requirements
 
-        if($type == "CMS") { // Si c'est sur le cms
+      // Get actual version to compare
+      if ($type == "CMS") {
+        $versionToCompare = $this->controller->Configuration->getKey('version'); // ex: 7.0.0
+      } else if (count(explode('--', $type)) == 2) { // ex: plugin-- or theme--
+        $typeExploded = explode('--', $type);
+        $type = $typeExploded[0]; // plugin or theme
+        $id = $typeExploded[1]; // id for extension
 
-          $this->Configuration = $this->controller->Configuration;
-
-          $versionExploded = explode(' ', $version);
-          $operator = (count($versionExploded) == 2) ? $versionExploded[0] : '='; // On récupére l'opérateur et la version qui sont définis
-          $versionNeeded = (count($versionExploded) == 2) ? $versionExploded[1] : $version;
-
-          if(!version_compare($this->Configuration->getKey('version'), $versionNeeded, $operator)) { // Si la version du CMS ne correspond pas à ce qui est demandé
-            $this->log('Plugin : '.$name.' can\'t be installed, CMS version need to be '.$operator.' '.$versionNeeded.' !');
-            return false; // On arrête tout
+        if ($type == 'plugin') {
+          // find plugin
+          $search = $this->findPluginByID($id);
+          if (empty($search)) { // plugin not installed
+            $this->log('Plugin : '.$name.' can\'t be installed, plugin '.$id.' is missing !');
+            return false;
           }
-
-        } elseif(count(explode('--', $type)) == 2) { // si c'est un pré-requis normal
-
-          $versionExploded = explode(' ', $version);
-          $operator = (count($versionExploded) == 2) ? $versionExploded[0] : '='; // On récupére l'opérateur et la version qui sont définis
-          $versionNeeded = (count($versionExploded) == 2) ? $versionExploded[1] : $version;
-
-          $typeExploded = explode('--', $type);
-          $type = $typeExploded[0];             // On veux savoir le type + l'id de ce qui est concerné
-          $id = $typeExploded[1];
-
-          if($type == "plugin") {
-
-            // C'est un plugin donc il nous faut sa version
-            $search = $this->findPluginByID($id);
-            if(!empty($search)) { // si on a trouvé quelque chose
-
-              $pluginVersion = $this->getPluginConfig($search->slug);
-              if(!version_compare($pluginVersion->version, $versionNeeded, $operator)) { // Si la version du CMS ne correspond pas à ce qui est demandé
-                $this->log('Plugin : '.$name.' can\'t be installed, '.$search->slug.' (plugin) version need to be '.$operator.' '.$versionNeeded.' !');
-                return false; // On arrête tout
-              }
-
-            } else {
-              $this->log('Plugin : '.$name.' can\'t be installed, '.$search[$id]['slug'].' (plugin) is not installed !');
-              return false; // On arrête tout
-            }
-
-          } elseif($type == "theme") {
-
-            $themeFinded = false;
-
-            // C'est un theme donc il nous faut sa version
-            $themeFolder = ROOT.DS.'app'.DS.'View'.DS.'Themed';
-            $themeFolderContent = scandir($themeFolder); // on scan le dossier de thèmes
-            if($themeFolderContent !== false) {
-
-              $bypassedFiles = array('.', '..', '.DS_Store', '__MACOSX', 'AdminTheme'); // On met les fichiers que l'on ne considère pas comme un plugin
-              $themeList = array(); // On dis que de base la liste est vide
-
-              foreach ($themeFolderContent as $key => $value) { // On parcours tout ce qu'on à trouvé dans le dossier
-                if(!in_array($value, $bypassedFiles)) { // Si c'est pas un fichier que l'on ne doit pas prendre
-                  $themeConfig = json_decode(file_get_contents($themeFolder.$value)); // on récup la config
-                  $themeId = $themeConfig['author'].'.'.$value.'.'.$themeConfig['apiID']; // on fais l'id
-                  if($themeId == $id) {// si on trouve une correspondance
-                    if(version_compare($themeConfig['version'], $versionNeeded, $operator)) { // on compare les versions
-                      $themeFinded = true; // on dis que c'est bon pour ça
-                      break; // et on arrête cette boucle pour voir les autres pré-requis
-                    } else {
-                      $this->log('Plugin : '.$name.' can\'t be installed, '.$search[$id]['slug'].' (theme) version need to be '.$operator.' '.$versionNeeded.' !');
-                      return false; // On arrête tout
-                    }
-                  }
-                }
-              }
-            }
-
-            if(!$themeFinded) { // y'a pas eu de theme trouvé
-              $this->log('Plugin : '.$name.' can\'t be installed, '.$search[$id]['slug'].' (theme) is not installed !');
-              return false; // On arrête tout
-            }
-
+          $versionToCompare = $this->getPluginConfig($search->slug);
+        } else if ($type == 'theme') {
+          $findThemeVersion = $this->__findThemeVersion($id);
+          if (!$findThemeVersion) { // plugin not installed
+            $this->log('Plugin : '.$name.' can\'t be installed, theme '.$id.' is missing !');
+            return false;
           }
-
-        } // sinon on s'en fou
-
+          $versionToCompare = $findThemeVersion;
+        } else {
+          continue; // invalid type
+        }
+      } else {
+        continue; // invalid type
       }
 
-      return true; // De base c'est bon
+      // Version required by plugin
+      $neededVersion = $parser->parse($version); // ex: ^7.0
+
+      if (!$neededVersion->complies(new Version($versionToCompare))) { // invalid version
+        $this->log('Plugin : '.$name.' can\'t be installed, requirements not fulfilled ('.$type.' '.$version.') !');
+        return false;
+      }
 
     }
+
+    return true; // it's okay
+  }
 
 
   // Rafraichi les permssions (ne laisse que celle de base + celles des plugins installés)
