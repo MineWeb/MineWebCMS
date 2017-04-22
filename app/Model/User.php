@@ -19,6 +19,9 @@ class User extends AppModel {
   	)
 	);
 
+  private $isConnected = null;
+  private $isAdmin = null;
+
 	public function validRegister($data, $UtilComponent) {
 		if(preg_match('`^([a-zA-Z0-9_]{2,16})$`', $data['pseudo'])) {
 			$data['password'] = $UtilComponent->password($data['password'], $data['pseudo']);
@@ -157,35 +160,22 @@ class User extends AppModel {
 		}
 	}
 
-	private function getDataBySession($session) {
-    	if(empty($this->userData)) {
-      		$this->userData = $this->find('first', array('conditions' => array('id' => $session)));
-    	}
-    	return $this->userData;
-  	}
+	private function getDataBySession() {
+    if (empty($this->userData)) {
+      $this->userData = $this->find('first', array('conditions' => array('id' => CakeSession::check('user'))));
+    }
+    return $this->userData;
+  }
 
-	public function isConnected() {
-		if(CakeSession::check('user') == false) {
-      		return false;
-  	  	} else {
-        	// Je cherche si il la session est pas vide et si elle est dans la bdd
-        	$user = $this->find('all', array(
-            	'conditions' => array(
-                	'id' => CakeSession::read('user'),
-            	)
-        	));
-       	 	return (isset($user['0']['User']['id']));
-    	}
-	}
+  public function isConnected() {
+    $user = $this->getDataBySession();
+    return !empty($user);
+ }
 
-	public function isAdmin() {
-		if(CakeSession::check('user') == false) {
-          return false;
-      	} else {
-        	// Je cherche si il la session est pas vide et si elle est dans la bdd
-        	$user = $this->getDataBySession(CakeSession::read('user'));
-        	return (isset($user['User']['id']) AND $user['User']['rank'] == 3 OR $user['User']['rank'] == 4);
-      }
+ public function isAdmin() {
+    $user = $this->getDataBySession();
+    if (empty($user)) return false;
+    return ($user['User']['rank'] === 3 || $user['User']['rank'] === 4);
 	}
 
 	public function __makeCondition($search) {
