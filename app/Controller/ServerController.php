@@ -179,7 +179,7 @@ class ServerController extends AppController {
         return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__TIMEOUT_UNDEFINED'))));
 
       if(!$this->Server->check('connection', array('host' => $this->request->data['host'], 'port' => $this->request->data['port'], 'timeout' => $timeout)))
-        return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED'))));
+        return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_ERROR_' . $this->Server->linkErrorCode))));
       // get secretKey
       $secretKey = $this->Server->getSecretKey();
     }

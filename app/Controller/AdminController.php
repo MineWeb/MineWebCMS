@@ -72,7 +72,7 @@ class AdminController extends AppController {
 			if($this->request->is('post') && $this->Permissions->can('SEND_SERVER_COMMAND_FROM_DASHBOARD')) {
 				if(!empty($this->request->data['cmd']) && !empty($this->request->data['server_id'])) {
 					$this->ServerComponent = $this->Components->load('Server');
-					$call = $this->ServerComponent->call(array('performCommand' => $this->request->data['cmd']), true, $this->request->data['server_id']);
+					$call = $this->ServerComponent->send_command($this->request->data['cmd'], $this->request->data['server_id']);
 
 					$this->Session->setFlash($this->Lang->get('SERVER__SEND_COMMAND_SUCCESS'), 'default.success');
 				}
