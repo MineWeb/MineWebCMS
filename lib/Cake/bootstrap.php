@@ -153,7 +153,7 @@ App::uses('Multibyte', 'I18n');
  */
 if (!defined('FULL_BASE_URL')) {
 	$s = null;
-	if (env('SERVER_PORT') == 443) {
+	if (env('SERVER_PORT') == 443 || $_SERVER['HTTPS'] || (isset($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] == 'https')) {
 		$s = 's';
 	}
 

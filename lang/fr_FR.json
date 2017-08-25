@@ -161,6 +161,7 @@
         "LICENSE_ERROR__INVALID_URL": "Site d'installation non valide",
         "LICENSE_ERROR__LICENSE_DISABLED": "Licence d\u00e9sactiv\u00e9e",
         "LICENSE_ERROR__MINEWEB_DOWN": "L'API de MineWeb.org est temporairement indisponible, veuillez nous en excusez.",
+        "LICENSE_ERROR__DEV_USERS_LIMIT_REACHED": "Vous avez atteint le nombre d'utilisateurs maximum pour la licence de développement. Veuillez en supprimer",
 
         "PLUGIN__INSTALL": "Installer",
         "PLUGIN__INSTALL_LOADING": "Installation",

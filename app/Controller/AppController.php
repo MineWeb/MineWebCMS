@@ -84,7 +84,16 @@ class AppController extends Controller
             }
 
             if ($last_check < time() || $last_check_domain != parse_url(Router::url('/', true), PHP_URL_HOST)) {
-                $apiCall = $this->sendToAPI(array('version' => $this->Configuration->getKey('version')), 'authentication', true);
+                $apiCall = $this->sendToAPI(array(
+                    'data' => array(
+                        'version' => $this->Configuration->getKey('version'),
+                        'users_count' => $this->User->find('count'),
+                        'plugins' => array_map(function ($plugin) {
+                            return $plugin->id;
+                        }, $this->EyPlugin->loadedPlugins),
+                        'theme' => $this->Configuration->getKey('theme')
+                    )
+                ), 'authentication', true);
 
                 if ($apiCall['error'] === 6 || $apiCall['code'] !== 200)
                     throw new LicenseException('MINEWEB_DOWN');
