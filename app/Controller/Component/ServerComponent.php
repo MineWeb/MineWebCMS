@@ -6,16 +6,6 @@ class ServerComponent extends Object
     private $timeout = NULL;
     private $config = NULL;
     private $online = NULL;
-    private $methods = array( // old methods => plugin methods
-        'getMOTD' => 'GET_MOTD',
-        'getPlayerCount' => 'GET_PLAYER_COUNT',
-        'getVersion' => 'GET_VERSION',
-        'getPlayerMax' => 'GET_MAX_PLAYERS',
-        'isConnected' => 'IS_CONNECTED',
-        'performCommand' => 'RUN_COMMAND',
-        'performTimedCommand' => 'RUN_SCHEDULED_COMMAND',
-        'getServerTimestamp' => 'GET_SERVER_TIMESTAMP'
-    );
     public $lastErrorMessage = null;
     public $linkErrorCode = null;
 
@@ -35,31 +25,6 @@ class ServerComponent extends Object
     public function shutdown(&$controller) {}
 
     public function beforeRedirect() {}
-
-    private function parseMethods($methods = array())
-    {
-        $pluginsMethods = array();
-        foreach ($methods as $method => $value) {
-            if (isset($this->methods[$method]))
-                $pluginsMethods[$this->methods[$method]] = $value;
-            else
-                $pluginsMethods[$method] = $value;
-        }
-        return $pluginsMethods;
-    }
-
-    private function parseResult($methods = array())
-    {
-        $pluginsMethods = array_flip($this->methods);
-        $result = array();
-        foreach ($methods as $method => $value) {
-            if (isset($pluginsMethods[$method]))
-                $result[$pluginsMethods[$method]] = $value;
-            else
-                $result[$method] = $value;
-        }
-        return $result;
-    }
 
     public function call($methods = false, $server_id = false, $debug = false)
     {
@@ -84,7 +49,6 @@ class ServerComponent extends Object
         }
 
         // plugin
-        $methods = $this->parseMethods($methods); // new methods
         $url = $this->getUrl($server_id);
         $data = $this->encryptWithKey(json_encode($methods));
 
@@ -102,7 +66,7 @@ class ServerComponent extends Object
         if ($return && $code === 200) {
             $return = @json_decode($return, true);
             $return = $this->decryptWithKey($return['signed'], $return['iv']);
-            return $this->parseResult(@json_decode($return, true)); // json decode & set old method name
+            return @json_decode($return, true); // json decode & set old method name
         } else if ($code === 403 || $code === 500) {
             $this->lastErrorMessage = 'Request not allowed.';
             return false;
@@ -223,7 +187,7 @@ class ServerComponent extends Object
         }
         $Query->Close();
 
-        return (isset($Info['players'])) ? array('getMOTD' => $Info['description'], 'getVersion' => $Info['version']['name'], 'getPlayerCount' => $Info['players']['online'], 'getPlayerMax' => $Info['players']['max']) : false;
+        return (isset($Info['players'])) ? array('getMOTD' => $Info['description'], 'getVersion' => $Info['version']['name'], 'GET_PLAYER_COUNT' => $Info['players']['online'], 'GET_MAX_PLAYERS' => $Info['players']['max']) : false;
     }
 
     private function getUrl($server_id)
@@ -358,14 +322,14 @@ class ServerComponent extends Object
 
         // request
         $data = array(
-            'getPlayerCount' => 0,
-            'getPlayerMax' => 0
+            'GET_PLAYER_COUNT' => 0,
+            'GET_MAX_PLAYERS' => 0
         );
         foreach ($serverId as $id) {
-            $req = $this->call(array('getPlayerCount' => array(), 'getPlayerMax' => array()), $id);
+            $req = $this->call(array('GET_PLAYER_COUNT' => array(), 'GET_MAX_PLAYERS' => array()), $id);
             if (!$req) continue;
-            $data['getPlayerCount'] += intval($req['getPlayerCount']);
-            $data['getPlayerMax'] += intval($req['getPlayerMax']);
+            $data['GET_PLAYER_COUNT'] += intval($req['GET_PLAYER_COUNT']);
+            $data['GET_MAX_PLAYERS'] += intval($req['GET_MAX_PLAYERS']);
         }
 
         // cache
@@ -392,4 +356,31 @@ class ServerComponent extends Object
         return $this->call(array('RUN_COMMAND' => $commands), $server_id);
     }
 
+    public function scheduleCommands($commands, $time, $servers = array())
+    {
+        if (empty($servers))
+            $servers[] = $this->getFirstServerID();
+        foreach ($servers as $server) {
+            // Get timestamp
+            $serverTimestamp = $this->call('GET_SERVER_TIMESTAMP', $server);
+            if (!$serverTimestamp)
+                return false;
+            $serverTimestamp = $serverTimestamp['GET_SERVER_TIMESTAMP'];
+
+            // Calcul
+            $time = $time * 60000 + $serverTimestamp;
+
+            // Commands
+            $this->User = ClassRegistry::init('User');
+            if (!is_array($commands)) {
+                $commands = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $commands);
+                $commands = explode('[{+}]', $commands);
+            }
+
+            // Execute
+            foreach ($commands as $command) {
+                $this->call(array('RUN_SCHEDULED_COMMAND' => array($command, $this->User->getKey('pseudo'), $time)), $server);
+            }
+        }
+    }
 }

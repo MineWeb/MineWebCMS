@@ -131,13 +131,13 @@ class AppController extends Controller
         $this->__initUser();
 
         // Navbar
-        if ($this->params['prefix'] == "admin")
+        if ($this->params['prefix'] == "admin" && !$this->request->is('ajax'))
             $this->__initAdminNavbar();
-        else
+        else if (!$this->request->is('ajax'))
             $this->__initNavbar();
 
         // Server
-        if ($this->params['prefix'] !== "admin")
+        if ($this->params['prefix'] !== "admin" && !$this->request->is('ajax'))
             $this->__initServerInfos();
 
         // Plugins events
@@ -338,14 +338,14 @@ class AppController extends Controller
             $server_infos = $this->Server->banner_infos(unserialize($configuration));
         else
             return $this->set(['banner_server' => false, 'server_infos' => false]);
-        if (!isset($server_infos['getPlayerMax']) || !isset($server_infos['getPlayerCount']) || $server_infos['getPlayerMax'] === 0)
+        if (!isset($server_infos['GET_MAX_PLAYERS']) || !isset($server_infos['GET_PLAYER_COUNT']) || $server_infos['GET_MAX_PLAYERS'] === 0)
             return $this->set(['banner_server' => false, 'server_infos' => $server_infos]);
 
         $this->set(['banner_server' => $this->Lang->get('SERVER__STATUS_MESSAGE', array(
             '{MOTD}' => @$server_infos['getMOTD'],
             '{VERSION}' => @$server_infos['getVersion'],
-            '{ONLINE}' => @$server_infos['getPlayerCount'],
-            '{ONLINE_LIMIT}' => @$server_infos['getPlayerMax']
+            '{ONLINE}' => @$server_infos['GET_PLAYER_COUNT'],
+            '{ONLINE_LIMIT}' => @$server_infos['GET_MAX_PLAYERS']
         )), 'server_infos' => $server_infos]);
     }
 
@@ -408,8 +408,8 @@ class AppController extends Controller
                     $infos['servers'][$value['Server']['id']]['isOnline'] = $this->ServerComponent->online($value['Server']['id']);
                     $infos['servers'][$value['Server']['id']]['isOnlineDebug'] = $this->ServerComponent->online($value['Server']['id'], true);
 
-                    $infos['servers'][$value['Server']['id']]['callTests']['getPlayerCount'] = $this->ServerComponent->call('getPlayerCount', false, $value['Server']['id'], true);
-                    $infos['servers'][$value['Server']['id']]['callTests']['getPlayerMax'] = $this->ServerComponent->call('getPlayerMax', false, $value['Server']['id'], true);
+                    $infos['servers'][$value['Server']['id']]['callTests']['GET_PLAYER_COUNT'] = $this->ServerComponent->call('GET_PLAYER_COUNT', false, $value['Server']['id'], true);
+                    $infos['servers'][$value['Server']['id']]['callTests']['GET_MAX_PLAYERS'] = $this->ServerComponent->call('GET_MAX_PLAYERS', false, $value['Server']['id'], true);
                 }
             }
 

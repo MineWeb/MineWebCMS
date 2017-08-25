@@ -50,6 +50,8 @@ class EyPluginComponent extends Object
             'Plugin' => ClassRegistry::init('Plugin'),
             'Permission' => ClassRegistry::init('Permission')
         );
+        // versioning
+        App::import('Vendor', 'load', array('file' => 'phar-io/version-master/load.php'));
         // plugins list
         $this->pluginsInFolder = $this->getPluginsInFolder();
         $this->pluginsInDB = $this->getPluginsInDB();
@@ -281,8 +283,9 @@ class EyPluginComponent extends Object
         }
 
         // Check version
-        $testVersion = explode('.', $config['version']);
-        if (count($testVersion) < 3 && count($testVersion) > 4) { // On autorise que du type 1.0.0 ou 1.0.0.0
+        try {
+            new Version($config['version']);
+        } catch (Exception $e) {
             $this->log('File : ' . $slug . ' is not a valid plugin! The version configured is not at good format !'); // la clé n'existe pas
             return $this->alreadyCheckValid[$slug] = false;
         }
@@ -544,7 +547,7 @@ class EyPluginComponent extends Object
         $file = fopen($filename, 'w+');
         if (!fwrite($file, $zip)) {
             $this->log('Error when downloading plugin, save files failed.');
-            return false;
+            return 'ERROR__PLUGIN_PERMISSIONS';
         }
         fclose($file);
 
@@ -553,7 +556,7 @@ class EyPluginComponent extends Object
         $res = $zip->open($filename);
         if ($res !== TRUE) {
             $this->log('Error when downloading plugin, unable to open zip.');
-            return false;
+            return 'ERROR__PLUGIN_PERMISSIONS';
         }
         $zip->extractTo($this->pluginsFolder . DS);
         $zip->close();
@@ -621,14 +624,15 @@ class EyPluginComponent extends Object
     {
         // get config from api
         $config = $this->getPluginFromAPI($apiID);
-        $slug = $config['slug'];
+        $slug = $config->slug;
         // check requirements
         if (!$config || empty($config))
             return 'ERROR__PLUGIN_REQUIREMENTS';
 
         // download plugin
-        if (!$this->download($apiID, $slug))
-            return 'ERROR__PLUGIN_PERMISSIONS';
+        $dl = $this->download($apiID, $slug);
+        if ($dl !== true)
+            return $dl;
 
         // Unload plugin
         CakePlugin::unload($slug);
@@ -793,7 +797,6 @@ class EyPluginComponent extends Object
         if (empty($requirements)) return true; // no requirements
 
         // Semantic versioning
-        App::import('Vendor', 'load', array('file' => 'phar-io/version-master/load.php'));
         $versionParser = new VersionConstraintParser();
 
         foreach ($requirements as $type => $version) { // each requirements
@@ -808,7 +811,7 @@ class EyPluginComponent extends Object
 
                 if ($type == 'plugin') {
                     // find plugin
-                    $search = $this->findPluginByID($id);
+                    $search = $this->findPlugin('id', $id);
                     if (empty($search)) { // plugin not installed
                         $this->log('Plugin : ' . $name . ' can\'t be installed, plugin ' . $id . ' is missing !');
                         return false;
@@ -829,7 +832,12 @@ class EyPluginComponent extends Object
             }
 
             // Version required by plugin
-            $neededVersion = $parser->parse($version); // ex: ^7.0
+            try {
+                $neededVersion = $versionParser->parse($version); // ex: ^7.0
+            } catch (Exception $e) {
+                $this->log('Plugin: Version exception: ' . $e->getMessage());
+                return false;
+            }
 
             if (!$neededVersion->complies(new Version($versionToCompare))) { // invalid version
                 $this->log('Plugin : ' . $name . ' can\'t be installed, requirements not fulfilled (' . $type . ' ' . $version . ') !');
