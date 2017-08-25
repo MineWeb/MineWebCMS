@@ -816,7 +816,7 @@ class EyPluginComponent extends Object
                         $this->log('Plugin : ' . $name . ' can\'t be installed, plugin ' . $id . ' is missing !');
                         return false;
                     }
-                    $versionToCompare = $this->getPluginConfig($search->slug);
+                    $versionToCompare = $this->getPluginConfig($search->slug)->version;
                 } else if ($type == 'theme') {
                     $findThemeVersion = $this->__findThemeVersion($id);
                     if (!$findThemeVersion) { // plugin not installed
@@ -919,7 +919,7 @@ class EyPluginComponent extends Object
     {
         $plugins = array();
         // get free plugins
-        $plugins = @json_decode(@file_get_contents('http://api.mineweb.org/api/v' . $this->apiVersion . '/plugin/free'), true);
+        $plugins = @json_decode(@file_get_contents('https://api.mineweb.org/api/v' . $this->apiVersion . '/plugin/free'), true);
         if (!$plugins) return false;
 
         // purchased plugins
@@ -951,7 +951,7 @@ class EyPluginComponent extends Object
 
     public function getPluginsFromAPI(array $apiID)
     {
-        $plugins = @json_decode(@file_get_contents('http://api.mineweb.org/api/v' . $this->apiVersion . '/plugin/all'));
+        $plugins = @json_decode(@file_get_contents('https://api.mineweb.org/api/v' . $this->apiVersion . '/plugin/all'));
         if (!$plugins) return false;
         // each plugin
         $pluginsToFind = array();
