@@ -62,7 +62,7 @@ class ThemeComponent extends Object
             $this->getThemesOnAPI(true);
         // each installed themes
         foreach ($themes as $slug) {
-            if (in_array($slug, $bypassedFiles) || !$this->isValid($slug)) // not a valid theme
+            if (in_array($slug, $bypassedFiles)) // not a valid theme
                 continue;
             // get config
             $config = $this->getConfig($slug);
@@ -73,8 +73,12 @@ class ThemeComponent extends Object
             $checkSupported = $this->checkSupported($slug);
             $themesList->$id->supported = (empty($checkSupported)) ? true : false;
             $themesList->$id->supportedErrors = $checkSupported;
+            if ($this->isValid($slug) && $this->checkSecure($dir . DS . $slug, $config))
+                $themesList->$id->valid = true;
+            else
+                $themesList->$id->valid = false;
             // set last version
-            if (isset($this->themesAvailable['all'][$id]))
+            if (isset($this->themesAvailable['all']) && isset($this->themesAvailable['all'][$id]))
                 $themesList->$id->lastVersion = $this->themesAvailable['all'][$id]['version'];
         }
         // cache for this request
@@ -87,7 +91,7 @@ class ThemeComponent extends Object
         $type = ($all) ? 'all' : 'free';
         if (!empty($this->themesAvailable[$type]))
             return $this->themesAvailable[$type];
-        $url = ($all) ? 'http://mineweb.org/api/v' . $this->apiVersion . '/theme/all' : 'http://mineweb.org/api/v' . $this->apiVersion . '/theme/free';
+        $url = ($all) ? 'http://api.mineweb.org/api/v' . $this->apiVersion . '/theme/all' : 'http://api.mineweb.org/api/v' . $this->apiVersion . '/theme/free';
 
         // get themes
         $getAllThemes = @file_get_contents($url);
@@ -97,7 +101,7 @@ class ThemeComponent extends Object
         if (!$all) {
             $getPurchasedThemes = $this->controller->sendToAPI(array(), '/theme/purchased');
             if ($getPurchasedThemes['code'] === 200)
-                $getAllThemes += json_decode($getPurchasedThemes['content'], true);
+                $getAllThemes = array_merge($getAllThemes, json_decode($getPurchasedThemes['content'], true));
         }
         // delete themes already installed
         if ($deleteInstalledThemes) {
@@ -113,9 +117,12 @@ class ThemeComponent extends Object
     }
 
     // get config
-    public function getConfig($slug)
+    public function getConfig($slug, $array = false)
     {
-        return @json_decode(@file_get_contents($this->themesFolder . DS . $slug . DS . 'Config' . DS . 'config.json'));
+        $path = $this->themesFolder . DS . $slug . DS . 'Config' . DS . 'config.json';
+        if (strtolower($slug) === 'default' || !file_exists($path))
+            return @json_decode(@file_get_contents(ROOT . DS . 'config' . DS . 'theme.default.json'), $array);
+        return @json_decode(@file_get_contents($path), $array);
     }
 
     // get version
@@ -125,6 +132,69 @@ class ThemeComponent extends Object
         if (!$config)
             return false;
         return $config->version;
+    }
+
+    // check secure
+    private function checkSecure($path, $configuration)
+    {
+        // Get file
+        if (!file_exists($path  . DS . 'secure'))
+            return false;
+        $content = @file_get_contents($path  . DS . 'secure', true);
+        if (!$content)
+            return false;
+        $content = rsa_decrypt($content);
+        if (!$content)
+            return false;
+        $content = json_decode($content);
+        if (!$content)
+            return false;
+
+        // Check price
+        if ($content['free'])
+            return true;
+
+        // Check options key
+        if (!$content['options'] !== $configuration['configurations'])
+            return false;
+
+        // Check configurations
+        unset($configuration['configurations']);
+        if ($content['configuration'] !== $configuration)
+            return false;
+
+        // Check files
+        foreach ($content['files'] as $file => $size) {
+            if (!file_exists($path . DS . $file))
+                return false;
+            if (($fileSize = filesize($path . DS . $file)) === $size)
+                continue;
+            if ($fileSize > $size && (($size / $fileSize) * 100) < 75)
+                return false;
+            else if ($size > $fileSize && (($fileSize / $size) * 100) < 75)
+                return false;
+        }
+
+        // Check if purchased
+        $cache = @rsa_decrypt(@file_get_contents(ROOT . DS . 'config' . DS . 'themes'));
+        if (!$cache)
+            return false;
+        $cache = @json_decode($cache, true);
+        if (!$cache)
+            return false;
+        if (in_array($configuration['apiID'], $cache)) // in not purchased used themes list
+            return false;
+
+        return true;
+    }
+
+    public function getCurrentTheme()
+    {
+        $configuredTheme = $this->controller->Configuration->getKey('theme');
+        foreach ($this->getThemesInstalled(false) as $theme)
+            if ($configuredTheme === $theme->slug && $theme->valid)
+                return [$theme->slug, (array)$theme->configurations];
+        return ['default', $this->getConfig('default', true)];
     }
 
     // check if valid

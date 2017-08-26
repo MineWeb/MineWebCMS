@@ -66,7 +66,7 @@
                         ?>
                       </td>
                       <td>
-                        <?php if($value->slug != $Configuration->getKey('theme')) { ?>
+                        <?php if($value->slug != $Configuration->getKey('theme') && $value->valid) { ?>
                           <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'enable', $value->slug, 'admin' => true)) ?>" class="btn btn-success"><?= $Lang->get('GLOBAL__ENABLE') ?></a>
                         <?php } ?>
                           <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'theme', 'action' => 'delete', $value->slug, 'admin' => true)) ?>')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>

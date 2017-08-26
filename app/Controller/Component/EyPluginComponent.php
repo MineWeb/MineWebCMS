@@ -140,7 +140,7 @@ class EyPluginComponent extends Object
             if (in_array($plugin['name'], $loadedCakePlugins)) // cakephp have load it ? (or not because fucking cache)
                 $pluginList->$id->loaded = true;
             // unload if invalid
-            if (!$pluginList->$id->isValid || !$pluginList->$id->active) {
+            if (!$pluginList->$id->isValid || !$pluginList->$id->active || !$this->checkSecure($this->pluginsFolder . DS . $plugin['name'], $config)) {
                 $pluginList->$id->loaded = false;
                 CakePlugin::unload($pluginList->$id->slug);
             }
@@ -200,6 +200,69 @@ class EyPluginComponent extends Object
         return $pluginsList;
     }
 
+    private function checkSecure($path, $configuration)
+    {
+        // Get file
+        if (!file_exists($path  . DS . 'secure'))
+            return false;
+        $content = @file_get_contents($path  . DS . 'secure', true);
+        if (!$content)
+            return false;
+        $content = rsa_decrypt($content);
+        if (!$content)
+            return false;
+        $content = json_decode($content);
+        if (!$content)
+            return false;
+
+        // Check price
+        if ($content['free'])
+            return true;
+
+        // Check configurations
+        if ($content['configuration'] !== $configuration)
+            return false;
+
+        // Check routes
+        $regex = "/Router::connect\('([A-Za-z\/*_-]+)',( |)(array\(|\[)(.*|)'controller'( |)=>( |)'([A-Za-z]+)',(.*|)'action'( |)=>( |)'([A-Za-z]+)'(.*)(\)|])\)/";
+        $routes = [];
+        foreach (explode(';', file_get_contents($path . DS . 'Config' . DS . 'routes.php')) as $fileContent) {
+            preg_match($regex, $fileContent, $matches);
+            if (empty($matches))
+                continue;
+            $routes[$matches[1]] = [
+                'controller' => $matches[7],
+                'action' => $matches[11]
+            ];
+        }
+        if ($content['routes'] !== $routes)
+            return false;
+
+        // Check files
+        foreach ($content['files'] as $file => $size) {
+            if (!file_exists($path . DS . $file))
+                return false;
+            if (($fileSize = filesize($path . DS . $file)) === $size)
+                continue;
+            if ($fileSize > $size && (($size / $fileSize) * 100) < 75)
+                return false;
+            else if ($size > $fileSize && (($fileSize / $size) * 100) < 75)
+                return false;
+        }
+
+        // Check if purchased
+        $cache = @rsa_decrypt(@file_get_contents(ROOT . DS . 'config' . DS . 'plugins'));
+        if (!$cache)
+            return false;
+        $cache = @json_decode($cache, true);
+        if (!$cache)
+            return false;
+        if (in_array($configuration['apiID'], $cache)) // in not purchased used plugins list
+            return false;
+
+        return true;
+    }
+
     // Vérifier si le plugin donné (nom/chemin) est bien un dossier contenant tout les pré-requis d'un plugin
     private function isValid($slug)
     {
@@ -223,7 +286,7 @@ class EyPluginComponent extends Object
             'Model', /*'Model/Behavior',*/
             'View', /*'View/Helper',*/
             'View', /*'View/Layouts',*/
-            'config.json', 'SQL/schema.php');
+            'config.json', 'secure', 'SQL/schema.php');
         foreach ($neededFiles as $key => $value) {
             if (!file_exists($file . DS . $value)) {
                 $this->log('Plugin "' . $slug . '" not valid! The file or folder "' . $file . DS . $value . '" doesn\'t exist! Please verify documentation for more informations.');
@@ -919,7 +982,7 @@ class EyPluginComponent extends Object
     {
         $plugins = array();
         // get free plugins
-        $plugins = @json_decode(@file_get_contents('https://api.mineweb.org/api/v' . $this->apiVersion . '/plugin/free'), true);
+        $plugins = @json_decode(@file_get_contents('http://api.mineweb.org/api/v' . $this->apiVersion . '/plugin/free'), true);
         if (!$plugins) return false;
 
         // purchased plugins
@@ -927,7 +990,7 @@ class EyPluginComponent extends Object
         if ($apiQuery['code'] === 200 && $response = @json_decode($apiQuery['content'], true)) { // success
             if ($response['status'] == 'success') {
                 // each plugin
-                foreach ($response['success'] as $plugin) {
+                foreach ($response['content'] as $plugin) {
                     $plugins[] = $plugin; // add to list
                 }
             }
@@ -951,7 +1014,7 @@ class EyPluginComponent extends Object
 
     public function getPluginsFromAPI(array $apiID)
     {
-        $plugins = @json_decode(@file_get_contents('https://api.mineweb.org/api/v' . $this->apiVersion . '/plugin/all'));
+        $plugins = @json_decode(@file_get_contents('http://api.mineweb.org/api/v' . $this->apiVersion . '/plugin/all'));
         if (!$plugins) return false;
         // each plugin
         $pluginsToFind = array();

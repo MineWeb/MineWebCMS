@@ -84,14 +84,18 @@ class AppController extends Controller
             }
 
             if ($last_check < time() || $last_check_domain != parse_url(Router::url('/', true), PHP_URL_HOST)) {
+                $this->loadModel('User');
                 $apiCall = $this->sendToAPI(array(
                     'data' => array(
                         'version' => $this->Configuration->getKey('version'),
                         'users_count' => $this->User->find('count'),
                         'plugins' => array_map(function ($plugin) {
-                            return $plugin->id;
-                        }, $this->EyPlugin->loadedPlugins),
-                        'theme' => $this->Configuration->getKey('theme')
+                            return $plugin->apiID;
+                        }, $this->EyPlugin->pluginsLoaded),
+                        'current_theme' => $this->Configuration->getKey('theme'),
+                        'themes' =>  array_map(function ($theme) {
+                            return $theme->apiID;
+                        }, $this->Theme->getThemesInstalled(false))
                     )
                 ), 'authentication', true);
 
@@ -103,6 +107,13 @@ class AppController extends Controller
                     throw new LicenseException($apiCall['msg']);
 
                 file_put_contents(ROOT . '/config/last_check', $apiCall['time']);
+
+                // Check for plugins
+                @file_put_contents(ROOT . DS . 'config' . DS . 'plugins', @$apiCall['plugins']);
+                $this->EyPlugin->pluginsLoaded = $this->EyPlugin->loadPlugins();
+
+                // Check for themes
+                @file_put_contents(ROOT . DS . 'config' . DS . 'themes', @$apiCall['themes']);
             }
         }
 
@@ -178,15 +189,8 @@ class AppController extends Controller
         $this->set('Configuration', $this->Configuration);
 
         $website_name = $this->Configuration->getKey('name');
-        $theme_name = $this->Configuration->getKey('theme');
 
-        // thèmes
-        if (strtolower($theme_name) == "default") {
-            $theme_config = file_get_contents(ROOT . '/config/theme.default.json');
-            $theme_config = json_decode($theme_config, true);
-        } else {
-            $theme_config = $this->Theme->getCustomData($theme_name)[1];
-        }
+        list($theme_name, $theme_config) = $this->Theme->getCurrentTheme();
         Configure::write('theme', $theme_name);
         $this->__setTheme();
 
@@ -566,7 +570,7 @@ class AppController extends Controller
 
         $data = json_encode($data);
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'https://api.mineweb.org/api/v2/' . $path);
+        curl_setopt($curl, CURLOPT_URL, 'http://api.mineweb.org/api/v2/' . $path);
         curl_setopt($curl, CURLOPT_COOKIESESSION, true);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
