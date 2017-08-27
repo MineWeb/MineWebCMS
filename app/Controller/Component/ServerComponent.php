@@ -26,16 +26,48 @@ class ServerComponent extends Object
 
     public function beforeRedirect() {}
 
+    private function parse($methods)
+    {
+        $result = array();
+        foreach ($methods as $method) {
+            foreach ($method as $name => $args) {
+                $result[] = array(
+                    'name' => $name,
+                    'args' => (is_array($args)) ? $args : [$args]
+                );
+            }
+        }
+        return $result;
+    }
+
+    private function parseResult($result)
+    {
+        $methods = array();
+        foreach ($result as $method) {
+            $methods[] = [$method['name'] => $method['response']];
+        }
+        return $methods;
+    }
+
     public function call($methods = false, $server_id = false, $debug = false)
     {
+        $multi = true;
         if (!$server_id)
             $server_id = $this->getFirstServerID();
         if (!$methods) {
             $this->lastErrorMessage = 'Unknown method.';
             return false;
         }
-        if (!is_array($methods)) // transform into array
-            $methods = array($methods => array());
+        if (!is_array($methods)) {// transform into array
+            $methods = array(array($methods => array()));
+            $multi = false;
+        } else if (!isset($methods[0])) {
+            $result = array();
+            foreach ($methods as $name => $args)
+                $result[] = [$name => (is_array($args)) ? $args : [$args]];
+            $methods = $result;
+            $multi = false;
+        }
 
         $config = $this->getConfig($server_id);
         if ($config['type'] == 1) { // only ping
@@ -50,7 +82,7 @@ class ServerComponent extends Object
 
         // plugin
         $url = $this->getUrl($server_id);
-        $data = $this->encryptWithKey(json_encode($methods));
+        $data = $this->encryptWithKey(json_encode($this->parse($methods)));
 
         // request
         list($return, $code, $error) = $this->request($url, $data);
@@ -66,7 +98,17 @@ class ServerComponent extends Object
         if ($return && $code === 200) {
             $return = @json_decode($return, true);
             $return = $this->decryptWithKey($return['signed'], $return['iv']);
-            return @json_decode($return, true); // json decode & set old method name
+            $return = $this->parseResult(@json_decode($return, true));
+            if (!$multi) {
+                $result = [];
+                foreach ($return as $item) {
+                    foreach ($item as $key => $value) {
+                        $result[$key] = $value;
+                    }
+                }
+                $return = $result;
+            }
+            return $return;
         } else if ($code === 403 || $code === 500) {
             $this->lastErrorMessage = 'Request not allowed.';
             return false;
@@ -219,7 +261,7 @@ class ServerComponent extends Object
         if ($config['type'] == 1) // ping only
             return ($this->ping(array('ip' => $config['ip'], 'port' => $config['port']))) ? true : false;
 
-        list($return, $code, $error) = $this->request($this->getUrl($server_id), $this->encryptWithKey("{}"));
+        list($return, $code, $error) = $this->request($this->getUrl($server_id), $this->encryptWithKey("[]"));
         if ($return && $code === 200)
             return $this->online[$server_id] = true;
         else
@@ -353,7 +395,10 @@ class ServerComponent extends Object
             $commands = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $commands);
             $commands = explode('[{+}]', $commands);
         }
-        return $this->call(array('RUN_COMMAND' => $commands), $server_id);
+        $calls = [];
+        foreach ($commands as $command)
+            $calls[] = ['RUN_COMMAND' => $command];
+        return $this->call($calls, $server_id);
     }
 
     public function scheduleCommands($commands, $time, $servers = array())
@@ -378,9 +423,11 @@ class ServerComponent extends Object
             }
 
             // Execute
+            $calls = array();
             foreach ($commands as $command) {
-                $this->call(array('RUN_SCHEDULED_COMMAND' => array($command, $this->User->getKey('pseudo'), $time)), $server);
+                $calls[] = ['RUN_SCHEDULED_COMMAND' => [$command, $this->User->getKey('pseudo'), $time]];
             }
+            $this->call($calls, $server);
         }
     }
 }

@@ -387,7 +387,7 @@ class ThemeComponent extends Object
             if (file_exists($this->getPath($slug) . DS . 'update.json')) {
                 $updateFile = @json_decode(@file_get_contents($this->getPath($slug) . DS . 'update.json'));
                 if ($updateFile) {
-                    foreach ($updateFile as $type => value) {
+                    foreach ($updateFile as $type => $value) {
                         if ($type === 'delete') {
                             foreach ($value as $file) {
                                 unlink($this->getPath($slug) . DS . $file);

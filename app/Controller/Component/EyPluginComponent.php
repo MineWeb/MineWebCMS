@@ -141,7 +141,7 @@ class EyPluginComponent extends Object
             if (in_array($plugin['name'], $loadedCakePlugins)) // cakephp have load it ? (or not because fucking cache)
                 $pluginList->$id->loaded = true;
             // unload if invalid
-            if (!$pluginList->$id->isValid || !$pluginList->$id->active || !$this->checkSecure($this->pluginsFolder . DS . $plugin['name'], $config)) {
+            if (!$pluginList->$id->isValid || !$pluginList->$id->active) {// || !$this->checkSecure($this->pluginsFolder . DS . $plugin['name'], $config)) {
                 $pluginList->$id->loaded = false;
                 CakePlugin::unload($pluginList->$id->slug);
             }
