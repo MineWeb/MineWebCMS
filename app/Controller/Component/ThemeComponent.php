@@ -116,13 +116,26 @@ class ThemeComponent extends Object
         return $getAllThemes;
     }
 
+    public function getPath($slug)
+    {
+        return $this->themesFolder . DS . $slug;
+    }
+
     // get config
     public function getConfig($slug, $array = false)
     {
-        $path = $this->themesFolder . DS . $slug . DS . 'Config' . DS . 'config.json';
+        $path = $this->getPath($slug) . DS . 'Config' . DS . 'config.json';
         if (strtolower($slug) === 'default' || !file_exists($path))
             return @json_decode(@file_get_contents(ROOT . DS . 'config' . DS . 'theme.default.json'), $array);
         return @json_decode(@file_get_contents($path), $array);
+    }
+
+    public function setConfig($slug, $config = array())
+    {
+        $path = $this->getPath($slug) . DS . $slug . DS . 'Config' . DS . 'config.json';
+        if (strtolower($slug) === 'default' || !file_exists($path))
+            return @file_put_contents(ROOT . DS . 'config' . DS . 'theme.default.json', json_encode($config));
+        return @file_put_contents($path, json_encode($config));
     }
 
     // get version
@@ -337,7 +350,7 @@ class ThemeComponent extends Object
     }
 
     // install plugin
-    public function install($apiID)
+    public function install($apiID, $update = false, $slug = null)
     {
         // ask to api
         $return = $this->controller->sendToAPI(array(), '/theme/download/' . $apiID);
@@ -350,6 +363,8 @@ class ThemeComponent extends Object
             $this->log('[Install theme] Couldn\'t download files, invalid json returned.');
             return false;
         }
+        if ($update)
+            $oldConfig = $this->getCustomData($slug)[0];
         // unzip files
         if (!unzip($return['content'], $this->themesFolder, 'theme-' . $apiID . '-zip', true)) {
             $this->log('[Install theme] Couldn\'t unzip files.');
@@ -359,6 +374,29 @@ class ThemeComponent extends Object
         App::uses('Folder', 'Utility');
         $folder = new Folder($this->themesFolder . DS . '__MACOSX');
         $folder->delete();
+        if ($update) {
+            // Config
+            $config = $this->getConfig($slug);
+            foreach ($config['configurations'] as $key => $value) {
+                if (isset($oldConfig[$key]))
+                    $config['configurations'][$key] = $oldConfig[$key];
+            }
+            $this->setConfig($slug, $config);
+
+            // Edit file
+            if (file_exists($this->getPath($slug) . DS . 'update.json')) {
+                $updateFile = @json_decode(@file_get_contents($this->getPath($slug) . DS . 'update.json'));
+                if ($updateFile) {
+                    foreach ($updateFile as $type => value) {
+                        if ($type === 'delete') {
+                            foreach ($value as $file) {
+                                unlink($this->getPath($slug) . DS . $file);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         return true;
     }
@@ -366,6 +404,7 @@ class ThemeComponent extends Object
     // return config + name
     public function getCustomData($slug)
     {
+        $config = (object)array();
         if ($slug == "default") {
             $config = json_decode(file_get_contents(ROOT . DS . 'config' . DS . 'theme.default.json'), true);
             $theme_name = "Bootstrap";

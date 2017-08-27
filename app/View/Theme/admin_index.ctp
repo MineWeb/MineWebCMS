@@ -76,7 +76,7 @@
                         <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'custom_files', $value->slug, 'admin' => true)) ?>" class="btn btn-primary"><?= $Lang->get('THEME__CUSTOM_FILES') ?></a>
                         <?php if(isset($value->lastVersion)) { ?>
                           <?php if($value->version !== $value->lastVersion) { ?>
-                            <a <?= (explode('.', $value->lastVersion)[0] > explode('.', $value->version)[0] ? 'data-warning-update' : '') ?> href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'update', 'admin' => true, $value->apiID)) ?>" class="btn btn-warning"><?= $Lang->get('GLOBAL__UPDATE') ?></a>
+                            <a <?= (explode('.', $value->lastVersion)[0] > explode('.', $value->version)[0] ? 'data-warning-update' : '') ?> href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'update', 'admin' => true, $value->apiID, $value->slug)) ?>" class="btn btn-warning"><?= $Lang->get('GLOBAL__UPDATE') ?></a>
                           <?php } ?>
                         <?php } ?>
                       </td>
