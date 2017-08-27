@@ -80,8 +80,10 @@
         $howManyBtns += count($findSocialButtons);
 
         $maxBtnsByLine = 4;
-        $howManyBtnsDivided = ceil( $howManyBtns / ceil( $howManyBtns / $maxBtnsByLine ) );
-        $col = 12 / $howManyBtnsDivided;
+        if ($howManyBtns > 0) {
+            $howManyBtnsDivided = ceil($howManyBtns / ceil($howManyBtns / $maxBtnsByLine));
+            $col = 12 / $howManyBtnsDivided;
+        }
 
         if(!empty($facebook_link)) {
           echo '<div class="col-md-'.$col.' text-center"><a href="'.$facebook_link.'" target="_blank" class="btn btn-lg btn-block btn-primary"><i class="fa fa-facebook-square"></i> '.$Lang->get('GLOBAL__JOIN_US_SOCIAL').' Facebook</a></div>';

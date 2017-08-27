@@ -75,6 +75,8 @@
                       <label><?= $Lang->get('URL') ?></label>
                       <input type="text" class="form-control url_of_nav" value="<?= urldecode(urldecode($url)) ?>" placeholder="<?= $Lang->get('NAVBAR__CUSTOM_URL') ?>" name="url">
                     </div>
+                      <a href="#" class="text-danger delete-nav pull-right"><?= $Lang->get('GLOBAL__DELETE') ?></a>
+                      <br>
                   </div>
                 <?php } ?>
               </div>
@@ -106,10 +108,22 @@
     e.preventDefault();
     var how = $('#add-js').attr('data-number');
     how = parseInt(how) + 1;
-    var add = '<div class="form-group"><div class="well" id="nav-'+how+'"><div class="form-group"><label><?= addslashes($Lang->get('NAVBAR__LINK_NAME')) ?></label><input type="text" class="form-control name_of_nav" name="name_of_nav"></div><div class="form-group"><label><?= $Lang->get('URL') ?></label><input type="text" class="form-control url_of_nav" placeholder="<?= $Lang->get('NAVBAR__CUSTOM_URL') ?>" name="url"></div></div></div>'
+    var add = '<div class="form-group"><div class="well" id="nav-'+how+'"><div class="form-group"><label><?= addslashes($Lang->get('NAVBAR__LINK_NAME')) ?></label><input type="text" class="form-control name_of_nav" name="name_of_nav"></div><div class="form-group"><label><?= $Lang->get('URL') ?></label><input type="text" class="form-control url_of_nav" placeholder="<?= $Lang->get('NAVBAR__CUSTOM_URL') ?>" name="url"></div><a href="#" class="text-danger delete-nav pull-right"><?= $Lang->get('GLOBAL__DELETE') ?></a><br></div></div>';
     $('#add-js').append(add);
     $('#add-js').attr('data-number', how);
+    deleteNavEvents();
   });
+  deleteNavEvents();
+  function deleteNavEvents() {
+      $('.delete-nav').unbind('click');
+      $('.delete-nav').on('click', function (e) {
+          e.preventDefault();
+          var div = $(this).parent();
+          div.slideUp(150, function () {
+              $(this).remove();
+          });
+      });
+  }
 </script>
 <script type="text/javascript">
   $("#normal").change(function() {
