@@ -535,6 +535,8 @@
         "UPDATE__CLEAR_CACHE":"Supprimer le cache (conseillé)",
         "UPDATE__AUTHORIZE_FORCED_UPDATE":"Autoriser les mises à jours forcées",
         "UPDATE__AUTHORIZE_FORCED_UPDATE_EXPLAIN":"Permet des mises à jours automatique si une faille de sécurité a été trouvée ou un problème important.",
+        "UPDATE__MAJOR_WARNING": "La mise à jour disponible est une mise à jour importante, renseignez-vous avant de la faire. Celle-ci pourrait empêcher certaines fonctionnalités de plugins/thèmes de fonctionner correctement.",
+        "UPDATE__MAJOR_WARNING_EXTENSION": "La mise à jour disponible est une mise à jour importante, renseignez-vous avant de la faire. Celle-ci pourrait empêcher certaines fonctionnalités de fonctionner correctement. Souhaitez-vous vraiment la faire ?",
 
         "STATS__TITLE":"Statistiques",
         "STATS__NBR_VISITS":"Nombre de visites",

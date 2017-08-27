@@ -12,8 +12,12 @@
         </div>
         <div class="box-body">
 
-           <center>
+           <div style="text-align: center;">
             <p class="text-center"><?= $Lang->get('UPDATE__LAST_VERSION') ?> : <?= $Update->update['version'] ?></p>
+            <?php
+            if (explode('.', $Update->update['version'])[0] > explode('.', $Configuration->getKey('version'))[0])
+                echo '<div class="alert alert-warning">' . $Lang->get('UPDATE__MAJOR_WARNING') . '</div>';
+            ?>
             <div class="btn-group">
               <button id="update" class="btn btn-large btn-primary"><?= $Lang->get('GLOBAL__UPDATE') ?></button>
               <a class="btn btn-warning" href="<?= $this->Html->url(array('action' => 'clear_cache')) ?>"><?= $Lang->get('UPDATE__CLEAR_CACHE') ?></a>
@@ -24,7 +28,7 @@
             <div class="progress progress-striped active" style="display:none;">
               <div class="bar" style="width: 40%;"></div>
             </div>
-          </center>
+          </div>
           <br>
 
           <?php if(!empty($logs)) { ?>

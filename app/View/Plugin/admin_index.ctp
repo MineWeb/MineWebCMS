@@ -12,7 +12,7 @@
         <div class="box-body">
 
           <?php
-          $pluginList = $EyPlugin->loadPlugins();
+          $pluginList = $EyPlugin->pluginsLoaded;
             if(!empty($pluginList)) {
           ?>
             <table class="table table-bordered" id="plugin-installed">
@@ -55,7 +55,7 @@
                       <?php
                       $lastVersion = $versions[$value->apiID];
                       if($lastVersion && $value->version != $lastVersion) { ?>
-                        <a href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'update', $value->apiID, $value->slug, 'admin' => true)) ?>" class="btn btn-warning update"><?= $Lang->get('GLOBAL__UPDATE') ?></a> <!-- ICI -->
+                        <a <?= (explode('.', $lastVersion)[0] > explode('.', $value->version)[0] ? 'data-warning-update' : '') ?> href="<?= $this->Html->url(array('controller' => 'plugine', 'action' => 'update', $value->apiID, $value->slug, 'admin' => true)) ?>" class="btn btn-warning update"><?= $Lang->get('GLOBAL__UPDATE') ?></a> <!-- ICI -->
                       <?php } ?>
                     </td>
                   </tr>
@@ -112,6 +112,13 @@
   </div>
 </section>
 <script type="text/javascript">
+
+    $('a[data-warning-update]').on('click', function (e) {
+        e.preventDefault();
+        if (confirm("<?= $Lang->get('UPDATE__MAJOR_WARNING_EXTENSION') ?>"))
+            window.location = $(this).attr('href');
+    });
+
   $('.install').click(function(e) {
     e.preventDefault();
 
