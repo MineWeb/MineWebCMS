@@ -313,7 +313,8 @@ class AppSchema extends CakeSchema {
 
 	public $notifications = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
-		'user_id' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
+        'group' => array('type' => 'string', 'length' => 10, 'null' => false, 'default' => 'user', 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+        'user_id' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
 		'from' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
 		'content' => array('type' => 'string', 'null' => false, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'type' => array('type' => 'string', 'length' => 5, 'null' => false, 'default' => 'user', 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),

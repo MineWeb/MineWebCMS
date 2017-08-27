@@ -78,7 +78,7 @@ class AppController extends Controller
             if ($last_check !== false) {
                 $last_check_domain = parse_url($last_check['domain'], PHP_URL_HOST);
                 $last_check = $last_check['time'];
-                $last_check = strtotime('+4 hours', $last_check);
+                $last_check = strtotime('+2 hours', $last_check);
             } else {
                 $last_check = '0';
             }
@@ -91,11 +91,11 @@ class AppController extends Controller
                         'users_count' => $this->User->find('count'),
                         'plugins' => array_map(function ($plugin) {
                             return $plugin->apiID;
-                        }, $this->EyPlugin->pluginsLoaded),
+                        }, (array)$this->EyPlugin->pluginsLoaded),
                         'current_theme' => $this->Configuration->getKey('theme'),
                         'themes' =>  array_map(function ($theme) {
                             return $theme->apiID;
-                        }, $this->Theme->getThemesInstalled(false))
+                        }, (array)$this->Theme->getThemesInstalled(false))
                     )
                 ), 'authentication', true);
 
@@ -514,15 +514,18 @@ class AppController extends Controller
     {
         $event = new CakeEvent('onLoadPage', $this, $this->request->data);
         $this->getEventManager()->dispatch($event);
+        $this->__setTheme();
         if ($event->isStopped())
             return $event->result;
 
         if ($this->params['prefix'] === "admin") {
             $event = new CakeEvent('onLoadAdminPanel', $this, $this->request->data);
             $this->getEventManager()->dispatch($event);
+            $this->__setTheme();
             if ($event->isStopped())
                 return $event->result;
         }
+        $this->__setTheme();
     }
 
     protected function __setTheme()

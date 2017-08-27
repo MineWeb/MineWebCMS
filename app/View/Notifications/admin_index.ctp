@@ -10,6 +10,7 @@
             <thead>
               <tr>
                 <th><?= $Lang->get('USER__USERNAME') ?></th>
+                <th><?= $Lang->get('NOTIFICATION__GROUP') ?></th>
                 <th><?= $Lang->get('NOTIFICATION__FROM') ?></th>
                 <th><?= $Lang->get('NOTIFICATION__CONTENT') ?></th>
                 <th><?= $Lang->get('NOTIFICATION__TYPE') ?></th>
@@ -82,8 +83,20 @@
         </div>
         <div class="box-body">
 
-          <a href="<?= $this->Html->url(array('action' => 'clearAllFromAllUsers')) ?>" class="btn btn-danger btn-block" id="delete-all"><?= $Lang->get('NOTIFICATION__DELETE_ALL_FROM_ALL_USERS') ?></a>
-          <a href="<?= $this->Html->url(array('action' => 'markAllAsSeenFromAllUsers')) ?>" class="btn btn-default btn-block" id="mark-all-as-seen"><?= $Lang->get('NOTIFICATION__MARK_ALL_AS_SEEN_FROM_ALL_USERS') ?></a>
+            <a href="<?= $this->Html->url(array('action' => 'clearAllFromAllUsers')) ?>" class="btn btn-danger btn-block" id="delete-all"><?= $Lang->get('NOTIFICATION__DELETE_ALL_FROM_ALL_USERS') ?></a>
+            <a href="<?= $this->Html->url(array('action' => 'markAllAsSeenFromAllUsers')) ?>" class="btn btn-default btn-block" id="mark-all-as-seen"><?= $Lang->get('NOTIFICATION__MARK_ALL_AS_SEEN_FROM_ALL_USERS') ?></a>
+
+            <hr>
+
+            <form method="post" action="<?= $this->Html->url(array('action' => 'clearAllFromGroup')) ?>" data-ajax="true" data-callback-function="afterSendNotification">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">#</span>
+                    <input type="text" class="form-control" name="group" placeholder="<?= $Lang->get('NOTIFICATION__DELETE_ALL_FROM_GROUP_INPUT') ?>">
+                    <span class="input-group-btn">
+                        <button class="btn btn-danger"><?= $Lang->get('NOTIFICATION__DELETE_ALL_FROM_GROUP_BTN') ?></button>
+                    </span>
+                </div>
+            </form>
 
         </div>
       </div>
@@ -105,6 +118,7 @@ $(document).ready(function() {
     "sAjaxSource": "<?= $this->Html->url(array('action' => 'getAll')) ?>",
     "aoColumns": [
         {mData:"Notification.pseudo"},
+        {mData:"Notification.group"},
         {mData:"Notification.from"},
         {mData:"Notification.content"},
         {mData:"Notification.type"},
