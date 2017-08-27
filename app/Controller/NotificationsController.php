@@ -70,7 +70,8 @@ class NotificationsController extends AppController
             $this->modelClass = 'Notification';
             $this->DataTable->initialize($this);
             $this->paginate = array(
-                'fields' => array('Notification.id', 'Notification.group', 'Notification.user_id', 'Notification.from', 'Notification.content', 'Notification.seen', 'Notification.type', 'Notification.created'),
+                'fields' => array('Notification.id', 'User.pseudo', 'Notification.group', 'Notification.user_id', 'Notification.from', 'Notification.content', 'Notification.seen', 'Notification.type', 'Notification.created'),
+                'recursive' => 1
             );
             $this->DataTable->mDataProp = true;
 
@@ -84,8 +85,6 @@ class NotificationsController extends AppController
                 } else {
                     $from = $this->User->getFromUser('pseudo', $notification['Notification']['from']);
                 }
-
-                $pseudo = $this->User->getFromUser('pseudo', $notification['Notification']['user_id']);
 
                 $actions = '<div class="btn btn-group">';
                 if ($notification['Notification']['seen']) {
@@ -102,16 +101,17 @@ class NotificationsController extends AppController
                     $type = '<span class="label label-success">' . $this->Lang->get('NOTIFICATION__TYPE_USER') . '</span>';
                 }
 
-                $data[]['Notification'] = array(
-                    'group' => (!empty($notification['Notification']['group']) ? '#' . $notification['Notification']['group'] : '<small class="text-muted">' . $this->Lang->get('NOTIFICATION__NO_FROM') . '</small>'),
-                    'pseudo' => $pseudo,
-                    'from' => $from,
-                    'content' => $notification['Notification']['content'],
-                    'type' => $type,
-                    'created' => $notification['Notification']['created'],
-                    'actions' => $actions
+                $data[] = array(
+                    'Notification' => array(
+                        'group' => (!empty($notification['Notification']['group']) ? '#' . $notification['Notification']['group'] : '<small class="text-muted">' . $this->Lang->get('NOTIFICATION__NO_FROM') . '</small>'),
+                        'from' => $from,
+                        'content' => $notification['Notification']['content'],
+                        'type' => $type,
+                        'created' => $notification['Notification']['created'],
+                        'actions' => $actions
+                    ),
+                    'User' => $notification['User']
                 );
-
             }
             $response['aaData'] = $data;
 

@@ -250,6 +250,9 @@ function getAdminNav($section, $plugins_need_admin, $context, $Permissions) {
                 <?php if($Permissions->can('MANAGE_NOTIFICATIONS')) { ?>
                   <li><a href="<?= $this->Html->url(array('controller' => 'notifications', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-flag"></i> <?= $Lang->get('NOTIFICATION__TITLE') ?></a></li>
                 <?php } ?>
+                <?php if($Permissions->can('VIEW_WEBSITE_HISTORY')) { ?>
+                  <li><a href="<?= $this->Html->url(array('controller' => 'history', 'action' => 'index', 'admin' => true, 'plugin' => false)) ?>"><i class="fa fa-table"></i> <?= $Lang->get('HISTORY__VIEW_GLOBAL') ?></a></li>
+                <?php } ?>
                 <?php getAdminNav('other', $plugins_need_admin, $this, $Permissions) ?>
 
                 <?php if(!empty($plugins_need_admin['default'])) { ?>

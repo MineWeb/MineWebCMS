@@ -3,6 +3,8 @@
 class Notification extends AppModel
 {
 
+    public $belongsTo = 'User';
+
     public function getFromUser($user_id, $type)
     {
         $query = $this->find('all', array(

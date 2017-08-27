@@ -141,6 +141,12 @@ class AppController extends Controller
             }
         }
 
+        // Plugin disabled
+        if ($this->request->params['plugin'] && !$this->EyPlugin->findPlugin('slugLower', $this->request->params['plugin'])->loaded) {
+            $this->redirect('/');
+            exit;
+        }
+
         // Global configuration
         $this->__initConfiguration();
 
@@ -159,12 +165,6 @@ class AppController extends Controller
         // Server
         if ($this->params['prefix'] !== "admin" && !$this->request->is('ajax'))
             $this->__initServerInfos();
-
-        // Plugin disabled
-        if ($this->request->params['plugin'] && !$this->EyPlugin->findPlugin('slugLower', $this->request->params['plugin'])->loaded) {
-            $this->redirect('/');
-            exit;
-        }
 
         // Plugins events
         $this->EyPlugin->initEventsListeners($this);

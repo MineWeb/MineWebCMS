@@ -108,22 +108,21 @@ $(document).ready(function() {
   $('table').DataTable({
     "paging": true,
     "lengthChange": false,
-    "searching": false,
+    "searching": true,
     "ordering": false,
     "info": false,
     "autoWidth": false,
-    'searching': true,
     "bProcessing": true,
     "bServerSide": true,
     "sAjaxSource": "<?= $this->Html->url(array('action' => 'getAll')) ?>",
     "aoColumns": [
-        {mData:"Notification.pseudo"},
+        {mData:"User.pseudo"},
         {mData:"Notification.group"},
-        {mData:"Notification.from"},
+        {mData:"Notification.from", "bSearchable": false},
         {mData:"Notification.content"},
-        {mData:"Notification.type"},
+        {mData:"Notification.type", "bSearchable": false},
         {mData:"Notification.created"},
-        {mData:"Notification.actions"}
+        {mData:"Notification.actions", "bSearchable": false}
     ],
   });
 

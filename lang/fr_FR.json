@@ -449,6 +449,7 @@
         "HISTORY__ACTION_EDIT_NAV":"Modification d'un lien",
         "HISTORY__ACTION_DELETE_USER":"Suppression d'un utilisateur",
         "HISTORY__ACTION_EDIT_LANG":"Changement du fichier de language",
+        "HISTORY__VIEW_GLOBAL": "Historique du site",
 
         "PERMISSIONS__LABEL": "Permissions",
         "PERMISSIONS__COMMENT_NEWS": "Commenter une news",
@@ -475,6 +476,7 @@
         "PERMISSIONS__MANAGE_THEMES":"Gérer les thèmes du site (activation, désactivation, suppression, installation, customisation)",
         "PERMISSIONS__MANAGE_USERS":"Gérer les utilisateurs (suppression, édition, voir la liste)",
         "PERMISSIONS__SEND_SERVER_COMMAND_FROM_DASHBOARD":"Envoyer des commandes aux serveurs depuis le dashboard admin.",
+        "PERMISSIONS__VIEW_WEBSITE_HISTORY": "Voir l'historique du site",
 
         "SERVER__TITLE":"Serveur",
         "SERVER__LINK": "Lier serveur-site",
