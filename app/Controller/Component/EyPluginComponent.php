@@ -67,7 +67,7 @@ class EyPluginComponent extends Object
     public function initEventsListeners($controller)
     {
         foreach ($this->pluginsLoaded as $plugin) {
-            if (!$plugin->useEvents)
+            if (!$plugin->useEvents || !$plugin->loaded)
                 continue;
             $slugFormated = ucfirst(strtolower($plugin->slug));
             $eventFolder = $this->pluginsFolder . DS . $plugin->slug . DS . 'Event';
@@ -130,6 +130,7 @@ class EyPluginComponent extends Object
             $pluginList->$id = $config; // add file config
             $pluginList->$id->id = $id;
             $pluginList->$id->slug = $plugin['name'];
+            $pluginList->$id->slugLower = strtolower($plugin['name']);
             $pluginList->$id->DBid = $plugin['id'];
             $pluginList->$id->DBinstall = $plugin['created'];
             $pluginList->$id->active = ($plugin['state']) ? true : false;
