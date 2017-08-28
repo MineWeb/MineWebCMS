@@ -150,6 +150,15 @@ class ThemeComponent extends Object
     // check secure
     private function checkSecure($path, $configuration)
     {
+        $cache = @rsa_decrypt(@file_get_contents(ROOT . DS . 'config' . DS . 'last_check'));
+        if (!$cache)
+            return false;
+        $cache = @json_decode($cache, true);
+        if (!$cache)
+            return false;
+        if ($cache['type'] === 'DEV')
+            return true;
+
         // Get file
         if (!file_exists($path  . DS . 'secure'))
             return false;
@@ -189,12 +198,6 @@ class ThemeComponent extends Object
         }
 
         // Check if purchased
-        $cache = @rsa_decrypt(@file_get_contents(ROOT . DS . 'config' . DS . 'last_check'));
-        if (!$cache)
-            return false;
-        $cache = @json_decode($cache, true);
-        if (!$cache)
-            return false;
         if (in_array($configuration['apiID'], $cache['themes'])) // in not purchased used themes list
             return false;
 

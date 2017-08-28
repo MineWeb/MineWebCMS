@@ -203,6 +203,15 @@ class EyPluginComponent extends Object
 
     private function checkSecure($path, $configuration)
     {
+        $cache = @rsa_decrypt(@file_get_contents(ROOT . DS . 'config' . DS . 'last_check'));
+        if (!$cache)
+            return false;
+        $cache = @json_decode($cache, true);
+        if (!$cache)
+            return false;
+        if ($cache['type'] === 'DEV')
+            return true;
+
         // Get file
         if (!file_exists($path  . DS . 'secure'))
             return false;
@@ -252,12 +261,6 @@ class EyPluginComponent extends Object
         }
 
         // Check if purchased
-        $cache = @rsa_decrypt(@file_get_contents(ROOT . DS . 'config' . DS . 'last_check'));
-        if (!$cache)
-            return false;
-        $cache = @json_decode($cache, true);
-        if (!$cache)
-            return false;
         if (in_array($configuration['apiID'], $cache['plugins'])) // in not purchased used plugins list
             return false;
 
@@ -287,7 +290,7 @@ class EyPluginComponent extends Object
             'Model', /*'Model/Behavior',*/
             'View', /*'View/Helper',*/
             'View', /*'View/Layouts',*/
-            'config.json', 'secure', 'SQL/schema.php');
+            'config.json', 'SQL/schema.php');
         foreach ($neededFiles as $key => $value) {
             if (!file_exists($file . DS . $value)) {
                 $this->log('Plugin "' . $slug . '" not valid! The file or folder "' . $file . DS . $value . '" doesn\'t exist! Please verify documentation for more informations.');
