@@ -486,7 +486,7 @@
         "SERVER__TYPE_DEFAULT_INFOS": "Vous avez besoin d'installer le plugin MineWebBridge sur votre serveur pour utiliser ce type de liaison. Toutes les informations relatives à cette manipulation sont disponible sur <a href=\"http://docs.mineweb.org/#lier-serveur-site\">la documentation</a>",
         "SERVER__TYPE_QUERY_INFOS": "Vous n'avez pas besoin d'installer le plugin MineWebBridge sur votre serveur pour utiliser ce type de liaison. Ce type de liaison vous permet seulement d'afficher le nombre de connectés sur votre infrastructure. Toutes les informations relatives à cette manipulation sont disponible sur <a href=\"http://docs.mineweb.org/#lier-serveur-site\">la documentation</a>",
         "SERVER__HOST":"IP du serveur",
-        "SERVER__PORT":"Port configuré",
+        "SERVER__PORT":"Port",
         "SERVER__TIMEOUT":"Temps maximum d'\u00e9x\u00e9cution",
         "SERVER__LINK_SUCCESS":"La connexion au serveur \u00e0 bien \u00e9t\u00e9 \u00e9tablie !",
         "SERVER__LINK_ERROR_MINEWEB_DOWN":"L'API de MineWeb est indisponible.",
