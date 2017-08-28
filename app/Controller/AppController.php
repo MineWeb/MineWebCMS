@@ -89,17 +89,17 @@ class AppController extends Controller
                     'data' => array(
                         'version' => $this->Configuration->getKey('version'),
                         'users_count' => $this->User->find('count'),
-                        'plugins' => array_map(function ($plugin) {
+                        'plugins' => array_values(array_map(function ($plugin) {
                             return $plugin->apiID;
-                        }, (array)$this->EyPlugin->pluginsLoaded),
+                        }, (array)$this->EyPlugin->pluginsLoaded)),
                         'current_theme' => $this->Configuration->getKey('theme'),
-                        'themes' =>  array_map(function ($theme) {
+                        'themes' => array_values(array_map(function ($theme) {
                             return $theme->apiID;
-                        }, (array)$this->Theme->getThemesInstalled(false))
+                        }, (array)$this->Theme->getThemesInstalled(false)))
                     )
                 ), 'authentication', true);
 
-                if ($apiCall['error'] === 6 || $apiCall['code'] !== 200)
+                if ($apiCall['error'] === 6 || !in_array($apiCall['code'], [200, 404, 403]))
                     throw new LicenseException('MINEWEB_DOWN');
 
                 $apiCall = json_decode($apiCall['content'], true);
@@ -108,12 +108,7 @@ class AppController extends Controller
 
                 file_put_contents(ROOT . '/config/last_check', $apiCall['time']);
 
-                // Check for plugins
-                @file_put_contents(ROOT . DS . 'config' . DS . 'plugins', @$apiCall['plugins']);
                 $this->EyPlugin->pluginsLoaded = $this->EyPlugin->loadPlugins();
-
-                // Check for themes
-                @file_put_contents(ROOT . DS . 'config' . DS . 'themes', @$apiCall['themes']);
             }
         }
 
@@ -188,7 +183,7 @@ class AppController extends Controller
             $this->redirect(array('controller' => 'maintenance', 'action' => 'index', 'plugin' => false, 'admin' => false));
     }
 
-    protected function __initConfiguration()
+    public function __initConfiguration()
     {
         // configuration générale
         $this->loadModel('Configuration');

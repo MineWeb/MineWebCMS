@@ -189,13 +189,13 @@ class ThemeComponent extends Object
         }
 
         // Check if purchased
-        $cache = @rsa_decrypt(@file_get_contents(ROOT . DS . 'config' . DS . 'themes'));
+        $cache = @rsa_decrypt(@file_get_contents(ROOT . DS . 'config' . DS . 'last_check'));
         if (!$cache)
             return false;
         $cache = @json_decode($cache, true);
         if (!$cache)
             return false;
-        if (in_array($configuration['apiID'], $cache)) // in not purchased used themes list
+        if (in_array($configuration['apiID'], $cache['themes'])) // in not purchased used themes list
             return false;
 
         return true;

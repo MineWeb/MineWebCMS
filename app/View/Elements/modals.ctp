@@ -181,7 +181,7 @@
   });
 </script>
 
-<?php if($isConnected) { ?>
+<?php if(isset($isConnected) && $isConnected) { ?>
   <div class="modal modal-medium fade" id="notifications_modal" tabindex="-1" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">

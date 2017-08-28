@@ -141,7 +141,7 @@ class EyPluginComponent extends Object
             if (in_array($plugin['name'], $loadedCakePlugins)) // cakephp have load it ? (or not because fucking cache)
                 $pluginList->$id->loaded = true;
             // unload if invalid
-            if (!$pluginList->$id->isValid || !$pluginList->$id->active) {// || !$this->checkSecure($this->pluginsFolder . DS . $plugin['name'], $config)) {
+            if (!$pluginList->$id->isValid || !$pluginList->$id->active || !$this->checkSecure($this->pluginsFolder . DS . $plugin['name'], $config)) {
                 $pluginList->$id->loaded = false;
                 CakePlugin::unload($pluginList->$id->slug);
             }
@@ -252,13 +252,13 @@ class EyPluginComponent extends Object
         }
 
         // Check if purchased
-        $cache = @rsa_decrypt(@file_get_contents(ROOT . DS . 'config' . DS . 'plugins'));
+        $cache = @rsa_decrypt(@file_get_contents(ROOT . DS . 'config' . DS . 'last_check'));
         if (!$cache)
             return false;
         $cache = @json_decode($cache, true);
         if (!$cache)
             return false;
-        if (in_array($configuration['apiID'], $cache)) // in not purchased used plugins list
+        if (in_array($configuration['apiID'], $cache['plugins'])) // in not purchased used plugins list
             return false;
 
         return true;

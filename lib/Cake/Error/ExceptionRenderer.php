@@ -95,10 +95,7 @@ class ExceptionRenderer {
 		*/
 		if (method_exists($this->controller, '__initConfiguration')) {
             $this->controller->__initConfiguration();
-            $this->controller->__initUser();
-            $this->controller->__initSecurity();
             $this->controller->__initNavbar();
-            $this->controller->__initServerInfos();
         }
 		/*
 			====
