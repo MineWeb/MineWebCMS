@@ -19,7 +19,7 @@ class HelpController extends AppController {
       if($this->request->is('ajax')) {
 
         $lang = $this->Lang->lang['path'];
-        $get = @file_get_contents('http://mineweb.org/api/v1/getFAQ/'.$lang);
+        $get = @file_get_contents('http://api.mineweb.org/api/v2/getFAQ/'.$lang);
 
         if($get && json_decode($get)) {
 

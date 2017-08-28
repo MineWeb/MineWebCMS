@@ -135,7 +135,7 @@ $compatible['openSSL'] = function_exists('openssl_pkey_new');
 //allow_url_fopen
 if(function_exists('ini_get') && ini_get('allow_url_fopen') == "1") {
   $compatible['allowGetURL'] = true;
-} elseif(file_exists(ROOT.DS.'config'.DS.'installed.txt') || @file_get_contents('http://mineweb.org/api/v1/getFreeThemes')) {
+} elseif(file_exists(ROOT.DS.'config'.DS.'installed.txt') || @file_get_contents('http://api.mineweb.org/api/v2/theme/free')) {
   $compatible['allowGetURL'] = true;
 }
 
