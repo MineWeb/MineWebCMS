@@ -78,7 +78,7 @@ class AppController extends Controller
             if ($last_check !== false) {
                 $last_check_domain = parse_url($last_check['domain'], PHP_URL_HOST);
                 $last_check = $last_check['time'];
-                $last_check = strtotime('-2 hours', $last_check);
+                $last_check = strtotime('+2 hours', $last_check);
             } else {
                 $last_check = '0';
             }
@@ -574,7 +574,7 @@ class AppController extends Controller
 
         $data = json_encode($data);
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'http://localhost:8080/api/v2/' . $path);
+        curl_setopt($curl, CURLOPT_URL, 'http://api.mineweb.org/api/v2/' . $path);
         curl_setopt($curl, CURLOPT_COOKIESESSION, true);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);

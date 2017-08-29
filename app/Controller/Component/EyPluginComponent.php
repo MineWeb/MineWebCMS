@@ -102,9 +102,9 @@ class EyPluginComponent extends Object
     }
 
     // get plugin json config from his folder
-    public function getPluginConfig($slug)
+    public function getPluginConfig($slug, $array = false)
     {
-        $config = @json_decode(@file_get_contents($this->pluginsFolder . DS . $slug . DS . 'config.json'));
+        $config = @json_decode(@file_get_contents($this->pluginsFolder . DS . $slug . DS . 'config.json'), $array);
         if (!$config) return false; // error
         return $config;
     }
@@ -141,7 +141,7 @@ class EyPluginComponent extends Object
             if (in_array($plugin['name'], $loadedCakePlugins)) // cakephp have load it ? (or not because fucking cache)
                 $pluginList->$id->loaded = true;
             // unload if invalid
-            if (!$pluginList->$id->isValid || !$pluginList->$id->active || !$this->checkSecure($this->pluginsFolder . DS . $plugin['name'], $config)) {
+            if (!$pluginList->$id->isValid || !$pluginList->$id->active || !$this->checkSecure($plugin['name'])) {
                 $pluginList->$id->loaded = false;
                 CakePlugin::unload($pluginList->$id->slug);
             }
@@ -201,8 +201,11 @@ class EyPluginComponent extends Object
         return $pluginsList;
     }
 
-    private function checkSecure($path, $configuration)
+    private function checkSecure($slug)
     {
+        $path = $this->pluginsFolder . DS . $slug;
+        $configuration = $this->getPluginConfig($slug, true);
+
         $cache = @rsa_decrypt(@file_get_contents(ROOT . DS . 'config' . DS . 'last_check'));
         if (!$cache)
             return false;
@@ -211,28 +214,22 @@ class EyPluginComponent extends Object
             return false;
         if ($cache['type'] === 'DEV')
             return true;
-//debug($path);
-//debug($cache);
+
         // Get file
         if (!file_exists($path  . DS . 'secure'))
             return false;
-        $content = @file_get_contents($path  . DS . 'secure');
+        $content = @json_decode(@file_get_contents($path  . DS . 'secure'));
         if (!$content)
             return false;
-//debug($content);
-        $content = rsa_decrypt($content);
-//debug($content);
-//die();
+        $infos = @json_decode(@rsa_decrypt($content[0]));
+        if (!$infos)
+            return false;
+        $content = openssl_decrypt(hex2bin($content[1]), 'AES-128-CBC', $infos->pwd, OPENSSL_RAW_DATA, $infos->iv);
         if (!$content)
             return false;
         $content = json_decode($content, true);
         if (!$content)
             return false;
-//debug($content);
-//die();
-        // Check price
-        if ($content['free'])
-            return true;
 
         // Check configurations
         if ($content['configuration'] !== $configuration)
@@ -995,11 +992,11 @@ class EyPluginComponent extends Object
         if (!$plugins) return false;
 
         // purchased plugins
-        $apiQuery = $this->controller->sendToAPI(array(), '/plugin/purchased', true);
+        $apiQuery = $this->controller->sendToAPI(array(), 'plugin/purchased', true);
         if ($apiQuery['code'] === 200 && $response = @json_decode($apiQuery['content'], true)) { // success
             if ($response['status'] == 'success') {
                 // each plugin
-                foreach ($response['content'] as $plugin) {
+                foreach ($response['success'] as $plugin) {
                     $plugins[] = $plugin; // add to list
                 }
             }

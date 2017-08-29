@@ -73,7 +73,7 @@ class ThemeComponent extends Object
             $checkSupported = $this->checkSupported($slug);
             $themesList->$id->supported = (empty($checkSupported)) ? true : false;
             $themesList->$id->supportedErrors = $checkSupported;
-            if ($this->isValid($slug) && $this->checkSecure($dir . DS . $slug, $config))
+            if ($this->isValid($slug) && $this->checkSecure($slug))
                 $themesList->$id->valid = true;
             else
                 $themesList->$id->valid = false;
@@ -99,9 +99,9 @@ class ThemeComponent extends Object
 
         // get purchases themes
         if (!$all) {
-            $getPurchasedThemes = $this->controller->sendToAPI(array(), '/theme/purchased');
-            if ($getPurchasedThemes['code'] === 200)
-                $getAllThemes = array_merge($getAllThemes, json_decode($getPurchasedThemes['content'], true));
+            $getPurchasedThemes = $this->controller->sendToAPI(array(), 'theme/purchased');
+            if ($getPurchasedThemes['code'] === 200 && ($getPurchasedThemes = json_decode($getPurchasedThemes['content'], true)))
+                $getAllThemes = array_merge($getAllThemes, $getPurchasedThemes['success']);
         }
         // delete themes already installed
         if ($deleteInstalledThemes) {
@@ -148,8 +148,11 @@ class ThemeComponent extends Object
     }
 
     // check secure
-    private function checkSecure($path, $configuration)
+    private function checkSecure($slug)
     {
+        $path = $this->themesFolder . DS . $slug;
+        $configuration = $this->getConfig($slug, true);
+
         $cache = @rsa_decrypt(@file_get_contents(ROOT . DS . 'config' . DS . 'last_check'));
         if (!$cache)
             return false;
@@ -162,22 +165,21 @@ class ThemeComponent extends Object
         // Get file
         if (!file_exists($path  . DS . 'secure'))
             return false;
-        $content = @file_get_contents($path  . DS . 'secure');
+        $content = @json_decode(@file_get_contents($path  . DS . 'secure'));
         if (!$content)
             return false;
-        $content = rsa_decrypt($content);
+        $infos = @json_decode(@rsa_decrypt($content[0]));
+        if (!$infos)
+            return false;
+        $content = openssl_decrypt(hex2bin($content[1]), 'AES-128-CBC', $infos->pwd, OPENSSL_RAW_DATA, $infos->iv);
         if (!$content)
             return false;
         $content = json_decode($content, true);
         if (!$content)
             return false;
 
-        // Check price
-        if ($content['free'])
-            return true;
-
         // Check options key
-        if (!$content['options'] !== $configuration['configurations'])
+        if ($content['options'] !== array_keys($configuration['configurations']))
             return false;
 
         // Check configurations
