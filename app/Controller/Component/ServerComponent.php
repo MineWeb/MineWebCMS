@@ -30,6 +30,13 @@ class ServerComponent extends Object
     {
         $result = array();
         foreach ($methods as $method) {
+            if (!is_array($method)) {
+                $result[] = array(
+                    'name' => $method,
+                    'args' => []
+                );
+                continue;
+            }
             foreach ($method as $name => $args) {
                 $result[] = array(
                     'name' => $name,
@@ -149,29 +156,13 @@ class ServerComponent extends Object
         return array($return, $code, $error);
     }
 
-    private function pkcs5_pad($text, $blocksize)
-    {
-        $pad = $blocksize - (strlen($text) % $blocksize);
-        return $text . str_repeat(chr($pad), $pad);
-    }
-
-    private function pkcs5_unpad($text)
-    {
-        $pad = ord($text{strlen($text) - 1});
-        if ($pad > strlen($text)) return false;
-        if (strspn($text, chr($pad), strlen($text) - $pad) != $pad) return false;
-        return substr($text, 0, -1 * $pad);
-    }
-
     private function encryptWithKey($data)
     {
         if (!isset($this->key))
             $this->key = ClassRegistry::init('Configuration')->find('first')['Configuration']['server_secretkey'];
-
-        $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
-        $data = $this->pkcs5_pad($data, mcrypt_get_block_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC));
-        $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-        $signed = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, substr($this->key, 0, 16), $data, MCRYPT_MODE_CBC, $iv));
+        $iv_size = openssl_cipher_iv_length('AES-128-CBC');
+        $iv = openssl_random_pseudo_bytes($iv_size);
+        $signed = openssl_encrypt($data, 'AES-128-CBC', substr($this->key, 0, 16), 0, $iv);
         return json_encode(array('signed' => $signed, 'iv' => base64_encode($iv)));
     }
 
@@ -179,7 +170,9 @@ class ServerComponent extends Object
     {
         if (!isset($this->key))
             $this->key = ClassRegistry::init('Configuration')->find('first')['Configuration']['server_secretkey'];
-        return $this->pkcs5_unpad(mcrypt_decrypt(MCRYPT_RIJNDAEL_128, substr($this->key, 0, 16), base64_decode($data), MCRYPT_MODE_CBC, base64_decode($iv)));
+        $iv = base64_decode($iv);
+        $data = base64_decode($data);
+        return openssl_decrypt($data, 'AES-128-CBC', substr($this->key, 0, 16), OPENSSL_RAW_DATA, $iv);
     }
 
     public function getFirstServerID()
