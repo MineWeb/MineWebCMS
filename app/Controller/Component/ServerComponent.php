@@ -58,6 +58,20 @@ class ServerComponent extends Object
             $this->lastErrorMessage = 'Unknown method.';
             return false;
         }
+        $config = $this->getConfig($server_id);
+
+        if ($config['type'] == 1) { // only ping
+            // ping
+            $ping = $this->ping(array('ip' => $config['ip'], 'port' => $config['port']));
+            // each method
+            $result = array();
+            if (!is_array($methods))
+                $methods = array($methods);
+            foreach ($methods as $methodName => $methodValue)
+                $result[$methodName] = (isset($ping[$methodName])) ? $ping[$methodName] : false;
+            return $result;
+        }
+
         if (!is_array($methods)) {// transform into array
             $methods = array(array($methods => array()));
             $multi = false;
@@ -67,17 +81,6 @@ class ServerComponent extends Object
                 $result[] = [$name => (is_array($args)) ? $args : [$args]];
             $methods = $result;
             $multi = false;
-        }
-
-        $config = $this->getConfig($server_id);
-        if ($config['type'] == 1) { // only ping
-            // ping
-            $ping = $this->ping(array('ip' => $config['ip'], 'port' => $config['port']));
-            // each method
-            $result = array();
-            foreach ($methods as $methodName => $methodValue)
-                $result[$methodName] = (isset($ping[$methodName])) ? $ping[$methodName] : false;
-            return $result;
         }
 
         // plugin

@@ -211,20 +211,25 @@ class EyPluginComponent extends Object
             return false;
         if ($cache['type'] === 'DEV')
             return true;
-
+//debug($path);
+//debug($cache);
         // Get file
         if (!file_exists($path  . DS . 'secure'))
             return false;
-        $content = @file_get_contents($path  . DS . 'secure', true);
+        $content = @file_get_contents($path  . DS . 'secure');
         if (!$content)
             return false;
+//debug($content);
         $content = rsa_decrypt($content);
+//debug($content);
+//die();
         if (!$content)
             return false;
-        $content = json_decode($content);
+        $content = json_decode($content, true);
         if (!$content)
             return false;
-
+//debug($content);
+//die();
         // Check price
         if ($content['free'])
             return true;
@@ -234,7 +239,7 @@ class EyPluginComponent extends Object
             return false;
 
         // Check routes
-        $regex = "/Router::connect\('([A-Za-z\/*_-]+)',( |)(array\(|\[)(.*|)'controller'( |)=>( |)'([A-Za-z]+)',(.*|)'action'( |)=>( |)'([A-Za-z]+)'(.*)(\)|])\)/";
+        $regex = "/Router::connect\('([A-Za-z\/*_-]+)',( |)(array\(|\[)(.*|)'controller'( |)=>( |)'([A-Za-z_-]+)',(.*|)'action'( |)=>( |)'([A-Za-z_-]+)'(.*)(\)|])\)/";
         $routes = [];
         foreach (explode(';', file_get_contents($path . DS . 'Config' . DS . 'routes.php')) as $fileContent) {
             preg_match($regex, $fileContent, $matches);

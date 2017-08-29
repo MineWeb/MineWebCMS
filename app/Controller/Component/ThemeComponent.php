@@ -162,13 +162,13 @@ class ThemeComponent extends Object
         // Get file
         if (!file_exists($path  . DS . 'secure'))
             return false;
-        $content = @file_get_contents($path  . DS . 'secure', true);
+        $content = @file_get_contents($path  . DS . 'secure');
         if (!$content)
             return false;
         $content = rsa_decrypt($content);
         if (!$content)
             return false;
-        $content = json_decode($content);
+        $content = json_decode($content, true);
         if (!$content)
             return false;
 
