@@ -102,7 +102,7 @@ class UpdateComponent extends Object
             $lastVersion = json_decode($lastVersion, true);
 
             $this->update['status'] = true;
-            $this->update['version'] = $lastVersion['last_version'];
+            $this->update['version'] = $lastVersion['version'];
             $this->update['type'] = $lastVersion['type'];
             $this->update['visible'] = $lastVersion['visible'];
 
