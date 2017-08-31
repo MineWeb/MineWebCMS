@@ -305,11 +305,6 @@ class AppController extends Controller
                         'icon' => 'bars',
                         'permission' => 'MANAGE_NAV',
                         'route' => ['controller' => 'navbar', 'action' => 'index', 'admin' => true, 'plugin' => false]
-                    ],
-                    'SLIDER__TITLE' => [
-                        'icon' => 'picture-o',
-                        'permission' => 'MANAGE_SLIDER',
-                        'route' => ['controller' => 'slider', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ]
                 ]
             ],
@@ -402,7 +397,7 @@ class AppController extends Controller
             ]
         );
 
-        // Handle plugins
+        // Functions
         if (!function_exists('addToNav')) {
             function addToArrayAt($where, $index, $array) {
                 return array_slice($where, 0, $index, true) +
@@ -428,7 +423,17 @@ class AppController extends Controller
                 return $nav;
             }
         }
-        // Each of them
+
+        // Add slider if !useless
+        $themeConfig = $this->Theme->getConfig(Configure::read('theme'));
+        if (isset($themeConfig->slider) && $themeConfig->slider)
+            $nav['GLOBAL__ADMIN_GENERAL']['menu'] = addToArrayAt($nav['GLOBAL__ADMIN_GENERAL']['menu'], count($nav['GLOBAL__ADMIN_GENERAL']['menu']), ['SLIDER__TITLE' => [
+                'icon' => 'picture-o',
+                'permission' => 'MANAGE_SLIDER',
+                'route' => ['controller' => 'slider', 'action' => 'index', 'admin' => true, 'plugin' => false]
+            ]]);
+
+        // Handle plugins
         $plugins = $this->EyPlugin->pluginsLoaded;
         foreach ($plugins as $plugin) {
             if (!isset($plugin->admin_menus))

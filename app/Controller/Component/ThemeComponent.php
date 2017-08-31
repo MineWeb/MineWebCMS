@@ -126,7 +126,10 @@ class ThemeComponent extends Object
     {
         $path = $this->getPath($slug) . DS . 'Config' . DS . 'config.json';
         if (strtolower($slug) === 'default' || !file_exists($path))
-            return @json_decode(@file_get_contents(ROOT . DS . 'config' . DS . 'theme.default.json'), $array);
+            if ($array)
+                return ['slider' => true, 'configurations' => @json_decode(@file_get_contents(ROOT . DS . 'config' . DS . 'theme.default.json'), $array)];
+            else
+                return (object)['slider' => true, 'configurations' => @json_decode(@file_get_contents(ROOT . DS . 'config' . DS . 'theme.default.json'), $array)];
         return @json_decode(@file_get_contents($path), $array);
     }
 
@@ -212,7 +215,7 @@ class ThemeComponent extends Object
         foreach ($this->getThemesInstalled(false) as $theme)
             if ($configuredTheme === $theme->slug && $theme->valid)
                 return [$theme->slug, (array)$theme->configurations];
-        return ['default', $this->getConfig('default', true)];
+        return ['default', $this->getConfig('default', true)['configurations']];
     }
 
     // check if valid
