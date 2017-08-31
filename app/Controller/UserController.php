@@ -839,5 +839,4 @@ class UserController extends AppController
             $this->redirect('/');
         }
     }
-
 }

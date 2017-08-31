@@ -457,20 +457,6 @@
                 <hr>
 
                 <div class="form-group">
-                  <label><abbr title="<?= $Lang->get('CONFIG__KEY_MINEGUARD_EXPLAIN') ?>"><?= $Lang->get('CONFIG__KEY_MINEGUARD') ?></abbr></label>
-                  <div class="radio">
-                    <input type="radio" name="mineguard" value="true" <?= ($config['mineguard'] == 'true') ? 'checked=""' : '' ?>>
-                    <label><?= $Lang->get('GLOBAL__ENABLED') ?></label>
-                  </div>
-                  <div class="radio">
-                    <input type="radio" name="mineguard" value="false" <?= ($config['mineguard'] == 'false') ? 'checked=""': '' ?>>
-                    <label><?= $Lang->get('GLOBAL__DISABLED') ?></label>
-                  </div>
-                </div>
-
-                <hr>
-
-                <div class="form-group">
                   <label><?= $Lang->get('CONFIG__KEY_EMAIL_SEND_TYPE') ?></label>
                   <div class="radio">
                     <input type="radio" name="email_send_type" value="1" <?= ($config['email_send_type'] == '1') ? 'checked=""' : '' ?>>

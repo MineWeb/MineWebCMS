@@ -4,103 +4,11 @@ class APIController extends AppController {
 
 	public $components = array('Session', 'API');
 
-	public function mineguard() {
-		$this->autoRender = false;
-		$this->response->type('json');
-		$username = $_GET['user'];
-		$ip = $_GET['ip'];
-		$this->response->body(json_encode($this->API->verifIp($username, $ip)));
-	}
-
 	public function launcher($username, $password, $args = null) {
 		$this->autoRender = false;
 		$this->response->type('json');
 		$args = explode(',', $args);
 		$this->response->body(json_encode($this->API->get($username, $password, $args)));
-	}
-
-	public function delete_ip() {
-		$this->autoRender = false;
-		$this->response->type('json');
-        if($this->isConnected) {
-    		if($this->request->is('post')) {
-    			if(isset($this->request->data['ip'])) {
-    				if($this->API->removeIp($this->User->getKey('pseudo'), $this->request->data['ip'])) {
-							$this->response->body(json_encode(array('statut' => true, 'msg' => '')));
-    				} else {
-    					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__INTERNAL_ERROR'))));
-    				}
-    			} else {
-    				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
-    			}
-    		} else {
-    			$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
-    		}
-    	} else {
-    		$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED'))));
-    	}
-	}
-
-	public function add_ip() {
-		$this->autoRender = false;
-		$this->response->type('json');
-      if($this->isConnected) {
-    		if($this->request->is('post')) {
-    			if(!empty($this->request->data['ip'])) {
-    				if(filter_var($this->request->data['ip'], FILTER_VALIDATE_IP)) {
-	    				if($this->API->setIp($this->User->getKey('pseudo'), $this->request->data['ip'])) {
-	    					$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__IP_ADD_SUCCESS'))));
-	    				} else {
-	    					$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__INTERNAL_ERROR'))));
-	    				}
-	    			} else {
-	    				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('API__IP_INVALID'))));
-	    			}
-    			} else {
-    				$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
-    			}
-    		} else {
-    			$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
-    		}
-    	} else {
-    		$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED'))));
-    	}
-	}
-
-	public function disable_mineguard() {
-		$this->autoRender = false;
-		$this->response->type('json');
-      if($this->isConnected) {
-    		if($this->request->is('post')) {
-
-    			$this->User->setKey('allowed_ip', '0');
-
-    			$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__MINEGUARD_DISABLE_SUCCESS'))));
-
-    		} else {
-    			$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
-    		}
-    	} else {
-    		$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED'))));
-    	}
-	}
-
-	public function enable_mineguard() {
-		$this->autoRender = false;
-		$this->response->type('json');
-      if($this->isConnected) {
-    		if($this->request->is('post')) {
-
-    			$this->User->setKey('allowed_ip', serialize(array()));
-
-    			$this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__MINEGUARD_ENABLE_SUCCESS'))));
-
-    		} else {
-    			$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
-    		}
-    	} else {
-    		$this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED'))));
-    	}
 	}
 
 	public function admin_index() {

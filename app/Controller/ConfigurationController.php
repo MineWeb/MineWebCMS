@@ -17,27 +17,6 @@ class ConfigurationController extends AppController {
 							$value = serialize($value);
 						}
 						$data[$key] = $value;
-						if($key == "mineguard") {
-							if($value == "true") {
-								$this->ServerComponent = $this->Components->load('Server');
-								$this->loadModel('Server');
-								$findServers = $this->Server->findSelectableServers(true);
-								if(!empty($findServers)) {
-									foreach ($findServers as $server_id => $server_name) {
-										$this->ServerComponent->call(array('setMineguard' => 'true'), true, $server_id);
-									}
-								}
-							} else {
-								$this->ServerComponent = $this->Components->load('Server');
-								$this->loadModel('Server');
-								$findServers = $this->Server->findSelectableServers(true);
-								if(!empty($findServers)) {
-									foreach ($findServers as $server_id => $server_name) {
-										$this->ServerComponent->call(array('setMineguard' => 'false'), true, $server_id);
-									}
-								}
-							}
-						}
 					} elseif($key == "social_btn") { // si c'est pour les boutons sociaux personnalisés
 
 						$this->loadModel('SocialButton');
