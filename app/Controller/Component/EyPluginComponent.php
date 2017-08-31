@@ -122,8 +122,10 @@ class EyPluginComponent extends Object
             $plugin = $plugin['Plugin'];
             // get config
             $config = $this->getPluginConfig($plugin['name']);
-            if (!is_object($config)) // invalid plugin
+            if (!is_object($config)) { // invalid plugin
                 CakePlugin::unload($plugin['name']); // ask to cake to unload it (lol)
+                continue;
+            }
             // set config
             $id = strtolower($plugin['author'] . '.' . $plugin['name'] . '.' . $config->apiID); // on fais l'id - tout en minuscule
             $pluginList->$id = (object)array(); // init

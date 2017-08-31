@@ -278,40 +278,166 @@ class AppController extends Controller
 
     public function __initAdminNavbar()
     {
-        $plugins_need_admin = $this->EyPlugin->getPluginsActive();
-        $plugins_admin = array(
-            'general' => array(),
-            'customisation' => array(),
-            'server' => array(),
-            'other' => array(),
-            'default' => array()
+        $nav = array(
+            'Dashboard' => [
+                'icon' => 'dashboard',
+                'route' => ['controller' => 'admin', 'action' => 'index', 'admin' => true, 'plugin' => false]
+            ],
+            'GLOBAL__ADMIN_GENERAL' => [
+                'icon' => 'cogs',
+                'menu' => [
+                    'USER__USERS' => [
+                        'icon' => 'users',
+                        'permission' => 'MANAGE_USERS',
+                        'route' => ['controller' => 'user', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
+                    'PERMISSIONS__LABEL' => [
+                        'icon' => 'user',
+                        'permission' => 'MANAGE_PERMISSIONS',
+                        'route' => ['controller' => 'permissions', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
+                    'CONFIG__GENERAL_PREFERENCES' => [
+                        'icon' => 'cog',
+                        'permission' => 'MANAGE_CONFIGURATION',
+                        'route' => ['controller' => 'configuration', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
+                    'NAVBAR__TITLE' => [
+                        'icon' => 'bars',
+                        'permission' => 'MANAGE_NAV',
+                        'route' => ['controller' => 'navbar', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
+                    'SLIDER__TITLE' => [
+                        'icon' => 'picture-o',
+                        'permission' => 'MANAGE_SLIDER',
+                        'route' => ['controller' => 'slider', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ]
+                ]
+            ],
+            'GLOBAL__CUSTOMIZE' => [
+                'icon' => 'files-o',
+                'menu' => [
+                    'NEWS__TITLE' => [
+                        'icon' => 'pencil',
+                        'permission' => 'MANAGE_NEWS',
+                        'route' => ['controller' => 'news', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
+                    'PAGE__TITLE' => [
+                        'icon' => 'file-text-o',
+                        'permission' => 'MANAGE_PAGE',
+                        'route' => ['controller' => 'pages', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ]
+                ]
+            ],
+            'SERVER__TITLE' => [
+                'icon' => 'server',
+                'permission' => 'MANAGE_SERVERS',
+                'menu' => [
+                    'SERVER__LINK' => [
+                        'icon' => 'arrows-h',
+                        'route' => ['controller' => 'server', 'action' => 'link', 'admin' => true, 'plugin' => false]
+                    ],
+                    'SERVER__BANLIST' => [
+                        'icon' => 'ban',
+                        'route' => ['controller' => 'server', 'action' => 'banlist', 'admin' => true, 'plugin' => false]
+                    ],
+                    'SERVER__WHITELIST' => [
+                        'icon' => 'list',
+                        'route' => ['controller' => 'server', 'action' => 'whitelist', 'admin' => true, 'plugin' => false]
+                    ],
+                    'SERVER__ONLINE_PLAYERS' => [
+                        'icon' => 'list-ul',
+                        'route' => ['controller' => 'server', 'action' => 'online', 'admin' => true, 'plugin' => false]
+                    ]
+                ]
+            ],
+            'GLOBAL__ADMIN_OTHER_TITLE' => [
+                'icon' => 'folder-o',
+                'menu' => [
+                    'PLUGIN__TITLE' => [
+                        'icon' => 'plus',
+                        'permission' => 'MANAGE_PLUGINS',
+                        'route' => ['controller' => 'plugin', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
+                    'THEME__TITLE' => [
+                        'icon' => 'mobile',
+                        'permission' => 'MANAGE_THEMES',
+                        'route' => ['controller' => 'theme', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
+                    'API__LABEL' => [
+                        'icon' => 'sitemap',
+                        'permission' => 'MANAGE_API',
+                        'route' => ['controller' => 'API', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
+                    'NOTIFICATION__TITLE' => [
+                        'icon' => 'flag',
+                        'permission' => 'MANAGE_NOTIFICATIONS',
+                        'route' => ['controller' => 'notifications', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
+                    'HISTORY__VIEW_GLOBAL' => [
+                        'icon' => 'table',
+                        'permission' => 'VIEW_WEBSITE_HISTORY',
+                        'route' => ['controller' => 'history', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ]
+                ]
+            ],
+            'STATS__TITLE' => [
+                'icon' => 'bar-chart-o',
+                'permission' => 'VIEW_STATISTICS',
+                'route' => ['controller' => 'statistics', 'action' => 'index', 'admin' => true, 'plugin' => false]
+            ],
+            'MAINTENANCE__TITLE' => [
+                'icon' => 'hand-paper-o',
+                'permission' => 'MANAGE_MAINTENANCE',
+                'route' => ['controller' => 'maintenance', 'action' => 'index', 'admin' => true, 'plugin' => false]
+            ],
+            'GLOBAL__UPDATE' => [
+                'icon' => 'wrench',
+                'permission' => 'MANAGE_UPDATE',
+                'route' => ['controller' => 'update', 'action' => 'index', 'admin' => true, 'plugin' => false]
+            ],
+            'HELP__TITLE' => [
+                'icon' => 'question',
+                'permission' => 'USE_ADMIN_HELP',
+                'route' => ['controller' => 'help', 'action' => 'index', 'admin' => true, 'plugin' => false]
+            ]
         );
-        foreach ($plugins_need_admin as $key => $value) {
-            if (!$value->admin)
-                continue;
-            $group_menu = (isset($value->admin_group_menu)) ? $value->admin_group_menu : 'default';
-            $icon = (isset($value->admin_icon)) ? $value->admin_icon : 'circle-o';
-            $permission = (isset($value->admin_permission)) ? $value->admin_permission : null;
 
-            if (!isset($value->admin_menus) && isset($value->admin_route))
-                $plugins_admin[$group_menu][] = array(
-                    'name' => $value->admin_name,
-                    'icon' => $icon,
-                    'permission' => $permission,
-                    'slug' => $value->admin_route
-                );
-            elseif (isset($value->admin_menus))
-                $plugins_admin[$group_menu][] = array(
-                    'name' => $value->admin_name,
-                    'icon' => $icon,
-                    'submenu' => $value->admin_menus
-                );
+        // Handle plugins
+        if (!function_exists('addToNav')) {
+            function addToArrayAt($where, $index, $array) {
+                return array_slice($where, 0, $index, true) +
+                    $array +
+                    array_slice($where, $index, count($where) - $index, true);
+            }
         }
-        if (!empty($plugins_admin))
-            $plugins_need_admin = $plugins_admin;
-        else
-            $plugins_need_admin = null;
-        $this->set(compact('plugins_need_admin'));
+        if (!function_exists('addToNav')) {
+            function addToNav($menus, $nav, $index = 0)
+            {
+                foreach ($menus as $name => $menu) {
+                    if (isset($nav[$name])) // Multidimensional
+                        $nav[$name] = addToNav($menu, $nav[$name], $index + 1);
+                    else { // Add
+                        if (!isset($nav['menu']) && $index !== 0) // No others submenu
+                            $nav['menu'] = [];
+                        if ($index === 0) // Add
+                            $nav = addToArrayAt($nav, (isset($menu['index']) ? $menu['index'] : count($nav)), [$name => $menu]);
+                        else // Add into submenu
+                            $nav['menu'] = addToArrayAt($nav['menu'], (isset($menu['index']) ? $menu['index'] : count($nav['menu'])), [$name => $menu]);
+                    }
+                }
+                return $nav;
+            }
+        }
+        // Each of them
+        $plugins = $this->EyPlugin->pluginsLoaded;
+        foreach ($plugins as $plugin) {
+            if (!isset($plugin->admin_menus))
+                continue;
+            $menus = json_decode(json_encode($plugin->admin_menus), true);
+            $nav = addToNav($menus, $nav);
+        }
+
+        $this->set(compact('nav'));
     }
 
     public function __initNavbar()
