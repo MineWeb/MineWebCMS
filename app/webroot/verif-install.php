@@ -99,11 +99,7 @@ function affichImg($bool) {
 
 $compatible = array();
 
-$write = is_writable(ROOT);
-/*$write_config = is_writable(ROOT.'/config/');
-$write_tmp = is_writable(ROOT.'/app/tmp/');
-$write_plugin = is_writable(ROOT.'/app/Plugin/');*/
-$compatible['chmod'] = ($write/* && $write_config && $write_tmp && $write_plugin*/) ? true : false;
+$compatible['chmod'] = (is_writable(ROOT . DS . 'app' . DS . 'Config') && is_writable(ROOT . DS . 'app' . DS . 'Plugin') && is_writable(ROOT . DS . 'app' . DS . 'View' . DS . 'Themed') && is_writable(ROOT . DS . 'config') && is_writable(ROOT . DS . 'app' . DS . 'tmp')) ? true : false;
 
 $compatible['phpVersion'] = false;
 $compatible['ionCube'] = false;
@@ -116,7 +112,7 @@ $compatible['openSSL'] = false;
 
 $compatible['curl'] = extension_loaded('cURL');
 
-$compatible['phpVersion'] = version_compare(PHP_VERSION, '5.3', '>=');
+$compatible['phpVersion'] = version_compare(PHP_VERSION, '5.6', '>=');
 
 $compatible['pdo'] = in_array('pdo_mysql', get_loaded_extensions());
 
