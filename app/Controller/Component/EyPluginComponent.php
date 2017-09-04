@@ -12,6 +12,7 @@ class EyPluginComponent extends Object
 
     public $pluginsFolder;
     private $apiVersion = '2';
+    private $licenseType = 'BASIC';
 
     public $pluginsLoaded;
 
@@ -118,6 +119,7 @@ class EyPluginComponent extends Object
         // get cakephp loaded plugins
         $loadedCakePlugins = CakePlugin::loaded();
         // each db plugins
+        $count = 0;
         foreach ($dbPlugins as $plugin) { // On les parcours tous
             $plugin = $plugin['Plugin'];
             // get config
@@ -136,6 +138,8 @@ class EyPluginComponent extends Object
             $pluginList->$id->DBid = $plugin['id'];
             $pluginList->$id->DBinstall = $plugin['created'];
             $pluginList->$id->active = ($plugin['state']) ? true : false;
+            if ($pluginList->$id->active)
+                $count++;
             $pluginList->$id->tables = unserialize($plugin['tables']);
             $pluginList->$id->isValid = $this->isValid($pluginList->$id->slug); // plugin valid
             $pluginList->$id->loaded = false;
@@ -143,7 +147,7 @@ class EyPluginComponent extends Object
             if (in_array($plugin['name'], $loadedCakePlugins)) // cakephp have load it ? (or not because fucking cache)
                 $pluginList->$id->loaded = true;
             // unload if invalid
-            if (!$pluginList->$id->isValid || !$pluginList->$id->active || !$this->checkSecure($plugin['name'])) {
+            if (!$pluginList->$id->isValid || !$pluginList->$id->active || !$this->checkSecure($plugin['name']) || ($this->licenseType === 'DEV' && $count > 3)) {
                 $pluginList->$id->loaded = false;
                 CakePlugin::unload($pluginList->$id->slug);
             }
@@ -212,6 +216,7 @@ class EyPluginComponent extends Object
         if (!$cache)
             return false;
         $cache = @json_decode($cache, true);
+        $this->licenseType = $cache['type'];
         if (!$cache)
             return false;
         if ($cache['type'] === 'DEV')

@@ -76,6 +76,7 @@ class AppController extends Controller
             $last_check = @json_decode($last_check, true);
 
             if ($last_check !== false) {
+                $this->licenseType = $last_check['type'];
                 $last_check_domain = parse_url($last_check['domain'], PHP_URL_HOST);
                 $last_check = $last_check['time'];
                 $last_check = strtotime('+2 hours', $last_check);
@@ -649,18 +650,42 @@ class AppController extends Controller
     {
         $event = new CakeEvent('onLoadPage', $this, $this->request->data);
         $this->getEventManager()->dispatch($event);
-        $this->__setTheme();
-        if ($event->isStopped())
+        if ($event->isStopped()) {
+            $this->__setTheme();
             return $event->result;
+        }
 
         if ($this->params['prefix'] === "admin") {
             $event = new CakeEvent('onLoadAdminPanel', $this, $this->request->data);
             $this->getEventManager()->dispatch($event);
-            $this->__setTheme();
-            if ($event->isStopped())
+            if ($event->isStopped()) {
+                $this->__setTheme();
                 return $event->result;
+            }
         }
         $this->__setTheme();
+    }
+
+    public function afterFilter() {
+        $this->addDEVModal();
+    }
+
+    private function addDEVModal()
+    {
+        if ($this->licenseType !== 'DEV')
+            return;
+        if ($this->request->is('ajax') || $this->request->is('post') || $this->request->is('put') || $this->request->is('delete') || $this->request->is('head'))
+            return;
+        if ($this->Session->check('dev_modal_view'))
+            return;
+        $body = $this->response->body();
+        $firstPartBody = substr($body, 0, stripos($body, '</body>'));
+        $secondPartBody = substr($body, stripos($body, '</body>'));
+        $modal = "<script>alert('Cette licence est une licence de développement')</script>";
+
+        $body = $firstPartBody . $modal . $secondPartBody;
+        $this->Session->write('dev_modal_view', true);
+        $this->response->body($body);
     }
 
     protected function __setTheme()
