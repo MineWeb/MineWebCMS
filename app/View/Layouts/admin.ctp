@@ -151,7 +151,7 @@
                         echo '</li>';
                     }
                 }
-                displayNav($nav, (object)['Lang' => $Lang, 'Permissions' => $Permissions, 'Html' => $this->Html]);
+                displayNav($adminNavbar, (object)['Lang' => $Lang, 'Permissions' => $Permissions, 'Html' => $this->Html]);
                 ?>
             </ul>
         </section>

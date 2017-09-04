@@ -313,7 +313,7 @@ class EyPluginComponent extends Object
 
         // Check config
         $config = json_decode(file_get_contents($file . DS . 'config.json'), true);
-        $needConfigKey = array('name' => 'string', 'slug' => 'string', 'nav' => 'bool', 'admin' => 'bool', 'author' => 'string', 'version' => 'string', 'apiID' => 'int', 'useEvents' => 'bool', 'permissions' => 'array', 'permissions-available' => 'array', 'permissions-default' => 'array', 'requirements' => 'array');
+        $needConfigKey = array('name' => 'string', 'slug' => 'string', 'author' => 'string', 'version' => 'string', 'apiID' => 'int', 'useEvents' => 'bool', 'permissions' => 'array', 'permissions-available' => 'array', 'permissions-default' => 'array', 'requirements' => 'array');
         foreach ($needConfigKey as $key => $value) {
             $key = (is_array(explode('-', $key))) ? explode('-', $key) : $key; // si c'est une key multi-dimensionnel
             if (is_array($key) && count($key) > 1) { // si la clé est multi-dimensionnel
@@ -773,12 +773,12 @@ class EyPluginComponent extends Object
     }
 
     // Récupérer les plugins ou la navbar est activé (pour la nav)
-    public function findPluginsWithNavbar()
+    public function findPluginsLinks()
     {
         $plugins = array();
         foreach ($this->pluginsLoaded as $id => $data) {
-            if ($data->navbar)
-                $plugins[$id] = $data;
+            if (isset($data->navbar_routes))
+                $plugins[$data->apiID] = (object)['name' => $data->name, 'routes' => $data->navbar_routes];
         }
         return $plugins;
     }

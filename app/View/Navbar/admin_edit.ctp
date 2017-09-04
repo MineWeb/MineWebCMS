@@ -33,11 +33,15 @@
                   <label><?= $Lang->get('NAVBAR__LINK_TYPE_PLUGIN') ?></label>
                 </div>
                   <div class="plugin<?= ($nav['url']['type'] == "plugin") ? '' : ' hidden' ?>">
-                    <select class="form-control" name="url_plugin">
-                      <?php foreach ($url_plugins as $key => $value) { ?>
-                          <option value="<?= $key ?>"<?= ($nav['url']['id'] == $key) ? ' selected' : '' ?>><?= $value ?></option>
-                        <?php } ?>
-                    </select>
+                      <select class="form-control" name="url_plugin">
+                          <?php
+                          foreach ($url_plugins as $pluginId => $data) {
+                              echo '<option disabled>' . $data->name . '</option>';
+                              foreach ($data->routes as $name => $route)
+                                  echo '<option value=\'' . json_encode(['id' => $pluginId, 'route' => $route]) . '\' ' . ($nav['url']['type'] === 'plugin' && $nav['url']['id'] === $pluginId && $nav['url']['route'] === $route ? ' active' : '') . '>' . $name . ' (' . $route . ')</option>';
+                          }
+                          ?>
+                      </select>
                   </div>
                 <div class="radio">
                   <input type="radio" class="type_page" name="url_type" value="page"<?= ($nav['url']['type'] == "page") ? ' checked=""' : '' ?>>
@@ -176,57 +180,48 @@
   });
 </script>
 <script type="text/javascript">
-  function formatteData($form) {
+    function formatteData($form) {
+        var name = $form.find("input[name='name']").val();
+        var type = $form.find("input[type='radio'][name='type']:checked").val();
+        var url;
+        if (type === "normal") {
+            if ($form.find("input[name='url_type']:checked").val() === "custom")
+                url = '{"type":"custom", "url":"' + $form.find("input[name='url_custom']").val() + '"}';
+            else if ($form.find("input[name='url_type']:checked").val() === "plugin") {
+                var value = $form.find("select[name='url_plugin']").val();
+                value = JSON.parse(value);
+                url = {
+                    type: 'plugin',
+                    id: value.id,
+                    route: value.route
+                };
+                url = JSON.stringify(url);
+            } else if ($form.find("input[name='url_type']:checked").val() === "page")
+                url = '{"type":"page", "id":"' + $form.find("select[name='url_page']").val() + '"}';
+            else
+                url = "undefined";
+        } else {
+            var names = $('.name_of_nav').serialize();
+            names = names.split('&');
+            var urls = $('.url_of_nav').serialize();
+            urls = urls.split('&');
+            url = {};
+            for (var key in test = names) {
+                var l = test[key].split('=');
+                l = l[1];
+                var p = urls[key].split('=');
+                p = p[1];
+                url[l] = p;
+            }
+        }
 
-    var name = $form.find("input[name='name']").val();
-    var type = $form.find("input[type='radio'][name='type']:checked").val();
+        var inputs = {};
+        inputs['name'] = name;
+        inputs['type'] = type;
+        inputs['url'] = url;
+        inputs['open_new_tab'] = $('input[name="new_tab"]').is(':checked');
+        inputs['data[_Token][key]'] = '<?= $csrfToken ?>';
 
-    if(type == "normal") {
-
-      if($form.find("input[name='url_type']:checked").val() == "custom") {
-
-        var url = '{"type":"custom", "url":"'+$form.find("input[name='url_custom']").val()+'"}';
-
-      } else if($form.find("input[name='url_type']:checked").val() == "plugin") {
-
-        var url = '{"type":"plugin", "id":"'+$form.find("select[name='url_plugin']").val()+'"}';
-
-      } else if($form.find("input[name='url_type']:checked").val() == "page") {
-
-        var url = '{"type":"page", "id":"'+$form.find("select[name='url_page']").val()+'"}';
-
-      } else {
-
-        var url = "undefined";
-
-      }
-
-    } else {
-      var names = $('.name_of_nav').serialize();
-      names = names.split('&');
-      var urls = $('.url_of_nav').serialize();
-      urls = urls.split('&');
-      var url = {};
-      var test = "success"
-      for (var key in test = names)
-      {
-        var l = test[key].split('=');
-        l = l[1];
-        console.log(l);
-        var p = urls[key].split('=');
-        p = p[1];
-        url[l] = p;
-      }
-      console.log(url);
+        return inputs;
     }
-
-  var inputs = {};
-  inputs['name'] = name;
-  inputs['type'] = type;
-  inputs['url'] = url;
-  inputs['open_new_tab'] = $('input[name="new_tab"]').is(':checked');
-  inputs['data[_Token][key]'] = '<?= $csrfToken ?>';
-
-  return inputs;
-  }
 </script>

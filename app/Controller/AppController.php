@@ -442,7 +442,7 @@ class AppController extends Controller
             $nav = addToNav($menus, $nav);
         }
 
-        $this->set(compact('nav'));
+        $this->set('adminNavbar', $nav);
     }
 
     public function __initNavbar()
@@ -457,9 +457,12 @@ class AppController extends Controller
             $pages_listed[$value['Page']['id']] = $value['Page']['slug'];
         foreach ($nav as $key => $value) {
             if ($value['Navbar']['url']['type'] == "plugin") {
-                $plugin = $this->EyPlugin->findPlugin('DBid', $value['Navbar']['url']['id']);
+                if (isset($value['Navbar']['url']['route']))
+                    $plugin = $this->EyPlugin->findPlugin('apiID', $value['Navbar']['url']['id']);
+                else
+                    $plugin = $this->EyPlugin->findPlugin('DBid', $value['Navbar']['url']['id']);
                 if (is_object($plugin))
-                    $nav[$key]['Navbar']['url'] = Router::url('/' . strtolower($plugin->slug));
+                    $nav[$key]['Navbar']['url'] = (isset($value['Navbar']['url']['route'])) ? Router::url($value['Navbar']['url']['route']) : Router::url('/' . strtolower($plugin->slug));
                 else
                     $nav[$key]['Navbar']['url'] = '#';
             } elseif ($value['Navbar']['url']['type'] == "page") {
