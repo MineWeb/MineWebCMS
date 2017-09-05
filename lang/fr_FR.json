@@ -488,7 +488,7 @@
         "SERVER__TIMEOUT":"Temps maximum d'\u00e9x\u00e9cution",
         "SERVER__LINK_SUCCESS":"La connexion au serveur \u00e0 bien \u00e9t\u00e9 \u00e9tablie !",
         "SERVER__LINK_ERROR_MINEWEB_DOWN":"L'API de MineWeb est indisponible.",
-        "SERVER__LINK_ERROR_ALREADY_LINKED":"Le serveur est déjà lié.",
+        "SERVER__LINK_ERROR_ALREADY_LINKED":"Le serveur est déjà lié, faites /mineweb reset pour re-faire la liaison.",
         "SERVER__LINK_ERROR_INVALID_PARAMS":"La connexion au serveur \u00e0 \u00e9chou\u00e9e.",
         "SERVER__LINK_ERROR_FAILED":"La connexion au serveur \u00e0 \u00e9chou\u00e9e.",
         "SERVER__STATUS_ONLINE":"En ligne",
