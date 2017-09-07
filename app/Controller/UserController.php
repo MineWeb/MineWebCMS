@@ -423,9 +423,6 @@ class UserController extends AppController
             }
             $this->set(compact('available_ranks'));
 
-            $api = $this->API->getIp($this->User->getKey('pseudo'));
-            $this->set(compact('api'));
-
             $this->set('can_cape', $this->API->can_cape());
             $this->set('can_skin', $this->API->can_skin());
 
