@@ -104,7 +104,7 @@ class AppController extends Controller
                     throw new LicenseException('MINEWEB_DOWN');
 
                 $apiCall = json_decode($apiCall['content'], true);
-                if ($apiCall['status'] !== "success")
+                if (!$apiCall['status'])
                     throw new LicenseException($apiCall['msg']);
 
                 file_put_contents(ROOT . '/config/last_check', $apiCall['time']);
@@ -138,9 +138,12 @@ class AppController extends Controller
         }
 
         // Plugin disabled
-        if ($this->request->params['plugin'] && !$this->EyPlugin->findPlugin('slugLower', $this->request->params['plugin'])->loaded) {
-            $this->redirect('/');
-            exit;
+        if ($this->request->params['plugin']) {
+            $plugin = $this->EyPlugin->findPlugin('slugLower', $this->request->params['plugin']);
+            if (!empty($plugin) && !$plugin->loaded) {
+                $this->redirect('/');
+                exit;
+            }
         }
 
         // Global configuration
