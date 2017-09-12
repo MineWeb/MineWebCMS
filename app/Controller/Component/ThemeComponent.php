@@ -367,8 +367,8 @@ class ThemeComponent extends Object
             return false;
         }
         $apiResponse = json_decode($return['content'], true);
-        if (!$apiResponse) {
-            $this->log('[Install theme] Couldn\'t download files, invalid json returned.');
+        if ($apiResponse) {
+            $this->log('[Install theme] Couldn\'t download files, JSON: ' . json_encode($apiResponse) . '.');
             return false;
         }
         if ($update)

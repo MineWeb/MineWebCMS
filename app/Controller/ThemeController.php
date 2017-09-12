@@ -116,7 +116,7 @@ class ThemeController extends AppController
             throw new ForbiddenException();
         if (!$slug)
             throw new NotFoundException();
-
+        $this->layout = 'admin';
         // utils
         App::uses('Folder', 'Utility');
         App::uses('File', 'Utility');
