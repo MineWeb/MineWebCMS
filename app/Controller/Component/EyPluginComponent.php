@@ -229,13 +229,16 @@ class EyPluginComponent extends Object
         if (!$content)
             return false;
         $infos = @json_decode(@rsa_decrypt($content[0]));
-        if (!$infos)
+        if (!$infos || !isset($infos->pwd) || !isset($infos->iv) || !isset($infos->md5))
             return false;
-        $content = openssl_decrypt(hex2bin($content[1]), 'AES-128-CBC', $infos->pwd, OPENSSL_RAW_DATA, $infos->iv);
+        $cryptedSecure = $content[1];
+        $content = openssl_decrypt(hex2bin($cryptedSecure), 'AES-128-CBC', $infos->pwd, OPENSSL_RAW_DATA, $infos->iv);
         if (!$content)
             return false;
         $content = json_decode($content, true);
         if (!$content)
+            return false;
+        if ($infos->md5 !== md5($cryptedSecure))
             return false;
 
         // Check configurations
@@ -259,6 +262,8 @@ class EyPluginComponent extends Object
 
         // Check files
         foreach ($content['files'] as $file => $size) {
+            if (in_array($file, ['secure', 'lang/en_US.json', 'lang/fr_FR.json']))
+                continue;
             if (!file_exists($path . DS . $file))
                 return false;
             if (($fileSize = filesize($path . DS . $file)) === $size)
