@@ -364,19 +364,19 @@ class ThemeComponent extends Object
         $return = $this->controller->sendToAPI(array(), '/theme/download/' . $apiID);
         if ($return['code'] !== 200) {
             $this->log('[Install theme] Couldn\'t download files, error code (http) : ' . $return['code']);
-            return false;
+            return 'THEME__ERROR_INSTALL_DOWNLOAD_FAILED';
         }
         $apiResponse = json_decode($return['content'], true);
         if ($apiResponse) {
             $this->log('[Install theme] Couldn\'t download files, JSON: ' . json_encode($apiResponse) . '.');
-            return false;
+            return 'THEME__ERROR_INSTALL_DOWNLOAD_FAILED';
         }
         if ($update)
             $oldConfig = $this->getCustomData($slug)[0];
         // unzip files
         if (!unzip($return['content'], $this->themesFolder, 'theme-' . $apiID . '-zip', true)) {
             $this->log('[Install theme] Couldn\'t unzip files.');
-            return false;
+            return 'THEME__ERROR_INSTALL_UNZIP';
         }
         // delete mac os files (fuck hidden files)
         App::uses('Folder', 'Utility');

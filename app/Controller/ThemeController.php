@@ -56,10 +56,10 @@ class ThemeController extends AppController
         if (!$apiID)
             throw new NotFoundException();
         // install
-        $install = $this->Theme->install($apiID);
+        $error = $this->Theme->install($apiID);
 
-        if (!$install) {
-            $this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
+        if ($error !== true) {
+            $this->Session->setFlash($this->Lang->get($error), 'default.error');
             return $this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
         }
 
@@ -76,9 +76,9 @@ class ThemeController extends AppController
         if (!$apiID)
             throw new NotFoundException();
         // install
-        $update = $this->Theme->install($apiID, true, $slug);
-        if (!$update) {
-            $this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
+        $error = $this->Theme->install($apiID, true, $slug);
+        if ($error !== true) {
+            $this->Session->setFlash($this->Lang->get($error), 'default.error');
             return $this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
         }
 

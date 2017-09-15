@@ -261,6 +261,8 @@
         "THEME__UPDATE_SUCCESS": "Le th\u00e8me \u00e0 \u00e9t\u00e9 mis \u00e0 jour avec succ\u00e8s !",
         "THEME__SUPPORTED_STATUS":"Le thème est-il supporté ?",
         "THEME__SUPPORTED_EXPLAIN":"Il se peut que certaines fonctionnalités <br> ne soit pas disponible avec ce thème",
+        "THEME__ERROR_INSTALL_DOWNLOAD_FAILED": "Le thème n'a pas pu être téléchargé depuis les serveurs de mineweb.org.",
+        "THEME__ERROR_INSTALL_UNZIP": "Le thème n'a pas pu être installé, vérifiez que le dossier app/View/Themed soit disponible en écriture.",
 
         "INSTALL__STEP_1_TITLE": "\u00c9tape 1",
         "INSTALL__STEP_1_DESC": "Veuillez entrer votre cl\u00e9 de licence disponible sur votre espace membre de mineweb.org",
