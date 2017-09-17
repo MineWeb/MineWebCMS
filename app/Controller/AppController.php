@@ -460,6 +460,8 @@ class AppController extends Controller
         foreach ($pages as $key => $value)
             $pages_listed[$value['Page']['id']] = $value['Page']['slug'];
         foreach ($nav as $key => $value) {
+            if (!isset($value['Navbar']['url']['type']))
+                continue;
             if ($value['Navbar']['url']['type'] == "plugin") {
                 if (isset($value['Navbar']['url']['route']))
                     $plugin = $this->EyPlugin->findPlugin('apiID', $value['Navbar']['url']['id']);

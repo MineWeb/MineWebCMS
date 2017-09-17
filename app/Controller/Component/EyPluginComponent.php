@@ -25,13 +25,21 @@ class EyPluginComponent extends Object
         $this->pluginsFolder = ROOT . DS . 'app' . DS . 'Plugin';
     }
 
-    function shutdown(&$controller) {}
+    function shutdown(&$controller)
+    {
+    }
 
-    function beforeRender(&$controller) {}
+    function beforeRender(&$controller)
+    {
+    }
 
-    function beforeRedirect() {}
+    function beforeRedirect()
+    {
+    }
 
-    function startup(&$controller) {}
+    function startup(&$controller)
+    {
+    }
 
     public function clearCakeCache()
     {
@@ -223,22 +231,19 @@ class EyPluginComponent extends Object
             return true;
 
         // Get file
-        if (!file_exists($path  . DS . 'secure'))
+        if (!file_exists($path . DS . 'secure'))
             return false;
-        $content = @json_decode(@file_get_contents($path  . DS . 'secure'));
+        $content = @json_decode(@file_get_contents($path . DS . 'secure'));
         if (!$content)
             return false;
         $infos = @json_decode(@rsa_decrypt($content[0]));
-        if (!$infos || !isset($infos->pwd) || !isset($infos->iv) || !isset($infos->md5))
+        if (!$infos)
             return false;
-        $cryptedSecure = $content[1];
-        $content = openssl_decrypt(hex2bin($cryptedSecure), 'AES-128-CBC', $infos->pwd, OPENSSL_RAW_DATA, $infos->iv);
+        $content = openssl_decrypt(hex2bin($content[1]), 'AES-128-CBC', $infos->pwd, OPENSSL_RAW_DATA, $infos->iv);
         if (!$content)
             return false;
         $content = json_decode($content, true);
         if (!$content)
-            return false;
-        if ($infos->md5 !== md5($cryptedSecure))
             return false;
 
         // Check configurations
@@ -262,8 +267,6 @@ class EyPluginComponent extends Object
 
         // Check files
         foreach ($content['files'] as $file => $size) {
-            if (in_array($file, ['secure', 'lang/en_US.json', 'lang/fr_FR.json']))
-                continue;
             if (!file_exists($path . DS . $file))
                 return false;
             if (($fileSize = filesize($path . DS . $file)) === $size)
@@ -458,7 +461,7 @@ class EyPluginComponent extends Object
 
         $this->editDatabaseWithSchema($slug, 'DROP'); // delete custom columns
 
-        $plugin = $this->models->Plugin->find('first', array('conditions' => array('slug' => $slug)));
+        $plugin = $this->models->Plugin->find('first', array('conditions' => array('name' => $slug)));
         if (!empty($plugin))
             $this->models->Plugin->delete($plugin['Plugin']['id']); // On supprime le plugin de la db
 
@@ -488,33 +491,17 @@ class EyPluginComponent extends Object
             'connection' => $this->Schema->connection,
             'models' => false
         );
-        $schema = $this->Schema->load($options);
+        $currentSchema = $this->Schema->read($options);
 
-        $old = $this->Schema->read($options);
-        $compare = $this->Schema->compare($old, $schema);
+        if ($type === 'CREATE') {
+            $pluginSchema = $this->Schema->load($options);
+            $compare = $this->Schema->compare($currentSchema, $pluginSchema);
 
-        // Check edits
-        $databaseQueries = array();
+            // Check edits
+            $contents = [];
+            foreach ($compare as $table => $changes) {
+                if (isset($compare[$table]['create'])) continue; // not handle create here
 
-        foreach ($compare as $table => $changes) {
-            if (isset($compare[$table]['create'])) continue; // not handle create here
-
-            // DELETE PLUGIN
-            if ($type === 'DROP') {
-                if (!isset($compare[$table]['drop'])) continue; // no drop
-                // each drop
-                foreach ($compare[$table]['drop'] as $column => $structure) {
-                    if (explode('-', $column)[0] != $slug) // other plugin
-                        unset($compare[$table]['drop'][$column]);
-                }
-                // remove empty actions
-                if (count($compare[$table]['drop']) <= 0) unset($compare[$table]['drop']);
-                if (isset($compare[$table]['add'])) unset($compare[$table]['add']);
-                // set sql schema
-                if (count($compare[$table]) > 0)
-                    $contents[$table] = $db->alterSchema(array($table => $compare[$table]), $table);
-            } // INSTALL PLUGIN
-            else if ($type === 'CREATE') {
                 if (!isset($compare[$table]['add'])) continue; // no add
 
                 if (explode('__', $table)[0] != strtolower($slug)) { // other plugin
@@ -523,41 +510,45 @@ class EyPluginComponent extends Object
                             unset($compare[$table]['add'][$column]);
                     }
                 }
+                // each drop
+                foreach ($compare[$table]['drop'] as $column => $structure) {
+                    // column not from this plugin on table not from this plugin
+                    if (explode('-', $column)[0] != strtolower($slug) && explode('__', $table)[0] != strtolower($slug)) // other plugin
+                        unset($compare[$table]['drop'][$column]);
+                }
                 // remove empty actions
                 if (count($compare[$table]['drop']) <= 0) unset($compare[$table]['drop']);
-                if (isset($compare[$table]['add'])) unset($compare[$table]['add']);
+                if (count($compare[$table]['add']) <= 0) unset($compare[$table]['add']);
                 // set sql schema
                 if (count($compare[$table]) > 0)
                     $contents[$table] = $db->alterSchema(array($table => $compare[$table]), $table);
             }
-        }
-
-        // INSTALL PLUGIN
-        if ($type === 'CREATE') {
             // add tables
             $pluginTables = array();
             foreach ($compare as $table => $changes) {
                 if (isset($compare[$table]['create'])) { // is create
-                    $contents[$table] = $db->createSchema($schema, $table);
+                    $contents[$table] = $db->createSchema($pluginSchema, $table);
                     $pluginTables[] = $table; // save for delete
                 }
             }
         } // DELETE PLUGIN
         else if ($type === 'DROP') {
-            $search = $this->models->Plugin->find('first', array('conditions' => array('name' => $slug)));
-            if (empty($search)) return false;
-
-            $tables = unserialize($search['Plugin']['tables']);
-            App::import('Model', 'ConnectionManager');
-            $con = new ConnectionManager;
-            $cn = $con->getDataSource('default');
-
-            if (is_array($tables)) {
-                foreach ($tables as $table) { // on les parcours et on les supprimes
+            foreach ($currentSchema['tables'] as $table => $columns) {
+                if (explode('__', $table)[0] === strtolower($slug)) {
                     try {
-                        $cn->query("DROP TABLE IF EXISTS $table"); // on les supprimes
+                        $db->query("DROP TABLE IF EXISTS $table");
                     } catch (Exception $e) {
                         $this->log('Error when delete plugin ' . $slug . ' : ' . $e->getMessage());
+                    }
+                } else {
+                    foreach ($columns as $name => $structure) {
+                        if (explode('-', $name)[0] === strtolower($slug)) {
+                            try {
+                                $db->query("ALTER TABLE `$table` DROP COLUMN `$name`;");
+                            } catch (Exception $e) {
+                                $this->log('Error when delete plugin ' . $slug . ' : ' . $e->getMessage());
+                            }
+                        }
                     }
                 }
             }
