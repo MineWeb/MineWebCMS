@@ -674,8 +674,7 @@ class EyPluginComponent extends Object
             'apiID' => $config->apiID,
             'name' => $slug,
             'author' => $config->author,
-            'version' => $config->version,
-            'tables' => serialize($tablesName)
+            'version' => $config->version
         ));
         $this->models->Plugin->save(); // On sauvegarde le tout
 
