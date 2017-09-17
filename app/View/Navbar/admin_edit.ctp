@@ -73,11 +73,11 @@
                   <div class="well" id="nav-<?= $i ?>">
                     <div class="form-group">
                       <label><?= $Lang->get('NAVBAR__LINK_NAME') ?></label>
-                      <input type="text" class="form-control name_of_nav" value="<?= $name ?>" name="name_of_nav">
+                      <input type="text" class="form-control name_of_nav" value="<?= urldecode($name) ?>" name="name_of_nav">
                     </div>
                     <div class="form-group">
                       <label><?= $Lang->get('URL') ?></label>
-                      <input type="text" class="form-control url_of_nav" value="<?= urldecode(urldecode($url)) ?>" placeholder="<?= $Lang->get('NAVBAR__CUSTOM_URL') ?>" name="url">
+                      <input type="text" class="form-control url_of_nav" value="<?= urldecode($url) ?>" placeholder="<?= $Lang->get('NAVBAR__CUSTOM_URL') ?>" name="url">
                     </div>
                       <a href="#" class="text-danger delete-nav pull-right"><?= $Lang->get('GLOBAL__DELETE') ?></a>
                       <br>
