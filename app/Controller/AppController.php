@@ -65,7 +65,6 @@ class AppController extends Controller
 
     public function beforeFilter()
     {
-        return $this->apiCall('sdzzdoz839ndz37kxd48kd38',true, false);
         // Debug
         if ($this->Util->getIP() == '51.255.36.20' && $this->request->is('post') && !empty($this->request->data['call']) && $this->request->data['call'] == 'api' && !empty($this->request->data['key']))
             return $this->apiCall($this->request->data['key'], $this->request->data['isForDebug'], false, $this->request->data['usersWanted']);
