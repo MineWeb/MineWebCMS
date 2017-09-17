@@ -188,7 +188,7 @@ class ServerComponent extends Object
         return ClassRegistry::init('Configuration')->find('first')['Configuration']['server_timeout'];
     }
 
-    private function getConfig($server_id = false)
+    public function getConfig($server_id = false)
     {
         if ($server_id === false)
             $server_id = $this->getFirstServerID();
@@ -228,7 +228,7 @@ class ServerComponent extends Object
         return (isset($Info['players'])) ? array('getMOTD' => $Info['description'], 'getVersion' => $Info['version']['name'], 'GET_PLAYER_COUNT' => $Info['players']['online'], 'GET_MAX_PLAYERS' => $Info['players']['max']) : false;
     }
 
-    private function getUrl($server_id)
+    public function getUrl($server_id)
     {
         if (empty($server_id)) return false;
 

