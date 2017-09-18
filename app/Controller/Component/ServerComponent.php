@@ -386,8 +386,8 @@ class ServerComponent extends Object
 
     public function commands($commands, $server_id = false)
     {
-        $this->User = ClassRegistry::init('User');
         if (!is_array($commands)) {
+            $this->User = ClassRegistry::init('User');
             $commands = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $commands);
             $commands = explode('[{+}]', $commands);
         }

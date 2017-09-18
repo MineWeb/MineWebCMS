@@ -415,13 +415,11 @@ class AppSchema extends CakeSchema {
 		'email' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'rank' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 1, 'unsigned' => false),
 		'money' => array('type' => 'string', 'null' => false, 'default' => '0', 'length' => 20, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
-		'vote' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 3, 'unsigned' => false),
 		'ip' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'allowed_ip' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'skin' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1, 'unsigned' => false),
 		'cape' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1, 'unsigned' => false),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
-		'rewards_waited' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
 		'confirmed' => array('type' => 'string', 'length' => 25, 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)

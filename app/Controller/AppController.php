@@ -674,6 +674,13 @@ class AppController extends Controller
     }
 
     public function afterFilter() {
+        $event = new CakeEvent('beforePageDisplay', $this, $this->request->data);
+        $this->getEventManager()->dispatch($event);
+        if ($event->isStopped()) {
+            $this->__setTheme();
+            $this->addDEVModal();
+            return $event->result;
+        }
         $this->addDEVModal();
     }
 
@@ -758,5 +765,10 @@ class AppController extends Controller
         curl_close($curl);
 
         return array('content' => $return, 'code' => $code, 'error' => $error);
+    }
+
+    public function sendJSON($data)
+    {
+        return $this->response->body(json_encode($data));
     }
 }
