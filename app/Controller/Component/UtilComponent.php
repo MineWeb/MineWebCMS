@@ -305,6 +305,7 @@ class UtilComponent extends Object
         asort($items);
 
         foreach ($items as $name => $value) {
+            $item = $name;
             if ($rand <= $i += ($value * $pct)) {
                 $item = $name;
                 break;

