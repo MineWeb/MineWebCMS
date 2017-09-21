@@ -379,6 +379,12 @@ class ServerComponent extends Object
         return $data;
     }
 
+    public function userIsConnected($username, $server_id = false)
+    {
+        $result = $this->call(['IS_CONNECTED' => $username], $server_id);
+        return ($result && isset($result['IS_CONNECTED']) && $result['IS_CONNECTED']);
+    }
+
     public function send_command($cmd, $server_id = false)
     {
         return $this->commands(array($cmd), $server_id);
