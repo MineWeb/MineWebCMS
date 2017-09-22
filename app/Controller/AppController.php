@@ -707,9 +707,8 @@ class AppController extends Controller
 
     protected function __setTheme()
     {
-        if (!isset($this->params['prefix']) OR $this->params['prefix'] !== "admin") {
+        if (!isset($this->params['prefix']) OR $this->params['prefix'] !== "admin")
             $this->theme = Configure::read('theme');
-        }
     }
 
     public function blackhole($type)
