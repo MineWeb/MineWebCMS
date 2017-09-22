@@ -668,7 +668,10 @@ class EyPluginComponent extends Object
         $this->addPermissions($config->permissions);
 
         // Add into database
-        $this->models->Plugin->create();
+        $id = null;
+        if (($findPlugin = $this->models->Plugin->find('first', ['conditions' => ['apiID' => $config->apiID]])))
+            $id = $findPlugin['Plugin']['id'];
+        $this->models->Plugin->read(null, $id);
         $this->models->Plugin->set(array(
             'apiID' => $config->apiID,
             'name' => $slug,
