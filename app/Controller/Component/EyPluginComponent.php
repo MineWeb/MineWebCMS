@@ -148,7 +148,6 @@ class EyPluginComponent extends Object
             $pluginList->$id->active = ($plugin['state']) ? true : false;
             if ($pluginList->$id->active)
                 $count++;
-            $pluginList->$id->tables = unserialize($plugin['tables']);
             $pluginList->$id->isValid = $this->isValid($pluginList->$id->slug); // plugin valid
             $pluginList->$id->loaded = false;
             // check if loaded
