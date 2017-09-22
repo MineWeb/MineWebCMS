@@ -114,7 +114,7 @@ class UtilComponent extends Object
             $time[] = $waitTime['m'] . ' ' . $this->controller->Lang->get('GLOBAL__DATE_R_MINUTES');
         if ($waitTime['s'] > 0)
             $time[] = $waitTime['s'] . ' ' . $this->controller->Lang->get('GLOBAL__DATE_R_SECONDS');
-        return implode(', ', $wait_time);
+        return implode(', ', $time);
     }
 
     /*
