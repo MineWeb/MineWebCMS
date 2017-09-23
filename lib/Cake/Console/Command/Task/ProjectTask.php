@@ -212,7 +212,7 @@ class ProjectTask extends AppShell {
 				}
 
 				foreach ($Folder->messages() as $message) {
-					$this->out(String::wrap(' * ' . $message), 1, Shell::VERBOSE);
+					$this->out(CakeString::wrap(' * ' . $message), 1, Shell::VERBOSE);
 				}
 
 				return true;

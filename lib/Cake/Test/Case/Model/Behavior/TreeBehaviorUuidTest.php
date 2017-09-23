@@ -73,7 +73,7 @@ class TreeBehaviorUuidTest extends CakeTestCase {
 			'conditions' => array($modelClass . '.name' => '1.1')
 		));
 
-		$id = String::uuid();
+		$id = CakeString::uuid();
 		$this->Tree->create();
 		$result = $this->Tree->save(array($modelClass => array(
 			'id' => $id,

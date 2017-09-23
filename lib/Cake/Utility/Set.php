@@ -549,7 +549,7 @@ class Set {
 			return null;
 		}
 		if (is_string($path) && strpos($path, '{') !== false) {
-			$path = String::tokenize($path, '.', '{', '}');
+			$path = CakeString::tokenize($path, '.', '{', '}');
 		} elseif (is_string($path)) {
 			$path = explode('.', $path);
 		}

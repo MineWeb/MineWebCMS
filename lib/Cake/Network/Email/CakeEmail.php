@@ -765,7 +765,7 @@ class CakeEmail {
 		}
 		if ($this->_messageId !== false) {
 			if ($this->_messageId === true) {
-				$headers['Message-ID'] = '<' . str_replace('-', '', String::UUID()) . '@' . $this->_domain . '>';
+				$headers['Message-ID'] = '<' . str_replace('-', '', CakeString::UUID()) . '@' . $this->_domain . '>';
 			} else {
 				$headers['Message-ID'] = $this->_messageId;
 			}

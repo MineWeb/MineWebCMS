@@ -63,7 +63,7 @@ class Security {
  * @return string Hash
  */
 	public static function generateAuthKey() {
-		return Security::hash(String::uuid());
+		return Security::hash(CakeString::uuid());
 	}
 
 /**
