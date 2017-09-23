@@ -19,7 +19,7 @@
  */
 
 App::uses('CakeLog', 'Log');
-App::uses('String', 'Utility');
+App::uses('CakeString', 'Utility');
 
 /**
  * Provide custom logging and error handling.

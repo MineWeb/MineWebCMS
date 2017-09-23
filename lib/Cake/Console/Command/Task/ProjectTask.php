@@ -18,7 +18,7 @@
 App::uses('AppShell', 'Console/Command');
 App::uses('File', 'Utility');
 App::uses('Folder', 'Utility');
-App::uses('String', 'Utility');
+App::uses('CakeString', 'Utility');
 App::uses('Security', 'Utility');
 
 /**

@@ -14,7 +14,7 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-App::uses('String', 'Utility');
+App::uses('CakeString', 'Utility');
 
 /**
  * HelpFormatter formats help for console shells. Can format to either
