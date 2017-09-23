@@ -13,11 +13,11 @@ class UtilComponent extends Object
 
     private $smtpOptions = array();
 
-    function shutdown(&$controller)
+    function shutdown($controller)
     {
     }
 
-    function beforeRender(&$controller)
+    function beforeRender($controller)
     {
     }
 
@@ -25,16 +25,16 @@ class UtilComponent extends Object
     {
     }
 
-    function initialize(&$controller)
+    function initialize($controller)
     {
-        $this->controller =& $controller;
+        $this->controller = $controller;
 
         if ($this->controller->Configuration === NULL) {
             $this->controller->Configuration = ClassRegistry::init('Configuration');
         }
     }
 
-    function startup(&$controller)
+    function startup($controller)
     {
     }
 

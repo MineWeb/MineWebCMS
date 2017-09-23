@@ -25,11 +25,11 @@ class EyPluginComponent extends Object
         $this->pluginsFolder = ROOT . DS . 'app' . DS . 'Plugin';
     }
 
-    function shutdown(&$controller)
+    function shutdown($controller)
     {
     }
 
-    function beforeRender(&$controller)
+    function beforeRender($controller)
     {
     }
 
@@ -37,7 +37,7 @@ class EyPluginComponent extends Object
     {
     }
 
-    function startup(&$controller)
+    function startup($controller)
     {
     }
 
@@ -48,9 +48,9 @@ class EyPluginComponent extends Object
     }
 
     // init
-    function initialize(&$controller)
+    function initialize($controller)
     {
-        $this->controller =& $controller;
+        $this->controller = $controller;
         $this->controller->set('EyPlugin', $this);
         // models
         if (!class_exists('ClassRegistry')) // cakephp lol

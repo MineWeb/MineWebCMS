@@ -20,18 +20,18 @@ class ThemeComponent extends Object
         $this->themesFolder = ROOT . DS . 'app' . DS . 'View' . DS . 'Themed';
     }
 
-    public function shutdown(&$controller) {}
+    public function shutdown($controller) {}
 
-    public function beforeRender(&$controller) {}
+    public function beforeRender($controller) {}
 
     public function beforeRedirect() {}
 
-    public function startup(&$controller) {}
+    public function startup($controller) {}
 
     // init
-    public function initialize(&$controller)
+    public function initialize($controller)
     {
-        $this->controller =& $controller;
+        $this->controller = $controller;
         $this->controller->set('Theme', $this);
 
         // plugins

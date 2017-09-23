@@ -16,11 +16,11 @@ class UpdateComponent extends Object
 
     public $lastVersion;
 
-    function shutdown(&$controller)
+    function shutdown($controller)
     {
     }
 
-    function beforeRender(&$controller)
+    function beforeRender($controller)
     {
     }
 
@@ -28,12 +28,12 @@ class UpdateComponent extends Object
     {
     }
 
-    function startup(&$controller)
+    function startup($controller)
     {
     }
 
 
-    function initialize(&$controller)
+    function initialize($controller)
     {
         $this->controller = $controller;
         $controller->set('Update', $this);

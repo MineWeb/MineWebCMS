@@ -32,19 +32,19 @@ App::uses('AppHelper', 'View/Helper');
 App::uses('CakeSession', 'Model/Datasource');
 class StatisticsComponent extends Object {
 
-  function shutdown(&$controller) {
+  function shutdown($controller) {
   }
 
-  function beforeRender(&$controller) {
+  function beforeRender($controller) {
   }
 
   function beforeRedirect() {
   }
 
-  function initialize(&$controller) {
+  function initialize($controller) {
   }
 
-  function startup(&$controller) {
+  function startup($controller) {
     $cookie = CakeSession::read('visit_check');
     if(!isset($cookie) OR empty($cookie)) {
       $this->Visit = ClassRegistry::init('Visit');

@@ -36,19 +36,19 @@ class PermissionsComponent extends Object
 
     private $controller;
 
-    function shutdown(&$controller) {}
+    function shutdown($controller) {}
 
-    function beforeRender(&$controller) {}
+    function beforeRender($controller) {}
 
     function beforeRedirect() {}
 
-    function initialize(&$controller)
+    function initialize($controller)
     {
-        $this->controller =& $controller;
+        $this->controller = $controller;
         $this->userModel = ClassRegistry::init('User');
     }
 
-    function startup(&$controller)
+    function startup($controller)
     {
         $controller->set('Permissions', $this);
     }

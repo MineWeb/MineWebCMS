@@ -6,11 +6,11 @@ class ModuleComponent extends Object
     protected $controller;
     static public $vars;
 
-    function shutdown(&$controller)
+    function shutdown($controller)
     {
     }
 
-    function beforeRender(&$controller)
+    function beforeRender($controller)
     {
     }
 
@@ -18,13 +18,13 @@ class ModuleComponent extends Object
     {
     }
 
-    function initialize(&$controller)
+    function initialize($controller)
     {
-        $this->controller =& $controller;
+        $this->controller = $controller;
         $this->controller->set('Module', $this);
     }
 
-    function startup(&$controller)
+    function startup($controller)
     {
     }
 

@@ -12,17 +12,17 @@ class ServerComponent extends Object
     public $controller;
     public $components = array('Session', 'Configuration');
 
-    public function initialize(&$controller)
+    public function initialize($controller)
     {
-        $this->controller =& $controller;
+        $this->controller = $controller;
         $this->controller->set('Server', $this);
     }
 
-    public function startup(&$controller) {}
+    public function startup($controller) {}
 
-    public function beforeRender(&$controller) {}
+    public function beforeRender($controller) {}
 
-    public function shutdown(&$controller) {}
+    public function shutdown($controller) {}
 
     public function beforeRedirect() {}
 

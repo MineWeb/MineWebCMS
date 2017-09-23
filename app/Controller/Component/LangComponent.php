@@ -23,11 +23,11 @@ class LangComponent extends Object {
       }
     }
 
-	  function shutdown(&$controller) {}
-	  function beforeRender(&$controller) {}
+	  function shutdown($controller) {}
+	  function beforeRender($controller) {}
   	function beforeRedirect() {}
-	  function initialize(&$controller) {
-		  $this->controller =& $controller;
+	  function initialize($controller) {
+		  $this->controller = $controller;
 		  $this->controller->set('Lang', $this);
 
       // Maintenant on indexe tout les fichiers de langues
@@ -36,7 +36,7 @@ class LangComponent extends Object {
       // on choisi le language et on indexe les messages
       $this->lang = $this->getLang();
 	  }
-    function startup(&$controller) {}
+    function startup($controller) {}
 
     public function getLanguages() {
       $languages_available = array();

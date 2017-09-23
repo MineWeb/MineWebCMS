@@ -10,11 +10,11 @@ class APIComponent extends Object
     public $skin_active;
     public $cape_active;
 
-    function shutdown(&$controller)
+    function shutdown($controller)
     {
     }
 
-    function beforeRender(&$controller)
+    function beforeRender($controller)
     {
     }
 
@@ -22,7 +22,7 @@ class APIComponent extends Object
     {
     }
 
-    function initialize(&$controller)
+    function initialize($controller)
     {
         $this->controller = $controller;
 
@@ -52,7 +52,7 @@ class APIComponent extends Object
         }
     }
 
-    function startup(&$controller)
+    function startup($controller)
     {
     }
 

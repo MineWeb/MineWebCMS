@@ -8,21 +8,21 @@ class HistoryComponent extends Object {
 
   private $controller;
 
-  function shutdown(&$controller) {
+  function shutdown($controller) {
   }
 
-  function beforeRender(&$controller) {
+  function beforeRender($controller) {
   }
 
   function beforeRedirect() {
   }
 
-  function initialize(&$controller) {
+  function initialize($controller) {
     $this->controller = $controller;
     $this->controller->set('History', $this);
   }
 
-  function startup(&$controller) {
+  function startup($controller) {
   }
 
   function set($action, $category, $optionnal = null, $user_id = null) { // Ajoute une entrée dans l'historique général
