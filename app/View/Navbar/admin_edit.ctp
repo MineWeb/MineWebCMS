@@ -38,7 +38,7 @@
                           foreach ($url_plugins as $pluginId => $data) {
                               echo '<option disabled>' . $data->name . '</option>';
                               foreach ($data->routes as $name => $route)
-                                  echo '<option value=\'' . json_encode(['id' => $pluginId, 'route' => $route]) . '\' ' . ($nav['url']['type'] === 'plugin' && $nav['url']['id'] === $pluginId && $nav['url']['route'] === $route ? ' active' : '') . '>' . $name . ' (' . $route . ')</option>';
+                                  echo '<option value=\'' . json_encode(['id' => $pluginId, 'route' => $route]) . '\' ' . ($nav['url']['type'] === 'plugin' && $nav['url']['id'] === $pluginId && $nav['url']['route'] === $route ? ' selected' : '') . '>' . $name . ' (' . $route . ')</option>';
                           }
                           ?>
                       </select>

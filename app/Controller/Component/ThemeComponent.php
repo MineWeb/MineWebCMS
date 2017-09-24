@@ -106,9 +106,13 @@ class ThemeComponent extends Object
         // delete themes already installed
         if ($deleteInstalledThemes) {
             $installed = $this->getThemesInstalled();
-            foreach ($getAllThemes as $themeid => $themedata) {
-                if (isset($installed->$themeid))
-                    unset($getAllThemes[$themeid]);
+            $themeInstalledID = [];
+            foreach ($installed as $themeInstalled) {
+                $themeInstalledID[] = $themeInstalled->apiID;
+            }
+            foreach ($getAllThemes as $key => $theme) {
+                if (in_array($theme['id'], $themeInstalledID))
+                    unset($getAllThemes[$key]);
             }
         }
 

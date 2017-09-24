@@ -220,7 +220,7 @@ class NavbarController extends AppController
             return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
 
         $this->loadModel('Navbar');
-        $this->Navbar->create();
+        $this->Navbar->read(null, $id);
         $data = array(
             'name' => $this->request->data['name'],
             'type' => 1,
