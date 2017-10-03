@@ -71,61 +71,39 @@ class User extends AppModel
         return $this->getLastInsertId();
     }
 
-    public function login($data, $need_email_confirmed = false, $controller)
+    public function login($data, $confirmEmailIsNeeded = false, $controller)
     {
         $UtilComponent = $controller->Util;
         $LoginRetryTable = ClassRegistry::init('LoginRetry');
-        $ip = isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? $_SERVER["HTTP_CF_CONNECTING_IP"] : $_SERVER["REMOTE_ADDR"];
-        $findRetryWithIP = $LoginRetryTable->find('first', array('conditions' => array('ip' => $ip)));
-
-        // si on trouve rien OU que il n'a pas encore essayé plus de 10 fois OU que la dernière date du retry est passé depuis 2h
-
-        if (empty($findRetryWithIP) || $findRetryWithIP['LoginRetry']['count'] < 10 || strtotime('+2 hours', strtotime($findRetryWithIP['LoginRetry']['modified'])) < time()) {
-
-            $search_user = $this->find('first', array('conditions' => array('pseudo' => $data['pseudo'], 'password' => $UtilComponent->password($data['password'], $data['pseudo']))));
-            if (!empty($search_user)) {
-
-                if ($need_email_confirmed && !empty($search_user['User']['confirmed']) && date('Y-m-d H:i:s', strtotime($search_user['User']['confirmed'])) != $search_user['User']['confirmed']) {
-                    // mail non confirmé
-                    $controller->Session->write('email.confirm.user.id', $search_user['User']['id']);
-                    return 'USER__MSG_NOT_CONFIRMED_EMAIL';
-                }
-
-                return array('status' => true, 'session' => $search_user['User']['id']);
-
-            } else {
-
-                if (!isset($findRetryWithIP['LoginRetry']) || strtotime('+2 hours', strtotime($findRetryWithIP['LoginRetry']['modified'])) < time()) { //on reset à 0
-                    $findRetryWithIP['LoginRetry']['count'] = 0;
-                }
-
-                if (empty($findRetryWithIP) || !isset($findRetryWithIP['LoginRetry']['id'])) { // si il avais rien fail encore
-
-                    $LoginRetryTable->create();
-                    $LoginRetryTable->set(array(
-                        'ip' => $ip,
-                        'count' => 1
-                    ));
-                    $LoginRetryTable->save();
-
-                } else {
-
-                    $LoginRetryTable->read(null, $findRetryWithIP['LoginRetry']['id']);
-                    $LoginRetryTable->set(array(
-                        'ip' => $ip,
-                        'count' => ($findRetryWithIP['LoginRetry']['count'] + 1),
-                        'modified' => date('Y-m-d H:i:s')
-                    ));
-                    $LoginRetryTable->save();
-
-                }
-
-                return 'USER__ERROR_INVALID_CREDENTIALS';
-            }
-
-        } else {
+        $ip = $UtilComponent->getIP();
+        $findRetryWithIP = $LoginRetryTable->find('first', ['conditions' => [
+            'ip' => $ip,
+            'modified >=' => strtotime('-2 hours'),
+            'count >=' => 10
+        ]]);
+        if (!empty($findRetryWithIP))
             return 'LOGIN__BLOCKED';
+
+        $user = $this->find('first', ['conditions' => [
+            'pseudo' => $data['pseudo'],
+            'password' => $UtilComponent->password($data['password'], $data['pseudo'])
+        ]]);
+        if (empty($user)) {
+            $LoginRetryTable->updateAll([
+                'count' => 'count + 1',
+                ['ip' => $ip]
+            ]);
+            return 'USER__ERROR_INVALID_CREDENTIALS';
         }
+        $user = $user['User'];
+        $LoginRetryTable->deleteAll(['ip' => $ip]);
+
+        if ($confirmEmailIsNeeded && !empty($user['confirmed']) && date('Y-m-d H:i:s', strtotime($user['confirmed'])) != $user['confirmed']) {
+            $controller->Session->write('email.confirm.user.id', $user['id']);
+            return 'USER__MSG_NOT_CONFIRMED_EMAIL';
+        }
+
+        return ['status' => true, 'session' => $user['id']];
     }
 
     public function resetPass($data, $controller)
@@ -169,9 +147,8 @@ class User extends AppModel
 
     private function getDataBySession()
     {
-        if (empty($this->userData)) {
-            $this->userData = $this->find('first', array('conditions' => array('id' => CakeSession::check('user'))));
-        }
+        if (empty($this->userData))
+            $this->userData = $this->find('first', array('conditions' => array('id' => CakeSession::read('user'))));
         return $this->userData;
     }
 

@@ -126,40 +126,28 @@ class UserController extends AppController
 
     function ajax_login()
     {
+        if (!$this->request->is('post'))
+            throw new BadRequestException();
+        if (empty($this->request->data['pseudo']) || empty($this->request->data['password']))
+            return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]);
         $this->autoRender = false;
         $this->response->type('json');
-        if ($this->request->is('Post')) {
-            if (!empty($this->request->data['pseudo']) && !empty($this->request->data['password'])) {
 
-                $need_confirmed_email = ($this->Configuration->getKey('confirm_mail_signup') && $this->Configuration->getKey('confirm_mail_signup_block'));
+        $confirmEmailIsNeeded = ($this->Configuration->getKey('confirm_mail_signup') && $this->Configuration->getKey('confirm_mail_signup_block'));
+        $login = $this->User->login($this->request->data, $confirmEmailIsNeeded, $this);
+        if (!isset($login['status']) || $login['status'] !== true)
+            return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get($login, array('{URL_RESEND_EMAIL}' => Router::url(array('action' => 'resend_confirmation'))))]);
 
-                $login = $this->User->login($this->request->data, $need_confirmed_email, $this);
-                if (isset($login['status']) && $login['status'] === true) {
+        $event = new CakeEvent('onLogin', $this, array('user' => $this->User->getAllFromUser($this->request->data['pseudo'])));
+        $this->getEventManager()->dispatch($event);
+        if ($event->isStopped())
+            return $event->result;
 
-                    $event = new CakeEvent('onLogin', $this, array('user' => $this->User->getAllFromUser($this->request->data['pseudo'])));
-                    $this->getEventManager()->dispatch($event);
-                    if ($event->isStopped()) {
-                        return $event->result;
-                    }
+        if ($this->request->data['remember_me'])
+            $this->Cookie->write('remember_me', array('pseudo' => $this->request->data['pseudo'], 'password' => $this->User->getFromUser('password', $this->request->data['pseudo'])), true, '1 week');
+        $this->Session->write('user', $login['session']);
 
-                    if ($this->request->data['remember_me']) {
-                        $this->Cookie->write('remember_me', array('pseudo' => $this->request->data['pseudo'], 'password' => $this->User->getFromUser('password', $this->request->data['pseudo'])), true, '1 week');
-                    }
-
-                    $this->Session->write('user', $login['session']);
-
-                    $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN'))));
-
-                } else {
-                    $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get($login, array('{URL_RESEND_EMAIL}' => Router::url(array('action' => 'resend_confirmation')))))));
-                }
-
-            } else {
-                $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
-            }
-        } else {
-            $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
-        }
+        $this->sendJSON(['statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN')]);
     }
 
     function confirm($code = false)
