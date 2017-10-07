@@ -342,10 +342,8 @@ class ThemeComponent extends Object
             else {
                 // find plugin
                 $search = $this->EyPlugin->findPlugin('id', $type);
-                if (empty($search)) { // plugin not installed
-                    $errors[$type] = 'missing';
+                if (empty($search)) // plugin not installed
                     continue;
-                }
                 $versionToCompare = $this->EyPlugin->getPluginConfig($search->slug)->version;
             }
 
