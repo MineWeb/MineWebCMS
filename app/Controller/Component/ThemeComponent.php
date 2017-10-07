@@ -357,8 +357,15 @@ class ThemeComponent extends Object
                 continue;
             }
 
-            if (!$neededVersion->complies(new Version($versionToCompare)))
-                $errors[$type] = $version;
+            try {
+                if (!$neededVersion->complies(new Version($versionToCompare)))
+                    $errors[$type] = $version;
+            } catch (Exception $exception) {
+                if (isset($search))
+                    $this->log('Theme (' . $slug . ') check supported: Plugin (' . $search->slug . ') invalid version: ' . $versionToCompare);
+                else
+                    $this->log('Theme (' . $slug . ') check supported: Invalid version : ' . $versionToCompare);
+            }
         }
 
         return $errors;

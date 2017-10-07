@@ -112,7 +112,7 @@ $compatible['openSSL'] = false;
 
 $compatible['curl'] = extension_loaded('cURL');
 
-$compatible['phpVersion'] = version_compare(PHP_VERSION, '5.6', '>=');
+$compatible['phpVersion'] = version_compare(PHP_VERSION, '5.6', '>=') && version_compare(PHP_VERSION, '7.1', '<');
 
 $compatible['pdo'] = in_array('pdo_mysql', get_loaded_extensions());
 

@@ -197,7 +197,6 @@ class AppController extends Controller
         $this->set('Configuration', $this->Configuration);
 
         $website_name = $this->Configuration->getKey('name');
-
         list($theme_name, $theme_config) = $this->Theme->getCurrentTheme();
         Configure::write('theme', $theme_name);
         $this->__setTheme();

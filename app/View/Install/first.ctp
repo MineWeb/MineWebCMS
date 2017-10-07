@@ -75,7 +75,7 @@
               <td><?= affichImg($compatible['chmod']) ?></td>
             </tr>
             <tr>
-              <td>Version de PHP >= 5.4</td>
+              <td>Version de PHP >= 5.6 < 7.1</td>
               <td><?= affichImg($compatible['phpVersion']) ?></td>
             </tr>
             <tr>

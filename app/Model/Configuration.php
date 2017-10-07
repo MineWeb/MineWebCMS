@@ -4,8 +4,11 @@ class Configuration extends AppModel {
   public $dataConfig;
 
   private function getData() {
-    if(empty($this->dataConfig)) {
-      $this->dataConfig = $this->find('first')['Configuration'];
+    if (empty($this->dataConfig)) {
+      $config = $this->find('first');
+      if (!isset($config['Configuration']))
+          return [];
+      $this->dataConfig = $config['Configuration'];
     }
     return $this->dataConfig;
   }

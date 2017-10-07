@@ -93,7 +93,7 @@ class ExceptionRenderer {
 		/*
 			CUSTOM
 		*/
-		if (method_exists($this->controller, '__initConfiguration')) {
+		if (method_exists($this->controller, '__initConfiguration') && !($exception instanceof MissingConnectionException)) {
             $this->controller->__initConfiguration();
             $this->controller->__initNavbar();
         }
