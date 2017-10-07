@@ -245,9 +245,7 @@ class AppController extends Controller
     {
         $this->loadModel('User');
 
-        if (!$this->User->isConnected() && $this->Cookie->read('remember_me')) {
-            $cookie = $this->Cookie->read('remember_me');
-
+        if (!$this->User->isConnected() && ($cookie = $this->Cookie->read('remember_me')) && isset($cookie['pseudo']) && isset($cookie['password'])) {
             $user = $this->User->find('first', array(
                 'conditions' => array(
                     'pseudo' => $cookie['pseudo'],

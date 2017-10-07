@@ -176,6 +176,8 @@
     var SUCCESS_MSG = "<?= $Lang->get('GLOBAL__SUCCESS') ?>";
 
     var CSRF_TOKEN = "<?= $csrfToken ?>";
+
+    $(".navbar-collapse").css({ maxHeight: ($(window).height() - 130) - $(".navbar-header").height() + "px" });
     </script>
 
     <?php if(isset($google_analytics) && !empty($google_analytics)) { ?>
