@@ -412,6 +412,8 @@ class AppController extends Controller
         if (!function_exists('addToNav')) {
             function addToNav($menus, $nav, $index = 0)
             {
+                if (!is_array($menus))
+                    return $nav;
                 foreach ($menus as $name => $menu) {
                     if (isset($nav[$name])) // Multidimensional
                         $nav[$name] = addToNav($menu, $nav[$name], $index + 1);

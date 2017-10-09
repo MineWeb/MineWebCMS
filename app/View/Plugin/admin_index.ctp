@@ -53,7 +53,7 @@
                        <?php } ?>
                       <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete/'.$value->DBid, 'admin' => true)) ?>')" class="btn btn-danger delete"><?= $Lang->get('GLOBAL__DELETE') ?></a>
                       <?php
-                      $lastVersion = $versions[$value->apiID];
+                      $lastVersion = (isset($versions[$value->apiID])) ? $versions[$value->apiID] : false;
                       if($lastVersion && $value->version != $lastVersion) { ?>
                         <a <?= (explode('.', $lastVersion)[0] > explode('.', $value->version)[0] ? 'data-warning-update' : '') ?> href="<?= $this->Html->url(array('controller' => 'plugine', 'action' => 'update', $value->apiID, $value->slug, 'admin' => true)) ?>" class="btn btn-warning update"><?= $Lang->get('GLOBAL__UPDATE') ?></a> <!-- ICI -->
                       <?php } ?>
