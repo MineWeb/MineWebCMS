@@ -66,7 +66,7 @@ class ThemeComponent extends Object
                 continue;
             // get config
             $config = $this->getConfig($slug);
-            if (empty($config)) continue; // config not found
+            if (empty($config) || !isset($config->apiID)) continue; // config not found
             // add config
             $id = strtolower($config->author . '.' . $slug . '.' . $config->apiID);;
             $themesList->$id = $config;
