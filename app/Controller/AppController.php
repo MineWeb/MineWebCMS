@@ -770,6 +770,8 @@ class AppController extends Controller
 
     public function sendJSON($data)
     {
+        $this->response->type('json');
+        $this->autoRender = false;
         return $this->response->body(json_encode($data));
     }
 }
