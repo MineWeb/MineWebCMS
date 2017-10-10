@@ -167,8 +167,7 @@ $("#add_server").click(function() {
               new_server += '<label><?= $Lang->get('SERVER__TYPE') ?></label>';
               new_server += '<select class="form-control" name="type">';
                 new_server += '<option value="0"><?= $Lang->get('SERVER__TYPE_DEFAULT') ?></option>';
-                new_server += '<option value="1"><?= $Lang->get('SERVER__TYPE_BUNGEE') ?></option>';
-                new_server += '<option value="2"><?= $Lang->get('SERVER__TYPE_QUERY') ?></option>';
+                new_server += '<option value="1"><?= $Lang->get('SERVER__TYPE_QUERY') ?></option>';
               new_server +='</select>';
             new_server += '</div>';
             new_server += '<div class="form-group">';
