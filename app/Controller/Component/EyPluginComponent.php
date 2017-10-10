@@ -265,7 +265,7 @@ class EyPluginComponent extends Object
             return false;
 
         // Check files
-        foreach ($content['files'] as $file => $size) {
+        /*foreach ($content['files'] as $file => $size) {
             if (!file_exists($path . DS . $file))
                 return false;
             if (($fileSize = filesize($path . DS . $file)) === $size)
@@ -274,7 +274,7 @@ class EyPluginComponent extends Object
                 return false;
             else if ($size > $fileSize && (($fileSize / $size) * 100) < 75)
                 return false;
-        }
+        }*/
 
         // Check if purchased
         if (in_array($configuration['apiID'], $cache['plugins'])) // in not purchased used plugins list
