@@ -41,6 +41,15 @@ class ThemeComponent extends Object
         App::import('Vendor', 'load', array('file' => 'phar-io/version-master/load.php'));
     }
 
+    private function getThemeFromAPI($id)
+    {
+        if (isset($this->themesAvailable['all']))
+            foreach ($this->themesAvailable['all'] as $theme)
+                if (strtolower($theme['author'] . '.' . $theme['slug'] . '.' . $theme['id']) === $id)
+                    return $theme;
+        return false;
+    }
+
     // get themes in folder
     public function getThemesInstalled($api = true)
     {
@@ -68,7 +77,7 @@ class ThemeComponent extends Object
             $config = $this->getConfig($slug);
             if (empty($config) || !isset($config->apiID)) continue; // config not found
             // add config
-            $id = strtolower($config->author . '.' . $slug . '.' . $config->apiID);;
+            $id = strtolower($config->author . '.' . $slug . '.' . $config->apiID);
             $themesList->$id = $config;
             $checkSupported = $this->checkSupported($slug);
             $themesList->$id->supported = (empty($checkSupported)) ? true : false;
@@ -78,8 +87,8 @@ class ThemeComponent extends Object
             else
                 $themesList->$id->valid = false;
             // set last version
-            if (isset($this->themesAvailable['all']) && isset($this->themesAvailable['all'][$id]))
-                $themesList->$id->lastVersion = $this->themesAvailable['all'][$id]['version'];
+            if (($theme = $this->getThemeFromAPI($id)))
+                $themesList->$id->lastVersion = $theme['version'];
         }
         // cache for this request
         return $this->themesInstalled[$api] = $themesList;
@@ -198,7 +207,7 @@ class ThemeComponent extends Object
             return false;
 
         // Check files
-        foreach ($content['files'] as $file => $size) {
+        /*foreach ($content['files'] as $file => $size) {
             if (!file_exists($path . DS . $file))
                 return false;
             if (($fileSize = filesize($path . DS . $file)) === $size)
@@ -207,7 +216,7 @@ class ThemeComponent extends Object
                 return false;
             else if ($size > $fileSize && (($fileSize / $size) * 100) < 75)
                 return false;
-        }
+        }*/
 
         // Check if purchased
         if (in_array($configuration['apiID'], $cache['themes'])) // in not purchased used themes list
@@ -396,7 +405,7 @@ class ThemeComponent extends Object
         $folder->delete();
         if ($update) {
             // Config
-            $config = $this->getConfig($slug);
+            $config = $this->getConfig($slug, true);
             foreach ($config['configurations'] as $key => $value) {
                 if (isset($oldConfig[$key]))
                     $config['configurations'][$key] = $oldConfig[$key];

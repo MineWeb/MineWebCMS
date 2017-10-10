@@ -71,7 +71,9 @@ class UpdateController extends AppController {
 			$componentUpdated = ($componentUpdated) ? true : false;
 			if($this->Update->updateCMS($componentUpdated)) {
 				if($componentUpdated == '1') {
-					$this->Configuration->setKey('version', $this->Update->update['version']);
+                    $lastVersion = @file_get_contents('http://api.mineweb.org/api/v2/cms/version');
+                    $lastVersion = json_decode($lastVersion, true);
+					$this->Configuration->setKey('version', $lastVersion['version']);
 					$this->response->body(json_encode(array('statut' => 'success', 'msg' => $this->Lang->get('UPDATE__SUCCESS'))));
 				} else {
 					$this->response->body(json_encode(array('statut' => 'continue', 'msg' => '')));

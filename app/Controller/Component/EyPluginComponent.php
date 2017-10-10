@@ -616,7 +616,7 @@ class EyPluginComponent extends Object
         // Temporary file
         $filename = ROOT . DS . 'app' . DS . 'tmp' . DS . 'plugin-' . $slug . '-' . $apiID . '.zip';
         $file = fopen($filename, 'w+');
-        if (!fwrite($file, $zip)) {
+        if (!fwrite($file, $apiQuery['content'])) {
             $this->log('Error when downloading plugin, save files failed.');
             return 'ERROR__PLUGIN_PERMISSIONS';
         }
@@ -929,7 +929,7 @@ class EyPluginComponent extends Object
         $defaultPermissions = $this->controller->Permissions->permissions;
         $pluginsPermissions = array();
 
-        foreach ($this->$pluginsLoaded as $id => $data) {
+        foreach ($this->pluginsLoaded as $id => $data) {
             if (!isset($data->permissions->available)) continue; // no permissions on this plugin
             foreach ($data->permissions->available as $key => $permission) {
                 $pluginsPermissions[] = $permission; // add permission to plugins permissions
