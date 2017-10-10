@@ -188,7 +188,7 @@ class User extends AppModel
     {
         if (CakeSession::check('user')) {
             $search_user = $this->getDataBySession(CakeSession::read('user'));
-            return ($search_user) ? $search_user['User'][$key] : '';
+            return ($search_user && isset($search_user['User'][$key])) ? $search_user['User'][$key] : '';
         }
     }
 
