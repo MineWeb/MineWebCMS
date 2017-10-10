@@ -198,8 +198,8 @@ class ThemeComponent extends Object
             return false;
 
         // Check options key
-        if ($content['options'] !== array_keys($configuration['configurations']))
-            return false;
+        //if ($content['options'] !== array_keys($configuration['configurations']))
+        //    return false;
 
         // Check configurations
         unset($configuration['configurations']);
