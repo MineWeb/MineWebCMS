@@ -156,14 +156,25 @@ class ServerComponent extends Object
         return array($return, $code, $error);
     }
 
+    private function pkcs5_pad($text, $blocksize)
+    {
+        $pad = $blocksize - (strlen($text) % $blocksize);
+        return $text . str_repeat(chr($pad), $pad);
+    }
+
     private function encryptWithKey($data)
     {
         if (!isset($this->key))
             $this->key = ClassRegistry::init('Configuration')->find('first')['Configuration']['server_secretkey'];
-        $iv_size = openssl_cipher_iv_length('AES-128-CBC');
+        $iv_size = openssl_cipher_iv_length('aes-128-cbc'); // AES-128-CBC or  AES-256-CBC
         $iv = openssl_random_pseudo_bytes($iv_size);
-        $signed = openssl_encrypt($data, 'AES-128-CBC', substr($this->key, 0, 16), 0, $iv);
-        return json_encode(array('signed' => $signed, 'iv' => base64_encode($iv)));
+
+        $data = $this->pkcs5_pad($data, 16);
+
+        $signed = openssl_encrypt($data, 'aes-128-cbc', substr($this->key, 0, 16), OPENSSL_ZERO_PADDING, $iv);
+        if ($signed === false)
+            $this->log('Server: openssl_encrypt failed.');
+        return json_encode(array('signed' => ($signed), 'iv' => base64_encode($iv)));
     }
 
     private function decryptWithKey($data, $iv)
