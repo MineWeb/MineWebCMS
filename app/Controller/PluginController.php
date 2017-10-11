@@ -83,9 +83,6 @@ class PluginController extends AppController
 
         $this->History->set('INSTALL_PLUGIN', 'plugin');
 
-        $this->loadModel('Plugin');
-        $search = $this->Plugin->find('first', array('conditions' => array('apiID' => $apiID)));
-
         Configure::write('Cache.disable', true);
         App::uses('Folder', 'Utility');
         $folder = new Folder(ROOT . DS . 'app' . DS . 'tmp' . DS . 'cache');
@@ -93,15 +90,17 @@ class PluginController extends AppController
             $folder->delete();
         }
 
-        $this->EyPlugin->pluginsLoaded = $this->EyPlugin->loadPlugins();
+        $this->loadModel('Plugin');
+        $this->Plugin->cacheQueries = false;
+        $search = $this->Plugin->find('first', ['conditions' => ['apiID' => $apiID]]);
         $this->response->body(json_encode(array(
             'statut' => 'success',
             'plugin' => array(
-                'name' => $this->EyPlugin->findPlugin('id', $apiID)->name,
+                'name' => $search['Plugin']['name'],
                 'DBid' => $search['Plugin']['id'],
                 'author' => $search['Plugin']['author'],
                 'dateformatted' => $this->Lang->date($search['Plugin']['created']),
-                'version' => $search['Plugin']['version'],
+                'version' => $search['Plugin']['version']
             )
         )));
     }
