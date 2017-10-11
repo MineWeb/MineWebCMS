@@ -89,10 +89,10 @@ class User extends AppModel
             'password' => $UtilComponent->password($data['password'], $data['pseudo'])
         ]]);
         if (empty($user)) {
-            $LoginRetryTable->updateAll([
-                'count' => 'count + 1',
+            $LoginRetryTable->updateAll(
+                ['count' => 'count + 1'],
                 ['ip' => $ip]
-            ]);
+            );
             return 'USER__ERROR_INVALID_CREDENTIALS';
         }
         $user = $user['User'];
