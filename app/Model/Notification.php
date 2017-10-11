@@ -103,7 +103,7 @@ class Notification extends AppModel
 
     public function clearFromUser($id, $user_id)
     {
-        return $this->deleteAll(array('user_id' => $user_id, 'id' => $id));
+        return $this->deleteAll(array('user_id' => $user_id, 'Notification.id' => $id));
     }
 
     public function clearAllFromUser($user_id)
@@ -113,7 +113,7 @@ class Notification extends AppModel
 
     public function markAsSeenFromUser($id, $user_id)
     {
-        return $this->updateAll(array('seen' => 1), array('user_id' => $user_id, 'id' => $id));
+        return $this->updateAll(array('seen' => 1), array('user_id' => $user_id, 'Notification.id' => $id));
     }
 
     public function markAllAsSeenFromUser($user_id)
@@ -128,7 +128,7 @@ class Notification extends AppModel
 
     public function markAsSeenFromAllUsers($id)
     {
-        return $this->updateAll(array('seen' => 1), array('id' => $id));
+        return $this->updateAll(array('seen' => 1), array('Notification.id' => $id));
     }
 
     public function clearAllFromGroup($group)
