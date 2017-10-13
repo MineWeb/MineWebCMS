@@ -70,7 +70,7 @@ class AppSchema extends CakeSchema {
 				'server_cache' => 0,
 				'server_secretkey' => '',
 				'server_timeout' => 1,
-				'version' => '1.2.5',
+				'version' => '1.3.0',
 				'skype' => 'http://mineweb.org',
 				'youtube' => 'http://mineweb.org',
 				'twitter' => 'http://mineweb.org',
@@ -378,6 +378,7 @@ class AppSchema extends CakeSchema {
 		'ip' => array('type' => 'string', 'null' => false, 'length' => 120, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'port' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 5, 'unsigned' => false),
 		'type' => array('type' => 'integer', 'null' => false, 'default' => 0, 'length' => 1, 'unsigned' => false),
+        'port' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 255, 'unsigned' => false),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),

@@ -25,6 +25,9 @@ class ServerController extends AppController
             }
         }
 
+        foreach ($servers as $key => $value)
+            $servers[$key]['Server']['data'] = json_decode($servers[$key]['Server']['data'], true);
+
         $bannerMsg = $this->Lang->get('SERVER__STATUS_MESSAGE');
 
         $this->set(compact('servers', 'bannerMsg'));
@@ -195,6 +198,9 @@ class ServerController extends AppController
         else if ($this->request->data['type'] == 1) {
             if (!$this->Server->ping(array('ip' => $this->request->data['host'], 'port' => $this->request->data['port'])))
                 return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED'))));
+        } else if ($this->request->data['type'] == 2) {
+            if (!$this->Server->rcon(array('ip' => $this->request->data['host'], 'port' => $this->request->data['server_data']['rcon_port'], 'password' => $this->request->data['server_data']['rcon_password']), 'say ' . $this->Lang->get('SERVER__LINK_SUCCESS')))
+                return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED'))));
         } else {
             return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
         }
@@ -205,10 +211,16 @@ class ServerController extends AppController
 
         $this->loadModel('Server');
         $this->Server->read(null, $id);
-        $this->Server->set(array('name' => $this->request->data['name'], 'ip' => $this->request->data['host'], 'port' => $this->request->data['port'], 'type' => $this->request->data['type']));
+        $this->Server->set(array(
+            'name' => $this->request->data['name'],
+            'ip' => $this->request->data['host'],
+            'port' => $this->request->data['port'],
+            'type' => $this->request->data['type'],
+            'data' => json_encode($this->request->data['server_data'])
+        ));
         $this->Server->save();
 
-        if ($this->request->data['type'] != 1 && $secretKey)
+        if ($this->request->data['type'] == 0 && isset($secretKey) && $secretKey)
             $this->Configuration->setKey('server_secretkey', $secretKey);
 
         return $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('SERVER__LINK_SUCCESS'))));

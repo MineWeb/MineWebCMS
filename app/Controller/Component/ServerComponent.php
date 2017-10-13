@@ -56,7 +56,7 @@ class ServerComponent extends Object
         return $methods;
     }
 
-    public function call($methods = false, $server_id = false, $debug = false)
+    public function call($methods = [], $server_id = false, $debug = false)
     {
         $multi = true;
         if (!$server_id)
@@ -67,18 +67,6 @@ class ServerComponent extends Object
         }
         $config = $this->getConfig($server_id);
 
-        if ($config['type'] == 1) { // only ping
-            // ping
-            $ping = $this->ping(array('ip' => $config['ip'], 'port' => $config['port']));
-            // each method
-            $result = array();
-            if (!is_array($methods))
-                $methods = array($methods);
-            foreach ($methods as $methodName => $methodValue)
-                $result[$methodName] = (isset($ping[$methodName])) ? $ping[$methodName] : false;
-            return $result;
-        }
-
         if (!is_array($methods)) {// transform into array
             $methods = array(array($methods => array()));
             $multi = false;
@@ -88,6 +76,41 @@ class ServerComponent extends Object
                 $result[] = [$name => (is_array($args)) ? $args : [$args]];
             $methods = $result;
             $multi = false;
+        }
+
+        if ($config['type'] == 1 || $config['type'] == 2) {
+            $methodsName = array_map(function ($method) {
+                return array_keys($method)[0];
+            }, $methods);
+            $result = [];
+
+            if (in_array('RUN_COMMAND', $methodsName) && $config['type'] == 2) {
+                foreach ($methods as $key => $method) {
+                    if (array_keys($method)[0] === 'RUN_COMMAND')
+                        $result[$key]['RUN_COMMAND'] = $this->rcon(['ip' => $config['ip'], 'port' => $config['data']['rcon_port'], 'password' => $config['data']['rcon_password']], $method['RUN_COMMAND']) !== false;
+                }
+                $methodsName = array_delete_value($methodsName, 'RUN_COMMAND');
+            }
+
+            if (count($methodsName) > 0) {
+                $ping = $this->ping(array('ip' => $config['ip'], 'port' => $config['port']));
+                foreach ($methods as $key => $method) {
+                    $name = array_keys($method)[0];
+                    if (isset($ping[$name]))
+                        $result[$key][$name] = $ping[$name];
+                }
+            }
+
+            if (!$multi) {
+                $parsedResult = [];
+                foreach ($result as $item) {
+                    foreach ($item as $key => $value) {
+                        $parsedResult[$key] = $value;
+                    }
+                }
+                $result = $parsedResult;
+            }
+            return $result;
         }
 
         // plugin
@@ -217,7 +240,12 @@ class ServerComponent extends Object
         if (empty($search))
             return $this->config[$server_id] = false;
 
-        return $this->config[$server_id] = array('ip' => $search['Server']['ip'], 'port' => $search['Server']['port'], 'type' => $search['Server']['type']);
+        return $this->config[$server_id] = array(
+            'ip' => $search['Server']['ip'],
+            'port' => $search['Server']['port'],
+            'type' => $search['Server']['type'],
+            'data' => json_decode($search['Server']['data'], true)
+        );
     }
 
     public function ping($config = false)
@@ -236,7 +264,24 @@ class ServerComponent extends Object
         }
         $Query->Close();
 
-        return (isset($Info['players'])) ? array('getMOTD' => $Info['description'], 'getVersion' => $Info['version']['name'], 'GET_PLAYER_COUNT' => $Info['players']['online'], 'GET_MAX_PLAYERS' => $Info['players']['max']) : false;
+        return (isset($Info['players'])) ? array(
+            'GET_MOTD' => $Info['description'],
+            'GET_VERSION' => $Info['version']['name'],
+            'GET_PLAYER_COUNT' => $Info['players']['online'],
+            'GET_MAX_PLAYERS' => $Info['players']['max']) : false;
+    }
+
+    public function rcon($config = false, $cmd = '')
+    {
+        if (!$config || !isset($config['ip']) || !isset($config['port']) || !isset($config['password']))
+            return false;
+
+        App::import('Vendor', 'Rcon', array('file' => 'rcon/Rcon.php'));
+
+        $rcon = new Thedudeguy\Rcon($config['ip'], $config['port'], $config['password'], $this->getTimeout());
+        if ($rcon->connect())
+            return $rcon->sendCommand($cmd);
+        return false;
     }
 
     public function getUrl($server_id)
@@ -265,8 +310,8 @@ class ServerComponent extends Object
         if (!$config) // server not found
             return $this->online[$server_id] = false;
 
-        if ($config['type'] == 1) // ping only
-            return ($this->ping(array('ip' => $config['ip'], 'port' => $config['port']))) ? true : false;
+        if ($config['type'] == 1 || $config['type'] == 2) // ping only
+            return $this->online[$server_id] = ($this->ping(array('ip' => $config['ip'], 'port' => $config['port']))) ? true : false;
 
         list($return, $code, $error) = $this->request($this->getUrl($server_id), $this->encryptWithKey("[]"));
         if ($return && $code === 200)
@@ -375,7 +420,7 @@ class ServerComponent extends Object
             'GET_MAX_PLAYERS' => 0
         );
         foreach ($serverId as $id) {
-            $req = $this->call(array('GET_PLAYER_COUNT' => array(), 'GET_MAX_PLAYERS' => array()), $id);
+            $req = $this->call(['GET_PLAYER_COUNT' => [], 'GET_MAX_PLAYERS' => []], $id);
             if (!$req) continue;
             $data['GET_PLAYER_COUNT'] += intval($req['GET_PLAYER_COUNT']);
             $data['GET_MAX_PLAYERS'] += intval($req['GET_MAX_PLAYERS']);
@@ -393,7 +438,11 @@ class ServerComponent extends Object
     public function userIsConnected($username, $server_id = false)
     {
         $result = $this->call(['IS_CONNECTED' => $username], $server_id);
-        return ($result && isset($result['IS_CONNECTED']) && $result['IS_CONNECTED']);
+        if ($result && isset($result['IS_CONNECTED']) && $result['IS_CONNECTED'])
+            return true;
+        else if (!isset($result['IS_CONNECTED']))
+            return true;
+        return false;
     }
 
     public function send_command($cmd, $server_id = false)

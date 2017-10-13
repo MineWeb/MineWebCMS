@@ -53,14 +53,6 @@
               </div>
             <?php } ?>
 
-            <?php if($EyPlugin->isInstalled('eywek.vote.3')) { ?>
-              <div class="form-group">
-                <label><?= $Lang->get('VOTE__TITLE_ACTION') ?></label>
-               	<input name="vote" class="form-control" value="<?= $search_user['vote'] ?>" type="text">
-              </div>
-            <?php } ?>
-
-
             <div class="form-group">
               <label>IP</label>
               <input class="form-control" value="<?= $search_user['ip'] ?>" type="text" disabled="">

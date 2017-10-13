@@ -766,10 +766,6 @@ class UserController extends AppController
                         $data['money'] = $this->request->data['money'];
                     }
 
-                    if ($this->EyPlugin->isInstalled('eywek.vote.3')) {
-                        $data['vote'] = $this->request->data['vote'];
-                    }
-
                     $event = new CakeEvent('beforeEditUser', $this, array('user_id' => $findUser['User']['id'], 'data' => $data, 'password_updated' => $password_updated));
                     $this->getEventManager()->dispatch($event);
                     if ($event->isStopped()) {

@@ -72,6 +72,7 @@
                   <select class="form-control" name="type">
                     <option value="0"<?= ($value['Server']['type'] == '0') ? ' selected' : '' ?>><?= $Lang->get('SERVER__TYPE_DEFAULT') ?></option>
                     <option value="1"<?= ($value['Server']['type'] == '1') ? ' selected' : '' ?>><?= $Lang->get('SERVER__TYPE_QUERY') ?></option>
+                    <option value="2"<?= ($value['Server']['type'] == '2') ? ' selected' : '' ?>><?= $Lang->get('SERVER__TYPE_RCON') ?></option>
                   </select>
                 </div>
 
@@ -87,8 +88,20 @@
 
                 <div class="form-group">
                   <label><?= $Lang->get('SERVER__PORT') ?></label>
-                  <input type="text" class="form-control" name="port" value="<?= $value['Server']['port'] ?>" placeholder="Ex: 8080">
+                  <input type="text" class="form-control" name="port" value="<?= $value['Server']['port'] ?>" placeholder="Ex: 25565">
                 </div>
+
+                <?php if ($value['Server']['type'] == '2'): ?>
+                    <div class="form-group">
+                      <label><?= $Lang->get('SERVER__RCON_PORT') ?></label>
+                      <input type="text" class="form-control" name="server_data[rcon_port]" value="<?= $value['Server']['data']['rcon_port'] ?>" placeholder="Ex: 25575">
+                    </div>
+
+                    <div class="form-group">
+                      <label><?= $Lang->get('SERVER__RCON_PASSWORD') ?></label>
+                      <input type="password" class="form-control" name="server_data[rcon_password]" value="<?= $value['Server']['data']['rcon_password'] ?>" placeholder="**********">
+                    </div>
+                <?php endif; ?>
 
                 <button type="submit" class="btn btn-success"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
                 <a href="<?= $this->Html->url(array('controller' => 'server', 'action' => 'delete', 'admin' => true, $value['Server']['id'])) ?>" type="submit" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
@@ -134,21 +147,38 @@ function initSelectInfos() {
   })
 }
 $('select[name="type"]').each(function () {
-  selectInfos($(this))
+  selectInfos($(this), true)
 })
-function selectInfos(select) {
-  var type = select.val()
+function selectInfos(select, init) {
+    var type = select.val()
 
-  var infosDiv = select.parent().find('.infos-type')
-  if (infosDiv)
-    infosDiv.remove()
+    var infosDiv = select.parent().find('.infos-type')
+    if (infosDiv)
+        infosDiv.remove()
 
-  if (type == 0)
-    var infos = '<div class="alert alert-info"><?= addslashes($Lang->get('SERVER__TYPE_DEFAULT_INFOS')) ?></div>'
-  else
-    var infos = '<div class="alert alert-info"><?= addslashes($Lang->get('SERVER__TYPE_QUERY_INFOS')) ?></div>'
+    if (type == 0) {
+        var infos = '<div class="alert alert-info"><?= addslashes($Lang->get('SERVER__TYPE_DEFAULT_INFOS')) ?></div>'
+        select.parent().parent().find('input[name="server_data[rcon_port]"]').parent().remove()
+        select.parent().parent().find('input[name="server_data[rcon_password]"]').parent().remove()
+    } else if (type == 1) {
+      var infos = '<div class="alert alert-info"><?= addslashes($Lang->get('SERVER__TYPE_QUERY_INFOS')) ?></div>'
+        select.parent().parent().find('input[name="server_data[rcon_port]"]').parent().remove()
+        select.parent().parent().find('input[name="server_data[rcon_password]"]').parent().remove()
+    } else if (type == 2) {
+      var infos = '<div class="alert alert-info"><?= addslashes($Lang->get('SERVER__TYPE_RCON_INFOS')) ?></div>'
+      var new_server = '<div class="form-group">';
+        new_server += '<label><?= $Lang->get('SERVER__RCON_PORT') ?></label>';
+        new_server += '<input type="text" class="form-control" name="server_data[rcon_port]" placeholder="Ex: 25575">';
+      new_server += '</div>';
+      new_server += '<div class="form-group">';
+        new_server += '<label><?= $Lang->get('SERVER__RCON_PASSWORD') ?></label>';
+        new_server += '<input type="password" class="form-control" name="server_data[rcon_password]" placeholder="**********">';
+      new_server += '</div>';
+      if (!init)
+          $(new_server).insertBefore($(select.parent().parent().find('button')[0]))
+    }
 
-  $('<div class="infos-type"><br>' + infos + '</div>').insertAfter(select)
+    $('<div class="infos-type"><br>' + infos + '</div>').insertAfter(select)
 }
 
 var i = 0;
@@ -168,6 +198,7 @@ $("#add_server").click(function() {
               new_server += '<select class="form-control" name="type">';
                 new_server += '<option value="0"><?= $Lang->get('SERVER__TYPE_DEFAULT') ?></option>';
                 new_server += '<option value="1"><?= $Lang->get('SERVER__TYPE_QUERY') ?></option>';
+                new_server += '<option value="2"><?= $Lang->get('SERVER__TYPE_RCON') ?></option>';
               new_server +='</select>';
             new_server += '</div>';
             new_server += '<div class="form-group">';
@@ -180,7 +211,7 @@ $("#add_server").click(function() {
             new_server += '</div>';
             new_server += '<div class="form-group">';
               new_server += '<label><?= $Lang->get('SERVER__PORT') ?></label>';
-              new_server += '<input type="text" class="form-control" name="port" placeholder="Ex: 8080">';
+              new_server += '<input type="text" class="form-control" name="port" placeholder="Ex: 25565">';
             new_server += '</div>';
             new_server += '<button type="submit" class="btn btn-success"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>';
           new_server += '</form>';
