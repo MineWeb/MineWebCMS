@@ -486,7 +486,7 @@
         "SERVER__TYPE_RCON": "RCON (pas besoin de plugin)",
         "SERVER__TYPE_DEFAULT_INFOS": "Vous avez besoin d'installer le plugin MineWebBridge sur votre serveur pour utiliser ce type de liaison. Toutes les informations relatives à cette manipulation sont disponible sur <a href=\"http://docs.mineweb.org/#lier-serveur-site\">la documentation</a>",
         "SERVER__TYPE_QUERY_INFOS": "Vous n'avez pas besoin d'installer le plugin MineWebBridge sur votre serveur pour utiliser ce type de liaison. Ce type de liaison vous permet seulement d'afficher le nombre de connectés sur votre infrastructure. Toutes les informations relatives à cette manipulation sont disponible sur <a href=\"http://docs.mineweb.org/#lier-serveur-site\">la documentation</a>",
-        "SERVER__TYPE_RCON_INFOS": "some explanation",
+        "SERVER__TYPE_RCON_INFOS": "Le protocol RCON est disponible sur tous les serveurs minecraft et permet de communiquer avec le site. Pour utiliser ce protocol il vous faut le configurer dans votre server.properties : <ul><li>Passer <em>enable-rcon</em> à <b>true</b></li><li>Changer <em>rcon.password</em> par un mot de passe</li><li>Changer <em>rcon.port</em> par un port <b>disponible</b></li></ul>",
         "SERVER__HOST":"IP du serveur",
         "SERVER__PORT":"Port",
         "SERVER__RCON_PASSWORD": "Mot de passe RCON",
