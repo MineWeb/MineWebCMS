@@ -5,43 +5,35 @@ class PermissionsController extends AppController {
 	public $components = array('Session', 'History');
 
 	function admin_index() {
-		if($this->isConnected AND $this->Permissions->can('MANAGE_PERMISSIONS')) {
+	    if (!$this->Permissions->can('MANAGE_PERMISSIONS'))
+	        throw new ForbiddenException();
+        $this->set('title_for_layout', $this->Lang->get('PERMISSIONS__LABEL'));
+        $this->layout = 'admin';
 
-			$this->set('title_for_layout', $this->Lang->get('PERMISSIONS__LABEL'));
-			$this->layout = 'admin';
+        $this->loadModel('Rank');
+        $custom_ranks = $this->Rank->find('all');
+        $this->set(compact('custom_ranks'));
 
-			$this->loadModel('Rank');
-			$custom_ranks = $this->Rank->find('all');
-			$this->set(compact('custom_ranks'));
 
-			if($this->request->is('post')) {
-				foreach ($this->request->data as $key => $value) {
-					$perm = explode('-', $key);
-					$data[$perm['1']][] = $perm['0'];
-					unset($perm);
-				}
-				$this->loadModel('Permissions');
-				foreach ($data as $key => $value) {
-					$id = $this->Permissions->find('all', array('conditions' => array('rank' => $key)));
-					if(!empty($id)) {
-						$id = $id['0']['Permissions']['id'];
-						$sql_data = array('permissions' => serialize($value));
-						$this->Permissions->read(null, $id);
-					} else {
-						$sql_data = array('rank' => $key, 'permissions' => serialize($value));
-						$this->Permissions->create();
-					}
-					$this->Permissions->set($sql_data);
-					$this->Permissions->save();
-				}
+        if ($this->request->is('post')) {
+            $permissions = [];
+            foreach ($this->request->data as $permission => $checked) {
+                list($permission, $rank) = explode('-', $permission);
+                $permissions[$rank][] = $permission;
+            }
 
-				$this->Session->setFlash($this->Lang->get('PERMISSIONS__SUCCESS_SAVE'), 'default.success');
+            $this->loadModel('Permission');
+            foreach ($permissions as $rank => $permission) {
+                $this->Permission->updateAll(
+                    ['permissions' => "'" . serialize($permission) . "'"],
+                    ['rank' => $rank]
+                );
+            }
 
-			}
+            $this->Session->setFlash($this->Lang->get('PERMISSIONS__SUCCESS_SAVE'), 'default.success');
+        }
 
-		} else {
-			$this->redirect('/');
-		}
+        $this->set('permissions', $this->Permissions->get_all());
 	}
 
 	function admin_add_rank() {

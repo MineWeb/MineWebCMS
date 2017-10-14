@@ -32,16 +32,15 @@
                 </thead>
                 <tbody>
                   <?php
-                  $config = $Permissions->get_all();
-                  foreach ($config as $key => $value) { ?>
+                  foreach ($permissions as $permission => $ranks) { ?>
                     <tr>
-                      <td><?= $Lang->get('PERMISSIONS__'.$key) ?></td>
-                      <td><input type="checkbox" name="<?= $key ?>-0"<?php if($value['0'] == "true") { echo ' checked="checked"'; } ?>></td>
-                      <td><input type="checkbox" name="<?= $key ?>-2"<?php if($value['2'] == "true") { echo ' checked="checked"'; } ?>></td>
+                      <td><?= $Lang->get('PERMISSIONS__' . $permission) ?></td>
+                      <td><input type="checkbox" name="<?= $permission ?>-0"<?= ($ranks[0]) ? ' checked="checked"' : '' ?>></td>
+                      <td><input type="checkbox" name="<?= $permission ?>-2"<?= ($ranks[2]) ? ' checked="checked"' : '' ?>></td>
                       <td><input type="checkbox" checked="checked" disabled="disabled"></td>
                       <?php if(!empty($custom_ranks)) { ?>
                         <?php foreach ($custom_ranks as $k => $data) { ?>
-                      <td><input type="checkbox" name="<?= $key ?>-<?= $data['Rank']['rank_id'] ?>"<?php if(!empty($value[$data['Rank']['rank_id']]) && $value[$data['Rank']['rank_id']] == "true") { echo ' checked="checked"'; } ?>></td>
+                      <td><input type="checkbox" name="<?= $permission ?>-<?= $data['Rank']['rank_id'] ?>"<?= (isset($ranks[$data['Rank']['rank_id']]) && $ranks[$data['Rank']['rank_id']]) ? ' checked="checked"' : '' ?>></td>
                       <?php } ?>
                     <?php } ?>
                     </tr>

@@ -46,6 +46,8 @@ class PermissionsComponent extends Object
     {
         $this->controller = $controller;
         $this->userModel = ClassRegistry::init('User');
+        $this->permModel = ClassRegistry::init('Permission');
+        $this->rankModel = ClassRegistry::init('Rank');
     }
 
     function startup($controller)
@@ -53,65 +55,49 @@ class PermissionsComponent extends Object
         $controller->set('Permissions', $this);
     }
 
-    function __construct()
-    {
-    }
-
     public function can($perm)
     {
-        if ($this->userModel->isConnected()) {
-            if ($this->userModel->isAdmin()) {
-                return true;
-            } else {
-                $this->Perm = ClassRegistry::init('Permission');
-                $search_perm = $this->Perm->find('first', array('conditions' => array('rank' => $this->userModel->getKey('rank'))));
-                $search_perm = (isset($search_perm['Permission']) && is_array(unserialize($search_perm['Permission']['permissions']))) ? unserialize($search_perm['Permission']['permissions']) : array();
-                return in_array($perm, $search_perm);
-            }
-        }
-        return false;
+        if (!$this->userModel->isConnected())
+            return false;
+        if ($this->userModel->isAdmin())
+            return true;
+        return $this->have($this->userModel->getKey('rank'), $perm);
     }
 
     public function have($rank, $perm)
     {
-        if ($rank == 3 OR $rank == 4) {
-            return 'true';
-        } else {
-            $this->Perm = ClassRegistry::init('Permission');
-            $search_perm = $this->Perm->find('first', array('conditions' => array('rank' => $rank)));
-            if (!empty($search_perm)) {
-                $search_perm = (isset($search_perm['Permission']) && is_array(unserialize($search_perm['Permission']['permissions']))) ? unserialize($search_perm['Permission']['permissions']) : array();
-                return (in_array($perm, $search_perm)) ? 'true' : 'false';
-            }
-        }
-        return 'false';
+        if ($rank == 3 || $rank == 4)
+            return true;
+        $search = $this->permModel->find('first', ['conditions' => ['rank' => $rank]]);
+        if (empty($search) || !is_array(($search = unserialize($search['Permission']['permissions']))))
+            return false;
+        return in_array($perm, $search);
     }
 
     public function get_all()
     {
-        $return = $this->permissions;
-        // on récupére les perms des plugins
+        $permissionsList = $this->permissions;
         $this->EyPlugin = $this->controller->EyPlugin;
 
-        foreach ($this->EyPlugin->getPluginsActive() as $key => $value) {
-            $plugins_perm = $value->permissions->available;
-            if (isset($plugins_perm)) {
-                foreach ($plugins_perm as $k => $v) {
-                    array_push($return, $v);
-                }
+        foreach ($this->EyPlugin->getPluginsActive() as $id => $plugin) {
+            foreach ($plugin->permissions->available as $permission) {
+                array_push($permissionsList, $permission);
             }
         }
-        $this->Rank = ClassRegistry::init('Rank');
-        $custom_ranks = $this->Rank->find('all');
-        foreach ($return as $key => $value) {
-            $return[$value]['0'] = $this->have(0, $value);
-            $return[$value]['2'] = $this->have(2, $value);
-            foreach ($custom_ranks as $k => $v) {
-                $return[$value][$v['Rank']['rank_id']] = $this->have($v['Rank']['rank_id'], $value);
+
+        $customRanks = $this->rankModel->find('all');
+        $permissions = [];
+        foreach ($permissionsList as $permission) {
+            $permissions[$permission] = [
+                0 => $this->have(0, $permission),
+                2 => $this->have(2, $permission),
+            ];
+            foreach ($customRanks as $rank) {
+                $rank = $rank['Rank']['rank_id'];
+                $permissions[$permission] = $this->have($rank, $permission);
             }
-            unset($return[$key]);
         }
-        return $return;
+        return $permissions;
     }
 
 }
