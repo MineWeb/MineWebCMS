@@ -36,6 +36,8 @@ class PermissionsComponent extends Object
 
     private $controller;
 
+    public $ranks = [];
+
     function shutdown($controller) {}
 
     function beforeRender($controller) {}
@@ -64,14 +66,21 @@ class PermissionsComponent extends Object
         return $this->have($this->userModel->getKey('rank'), $perm);
     }
 
+    public function getRankPermissions($rank)
+    {
+        if (isset($this->ranks[$rank]))
+            return $this->ranks[$rank];
+        $search = $this->permModel->find('first', ['conditions' => ['rank' => $rank]]);
+        if (empty($search) || !is_array(($search = unserialize($search['Permission']['permissions']))))
+            return $this->ranks[$rank] = [];
+        return $this->ranks[$rank] = $search;
+    }
+
     public function have($rank, $perm)
     {
         if ($rank == 3 || $rank == 4)
             return true;
-        $search = $this->permModel->find('first', ['conditions' => ['rank' => $rank]]);
-        if (empty($search) || !is_array(($search = unserialize($search['Permission']['permissions']))))
-            return false;
-        return in_array($perm, $search);
+        return in_array($perm, $this->getRankPermissions($rank));
     }
 
     public function get_all()
@@ -94,7 +103,7 @@ class PermissionsComponent extends Object
             ];
             foreach ($customRanks as $rank) {
                 $rank = $rank['Rank']['rank_id'];
-                $permissions[$permission] = $this->have($rank, $permission);
+                $permissions[$permission][$rank] = $this->have($rank, $permission);
             }
         }
         return $permissions;

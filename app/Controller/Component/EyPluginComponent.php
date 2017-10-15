@@ -929,7 +929,7 @@ class EyPluginComponent extends Object
         $defaultPermissions = $this->controller->Permissions->permissions;
         $pluginsPermissions = array();
 
-        foreach ($this->pluginsLoaded as $id => $data) {
+        foreach ($this->loadPlugins() as $id => $data) {
             if (!isset($data->permissions->available)) continue; // no permissions on this plugin
             foreach ($data->permissions->available as $key => $permission) {
                 $pluginsPermissions[] = $permission; // add permission to plugins permissions

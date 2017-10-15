@@ -24,15 +24,22 @@ class PermissionsController extends AppController {
 
             $this->loadModel('Permission');
             foreach ($permissions as $rank => $permission) {
-                $this->Permission->updateAll(
-                    ['permissions' => "'" . serialize($permission) . "'"],
-                    ['rank' => $rank]
-                );
+                if (!empty(($row = $this->Permission->find('first', ['conditions' => ['rank' => $rank]]))))
+                    $this->Permission->read(null, $row['Permission']['id']);
+                else
+                    $this->Permission->create();
+                $this->Permission->set([
+                    'permissions' => serialize($permission),
+                    'rank' => $rank
+                ]);
+                $this->Permission->save();
             }
 
             $this->Session->setFlash($this->Lang->get('PERMISSIONS__SUCCESS_SAVE'), 'default.success');
         }
 
+        $this->Permissions->ranks = [];
+        $this->Permissions->permModel->cacheQueries = false;
         $this->set('permissions', $this->Permissions->get_all());
 	}
 

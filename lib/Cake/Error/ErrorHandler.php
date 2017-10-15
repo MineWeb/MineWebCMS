@@ -105,7 +105,7 @@ class ErrorHandler {
  * @return void
  * @see http://php.net/manual/en/function.set-exception-handler.php
  */
-	public static function handleException(Exception $exception) {
+	public static function handleException($exception) {
 		$config = Configure::read('Exception');
 		self::_log($exception, $config);
 
@@ -163,7 +163,7 @@ class ErrorHandler {
  * @param array $config An array of configuration for logging.
  * @return bool
  */
-	protected static function _log(Exception $exception, $config) {
+	protected static function _log($exception, $config) {
 		if (empty($config['log'])) {
 			return false;
 		}
