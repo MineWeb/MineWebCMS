@@ -40,7 +40,7 @@
 
             <div class="form-group">
               <input type="text" class="form-control" name="msg" value="<?= $bannerMsg ?>">
-              <small><?= $Lang->get('CONFIG__LANG_AVAILABLE_VARIABLES') ?> : {MOTD}, {VERSION}, {ONLINE}, {ONLINE_LIMIT}</small>
+              <small><?= $Lang->get('CONFIG__LANG_AVAILABLE_VARIABLES') ?> : {ONLINE}, {ONLINE_LIMIT}</small>
             </div>
 
             <button type="submit" class="btn btn-primary"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>

@@ -251,7 +251,7 @@ class ServerController extends AppController
         if (!$this->isConnected || !$this->Permissions->can('MANAGE_SERVERS'))
             throw new ForbiddenException();
 
-        $call = $this->Server->call('GET_BANNED_PLAYERS', $server_id);
+        $call = $this->Server->call('GET_WHITELISTED_PLAYERS', $server_id);
         $list = array();
         if (isset($call['GET_WHITELISTED_PLAYERS']) && $call['GET_WHITELISTED_PLAYERS'] !== 'NOT_FOUND')
             foreach ($call['GET_WHITELISTED_PLAYERS'] as $player)
