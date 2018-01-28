@@ -82,7 +82,7 @@ class ThemeComponent extends Object
             $checkSupported = $this->checkSupported($slug);
             $themesList->$id->supported = (empty($checkSupported)) ? true : false;
             $themesList->$id->supportedErrors = $checkSupported;
-            if ($this->isValid($slug) && $this->checkSecure($slug))
+            if ($this->isValid($slug))
                 $themesList->$id->valid = true;
             else
                 $themesList->$id->valid = false;
