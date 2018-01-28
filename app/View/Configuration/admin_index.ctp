@@ -146,7 +146,7 @@
 
                 <div class="form-group">
                   <label><?= $Lang->get('CONFIG__KEY_VERSION') ?></label>
-                    <input type="text" value="<?= $config['version'] ?>" class="form-control disabled" disabled>
+                    <input type="text" value="<?= file_get_contents(ROOT . DS . 'VERSION') ?>" class="form-control disabled" disabled>
                 </div>
 
               </div>
