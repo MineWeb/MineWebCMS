@@ -1,29 +1,7 @@
 <div class="col-xs-12 col-sm-9">
 
     <div class="tab-content">
-      <div class="tab-pane active" id="tabsleft-tab1">
-
-        <h1><?= $Lang->get('INSTALL__STEP_1_TITLE') ?></h1>
-        <p><?= $Lang->get('INSTALL__STEP_1_DESC') ?></p>
-
-        <form id="step1">
-          <div class="ajax-msg-step1"></div>
-          <?php if($step1_ok) { ?>
-              <input type="hidden" name="step1" value="true">
-          <?php } ?>
-          <div class="form-group">
-              <label>License key</label>
-              <input type="text" name="key" class="form-control"<?php if($step1_ok) { ?> value="***********************" disabled<?php } ?>>
-          </div>
-          <ul class="pager wizard">
-              <li class="previous disabled"><a href="javascript:;"><?= $Lang->get('GLOBAL__PREVIOUS') ?></a></li>
-              <li class="next" style="display: inline;"><a id="tabsleft-link" href="javascript:;"><?= $Lang->get('GLOBAL__NEXT') ?></a></li>
-              <li class="next finish hidden" style="display: none;"><a href="javascript:;"><?= $Lang->get('GLOBAL__END') ?></a></li>
-          </ul>
-        </form>
-
-      </div>
-      <div class="tab-pane" id="tabsleft-tab2">
+      <div class="tab-pane active" id="tabsleft-tab2">
         <h1><?= $Lang->get('INSTALL__STEP_2_TITLE') ?></h1>
         <p><?= $Lang->get('INSTALL__STEP_2_DESC') ?></p>
 
