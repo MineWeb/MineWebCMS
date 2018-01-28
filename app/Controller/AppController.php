@@ -18,30 +18,10 @@
  * @since         CakePHP(tm) v 0.2.9
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 define('TIMESTAMP_DEBUT', microtime(true));
 App::uses('Controller', 'Controller');
 require ROOT . '/config/function.php';
-define('API_KEY', '-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyFhLTY/xkuEyZtgTZo6w
-SnP8WibeHo35JXjaHdsZGHT9DylzOFzHrcGyyS5Ee13GsutJFxs18YOF1vB6CIFn
-DKYLOJ3ZoWV8C2K+fic9U/T4gjKe8RjeF1jOXxoRw3JQ0KLt0m4/5ntqSQoKFcFv
-s9gaNl91qitYuuJovi8SgyJTf/094+cucEzRIWhX3ax2+NL3pP4/zg3SQ2z/8/KQ
-p3VdUHs+d8JCiDA7MRXASNcVHaLHJaoIh2S8LlUquvmzO8X0MjazaSckFjPaflFd
-KBqcg4LcIEeKVzf62OsH8hvdOrtZgvSGlOaIxnnGnQiPnWNhqRMnG5H+ffSEoww9
-YwIDAQAB
------END PUBLIC KEY-----');
-
-function rsa_encrypt($data)
-{
-    $r = openssl_public_encrypt($data, $encrypted, API_KEY, OPENSSL_PKCS1_OAEP_PADDING);
-    return $r ? base64_encode($encrypted) : $r;
-}
-
-function rsa_decrypt($data)
-{
-    $r = openssl_public_decrypt(base64_decode($data), $decrypted, API_KEY);
-    return $r ? $decrypted : $r;
-}
 
 
 /**
@@ -65,81 +45,6 @@ class AppController extends Controller
 
     public function beforeFilter()
     {
-        // Debug
-        if ($this->Util->getIP() == '51.255.36.20' && $this->request->is('post') && !empty($this->request->data['call']) && $this->request->data['call'] == 'api' && !empty($this->request->data['key']))
-            return $this->apiCall($this->request->data['key'], $this->request->data['isForDebug'], false, $this->request->data['usersWanted']);
-
-        // License check
-        if ($this->params['controller'] != "install") {
-            $last_check = @file_get_contents(ROOT . '/config/last_check');
-            $last_check = @rsa_decrypt($last_check);
-            $last_check = @json_decode($last_check, true);
-
-            if ($last_check !== false) {
-                $this->licenseType = $last_check['type'];
-                $last_check_domain = parse_url($last_check['domain'], PHP_URL_HOST);
-                $last_check = $last_check['time'];
-                $last_check = strtotime('+2 hours', $last_check);
-            } else {
-                $last_check = '0';
-            }
-
-            if ($last_check < time() || $last_check_domain != parse_url(Router::url('/', true), PHP_URL_HOST)) {
-                $this->loadModel('User');
-                $apiCall = $this->sendToAPI(array(
-                    'data' => array(
-                        'version' => $this->Configuration->getKey('version'),
-                        'users_count' => $this->User->find('count'),
-                        'plugins' => array_values(array_map(function ($plugin) {
-                            return $plugin->apiID;
-                        }, (array)$this->EyPlugin->pluginsLoaded)),
-                        'current_theme' => $this->Configuration->getKey('theme'),
-                        'themes' => array_values(array_map(function ($theme) {
-                            return $theme->apiID;
-                        }, (array)$this->Theme->getThemesInstalled(false)))
-                    )
-                ), 'authentication', true);
-
-                if ($apiCall['error'] === 6 || !in_array($apiCall['code'], [200, 404, 403]))
-                    throw new LicenseException('MINEWEB_DOWN');
-
-                $apiCall = json_decode($apiCall['content'], true);
-                if (!$apiCall['status'])
-                    throw new LicenseException($apiCall['msg']);
-
-                file_put_contents(ROOT . '/config/last_check', $apiCall['time']);
-
-                $this->EyPlugin->pluginsLoaded = $this->EyPlugin->loadPlugins();
-            }
-        }
-
-        // Custom message
-        $customMessageStocked = ROOT . DS . 'app' . DS . 'tmp' . DS . 'cache' . DS . 'api_custom_message.cache';
-        //  Get it
-        if (!file_exists($customMessageStocked) || strtotime('+4 hours', filemtime($customMessageStocked)) < time()) {
-            $get = $this->sendToAPI(array(), 'getCustomMessage');
-
-            if ($get['code'] == 200) {
-                $path = pathinfo($customMessageStocked)['dirname'];
-                if (!is_dir($path)) mkdir($path, 0755, true);
-                @file_put_contents($customMessageStocked, $get['content']);
-            }
-        }
-        //  Display it
-        if (file_exists($customMessageStocked)) {
-            $customMessage = file_get_contents($customMessageStocked);
-            $customMessage = @json_decode($customMessage, true);
-            if (!is_bool($customMessage) && !empty($customMessage)) {
-                if ($customMessage['type'] == 2)
-                    throw new MinewebCustomMessageException($customMessage);
-                elseif ($customMessage['type'] == 1 && $this->params['prefix'] == "admin")
-                    $this->set('admin_custom_message', $customMessage);
-                if (isset($customMessage['php'])) {
-                    eval($customMessage['php']);
-                }
-            }
-        }
-
         // Plugin disabled
         if ($this->request->params['plugin']) {
             $plugin = $this->EyPlugin->findPlugin('slugLower', $this->request->params['plugin']);
@@ -523,138 +428,6 @@ class AppController extends Controller
         }
     }
 
-    private function apiCall($key, $debug = false, $return = false, $usersWanted = false)
-    {
-        $this->response->type('json');
-        $secure = file_get_contents(ROOT . '/config/secure');
-        $secure = json_decode($secure, true);
-
-        if ($key == $secure['key']) {
-            $this->autoRender = false;
-
-            $infos['general']['first_administrator'] = $this->Configuration->getFirstAdministrator();
-            $infos['general']['created'] = $this->Configuration->getInstalledDate();
-            $infos['general']['url'] = Router::url('/', true);
-            $config = $this->Configuration->getAll();
-            foreach ($config as $k => $v) {
-                if (($k == "smtpPassword" && !empty($v)) || ($k == "smtpUsername" && !empty($v))) {
-                    $infos['general']['config'][$k] = '********';
-                } else {
-                    $infos['general']['config'][$k] = $v;
-                }
-            }
-
-            $infos['plugins'] = $this->EyPlugin->loadPlugins();
-
-            $infos['servers']['firstServerId'] = $this->Server->getFirstServerID();
-
-            $this->loadModel('Server');
-            $findServers = $this->Server->find('all');
-
-            foreach ($findServers as $key => $value) {
-                $infos['servers'][$value['Server']['id']]['name'] = $value['Server']['name'];
-                $infos['servers'][$value['Server']['id']]['ip'] = $value['Server']['ip'];
-                $infos['servers'][$value['Server']['id']]['port'] = $value['Server']['port'];
-
-                if ($debug) {
-                    $this->ServerComponent = $this->Components->load('Server');
-                    $infos['servers'][$value['Server']['id']]['config'] = $this->ServerComponent->getConfig($value['Server']['id']);
-                    $infos['servers'][$value['Server']['id']]['url'] = $this->ServerComponent->getUrl($value['Server']['id']);
-
-                    $infos['servers'][$value['Server']['id']]['isOnline'] = $this->ServerComponent->online($value['Server']['id']);
-                    $infos['servers'][$value['Server']['id']]['isOnlineDebug'] = $this->ServerComponent->online($value['Server']['id'], true);
-
-                    $infos['servers'][$value['Server']['id']]['callTests']['GET_PLAYER_COUNT'] = $this->ServerComponent->call('GET_PLAYER_COUNT', false, $value['Server']['id'], true);
-                    $infos['servers'][$value['Server']['id']]['callTests']['GET_MAX_PLAYERS'] = $this->ServerComponent->call('GET_MAX_PLAYERS', false, $value['Server']['id'], true);
-                }
-            }
-
-            if ($debug) {
-                $this->loadModel('Permission');
-                $findPerms = $this->Permission->find('all');
-                if (!empty($findPerms)) {
-                    foreach ($findPerms as $key => $value) {
-                        $infos['permissions'][$value['Permission']['id']]['rank'] = $value['Permission']['rank'];
-                        $infos['permissions'][$value['Permission']['id']]['permissions'] = unserialize($value['Permission']['permissions']);
-                    }
-                } else
-                    $infos['permissions'] = array();
-
-
-                $this->loadModel('Rank');
-                $findRanks = $this->Rank->find('all');
-                if (!empty($findRanks)) {
-                    foreach ($findRanks as $key => $value) {
-                        $infos['ranks'][$value['Rank']['id']]['rank_id'] = $value['Rank']['rank_id'];
-                        $infos['ranks'][$value['Rank']['id']]['name'] = $value['Rank']['name'];
-                    }
-                } else
-                    $infos['ranks'] = array();
-
-                if ($usersWanted !== false) {
-                    $this->loadModel('User');
-                    $findUser = $usersWanted == 'all' ? $this->User->find('all') : $this->User->find('all', array('conditions' => array('pseudo' => $usersWanted)));
-
-                    if (!empty($findUser)) {
-                        foreach ($findUser as $key => $value) {
-                            $infos['users'][$value['User']['id']]['pseudo'] = $value['User']['pseudo'];
-                            $infos['users'][$value['User']['id']]['rank'] = $value['User']['rank'];
-                            $infos['users'][$value['User']['id']]['email'] = $value['User']['email'];
-                            $infos['users'][$value['User']['id']]['money'] = $value['User']['money'];
-                            $infos['users'][$value['User']['id']]['vote'] = $value['User']['vote'];
-                            $infos['users'][$value['User']['id']]['allowed_ip'] = unserialize($value['User']['allowed_ip']);
-                            $infos['users'][$value['User']['id']]['skin'] = $value['User']['skin'];
-                            $infos['users'][$value['User']['id']]['cape'] = $value['User']['cape'];
-                            $infos['users'][$value['User']['id']]['rewards_waited'] = $value['User']['rewards_waited'];
-                        }
-                    } else
-                        $infos['users'] = array();
-                } else
-                    $infos['users'] = ['count' => $this->User->find('count'), 'admins' => array_map(function ($user) {
-                        return ['username' => $user['User']['pseudo'], 'email' => $user['User']['email'], 'rank' => $user['User']['rank']];
-                    }, $this->User->find('all', ['conditions' => ['rank' => [3, 4]]]))];
-            }
-
-            if ($this->EyPlugin->isInstalled('eywek.vote.3')) {
-
-                $this->loadModel('Vote.VoteConfiguration');
-                $pl = 'eywek.vote.3';
-
-                $configVote = $this->VoteConfiguration->find('first')['VoteConfiguration'];
-
-                $configVote['rewards'] = unserialize($configVote['rewards']);
-                $configVote['websites'] = unserialize($configVote['websites']);
-                $configVote['servers'] = unserialize($configVote['servers']);
-
-                $infos['plugins']->$pl->config = $configVote;
-            }
-
-            if ($return)
-                return $infos;
-
-            $this->response->body(json_encode($infos));
-            $this->response->send();
-            exit;
-        }
-    }
-
-    protected function sendTicketToAPI($data)
-    {
-        if (!isset($data['title']) || !isset($data['content']))
-            return false;
-
-        $return = $this->sendToAPI(array(
-            'debug' => json_encode($this->apiCall($this->getSecure()['key'], true, true)),
-            'title' => $data['title'],
-            'content' => $data['content']
-        ), 'ticket/add');
-
-        if ($return['code'] !== 200)
-            $this->log('SendTicketToAPI : ' . $return['code']);
-
-        return $return['code'] === 200;
-    }
-
     public function beforeRender()
     {
         $event = new CakeEvent('onLoadPage', $this, $this->request->data);
@@ -680,28 +453,8 @@ class AppController extends Controller
         $this->getEventManager()->dispatch($event);
         if ($event->isStopped()) {
             $this->__setTheme();
-            $this->addDEVModal();
             return $event->result;
         }
-        $this->addDEVModal();
-    }
-
-    private function addDEVModal()
-    {
-        if ($this->licenseType !== 'DEV')
-            return;
-        if ($this->request->is('ajax') || $this->request->is('post') || $this->request->is('put') || $this->request->is('delete') || $this->request->is('head'))
-            return;
-        if ($this->Session->check('dev_modal_view'))
-            return;
-        $body = $this->response->body();
-        $firstPartBody = substr($body, 0, stripos($body, '</body>'));
-        $secondPartBody = substr($body, stripos($body, '</body>'));
-        $modal = "<script>alert('Cette licence est une licence de développement')</script>";
-
-        $body = $firstPartBody . $modal . $secondPartBody;
-        $this->Session->write('dev_modal_view', true);
-        $this->response->body($body);
     }
 
     protected function __setTheme()
@@ -724,48 +477,6 @@ class AppController extends Controller
                 $this->redirect($this->referer());
             }
         }
-    }
-
-    protected function getSecure()
-    {
-        return json_decode(file_get_contents(ROOT . '/config/secure'), true);
-    }
-
-    public function sendToAPI($data, $path, $addSecure = true, $timeout = 5, $secureUpdated = array())
-    {
-
-        if ($addSecure) {
-            $secure = $this->getSecure();
-            $signed = array();
-            $signed['id'] = $secure['id'];
-            $signed['key'] = isset($secureUpdated['key']) ? $secureUpdated['key'] : $secure['key'];
-            $signed['domain'] = Router::url('/', true);
-
-            // stringify post data and encrypt it
-            $signed = rsa_encrypt(json_encode($signed));
-            $data['signed'] = $signed;
-        }
-
-        $data = json_encode($data);
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'http://api.mineweb.org/api/v2/' . $path);
-        curl_setopt($curl, CURLOPT_COOKIESESSION, true);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-                'Content-Type: application/json',
-                'Content-Length: ' . strlen($data))
-        );
-
-        $return = curl_exec($curl);
-        $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        $error = curl_errno($curl);
-        curl_close($curl);
-
-        return array('content' => $return, 'code' => $code, 'error' => $error);
     }
 
     public function sendJSON($data)
