@@ -5,8 +5,8 @@ class UpdateComponent extends Object
 
     public $components = array('Session', 'Configuration', 'Lang');
 
-    public $update = array('status' => false, 'version' => NULL, 'type' => NULL, 'visible' => false);
-    public $cmsVersion = NULL;
+    public $cmsVersion;
+    public $lastVersion;
 
     private $updateLogFile;
     private $updateLogFileName;
@@ -14,23 +14,17 @@ class UpdateComponent extends Object
 
     private $controller;
 
-    public $lastVersion;
-
     function shutdown($controller)
-    {
-    }
+    {}
 
     function beforeRender($controller)
-    {
-    }
+    {}
 
     function beforeRedirect()
-    {
-    }
+    {}
 
     function startup($controller)
-    {
-    }
+    {}
 
 
     function initialize($controller)
@@ -42,30 +36,6 @@ class UpdateComponent extends Object
 
         // On check si il y a une nouvelle mise à jour
         $this->check();
-
-        // Si il n'y a pas de cache ou qu'il est outdated
-        //if(!file_exists(ROOT.'/config/update') OR strtotime('+5 hours', filemtime(ROOT.'/config/update')) < time()) {
-
-        if ($this->update['status']) {
-            // Si elle est forcé on l'éxecute
-            if ($this->update['type'] == "forced" && ($this->controller->Configuration->getKey('forced_updates') === false || $this->controller->Configuration->getKey('forced_updates'))) {
-
-                // On update l'updater
-                if (!file_exists(ROOT . DS . 'update_forced_inprogress')) {
-                    $this->updateCMS(false); // Première fois qu'elle est lancée
-                    file_put_contents(ROOT . DS . 'update_forced_inprogress', '1');
-                    $this->controller->redirect($this->controller->request->here); // on le redirige à la même page
-                } else {
-
-                    // On update le CMS
-                    $this->updateCMS(true);
-                    unlink(ROOT . DS . 'update_forced_inprogress');
-                    $this->controller->redirect($this->controller->request->here);
-                }
-
-            }
-        }
-        //}
     }
 
     /*
@@ -74,14 +44,9 @@ class UpdateComponent extends Object
 
     public function available()
     {
-        if (version_compare($this->cmsVersion, $this->update['version'], '<')) {
+        if (version_compare($this->cmsVersion, $this->lastVersion, '<')) {
             $this->Lang = $this->controller->Lang;
-
-            if ($this->update['status']) {
-                if ($this->update['visible'] AND $this->update['type'] == "choice") { // choice -> l'utilisateur choisis ou pas, forced -> la màj est faite automatiquement
-                    return '<div class="alert alert-info">' . $this->Lang->get('UPDATE__AVAILABLE') . ' ' . $this->Lang->get('UPDATE__CMS_VERSION') . ' : ' . $this->cmsVersion . ', ' . $this->Lang->get('UPDATE__LAST_VERSION') . ' : ' . $this->update['version'] . ' <a href="' . Router::url(array('controller' => 'update', 'action' => 'index', 'admin' => true)) . '" style="margin-top: -6px;" class="btn btn-info pull-right">' . $this->Lang->get('GLOBAL__UPDATE') . '</a></div>';
-                }
-            }
+            return '<div class="alert alert-info">' . $this->Lang->get('UPDATE__AVAILABLE') . ' ' . $this->Lang->get('UPDATE__CMS_VERSION') . ' : ' . $this->cmsVersion . ', ' . $this->Lang->get('UPDATE__LAST_VERSION') . ' : ' . $this->lastVersion . ' <a href="' . Router::url(array('controller' => 'update', 'action' => 'index', 'admin' => true)) . '" style="margin-top: -6px;" class="btn btn-info pull-right">' . $this->Lang->get('GLOBAL__UPDATE') . '</a></div>';
         }
     }
 
@@ -89,27 +54,14 @@ class UpdateComponent extends Object
         Appelé par le component pour check la mise à jour (renouvellement ou non du cache)
     */
 
-    private function check($forced = false, $snapshot = false)
+    private function check()
     {
-
-        $this->Configuration = $this->controller->Configuration;
-        $cmsVersion = $this->Configuration->getKey('version');
-
+        $cmsVersion = file_get_contents(ROOT . DS . 'VERSION');
         $this->cmsVersion = $cmsVersion;
 
-        if (!file_exists(ROOT . '/config/update') || strtotime('+5 hours', filemtime(ROOT . '/config/update')) < time() || $forced) {
-            $lastVersion = @file_get_contents('http://api.mineweb.org/api/v2/cms/version');
-            $lastVersion = json_decode($lastVersion, true);
-
-            $this->update['status'] = true;
-            $this->update['version'] = $lastVersion['version'];
-            $this->update['type'] = $lastVersion['type'];
-            $this->update['visible'] = $lastVersion['visible'];
-
-            file_put_contents(ROOT . DS . 'config' . DS . 'update', json_encode($this->update));
-        } else {
-            $this->update = json_decode(file_get_contents(ROOT . DS . 'config' . DS . 'update'), true);
-        }
+        if (!file_exists(ROOT . DS . 'config' . DS . 'update') || strtotime('+5 hours', filemtime(ROOT . DS . 'config' . DS . 'update')) < time())
+            file_put_contents(ROOT . DS . 'config' . DS . 'update', @file_get_contents('https://raw.githubusercontent.com/Eywek/MineWebCMS/master/VERSION'));
+        $this->lastVersion = file_get_contents(ROOT . DS . 'config' . DS . 'update');
     }
 
     /*
@@ -118,45 +70,15 @@ class UpdateComponent extends Object
 
     private function downloadUpdate()
     {
-
-        // On demande à l'API
-        $apiResult = $this->controller->sendToAPI(array(), 'cms/update', true);
-
-        // On vérifie qu'il n'y ai pas de problèmes
-        if ($apiResult['code'] == 200) {
-
-            // On décode ce qu'on a récupéré
-            $tryJSON = json_decode($apiResult['content'], true);
-
-            // On vérifie que ce n'est pas du JSON (aucune erreur)
-            if ($tryJSON === false || $tryJSON === NULL) {
-
-                $filesContent = $apiResult['content'];
-
-                $this->check(true, true); // on force (pour les snapshots)
-
-                // On stocke temporairement la mise à jour
-                $write = fopen(ROOT . DS . 'app' . DS . 'tmp' . DS . $this->update['version'] . '.zip', 'w+');
-                if (!fwrite($write, $filesContent)) {
-                    $this->log('[Update] Save files failed.');
-                    return false;
-                }
-                fclose($write);
-
-                // On retourne le succès
-                return true;
-
-            } else {
-                $this->log('[Update] Download files failed.' . json_encode($tryJSON));
-                return false;
-            }
-        } else {
-            $this->log('[Update] Download files failed (CODE: ' . $apiResult['code'] . ').');
+        if (!($filesContent = @file_get_contents('https://github.com/Eywek/MineWebCMS/archive/master.zip')))
+            return false;
+        $write = fopen(ROOT . DS . 'app' . DS . 'tmp' . DS . $this->lastVersion . '.zip', 'w+');
+        if (!fwrite($write, $filesContent)) {
+            $this->log('[Update] Save files failed.');
             return false;
         }
-
-        // Si on a rencontré une erreur (inconnue/non gérée)
-        return false;
+        fclose($write);
+        return true;
     }
 
     /*
@@ -176,7 +98,7 @@ class UpdateComponent extends Object
                 $zip = new ZipArchive;
 
                 // On ouvre le zip
-                if ($zip->open(ROOT . DS . 'app' . DS . 'tmp' . DS . $this->update['version'] . '.zip') === TRUE) {
+                if ($zip->open(ROOT . DS . 'app' . DS . 'tmp' . DS . $this->lastVersion . '.zip') === TRUE) {
 
                     $updateComponentContent = $zip->getFromName('app/Controller/Component/UpdateComponent.php');
                     file_put_contents(ROOT . DS . 'app' . DS . 'Controller' . DS . 'Component' . DS . 'UpdateComponent.php', $updateComponentContent);
@@ -194,7 +116,7 @@ class UpdateComponent extends Object
             $this->updateLog();
 
             // On ouvre le zip
-            $updateFiles = zip_open(ROOT . DS . 'app' . DS . 'tmp' . DS . $this->update['version'] . '.zip');
+            $updateFiles = zip_open(ROOT . DS . 'app' . DS . 'tmp' . DS . $this->lastVersion . '.zip');
 
             // On parcours les fichiers
             while ($fileRessource = zip_read($updateFiles)) {
@@ -202,7 +124,7 @@ class UpdateComponent extends Object
                 // Si on a le fichier "stop"
                 if (file_exists(ROOT . '/stop_update')) {
                     unlink(ROOT . '/stop_update');
-                    @unlink(ROOT . DS . 'app' . DS . 'tmp' . DS . $this->update['version'] . '.zip');
+                    @unlink(ROOT . DS . 'app' . DS . 'tmp' . DS . $this->lastVersion . '.zip');
                     @unlink(ROOT . '/config/update');
                     break;
                 }
@@ -290,7 +212,7 @@ class UpdateComponent extends Object
 
             // On finis la MAJ
             if (!$error) {
-                @unlink(ROOT . DS . 'app' . DS . 'tmp' . DS . $this->update['version'] . '.zip');
+                @unlink(ROOT . DS . 'app' . DS . 'tmp' . DS . $this->lastVersion . '.zip');
                 @unlink(ROOT . '/config/update');
 
                 Cache::clearGroup(false, '_cake_core_');
@@ -429,11 +351,11 @@ class UpdateComponent extends Object
 
         // On set le name
         if (empty($this->updateLogFileName)) {
-            $this->updateLogFileName = time() . '_' . $this->update['version'] . '.log';
+            $this->updateLogFileName = time() . '_' . $this->lastVersion . '.log';
 
             // On init le fichier
             $write = fopen($this->updateLogFile . $this->updateLogFileName, "x+");
-            $header = json_encode(array('head' => array('date' => date('d/m/Y H:i:s'), 'version' => $this->update['version'])), JSON_PRETTY_PRINT);
+            $header = json_encode(array('head' => array('date' => date('d/m/Y H:i:s'), 'version' => $this->lastVersion)), JSON_PRETTY_PRINT);
             fwrite($write, $header);
             fclose($write);
 

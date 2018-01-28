@@ -5,17 +5,14 @@
         <div class="box-header with-border">
           <h3 class="box-title" style="width:100%;">
             <?= $Lang->get('GLOBAL__UPDATE') ?>
-            <small class="pull-right">
-              <input id="forced_updates" type="checkbox" name="name" <?= ($Configuration->getKey('forced_updates') === false || $Configuration->getKey('forced_updates')) ? 'checked' : '' ?>>&nbsp;&nbsp;<abbr title="<?= $Lang->get('UPDATE__AUTHORIZE_FORCED_UPDATE_EXPLAIN') ?>"><?= $Lang->get('UPDATE__AUTHORIZE_FORCED_UPDATE') ?></abbr>
-            </small>
           </h3>
         </div>
         <div class="box-body">
 
            <div style="text-align: center;">
-            <p class="text-center"><?= $Lang->get('UPDATE__LAST_VERSION') ?> : <?= $Update->update['version'] ?></p>
+            <p class="text-center"><?= $Lang->get('UPDATE__LAST_VERSION') ?> : <?= $Update->lastVersion ?></p>
             <?php
-            if (explode('.', $Update->update['version'])[0] > explode('.', $Configuration->getKey('version'))[0])
+            if (explode('.', $Update->lastVersion)[0] > explode('.', $Update->cmsVersion)[0])
                 echo '<div class="alert alert-warning">' . $Lang->get('UPDATE__MAJOR_WARNING') . '</div>';
             ?>
             <div class="btn-group">

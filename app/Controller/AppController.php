@@ -298,11 +298,6 @@ class AppController extends Controller
                 'icon' => 'wrench',
                 'permission' => 'MANAGE_UPDATE',
                 'route' => ['controller' => 'update', 'action' => 'index', 'admin' => true, 'plugin' => false]
-            ],
-            'HELP__TITLE' => [
-                'icon' => 'question',
-                'permission' => 'USE_ADMIN_HELP',
-                'route' => ['controller' => 'help', 'action' => 'index', 'admin' => true, 'plugin' => false]
             ]
         );
 

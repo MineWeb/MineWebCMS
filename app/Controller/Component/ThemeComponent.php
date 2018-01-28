@@ -163,68 +163,6 @@ class ThemeComponent extends Object
         return $config->version;
     }
 
-    // check secure
-    private function checkSecure($slug)
-    {
-        $path = $this->themesFolder . DS . $slug;
-        $configuration = $this->getConfig($slug, true);
-
-        $cache = @rsa_decrypt(@file_get_contents(ROOT . DS . 'config' . DS . 'last_check'));
-        if (!$cache)
-            return false;
-        $cache = @json_decode($cache, true);
-        if (!$cache)
-            return false;
-        if ($cache['type'] === 'DEV')
-            return true;
-
-        // Get file
-        if (!file_exists($path  . DS . 'secure'))
-            return false;
-        $content = @json_decode(@file_get_contents($path  . DS . 'secure'));
-        if (!$content)
-            return false;
-        $infos = @json_decode(@rsa_decrypt($content[0]));
-        if (!$infos || !isset($infos->pwd) || !isset($infos->iv) || !isset($infos->md5))
-            return false;
-        $cryptedSecure = $content[1];
-        $content = openssl_decrypt(hex2bin($cryptedSecure), 'AES-128-CBC', $infos->pwd, OPENSSL_RAW_DATA, $infos->iv);
-        if (!$content)
-            return false;
-        $content = json_decode($content, true);
-        if (!$content)
-            return false;
-        if ($infos->md5 !== md5($cryptedSecure))
-            return false;
-
-        // Check options key
-        //if ($content['options'] !== array_keys($configuration['configurations']))
-        //    return false;
-
-        // Check configurations
-        unset($configuration['configurations']);
-        if ($content['configuration'] !== $configuration)
-            return false;
-
-        // Check files
-        /*foreach ($content['files'] as $file => $size) {
-            if (!file_exists($path . DS . $file))
-                return false;
-            if (($fileSize = filesize($path . DS . $file)) === $size)
-                continue;
-            if ($fileSize > $size && (($size / $fileSize) * 100) < 75)
-                return false;
-            else if ($size > $fileSize && (($fileSize / $size) * 100) < 75)
-                return false;
-        }*/
-
-        // Check if purchased
-        if (in_array($configuration['apiID'], $cache['themes'])) // in not purchased used themes list
-            return false;
-
-        return true;
-    }
-
     public function getCurrentTheme()
     {
         $configuredTheme = $this->controller->Configuration->getKey('theme');

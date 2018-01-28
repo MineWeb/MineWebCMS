@@ -154,7 +154,7 @@ class EyPluginComponent extends Object
             if (in_array($plugin['name'], $loadedCakePlugins)) // cakephp have load it ? (or not because fucking cache)
                 $pluginList->$id->loaded = true;
             // unload if invalid
-            if (!$pluginList->$id->isValid || !$pluginList->$id->active || !$this->checkSecure($plugin['name']) || ($this->licenseType === 'DEV' && $count > 3)) {
+            if (!$pluginList->$id->isValid || !$pluginList->$id->active) {
                 $pluginList->$id->loaded = false;
                 CakePlugin::unload($pluginList->$id->slug);
             }
@@ -212,75 +212,6 @@ class EyPluginComponent extends Object
             $pluginsList[] = $value['Plugin']['name'];
         }
         return $pluginsList;
-    }
-
-    private function checkSecure($slug)
-    {
-        $path = $this->pluginsFolder . DS . $slug;
-        $configuration = $this->getPluginConfig($slug, true);
-
-        $cache = @rsa_decrypt(@file_get_contents(ROOT . DS . 'config' . DS . 'last_check'));
-        if (!$cache)
-            return false;
-        $cache = @json_decode($cache, true);
-        $this->licenseType = $cache['type'];
-        if (!$cache)
-            return false;
-        if ($cache['type'] === 'DEV')
-            return true;
-
-        // Get file
-        if (!file_exists($path . DS . 'secure'))
-            return false;
-        $content = @json_decode(@file_get_contents($path . DS . 'secure'));
-        if (!$content)
-            return false;
-        $infos = @json_decode(@rsa_decrypt($content[0]));
-        if (!$infos)
-            return false;
-        $content = openssl_decrypt(hex2bin($content[1]), 'AES-128-CBC', $infos->pwd, OPENSSL_RAW_DATA, $infos->iv);
-        if (!$content)
-            return false;
-        $content = json_decode($content, true);
-        if (!$content)
-            return false;
-
-        // Check configurations
-        if ($content['configuration'] !== $configuration)
-            return false;
-
-        // Check routes
-        $regex = "/Router::connect\('([A-Za-z\/*_-]+)',( |)(array\(|\[)(.*|)'controller'( |)=>( |)'([A-Za-z_-]+)',(.*|)'action'( |)=>( |)'([A-Za-z_-]+)'(.*)(\)|])\)/";
-        $routes = [];
-        foreach (explode(';', file_get_contents($path . DS . 'Config' . DS . 'routes.php')) as $fileContent) {
-            preg_match($regex, $fileContent, $matches);
-            if (empty($matches))
-                continue;
-            $routes[$matches[1]] = [
-                'controller' => $matches[7],
-                'action' => $matches[11]
-            ];
-        }
-        if ($content['routes'] !== $routes)
-            return false;
-
-        // Check files
-        /*foreach ($content['files'] as $file => $size) {
-            if (!file_exists($path . DS . $file))
-                return false;
-            if (($fileSize = filesize($path . DS . $file)) === $size)
-                continue;
-            if ($fileSize > $size && (($size / $fileSize) * 100) < 75)
-                return false;
-            else if ($size > $fileSize && (($fileSize / $size) * 100) < 75)
-                return false;
-        }*/
-
-        // Check if purchased
-        if (in_array($configuration['apiID'], $cache['plugins'])) // in not purchased used plugins list
-            return false;
-
-        return true;
     }
 
     // Vérifier si le plugin donné (nom/chemin) est bien un dossier contenant tout les pré-requis d'un plugin
