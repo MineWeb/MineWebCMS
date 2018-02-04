@@ -115,7 +115,7 @@
                 <td><?= $value['author'] ?></td>
                 <td><?= $value['version'] ?></td>
                 <td>
-                  <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'install', 'admin' => true, $value['id'])) ?>" class="btn btn-success"><?= $Lang->get('INSTALL__INSTALL') ?></a>
+                  <a href="<?= $this->Html->url(array('controller' => 'theme', 'action' => 'install', 'admin' => true, $value['slug'])) ?>" class="btn btn-success"><?= $Lang->get('INSTALL__INSTALL') ?></a>
                 </td>
               </tr>
               <?php } ?>

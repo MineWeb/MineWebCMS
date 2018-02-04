@@ -443,7 +443,8 @@ class AppController extends Controller
         $this->__setTheme();
     }
 
-    public function afterFilter() {
+    public function afterFilter()
+    {
         $event = new CakeEvent('beforePageDisplay', $this, $this->request->data);
         $this->getEventManager()->dispatch($event);
         if ($event->isStopped()) {
@@ -472,6 +473,20 @@ class AppController extends Controller
                 $this->redirect($this->referer());
             }
         }
+    }
+
+    public function sendGetRequest($url)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'User-Agent: MineWebCMS'
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result;
     }
 
     public function sendJSON($data)

@@ -60,8 +60,10 @@ class UpdateComponent extends Object
         $this->cmsVersion = $cmsVersion;
 
         if (!file_exists(ROOT . DS . 'config' . DS . 'update') || strtotime('+5 hours', filemtime(ROOT . DS . 'config' . DS . 'update')) < time())
-            file_put_contents(ROOT . DS . 'config' . DS . 'update', @file_get_contents('https://raw.githubusercontent.com/Eywek/MineWebCMS/master/VERSION'));
+            file_put_contents(ROOT . DS . 'config' . DS . 'update', $this->controller->sendGetRequest('https://raw.githubusercontent.com/Eywek/MineWebCMS/master/VERSION'));
         $this->lastVersion = file_get_contents(ROOT . DS . 'config' . DS . 'update');
+        if (empty($this->lastVersion))
+            $this->lastVersion = $this->cmsVersion;
     }
 
     /*
@@ -70,7 +72,7 @@ class UpdateComponent extends Object
 
     private function downloadUpdate()
     {
-        if (!($filesContent = @file_get_contents('https://github.com/Eywek/MineWebCMS/archive/master.zip')))
+        if (!($filesContent = $this->controller->sendGetRequest('https://github.com/Eywek/MineWebCMS/archive/master.zip')))
             return false;
         $write = fopen(ROOT . DS . 'app' . DS . 'tmp' . DS . $this->lastVersion . '.zip', 'w+');
         if (!fwrite($write, $filesContent)) {

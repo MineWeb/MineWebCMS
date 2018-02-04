@@ -68,16 +68,16 @@ class PluginController extends AppController
         $this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
     }
 
-    function admin_install($apiID = false, $slug = false)
+    function admin_install($slug = false)
     {
         if (!$this->isConnected || !$this->Permissions->can('MANAGE_PLUGINS'))
             throw new ForbiddenException();
-        if (!$apiID || !$slug)
+        if (!$slug)
             throw new NotFoundException();
         $this->autoRender = false;
         $this->response->type('json');
 
-        $installed = $this->EyPlugin->download($apiID, $slug, true);
+        $installed = $this->EyPlugin->download($slug, true);
         if ($installed !== true)
             return $this->response->body(json_encode(array('statut' => 'error', 'msg' => $this->Lang->get($installed))));
 
@@ -92,7 +92,7 @@ class PluginController extends AppController
 
         $this->loadModel('Plugin');
         $this->Plugin->cacheQueries = false;
-        $search = $this->Plugin->find('first', ['conditions' => ['apiID' => $apiID]]);
+        $search = $this->Plugin->find('first', ['conditions' => ['name' => $slug]]);
         $this->response->body(json_encode(array(
             'statut' => 'success',
             'plugin' => array(
@@ -105,15 +105,15 @@ class PluginController extends AppController
         )));
     }
 
-    function admin_update($apiID)
+    function admin_update($slug)
     {
         if (!$this->isConnected || !$this->Permissions->can('MANAGE_PLUGINS'))
             throw new ForbiddenException();
-        if (!$apiID)
+        if (!$slug)
             throw new NotFoundException();
         $this->autoRender = false;
 
-        $updated = $this->EyPlugin->update($apiID);
+        $updated = $this->EyPlugin->update($slug);
         if ($updated === true)
         {
             App::uses('Folder', 'Utility');

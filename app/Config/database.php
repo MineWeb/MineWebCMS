@@ -5,9 +5,9 @@ class DATABASE_CONFIG {
         'datasource' => 'Database/Mysql',
         'persistent' => false,
         'host' => 'localhost',
-        'login' => 'LOGIN1',
-        'password' => 'PASSWORD1',
-        'database' => 'DATABASE1',
+        'login' => 'root',
+        'password' => 'root',
+        'database' => 'mineweb',
         'encoding' => 'utf8',
     );
 }

@@ -48,15 +48,15 @@ class ThemeController extends AppController
         $this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
     }
 
-    function admin_install($apiID = false)
+    function admin_install($slug = false)
     {
         $this->autoRender = false;
         if (!$this->isConnected || !$this->Permissions->can('MANAGE_THEMES'))
             throw new ForbiddenException();
-        if (!$apiID)
+        if (!$slug)
             throw new NotFoundException();
         // install
-        $error = $this->Theme->install($apiID);
+        $error = $this->Theme->install($slug);
 
         if ($error !== true) {
             $this->Session->setFlash($this->Lang->get($error), 'default.error');
@@ -68,15 +68,15 @@ class ThemeController extends AppController
         $this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
     }
 
-    function admin_update($apiID = false, $slug)
+    function admin_update($slug)
     {
         $this->autoRender = false;
         if (!$this->isConnected || !$this->Permissions->can('MANAGE_THEMES'))
             throw new ForbiddenException();
-        if (!$apiID)
+        if (!$slug)
             throw new NotFoundException();
         // install
-        $error = $this->Theme->install($apiID, true, $slug);
+        $error = $this->Theme->install($slug, true);
         if ($error !== true) {
             $this->Session->setFlash($this->Lang->get($error), 'default.error');
             return $this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));

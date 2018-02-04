@@ -11,8 +11,6 @@ class EyPluginComponent extends Object
     private $alreadyCheckValid = array();
 
     public $pluginsFolder;
-    private $apiVersion = '2';
-    private $licenseType = 'BASIC';
 
     public $pluginsLoaded;
 
@@ -137,7 +135,7 @@ class EyPluginComponent extends Object
                 continue;
             }
             // set config
-            $id = strtolower($plugin['author'] . '.' . $plugin['name'] . '.' . $config->apiID); // on fais l'id - tout en minuscule
+            $id = strtolower($plugin['author'] . '.' . $plugin['name']); // on fais l'id - tout en minuscule
             $pluginList->$id = (object)array(); // init
             $pluginList->$id = $config; // add file config
             $pluginList->$id->id = $id;
@@ -256,7 +254,7 @@ class EyPluginComponent extends Object
 
         // Check config
         $config = json_decode(file_get_contents($file . DS . 'config.json'), true);
-        $needConfigKey = array('name' => 'string', 'author' => 'string', 'version' => 'string', 'apiID' => 'int', 'useEvents' => 'bool', 'permissions' => 'array', 'permissions-available' => 'array', 'permissions-default' => 'array', 'requirements' => 'array');
+        $needConfigKey = array('name' => 'string', 'author' => 'string', 'version' => 'string', 'useEvents' => 'bool', 'permissions' => 'array', 'permissions-available' => 'array', 'permissions-default' => 'array', 'requirements' => 'array');
         foreach ($needConfigKey as $key => $value) {
             $key = (is_array(explode('-', $key))) ? explode('-', $key) : $key; // si c'est une key multi-dimensionnel
             if (is_array($key) && count($key) > 1) { // si la clé est multi-dimensionnel
@@ -525,29 +523,22 @@ class EyPluginComponent extends Object
     }
 
     // Fonction de download (pré-installation)
-    public function download($apiID, $slug, $install = false)
+    public function download($slug, $install = false)
     {
         // Check requirements
-        $config = $this->getPluginFromAPI($apiID);
+        $config = $this->getPluginFromAPI($slug);
         if (!$this->requirements($slug, $config))
             return 'ERROR__PLUGIN_REQUIREMENTS';
 
         // get files
-        $apiQuery = $this->controller->sendToAPI(array(), '/plugin/download/' . $apiID, true);
-        if ($apiQuery['code'] !== 200) {
-            $this->log('Error when downloading plugin, HTTP CODE: ' . $apiQuery['code']);
+        $zip = $this->controller->sendGetRequest('https://github.com/MineWeb/Plugin-' . $slug . '/archive/master.zip');
+        if (!$zip)
             return 'ERROR__PLUGIN_CANT_BE_DOWNLOADED';
-        }
-        // Check if JSON
-        if (@json_decode($apiQuery['content'])) {
-            $this->log('Error when downloading plugin, JSON: ' . $apiQuery['content']);
-            return 'ERROR__PLUGIN_CANT_BE_DOWNLOADED';
-        }
 
         // Temporary file
-        $filename = ROOT . DS . 'app' . DS . 'tmp' . DS . 'plugin-' . $slug . '-' . $apiID . '.zip';
+        $filename = ROOT . DS . 'app' . DS . 'tmp' . DS . 'plugin-' . $slug . '.zip';
         $file = fopen($filename, 'w+');
-        if (!fwrite($file, $apiQuery['content'])) {
+        if (!fwrite($file, $zip)) {
             $this->log('Error when downloading plugin, save files failed.');
             return 'ERROR__PLUGIN_PERMISSIONS';
         }
@@ -562,6 +553,7 @@ class EyPluginComponent extends Object
         }
         $zip->extractTo($this->pluginsFolder . DS);
         $zip->close();
+        rename(ROOT . DS . 'app' . DS . 'Plugin' . DS . 'Plugin-' . $slug . '-master', ROOT . DS . 'app' . DS . 'Plugin' . DS . $slug);
 
         // Delete temporary file
         unlink($filename);
@@ -600,11 +592,10 @@ class EyPluginComponent extends Object
 
         // Add into database
         $id = null;
-        if (($findPlugin = $this->models->Plugin->find('first', ['conditions' => ['apiID' => $config->apiID]])))
+        if (($findPlugin = $this->models->Plugin->find('first', ['conditions' => ['name' => $config->slug]])))
             $id = $findPlugin['Plugin']['id'];
         $this->models->Plugin->read(null, $id);
         $this->models->Plugin->set(array(
-            'apiID' => $config->apiID,
             'name' => $slug,
             'author' => $config->author,
             'version' => $config->version
@@ -624,17 +615,17 @@ class EyPluginComponent extends Object
     }
 
     // Fonction d'update
-    public function update($apiID)
+    public function update($slug)
     {
         // get config from api
-        $config = $this->getPluginFromAPI($apiID);
+        $config = $this->getPluginFromAPI($slug);
         $slug = $config->slug;
         // check requirements
         if (!$config || empty($config))
             return 'ERROR__PLUGIN_REQUIREMENTS';
 
         // download plugin
-        $dl = $this->download($apiID, $slug);
+        $dl = $this->download($slug);
         if ($dl !== true)
             return $dl;
 
@@ -645,7 +636,7 @@ class EyPluginComponent extends Object
         $pluginVersion = $pluginConfig['version']; // récupére la nouvelle version
 
         // Get db id
-        $searchPlugin = $this->models->Plugin->find('first', array('conditions' => array('apiID' => $apiID)))['Plugin'];
+        $searchPlugin = $this->models->Plugin->find('first', array('conditions' => array('name' => $slug)))['Plugin'];
         $pluginDBID = $searchPlugin['id'];
 
         // Custom actions
@@ -711,7 +702,7 @@ class EyPluginComponent extends Object
         $plugins = array();
         foreach ($this->pluginsLoaded as $id => $data) {
             if (isset($data->navbar_routes))
-                $plugins[$data->apiID] = (object)['name' => $data->name, 'routes' => $data->navbar_routes];
+                $plugins[$data->slug] = (object)['name' => $data->name, 'routes' => $data->navbar_routes];
         }
         return $plugins;
     }
@@ -780,7 +771,7 @@ class EyPluginComponent extends Object
             if (in_array($value, $bypassedFiles)) continue; // not a theme
             // get config & theme id
             $themeConfig = json_decode(file_get_contents($themeFolder . $value)); // on récup la config
-            $themeId = $themeConfig['author'] . '.' . $value . '.' . $themeConfig['apiID']; // on fais l'id
+            $themeId = $themeConfig['author'] . '.' . $value; // on fais l'id
 
             if ($themeId == $id)
                 return $themeConfig['version'];
@@ -921,19 +912,16 @@ class EyPluginComponent extends Object
 
     public function getFreePlugins($all = false)
     {
-        $plugins = array();
-        // get free plugins
-        $plugins = @json_decode(@file_get_contents('http://api.mineweb.org/api/v' . $this->apiVersion . '/plugin/free'), true);
-        if (!$plugins) return false;
-
-        // purchased plugins
-        $apiQuery = $this->controller->sendToAPI(array(), 'plugin/purchased', true);
-        if ($apiQuery['code'] === 200 && $response = @json_decode($apiQuery['content'], true)) { // success
-            if ($response['status'] == 'success') {
-                // each plugin
-                foreach ($response['success'] as $plugin) {
-                    $plugins[] = $plugin; // add to list
-                }
+        $orgRepos = @json_decode($this->controller->sendGetRequest('https://api.github.com/orgs/MineWeb/repos'));
+        $plugins = [];
+        if ($orgRepos) {
+            foreach ($orgRepos as $repo) {
+                if (!is_object($repo)) // rate limited
+                    break;
+                if (strpos($repo->name, 'Plugin-') === false)
+                    continue;
+                if (($plugin = $this->getPluginFromRepoName($repo->full_name)))
+                    $plugins[] = $plugin;
             }
         }
 
@@ -944,7 +932,6 @@ class EyPluginComponent extends Object
                 $installedPlugins[] = $config->slug;
             }
             foreach ($plugins as $key => $plugin) {
-                $plugins[$key]['apiID'] = $plugin['id'];
                 if (in_array($plugin['slug'], $installedPlugins)) // if already installed
                     unset($plugins[$key]); // remove
             }
@@ -953,43 +940,64 @@ class EyPluginComponent extends Object
         return $plugins;
     }
 
-    public function getPluginsFromAPI(array $apiID)
+    private function getPluginFromRepoName($repoName, $assoc = true)
     {
-        $plugins = @json_decode(@file_get_contents('http://api.mineweb.org/api/v' . $this->apiVersion . '/plugin/all'));
-        if (!$plugins) return false;
+        $configUrl = 'https://raw.githubusercontent.com/' . $repoName . '/master/config.json';
+        if (!($config = @json_decode($this->controller->sendGetRequest($configUrl), $assoc)))
+            return false;
+        $config['repo'] = $repoName;
+        $config['slug'] = substr($repoName, strlen('MineWeb/Plugin-'));
+        return $config;
+    }
+
+    public function getPluginsFromAPI(array $slug)
+    {
+        $orgRepos = @json_decode($this->controller->sendGetRequest('https://api.github.com/orgs/MineWeb/repos'));
+        $plugins = [];
+        if ($orgRepos) {
+            foreach ($orgRepos as $repo) {
+                if (!is_object($repo)) // rate limited
+                    break;
+                if (strpos($repo->name, 'Plugin-') === false)
+                    continue;
+                if (($theme = $this->getPluginFromRepoName($repo->full_name)))
+                    $plugins[] = $theme;
+            }
+        }
         // each plugin
         $pluginsToFind = array();
         foreach ($plugins as $plugin) {
-            $plugin->apiID = $plugin->id;
-            foreach ($apiID as $id) {
-                if ($plugin->apiID == $id)
-                    $pluginsToFind[$plugin->apiID] = $plugin;
+            foreach ($slug as $id) {
+                if (!is_object($plugin))
+                    continue;
+                if ($plugin->slug == $id)
+                    $pluginsToFind[$plugin->slug] = $plugin;
             }
         }
         return $pluginsToFind;
     }
 
-    public function getPluginsLastVersion(array $apiID)
+    public function getPluginsLastVersion(array $slug)
     {
-        $plugins = $this->getPluginsFromAPI($apiID);
+        $plugins = $this->getPluginsFromAPI($slug);
         if ($plugins === false) return false;
         $versions = array();
         foreach ($plugins as $plugin) {
-            $versions[$plugin->apiID] = $plugin->version;
+            $versions[$plugin->slug] = $plugin->version;
         }
         return $versions;
     }
 
-    public function getPluginFromAPI($apiID)
+    public function getPluginFromAPI($slug)
     {
-        $plugins = $this->getPluginsFromAPI(array($apiID));
-        if (!$plugins || !isset($plugins[$apiID])) return false;
-        return $plugins[$apiID];
+        $plugins = $this->getPluginsFromAPI(array($slug));
+        if (!$plugins || !isset($plugins[$slug])) return false;
+        return $plugins[$slug];
     }
 
-    public function getPluginLastVersion($apiID)
+    public function getPluginLastVersion($slug)
     {
-        $plugin = $this->getPluginFromAPI($apiID);
+        $plugin = $this->getPluginFromAPI($slug);
         if (!$plugin) return false;
         return $plugin->version;
     }

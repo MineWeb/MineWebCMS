@@ -11,8 +11,6 @@ class ThemeComponent extends Object
     private $themesInstalled;
     private $alreadyCheckValid;
 
-    private $apiVersion = '2';
-
     private $controller;
 
     public function __construct()
@@ -41,11 +39,11 @@ class ThemeComponent extends Object
         App::import('Vendor', 'load', array('file' => 'phar-io/version-master/load.php'));
     }
 
-    private function getThemeFromAPI($id)
+    private function getThemeFromAPI($slug)
     {
         if (isset($this->themesAvailable['all']))
             foreach ($this->themesAvailable['all'] as $theme)
-                if (strtolower($theme['author'] . '.' . $theme['slug'] . '.' . $theme['id']) === $id)
+                if (strtolower($theme['author'] . '.' . $theme['slug']) === $slug)
                     return $theme;
         return false;
     }
@@ -75,9 +73,9 @@ class ThemeComponent extends Object
                 continue;
             // get config
             $config = $this->getConfig($slug);
-            if (empty($config) || !isset($config->apiID)) continue; // config not found
+            if (empty($config) || !isset($config->slug)) continue; // config not found
             // add config
-            $id = strtolower($config->author . '.' . $slug . '.' . $config->apiID);
+            $id = strtolower($config->author . '.' . $config->slug);
             $themesList->$id = $config;
             $checkSupported = $this->checkSupported($slug);
             $themesList->$id->supported = (empty($checkSupported)) ? true : false;
@@ -87,11 +85,20 @@ class ThemeComponent extends Object
             else
                 $themesList->$id->valid = false;
             // set last version
-            if (($theme = $this->getThemeFromAPI($id)))
+            if (($theme = $this->getThemeFromAPI($config->slug)))
                 $themesList->$id->lastVersion = $theme['version'];
         }
         // cache for this request
         return $this->themesInstalled[$api] = $themesList;
+    }
+
+    private function getThemeFromRepoName($repoName)
+    {
+        $configUrl = 'https://raw.githubusercontent.com/' . $repoName . '/master/Config/config.json';
+        if (!($config = @json_decode($this->controller->sendGetRequest($configUrl), true)))
+            return false;
+        $config['repo'] = $repoName;
+        return $config;
     }
 
     // get themes on api
@@ -100,33 +107,36 @@ class ThemeComponent extends Object
         $type = ($all) ? 'all' : 'free';
         if (!empty($this->themesAvailable[$type]))
             return $this->themesAvailable[$type];
-        $url = ($all) ? 'http://api.mineweb.org/api/v' . $this->apiVersion . '/theme/all' : 'http://api.mineweb.org/api/v' . $this->apiVersion . '/theme/free';
 
         // get themes
-        $getAllThemes = @file_get_contents($url);
-        $getAllThemes = ($getAllThemes) ? json_decode($getAllThemes, true) : array();
+        $orgRepos = @json_decode($this->controller->sendGetRequest('https://api.github.com/orgs/MineWeb/repos'));
+        $themes = [];
+        if ($orgRepos) {
+            foreach ($orgRepos as $repo) {
+                if (!is_object($repo)) // rate limited
+                    break;
+                if (strpos($repo->name, 'Theme-') === false)
+                    continue;
+                if (($theme = $this->getThemeFromRepoName($repo->full_name)))
+                    $themes[] = $theme;
+            }
+        }
 
         // get purchases themes
-        if (!$all) {
-            $getPurchasedThemes = $this->controller->sendToAPI(array(), 'theme/purchased');
-            if ($getPurchasedThemes['code'] === 200 && ($getPurchasedThemes = json_decode($getPurchasedThemes['content'], true)))
-                $getAllThemes = array_merge($getAllThemes, $getPurchasedThemes['success']);
-        }
-        // delete themes already installed
         if ($deleteInstalledThemes) {
             $installed = $this->getThemesInstalled();
             $themeInstalledID = [];
             foreach ($installed as $themeInstalled) {
-                $themeInstalledID[] = $themeInstalled->apiID;
+                $themeInstalledID[] = $themeInstalled->slug;
             }
-            foreach ($getAllThemes as $key => $theme) {
-                if (in_array($theme['id'], $themeInstalledID))
-                    unset($getAllThemes[$key]);
+            foreach ($themes as $key => $theme) {
+                if (in_array($theme['slug'], $themeInstalledID))
+                    unset($themes[$key]);
             }
         }
 
-        $this->themesAvailable[$type] = $getAllThemes;
-        return $getAllThemes;
+        $this->themesAvailable[$type] = $themes;
+        return $themes;
     }
 
     public function getPath($slug)
@@ -215,7 +225,7 @@ class ThemeComponent extends Object
 
         // check config
         $config = json_decode(file_get_contents($file . DS . 'Config' . DS . 'config.json'), true);
-        $needConfigKey = array('name' => 'string', 'slug' => 'string', 'author' => 'string', 'version' => 'string', 'apiID' => 'int', 'configurations' => 'array', 'supported' => 'array');
+        $needConfigKey = array('name' => 'string', 'slug' => 'string', 'author' => 'string', 'version' => 'string', 'configurations' => 'array', 'supported' => 'array');
         foreach ($needConfigKey as $key => $value) {
 
             $key = (is_array(explode('-', $key))) ? explode('-', $key) : $key; // si c'est une key multi-dimensionnel
@@ -317,26 +327,18 @@ class ThemeComponent extends Object
     }
 
     // install plugin
-    public function install($apiID, $update = false, $slug = null)
+    public function install($slug, $update = false)
     {
         // ask to api
-        $return = $this->controller->sendToAPI(array(), '/theme/download/' . $apiID);
-        if ($return['code'] !== 200) {
-            $this->log('[Install theme] Couldn\'t download files, error code (http) : ' . $return['code']);
-            return 'THEME__ERROR_INSTALL_DOWNLOAD_FAILED';
-        }
-        $apiResponse = json_decode($return['content'], true);
-        if ($apiResponse) {
-            $this->log('[Install theme] Couldn\'t download files, JSON: ' . json_encode($apiResponse) . '.');
-            return 'THEME__ERROR_INSTALL_DOWNLOAD_FAILED';
-        }
+        $zip = $this->controller->sendGetRequest('https://github.com/MineWeb/Theme-' . $slug . '/archive/master.zip');
         if ($update)
             $oldConfig = $this->getCustomData($slug)[0];
         // unzip files
-        if (!unzip($return['content'], $this->themesFolder, 'theme-' . $apiID . '-zip', true)) {
+        if (!unzip($zip, $this->themesFolder, 'theme-' . $slug . '-zip', true)) {
             $this->log('[Install theme] Couldn\'t unzip files.');
             return 'THEME__ERROR_INSTALL_UNZIP';
         }
+        rename(ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . 'Theme-' . $slug . '-master', ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug);
         // delete mac os files (fuck hidden files)
         App::uses('Folder', 'Utility');
         $folder = new Folder($this->themesFolder . DS . '__MACOSX');
@@ -352,7 +354,7 @@ class ThemeComponent extends Object
 
             // Edit file
             if (file_exists($this->getPath($slug) . DS . 'update.json')) {
-                $updateFile = @json_decode(@file_get_contents($this->getPath($slug) . DS . 'update.json'));
+                $updateFile = @json_decode($this->controller->sendGetRequest($this->getPath($slug) . DS . 'update.json'));
                 if ($updateFile) {
                     foreach ($updateFile as $type => $value) {
                         if ($type === 'delete') {

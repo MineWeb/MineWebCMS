@@ -91,12 +91,12 @@
               <tbody>
                 <?php foreach ($free_plugins as $key => $value) {
                 ?>
-                  <tr plugin-apiID="<?= $value['apiID'] ?>">
+                  <tr plugin-slug="<?= $value['slug'] ?>">
                     <td><?= $value['name'] ?></td>
                     <td><?= $value['author'] ?></td>
                     <td><?= $value['version'] ?></td>
                     <td>
-                      <btn class="btn btn-success install" apiID="<?= $value['apiID'] ?>" slug="<?= $value['slug'] ?>"><?= $Lang->get('PLUGIN__INSTALL') ?></btn>
+                      <btn class="btn btn-success install" slug="<?= $value['slug'] ?>"><?= $Lang->get('PLUGIN__INSTALL') ?></btn>
                     </td>
                   </tr>
                 <?php } ?>
@@ -122,12 +122,11 @@
   $('.install').click(function(e) {
     e.preventDefault();
 
-    var apiID = $(this).attr('apiID');
     var slug = $(this).attr('slug');
 
     var btn = $(this);
 
-    if(apiID !== undefined) {
+    if(slug !== undefined) {
 
       // Désactivation de toute action
       $('.install').each(function(e) {
@@ -153,7 +152,7 @@
       $('.ajax').empty().html('<div class="alert alert-info"><?= $Lang->get('PLUGIN__INSTALL_LOADING') ?>...</b></div>').fadeIn(500);
 
       // On lance la requête
-      $.get('<?= $this->Html->url(array('action' => 'install')) ?>/'+apiID+'/'+slug, function(data) {
+      $.get('<?= $this->Html->url(array('action' => 'install')) ?>/'+slug, function(data) {
         if(typeof data != 'object') {
           data = JSON.parse(data);
         }
@@ -164,7 +163,7 @@
             $('.ajax').empty().html('<div class="alert alert-success"><b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> <?= $Lang->get('PLUGIN__INSTALL_SUCCESS') ?></div>').fadeIn(500);
 
             // on bouge le plugin dans le tableau dans les plugins installés
-            $('table#plugin-not-installed').find('tr[plugin-apiID="'+apiID+'"]').slideUp(250);
+            $('table#plugin-not-installed').find('tr[plugin-slug="'+slug+'"]').slideUp(250);
 
             var tr = '';
             tr += '<tr>';
