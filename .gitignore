@@ -20,7 +20,8 @@ app/Config/database.php
 app/Config/core.php
 
 config/secure
-
+app/Plugin/*
+app/View/Themed/*
 config/last_check
 config/update
 config/install.txt
