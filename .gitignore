@@ -18,6 +18,7 @@ dev.json
 
 app/Config/database.php
 app/Config/core.php
+.gitmodules
 
 config/secure
 app/Plugin/*
