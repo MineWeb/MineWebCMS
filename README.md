@@ -17,7 +17,7 @@ Jusqu'en mars 2018, il vous fallait avoir une licence payante pour utiliser le C
 
 Premièrement je maintenais ce projet depuis plusieurs années presque complètement seul (hormis les 2/3 supports et 2 amis pour m'aider sur l'infrastructure) et je commençais à m'en lasser, de plus, ne jouant plus à Minecraft je ne m'intéressais plus à ce domaine. Dès mars 2018 j'ai eu ma réelle première expérience professionnelle me poussant également a arrêter ce projet. 
 
-Deuxièmement, le CMS est en développement depuis plusieurs années sur un vieux framework, le code est vieux et j'ai évolué depuis le début, une refonte sera nécessaire pour rajouter des fonctionnalités intéressantes et maintenir correctement le projet mais le manque de temps et de motivation m'ont pas permis de le faire.
+Deuxièmement, le CMS est en développement depuis plusieurs années sur un vieux framework, le code est vieux et j'ai évolué depuis le début, une refonte sera nécessaire pour rajouter des fonctionnalités intéressantes et maintenir correctement le projet mais le manque de temps et de motivation ne m'ont pas permis de le faire.
 
 Troisièmement je ne tenais pas a faire disparaitre le CMS et empêcher mes anciens utilisateurs de l'utiliser. De plus, cela ajoute du contenu sur mon Github. 
 
