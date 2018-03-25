@@ -343,13 +343,15 @@ class ServerComponent extends Object
 
     public function getSecretKey()
     {
-        $return = $this->controller->sendToAPI(array(), 'key', true);
-        if ($return['code'] !== 200) return false;
+        $key = ClassRegistry::init('Configuration')->find('first')['Configuration']['server_secretkey'];
+        if (isset($key) && !empty($key))
+            return $key;
+        $key = "";
+        $possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-        $return = json_decode($return['content'], true);
-        if ($return['status'] !== "success" || $return['status'] == "error") return false;
-
-        return @rsa_decrypt($return['secret_key']);
+        for ($i = 0; $i < 32; $i++)
+            $key .= $possible[random_int(0, 32)];
+        return $key;
     }
 
     public function check($info, $value)
@@ -370,10 +372,6 @@ class ServerComponent extends Object
             return true;
 
         switch ($code) {
-            case 500:
-                $this->lastErrorMessage = 'MineWeb API down';
-                $this->linkErrorCode = 'MINEWEB_DOWN';
-                break;
             case 403:
                 $this->lastErrorMessage = 'Already link';
                 $this->linkErrorCode = 'ALREADY_LINKED';
