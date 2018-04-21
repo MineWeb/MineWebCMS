@@ -55,7 +55,25 @@ class APIComponent extends Object
   }
 
   private function _getSkinFromUsername($username) {
-    // TODO: Make a request to Mojang API
+    // We need to get UUID
+    $user = @json_decode(@file_get_contents("https://api.mojang.com/users/profiles/minecraft/$username"), true);
+    if (!$user) return false;
+    $uuid = $user['id'];
+    // Get profile with skin as base64
+    $profile = @json_decode(@file_get_contents("https://sessionserver.mojang.com/session/minecraft/profile/$uuid"), true);
+    if (!$profile) return false;
+    // Get texture item
+    $properties = $profile['properties'];
+    $textures = null;
+    foreach ($properties as $property)
+      if ($property['name'] === 'textures')
+        $textures = $property;
+    if (!$textures) return false;
+    // Decode value
+    $texturesObject = @json_decode(@base64_decode($textures['value']), true);
+    if (!$texturesObject) return false;
+    $url = $texturesObject['textures']['SKIN']['url'];
+    return file_get_contents($url);
   }
 
   private function _getSkinImage($username) {
