@@ -692,7 +692,7 @@ class EyPluginComponent extends Object
 
     // Vérifier si un plugin est installé
     public function isInstalled($id)
-    { // on le recherche avec son ID (auteur.name.apiid)
+    { // on le recherche avec son ID (auteur.name)
         $find = $this->findPlugin('id', $id);
         return (!empty($find) && $find->loaded);
     }

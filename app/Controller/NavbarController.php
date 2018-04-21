@@ -24,7 +24,7 @@ class NavbarController extends AppController
         foreach ($navbars as $key => $value) {
             if ($value['Navbar']['url']['type'] == "plugin") {
                 if (isset($value['Navbar']['url']['route']))
-                    $plugin = $this->EyPlugin->findPlugin('apiID', $value['Navbar']['url']['id']);
+                    $plugin = $this->EyPlugin->findPlugin('slug', $value['Navbar']['url']['id']);
                 else
                     $plugin = $this->EyPlugin->findPlugin('DBid', $value['Navbar']['url']['id']);
                 if (!empty($plugin)) {

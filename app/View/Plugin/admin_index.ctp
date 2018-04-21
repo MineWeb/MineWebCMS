@@ -30,7 +30,7 @@
               <tbody>
                 <?php
                 $versions = $EyPlugin->getPluginsLastVersion(array_map(function ($plugin) {
-                  return $plugin->apiID;
+                  return $plugin->slug;
                 }, (array)$pluginList));
                 foreach ($pluginList as $key => $value) {
                 ?>
@@ -53,9 +53,9 @@
                        <?php } ?>
                       <a onClick="confirmDel('<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'delete/'.$value->DBid, 'admin' => true)) ?>')" class="btn btn-danger delete"><?= $Lang->get('GLOBAL__DELETE') ?></a>
                       <?php
-                      $lastVersion = (isset($versions[$value->apiID])) ? $versions[$value->apiID] : false;
+                      $lastVersion = (isset($versions[$value->slug])) ? $versions[$value->slug] : false;
                       if($lastVersion && $value->version != $lastVersion) { ?>
-                        <a <?= (explode('.', $lastVersion)[0] > explode('.', $value->version)[0] ? 'data-warning-update' : '') ?> href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'update', $value->apiID, $value->slug, 'admin' => true)) ?>" class="btn btn-warning update"><?= $Lang->get('GLOBAL__UPDATE') ?></a> <!-- ICI -->
+                        <a <?= (explode('.', $lastVersion)[0] > explode('.', $value->version)[0] ? 'data-warning-update' : '') ?> href="<?= $this->Html->url(array('controller' => 'plugin', 'action' => 'update', $value->slug, 'admin' => true)) ?>" class="btn btn-warning update"><?= $Lang->get('GLOBAL__UPDATE') ?></a> <!-- ICI -->
                       <?php } ?>
                     </td>
                   </tr>
