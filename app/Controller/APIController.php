@@ -43,34 +43,15 @@ class APIController extends AppController {
 	}
 
 	public function get_skin($name) {
-		$this->response->type('png');
+		$this->response->type('image/png');
 		$this->autoRender = false;
-		$this->loadModel('ApiConfiguration');
-		$config = $this->ApiConfiguration->find('first');
-		$config = $config['ApiConfiguration'];
-		if($config['skins']) {
-			$filename = str_replace('{PLAYER}', $name, $config['skin_filename']);
-			$filename = WWW_ROOT.$filename.'.png';
-		} else {
-			$filename = 'https://skins.minecraft.net/MinecraftSkins/'.$name.'.png';
-		}
-
-		echo $this->API->get_skin($filename);
+		echo $this->API->get_skin($name);
 	}
 
 	public function get_head_skin($name, $size = 50) {
-		$this->response->type('png');
+		$this->response->type('image/png');
 		$this->autoRender = false;
-		$this->loadModel('ApiConfiguration');
-		$config = $this->ApiConfiguration->find('first');
-		$config = $config['ApiConfiguration'];
-		if($config['skins']) {
-			$filename = str_replace('{PLAYER}', $name, $config['skin_filename']);
-			$filename = WWW_ROOT.$filename.'.png';
-		} else {
-			$filename = 'https://skins.minecraft.net/MinecraftSkins/'.$name.'.png';
-		}
-		echo $this->API->get_head_skin($name, $size, $filename);
+		echo $this->API->get_head_skin($name, $size);
 	}
 
 }
