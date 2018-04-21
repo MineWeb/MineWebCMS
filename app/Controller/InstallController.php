@@ -17,12 +17,6 @@ class InstallController extends AppController
 
         $this->set('title_for_layout', $this->Lang->get('INSTALL__INSTALL'));
 
-        $secure = $this->getSecure();
-        if ($secure['key'] != "NOT_INSTALL")
-            $this->set('step1_ok', true);
-        else
-            $this->set('step1_ok', false);
-
         $this->loadModel('User');
         $admin = $this->User->find('first');
         if (!empty($admin)) {
