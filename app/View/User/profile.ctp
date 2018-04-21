@@ -25,7 +25,7 @@
 						} ?>
 					</p>
 				</div>
-				<?php if($EyPlugin->isInstalled('eywek.shop.1')) { ?>
+				<?php if($EyPlugin->isInstalled('eywek.shop')) { ?>
 					<div class="section">
 						<p><b><?= $Lang->get('USER__MONEY') ?> :</b> <span class="money"><?= $user['money'] ?></span></p>
 					</div>

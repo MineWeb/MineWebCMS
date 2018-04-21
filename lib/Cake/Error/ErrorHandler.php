@@ -124,8 +124,9 @@ class ErrorHandler {
 				get_class($e),
 				$e->getMessage(),
 				$e->getTraceAsString()
-			);
-			trigger_error($message, E_USER_ERROR);
+      );
+      echo "<pre>$message</pre>";
+			die('Try to remove files on directory /app/tmp/cache/');
 		}
 	}
 

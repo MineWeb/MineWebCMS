@@ -76,7 +76,7 @@
                 'debug': false,
 
                 onNext: function (tab, navigation, index) {
-                    if (index == 2) {
+                    if (index == 1) {
 
                         var $form = $('#step3');
                         if ($form.find("input[name='step3']").val() == "true") {

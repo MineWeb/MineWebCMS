@@ -203,7 +203,6 @@ class AppSchema extends CakeSchema {
 		'server_cache' => array('type' => 'integer', 'null' => false, 'default' => 0, 'length' => 1, 'unsigned' => false),
 		'server_secretkey' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'server_timeout' => array('type' => 'float', 'null' => false, 'default' => null, 'unsigned' => false),
-		'version' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'skype' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'youtube' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'twitter' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),

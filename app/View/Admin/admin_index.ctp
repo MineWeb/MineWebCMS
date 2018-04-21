@@ -42,7 +42,7 @@
 
     <div class="clearfix visible-sm-block"></div>
 
-    <?php if($EyPlugin->isInstalled('eywek.shop.1')) { ?>
+    <?php if($EyPlugin->isInstalled('eywek.shop')) { ?>
       <div class="col-md-3 col-sm-6 col-xs-12">
         <div class="small-box bg-green">
           <div class="inner">
@@ -170,7 +170,7 @@
           </div>
         </div>
         <div class="box-body">
-          <?php if($EyPlugin->isInstalled('eywek.shop.1')) { ?>
+          <?php if($EyPlugin->isInstalled('eywek.shop')) { ?>
             <?php if(count($items_solded) >= 5) { ?>
               <div class="alert alert-warning"><b><?= $Lang->get('GLOBAL__INFORMATIONS') ?> :</b> <?= $Lang->get('DASHBOARD__BIGGEST_SELLERS') ?></div>
               <div class="row">

@@ -33,7 +33,7 @@ class AdminController extends AppController {
 			$count_visits_yesterday = $this->Visit->getVisitsByDay(date('Y-m-d', strtotime('-1 day')))['count'];
 			$count_visits_today = $this->Visit->getVisitsByDay(date('Y-m-d'))['count'];
 
-			if($this->EyPlugin->isInstalled('eywek.shop.1')) {
+			if($this->EyPlugin->isInstalled('eywek.shop')) {
 
 				$this->loadModel('Shop.ItemsBuyHistory');
 				$purchase = $this->ItemsBuyHistory->find('count', array('order' => 'id DESC'));

@@ -46,7 +46,7 @@
               </select>
             </div>
 
-            <?php if($EyPlugin->isInstalled('eywek.shop.1')) { ?>
+            <?php if($EyPlugin->isInstalled('eywek.shop')) { ?>
               <div class="form-group">
                 <label><?= $Lang->get('USER__MONEY') ?></label>
                 <input name="money" class="form-control" value="<?= $search_user['money'] ?>" type="text">

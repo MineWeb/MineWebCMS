@@ -592,7 +592,7 @@ class EyPluginComponent extends Object
 
         // Add into database
         $id = null;
-        if (($findPlugin = $this->models->Plugin->find('first', ['conditions' => ['name' => $config->slug]])))
+        if (($findPlugin = $this->models->Plugin->find('first', ['conditions' => ['name' => $config->name]])))
             $id = $findPlugin['Plugin']['id'];
         $this->models->Plugin->read(null, $id);
         $this->models->Plugin->set(array(
@@ -619,7 +619,7 @@ class EyPluginComponent extends Object
     {
         // get config from api
         $config = $this->getPluginFromAPI($slug);
-        $slug = $config->slug;
+        $slug = $config->name;
         // check requirements
         if (!$config || empty($config))
             return 'ERROR__PLUGIN_REQUIREMENTS';

@@ -397,7 +397,7 @@ class UserController extends AppController
 
             $this->set('title_for_layout', $this->User->getKey('pseudo'));
             $this->layout = $this->Configuration->getKey('layout');
-            if ($this->EyPlugin->isInstalled('eywek.shop.1')) {
+            if ($this->EyPlugin->isInstalled('eywek.shop')) {
                 $this->set('shop_active', true);
             } else {
                 $this->set('shop_active', false);
@@ -762,7 +762,7 @@ class UserController extends AppController
                         $password_updated = false;
                     }
 
-                    if ($this->EyPlugin->isInstalled('eywek.shop.1')) {
+                    if ($this->EyPlugin->isInstalled('eywek.shop')) {
                         $data['money'] = $this->request->data['money'];
                     }
 
