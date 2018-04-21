@@ -22,8 +22,6 @@ app/Config/core.php
 .gitmodules
 
 config/secure
-app/Plugin/*
-app/View/Themed/*
 config/last_check
 config/update
 config/install.txt
