@@ -226,7 +226,8 @@ class EyPluginComponent extends Object
             return $this->alreadyCheckValid[$slug] = false;
         }
         if (!is_dir($file)) {
-            $this->log('File : ' . $file . ' is not a folder! Plugin not valid! Please remove this file from de plugin folder.'); // ce n'est pas un dossier
+            if (strstr($file, '.gitkeep') === false)
+              $this->log('File : ' . $file . ' is not a folder! Plugin not valid! Please remove this file from de plugin folder.'); // ce n'est pas un dossier
             return $this->alreadyCheckValid[$slug] = false;
         }
 

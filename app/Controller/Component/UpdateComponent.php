@@ -102,7 +102,7 @@ class UpdateComponent extends Object
                 // On ouvre le zip
                 if ($zip->open(ROOT . DS . 'app' . DS . 'tmp' . DS . $this->lastVersion . '.zip') === TRUE) {
 
-                    $updateComponentContent = $zip->getFromName('app/Controller/Component/UpdateComponent.php');
+                    $updateComponentContent = $zip->getFromName('MineWebCMS-master/app/Controller/Component/UpdateComponent.php');
                     file_put_contents(ROOT . DS . 'app' . DS . 'Controller' . DS . 'Component' . DS . 'UpdateComponent.php', $updateComponentContent);
 
                     $zip->close();
@@ -133,6 +133,8 @@ class UpdateComponent extends Object
 
                 // On set quelque variables
                 $filename = zip_entry_name($fileRessource);
+                if ($filename === 'MineWebCMS-master/') continue;
+                $filename = substr($filename, strlen('MineWebCMS-master/')); // remove
                 $folder = dirname($filename);
 
                 // On vérifie que c'est un fichier
