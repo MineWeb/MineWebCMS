@@ -197,10 +197,10 @@ class ServerController extends AppController
         } // use simple ping to retrieve data from MC protocol
         else if ($this->request->data['type'] == 1) {
             if (!$this->Server->ping(array('ip' => $this->request->data['host'], 'port' => $this->request->data['port'])))
-                return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED'))));
+                return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_ERROR_FAILED'))));
         } else if ($this->request->data['type'] == 2) {
             if (!$this->Server->rcon(array('ip' => $this->request->data['host'], 'port' => $this->request->data['server_data']['rcon_port'], 'password' => $this->request->data['server_data']['rcon_password']), 'say ' . $this->Lang->get('SERVER__LINK_SUCCESS')))
-                return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_FAILED'))));
+                return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_ERROR_FAILED'))));
         } else {
             return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
         }
