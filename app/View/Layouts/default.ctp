@@ -15,7 +15,6 @@
     <?= $this->Html->css('modern-business.css') ?>
     <?= $this->Html->css('animate.css') ?>
     <?= $this->Html->css('font-awesome.min.css') ?>
-    <?= $this->Html->css('../font-awesome-4.1.0/css/font-awesome.min.css') ?>
     <?= $this->Html->css('flat.css') ?>
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,900' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700' rel='stylesheet' type='text/css'>
