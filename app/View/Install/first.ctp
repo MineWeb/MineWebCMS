@@ -79,10 +79,6 @@
               <td><?= affichImg($compatible['phpVersion']) ?></td>
             </tr>
             <tr>
-              <td>ionCube Loader >= 5.0.0</td>
-              <td><?= affichImg($compatible['ionCube']) ?></td>
-            </tr>
-            <tr>
               <td>PDO</td>
               <td><?= affichImg($compatible['pdo']) ?></td>
             </tr>

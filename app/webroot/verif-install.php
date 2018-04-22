@@ -102,7 +102,6 @@ $compatible = array();
 $compatible['chmod'] = (is_writable(ROOT . DS . 'app' . DS . 'Config') && is_writable(ROOT . DS . 'app' . DS . 'Plugin') && is_writable(ROOT . DS . 'app' . DS . 'View' . DS . 'Themed') && is_writable(ROOT . DS . 'config') && is_writable(ROOT . DS . 'app' . DS . 'tmp')) ? true : false;
 
 $compatible['phpVersion'] = false;
-$compatible['ionCube'] = false;
 $compatible['pdo'] = false;
 $compatible['curl'] = false;
 $compatible['rewriteUrl'] = false;
@@ -134,8 +133,6 @@ if(function_exists('ini_get') && ini_get('allow_url_fopen') == "1") {
 } elseif(file_exists(ROOT.DS.'config'.DS.'installed.txt') || @file_get_contents('https://google.fr')) {
   $compatible['allowGetURL'] = true;
 }
-
-$compatible['ionCube'] = ((function_exists('ioncube_loader_version') && ioncube_loader_version() >= 5.0) || (function_exists('ioncube_loader_iversion') && ioncube_loader_iversion() >= 5.0));
 
 $needAffichCompatibility = (in_array(false, $compatible)) ? true : false;
 if(file_exists(ROOT.DS.'config'.DS.'bypass_compatibility')) {
