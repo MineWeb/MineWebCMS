@@ -77,11 +77,18 @@ class APIComponent extends Object
   }
 
   private function _getSkinImage($username) {
-		if ($this->config['skins']) {
-			$filename = str_replace('{PLAYER}', $name, $config['skin_filename']);
-			$content = file_get_contents(WWW_ROOT . $filename . '.png');
-		} else {
-			$content = $this->_getSkinFromUsername($username);
+    if ($this->config['skins']) {
+        $filename = str_replace('{PLAYER}', $name, $config['skin_filename']);
+        $content = file_get_contents(WWW_ROOT . $filename . '.png');
+    } else {
+        $content = $this->_getSkinFromUsername($username);
+
+        Cache::remember('skin_'.$username, function() use ($content){
+            return base64_encode($content);
+        }, 'skin');
+
+        if (empty($content))
+            $content = base64_decode(Cache::read('skin_'.$username, 'skin'));
     }
     
     if ($content) return @imagecreatefromstring($content);
