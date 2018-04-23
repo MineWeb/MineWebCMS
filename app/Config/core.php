@@ -403,3 +403,10 @@ Cache::config('_cake_model_', array(
 	'serialize' => ($engine === 'File'),
 	'duration' => $duration
 ));
+
+Cache::config('skin', array(
+    'engine' => $engine,
+    'prefix' => $prefix,
+    'path' => CACHE . 'skins' . DS,
+    'duration' => $duration
+));
