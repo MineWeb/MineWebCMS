@@ -81,14 +81,14 @@ class APIComponent extends Object
         $filename = str_replace('{PLAYER}', $name, $config['skin_filename']);
         $content = file_get_contents(WWW_ROOT . $filename . '.png');
     } else {
-        $content = $this->_getSkinFromUsername($username);
+        $content = base64_decode(Cache::read('skin_'.$username, 'skin'));
 
-        Cache::remember('skin_'.$username, function() use ($content){
-            return base64_encode($content);
-        }, 'skin');
-
-        if (empty($content))
-            $content = base64_decode(Cache::read('skin_'.$username, 'skin'));
+        if (empty($content)) {
+            $content = $this->_getSkinFromUsername($username);
+            Cache::remember('skin_'.$username, function() use ($content){
+                return base64_encode($content);
+            }, 'skin');
+        }
     }
     
     if ($content) return @imagecreatefromstring($content);
