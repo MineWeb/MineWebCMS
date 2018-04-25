@@ -237,7 +237,7 @@
         "CONFIG__KEY_SESSION_TYPE_DB": "Database",
         "CONFIG_GITHUB_CLIENT_ID": "Github Client ID",
         "CONFIG_GITHUB_CLIENT_SECRET": "Github Client Secret",
-        "CONFIG_GITHUB_EXPLAIN": "We are now using the github api in order to fetch datas around MineWeb. By default there is a rate limit which is 60request/hour. <br> If you want to increase this limit, please look at the documentation<a href=\"#\">documentation</a>.",
+        "CONFIG_GITHUB_EXPLAIN": "We are now using the github api in order to fetch datas around MineWeb. By default there is a rate limit which is 60request/hour. <br> If you want to increase this limit, please look at the documentation<a href=\"https://docs.mineweb.org/#github\">documentation</a>.",
 
 		"EMAIL__TITLE_CONFIRM_MAIL": "Confirm your email",
         "EMAIL__CONTENT_CONFIRM_MAIL": "Hi {USERNAME}! <br> You registered on {DATE} with IP <b> {IP} </b>, you have to confirm your email by going to this link <a href=\"{LINK}\">{LINK}</a>. <br> <br> <br> This email is automatic, no need to answer. ",
