@@ -91,7 +91,9 @@ class AppSchema extends CakeSchema {
 				'passwords_hash' => 'sha256',
 				'passwords_salt' => 0,
 				'forced_updates' => 1,
-				'session_type' => 'php'
+				'session_type' => 'php',
+				'github_client_id' => '',
+				'github_client_secret' => ''
 			));
 
 	    $configuration->save();
@@ -225,6 +227,8 @@ class AppSchema extends CakeSchema {
 		'passwords_salt' => array('type' => 'integer', 'null' => true, 'default' => 0, 'length' => 1, 'unsigned' => false),
 		'forced_updates' => array('type' => 'integer', 'null' => true, 'default' => 1, 'length' => 1, 'unsigned' => false),
 		'session_type' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 10, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+		'github_client_id' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+		'github_client_secret' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),
