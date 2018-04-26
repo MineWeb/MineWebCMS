@@ -284,7 +284,7 @@ class AppController extends Controller
                     ]
                 ]
             ],
-			'GLOBAL__MARKET' => [
+	    'GLOBAL__MARKET' => [
                 'icon' => 'shopping-cart',
                 'permission' => 'MANAGE_THEMES',
                 'route' => ['controller' => 'market', 'action' => 'index', 'admin' => true, 'plugin' => false]
