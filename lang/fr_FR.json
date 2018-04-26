@@ -239,7 +239,8 @@
         "EMAIL__TITLE_CONFIRM_MAIL": "Confirmer votre email",
         "EMAIL__CONTENT_CONFIRM_MAIL": "Salut {USERNAME} ! <br> Tu t'es inscrit le {DATE} avec l'IP <b>{IP}<\/b>, tu dois confirmer ton email en te rendant sur ce lien <a href=\"{LINK}\">{LINK}<\/a>.<br><br><br>Cet email est automatique, inutile d'y répondre.",
 
-        "THEME__TITLE":"Thèmes",
+        "GLOBAL__MARKET":"Market",
+		"THEME__TITLE":"Thèmes",
         "THEME__LIST":"Liste des thèmes",
         "THEME__ENABLED_SUCCESS":"Thème activé avec succès !",
         "THEME__INSTALL_SUCCESS":"Thème installé avec succès !",
@@ -265,11 +266,9 @@
         "THEME__ERROR_INSTALL_UNZIP": "Le thème n'a pas pu être installé, vérifiez que le dossier app/View/Themed soit disponible en écriture.",
 
         "INSTALL__STEP_1_TITLE": "Étape 1",
-        "INSTALL__STEP_1_DESC": "Veuillez entrer votre clé de licence disponible sur votre espace membre de mineweb.org",
+        "INSTALL__STEP_1_DESC": "Vous pouvez maintenant configurer votre compte Administrateur",
         "INSTALL__STEP_2_TITLE": "Étape 2",
-        "INSTALL__STEP_2_DESC": "Vous pouvez maintenant configurer votre compte Administrateur",
-        "INSTALL__STEP_3_TITLE": "Étape 3",
-        "INSTALL__STEP_3_DESC": "Vous avez terminé l'installation du CMS avec succès ! La configuration du CMS peut être dans le panel admin. Cliquez sur le bouton ci-dessous pour passer à l'utilisation.",
+        "INSTALL__STEP_2_DESC": "Vous avez terminé l'installation du CMS avec succès ! La configuration du CMS peut être dans le panel admin. Cliquez sur le bouton ci-dessous pour passer à l'utilisation.",
         "INSTALL__ALREADY_INSTALLED": "Votre site est déjà installé, si vous souhaitez le réinstaller vous devez supprimer le fichier <code>\/config\/install.txt<\/code> et <code>\/config\/installed.txt<\/code>.",
         "INSTALL__GO_TO_INDEX":"Passer à l'utilisation",
         "INSTALL__INSTALL":"Installation",

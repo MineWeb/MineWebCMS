@@ -284,6 +284,11 @@ class AppController extends Controller
                     ]
                 ]
             ],
+			'GLOBAL__MARKET' => [
+                'icon' => 'shopping-cart',
+                'permission' => 'MANAGE_THEMES',
+                'route' => ['controller' => 'market', 'action' => 'index', 'admin' => true, 'plugin' => false]
+            ],
             'STATS__TITLE' => [
                 'icon' => 'bar-chart-o',
                 'permission' => 'VIEW_STATISTICS',
