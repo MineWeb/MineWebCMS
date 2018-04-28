@@ -97,7 +97,7 @@ function clearFolder($folder)
 	        if ($fichier != "." && $fichier != "..")
 	        {
 	                //On selectionne le fichier et on le supprime
-	                unlink($folder.$fichier;);
+	                unlink($folder.$fichier);
 	        }
 	}
 	//Fermer le dossier vide
