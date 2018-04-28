@@ -2,8 +2,8 @@
 
     <div class="tab-content">
       <div class="tab-pane active" id="tabsleft-tab2">
-        <h1><?= $Lang->get('INSTALL__STEP_2_TITLE') ?></h1>
-        <p><?= $Lang->get('INSTALL__STEP_2_DESC') ?></p>
+        <h1><?= $Lang->get('INSTALL__STEP_1_TITLE') ?></h1>
+        <p><?= $Lang->get('INSTALL__STEP_1_DESC') ?></p>
 
         <form id="step3">
           <div class="ajax-msg-step3"></div>
@@ -29,7 +29,6 @@
           <div id="input"></div>
           <li class="next finish hidden" style="display: none;"><a href="javascript:;"><?= $Lang->get('GLOBAL__END') ?></a></li>
           <ul class="pager wizard">
-            <li class="previous disabled"><a href="javascript:;"><?= $Lang->get('GLOBAL__PREVIOUS') ?></a></li>
             <li class="next" style="display: inline;"><a id="tabsleft-link" href="javascript:;"><?= $Lang->get('GLOBAL__NEXT') ?></a></li>
             <li class="next finish hidden" style="display: none;"><a href="javascript:;"><?= $Lang->get('GLOBAL__END') ?></a></li>
           </ul>
@@ -38,8 +37,8 @@
       </div>
       <div class="tab-pane" id="tabsleft-tab3">
 
-        <h1><?= $Lang->get('INSTALL__STEP_3_TITLE') ?></h1>
-        <div class="alert alert-success"><?= $Lang->get('INSTALL__STEP_3_DESC') ?></div>
+        <h1><?= $Lang->get('INSTALL__STEP_2_TITLE') ?></h1>
+        <div class="alert alert-success"><?= $Lang->get('INSTALL__STEP_2_DESC') ?></div>
 
         <p>
           <a href="<?= $this->Html->url(array('controller' => 'install', 'action' => 'end')) ?>" class="btn btn-block btn-success"><?= $Lang->get('INSTALL__GO_TO_INDEX') ?></a>
