@@ -267,11 +267,9 @@
         "THEME__ERROR_INSTALL_UNZIP": "The theme could not be installed, check that the app / View / Themed folder is available for writing.",
 		
 		"INSTALL__STEP_1_TITLE": "Step 1",
-        "INSTALL__STEP_1_DESC": "Please enter your license key available on your mineweb.org member area",
+        "INSTALL__STEP_1_DESC": "You can now configure your Administrator account",
         "INSTALL__STEP_2_TITLE": "Step 2",
-        "INSTALL__STEP_2_DESC": "You can now configure your Administrator account",
-        "INSTALL__STEP_3_TITLE": "Step 3",
-        "INSTALL__STEP_3_DESC": "You have completed the installation of the CMS successfully! CMS configuration can be in the admin panel. Click the button below to switch to use.",
+        "INSTALL__STEP_2_DESC": "You have completed the installation of the CMS successfully! CMS configuration can be in the admin panel. Click the button below to switch to use.",
         "INSTALL__ALREADY_INSTALLED": "Your site is already installed, if you want to reinstall it you must delete the file <code>/config/install.txt </code> and <code>/config/installed.txt </code>. ",
         "INSTALL__GO_TO_INDEX": "Switch to use",
         "INSTALL__INSTALL": "Installation",
