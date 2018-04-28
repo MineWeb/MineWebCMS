@@ -105,19 +105,16 @@
                     )); ?>
                   </div>
                   <div class="form-group">
+                    <input type="hidden" name="passwords_salt" value="<?= $config['passwords_salt'] ?>">
                     <div class="checkbox">
-                      <input name="passwords_salt" type="checkbox"<?= ($config['passwords_salt']) ? ' checked=""' : ''; ?> value="<?= ($config['passwords_salt']) ? '1' : '0'; ?>">
+                      <input name="passwords_salt_checkbox" type="checkbox" <?= $config['passwords_salt'] == '1' ? 'checked' : '' ?>>
                       <label><?= $Lang->get('CONFIG__KEY_PASSWORDS_SALT') ?></label>
                     </div>
                   </div>
                   <script type="text/javascript">
-                    $('input[name="passwords_salt"]').on('change', function(e) {
-                      if($(this).val() == 'on') {
-                        $(this).val('1');
-                      } else {
-                        $(this).val('0');
-                      }
-                    });
+                    $('input[name="passwords_salt_checkbox"]').on('change', function(e) {
+                      $('input[name="passwords_salt').val($('input[name="passwords_salt_checkbox"]:checked').length > 0 ? '1' : '0')
+                    })
                   </script>
                   <small class="text-danger"><?= $Lang->get('CONFIG__KEY_PASSWORDS_ADVERTISSEMENT') ?></small>
                 </div>
