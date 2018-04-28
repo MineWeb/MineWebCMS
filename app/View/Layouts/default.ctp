@@ -61,11 +61,10 @@
                             <?php if(empty($value['Navbar']['submenu'])) { ?>
                               <li class="li-nav<?php if($this->params['controller'] == $value['Navbar']['name']) { ?> actived<?php } ?>">
                                   <a href="<?= $value['Navbar']['url'] ?>"<?= ($value['Navbar']['open_new_tab']) ? ' target="_blank"' : '' ?>>
-								  <?php if(!empty($value['Navbar']['icon'])): ?> 
-									<i class="fa fa-<?= $value['Navbar']['icon'] ?>"></i>
-									<?php endif; ?>
-									<?= $value['Navbar']['name'] ?></a>
-								  
+					<?php if(!empty($value['Navbar']['icon'])): ?> 
+						<i class="fa fa-<?= $value['Navbar']['icon'] ?>"></i>
+					<?php endif; ?>
+						<?= $value['Navbar']['name'] ?></a>		  
                               </li>
                             <?php } else { ?>
                               <li class="dropdown">
