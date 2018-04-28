@@ -23,10 +23,7 @@ function cut($data, $how) {
 // Fonction qui génére une classe parmis toute celle disponible pour les news. Permet une couleur aléatoire.
 function rand_color_news() {
 	$colors = array('border-top-color-dark-blue', 'border-top-color-dark-blue-2', 'border-top-color-yellow', 'border-top-color-dark-yellow', 'border-top-color-blue', 'border-top-color-magenta', 'border-top-color-green'); // toute les class disponible
-	$color = rand(0, count($colors)); // génére un chiffre aléatoire entre 0 et le nombre de class
-	if($color > 0) { // si le chiffre généré est supérier à 0
-		$color = $color - 1; // je lui enlève -1 pour bien sélectionner dans l'array après
-	}
+	$color = rand(0, count($colors)-1); // génére un chiffre aléatoire entre 0 et le nombre de class
 	return $colors[$color]; // et je retourne la class selon le chiffre aléatoire
 }
 
@@ -100,8 +97,7 @@ function clearFolder($folder)
 	        if ($fichier != "." && $fichier != "..")
 	        {
 	                //On selectionne le fichier et on le supprime
-	                $Vidage= $folder.$fichier;
-	                unlink($Vidage);
+	                unlink($folder.$fichier;);
 	        }
 	}
 	//Fermer le dossier vide

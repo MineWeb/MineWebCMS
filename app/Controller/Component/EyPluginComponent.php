@@ -9,6 +9,7 @@ class EyPluginComponent extends Object
     public $pluginsInFolder = array();
     public $pluginsInDB = array();
     private $alreadyCheckValid = array();
+    private $reference = 'https://raw.githubusercontent.com/MineWeb/mineweb.org/gh-pages/market/plugins.json';
 
     public $pluginsFolder;
 
@@ -799,7 +800,7 @@ class EyPluginComponent extends Object
 
             // Get actual version to compare
             if ($type == "CMS") {
-                $versionToCompare = $this->controller->Configuration->getKey('version'); // ex: 7.0.0
+                $versionToCompare = trim(@file_get_contents(ROOT . DS . 'VERSION'));
             } else if (count(explode('--', $type)) == 2) { // ex: plugin-- or theme--
                 $typeExploded = explode('--', $type);
                 $type = $typeExploded[0]; // plugin or theme
@@ -911,23 +912,26 @@ class EyPluginComponent extends Object
         }
     }
 
-    public function getFreePlugins($all = false)
+    public function getFreePlugins($all = false, $removeInstalledPlugins = false)
     {
-        $orgRepos = @json_decode($this->controller->sendGetRequest('https://api.github.com/orgs/MineWeb/repos'));
+        $pluginsList = @json_decode($this->controller->sendGetRequest($this->reference), true);
         $plugins = [];
-        if ($orgRepos) {
-            foreach ($orgRepos as $repo) {
-                if (!is_object($repo)) // rate limited
-                    break;
-                if (strpos($repo->name, 'Plugin-') === false)
-                    continue;
-                if (($plugin = $this->getPluginFromRepoName($repo->full_name)))
-                    $plugins[] = $plugin;
+        if ($pluginsList) {
+            foreach ($pluginsList as $plugin) {
+              if ($plugin['free']) {
+                if (($pl = $this->getPluginFromRepoName($plugin['repo']))) {
+                  $pl['free'] = true;
+                  $pl['slug'] = $plugin['slug'];
+                  $plugins[] = $pl;
+                }
+              } else if ($all) {
+                $plugins[] = $plugin;
+              }
             }
         }
 
         // remove installed plugins
-        if (!$all) {
+        if ($removeInstalledPlugins) {
             $installedPlugins = array();
             foreach ($this->pluginsLoaded as $id => $config) {
                 $installedPlugins[] = $config->slug;
@@ -941,37 +945,24 @@ class EyPluginComponent extends Object
         return $plugins;
     }
 
-    private function getPluginFromRepoName($repoName, $assoc = true)
+    private function getPluginFromRepoName($repo, $assoc = true)
     {
-        $configUrl = 'https://raw.githubusercontent.com/' . $repoName . '/master/config.json';
+        $configUrl = "https://raw.githubusercontent.com/$repo/master/config.json";
         if (!($config = @json_decode($this->controller->sendGetRequest($configUrl), $assoc)))
             return false;
-        $config['repo'] = $repoName;
-        $config['slug'] = substr($repoName, strlen('MineWeb/Plugin-'));
+        $config['repo'] = $repo;
         return $config;
     }
 
-    public function getPluginsFromAPI(array $slug)
+    public function getPluginsFromAPI(array $slugs)
     {
-        $orgRepos = @json_decode($this->controller->sendGetRequest('https://api.github.com/orgs/MineWeb/repos'));
-        $plugins = [];
-        if ($orgRepos) {
-            foreach ($orgRepos as $repo) {
-                if (!is_object($repo)) // rate limited
-                    break;
-                if (strpos($repo->name, 'Plugin-') === false)
-                    continue;
-                if (($theme = $this->getPluginFromRepoName($repo->full_name)))
-                    $plugins[] = $theme;
-            }
-        }
+        $plugins = $this->getFreePlugins(true);
         // each plugin
         $pluginsToFind = array();
         foreach ($plugins as $plugin) {
-            foreach ($slug as $id) {
-                if (!is_object($plugin))
-                    continue;
-                if ($plugin->slug == $id)
+            $plugin = json_decode(json_encode($plugin)); // to object
+            foreach ($slugs as $slug) {
+                if ($plugin->slug == $slug)
                     $pluginsToFind[$plugin->slug] = $plugin;
             }
         }
