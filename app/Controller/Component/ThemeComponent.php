@@ -295,13 +295,13 @@ class ThemeComponent extends Object
         foreach ($supported as $type => $version) { // on parcours tout les pré-requis
             // Set version to compare
             if ($type == 'CMS')
-                $versionToCompare = $this->controller->Configuration->getKey('version');
+                $versionToCompare = trim(@file_get_contents(ROOT . DS . 'VERSION'));
             else {
                 // find plugin
                 $search = $this->EyPlugin->findPlugin('id', $type);
                 if (empty($search)) // plugin not installed
                     continue;
-                $versionToCompare = $this->EyPlugin->getPluginConfig($search->slug)->version;
+                $versionToCompare = $search->version;
             }
 
             // Check
@@ -319,7 +319,7 @@ class ThemeComponent extends Object
                 if (isset($search))
                     $this->log('Theme (' . $slug . ') check supported: Plugin (' . $search->slug . ') invalid version: ' . $versionToCompare);
                 else
-                    $this->log('Theme (' . $slug . ') check supported: Invalid version : ' . $versionToCompare);
+                    $this->log('Theme (' . $slug . ') check supported: Invalid version : ' . $versionToCompare . '(' . $type . ' => ' . $version . ')');
             }
         }
 
