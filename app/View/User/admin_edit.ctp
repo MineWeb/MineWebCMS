@@ -12,7 +12,7 @@
 
             <div class="form-group">
               <label><?= $Lang->get('USER__USERNAME') ?></label>
-              <input class="form-control" value="<?= $search_user['pseudo'] ?>" type="text" disabled="" autocomplete="off">
+              <input name="pseudo" class="form-control" value="<?= $search_user['pseudo'] ?>" type="text" autocomplete="off">
            	</div>
 
             <?php if(!$Configuration->getKey('confirm_mail_signup')) { ?>
