@@ -37,20 +37,20 @@
                 <ul class="nav nav-tabs nav-pills nav-stacked col-xs-6 col-sm-3" style="max-width: 300px;">
 
                     <li role="presentation"><a
-                                title="<?= $Lang->get('INSTALL__NO_SKIP') ?>"><?= $Lang->get('INSTALL__STEP_2_TITLE') ?></a>
+                                title="<?= $Lang->get('INSTALL__NO_SKIP') ?>"><?= $Lang->get('INSTALL__STEP_1_TITLE') ?></a>
                     </li>
                     <li role="presentation" class="active"><a
-                                title="<?= $Lang->get('INSTALL__NO_SKIP') ?>"><?= $Lang->get('INSTALL__STEP_3_TITLE') ?></a>
+                                title="<?= $Lang->get('INSTALL__NO_SKIP') ?>"><?= $Lang->get('INSTALL__STEP_2_TITLE') ?></a>
                     </li>
                 </ul>
             <?php } else { ?>
             <div id="tabsleft" class="tabbable tabs-left">
                 <ul class="nav nav-tabs nav-pills nav-stacked col-xs-6 col-sm-3" style="max-width: 300px;">
                     <li role="presentation" class=""><a href="#tabsleft-tab2" data-toggle="tab" data-toggle="tab"
-                                                        title="<?= $Lang->get('INSTALL__NO_SKIP') ?>"><?= $Lang->get('INSTALL__STEP_2_TITLE') ?></a>
+                                                        title="<?= $Lang->get('INSTALL__NO_SKIP') ?>"><?= $Lang->get('INSTALL__STEP_1_TITLE') ?></a>
                     </li>
                     <li role="presentation" class=""><a href="#tabsleft-tab3" data-toggle="tab"
-                                                        title="<?= $Lang->get('INSTALL__NO_SKIP') ?>"><?= $Lang->get('INSTALL__STEP_3_TITLE') ?></a>
+                                                        title="<?= $Lang->get('INSTALL__NO_SKIP') ?>"><?= $Lang->get('INSTALL__STEP_2_TITLE') ?></a>
                     </li>
                 </ul>
                 <?php } ?>
