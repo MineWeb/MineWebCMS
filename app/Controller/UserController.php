@@ -736,7 +736,7 @@ class UserController extends AppController
         if ($this->isConnected && $this->Permissions->can('MANAGE_USERS')) {
             if ($this->request->is('post')) {
                 $this->loadModel('User');
-                if (!empty($this->request->data['id']) && !empty($this->request->data['email']) && (!empty($this->request->data['rank']) || $this->request->data['rank'] == 0)) {
+                if (!empty($this->request->data['id']) && !empty($this->request->data['email']) && !empty($this->request->data['pseudo']) && (!empty($this->request->data['rank']) || $this->request->data['rank'] == 0)) {
 
                     $findUser = $this->User->find('first', array('conditions' => array('id' => intval($this->request->data['id']))));
 
@@ -752,9 +752,11 @@ class UserController extends AppController
 
                     $data = array(
                         'email' => $this->request->data['email'],
-                        'rank' => $this->request->data['rank']
+                        'rank' => $this->request->data['rank'],
+						'pseudo' => $this->request->data['pseudo']
                     );
 
+					
                     if (!empty($this->request->data['password'])) {
                         $data['password'] = $this->Util->password($this->request->data['password'], $findUser['User']['pseudo']);
                         $password_updated = true;
