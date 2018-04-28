@@ -159,7 +159,8 @@ class NavbarController extends AppController
         $this->Navbar->create();
         $data = array(
             'order' => $order,
-            'name' => $this->request->data['name'],
+            'name' => $this->request->data['name'], 
+	    'icon' => $this->request->data['icon'],
             'type' => 1,
             'open_new_tab' => $open_new_tab
         );
@@ -223,10 +224,10 @@ class NavbarController extends AppController
         $this->Navbar->read(null, $id);
         $data = array(
             'name' => $this->request->data['name'],
+	    'icon' => $this->request->data['icon'],
             'type' => 1,
             'open_new_tab' => ($this->request->data['open_new_tab'] == 'true') ? 1 : 0
         );
-
         if ($this->request->data['type'] == "dropdown") {
             $data['type'] = 2;
             $data['url'] = json_encode(array('type' => 'submenu'));
