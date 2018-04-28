@@ -12,6 +12,11 @@
               <label><?= $Lang->get('GLOBAL__NAME') ?></label>
               <input name="name" class="form-control" type="text" value="<?= $nav['name'] ?>">
             </div>
+			<div class="form-group">
+              <label><?= $Lang->get('NAVBAR__ICON') ?></label>
+			  <p><?= $Lang->get('NAVBAR__ICON__DESC') ?></p>
+              <input name="icon" class="form-control" type="text" value="<?= $nav['icon'] ?>">
+            </div>
 
             <div class="form-group">
               <label><?= $Lang->get('GLOBAL__TYPE') ?></label>
@@ -182,6 +187,7 @@
 <script type="text/javascript">
     function formatteData($form) {
         var name = $form.find("input[name='name']").val();
+		var icon = $form.find("input[name='icon']").val();
         var type = $form.find("input[type='radio'][name='type']:checked").val();
         var url;
         if (type === "normal") {
@@ -217,6 +223,7 @@
 
         var inputs = {};
         inputs['name'] = name;
+		inputs['icon'] = icon;
         inputs['type'] = type;
         inputs['url'] = url;
         inputs['open_new_tab'] = $('input[name="new_tab"]').is(':checked');
