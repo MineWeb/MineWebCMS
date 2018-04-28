@@ -24,7 +24,11 @@
               <?php $i=0; foreach ($navbars as $key => $value) { $i++; ?>
               <li id="<?= $value['Navbar']['name'] ?>-<?= $i ?>">
                 <tr style="cursor:move;" id="<?= $value['Navbar']['name'] ?>-<?= $i ?>">
-                  <td><?= $value['Navbar']['name'] ?></td>
+                  <td>
+				  <?php if(!empty($value['Navbar']['icon'])): ?> 
+                     <i class="fa fa-<?= $value['Navbar']['icon'] ?>"></i>
+                     <?php endif; ?>
+                     <?= $value['Navbar']['name'] ?></td>
                   <?php if($value['Navbar']['url'] != '#' && $value['Navbar']['url'] !== false) { ?>
                     <td><a href="<?= $value['Navbar']['url'] ?>"><?= $value['Navbar']['url'] ?></a></td>
                   <?php } elseif($value['Navbar']['url'] === false) { ?>
