@@ -11,7 +11,7 @@ class ThemeController extends AppController
         $this->set('title_for_layout', $this->Lang->get('THEME__LIST'));
         $this->layout = 'admin';
 
-        $this->set('themesAvailable', $this->Theme->getThemesOnAPI(false, true));
+        $this->set('themesAvailable', $this->Theme->getThemesOnAPI(true, true));
         $this->set('themesInstalled', $this->Theme->getThemesInstalled());
     }
 

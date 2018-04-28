@@ -10,6 +10,7 @@ class ThemeComponent extends Object
     private $themesAvailable;
     private $themesInstalled;
     private $alreadyCheckValid;
+    private $reference = 'https://raw.githubusercontent.com/MineWeb/mineweb.org/gh-pages/market/themes.json';
 
     private $controller;
 
@@ -43,7 +44,7 @@ class ThemeComponent extends Object
     {
         if (isset($this->themesAvailable['all']))
             foreach ($this->themesAvailable['all'] as $theme)
-                if (strtolower($theme['author'] . '.' . $theme['slug']) === $slug)
+                if (strtolower($theme['slug']) === strtolower($slug))
                     return $theme;
         return false;
     }
@@ -85,19 +86,19 @@ class ThemeComponent extends Object
             else
                 $themesList->$id->valid = false;
             // set last version
-            if (($theme = $this->getThemeFromAPI($config->slug)))
+            if (($theme = $this->getThemeFromAPI($config->slug)) && $theme['version'])
                 $themesList->$id->lastVersion = $theme['version'];
         }
         // cache for this request
         return $this->themesInstalled[$api] = $themesList;
     }
 
-    private function getThemeFromRepoName($repoName)
+    private function getThemeFromRepoName($repo)
     {
-        $configUrl = 'https://raw.githubusercontent.com/' . $repoName . '/master/Config/config.json';
+        $configUrl = "https://raw.githubusercontent.com/$repo/master/Config/config.json";
         if (!($config = @json_decode($this->controller->sendGetRequest($configUrl), true)))
             return false;
-        $config['repo'] = $repoName;
+        $config['repo'] = $repo;
         return $config;
     }
 
@@ -109,20 +110,22 @@ class ThemeComponent extends Object
             return $this->themesAvailable[$type];
 
         // get themes
-        $orgRepos = @json_decode($this->controller->sendGetRequest('https://api.github.com/orgs/MineWeb/repos'));
+        $themesList = @json_decode($this->controller->sendGetRequest($this->reference), true);
         $themes = [];
-        if ($orgRepos) {
-            foreach ($orgRepos as $repo) {
-                if (!is_object($repo)) // rate limited
-                    break;
-                if (strpos($repo->name, 'Theme-') === false)
-                    continue;
-                if (($theme = $this->getThemeFromRepoName($repo->full_name)))
-                    $themes[] = $theme;
+        if ($themesList) {
+            foreach ($themesList as $theme) {
+              if ($theme['free']) {
+                if (($theme = $this->getThemeFromRepoName($theme['repo']))) {
+                  $theme['free'] = true;
+                  $themes[] = $theme;
+                }
+              } else if ($all) {
+                $themes[] = $theme;
+              }
             }
         }
 
-        // get purchases themes
+        // delete installed themes
         if ($deleteInstalledThemes) {
             $installed = $this->getThemesInstalled();
             $themeInstalledID = [];
