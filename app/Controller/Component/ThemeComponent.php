@@ -130,10 +130,10 @@ class ThemeComponent extends Object
             $installed = $this->getThemesInstalled();
             $themeInstalledID = [];
             foreach ($installed as $themeInstalled) {
-                $themeInstalledID[] = $themeInstalled->slug;
+                $themeInstalledID[] = strtolower($themeInstalled->slug);
             }
             foreach ($themes as $key => $theme) {
-                if (in_array($theme['slug'], $themeInstalledID))
+                if (in_array(strtolower($theme['slug']), $themeInstalledID))
                     unset($themes[$key]);
             }
         }
@@ -329,20 +329,59 @@ class ThemeComponent extends Object
         return $errors;
     }
 
+    private function download($slug) {
+      $zip = $this->controller->sendGetRequest('https://github.com/MineWeb/Theme-' . $slug . '/archive/master.zip');
+      if (!$zip)
+          return 'THEME__ERROR_INSTALL_DOWNLOAD_FAILED';
+
+      // Temporary file
+      $zipFile = ROOT . DS . 'app' . DS . 'tmp' . DS . 'theme-' . $slug . '.zip';
+      $file = fopen($zipFile, 'w+');
+      if (!fwrite($file, $zip)) {
+          $this->log('Error when downloading theme, save files failed.');
+          return 'THEME__ERROR_INSTALL_UNZIP';
+      }
+      fclose($file);
+
+      // Set into plugin folder
+      $zip = new ZipArchive;
+      $res = $zip->open($zipFile);
+      if ($res !== TRUE) {
+          $this->log('Error when downloading theme, unable to open zip. (CODE: ' . $res . ')');
+          return 'THEME__ERROR_INSTALL_UNZIP';
+      }
+      if (!file_exists(ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug) && !mkdir(ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug))
+        return 'THEME__ERROR_INSTALL_UNZIP';
+      for($i = 0; $i < $zip->numFiles; $i++) {
+        $filename = $zip->getNameIndex($i);
+        $fileinfo = pathinfo($filename);
+        $stat = $zip->statIndex($i);
+        if ($fileinfo['basename'] === 'Theme-' . $slug . '-master') continue;
+
+        $target = "zip://".$zipFile."#".$filename;
+        $dest = ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug . substr($filename, strlen('Theme-' . $slug . '-master'));
+        if ($stat['size'] === 0 && strpos($filename, '.') === false) {
+          if (!file_exists($dest)) mkdir($dest);
+          continue;
+        }
+        if (!copy($target, $dest)) return 'THEME__ERROR_INSTALL_UNZIP';
+      }
+      $zip->close();
+
+      // Delete temporary file
+      unlink($zipFile);
+      return true;
+    }
+ 
     // install plugin
     public function install($slug, $update = false)
     {
         // ask to api
-        $zip = $this->controller->sendGetRequest('https://github.com/MineWeb/Theme-' . $slug . '/archive/master.zip');
+        $download = $this->download($slug);
+        if ($download !== true)
+          return $download;
         if ($update)
-            $oldConfig = $this->getCustomData($slug)[0];
-        // unzip files
-        if (!unzip($zip, $this->themesFolder, 'theme-' . $slug . '-zip', true)) {
-            $this->log('[Install theme] Couldn\'t unzip files.');
-            return 'THEME__ERROR_INSTALL_UNZIP';
-        }
-        rename(ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . 'Theme-' . $slug . '-master', ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug);
-        // delete mac os files (fuck hidden files)
+          $oldConfig = $this->getCustomData($slug)[0];
         App::uses('Folder', 'Utility');
         $folder = new Folder($this->themesFolder . DS . '__MACOSX');
         $folder->delete();
