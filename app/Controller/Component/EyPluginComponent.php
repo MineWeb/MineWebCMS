@@ -538,8 +538,8 @@ class EyPluginComponent extends Object
             return 'ERROR__PLUGIN_CANT_BE_DOWNLOADED';
 
         // Temporary file
-        $filename = ROOT . DS . 'app' . DS . 'tmp' . DS . 'plugin-' . $slug . '.zip';
-        $file = fopen($filename, 'w+');
+        $zipFile = ROOT . DS . 'app' . DS . 'tmp' . DS . 'plugin-' . $slug . '.zip';
+        $file = fopen($zipFile, 'w+');
         if (!fwrite($file, $zip)) {
             $this->log('Error when downloading plugin, save files failed.');
             return 'ERROR__PLUGIN_PERMISSIONS';
@@ -548,17 +548,31 @@ class EyPluginComponent extends Object
 
         // Set into plugin folder
         $zip = new ZipArchive;
-        $res = $zip->open($filename);
+        $res = $zip->open($zipFile);
         if ($res !== TRUE) {
-            $this->log('Error when downloading plugin, unable to open zip.');
+            $this->log('Error when downloading plugin, unable to open zip. (CODE: ' . $res . ')');
             return 'ERROR__PLUGIN_PERMISSIONS';
         }
-        $zip->extractTo($this->pluginsFolder . DS);
+        if (!file_exists(ROOT . DS . 'app' . DS . 'Plugin' . DS . $slug) && !mkdir(ROOT . DS . 'app' . DS . 'Plugin' . DS . $slug))
+          return 'ERROR__PLUGIN_PERMISSIONS';
+        for($i = 0; $i < $zip->numFiles; $i++) {
+          $filename = $zip->getNameIndex($i);
+          $fileinfo = pathinfo($filename);
+          $stat = $zip->statIndex($i);
+          if ($fileinfo['basename'] === 'Plugin-' . $slug . '-master') continue;
+
+          $target = "zip://".$zipFile."#".$filename;
+          $dest = ROOT . DS . 'app' . DS . 'Plugin' . DS . $slug . substr($filename, strlen('Plugin-' . $slug . '-master'));
+          if ($stat['size'] === 0 && strpos($filename, '.') === false) {
+            if (!file_exists($dest)) mkdir($dest);
+            continue;
+          }
+          if (!copy($target, $dest)) return 'ERROR__PLUGIN_PERMISSIONS';
+        }
         $zip->close();
-        rename(ROOT . DS . 'app' . DS . 'Plugin' . DS . 'Plugin-' . $slug . '-master', ROOT . DS . 'app' . DS . 'Plugin' . DS . $slug);
 
         // Delete temporary file
-        unlink($filename);
+        unlink($zipFile);
 
         // Delete MacOS hidden files
         App::uses('Folder', 'Utility');
@@ -621,7 +635,6 @@ class EyPluginComponent extends Object
     {
         // get config from api
         $config = $this->getPluginFromAPI($slug);
-        $slug = $config->name;
         // check requirements
         if (!$config || empty($config))
             return 'ERROR__PLUGIN_REQUIREMENTS';
