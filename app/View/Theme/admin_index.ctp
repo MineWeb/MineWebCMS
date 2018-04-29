@@ -11,6 +11,7 @@
             <thead>
                 <tr>
                   <th><?= $Lang->get('GLOBAL__NAME') ?></th>
+				          <th><?= $Lang->get('GLOBAL__AUTHOR') ?></th>
                   <th><?= $Lang->get('GLOBAL__VERSION') ?></th>
                   <th><?= $Lang->get('GLOBAL__STATUS') ?></th>
                   <th><?= $Lang->get('THEME__SUPPORTED_STATUS') ?></th>
@@ -20,6 +21,7 @@
               <tbody>
                 <tr>
                   <td>Bootstrap</td>
+				          <td>Eywek</td>
                   <td>N/A</td>
                   <td>
                     <?php
@@ -45,6 +47,7 @@
                   <?php foreach ($themesInstalled as $key => $value) { ?>
                     <tr>
                       <td><?= $value->name ?></td>
+					            <td><?= $value->author ?></td>
                       <td><?= $value->version ?></td>
                       <td>
                         <?php
