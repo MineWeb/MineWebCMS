@@ -19,7 +19,7 @@
               <button id="update" class="btn btn-large btn-primary"><?= $Lang->get('GLOBAL__UPDATE') ?></button>
               <a class="btn btn-warning" href="<?= $this->Html->url(array('action' => 'clear_cache')) ?>"><?= $Lang->get('UPDATE__CLEAR_CACHE') ?></a>
               <a href="<?= $this->Html->url(array('action' => 'check')) ?>" class="btn btn-large btn-info"><?= $Lang->get('UPDATE__CHECK_STATUS') ?></a>
-              <a href="http://mineweb.org/changelog" target="_blank" class="btn btn-large btn-default"><?= $Lang->get('UPDATE__VIEW_CHANGELOG') ?></a>
+              <a href="https://github.com/MineWeb/MineWebCMS/releases" target="_blank" class="btn btn-large btn-default"><?= $Lang->get('UPDATE__VIEW_CHANGELOG') ?></a>
             </div>
             <div id="update-msg"></div>
             <div class="progress progress-striped active" style="display:none;">
