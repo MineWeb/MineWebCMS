@@ -147,7 +147,7 @@
 					<table class="table table-bordered" id="users">
 						<thead>
 							<tr>
-								<th><?= $Lang->get('USER__TITLE') ?></th>
+								<th><?= $Lang->get('DASHBOARD__PURCHASES') ?> ID</th>
 								<th><?= $Lang->get('GLOBAL__CREATED') ?></th>
 								<th><?= $Lang->get('SHOP__ITEM_PRICE') ?></th>
 								<th class="right"><?= $Lang->get('SHOP__ITEMS') ?></th>
@@ -157,17 +157,10 @@
 						<?php
 						foreach ($histories as $value) { ?>
 							<tr>
-								<td><?= $user['pseudo'] ?></td>
+								<td><?= $value["ItemsBuyHistory"]["id"] ?></td>
 								<td><?= $value["ItemsBuyHistory"]["created"] ?></td>
-								<?php foreach ($items_name as $val) { ?>
-									<?php if($value["ItemsBuyHistory"]["item_id"] == $val["Item"]["id"]){ ?>
-									<td>
-										<?= $val["Item"]["price"] ?>
-									</td>
-									<td>
-										<?= $val["Item"]["name"] ?>
-									</td>
-								<?php }} ?>
+								<td><?= $value["Item"]["price"] ?></td>
+								<td><?= $value["Item"]["name"] ?></td>
 							</tr>
 						<?php } ?>
 						</tbody>
