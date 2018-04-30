@@ -141,9 +141,39 @@
 					  </div>
 					</form>
 				<?php } ?>
-
+				<?php if($EyPlugin->isInstalled('eywek.shop')) { ?>
+					<hr>
+					<h3 class="text-center"><?= $Lang->get('SHOP__HISTORY_PURCHASES') ?></h3>
+					<table class="table table-bordered" id="users">
+						<thead>
+							<tr>
+								<th><?= $Lang->get('USER__TITLE') ?></th>
+								<th><?= $Lang->get('GLOBAL__CREATED') ?></th>
+								<th><?= $Lang->get('SHOP__ITEM_PRICE') ?></th>
+								<th class="right"><?= $Lang->get('SHOP__ITEMS') ?></th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php
+						foreach ($histories as $value) { ?>
+							<tr>
+								<td><?= $user['pseudo'] ?></td>
+								<td><?= $value["ItemsBuyHistory"]["created"] ?></td>
+								<?php foreach ($items_name as $val) { ?>
+									<?php if($value["ItemsBuyHistory"]["item_id"] == $val["Item"]["id"]){ ?>
+									<td>
+										<?= $val["Item"]["price"] ?>
+									</td>
+									<td>
+										<?= $val["Item"]["name"] ?>
+									</td>
+								<?php }} ?>
+							</tr>
+						<?php } ?>
+						</tbody>
+					</table>
+				<?php } ?>
 				<?= $Module->loadModules('user_profile') ?>
-
 		  	</div>
 		</div>
 	</div>

@@ -394,15 +394,23 @@ class UserController extends AppController
         if ($this->isConnected) {
 
             $this->loadModel('User');
-
             $this->set('title_for_layout', $this->User->getKey('pseudo'));
             $this->layout = $this->Configuration->getKey('layout');
             if ($this->EyPlugin->isInstalled('eywek.shop')) {
+		$this->loadModel('Shop.ItemsBuyHistory');
+		$histories = $this->ItemsBuyHistory->find('all', array(
+                        'conditions' => ['user_id' => $_SESSION['user']],
+                        'order' => 'created DESC'
+                    ));
+					
+		$this->loadModel('Shop.Item');
+		$items_name = $this->Item->find('all');
+					
+		$this->set(compact('histories', 'items_name'));
                 $this->set('shop_active', true);
             } else {
                 $this->set('shop_active', false);
             }
-
             $available_ranks = array(0 => $this->Lang->get('USER__RANK_MEMBER'), 2 => $this->Lang->get('USER__RANK_MODERATOR'), 3 => $this->Lang->get('USER__RANK_ADMINISTRATOR'), 4 => $this->Lang->get('USER__RANK_ADMINISTRATOR'), 5 => $this->Lang->get('USER__RANK_BANNED'));
             $this->loadModel('Rank');
             $custom_ranks = $this->Rank->find('all');
