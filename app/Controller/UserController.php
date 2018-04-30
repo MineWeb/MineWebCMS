@@ -398,15 +398,13 @@ class UserController extends AppController
             $this->layout = $this->Configuration->getKey('layout');
             if ($this->EyPlugin->isInstalled('eywek.shop')) {
 		$this->loadModel('Shop.ItemsBuyHistory');
-		$histories = $this->ItemsBuyHistory->find('all', array(
-                        'conditions' => ['user_id' => $_SESSION['user']],
-                        'order' => 'created DESC'
-                    ));
-					
 		$this->loadModel('Shop.Item');
-		$items_name = $this->Item->find('all');
-					
-		$this->set(compact('histories', 'items_name'));
+		$histories = $this->ItemsBuyHistory->find('all', array(
+			'recursive' => 1,
+			'order' => 'ItemsBuyHistory.created DESC',
+                       	 'conditions' => ['user_id' => $_SESSION['user']]
+                ));
+				$this->set(compact('histories'));
                 $this->set('shop_active', true);
             } else {
                 $this->set('shop_active', false);
