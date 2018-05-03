@@ -361,8 +361,7 @@ class ServerComponent extends Object
         $path = 'http://' . $value['host'] . ':' . $value['port'] . '/handshake';
         $secure = json_decode(file_get_contents(ROOT . DS . 'config' . DS . 'secure'), true);
         $data = json_encode(array(
-            'licenseId' => $secure['id'],
-            'licenseKey' => $secure['key'],
+            'secretKey' => $this->getSecretKey(),
             'domain' => Router::url('/', true)
         ));
 
