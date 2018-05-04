@@ -402,7 +402,7 @@ class UserController extends AppController
 		$histories = $this->ItemsBuyHistory->find('all', array(
 			'recursive' => 1,
 			'order' => 'ItemsBuyHistory.created DESC',
-                        'conditions' => ['user_id' => $_SESSION['user']]
+                        'conditions' => ['user_id' => $this->User->getKey('id')]
                 ));
 		$this->set(compact('histories'));
                 $this->set('shop_active', true);
