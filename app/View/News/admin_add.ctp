@@ -42,7 +42,7 @@
 
             <div class="form-group">
               <div class="checkbox">
-                <input name="published" type="checkbox">
+                <input name="published" type="checkbox" checked="checked">
                 <label><?= $Lang->get('NEWS__WANT_TO_PUBLISH') ?></label>
               </div>
             </div>
