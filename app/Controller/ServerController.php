@@ -192,8 +192,6 @@ class ServerController extends AppController
 
             if (!$this->Server->check('connection', array('host' => $this->request->data['host'], 'port' => $this->request->data['port'], 'timeout' => $timeout)))
                 return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__LINK_ERROR_' . $this->Server->linkErrorCode))));
-            // get secretKey
-            $secretKey = $this->Server->getSecretKey();
         } // use simple ping to retrieve data from MC protocol
         else if ($this->request->data['type'] == 1) {
             if (!$this->Server->ping(array('ip' => $this->request->data['host'], 'port' => $this->request->data['port'])))
@@ -216,12 +214,9 @@ class ServerController extends AppController
             'ip' => $this->request->data['host'],
             'port' => $this->request->data['port'],
             'type' => $this->request->data['type'],
-            'data' => json_encode($this->request->data['server_data'])
+            'data' => isset($this->request->data['server_data']) ? json_encode($this->request->data['server_data']) : '[]'
         ));
         $this->Server->save();
-
-        if ($this->request->data['type'] == 0 && isset($secretKey) && $secretKey)
-            $this->Configuration->setKey('server_secretkey', $secretKey);
 
         return $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('SERVER__LINK_SUCCESS'))));
     }
