@@ -77,9 +77,9 @@ class APIComponent extends Object
   }
 
   private function _getSkinImage($username) {
-    if ($this->config['skins']) {
-        $filename = str_replace('{PLAYER}', $name, $config['skin_filename']);
-        $content = file_get_contents(WWW_ROOT . $filename . '.png');
+    if ($this->skin_active) {
+        $filename = str_replace('{PLAYER}', $username, $this->config['skin_filename']);
+        $content = @file_get_contents(WWW_ROOT . $filename . '.png');
     } else {
         $content = base64_decode(Cache::read('skin_'.$username, 'skin'));
 
@@ -173,12 +173,7 @@ class APIComponent extends Object
     }
     $final = imagecreatetruecolor($size, $size);
     imagecopyresized($final, $dest, 0, 0, 0, 0, $size, $size, 8, 8);
-    if ($cache) {
-      imagepng($final, $cachePath);
-      include($cachePath);
-    } else {
-      imagepng($final);
-    }
+    imagepng($final);
     imagedestroy($dest);
     imagedestroy($final);
   }
