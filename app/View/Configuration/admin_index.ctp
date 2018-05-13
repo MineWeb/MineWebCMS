@@ -484,7 +484,8 @@
                         'type' => 'text',
                         'name' => 'smtpHost',
                         'class' => 'form-control',
-                        'value' => $config['smtpHost']
+                        'value' => $config['smtpHost'],
+                        'autocomplete' => 'off'
                       )); ?>
                   </div>
 
@@ -495,7 +496,8 @@
                         'type' => 'text',
                         'name' => 'smtpUsername',
                         'class' => 'form-control',
-                        'value' => $config['smtpUsername']
+                        'value' => $config['smtpUsername'],
+                        'autocomplete' => 'off'
                       )); ?>
                   </div>
 
@@ -506,7 +508,8 @@
                         'type' => 'text',
                         'name' => 'smtpPort',
                         'class' => 'form-control',
-                        'value' => $config['smtpPort']
+                        'value' => $config['smtpPort'],
+                        'autocomplete' => 'off'
                       )); ?>
                   </div>
 
@@ -517,7 +520,8 @@
                         'type' => 'password',
                         'name' => 'smtpPassword',
                         'class' => 'form-control',
-                        'value' => $config['smtpPassword']
+                        'value' => $config['smtpPassword'],
+                        'autocomplete' => 'off'
                       )); ?>
                   </div>
 
