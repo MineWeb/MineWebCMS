@@ -234,6 +234,9 @@
         "CONFIG__KEY_SESSION_TYPE_INFO":"Ceci est un réglage avancé de votre site, il n'est pas nécessaire de le modifier si vous n'en avez pas l'utilité. Par défaut, le CMS utilise les sessions php.",
         "CONFIG__KEY_SESSION_TYPE_PHP":"PHP / Par défaut",
         "CONFIG__KEY_SESSION_TYPE_DB":"Base de données",
+        "CONFIG_GITHUB_CLIENT_ID": "Id client github",
+        "CONFIG_GITHUB_CLIENT_SECRET": "Clé secrète github",
+        "CONFIG_GITHUB_EXPLAIN": "Nous utilisons maintenant l'api de github pour pouvoir récupérer toutes les données relatives au cms. <br>Une limite de 60 requêtes par heure est imposée. Si vous souhaitez l'augmenter veuillez suivre la <a href=\"https://docs.mineweb.org/#github\">documentation</a>",
 
         "EMAIL__TITLE_CONFIRM_MAIL": "Confirmer votre email",
         "EMAIL__CONTENT_CONFIRM_MAIL": "Salut {USERNAME} ! <br> Tu t'es inscrit le {DATE} avec l'IP <b>{IP}<\/b>, tu dois confirmer ton email en te rendant sur ce lien <a href=\"{LINK}\">{LINK}<\/a>.<br><br><br>Cet email est automatique, inutile d'y répondre.",

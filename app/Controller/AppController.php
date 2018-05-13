@@ -121,6 +121,10 @@ class AppController extends Controller
         $youtube_link = $this->Configuration->getKey('youtube');
         $twitter_link = $this->Configuration->getKey('twitter');
 
+		//partie github
+		$github_client_id = $this->Configuration->getKey("github_client_id");
+		$github_client_secret = $this->Configuration->getKey("github_client_secret");
+		
         // Variables
         $google_analytics = $this->Configuration->getKey('google_analytics');
         $configuration_end_code = $this->Configuration->getKey('end_layout_code');
@@ -141,7 +145,9 @@ class AppController extends Controller
             'twitter_link',
             'findSocialButtons',
             'google_analytics',
-            'configuration_end_code'
+            'configuration_end_code',
+			'github_client_id',
+            'github_client_secret'
         ));
     }
 
@@ -477,6 +483,14 @@ class AppController extends Controller
 
     public function sendGetRequest($url)
     {
+		if(strpos($url, "api.github.com") !== false){
+			$github_client_id = $this->Configuration->getKey("github_client_id");
+			$github_client_secret = $this->Configuration->getKey("github_client_secret");
+			
+			if($github_client_id != "" && $github_client_secret != "")
+				$url = $url . "?client_id={$github_client_id}&client_secret={$github_client_secret}";
+		}
+		
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -484,6 +498,7 @@ class AppController extends Controller
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         $result = curl_exec($ch);
         curl_close($ch);
         return $result;

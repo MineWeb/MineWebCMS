@@ -526,7 +526,31 @@
                   </div>
 
                 </div>
-
+				<hr>
+				<div>
+					<div class="form-group">
+					  <label><?= $Lang->get('CONFIG_GITHUB_CLIENT_ID') ?></label>
+						<?= $this->Form->input(false, array(
+						  'div' => false,
+						  'type' => 'text',
+						  'name' => 'github_client_id',
+						  'class' => 'form-control',
+						  'value' => $config['github_client_id']
+						)); ?>
+					</div>
+					
+					<div class="form-group">
+					  <label><?= $Lang->get('CONFIG_GITHUB_CLIENT_SECRET') ?></label>
+						<?= $this->Form->input(false, array(
+						  'div' => false,
+						  'type' => 'text',
+						  'name' => 'github_client_secret',
+						  'class' => 'form-control',
+						  'value' => $config['github_client_secret']
+						)); ?>
+					</div>
+					<small><?= $Lang->get('CONFIG_GITHUB_EXPLAIN') ?></small>
+				</div>
               </div>
               <!-- /.tab-pane -->
             </div>
