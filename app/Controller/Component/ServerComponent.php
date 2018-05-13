@@ -16,6 +16,7 @@ class ServerComponent extends Object
     {
         $this->controller = $controller;
         $this->controller->set('Server', $this);
+        $this->configModel = ClassRegistry::init('Configuration');
     }
 
     public function startup($controller) {}
@@ -188,7 +189,7 @@ class ServerComponent extends Object
     private function encryptWithKey($data)
     {
         if (!isset($this->key))
-            $this->key = ClassRegistry::init('Configuration')->find('first')['Configuration']['server_secretkey'];
+            $this->key = $this->configModel->find('first')['Configuration']['server_secretkey'];
         $iv_size = openssl_cipher_iv_length('aes-128-cbc'); // AES-128-CBC or  AES-256-CBC
         $iv = openssl_random_pseudo_bytes($iv_size);
 
@@ -203,7 +204,7 @@ class ServerComponent extends Object
     private function decryptWithKey($data, $iv)
     {
         if (!isset($this->key))
-            $this->key = ClassRegistry::init('Configuration')->find('first')['Configuration']['server_secretkey'];
+            $this->key = $this->configModel->find('first')['Configuration']['server_secretkey'];
         $iv = base64_decode($iv);
         $data = base64_decode($data);
         return openssl_decrypt($data, 'AES-128-CBC', substr($this->key, 0, 16), OPENSSL_RAW_DATA, $iv);
@@ -219,7 +220,7 @@ class ServerComponent extends Object
     {
         if (!empty($this->timeout))
             return $this->timeout;
-        return ClassRegistry::init('Configuration')->find('first')['Configuration']['server_timeout'];
+        return $this->configModel->find('first')['Configuration']['server_timeout'];
     }
 
     public function getConfig($server_id = false)
@@ -229,7 +230,7 @@ class ServerComponent extends Object
         if (!empty($this->config[$server_id]))
             return $this->config[$server_id];
 
-        $this->Configuration = ClassRegistry::init('Configuration');
+        $this->Configuration = $this->configModel;
         $configuration = $this->Configuration->find('first');
         if ($configuration['Configuration']['server_state'] != 1)
             return $this->config[$server_id] = false;
@@ -298,7 +299,7 @@ class ServerComponent extends Object
     {
         if (!$server_id) // first server config
             $server_id = $this->getFirstServerID();
-        if (ClassRegistry::init('Configuration')->find('first')['Configuration']['server_state'] == '0') // enabled
+        if ($this->configModel->find('first')['Configuration']['server_state'] == '0') // enabled
             return $this->online[$server_id] = false;
         if (!empty($this->online[$server_id])) // already called
             return $this->online[$server_id];
@@ -343,14 +344,19 @@ class ServerComponent extends Object
 
     public function getSecretKey()
     {
-        $key = ClassRegistry::init('Configuration')->find('first')['Configuration']['server_secretkey'];
+        $config = $this->configModel->find('first');
+        $key = $config['Configuration']['server_secretkey'];
         if (isset($key) && !empty($key))
             return $key;
         $key = "";
         $possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
         for ($i = 0; $i < 32; $i++)
-            $key .= $possible[random_int(0, 32)];
+            $key .= $possible[rand(0, 61)];
+        // save
+        $this->configModel->read(null, $config['Configuration']['id']);
+        $this->configModel->set(['server_secretkey' => $key]);
+        $this->configModel->save();
         return $key;
     }
 
@@ -361,7 +367,7 @@ class ServerComponent extends Object
         $path = 'http://' . $value['host'] . ':' . $value['port'] . '/handshake';
         $secure = json_decode(file_get_contents(ROOT . DS . 'config' . DS . 'secure'), true);
         $data = json_encode(array(
-            'secretKey' => $this->getSecretKey(),
+            'secretKey' => substr($this->getSecretKey(), 0, 16),
             'domain' => Router::url('/', true)
         ));
 
@@ -397,7 +403,7 @@ class ServerComponent extends Object
             $serverId = array($serverId);
 
         // get configuration
-        $configuration = ClassRegistry::init('Configuration')->find('first')['Configuration'];
+        $configuration = $this->configModel->find('first')['Configuration'];
         // setup cache
         if ($configuration['server_cache']) {
             $cacheFolder = ROOT . DS . 'app' . DS . 'tmp' . DS . 'cache' . DS;
