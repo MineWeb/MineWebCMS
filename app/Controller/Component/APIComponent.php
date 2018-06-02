@@ -189,7 +189,7 @@ class APIComponent extends Object
 
     $user = $this->User->find('first', array('conditions' => array('pseudo' => $username, 'password' => $password)));
     if (empty($user))
-      return ['status' => true];
+      return ['status' => false];
     $user = $user['User'];
 
     $result = ['status' => true];
