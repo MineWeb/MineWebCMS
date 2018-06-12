@@ -120,6 +120,21 @@
                 </div>
 
                 <hr>
+                <div class="form-group">
+                  <label><?= $Lang->get('CONFIG__CONDITION_TITLE') ?></label>
+                  <div class="form-group">
+                    <?= $this->Form->input(false, array(
+                      'div' => false,
+                      'type' => 'text',
+                      'name' => 'condition',
+                      'class' => 'form-control',
+                      'value' => $config['condition']
+                    )); ?>
+                  </div>
+                  <small class="text-danger"><?= $Lang->get('CONFIG__CONDITION') ?></small>
+                </div>
+
+                <hr>
 
                 <div class="form-group">
                   <label><?= $Lang->get('CONFIG__KEY_SESSION_TYPE') ?></label>

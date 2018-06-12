@@ -185,6 +185,8 @@
 		"PLUGIN__ERROR_UNINSTALLED": "The plugin is uninstalled",
 		
 		"CONFIG__GENERAL_PREFERENCES": "General Preferences",
+		"CONFIG__CONDITION_TITLE": "Conditions of use",
+		"CONFIG__CONDITION": "Put the link of the general conditions of use to activate this option. ! Please note, not all themes are compatible and may prevent registration.",
         "CONFIG__SOCIAL_PREFERENCES": "Social preferences",
         "CONFIG__OTHER_PREFERENCES": "Preferences other",
         "CONFIG__EDIT_SUCCESS": "Configuration successfully changed!",
@@ -346,6 +348,8 @@
         "USER__LOGIN": "Login",
         "USER__REGISTER": "Register",
         "USER__USERNAME": "Nickname",
+		"USER__CONDITION_1":"Accept the",
+		"USER__CONDITION_2":"conditions",
         "USER__USERNAME_LABEL": "Enter your username",
         "USER__PASSWORD": "Password",
         "USER__PASSWORD_LABEL": "Enter your password",

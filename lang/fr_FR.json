@@ -183,6 +183,8 @@
         "PLUGIN__ERROR_UNINSTALLED":"Le plugin est désinstallé",
 
         "CONFIG__GENERAL_PREFERENCES": "Préférences générales",
+		"CONFIG__CONDITION_TITLE": "Conditions d'utilisations",
+		"CONFIG__CONDITION": "Mettez le lien des conditions générales d'utilisations pour activer cette option. ! Attention, tous les thèmes ne sont pas compatibles et peuvent empêcher l'inscription",
         "CONFIG__SOCIAL_PREFERENCES": "Préférences sociales",
         "CONFIG__OTHER_PREFERENCES": "Préférences autres",
         "CONFIG__EDIT_SUCCESS":"Configuration modifié avec succès !",
@@ -344,6 +346,8 @@
         "USER__LOGIN":"Connexion",
         "USER__REGISTER":"S'inscrire",
         "USER__USERNAME":"Pseudo",
+		"USER__CONDITION_1":"Accepter les",
+		"USER__CONDITION_2":"conditions",
         "USER__USERNAME_LABEL":"Entrez votre pseudo",
         "USER__PASSWORD":"Mot de passe",
         "USER__PASSWORD_LABEL":"Entrez votre mot de passe",
