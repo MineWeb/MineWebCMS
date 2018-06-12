@@ -124,6 +124,7 @@ class AppController extends Controller
         // Variables
         $google_analytics = $this->Configuration->getKey('google_analytics');
         $configuration_end_code = $this->Configuration->getKey('end_layout_code');
+		$condition = $this->Configuration->getKey('condition');
 
         $this->loadModel('SocialButton');
         $findSocialButtons = $this->SocialButton->find('all');
@@ -133,6 +134,7 @@ class AppController extends Controller
 
         $this->set(compact(
             'reCaptcha',
+			'condition',
             'website_name',
             'theme_config',
             'facebook_link',

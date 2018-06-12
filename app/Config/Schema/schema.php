@@ -70,6 +70,7 @@ class AppSchema extends CakeSchema {
 				'server_cache' => 0,
 				'server_secretkey' => '',
 				'server_timeout' => 1,
+				'condition' => null,
 				'skype' => 'http://mineweb.org',
 				'youtube' => 'http://mineweb.org',
 				'twitter' => 'http://mineweb.org',
