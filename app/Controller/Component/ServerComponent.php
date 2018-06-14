@@ -365,7 +365,6 @@ class ServerComponent extends Object
         if (empty($info) OR !is_array($value)) return false;
 
         $path = 'http://' . $value['host'] . ':' . $value['port'] . '/handshake';
-        $secure = json_decode(file_get_contents(ROOT . DS . 'config' . DS . 'secure'), true);
         $data = json_encode(array(
             'secretKey' => substr($this->getSecretKey(), 0, 16),
             'domain' => Router::url('/', true)
