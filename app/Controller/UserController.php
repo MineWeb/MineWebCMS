@@ -37,7 +37,13 @@ class UserController extends AppController
         $this->autoRender = false;
         $this->response->type('json');
         if ($this->request->is('Post')) { // si la requête est bien un post
-            if (!empty($this->request->data['pseudo']) && !empty($this->request->data['condition']) && !empty($this->request->data['password']) && !empty($this->request->data['password_confirmation']) && !empty($this->request->data['email'])) { // si tout les champs sont bien remplis
+			if (empty($this->request->data['condition']) && !empty($this->Configuration->getKey('condition'))) {
+				$condition_verif = 0;
+			}
+			else {
+				$condition_verif = 1;
+			}
+            if (!empty($this->request->data['pseudo']) && !empty($this->request->data['password']) && $condition_verif != 0 && !empty($this->request->data['password_confirmation']) && !empty($this->request->data['email'])) { // si tout les champs sont bien remplis
 
                 // Captcha
                 if ($this->Configuration->getKey('captcha_type') == "2") { // ReCaptcha

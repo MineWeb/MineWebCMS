@@ -126,14 +126,16 @@
                 <input type="text" class="form-control" name="captcha" id="inputPassword3" placeholder="<?= $Lang->get('FORM__CAPTCHA_LABEL') ?>">
             </div>
           <?php } ?>
-		  <div class="form-group" <?php if(empty($condition)) { ?> style="display: none;" <?php } ?>>
+		  <?php if (!empty($condition)) { ?>
+		  <div class="form-group">
 			<div class="checkbox">
 				<label>
-					<input type="checkbox" name="condition" <?php if(empty($condition)) { ?> checked <?php } ?>>
+					<input type="checkbox" name="condition">
 					<?=$Lang->get('USER__CONDITION_1')?> <a href="<?= $condition ?>"> <?= $Lang->get('USER__CONDITION_2')?></a>
 				</label>
 			</div>
-		</div>
+		  </div>
+		 <?php } ?>
       </div>
       <div class="modal-footer">
         <button type="submit" class="btn btn-primary btn-block"><?= $Lang->get('USER__REGISTER') ?></button>
