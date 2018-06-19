@@ -159,12 +159,6 @@
         "GALLERY__CHOOSE":"Choisir cette image",
         "GALLERY__PARAGRAPH":"Vous avez ci-dessous la liste des images ayant déjà été enregistrées sur votre site, vous pouvez les réutiliser.",
 
-        "LICENSE_ERROR__ID_OR_KEY_INVALID": "Licence inconnue",
-        "LICENSE_ERROR__INVALID_URL": "Site d'installation non valide",
-        "LICENSE_ERROR__LICENSE_DISABLED": "Licence désactivée",
-        "LICENSE_ERROR__MINEWEB_DOWN": "L'API de MineWeb.org est temporairement indisponible, veuillez nous en excuser.",
-        "LICENSE_ERROR__DEV_USERS_LIMIT_REACHED": "Vous avez atteint le nombre d'utilisateurs maximum pour la licence de développement. Veuillez en supprimer.",
-
         "PLUGIN__INSTALL": "Installer",
         "PLUGIN__INSTALL_LOADING": "Installation",
         "PLUGIN__NONE_INSTALLED": "Aucun plugin n'est installé",
