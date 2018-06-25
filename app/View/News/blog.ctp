@@ -14,7 +14,7 @@
 				<p><b><?= $Lang->get('NEWS__COMMENTS_NBR') ?> : </b><?= $news['News']['count_comments'] ?></p>
 				<p><b><?= $Lang->get('NEWS__LIKES_NBR') ?> : </b><?= $news['News']['count_likes'] ?></p>
 					<hr>
-				<p><?php $nmsg = substr($news['News']['content'], 0, 500); echo $nmsg; ?></p>
+				<p><?php $nmsg = substr($news['News']['content'], 0, 500); echo $nmsg; ?> ...</p>
 			</div>
 		<? } ?>
 	</div>
