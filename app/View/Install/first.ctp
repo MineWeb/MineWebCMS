@@ -99,7 +99,7 @@
               <td><?= affichImg($compatible['openZip']) ?></td>
             </tr>
             <tr>
-              <td>OpenSSL (Connexion à l'API MineWeb)</td>
+              <td>OpenSSL</td>
               <td><?= affichImg($compatible['openSSL']) ?></td>
             </tr>
             <tr>
@@ -109,7 +109,7 @@
 
           </tbody>
         </table>
-        <div class="alert alert-danger"><b>Erreur : </b>Votre hébergeur n'est pas compatible avec le CMS.</div>
+        <div class="alert alert-danger"><b>Erreur : </b>Votre hébergeur n'a pas les pré-requis.</div>
       </div>
 
       <div class="ajax-msg"></div>
@@ -117,7 +117,7 @@
       <div class="database" style="display:none;" data-need-to-display="<?= ($needDisplayDatabase) ? 'true' : 'false' ?>">
         <form id="saveDB">
           <div class="form-group">
-            <label>Hébergeur</label>
+            <label>Adresse de la base de données</label>
             <input type="text" class="form-control" name="host" placeholder="Ex: localhost">
           </div>
           <div class="form-group">
