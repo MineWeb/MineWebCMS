@@ -201,7 +201,7 @@
 			$help['chmod'] = "Le dossier /app/View/Themed ne peut être écrit. <br /><br />";
 		}
 
-		if (! is_writable(ROOT . DS . 'config')) {
+		if (!is_writable(ROOT . DS . 'config')) {
 			$help['chmod'] = "Le dossier /config ne peut être écrit. <br /><br />";
 		}
 
@@ -267,7 +267,7 @@
 		$help['gd2'] .= "<i class='fa fa-info'></i> Essayer cette commande : <b>sudo apt-get install php".$php."-gd</b>";
 	}
 
-	$compatible['openZip'] = false;
+	$compatible['openZip'] = function_exists('zip_open');
 
 	if (!$compatible['openZip']) {
 		$help['openZip'] = "<a target='_blank' href='https://www.google.fr/search?query=Install+php".$php."-zip+on+$os'>Aide à propos de l'installation de php-zip sur ma machine</a><br /><br />";
@@ -276,7 +276,7 @@
 
 	$compatible['openSSL'] = function_exists('openssl_pkey_new');
 
-	//allow_url_fopen
+//allow_url_fopen
 	if(function_exists('ini_get') && ini_get('allow_url_fopen') == "1") {
 		$compatible['allowGetURL'] = true;
 	} elseif(file_exists(ROOT.DS.'config'.DS.'installed.txt') || @file_get_contents('https://google.fr')) {
