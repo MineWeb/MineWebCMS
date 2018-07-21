@@ -239,7 +239,11 @@ class ErrorHandler {
 	public static function handleFatalError($code, $description, $file, $line) {
 		$logMessage = 'Fatal Error (' . $code . '): ' . $description . ' in [' . $file . ', line ' . $line . ']';
 		CakeLog::write(LOG_ERR, $logMessage);
-
+		App::uses('Folder', 'Utility');
+		$folder = new Folder(ROOT . DS . 'app' . DS . 'tmp' . DS . 'cache');
+		if (!empty($folder->path)) {
+			$folder->delete();
+		}
 		$exceptionHandler = Configure::read('Exception.handler');
 		if (!is_callable($exceptionHandler)) {
 			return false;
@@ -248,7 +252,7 @@ class ErrorHandler {
 		if (ob_get_level()) {
 			ob_end_clean();
 		}
-
+		
 		if (Configure::read('debug')) {
 			call_user_func($exceptionHandler, new FatalErrorException($description, 500, $file, $line));
 		} else {
