@@ -105,7 +105,12 @@
 	function phpinfo2array() {
 		$entitiesToUtf8 = function($input) {
 			// http://php.net/manual/en/function.html-entity-decode.php#104617
-			return preg_replace_callback("/(&#[0-9]+;)/", function($m) { return mb_convert_encoding($m[1], "UTF-8", "HTML-ENTITIES"); }, $input);
+			return preg_replace_callback("/(&#[0-9]+;)/",
+				function($m) {
+					$char = current($m);
+					$utf = iconv('UTF-8', 'UCS-4', $char);
+					return sprintf("&#x%s;", ltrim(strtoupper(bin2hex($utf)), "0"));
+				}, $input);
 		};
 		$plainText = function($input) use ($entitiesToUtf8) {
 			return trim(html_entity_decode($entitiesToUtf8(strip_tags($input))));
