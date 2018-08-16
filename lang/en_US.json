@@ -366,7 +366,7 @@
         "USER__ERROR_INVALID_CREDENTIALS": "Bad IDs",
         "USER__ERROR_EMAIL_NOT_SAME": "The emails are not the same",
         "USER__ERROR_NOT_FOUND": "The user does not exist",
-        "USER__PROFILE": "profile",
+        "USER__PROFILE": "Profile",
         "USER__LOGOUT": "Disconnect",
         "USER__EDIT_PROFILE": "Edit your profile",
         "USER__ERROR_MUST_BE_LOGGED": "You must be logged in to perform this action",
