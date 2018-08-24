@@ -12,11 +12,14 @@
               <label><?= $Lang->get('GLOBAL__NAME') ?></label>
               <input name="name" class="form-control" type="text" value="<?= $nav['name'] ?>">
             </div>
-			<div class="form-group">
-              <label><?= $Lang->get('NAVBAR__ICON') ?></label>
-			  <p><?= $Lang->get('NAVBAR__ICON__DESC') ?></p>
-              <input name="icon" class="form-control" type="text" value="<?= $nav['icon'] ?>">
-            </div>
+	    <div class="form-group">
+		<label><?= $Lang->get('NAVBAR__ICON') ?></label>
+		<p><?= $Lang->get('NAVBAR__ICON__DESC') ?></p>
+		<div class="input-group">
+			<div class="input-group-addon">fa-</div>
+		   <input name="icon" class="form-control" type="text" value="<?= $nav['icon'] ?>">
+		</div>
+	    </div>
 
             <div class="form-group">
               <label><?= $Lang->get('GLOBAL__TYPE') ?></label>
