@@ -259,8 +259,11 @@
 		}
 
 		if ($os != "windows") {
-			$help['rewriteUrl'] .= "Essayer de taper : <b>sudo a2enmod rewrite</b> dans une invite de commande SSH. <br /><br />";
-			$help['rewriteUrl'] .= "Vérifiez la précense de  <b>AllowOverride All</b> dans le fichier de configuration d'apache2 situé ici /etc/apache2/sites-enabled/000-default";
+			$help['rewriteUrl'] .= "Essayez de taper : <b>sudo a2enmod rewrite</b> dans une invite de commande SSH. <br /><br />";
+            $help['rewriteUrl'] .= "Ajoutez ces lignes : <br /> <br />";
+			$help['rewriteUrl'] .= '<b>'.htmlspecialchars('<Directory "/var/www/html">').'<br />' ;
+            $help['rewriteUrl'] .= "AllowOverride All <br />";
+            $help['rewriteUrl'] .= htmlspecialchars('</Directory>')."</b><br /> <br /> entre les balises <b />".htmlspecialchars('<VirtualHost>')."</b>, dans le fichier de configuration d'apache2 située ici /etc/apache2/sites-available/000-default.conf";
 		}
 
 	}
