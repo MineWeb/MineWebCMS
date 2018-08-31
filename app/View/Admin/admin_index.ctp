@@ -1,11 +1,11 @@
 <section class="content-header">
   <h1>
-    Dashboard
+    <?= $Lang->get('GLOBAL__ADMIN_PANEL'); ?>
     <small>Version 2.0</small>
   </h1>
   <ol class="breadcrumb">
-    <li><a href="<?= $this->Html->url('/') ?>"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li class="active">Dashboard</li>
+    <li><a href="<?= $this->Html->url('/') ?>"><i class="fa fa-dashboard"></i> <?= $Lang->get('GLOBAL__HOME'); ?></a></li>
+    <li class="active"><?= $Lang->get('GLOBAL__ADMIN_PANEL'); ?></li>
   </ol>
 </section>
 
