@@ -13,14 +13,14 @@
 
             <div class="form-group">
               <div class="radio">
-                <input type="radio" class="enabledStatus" name="state" value="enabled"<?= ($Configuration->getKey('maintenance') != '0') ? ' checked=""' : '' ?>>
-                <label>
+                <input type="radio" id="activate" class="enabledStatus" name="state" value="enabled"<?= ($Configuration->getKey('maintenance') != '0') ? ' checked=""' : '' ?>>
+                <label for="activate">
                   <?= $Lang->get('GLOBAL__ENABLED') ?>
                 </label>
               </div>
               <div class="radio">
-                <input type="radio" class="disabledStatus" name="state" value="disabled"<?= ($Configuration->getKey('maintenance') == '0') ? ' checked=""' : '' ?>>
-                <label>
+                <input type="radio" id="disable" class="disabledStatus" name="state" value="disabled"<?= ($Configuration->getKey('maintenance') == '0') ? ' checked=""' : '' ?>>
+                <label for="disable">
                   <?= $Lang->get('GLOBAL__DISABLED') ?>
                 </label>
               </div>

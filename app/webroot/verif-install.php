@@ -29,20 +29,20 @@
 							exit;
 						}
 
-						$databaseStructure = '<?php
-          class DATABASE_CONFIG {
+						$databaseStructure = "<?php
+class DATABASE_CONFIG {
 
-          	public $default = array(
-          		\'datasource\' => \'Database/Mysql\',
-          		\'persistent\' => false,
-          		\'host\' => \''.$sql_host.'\',
-          		\'login\' => \''.$sql_user.'\',
-          		\'password\' => \''.$sql_pass.'\',
-          		\'database\' => \''.$sql_name.'\',
-          		\'encoding\' => \'utf8\',
-          	);
-          }
-          ';
+	public \$default = [
+		'datasource' => 'Database/Mysql',
+		'persistent' => false,
+		'host' => '{$sql_host}',
+		'login' => '{$sql_user}',
+		'password' => '{$sql_pass}',
+		'database' => '{$sql_name}',
+		'encoding' => 'utf8',
+	];
+}
+";
 						$write = fwrite($dbFile, $databaseStructure);
 						fclose($dbFile);
 

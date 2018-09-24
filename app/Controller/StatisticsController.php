@@ -30,21 +30,23 @@ class StatisticsController extends AppController {
 
 			$visits = $this->Visit->getVisitRange(15);
 
-			foreach ($visits as $key => $value) {
+			if ($visits) {
+				foreach ($visits as $key => $value) {
 
-				$date = strtotime($key);
-				$date = $date * 1000;
+					$date = strtotime($key);
+					$date = $date * 1000;
 
-				$visitsToFormatte[$date] = intval($value);
+					$visitsToFormatte[$date] = intval($value);
 
+				}
+
+				$i = 0;
+				foreach ($visitsToFormatte as $key => $value) {
+					$visitsFormatted[] = array($key, $value);
+				}
+
+				$this->response->body(json_encode($visitsFormatted));
 			}
-
-			$i = 0;
-			foreach ($visitsToFormatte as $key => $value) {
-				$visitsFormatted[] = array($key, $value);
-			}
-
-			$this->response->body(json_encode($visitsFormatted));
 
 		} else {
 			throw new ForbiddenException();

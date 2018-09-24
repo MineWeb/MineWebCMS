@@ -298,7 +298,7 @@
 
         "NAVBAR__TITLE":"Barre de navigation",
         "NAVBAR__ICON":"Icones",
-        "NAVBAR__ICON__DESC":"Nom d'un fa-icon : <a>https://fontawesome.com/v4.7.0/icons/</a> . Ex = angle-up",
+        "NAVBAR__ICON__DESC":"Exemple : (angle-up) ; liste disponible depuis ce lien : ",
         "NAVBAR__OPEN_IN_NEW_TAB": "Ouvrir dans un nouvel onglet",
         "NAVBAR__EDIT_TITLE": "Modifier un lien",
         "NAVBAR__SAVE_IN_PROGRESS":"Sauvegarde automatique...",

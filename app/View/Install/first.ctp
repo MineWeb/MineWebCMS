@@ -14,7 +14,7 @@
 </head>
 <body>
 
-<div class="container" style="width:35%;">
+<div class="container" style="max-width:700px">
     <svg width='160px' height='160px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="loader">
         <rect x="0" y="0" width="100" height="100" fill="none" class="bk"></rect>
         <rect  x='48.5' y='40' width='3' height='20' rx='5' ry='5' fill='#7c7e7f' transform='rotate(0 50 50) translate(0 -30)'>
