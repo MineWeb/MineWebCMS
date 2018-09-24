@@ -16,7 +16,7 @@
                         </div>
 			<div class="form-group">
 				<label><?= $Lang->get('NAVBAR__ICON') ?></label>
-				<p><?= $Lang->get('NAVBAR__ICON__DESC') ?></p>
+				<p><?= $Lang->get('NAVBAR__ICON__DESC') ?><a target="_blank" href="https://fontawesome.com/v4.7.0/icons/">https://fontawesome.com/v4.7.0/icons/</a></p>
 				<div class="input-group">
 				  <div class="input-group-addon">fa-</div>
 				   <input name="icon" class="form-control" type="text">
