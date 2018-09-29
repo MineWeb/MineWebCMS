@@ -87,11 +87,11 @@ class AppController extends Controller
             if ($event->isStopped())
                 return $event->result;
         }
-
+		$LoginCondition = ($this->here != "/login") || !$this->EyPlugin->isInstalled('phpierre.signinup');
         // Maintenance / Bans
         if ($this->isConnected AND $this->User->getKey('rank') == 5 AND $this->params['controller'] != "maintenance" AND $this->params['action'] != "logout" AND $this->params['controller'] != "api")
             $this->redirect(array('controller' => 'maintenance', 'action' => 'index/banned', 'plugin' => false, 'admin' => false));
-        else if ($this->params['controller'] != "user" && $this->params['controller'] != "maintenance" && $this->Configuration->getKey('maintenance') != '0' && !$this->Permissions->can('BYPASS_MAINTENANCE'))
+        else if ($this->params['controller'] != "user" && $this->params['controller'] != "maintenance" && $this->Configuration->getKey('maintenance') != '0' && !$this->Permissions->can('BYPASS_MAINTENANCE') && $LoginCondition)
             $this->redirect(array('controller' => 'maintenance', 'action' => 'index', 'plugin' => false, 'admin' => false));
     }
 
@@ -405,24 +405,6 @@ class AppController extends Controller
             '{ONLINE}' => @$server_infos['GET_PLAYER_COUNT'],
             '{ONLINE_LIMIT}' => @$server_infos['GET_MAX_PLAYERS']
         )), 'server_infos' => $server_infos]);
-    }
-
-    public function removeCache($key)
-    {
-        $this->response->type('json');
-        $secure = file_get_contents(ROOT . '/config/secure');
-        $secure = json_decode($secure, true);
-        if ($key == $secure['key']) {
-            $this->autoRender = false;
-
-            App::uses('Folder', 'Utility');
-            $folder = new Folder(ROOT . DS . 'app' . DS . 'tmp' . DS . 'cache');
-            if (!empty($folder->path)) {
-                $folder->delete();
-            }
-
-            echo json_encode(array('status' => true));
-        }
     }
 
     public function beforeRender()
