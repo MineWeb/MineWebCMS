@@ -6,6 +6,7 @@
     <title><?= $title_for_layout ?> | Admin</title>
 
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="icon" type="image/png" href="<?= (isset($theme_config) && isset($theme_config['favicon_url'])) ? $theme_config['favicon_url'] : '' ?>" />
 
     <?= $this->Html->css('bootstrap.min.css'); ?>
     <?= $this->Html->css('font-awesome.min.css') ?>
