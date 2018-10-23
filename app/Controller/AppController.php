@@ -62,6 +62,7 @@ class AppController extends Controller
 
         // User
         $this->__initUser();
+        $this->__initWebsiteInfos();
 
         // Navbar
         if ($this->params['prefix'] == "admin" && !$this->request->is('ajax'))
@@ -405,6 +406,21 @@ class AppController extends Controller
             '{ONLINE}' => @$server_infos['GET_PLAYER_COUNT'],
             '{ONLINE_LIMIT}' => @$server_infos['GET_MAX_PLAYERS']
         )), 'server_infos' => $server_infos]);
+        
+    }
+    
+    public function __initWebsiteInfos()
+    {
+        $this->loadModel('User');
+        $this->loadModel('Visit');
+        $users_count = $this->User->find('count');
+        $users_last = $this->User->find('first', array('order' =>'created DESC'));
+        $users_last = $users_last['User'];
+        $users_count_today = $this->User->find('count', array('conditions' => array('created LIKE' => date('Y-m-d').'%')));
+        $visits_count = $this->Visit->getVisitsCount();
+        $visits_count_today = $this->Visit->getVisitsByDay(date('Y-m-d'))['count'];
+        $this->set(compact('users_count', 'users_last', 'users_count_today', 'visits_count', 'visits_count_today'));
+        
     }
 
     public function beforeRender()
