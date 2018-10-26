@@ -35,7 +35,78 @@ class ServerController extends AppController
 		$this->set('isCacheEnabled', $this->Configuration->getKey('server_cache'));
 		$this->set('timeout', $this->Configuration->getKey('server_timeout'));
 	}
-	
+    public function admin_cmd()
+    {
+        if (!$this->isConnected || !$this->Permissions->can('MANAGE_SERVERS'))
+            throw new ForbiddenException();
+        $this->layout = "admin";
+        $this->set('title_for_layout', $this->Lang->get('SERVER__CMD'));
+        
+        $this->loadModel('ServerCmd');
+        $this->loadModel('Server');
+        $search_cmd = $this->ServerCmd->find('all', array('order' => 'server_id DESC'));
+        $search_server = $this->Server->find('all');
+        $this->set(compact(
+            'search_cmd',
+            'search_server'
+        ));
+    }
+
+    public function admin_delete_cmd($id)
+    {
+        $this->autoRender = null;
+        if (!$this->isConnected || !$this->Permissions->can('MANAGE_SERVERS'))
+            throw new ForbiddenException();
+            $this->loadModel('ServerCmd');
+            $this->autoRender = null;
+            $this->ServerCmd->delete($id);
+            $this->redirect('/admin/server/cmd');
+    }
+
+    public function admin_execute_cmd()
+    {
+        $this->autoRender = null;
+        if (!$this->isConnected || !$this->Permissions->can('MANAGE_SERVERS'))
+            throw new ForbiddenException();
+            $this->loadModel('Server');
+            $this->response->type('json');
+            $this->ServerComponent = $this->Components->load('Server');
+            $call = $this->ServerComponent->send_command($this->request->data['cmd'], $this->request->data['server_id']);
+            $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('SERVER__SEND_COMMAND_SUCCESS'))));
+            
+    }
+    public function admin_add_cmd()
+    {
+        $this->autoRender = null;
+        $this->response->type('json');
+        
+        if (!$this->isConnected || !$this->Permissions->can('MANAGE_SERVERS'))
+            throw new ForbiddenException();
+        $this->layout = 'admin';
+        $this->loadModel('ServerCmd');
+
+        if($this->request->is('ajax')) {
+            
+            if (!empty($this->request->data['name']) AND !empty($this->request->data['cmd']) AND !empty($this->request->data['server_id'])) {
+                if (!strstr($this->request->data['cmd'], '/')) {
+                    $this->ServerCmd->create();
+                    $this->ServerCmd->set(array(
+                        'name' => $this->request->data['name'],
+                        'cmd' => $this->request->data['cmd'],
+                        'server_id' => $this->request->data['server_id']
+                    ));
+                    $this->ServerCmd->save();
+                    $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('SERVER__CMD_ADD'))));
+                } else {
+                    $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('SERVER__CMD_SLASH'))));
+                }
+            } else {
+                $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
+            }
+        } else {
+            $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
+        }
+    }
 	public function admin_editBannerMsg()
 	{
 		$this->autoRender = false;

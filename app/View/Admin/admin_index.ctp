@@ -328,14 +328,27 @@
         <h4 class="modal-title"><?= $Lang->get('SERVER__COMMAND') ?></h4>
       </div>
       <div class="modal-body">
-        <form action="" method="post">
-          <input type="hidden" id="form_infos" data-ajax="false">
-          <input type="hidden" id="server_id" name="server_id">
-          <div class="col-md-8">
-              <input class="form-control col-md-4" name="cmd" type="text"></input>
-          </div>
-          <input type="hidden" name="data[_Token][key]" value="<?= $csrfToken ?>">
-          <button class="btn btn-info" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
+        <form action="" data-ajax="true" method="post">
+          <div>
+              <input type="hidden" id="form_infos" data-ajax="false">
+              <input type="hidden" id="server_id" name="server_id">
+              
+              <div class="col-md-8">
+                  <input class="form-control col-md-4" name="cmd" type="text"></input>
+              </div>
+
+              <button class="btn btn-info" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button><br>
+          </div><br>
+            <div class="col-md-8">
+                <select class="form-control col-md-4" name="cmd2">
+                <?php foreach($search_cmd as $c) { if($c['ServerCmd']['server_id'] == $value['Server']['id']) { ?>
+                      <option value="<?= $c['ServerCmd']['cmd'] ?>"><?= $c['ServerCmd']['name'] ?></option>
+                <?php }} ?>
+                </select>
+            </div>
+            
+            <input type="hidden" name="data[_Token][key]" value="<?= $csrfToken ?>">
+            <button class="btn btn-info" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
         </form>
       </div>
       <div class="modal-footer">
