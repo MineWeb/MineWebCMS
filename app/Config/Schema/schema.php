@@ -384,7 +384,18 @@ class AppSchema extends CakeSchema {
 		),
 		'tableParameters' => array('charset' => 'latin1', 'collate' => 'latin1_swedish_ci', 'engine' => 'InnoDB')
 	);
-
+    
+    public $server_cmds = array(
+        'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
+        'name' => array('type' => 'string', 'null' => false, 'length' => 255, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+        'server_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 8, 'unsigned' => false),
+        'cmd' => array('type' => 'string', 'null' => false, 'length' => 255, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+        'indexes' => array(
+            'PRIMARY' => array('column' => 'id', 'unique' => 1)
+        ),
+        'tableParameters' => array('charset' => 'latin1', 'collate' => 'latin1_swedish_ci', 'engine' => 'InnoDB')
+    );
+    
 	public $sliders = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'),
 		'title' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),

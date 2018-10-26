@@ -526,6 +526,11 @@
         "SERVER__SEEMS_CLOSE_OR_BLOCKED": "Le port du serveur web semble fermé pour le pare-feu bloque la connexion.",
         "SERVER__PORT_CLOSE_OR_BAD": "Le port du serveur Minecraft semble fermé ou vous n'avez pas indiqué un bon couple d'IP/port.",
         "SERVER__PORT_OPEN": "Le port du serveur web semble ouvert.",
+        "SERVER__CMD": "Pre-recorded order",
+        "SERVER__CMD_TITLE": "Ajouter une commande pré-enregistrée",
+        "SERVER__CMD_NAME": "Nom de la commande.",
+        "SERVER__CMD_SLASH": "Il ne faut pas mettre de '/' dans la commande",
+        "SERVER__CMD_ADD": "La commande a été ajoutée avec succès",
 
         "UPDATE__CHECK_STATUS": "Vérifier si une mise à jour est disponible",
         "UPDATE__VIEW_CHANGELOG": "Voir les modifications",

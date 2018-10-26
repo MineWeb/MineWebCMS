@@ -524,6 +524,11 @@
         "SERVER__DISABLE_SERVER": "Disable feature",
         "SERVER__ENABLE_SERVER": "Enable functionality",
         "SERVER__SUCCESS_CACHE_SWITCH": "You have changed the state of the cache feature.",
+        "SERVER__CMD": "Pre-recorded order",
+        "SERVER__CMD_TITLE": "Add a pre-recorded order",
+        "SERVER__CMD_NAME": "Name of the order",
+        "SERVER__CMD_SLASH": "Do not put '/' in the command",
+        "SERVER__CMD_ADD": "The order has been added successfully",
 
         "UPDATE__CHECK_STATUS": "Check if an update is available",
         "UPDATE__VIEW_CHANGELOG": "See the changes",
