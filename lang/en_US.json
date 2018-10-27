@@ -54,6 +54,7 @@
         "GLOBAL__DISABLE": "Deactivate",
         "GLOBAL__STATUS": "Status",
         "GLOBAL__ADMIN_OTHER_TITLE": "Others",
+		"GLOBAL__ADMIN_PLUGINS":"Plugins",
         "GLOBAL__UPDATE": "Update",
         "GLOBAL__SLUG": "Custom URL",
         "GLOBAL__GENERATE": "Generate",

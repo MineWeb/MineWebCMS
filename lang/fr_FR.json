@@ -53,6 +53,7 @@
         "GLOBAL__DISABLE": "Désactiver",
         "GLOBAL__STATUS":"Statut",
         "GLOBAL__ADMIN_OTHER_TITLE":"Autres",
+		"GLOBAL__ADMIN_PLUGINS":"Plugins",
         "GLOBAL__UPDATE":"Mettre à jour",
         "GLOBAL__SLUG":"URL personnalisée",
         "GLOBAL__GENERATE":"Générer",
