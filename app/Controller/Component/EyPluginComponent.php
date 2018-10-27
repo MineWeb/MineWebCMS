@@ -47,6 +47,23 @@ class EyPluginComponent extends Object
     }
 
     // init
+    public function available()
+    {
+        $pluginList = $this->pluginsLoaded;
+        if(!empty($pluginList)) {
+            $versions = $this->getPluginsLastVersion(array_map(function ($plugin) {
+              return $plugin->slug;
+            }, (array)$pluginList));
+            foreach ($pluginList as $key => $value) {
+                $lastVersion = (isset($versions[$value->slug])) ? $versions[$value->slug] : false;
+                if($lastVersion && $value->version != $lastVersion) {
+                   $this->Lang = $this->controller->Lang;
+                    return '<div class="alert alert-warning">' . $this->Lang->get('UPDATE__AVAILABLE') . ' ' . $this->Lang->get('UPDATE__PLUGIN') . ' <a href="' . Router::url(array('controller' => 'plugin', 'action' => 'index', 'admin' => true)) . '" style="margin-top: -6px;" class="btn btn-warning pull-right">' . $this->Lang->get('GLOBAL__UPDATE_LOOK') . '</a></div>';
+                }
+            }
+        }
+    }
+    
     function initialize($controller)
     {
         $this->controller = $controller;

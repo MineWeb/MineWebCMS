@@ -7,7 +7,6 @@
 
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="icon" type="image/png" href="<?= (isset($theme_config) && isset($theme_config['favicon_url'])) ? $theme_config['favicon_url'] : '' ?>" />
-
     <?= $this->Html->css('bootstrap.min.css'); ?>
     <?= $this->Html->css('font-awesome.min.css') ?>
     <?= $this->Html->css('jquery-jvectormap-1.2.2.css'); ?>
@@ -161,6 +160,8 @@
     <div class="content-wrapper">
         <div style="padding: 15px;">
             <?= $Update->available() ?>
+            <?= $Theme->available() ?>
+            <?= $EyPlugin->available() ?>
             <?= (isset($admin_custom_message['messageHTML'])) ? $admin_custom_message['messageHTML'] : '' ?>
             <?php echo $this->Session->flash(); ?>
         </div>

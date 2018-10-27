@@ -39,7 +39,20 @@ class ThemeComponent extends Object
         // versioning
         App::import('Vendor', 'load', array('file' => 'phar-io/version-master/load.php'));
     }
+    public function available()
+    {
+        if(!empty($this->getThemesInstalled(true))) { 
 
+            foreach ($this->getThemesInstalled(true) as $key => $value) {
+                if(isset($value->lastVersion)) {
+                    if($value->version !== $value->lastVersion) {
+                        $this->Lang = $this->controller->Lang;
+                        return '<div class="alert alert-warning">' . $this->Lang->get('UPDATE__AVAILABLE') . ' ' . $this->Lang->get('UPDATE__THEME') . ' <a href="' . Router::url(array('controller' => 'theme', 'action' => 'index', 'admin' => true)) . '" style="margin-top: -6px;" class="btn btn-warning pull-right">' . $this->Lang->get('GLOBAL__UPDATE_LOOK') . '</a></div>';
+                    }
+                }
+            }
+        }
+    }
     private function getThemeFromAPI($slug)
     {
         if (isset($this->themesAvailable['all']))
@@ -376,6 +389,8 @@ class ThemeComponent extends Object
     // install plugin
     public function install($slug, $update = false)
     {
+        $path = $this->getPath($slug) . DS . 'Config' . DS . 'config.json';
+        
         // ask to api
         $download = $this->download($slug);
         if ($download !== true)
@@ -387,7 +402,7 @@ class ThemeComponent extends Object
         $folder->delete();
         if ($update) {
             // Config
-            $config = $this->getConfig($slug, true);
+            $config = json_encode(file_get_contents($path));
             foreach ($config['configurations'] as $key => $value) {
                 if (isset($oldConfig[$key]))
                     $config['configurations'][$key] = $oldConfig[$key];
