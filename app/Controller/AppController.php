@@ -213,11 +213,16 @@ class AppController extends Controller
                         'permission' => 'MANAGE_CONFIGURATION',
                         'route' => ['controller' => 'configuration', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
-                    'NAVBAR__TITLE' => [
-                        'icon' => 'bars',
-                        'permission' => 'MANAGE_NAV',
-                        'route' => ['controller' => 'navbar', 'action' => 'index', 'admin' => true, 'plugin' => false]
-                    ]
+			        'STATS__TITLE' => [
+			            'icon' => 'bar-chart-o',
+			            'permission' => 'VIEW_STATISTICS',
+			            'route' => ['controller' => 'statistics', 'action' => 'index', 'admin' => true, 'plugin' => false]
+			        ],
+		            'MAINTENANCE__TITLE' => [
+		                'icon' => 'hand-paper-o',
+		                'permission' => 'MANAGE_MAINTENANCE',
+		                'route' => ['controller' => 'maintenance', 'action' => 'index', 'admin' => true, 'plugin' => false]
+		            ],
                 ]
             ],
             'GLOBAL__CUSTOMIZE' => [
@@ -232,6 +237,11 @@ class AppController extends Controller
                         'icon' => 'file-text-o',
                         'permission' => 'MANAGE_PAGE',
                         'route' => ['controller' => 'pages', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
+                    'NAVBAR__TITLE' => [
+                        'icon' => 'bars',
+                        'permission' => 'MANAGE_NAV',
+                        'route' => ['controller' => 'navbar', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ]
                 ]
             ],
@@ -256,6 +266,9 @@ class AppController extends Controller
                         'route' => ['controller' => 'server', 'action' => 'online', 'admin' => true, 'plugin' => false]
                     ]
                 ]
+            ],
+            'GLOBAL__ADMIN_PLUGINS' => [
+                'icon' => 'puzzle-piece'
             ],
             'GLOBAL__ADMIN_OTHER_TITLE' => [
                 'icon' => 'folder-o',
@@ -286,16 +299,6 @@ class AppController extends Controller
                         'route' => ['controller' => 'history', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ]
                 ]
-            ],
-            'STATS__TITLE' => [
-                'icon' => 'bar-chart-o',
-                'permission' => 'VIEW_STATISTICS',
-                'route' => ['controller' => 'statistics', 'action' => 'index', 'admin' => true, 'plugin' => false]
-            ],
-            'MAINTENANCE__TITLE' => [
-                'icon' => 'hand-paper-o',
-                'permission' => 'MANAGE_MAINTENANCE',
-                'route' => ['controller' => 'maintenance', 'action' => 'index', 'admin' => true, 'plugin' => false]
             ],
             'GLOBAL__UPDATE' => [
                 'icon' => 'wrench',
@@ -336,7 +339,7 @@ class AppController extends Controller
         // Add slider if !useless
         $themeConfig = $this->Theme->getConfig(Configure::read('theme'));
         if (isset($themeConfig->slider) && $themeConfig->slider)
-            $nav['GLOBAL__ADMIN_GENERAL']['menu'] = addToArrayAt($nav['GLOBAL__ADMIN_GENERAL']['menu'], count($nav['GLOBAL__ADMIN_GENERAL']['menu']), ['SLIDER__TITLE' => [
+            $nav['GLOBAL__CUSTOMIZE']['menu'] = addToArrayAt($nav['GLOBAL__CUSTOMIZE']['menu'], count($nav['GLOBAL__CUSTOMIZE']['menu']), ['SLIDER__TITLE' => [
                 'icon' => 'picture-o',
                 'permission' => 'MANAGE_SLIDER',
                 'route' => ['controller' => 'slider', 'action' => 'index', 'admin' => true, 'plugin' => false]
