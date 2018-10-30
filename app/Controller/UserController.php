@@ -132,22 +132,31 @@ class UserController extends AppController
             return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]);
         $this->autoRender = false;
         $this->response->type('json');
-
+        $this->loadModel('UsersSecret');
+        $this->loadModel('User');
+        $user_login = $this->User->getAllFromUser($this->request->data['pseudo']);
+        $infos = $this->UsersSecret->find('first', array('conditions' => array('user_id' => $user_login['id'], 'enabled' => true)));
+        
         $confirmEmailIsNeeded = ($this->Configuration->getKey('confirm_mail_signup') && $this->Configuration->getKey('confirm_mail_signup_block'));
         $login = $this->User->login($this->request->data, $confirmEmailIsNeeded, $this);
         if (!isset($login['status']) || $login['status'] !== true)
             return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get($login, array('{URL_RESEND_EMAIL}' => Router::url(array('action' => 'resend_confirmation'))))]);
-
-        $event = new CakeEvent('onLogin', $this, array('user' => $this->User->getAllFromUser($this->request->data['pseudo'])));
+        
+        $event = new CakeEvent('onLogin', $this, array('user' => $user_login));
         $this->getEventManager()->dispatch($event);
         if ($event->isStopped())
             return $event->result;
 
         if ($this->request->data['remember_me'])
             $this->Cookie->write('remember_me', array('pseudo' => $this->request->data['pseudo'], 'password' => $this->User->getFromUser('password', $this->request->data['pseudo'])), true, '1 week');
-        $this->Session->write('user', $login['session']);
-
-        $this->sendJSON(['statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN')]);
+        if($infos) {
+            $this->Session->write('user_id_two_factor_auth', $user_login['id']);
+            $this->sendJSON(['statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN'), 'two-factor-auth' => true]);
+        } else {
+            $this->Session->write('user', $login['session']);
+            $this->sendJSON(['statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN')]);
+        }
+        
     }
 
     function confirm($code = false)
@@ -393,18 +402,25 @@ class UserController extends AppController
     {
         if ($this->isConnected) {
 
+            // Check if user has twofactorauth enabled
+            $this->loadModel('UsersSecret');
+            $infos = $this->UsersSecret->find('first', array('conditions' => array('user_id' => $this->User->getKey('id'), 'enabled' => true)));
+            if (empty($infos)) // no two factor auth
+              $this->set('twoFactorAuthStatus', false);
+            else
+              $this->set('twoFactorAuthStatus', true);
             $this->loadModel('User');
             $this->set('title_for_layout', $this->User->getKey('pseudo'));
             $this->layout = $this->Configuration->getKey('layout');
             if ($this->EyPlugin->isInstalled('eywek.shop')) {
-		$this->loadModel('Shop.ItemsBuyHistory');
-		$this->loadModel('Shop.Item');
-		$histories = $this->ItemsBuyHistory->find('all', array(
-			'recursive' => 1,
-			'order' => 'ItemsBuyHistory.created DESC',
-                        'conditions' => ['user_id' => $this->User->getKey('id')]
+                $this->loadModel('Shop.ItemsBuyHistory');
+                $this->loadModel('Shop.Item');
+                $histories = $this->ItemsBuyHistory->find('all', array(
+                    'recursive' => 1,
+                    'order' => 'ItemsBuyHistory.created DESC',
+                                'conditions' => ['user_id' => $this->User->getKey('id')]
                 ));
-		$this->set(compact('histories'));
+                $this->set(compact('histories'));
                 $this->set('shop_active', true);
             } else {
                 $this->set('shop_active', false);
@@ -828,4 +844,133 @@ class UserController extends AppController
             $this->redirect('/');
         }
     }
+    public function validLogin() {
+    $this->response->type('json');
+    $this->autoRender = false;
+
+    // valid request
+    if (!$this->request->is('post'))
+      throw new NotFoundException('Not post');
+    if (!$this->Session->read('user_id_two_factor_auth'))
+      return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__LOGIN_INFOS_NOT_FOUND'))));
+    if (empty($this->request->data['code']))
+      return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__LOGIN_CODE_EMPTY'))));
+
+    // find user
+    $user = $this->User->find('first', array('conditions' => array('id' => $this->Session->read('user_id_two_factor_auth'))));
+    if (empty($user))
+      return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__LOGIN_INFOS_NOT_FOUND'))));
+
+    // get user infos
+    $this->loadModel('UsersSecret');
+    $infos = $this->UsersSecret->find('first', array('conditions' => array('user_id' => $user['User']['id'])));
+    if (empty($infos) || !$infos['UsersSecret']['enabled'])
+      return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__LOGIN_INFOS_NOT_FOUND'))));
+
+    // include library & init
+    require ROOT.DS.'app'.DS.'Vendor'.DS.'Auth'.DS.'GoogleAuthenticator.php';
+    $ga = new PHPGangsta_GoogleAuthenticator();
+
+    // check code
+    $checkResult = $ga->verifyCode($infos['UsersSecret']['secret'], $this->request->data['code'], 2);    // 2 = 2*30sec clock tolerance
+    if (!$checkResult)
+      return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__LOGIN_CODE_INVALID'))));
+
+    // remove TwoFactorAuth session
+    $this->Session->delete('user_id_two_factor_auth');
+
+    // login
+    if($this->request->data['remember_me'])
+      $this->Cookie->write('remember_me', array('pseudo' => $user['User']['pseudo'], 'password' => $user['User']['password'], true, '1 week'));
+
+    $this->Session->write('user', $user['User']['id']);
+
+    $event = new CakeEvent('afterLogin', $this, array('user' => $this->User->getAllFromUser($user['User']['pseudo'])));
+    $this->getEventManager()->dispatch($event);
+    if($event->isStopped()) {
+      return $event->result;
+    }
+
+    $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN'))));
+  }
+
+  public function generateSecret() {
+    $this->response->type('json');
+    $this->autoRender = false;
+
+    // valid request
+    if (!$this->isConnected)
+      throw new ForbiddenException('Not logged');
+
+    // include library & init
+    require ROOT.DS.'app'.DS.'Vendor'.DS.'Auth'.DS.'GoogleAuthenticator.php';
+    $ga = new PHPGangsta_GoogleAuthenticator();
+
+    // generate and set into session
+    $secret = $ga->createSecret();
+    $qrCodeUrl = $ga->getQRCodeGoogleUrl($this->User->getKey('pseudo'), $secret, $this->Configuration->getKey('name'));
+    $this->Session->write('two-factor-auth-secret', $secret);
+
+    // send to user
+    $this->response->body(json_encode(array('qrcode_url' => $qrCodeUrl, 'secret' => $secret)));
+  }
+
+  public function validEnable() {
+    $this->response->type('json');
+    $this->autoRender = false;
+
+    // valid request
+    if (!$this->request->is('post'))
+      throw new NotFoundException('Not post');
+    if (!$this->isConnected)
+      throw new ForbiddenException('Not logged');
+    if (empty($this->request->data['code']))
+      return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__LOGIN_CODE_EMPTY'))));
+    if (!$this->Session->read('two-factor-auth-secret'))
+      return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__SECRET_NOT_FOUND'))));
+    $secret = $this->Session->read('two-factor-auth-secret');
+
+    // include library & init
+    require ROOT.DS.'app'.DS.'Vendor'.DS.'Auth'.DS.'GoogleAuthenticator.php';
+    $ga = new PHPGangsta_GoogleAuthenticator();
+
+    // check code
+    $checkResult = $ga->verifyCode($secret, $this->request->data['code'], 2);    // 2 = 2*30sec clock tolerance
+    if (!$checkResult)
+      return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__LOGIN_CODE_INVALID'))));
+
+    // remove TwoFactorAuth session
+    $this->Session->delete('two-factor-auth-secret');
+
+    // save into db
+    $this->loadModel('UsersSecret');
+    if ($infos = $this->UsersSecret->find('first', array('conditions' => array('user_id' => $this->User->getKey('id')))))
+      $this->UsersSecret->read(null, $infos['UsersSecret']['id']);
+    else
+      $this->UsersSecret->create();
+    $this->UsersSecret->set(array('secret' => $secret, 'enabled' => true, 'user_id' => $this->User->getKey('id')));
+    $this->UsersSecret->save();
+
+    // send to user
+    $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__SUCCESS_ENABLED_TWO_FACTOR_AUTH'))));
+  }
+
+  public function disable() {
+    $this->response->type('json');
+    $this->autoRender = false;
+
+    // valid request
+    if (!$this->isConnected)
+      throw new ForbiddenException('Not logged');
+
+    // save into db
+    $this->loadModel('UsersSecret');
+    $infos = $this->UsersSecret->find('first', array('conditions' => array('user_id' => $this->User->getKey('id'))));
+    $this->UsersSecret->read(null, $infos['UsersSecret']['id']);
+    $this->UsersSecret->set(array('enabled' => false));
+    $this->UsersSecret->save();
+
+    // send to user
+    $this->response->body(json_encode(array('qrcode_url' => $qrCodeUrl, 'secret' => $secret)));
+  }
 }

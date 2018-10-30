@@ -38,7 +38,67 @@
 				<div class="section">
 					<p><b><?= $Lang->get('GLOBAL__CREATED') ?> :</b> <?= $Lang->date($user['created']) ?></p>
 				</div>
+                <div class="callout" id="twoFactorAuthStatus">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <a id="toggleTwoFactorAuth" data-status="<?= (isset($twoFactorAuthStatus) && $twoFactorAuthStatus) ? '1' : '0' ?>"  class="btn btn-info">Voulez-vous <span id="twoFactorAuthStatusInfos"><?= (isset($twoFactorAuthStatus) && $twoFactorAuthStatus) ? 'désactiver' : 'activer' ?></span> la double authentification ?</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="twoFactorAuthValid" class="text-center" style="display: none;">
+                    <img src="" id="two-factor-auth-qrcode" alt="" />
+                    <p>
+                        <small class="text-muted">Secret : <em id="two-factor-auth-secret"></em></small>
+                    </p>
 
+                    <form class="form-horizontal" method="POST" data-ajax="true" action="<?= $this->Html->url(array('admin' => false, 'controller' => 'User', 'action' => 'validEnable')) ?>" data-callback-function="afterValidQrCode">
+                        <div class="ajax-msg"></div>
+
+                        <div class="form-group text-center">
+                            <label><?= $Lang->get('USER__LOGIN_CODE') ?></label>
+                            <div class="col-md-6" style="margin: 0 auto;float: none;">
+                                <input type="text" class="form-control" name="code" placeholder="<?= $Lang->get('USER__LOGIN_CODE_PLACEHOLDER') ?>">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-info"><?= $Lang->get('USER__VALID_CODE') ?></button>
+                    </form>
+                </div>
+                <script type="text/javascript">
+                    $('#toggleTwoFactorAuth').on('click', function (e) {
+                        e.preventDefault()
+                        var btn = $(this)
+                        var status = parseInt(btn.attr('data-status'))
+
+                        // disable
+                        btn.html('<i class="fa fa-refresh fa-spin"></i>').addClass('disabled')
+
+                        // request to server
+                        if (!status) { // enable
+                            $.get('<?= $this->Html->url(array('controller' => 'User', 'action' => 'generateSecret')) ?>', function (data) {
+                                // add qrcode
+                                $('#two-factor-auth-qrcode').attr('src', data.qrcode_url)
+                                $('#two-factor-auth-secret').html(data.secret)
+                                // edit display
+                                $('#twoFactorAuthStatus').slideUp(150)
+                                $('#twoFactorAuthValid').slideDown(150)
+                            })
+                        } else { // disable
+                            $.get('<?= $this->Html->url(array('controller' => 'User', 'action' => 'disable')) ?>', function (data) {
+                                // edit display
+                                $('#toggleTwoFactorAuth').html('Voulez-vous activer la double authentification ?').removeClass('disabled').removeClass('btn-primary').addClass('btn-primary').attr('data-status', 0)
+                                $('#twoFactorAuthStatusInfos').html('activer')
+                            })
+                        }
+                    })
+                    function afterValidQrCode(req, res) {
+                        // edit display
+                        $('#toggleTwoFactorAuth').html('Voulez-vous désactiver la double authentification ?').removeClass('disabled').removeClass('btn-primary').addClass('btn-primary').attr('data-status', 1)
+                        $('#twoFactorAuthStatusInfos').html('désactiver')
+                        $('#twoFactorAuthValid').slideUp(150)
+                        $('#twoFactorAuthStatus').slideDown(150)
+                    }
+                </script> 
 				<hr>
 
 				<h3><?= $Lang->get('USER__UPDATE_PASSWORD') ?></h3>
