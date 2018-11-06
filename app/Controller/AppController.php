@@ -264,6 +264,10 @@ class AppController extends Controller
                     'SERVER__ONLINE_PLAYERS' => [
                         'icon' => 'list-ul',
                         'route' => ['controller' => 'server', 'action' => 'online', 'admin' => true, 'plugin' => false]
+                    ],
+                    'SERVER__CMD' => [
+                        'icon' => 'key',
+                        'route' => ['controller' => 'server', 'action' => 'cmd', 'admin' => true, 'plugin' => false]
                     ]
                 ]
             ],
