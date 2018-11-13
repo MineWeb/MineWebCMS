@@ -72,7 +72,7 @@ class EyPluginComponent extends CakeObject
         $this->pluginsLoaded = $this->loadPlugins();
     }
     
-    public function available()
+    public function displayAvailableUpdate()
     {
         $pluginList = $this->pluginsLoaded;
         if(!empty($pluginList)) {
