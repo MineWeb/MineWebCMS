@@ -5,7 +5,7 @@
         <div class="box-header with-border">
           <h3 class="box-title"><?= $Lang->get('THEME__LIST') ?></h3>
         </div>
-        <div class="box-body">
+        <div class="box-body table-responsive">
 
           <table class="table table-bordered">
             <thead>
@@ -99,7 +99,7 @@
         <div class="box-header with-border">
           <h3 class="box-title"><?= $Lang->get('THEME__AVAILABLE') ?></h3>
         </div>
-        <div class="box-body">
+        <div class="box-body table-responsive">
 
           <?php if(!empty($themesAvailable)) { ?>
           <table class="table table-bordered">
