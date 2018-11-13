@@ -710,7 +710,7 @@ class UserController extends AppController
     if (empty($infos) || !$infos['UsersSecret']['enabled'])
       return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__LOGIN_INFOS_NOT_FOUND'))));
     // include library & init
-    require ROOT.DS.'app'.DS.'Vendor'.DS.'Auth'.DS.'GoogleAuthenticator.php';
+    require ROOT.DS.'vendors'.DS.'auth'.DS.'GoogleAuthenticator.php';
     $ga = new PHPGangsta_GoogleAuthenticator();
     // check code
     $checkResult = $ga->verifyCode($infos['UsersSecret']['secret'], $this->request->data['code'], 2);    // 2 = 2*30sec clock tolerance
@@ -736,7 +736,7 @@ class UserController extends AppController
     if (!$this->isConnected)
       throw new ForbiddenException('Not logged');
     // include library & init
-    require ROOT.DS.'app'.DS.'Vendor'.DS.'Auth'.DS.'GoogleAuthenticator.php';
+    require ROOT.DS.'vendors'.DS.'auth'.DS.'GoogleAuthenticator.php';
     $ga = new PHPGangsta_GoogleAuthenticator();
     // generate and set into session
     $secret = $ga->createSecret();
@@ -759,7 +759,7 @@ class UserController extends AppController
       return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__SECRET_NOT_FOUND'))));
     $secret = $this->Session->read('two-factor-auth-secret');
     // include library & init
-    require ROOT.DS.'app'.DS.'Vendor'.DS.'Auth'.DS.'GoogleAuthenticator.php';
+    require ROOT.DS.'vendors'.DS.'auth'.DS.'GoogleAuthenticator.php';
     $ga = new PHPGangsta_GoogleAuthenticator();
     // check code
     $checkResult = $ga->verifyCode($secret, $this->request->data['code'], 2);    // 2 = 2*30sec clock tolerance

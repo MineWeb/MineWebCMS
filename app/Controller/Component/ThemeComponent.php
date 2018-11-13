@@ -41,7 +41,7 @@ class ThemeComponent extends CakeObject
         App::import('Vendor', 'load', array('file' => 'phar-io/version-master/load.php'));
     }
     
-    public function available()
+    public function displayAvailableUpdate()
     {
         if(!empty($this->getThemesInstalled(true))) { 
              foreach ($this->getThemesInstalled(true) as $key => $value) {
