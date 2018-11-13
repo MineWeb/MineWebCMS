@@ -9,7 +9,7 @@
           <h3 class="box-title"><?= $Lang->get('PLUGIN__LIST') ?></h3>
         </div>
 
-        <div class="box-body">
+        <div class="box-body table-responsive">
 
           <?php
           $pluginList = $EyPlugin->pluginsLoaded;
@@ -75,7 +75,7 @@
         <div class="box-header with-border">
           <h3 class="box-title"><?= $Lang->get('PLUGIN__AVAILABLE') ?></h3>
         </div>
-        <div class="box-body">
+        <div class="box-body table-responsive">
           <?php
           $free_plugins = $EyPlugin->getFreePlugins(true, true);
           if(!empty($free_plugins)) { ?>
