@@ -27,46 +27,6 @@
             </div>
           </div>
           <br>
-
-          <?php if(!empty($logs)) { ?>
-            <hr>
-            <h5 class="text-center"><?= $Lang->get('UPDATE__LOGS') ?></h5>
-            <div id="log-update">
-              <p><b><?= $Lang->get('GLOBAL__VERSION') ?></b> : <?= $logs['head']['version'] ?><br>
-              <b><?= $Lang->get('GLOBAL__CREATED') ?></b> : <?= $logs['head']['date'] ?></p>
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
-                    <th><?= $Lang->get('GLOBAL__STATUS') ?></th>
-                    <th><?= $Lang->get('UPDATE__FILE') ?></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php if(!empty($logs['update'])) { ?>
-                    <?php foreach ($logs['update'] as $k => $v) { ?>
-                    <tr>
-                      <td><?= $Lang->get('UPDATE__LOGS_'.key($v)) ?></td>
-                      <td>
-                        <?php
-                          $status = strtoupper($v[key($v)]['statut']);
-                          echo '<div class="label label-';
-                          echo ($status == "SUCCESS") ? 'success' : 'danger';
-                          echo '">';
-                            echo $Lang->get('GLOBAL__'.$status);
-                          echo '</div>';
-                        ?>
-                      </td>
-                      <td><?= $v[key($v)]['arg'] ?></td>
-                      <td></td>
-                    </tr>
-                    <?php } ?>
-                  <?php } ?>
-                </tbody>
-              </table>
-            </div>
-          <?php } ?>
-
         </div>
       </div>
     </div>
@@ -91,7 +51,6 @@
         if(data.statut == "success") {
           $('#update-msg').empty().html('<div class="alert alert-success" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> '+data.msg+'</i></div>').fadeIn(500);
           $('#update').remove();
-          $("#log-update").load("<?= $this->Html->url(array('action' => 'index')) ?> #log-update").fadeIn(500);
           window.location = '<?= $this->Html->url(array('action' => 'clear_cache')) ?>';
         } else if(data.statut == "continue") {
           callMAJ('1');

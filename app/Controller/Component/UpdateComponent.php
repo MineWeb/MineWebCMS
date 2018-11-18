@@ -92,8 +92,7 @@ class UpdateComponent extends Object
   /**
    * Used to download update from Github
    */
-  private function downloadUpdate()
-  {
+  private function downloadUpdate() {
     // We download the release we need
     if (!($filesContent = $this->controller->sendGetRequest("https://github.com/{$this->source->owner}/{$this->source->repo}/archive/v{$this->lastVersion}.zip")))
       return false;
@@ -109,8 +108,7 @@ class UpdateComponent extends Object
   /**
    * Update CMS files
    */
-  public function updateCMS($componentUpdated = false)
-  {
+  public function updateCMS($componentUpdated = false) {
     if (!$componentUpdated) {
       // Here, this is the first step of the update. We're trying to keep this component
       // updated for update (in case of we need new behavior).
@@ -170,8 +168,7 @@ class UpdateComponent extends Object
    * This read new app/Config/Schema/schema.php and compare it with a generated
    * one from database.
    */
-  public function updateDb()
-  {
+  public function updateDb() {
     // Load updated schema
     App::uses('CakeSchema', 'Model');
     $schema = new CakeSchema(array(
