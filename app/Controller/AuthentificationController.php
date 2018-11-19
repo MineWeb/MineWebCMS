@@ -1,6 +1,7 @@
 <?php
-class UserSecretController extends AppController
+class AuthentificationController extends AppController
 {
+
     public function validLogin() {
         $this->response->type('json');
         $this->autoRender = false;
@@ -16,15 +17,15 @@ class UserSecretController extends AppController
         if (empty($user))
           return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__LOGIN_INFOS_NOT_FOUND'))));
         // get user infos
-        $this->loadModel('UsersSecret');
-        $infos = $this->UsersSecret->find('first', array('conditions' => array('user_id' => $user['User']['id'])));
-        if (empty($infos) || !$infos['UsersSecret']['enabled'])
+        $this->loadModel('Authentification');
+        $infos = $this->Authentification->find('first', array('conditions' => array('user_id' => $user['User']['id'])));
+        if (empty($infos) || !$infos['Authentification']['enabled'])
           return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__LOGIN_INFOS_NOT_FOUND'))));
         // include library & init
         require ROOT.DS.'vendors'.DS.'auth'.DS.'GoogleAuthentificator.php';
         $ga = new PHPGangsta_GoogleAuthenticator();
         // check code
-        $checkResult = $ga->verifyCode($infos['UsersSecret']['secret'], $this->request->data['code'], 2);    // 2 = 2*30sec clock tolerance
+        $checkResult = $ga->verifyCode($infos['Authentification']['secret'], $this->request->data['code'], 2);    // 2 = 2*30sec clock tolerance
         if (!$checkResult)
           return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__LOGIN_CODE_INVALID'))));
         // remove TwoFactorAuth session
@@ -40,6 +41,7 @@ class UserSecretController extends AppController
         }
         $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN'))));
     }
+
     public function generateSecret() {
         $this->response->type('json');
         $this->autoRender = false;
@@ -56,6 +58,7 @@ class UserSecretController extends AppController
         // send to user
         $this->response->body(json_encode(array('qrcode_url' => $qrCodeUrl, 'secret' => $secret)));
     }
+
     public function validEnable() {
         $this->response->type('json');
         $this->autoRender = false;
@@ -79,16 +82,17 @@ class UserSecretController extends AppController
         // remove TwoFactorAuth session
         $this->Session->delete('two-factor-auth-secret');
         // save into db
-        $this->loadModel('UsersSecret');
-        if ($infos = $this->UsersSecret->find('first', array('conditions' => array('user_id' => $this->User->getKey('id')))))
-          $this->UsersSecret->read(null, $infos['UsersSecret']['id']);
+        $this->loadModel('Authentification');
+        if ($infos = $this->Authentification->find('first', array('conditions' => array('user_id' => $this->User->getKey('id')))))
+          $this->Authentification->read(null, $infos['Authentification']['id']);
         else
-          $this->UsersSecret->create();
-        $this->UsersSecret->set(array('secret' => $secret, 'enabled' => true, 'user_id' => $this->User->getKey('id')));
-        $this->UsersSecret->save();
+          $this->Authentification->create();
+        $this->Authentification->set(array('secret' => $secret, 'enabled' => true, 'user_id' => $this->User->getKey('id')));
+        $this->Authentification->save();
         // send to user
         $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__SUCCESS_ENABLED_TWO_FACTOR_AUTH'))));
     }
+
     public function disable() {
         $this->response->type('json');
         $this->autoRender = false;
@@ -96,11 +100,11 @@ class UserSecretController extends AppController
         if (!$this->isConnected)
           throw new ForbiddenException('Not logged');
         // save into db
-        $this->loadModel('UsersSecret');
-        $infos = $this->UsersSecret->find('first', array('conditions' => array('user_id' => $this->User->getKey('id'))));
-        $this->UsersSecret->read(null, $infos['UsersSecret']['id']);
-        $this->UsersSecret->set(array('enabled' => false));
-        $this->UsersSecret->save();
+        $this->loadModel('Authentification');
+        $infos = $this->Authentification->find('first', array('conditions' => array('user_id' => $this->User->getKey('id'))));
+        $this->Authentification->read(null, $infos['Authentification']['id']);
+        $this->Authentification->set(array('enabled' => false));
+        $this->Authentification->save();
         // send to user
         $this->response->body(json_encode(array('qrcode_url' => $qrCodeUrl, 'secret' => $secret)));
     }

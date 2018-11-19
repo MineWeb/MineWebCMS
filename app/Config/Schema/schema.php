@@ -437,7 +437,7 @@ class AppSchema extends CakeSchema {
 		),
 		'tableParameters' => array('charset' => 'latin1', 'collate' => 'latin1_swedish_ci', 'engine' => 'InnoDB')
 	);
-    public $users__secrets = array(
+    public $users__twofactorauth = array(
         'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
         'user_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
         'secret' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),

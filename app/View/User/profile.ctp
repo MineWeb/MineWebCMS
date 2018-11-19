@@ -51,7 +51,7 @@
                     <small class="text-muted">Secret : <em id="two-factor-auth-secret"></em></small>
                 </p>
 
-                <form class="form-horizontal" method="POST" data-ajax="true" action="<?= $this->Html->url(array('admin' => false, 'controller' => 'UserSecret', 'action' => 'validEnable')) ?>" data-callback-function="afterValidQrCode">
+                <form class="form-horizontal" method="POST" data-ajax="true" action="<?= $this->Html->url(array('admin' => false, 'controller' => 'Authentification', 'action' => 'validEnable')) ?>" data-callback-function="afterValidQrCode">
                     <div class="ajax-msg"></div>
 
                     <div class="form-group text-center">
@@ -73,7 +73,7 @@
                     btn.html('<i class="fa fa-refresh fa-spin"></i>').addClass('disabled')
                     // request to server
                     if (!status) { // enable
-                        $.get('<?= $this->Html->url(array('controller' => 'UserSecret', 'action' => 'generateSecret')) ?>', function (data) {
+                        $.get('<?= $this->Html->url(array('controller' => 'Authentification', 'action' => 'generateSecret')) ?>', function (data) {
                             // add qrcode
                             $('#two-factor-auth-qrcode').attr('src', data.qrcode_url)
                             $('#two-factor-auth-secret').html(data.secret)
@@ -82,7 +82,7 @@
                             $('#twoFactorAuthValid').slideDown(150)
                         })
                     } else { // disable
-                        $.get('<?= $this->Html->url(array('controller' => 'UserSecret', 'action' => 'disable')) ?>', function (data) {
+                        $.get('<?= $this->Html->url(array('controller' => 'Authentification', 'action' => 'disable')) ?>', function (data) {
                             // edit display
                             $('#toggleTwoFactorAuth').html('Voulez-vous activer la double authentification ?').removeClass('disabled').removeClass('btn-primary').addClass('btn-primary').attr('data-status', 0)
                             $('#twoFactorAuthStatusInfos').html('activer')
