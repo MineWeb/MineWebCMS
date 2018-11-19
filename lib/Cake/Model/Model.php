@@ -30,6 +30,7 @@ App::uses('Xml', 'Utility');
 App::uses('CakeEvent', 'Event');
 App::uses('CakeEventListener', 'Event');
 App::uses('CakeEventManager', 'Event');
+App::uses('CakeObject', 'Core');
 
 /**
  * Object-relational mapper.
@@ -42,7 +43,7 @@ App::uses('CakeEventManager', 'Event');
  * @package       Cake.Model
  * @link          http://book.cakephp.org/2.0/en/models.html
  */
-class Model extends Object implements CakeEventListener {
+class Model extends CakeObject implements CakeEventListener {
 
 /**
  * The name of the DataSource connection that this Model uses

@@ -1,6 +1,7 @@
 <?php
+App::uses('CakeObject', 'Core');
 
-class ServerComponent extends Object
+class ServerComponent extends CakeObject
 {
 
     private $timeout = NULL;

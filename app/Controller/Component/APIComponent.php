@@ -1,6 +1,6 @@
 <?php
-
-class APIComponent extends Object
+App::uses('CakeObject', 'Core');
+class APIComponent extends CakeObject
 {
 
   public $components = array('Session', 'Configuration', 'Lang');
