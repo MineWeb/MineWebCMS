@@ -22,6 +22,7 @@ App::uses('ConsoleInputSubcommand', 'Console');
 App::uses('ConsoleOptionParser', 'Console');
 App::uses('ClassRegistry', 'Utility');
 App::uses('File', 'Utility');
+App::uses('CakeObject', 'Core');
 App::uses('ClassRegistry', 'Utility');
 
 /**
@@ -29,7 +30,7 @@ App::uses('ClassRegistry', 'Utility');
  *
  * @package       Cake.Console
  */
-class Shell extends Object {
+class Shell extends CakeObject {
 
 /**
  * Output constant making verbose shells.

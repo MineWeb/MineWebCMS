@@ -21,6 +21,7 @@ App::uses('View', 'View');
 App::uses('CakeEvent', 'Event');
 App::uses('CakeEventListener', 'Event');
 App::uses('CakeEventManager', 'Event');
+App::uses('CakeObject', 'Core');
 
 /**
  * Application controller class for organization of business logic.
@@ -54,7 +55,7 @@ App::uses('CakeEventManager', 'Event');
  * @property      SessionComponent $Session
  * @link          http://book.cakephp.org/2.0/en/controllers.html
  */
-class Controller extends Object implements CakeEventListener {
+class Controller extends CakeObject implements CakeEventListener {
 
 /**
  * The name of this controller. Controller names are plural, named after the model they manipulate.
