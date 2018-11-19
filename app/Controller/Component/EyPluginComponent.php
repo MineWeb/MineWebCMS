@@ -2,8 +2,9 @@
 
 use PharIo\Version\Version;
 use PharIo\Version\VersionConstraintParser;
+App::uses('CakeObject', 'Core');
 
-class EyPluginComponent extends Object
+class EyPluginComponent extends CakeObject
 {
 
     public $pluginsInFolder = array();

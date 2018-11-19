@@ -17,6 +17,7 @@
 App::uses('Router', 'Routing');
 App::uses('Hash', 'Utility');
 App::uses('Inflector', 'Utility');
+App::uses('CakeObject', 'Core');
 
 /**
  * Abstract base class for all other Helpers in CakePHP.
@@ -24,7 +25,7 @@ App::uses('Inflector', 'Utility');
  *
  * @package       Cake.View
  */
-class Helper extends Object {
+class Helper extends CakeObject {
 
 /**
  * Settings for this helper.
