@@ -1,6 +1,7 @@
 <?php
+App::uses('CakeObject', 'Core');
 
-class UpdateComponent extends Object
+class UpdateComponent extends CakeObject
 {
   public $components = array('Session', 'Configuration', 'Lang');
 
@@ -51,12 +52,12 @@ class UpdateComponent extends Object
    */
   public function available() {
     if (version_compare($this->cmsVersion, $this->lastVersion, '<')) {
-      return "<div class='alert alert-info'>" +
-          "{$this->Lang->get('UPDATE__AVAILABLE')} {$this->Lang->get('UPDATE__CMS_VERSION')} : " +
-          "{$this->cmsVersion}}, {$this->Lang->get('UPDATE__LAST_VERSION')} : {$this->lastVersion} " +
-          "<a href='" . Router::url(array('controller' => 'update', 'action' => 'index', 'admin' => true)) . "' style='margin-top: -6px;' class='btn btn-info pull-right'>" +
-            $this->Lang->get('GLOBAL__UPDATE') +
-          "</a>" + 
+      return "<div class='alert alert-info'>" .
+        "{$this->Lang->get('UPDATE__AVAILABLE')} {$this->Lang->get('UPDATE__CMS_VERSION')} : " .
+        "{$this->cmsVersion}, {$this->Lang->get('UPDATE__LAST_VERSION')} : {$this->lastVersion} " .
+        "<a href='" . Router::url(array('controller' => 'update', 'action' => 'index', 'admin' => true)) . "' style='margin-top: -6px;' class='btn btn-info pull-right'>" .
+        $this->Lang->get('GLOBAL__UPDATE') .
+        "</a>" .
         "</div>";
     }
   }
@@ -66,7 +67,7 @@ class UpdateComponent extends Object
    */
   private function getLatestRelease() {
     try {
-      $release = json_decode($this->controller->sendGetRequest("https://api.github.com/repos/{$this->source->owner}/{$this->source->repo}/releases/latest"));
+      $release = json_decode($this->controller->sendGetRequest("https://api.github.com/repos/{$this->source['owner']}/{$this->source['repo']}/releases/latest"));
     } catch (Exception $e) {
       $this->log('Got an error on get latest release:', $e);
       return null;
@@ -78,7 +79,7 @@ class UpdateComponent extends Object
    * Used to check via cache or Github if a new version is available
    */
   private function check() {
-    $cmsVersion = file_get_contents(ROOT . DS . $this->source->versionFile);
+    $cmsVersion = file_get_contents(ROOT . DS . $this->source['versionFile']);
     $this->cmsVersion = $cmsVersion;
 
     if (!file_exists($this->updateCacheFile) || strtotime('+5 hours', filemtime(ROOT . DS . 'config' . DS . 'update')) < time()) {
@@ -94,7 +95,7 @@ class UpdateComponent extends Object
    */
   private function downloadUpdate() {
     // We download the release we need
-    if (!($filesContent = $this->controller->sendGetRequest("https://github.com/{$this->source->owner}/{$this->source->repo}/archive/v{$this->lastVersion}.zip")))
+    if (!($filesContent = $this->controller->sendGetRequest("https://github.com/{$this->source['owner']}/{$this->source['repo']}/archive/v{$this->lastVersion}.zip")))
       return false;
     $write = fopen(ROOT . DS . 'app' . DS . 'tmp' . DS . $this->lastVersion . '.zip', 'w+');
     if (!fwrite($write, $filesContent)) {
@@ -119,7 +120,7 @@ class UpdateComponent extends Object
       if ($zip->open(ROOT . DS . 'app' . DS . 'tmp' . DS . $this->lastVersion . '.zip') !== true) return false;
 
       $path = DS . 'app' . DS . 'Controller' . DS . 'Component' . DS . 'UpdateComponent.php';
-      $newContent = $zip->getFromName("{$this->source->repo}-{$this->lastVersion}{$path}");
+      $newContent = $zip->getFromName("{$this->source['repo']}-{$this->lastVersion}{$path}");
       file_put_contents(ROOT . $path, $newContent);
       $zip->close();
       return true;
@@ -135,17 +136,18 @@ class UpdateComponent extends Object
       $stats = $zip->statIndex($i);
       $fileinfo = pathinfo($filename);
       // We remove github root folder from name
-      $filename = substr($filename, strlen("{$this->source->repo}-{$this->lastVersion}/"));
-      $dirname = substr($fileinfo['dirname'], strlen("{$this->source->repo}-{$this->lastVersion}/"));
+      $filename = substr($filename, strlen("{$this->source['repo']}-{$this->lastVersion}/"));
+      $dirname = substr($fileinfo['dirname'], strlen("{$this->source['repo']}-{$this->lastVersion}/"));
       // We check if that file need to be updated or not
       if (in_array($filename, $this->bypassFiles)) continue;
       // If the folder doesn't exist, create it recursively
       if (!is_dir(ROOT . DS . $dirname)) mkdir(ROOT . DS . $dirname, 0775, true);
       // Copy file content if it's a file
-      if ($stat['size'] > 0) {
+      if ($stats['size'] > 0) {
         // We stop here if the copy fail
-        if (!copy("zip://$path#$filename", ROOT . DS . $filename)) {
-          $this->log("Failed to copy file from zip://$path#$filename to " . ROOT . DS . $filename);
+        $path = "zip://".ROOT . DS . "app" . DS . "tmp" . DS . $this->lastVersion . ".zip#{$this->source['repo']}-{$this->lastVersion}/"."$filename";
+        if (!copy($path, ROOT . DS . $filename)) {
+          $this->log("Failed to copy file from $path to " . ROOT . DS . $filename);
           return false;
         }
       }
@@ -171,47 +173,45 @@ class UpdateComponent extends Object
   public function updateDb() {
     // Load updated schema
     App::uses('CakeSchema', 'Model');
-    $schema = new CakeSchema(array(
-      'name' => 'App',
-      'path' => ROOT . DS . 'app' . DS . 'Config' . DS . 'Schema',
-      'models' => false
-    ));
-    $newSchema = $schema->load(); // This is a new instance of CakeSchema from schema.php loaded
+    $schema = new CakeSchema();
+
+    $newSchema = $schema->load(['models' => false]); // This is a new instance of CakeSchema from schema.php loaded
     // Generate a schema from database
-    $currentSchema = $schema->read(); // This is the current CakeShema instance
+    $currentSchema = $schema->read(['models' => false]); // This is the current CakeShema instance
 
     // Compare them
     $diffSchema = $schema->compare($currentSchema, $newSchema); // This is an object of diff between schemas
+
     $db = ConnectionManager::getDataSource('default');
     $queries = [];
     foreach ($diffSchema as $table => $changes) {
-      if (isset($compare[$table]['create'])) {
-        $queries[$table] = $db->createSchema($Schema, $table);
+      if (isset($diffSchema[$table]['create'])) {
+        $queries[$table] = $db->createSchema($newSchema, $table);
         continue;
       }
 
       // If we have columns to drop, we need to check this is not about a plugin
-      if (isset($compare[$table]['drop'])) {
-        foreach ($compare[$table]['drop'] as $column => $structure) { // For each drop, check column name
+      if (isset($diffSchema[$table]['drop'])) {
+        foreach ($diffSchema[$table]['drop'] as $column => $structure) { // For each drop, check column name
           if (count(explode('-', $column)) > 1) { // Plugin columns are prefixed by `pluginname-<column>`
-            unset($compare[$table]['drop'][$column]);
+            unset($diffSchema[$table]['drop'][$column]);
           }
         }
       }
 
       // Just delete `drop` action if we have removed all columns to drop (above)
-      if (isset($compare[$table]['drop']) && count($compare[$table]['drop']) <= 0) {
-        unset($compare[$table]['drop']);
+      if (isset($diffSchema[$table]['drop']) && count($diffSchema[$table]['drop']) <= 0) {
+        unset($diffSchema[$table]['drop']);
       }
 
       // If we have actions (maybe we've removed the only action `drop`)
-      if (count($compare[$table]) > 0) {
-        $queries[$table] = $db->alterSchema(array($table => $compare[$table]), $table);
+      if (count($diffSchema[$table]) > 0) {
+        $queries[$table] = $db->alterSchema(array($table => $diffSchema[$table]), $table);
       }
     }
 
     // Execute all queries generated from diff
-    foreach ($contents as $table => $query) {
+    foreach ($queries as $table => $query) {
       try {
         $db->execute($query);
       } catch (PDOException $e) {
