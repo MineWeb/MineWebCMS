@@ -31,7 +31,7 @@
     <header class="main-header">
         <a href="<?= $this->Html->url('/') ?>" class="logo">
             <span class="logo-mini">PA</span>
-            <span class="logo-lg"><?= $Lang->get('GOLBAL__ADMINISTRATION'); ?></span>
+            <span class="logo-lg"><?= $Lang->get('GLOBAL__ADMINISTRATION'); ?></span>
         </a>
         <nav class="navbar navbar-static-top" role="navigation">
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
