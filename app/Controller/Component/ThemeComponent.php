@@ -161,7 +161,7 @@ class ThemeComponent extends Object
 
     public function setConfig($slug, $config = array())
     {
-        $path = $this->getPath($slug) . DS . $slug . DS . 'Config' . DS . 'config.json';
+        $path = $this->getPath($slug) . DS . 'Config' . DS . 'config.json';
         if (strtolower($slug) === 'default' || !file_exists($path))
             return @file_put_contents(ROOT . DS . 'config' . DS . 'theme.default.json', json_encode($config));
         return @file_put_contents($path, json_encode($config));
@@ -381,7 +381,7 @@ class ThemeComponent extends Object
         if ($download !== true)
           return $download;
         if ($update)
-          $oldConfig = $this->getCustomData($slug)[0];
+          $oldConfig = $this->getCustomData($slug)[1];
         App::uses('Folder', 'Utility');
         $folder = new Folder($this->themesFolder . DS . '__MACOSX');
         $folder->delete();
