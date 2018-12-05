@@ -104,10 +104,10 @@ class UserController extends AppController
             return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]);
         $this->autoRender = false;
         $this->response->type('json');
-        $this->loadModel('UsersSecret');
+        $this->loadModel('Authentification');
         $this->loadModel('User');
         $user_login = $this->User->getAllFromUser($this->request->data['pseudo']);
-        $infos = $this->UsersSecret->find('first', array('conditions' => array('user_id' => $user_login['id'], 'enabled' => true)));
+        $infos = $this->Authentification->find('first', array('conditions' => array('user_id' => $user_login['id'], 'enabled' => true)));
         
         $confirmEmailIsNeeded = ($this->Configuration->getKey('confirm_mail_signup') && $this->Configuration->getKey('confirm_mail_signup_block'));
         $login = $this->User->login($this->request->data, $confirmEmailIsNeeded, $this);
@@ -320,8 +320,8 @@ class UserController extends AppController
     {
         if ($this->isConnected) {
             // Check if user has twofactorauth enabled
-            $this->loadModel('UsersSecret');
-            $infos = $this->UsersSecret->find('first', array('conditions' => array('user_id' => $this->User->getKey('id'), 'enabled' => true)));
+            $this->loadModel('Authentification');
+            $infos = $this->Authentification->find('first', array('conditions' => array('user_id' => $this->User->getKey('id'), 'enabled' => true)));
             if (empty($infos)) // no two factor auth
               $this->set('twoFactorAuthStatus', false);
             else
