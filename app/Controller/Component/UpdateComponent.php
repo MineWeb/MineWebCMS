@@ -51,7 +51,7 @@ class UpdateComponent extends CakeObject
    * Return HTML content if an update is available
    */
   public function available() {
-    if (version_compare($this->cmsVersion, $this->lastVersion, '<')) {
+    if ($this->cmsVersion < $this->lastVersion) {
       return "<div class='alert alert-info'>" .
         "{$this->Lang->get('UPDATE__AVAILABLE')} {$this->Lang->get('UPDATE__CMS_VERSION')} : " .
         "{$this->cmsVersion}, {$this->Lang->get('UPDATE__LAST_VERSION')} : {$this->lastVersion} " .
@@ -171,6 +171,7 @@ class UpdateComponent extends CakeObject
    * one from database.
    */
   public function updateDb() {
+
     // Load updated schema
     App::uses('CakeSchema', 'Model');
     $schema = new CakeSchema();
@@ -184,39 +185,41 @@ class UpdateComponent extends CakeObject
 
     $db = ConnectionManager::getDataSource('default');
     $queries = [];
+
     foreach ($diffSchema as $table => $changes) {
       if (isset($diffSchema[$table]['create'])) {
         $queries[$table] = $db->createSchema($newSchema, $table);
-        continue;
-      }
-
-      // If we have columns to drop, we need to check this is not about a plugin
-      if (isset($diffSchema[$table]['drop'])) {
-        foreach ($diffSchema[$table]['drop'] as $column => $structure) { // For each drop, check column name
-          if (count(explode('-', $column)) > 1) { // Plugin columns are prefixed by `pluginname-<column>`
-            unset($diffSchema[$table]['drop'][$column]);
+      } else {
+        // on vérifie que ce soit pas un plugin (pour ne pas supprimer ses modifications sur la tables lors d'une MISE A JOUR)
+        if (isset($diffSchema[$table]['drop'])) { // si ca concerne un drop de colonne
+          foreach ($diffSchema[$table]['drop'] as $column => $structure) {
+            // vérifions que cela ne correspond pas à une colonne de plugin
+            if (count(explode('-', $column)) > 1) {
+              unset($diffSchema[$table]['drop'][$column]);
+            }
           }
         }
-      }
-
-      // Just delete `drop` action if we have removed all columns to drop (above)
-      if (isset($diffSchema[$table]['drop']) && count($diffSchema[$table]['drop']) <= 0) {
-        unset($diffSchema[$table]['drop']);
-      }
-
-      // If we have actions (maybe we've removed the only action `drop`)
-      if (count($diffSchema[$table]) > 0) {
-        $queries[$table] = $db->alterSchema(array($table => $diffSchema[$table]), $table);
+        if (isset($diffSchema[$table]['drop']) && count($diffSchema[$table]['drop']) <= 0) {
+          unset($diffSchema[$table]['drop']); // on supprime l'action si y'a plus rien à faire dessus
+        }
+        if (count($diffSchema[$table]) > 0) {
+          $queries[$table] = $db->alterSchema(array($table => $diffSchema[$table]), $table);
+        }
       }
     }
 
     // Execute all queries generated from diff
-    foreach ($queries as $table => $query) {
-      try {
-        $db->execute($query);
-      } catch (PDOException $e) {
-        $this->log('MYSQL Schema Update : ' . $e->getMessage());
-        return false;
+    $error = [];
+    if (!empty($queries)) {
+      foreach ($queries as $table => $query) {
+        if (!empty($query)) {
+          try {
+            $db->execute($query);
+          } catch (PDOException $e) {
+            $error[] = $table . ': ' . $e->getMessage();
+            $this->log('MYSQL Schema Update : ' . $e->getMessage());
+          }
+        }
       }
     }
 
