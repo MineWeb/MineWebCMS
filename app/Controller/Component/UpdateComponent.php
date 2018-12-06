@@ -126,11 +126,6 @@ class UpdateComponent extends CakeObject
       $zip->close();
       return true;
     }
-    App::uses('Folder', 'Utility');
-    $folder = new Folder(ROOT . DS . 'app' . DS . 'tmp' . DS . 'cache');
-    if (!empty($folder->path)) {
-        $folder->delete();
-    }
 
     // We need to copy all files
     // We avoid extractTo() method because we need to avoid copying $bypassFiles
