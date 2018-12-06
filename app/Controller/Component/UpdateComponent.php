@@ -189,18 +189,20 @@ class UpdateComponent extends Object
       if (isset($diffSchema[$table]['create'])) {
         $queries[$table] = $db->createSchema($newSchema, $table);
       } else {
-        // on vérifie que ce soit pas un plugin (pour ne pas supprimer ses modifications sur la tables lors d'une MISE A JOUR)
-        if (isset($diffSchema[$table]['drop'])) { // si ca concerne un drop de colonne
+        // If we have columns to drop, we need to check this is not about a plugin
+        if (isset($diffSchema[$table]['drop'])) { // For each drop, check column name
           foreach ($diffSchema[$table]['drop'] as $column => $structure) {
-            // vérifions que cela ne correspond pas à une colonne de plugin
+            // Plugin columns are prefixed by `pluginname-<column>`
             if (count(explode('-', $column)) > 1) {
               unset($diffSchema[$table]['drop'][$column]);
             }
           }
         }
+        // Just delete `drop` action if we have removed all columns to drop (above)
         if (isset($diffSchema[$table]['drop']) && count($diffSchema[$table]['drop']) <= 0) {
-          unset($diffSchema[$table]['drop']); // on supprime l'action si y'a plus rien à faire dessus
+          unset($diffSchema[$table]['drop']);
         }
+        // If we have actions (maybe we've removed the only action `drop`)
         if (count($diffSchema[$table]) > 0) {
           $queries[$table] = $db->alterSchema(array($table => $diffSchema[$table]), $table);
         }
