@@ -233,7 +233,7 @@ class DATABASE_CONFIG {
 		$help['curl'] = "<a target='_blank' href='https://www.google.fr/search?query=Install+curl+on+$os'>Aide à propos de l'installation de curl sur ma machine</a>";
 	}
 
-	$compatible['phpVersion'] = version_compare(PHP_VERSION, '5.6', '>=') && version_compare(PHP_VERSION, '7.4', '<');
+	$compatible['phpVersion'] = version_compare(PHP_VERSION, '5.6', '>=') && version_compare(PHP_VERSION, '7.2', '<');
 
 	if (!$compatible['phpVersion']) {
 		$help['phpVersion'] = "<a target='_blank' href='https://www.google.fr/search?query=Install+PHP+7.1+on+$os'>Aide à propos de l'installation de php 7.1 sur ma machine</a>";

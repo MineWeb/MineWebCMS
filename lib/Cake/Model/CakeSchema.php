@@ -20,14 +20,13 @@ App::uses('Model', 'Model');
 App::uses('AppModel', 'Model');
 App::uses('ConnectionManager', 'Model');
 App::uses('File', 'Utility');
-App::uses('CakeObject', 'Core');
 
 /**
  * Base Class for Schema management
  *
  * @package       Cake.Model
  */
-class CakeSchema extends CakeObject {
+class CakeSchema extends Object {
 
 /**
  * Name of the schema

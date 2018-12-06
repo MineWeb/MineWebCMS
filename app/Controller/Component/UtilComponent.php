@@ -1,7 +1,6 @@
 <?php
-App::uses('CakeObject', 'Core');
 
-class UtilComponent extends CakeObject
+class UtilComponent extends Object
 {
 
     private $controller;

@@ -30,9 +30,8 @@
 **/
 App::uses('AppHelper', 'View/Helper');
 App::uses('CakeSession', 'Model/Datasource');
-App::uses('CakeObject', 'Core');
 
-class StatisticsComponent extends CakeObject {
+class StatisticsComponent extends Object {
 
   function shutdown($controller) {
   }

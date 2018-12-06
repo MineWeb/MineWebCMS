@@ -3,9 +3,8 @@
 /**
 * Composant qui gère les différents historiques
 **/
-App::uses('CakeObject', 'Core');
 
-class HistoryComponent extends CakeObject {
+class HistoryComponent extends Object {
 
   private $controller;
 

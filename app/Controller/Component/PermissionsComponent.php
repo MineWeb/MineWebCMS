@@ -1,7 +1,6 @@
 <?php
-App::uses('CakeObject', 'Core');
 
-class PermissionsComponent extends CakeObject
+class PermissionsComponent extends Object
 {
 
     public $permissions = array(

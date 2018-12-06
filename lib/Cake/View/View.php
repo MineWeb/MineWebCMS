@@ -23,7 +23,6 @@ App::uses('ViewBlock', 'View');
 App::uses('CakeEvent', 'Event');
 App::uses('CakeEventManager', 'Event');
 App::uses('CakeResponse', 'Network');
-App::uses('CakeObject', 'Core');
 
 /**
  * View, the V in the MVC triad. View interacts with Helpers and view variables passed
@@ -54,7 +53,7 @@ App::uses('CakeObject', 'Core');
  * @property      TimeHelper $Time
  * @property      ViewBlock $Blocks
  */
-class View extends CakeObject {
+class View extends Object {
 
 /**
  * Helpers collection

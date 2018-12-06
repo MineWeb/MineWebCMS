@@ -2,9 +2,8 @@
 
 use PharIo\Version\Version;
 use PharIo\Version\VersionConstraintParser;
-App::uses('CakeObject', 'Core');
 
-class ThemeComponent extends CakeObject
+class ThemeComponent extends Object
 {
 
     public $themesFolder;

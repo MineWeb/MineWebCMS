@@ -1,7 +1,6 @@
 <?php
-App::uses('CakeObject', 'Core');
 
-class LangComponent extends CakeObject {
+class LangComponent extends Object {
 
   	public $components = array('Cookie');
 

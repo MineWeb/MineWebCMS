@@ -1,7 +1,6 @@
 <?php
-App::uses('CakeObject', 'Core');
 
-class UpdateComponent extends CakeObject
+class UpdateComponent extends Object
 {
   public $components = array('Session', 'Configuration', 'Lang');
 

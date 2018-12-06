@@ -28,7 +28,7 @@ App::uses('CakeLog', 'Log');
  *
  * @package       Cake.Core
  */
-class CakeObject {
+class Object {
 
 /**
  * Constructor, no-op
