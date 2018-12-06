@@ -51,7 +51,7 @@ class UpdateComponent extends CakeObject
    * Return HTML content if an update is available
    */
   public function available() {
-    if (version_compare($this->cmsVersion, $this->lastVersion, '<')) {
+    if ($this->cmsVersion < $this->lastVersion) {
       return "<div class='alert alert-info'>" .
         "{$this->Lang->get('UPDATE__AVAILABLE')} {$this->Lang->get('UPDATE__CMS_VERSION')} : " .
         "{$this->cmsVersion}, {$this->Lang->get('UPDATE__LAST_VERSION')} : {$this->lastVersion} " .
@@ -187,14 +187,14 @@ class UpdateComponent extends CakeObject
     foreach ($diffSchema as $table => $changes) {
       if (isset($diffSchema[$table]['create'])) {
         $queries[$table] = $db->createSchema($newSchema, $table);
-        continue;
-      }
-
-      // If we have columns to drop, we need to check this is not about a plugin
-      if (isset($diffSchema[$table]['drop'])) {
-        foreach ($diffSchema[$table]['drop'] as $column => $structure) { // For each drop, check column name
-          if (count(explode('-', $column)) > 1) { // Plugin columns are prefixed by `pluginname-<column>`
-            unset($diffSchema[$table]['drop'][$column]);
+      } else {
+        // If we have columns to drop, we need to check this is not about a plugin
+        if (isset($diffSchema[$table]['drop'])) { // For each drop, check column name
+          foreach ($diffSchema[$table]['drop'] as $column => $structure) {
+            // Plugin columns are prefixed by `pluginname-<column>`
+            if (count(explode('-', $column)) > 1) {
+              unset($diffSchema[$table]['drop'][$column]);
+            }
           }
         }
       }
@@ -211,12 +211,17 @@ class UpdateComponent extends CakeObject
     }
 
     // Execute all queries generated from diff
-    foreach ($queries as $table => $query) {
-      try {
-        $db->execute($query);
-      } catch (PDOException $e) {
-        $this->log('MYSQL Schema Update : ' . $e->getMessage());
-        return false;
+    $error = [];
+    if (!empty($queries)) {
+      foreach ($queries as $table => $query) {
+        if (!empty($query)) {
+          try {
+            $db->execute($query);
+          } catch (PDOException $e) {
+            $error[] = $table . ': ' . $e->getMessage();
+            $this->log('MYSQL Schema Update : ' . $e->getMessage());
+          }
+        }
       }
     }
 
