@@ -2,6 +2,7 @@
 App::uses('CakeObject', 'Core');
 
 class UpdateComponent extends CakeObject
+
 {
   public $components = array('Session', 'Configuration', 'Lang');
 
@@ -124,6 +125,11 @@ class UpdateComponent extends CakeObject
       file_put_contents(ROOT . $path, $newContent);
       $zip->close();
       return true;
+    }
+    App::uses('Folder', 'Utility');
+    $folder = new Folder(ROOT . DS . 'app' . DS . 'tmp' . DS . 'cache');
+    if (!empty($folder->path)) {
+        $folder->delete();
     }
 
     // We need to copy all files
