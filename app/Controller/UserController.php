@@ -619,11 +619,11 @@ class UserController extends AppController
                 if (!empty($this->request->data['id']) && !empty($this->request->data['email']) && !empty($this->request->data['pseudo']) && (!empty($this->request->data['rank']) || $this->request->data['rank'] == 0)) {
                     $findUser = $this->User->find('first', array('conditions' => array('id' => intval($this->request->data['id']))));
                     if (empty($findUser)) {
-                        $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EDIT_ERROR_UNKNOWN'))));
+                        $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__EDIT_ERROR_UNKNOWN'))));
                         return;
                     }
                     if ($findUser['User']['id'] == $this->User->getKey('id') && $this->request->data['rank'] != $this->User->getKey('rank')) {
-                        $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EDIT_ERROR_YOURSELF'))));
+                        $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__EDIT_ERROR_YOURSELF'))));
                         return;
                     }
                     $data = array(
