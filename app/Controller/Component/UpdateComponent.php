@@ -1,5 +1,9 @@
 <?php
-App::uses('CakeObject', 'Core');
+if (file_exists(ROOT . DS . 'lib' . DS . 'Cake' . DS . 'Core' . DS . 'CakeObject.php')) {
+  App::uses('CakeObject', 'Core');
+} else {
+  class CakeObject extends Object {}
+}
 
 class UpdateComponent extends CakeObject
 {
@@ -80,7 +84,7 @@ class UpdateComponent extends CakeObject
    */
   private function check() {
     $cmsVersion = file_get_contents(ROOT . DS . $this->source['versionFile']);
-    $this->cmsVersion = $cmsVersion;
+    $this->cmsVersion = trim($cmsVersion);
 
     if (!file_exists($this->updateCacheFile) || strtotime('+5 hours', filemtime(ROOT . DS . 'config' . DS . 'update')) < time()) {
       $remoteVersion = $this->getLatestRelease();
