@@ -424,58 +424,47 @@ class EyPluginComponent extends CakeObject
 
         // Init & compare
         App::uses('CakeSchema', 'Model');
-        $this->Schema = new CakeSchema(array('name' => ucfirst(strtolower($slug)) . 'App', 'path' => ROOT . DS . 'app' . DS . 'Plugin' . DS . $slug . DS . 'SQL', 'file' => 'schema.php', 'connection' => 'default', 'plugin' => null, 'models' => false));
-        App::uses('SchemaShell', 'Console/Command');
-        $schemaShell = new SchemaShell();
-
-        $db = ConnectionManager::getDataSource($this->Schema->connection);
+        $schema = new CakeSchema();
+        $db = ConnectionManager::getDataSource('default');
         $db->cacheSources = false;
 
-        $options = array(
-            'name' => $this->Schema->name,
-            'path' => $this->Schema->path,
-            'file' => $this->Schema->file,
-            'plugin' => null,
-            'connection' => $this->Schema->connection,
-            'models' => false
-        );
-        $currentSchema = $this->Schema->read($options);
+        $currentSchema = $schema->read(['models' => false]);
 
         if ($type === 'CREATE') {
-            $pluginSchema = $this->Schema->load($options);
-            $compare = $this->Schema->compare($currentSchema, $pluginSchema);
+            $newSchema = $schema->load(['models' => false]);
+            $diffSchema = $schema->compare($currentSchema, $newSchema);
 
             // Check edits
             $contents = [];
-            foreach ($compare as $table => $changes) {
-                if (isset($compare[$table]['create'])) continue; // not handle create here
+            foreach ($diffSchema as $table => $changes) {
+                if (isset($diffSchema[$table]['create'])) continue; // not handle create here
 
-                if (!isset($compare[$table]['add'])) continue; // no add
+                if (!isset($diffSchema[$table]['add'])) continue; // no add
 
                 if (explode('__', $table)[0] != strtolower($slug)) { // other plugin
-                    foreach ($compare[$table]['add'] as $column => $structure) {
+                    foreach ($diffSchema[$table]['add'] as $column => $structure) {
                         if (explode('-', $column)[0] != strtolower($slug)) // other plugin
-                            unset($compare[$table]['add'][$column]);
+                            unset($diffSchema[$table]['add'][$column]);
                     }
                 }
                 // each drop
-                foreach ($compare[$table]['drop'] as $column => $structure) {
+                foreach ($diffSchema[$table]['drop'] as $column => $structure) {
                     // column not from this plugin on table not from this plugin
                     if (explode('-', $column)[0] != strtolower($slug) && explode('__', $table)[0] != strtolower($slug)) // other plugin
-                        unset($compare[$table]['drop'][$column]);
+                        unset($diffSchema[$table]['drop'][$column]);
                 }
                 // remove empty actions
-                if (count($compare[$table]['drop']) <= 0) unset($compare[$table]['drop']);
-                if (count($compare[$table]['add']) <= 0) unset($compare[$table]['add']);
+                if (count($diffSchema[$table]['drop']) <= 0) unset($diffSchema[$table]['drop']);
+                if (count($diffSchema[$table]['add']) <= 0) unset($diffSchema[$table]['add']);
                 // set sql schema
-                if (count($compare[$table]) > 0)
-                    $contents[$table] = $db->alterSchema(array($table => $compare[$table]), $table);
+                if (count($diffSchema[$table]) > 0)
+                    $contents[$table] = $db->alterSchema(array($table => $diffSchema[$table]), $table);
             }
             // add tables
             $pluginTables = array();
-            foreach ($compare as $table => $changes) {
-                if (isset($compare[$table]['create'])) { // is create
-                    $contents[$table] = $db->createSchema($pluginSchema, $table);
+            foreach ($diffSchema as $table => $changes) {
+                if (isset($diffSchema[$table]['create'])) { // is create
+                    $contents[$table] = $db->createSchema($newSchema, $table);
                     $pluginTables[] = $table; // save for delete
                 }
             }
@@ -511,7 +500,7 @@ class EyPluginComponent extends CakeObject
                     $db->execute($query);
                 } catch (PDOException $e) {
                     $error[] = $table . ': ' . $e->getMessage();
-                    $this->log('MYSQL Schema update for "' . $slug . '" plugin (' . $type . ') : ' . $e->getMessage());
+                    $this->log('MYSQL Schema update for "' . $slug . '" plugin (' . $type . ') : ' . $e->getMessage() . $table);
                 }
             }
         }
@@ -523,7 +512,7 @@ class EyPluginComponent extends CakeObject
             if (file_exists($this->pluginsFolder . DS . $slug . DS . 'Schema' . DS . 'update-entries.php'))
                 include $this->pluginsFolder . DS . $slug . DS . 'Schema' . DS . 'update-entries.php';
             // callback
-            $this->Schema->after(array(), !$update, $updateEntries);
+            $schema->after(array(), !$update, $updateEntries);
 
             if (!empty($error)) {
                 foreach ($error as $key => $value) {
