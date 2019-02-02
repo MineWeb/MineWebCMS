@@ -172,8 +172,8 @@ class AppSchema extends CakeSchema {
 	);
 
 	public $cake_sessions = array(
-		'id' => array('type' => 'string', 'null' => false, 'key' => 'primary'),
-		'data' => array('type' => 'text', 'null' => true, 'default' => null),
+		'id' => array('type' => 'string', 'null' => false, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1', 'key' => 'primary'),
+        	'data' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'expires' => array('type' => 'integer', 'null' => true, 'default' => null),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1))
 	);
