@@ -159,6 +159,7 @@
         "ERROR__403_LABEL": "Access forbidden",
         "ERROR__403_CONTENT": "You are not allowed to access the page <b> {URL} </b>!",
         "ERROR__500_LABEL": "Error 500",
+        "ERROR__IP_WRONG": "You do not have the same ip as when creating the database !",
 
         "GALLERY__MODAL_TITLE": "Gallery of images already sent",
         "GALLERY__CHOOSE": "Choose this image",
