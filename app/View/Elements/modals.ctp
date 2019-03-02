@@ -6,7 +6,7 @@
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"><?= $Lang->get('GLOBAL__CLOSE') ?></span></button>
         <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('USER__LOGIN') ?></h4>
       </div>
-        <form id="login-before-two-factor-auth" method="POST" data-ajax="true" action="<?= $this->Html->url(array('admin' => false, 'controller' => 'User', 'action' => 'ajax_login')) ?>" data-callback-function="afterLogin">
+        <form id="login-before-two-factor-auth" method="POST" data-ajax="true" action="<?= $this->Html->url(array('plugin' => false, 'admin' => false, 'controller' => 'User', 'action' => 'ajax_login')) ?>" data-callback-function="afterLogin">
             <div class="modal-body">
               <div class="ajax-msg"></div>
               <div class="form-group">
@@ -41,9 +41,10 @@
             <button type="submit" class="btn btn-primary btn-block"><?= $Lang->get('USER__LOGIN') ?></button>
           </div>
         </form>
-        <form id="login-two-factor-auth" style="display:none;" method="POST" data-ajax="true" action="<?= $this->Html->url(array('admin' => false, 'controller' => 'Authentification', 'action' => 'validLogin')) ?>" data-redirect-url="?">
+        <form id="login-two-factor-auth" style="display:none;" method="POST" data-ajax="true" action="<?= $this->Html->url(array('plugin' => null, 'admin' => false, 'controller' => 'Authentification', 'action' => 'validLogin')) ?>" data-redirect-url="?">
             <div class="modal-body">
                 <div class="ajax-msg"></div>
+                <input type="checkbox" style="display: none;" name="remember_me">
                 <div class="form-group">
                     <h5><?= $Lang->get('USER__LOGIN_CODE') ?></h5>
                     <input type="text" class="form-control" name="code" placeholder="<?= $Lang->get('USER__LOGIN_CODE') ?>">
