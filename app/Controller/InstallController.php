@@ -16,7 +16,6 @@ class InstallController extends AppController
         $this->layout = 'install';
 
         $this->set('title_for_layout', $this->Lang->get('INSTALL__INSTALL'));
-
         $this->loadModel('User');
         $admin = $this->User->find('first');
         if (!empty($admin)) {
@@ -33,6 +32,13 @@ class InstallController extends AppController
 
         if (!$this->request->is('ajax'))
             throw new NotFoundException();
+        if(file_exists(ROOT.DS.'config'.DS.'secure.txt')) {
+            $secure = file_get_contents(ROOT . DS . 'config' . DS . 'secure.txt');
+            $secure = json_decode($secure, true);
+            if ($secure['ip'] != $_SERVER['HTTP_X_FORWARDED_FOR']) {
+                return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__IP_WRONG'))));
+            }
+        }
         if (empty($this->request->data['pseudo']) || empty($this->request->data['password']) || empty($this->request->data['password_confirmation']) || empty($this->request->data['email']))
             return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
         if ($this->request->data['password'] !== $this->request->data['password_confirmation'])
