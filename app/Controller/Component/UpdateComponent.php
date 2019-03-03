@@ -90,7 +90,7 @@ class UpdateComponent extends CakeObject
       $remoteVersion = $this->getLatestRelease();
       if ($remoteVersion) file_put_contents($this->updateCacheFile, $remoteVersion);
     }
-    $this->lastVersion = isset($remoteVersion) ? $remoteVersion : file_get_contents($this->updateCacheFile);
+    $this->lastVersion = trim(isset($remoteVersion) ? $remoteVersion : file_get_contents($this->updateCacheFile));
     if (!$this->lastVersion) $this->lastVersion = $this->cmsVersion;
   }
 
