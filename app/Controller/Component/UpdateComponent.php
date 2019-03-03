@@ -230,6 +230,7 @@ class UpdateComponent extends CakeObject
     if (!empty($folder->path)) {
       $folder->delete();
     }
+    unlink (ROOT . DS . 'config' . DS . 'install.txt');
 
     // Hook method to update databases data if needed
     $updateEntries = array();
