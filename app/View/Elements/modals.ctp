@@ -6,7 +6,7 @@
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"><?= $Lang->get('GLOBAL__CLOSE') ?></span></button>
         <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('USER__LOGIN') ?></h4>
       </div>
-        <form id="login-before-two-factor-auth" method="POST" data-ajax="true" action="<?= $this->Html->url(array('plugin' => false, 'admin' => false, 'controller' => 'User', 'action' => 'ajax_login')) ?>" data-callback-function="afterLogin">
+        <form id="login-before-two-factor-auth" method="POST" data-ajax="true" action="<?= $this->Html->url(array('plugin' => false, 'admin' => false, 'controller' => 'user', 'action' => 'ajax_login')) ?>" data-callback-function="afterLogin">
             <div class="modal-body">
               <div class="ajax-msg"></div>
               <div class="form-group">
