@@ -1,3 +1,7 @@
+<div style="padding: 15px;">
+    <?= $Theme->displayAvailableUpdate() ?>
+    <?= $EyPlugin->displayAvailableUpdate() ?>
+</div>
 <section class="content-header">
   <h1>
     <?= $Lang->get('GLOBAL__ADMIN_PANEL'); ?>
