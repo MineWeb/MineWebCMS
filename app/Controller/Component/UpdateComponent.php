@@ -191,14 +191,14 @@ class UpdateComponent extends CakeObject
     foreach ($diffSchema as $table => $changes) {
       if (isset($diffSchema[$table]['create'])) {
         $queries[$table] = $db->createSchema($newSchema, $table);
-        continue;
-      }
+      } else {
 
-      // If we have columns to drop, we need to check this is not about a plugin
-      if (isset($diffSchema[$table]['drop'])) {
-        foreach ($diffSchema[$table]['drop'] as $column => $structure) { // For each drop, check column name
-          if (count(explode('-', $column)) > 1) { // Plugin columns are prefixed by `pluginname-<column>`
-            unset($diffSchema[$table]['drop'][$column]);
+        // If we have columns to drop, we need to check this is not about a plugin
+        if (isset($diffSchema[$table]['drop'])) {
+          foreach ($diffSchema[$table]['drop'] as $column => $structure) { // For each drop, check column name
+            if (count(explode('-', $column)) > 1) { // Plugin columns are prefixed by `pluginname-<column>`
+              unset($diffSchema[$table]['drop'][$column]);
+            }
           }
         }
       }
