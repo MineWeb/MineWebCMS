@@ -3,20 +3,16 @@
 	$needDisplayDatabase = (strpos(file_get_contents(ROOT.DS.'app'.DS.'Config'.DS.'database.php'), 'LOGIN1')) ? true : false;
 
 	if(!file_exists(ROOT.DS.'config'.DS.'install.txt')) {
-		if(!file_exists(ROOT.DS.'config'.DS.'secure.txt')) {
+		if(!file_exists(ROOT.DS.'config'.DS.'secure.txt') && is_writable(ROOT . DS . 'config')) {
 			$date = date('H:i:s d/m/Y');
 			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
 			$data = '{ "created": "'.$date.'", "ip": "'.$ip.'" }';
 			$fp = fopen(ROOT.DS.'config'.DS.'secure.txt', 'w+');
 			fwrite($fp, $data);
-			if(!$fp) {
-				echo json_encode(array('status' => false, 'msg' => 'Le fichier /config/secure.php ne peut pas être écris !'));
-				exit;
-			}
 			fclose($fp);
 		}
-		if($_POST) {
 
+		if($_POST) {
 			if($_GET['action'] == "db" && $needDisplayDatabase) {
 
 				if(!empty($_POST['host']) && !empty($_POST['database']) && !empty($_POST['login'])) {
