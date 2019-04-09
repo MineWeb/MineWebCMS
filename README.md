@@ -33,14 +33,14 @@ Pour installer le CMS, rien de plus simple, il vous suffit de télécharger les 
 
 ### Support
 
-Le site officiel étant partiellement coupé, plus aucun support officiel n'est assuré, mais vous pouvez toujours faire part de vos problèmes sur le [Discord](https://discordapp.com/invite/3QYdt8r) ou avec les issues sur Github. 
+Le site officiel étant partiellement coupé, plus aucun support officiel n'est assuré, mais vous pouvez toujours faire part de vos problèmes sur le [Discord](https://discordapp.com/invite/3QYdt8r) ou avec les [Issues](https://github.com/MineWeb/MineWebCMS/issues) sur Github. 
 
 ### Plugins et thèmes
 
-Le site officiel étant partiellement coupé, le market n'est plus disponible et maintenu sur celui-ci. Le CMS se base donc maintenant sur les repos faisant parti de l'[organisation MineWeb](https://github.com/MineWeb). Tous les plugins affichés sur le CMS sont les repos commençant par _Plugin-_ (et pour les thèmes _Theme-_). 
-Si vous souhaitez donc voir les sources d'un plugin ou y contribuer il vous suffit de vous rendre sur le repo correspondant (ex: [Boutique](https://github.com/MineWeb/Plugin-Shop)). 
+Le site officiel étant partiellement coupé, le market n'est plus disponible et maintenu sur celui-ci. Le CMS se base donc maintenant sur les repos faisant partie de l'[organisation MineWeb](https://github.com/MineWeb). Tous les plugins affichés sur le CMS sont les repos commençant par _Plugin-_ (et pour les thèmes _Theme-_). 
+Si vous souhaitez voir les sources d'un plugin ou alors y contribuer, il vous suffit de vous rendre sur le repo correspondant (ex: [Boutique](https://github.com/MineWeb/Plugin-Shop)). 
 
-Si vous souhaitez ajouter un plugin ou un thème sur le CMS il vous suffit simplement de demander sur notre Discord pour être ajouter dans l'organisation ce qui vous permettra de créer un plugin ou un thème. 
+Si vous souhaitez ajouter un plugin ou un thème sur le CMS, il vous suffit simplement de nous le demander sur notre Discord pour être ajouté dans l'organisation, ce qui vous permettra de créer un plugin ou un thème. 
 Pour cela, il vous suffira de créer votre propre repo (sur l'organisation) avec le préfix adéquate (_Plugin-_ ou _Theme-_), et d'y développer votre plugin/thème en suivant la [documentation](https://docs.mineweb.org). 
 Il vaut mieux créer plusieurs branches (_dev_ pour le développement par exemple) car le CMS utilise la branche _master_ pour récupérer le contenu du plugin ou du thème. 
 
