@@ -5,7 +5,7 @@
 	if(!file_exists(ROOT.DS.'config'.DS.'install.txt')) {
 		if(!file_exists(ROOT.DS.'config'.DS.'secure.txt') && is_writable(ROOT . DS . 'config')) {
 			$date = date('H:i:s d/m/Y');
-			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+			$ip = isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? htmlentities($_SERVER["HTTP_CF_CONNECTING_IP"]) : $_SERVER["REMOTE_ADDR"];
 			$data = '{ "created": "'.$date.'", "ip": "'.$ip.'" }';
 			$fp = fopen(ROOT.DS.'config'.DS.'secure.txt', 'w+');
 			fwrite($fp, $data);
