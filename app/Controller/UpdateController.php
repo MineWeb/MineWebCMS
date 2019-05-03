@@ -40,7 +40,4 @@ class UpdateController extends AppController
     unlink(ROOT . '/config/update');
     $this->redirect(array('action' => 'index'));
   }
-
-  public function upload_logs() {
-  } 
 }
