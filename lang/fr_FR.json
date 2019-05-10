@@ -234,6 +234,8 @@
         "CONFIG__KEY_SESSION_TYPE_INFO":"Ceci est un réglage avancé de votre site, il n'est pas nécessaire de le modifier si vous n'en avez pas l'utilité. Par défaut, le CMS utilise les sessions php.",
         "CONFIG__KEY_SESSION_TYPE_PHP":"PHP / Par défaut",
         "CONFIG__KEY_SESSION_TYPE_DB":"Base de données",
+        "CONFIG__CHECK_UUID":"Permettre aux utilisateurs seulement premium de s'inscrire",
+        "CONFIG__CHECK_UUID_CHANGE":"Ainsi que l'activation de la sauvegarde des UUID pour changer automatiquement le pseudo du joueur ?",
 
         "EMAIL__TITLE_CONFIRM_MAIL": "Confirmer votre email",
         "EMAIL__CONTENT_CONFIRM_MAIL": "Salut {USERNAME} ! <br> Tu t'es inscrit le {DATE} avec l'IP <b>{IP}<\/b>, tu dois confirmer ton email en te rendant sur ce lien <a href=\"{LINK}\">{LINK}<\/a>.<br><br><br>Cet email est automatique, inutile d'y répondre.",
@@ -362,6 +364,8 @@
         "USER__LOGING":"Connexion en cours...",
         "USER__ERROR_EMAIL_NOT_VALID":"Email invalide",
         "USER__ERROR_PASSWORDS_NOT_SAME":"Les mots de passe ne sont pas les mêmes",
+        "USER__ERROR_UUID":"Pseudo minecraft incorrect !",
+        "USER__ERROR_UUID_ALREADY_REGISTERED":"Ce compte est déjà utilisé",
         "USER__ERROR_PSEUDO_ALREADY_REGISTERED":"Ce pseudo est déjà utilisé",
         "USER__ERROR_PSEUDO_INVALID_FORMAT":"Votre pseudo contient des caractères spéciaux",
         "USER__ERROR_EMAIL_ALREADY_REGISTERED":"Cet email est déjà utilisé",
