@@ -657,7 +657,8 @@ class UserController extends AppController
                     $data = array(
                         'email' => $this->request->data['email'],
                         'rank' => $this->request->data['rank'],
-                        'pseudo' => $this->request->data['pseudo']
+                        'pseudo' => $this->request->data['pseudo'],
+                        'uuid' => $this->request->data['uuid']
                     );
 
                     if (!empty($this->request->data['password'])) {
