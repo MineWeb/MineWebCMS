@@ -177,7 +177,7 @@ class AppController extends Controller
     protected function __initSecurity()
     {
         $this->Security->blackHoleCallback = 'blackhole';
-        $this->Security->validatePost = false;
+        $this->Security->validatePost = true;
         $this->Security->csrfUseOnce = false;
 
         $csrfToken = $this->Session->read('_Token')['key'];
