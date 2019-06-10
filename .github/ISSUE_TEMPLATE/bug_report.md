@@ -45,6 +45,8 @@ If applicable, add screenshots to help explain your problem. | Mettez des captur
  - Version : [e.g. 1.7.0]
 
  - Web server : [e.g. Apache, nginx] 
+ 
+ - Path to logs (upload the content off /app/tmp/logs/error.log to https://hastebin.com/ and give us the link you get | Mettez en ligne sur https://hastebin.com/ le contenu du fichier /app/tmp/logs/error.log et donnez nous le lien qui en résulte): 
 
 **Additional context | Remarques**
 
