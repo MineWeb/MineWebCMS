@@ -21,8 +21,7 @@ app/Config/database.php
 app/Config/core.php
 .gitmodules
 
-config/secure
-config/last_check
 config/update
 config/install.txt
 config/installed.txt
+config/secure.txt

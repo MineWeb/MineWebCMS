@@ -1,7 +1,9 @@
 <?php
+
 class UserController extends AppController
 {
     public $components = array('Session', 'Captcha', 'API');
+
     function get_captcha()
     {
         $this->autoRender = false;
@@ -24,13 +26,22 @@ class UserController extends AppController
         $img = $this->Captcha->ShowImage($settings);
         echo $img;
     }
+
     function ajax_register()
     {
         $this->autoRender = false;
         $this->response->type('json');
         if ($this->request->is('Post')) { // si la requête est bien un post
-	$conditionsChecked = !empty($this->request->data['condition']) || !$this->Configuration->getKey('condition');
+            $conditionsChecked = !empty($this->request->data['condition']) || !$this->Configuration->getKey('condition');
             if (!empty($this->request->data['pseudo']) && !empty($this->request->data['password']) && $conditionsChecked && !empty($this->request->data['password_confirmation']) && !empty($this->request->data['email'])) { // si tout les champs sont bien remplis
+                //check uuid if needed
+                if ($this->Configuration->getKey('check_uuid')) {
+                    $pseudoToUUID = file_get_contents("https://api.mojang.com/users/profiles/minecraft/" . htmlentities($this->request->data['pseudo']));
+                    if (!$pseudoToUUID)
+                        return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_UUID'))));
+
+                    $this->request->data['uuid'] = json_decode($pseudoToUUID, true)['id'];
+                }
                 // Captcha
                 if ($this->Configuration->getKey('captcha_type') == "2") { // ReCaptcha
                     $validCaptcha = $this->Util->isValidReCaptcha($this->request->data['recaptcha'], $this->Util->getIP(), $this->Configuration->getKey('captcha_google_secret'));
@@ -96,6 +107,7 @@ class UserController extends AppController
             $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
         }
     }
+
     function ajax_login()
     {
         if (!$this->request->is('post'))
@@ -108,12 +120,12 @@ class UserController extends AppController
         $this->loadModel('User');
         $user_login = $this->User->getAllFromUser($this->request->data['pseudo']);
         $infos = $this->Authentification->find('first', array('conditions' => array('user_id' => $user_login['id'], 'enabled' => true)));
-        
+
         $confirmEmailIsNeeded = ($this->Configuration->getKey('confirm_mail_signup') && $this->Configuration->getKey('confirm_mail_signup_block'));
-        $login = $this->User->login($this->request->data, $confirmEmailIsNeeded, $this);
+        $login = $this->User->login($this->request->data, $confirmEmailIsNeeded, $this->Configuration->getKey('check_uuid'), $this);
         if (!isset($login['status']) || $login['status'] !== true)
             return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get($login, array('{URL_RESEND_EMAIL}' => Router::url(array('action' => 'resend_confirmation'))))]);
-        
+
         $event = new CakeEvent('onLogin', $this, array('user' => $user_login));
         $this->getEventManager()->dispatch($event);
         if ($event->isStopped())
@@ -127,8 +139,9 @@ class UserController extends AppController
             $this->Session->write('user', $login['session']);
             $this->sendJSON(['statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN')]);
         }
-        
+
     }
+
     function confirm($code = false)
     {
         $this->autoRender = false;
@@ -160,6 +173,7 @@ class UserController extends AppController
             throw new NotFoundException();
         }
     }
+
     function ajax_lostpasswd()
     {
         $this->layout = null;
@@ -209,6 +223,7 @@ class UserController extends AppController
             $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
         }
     }
+
     function ajax_resetpasswd()
     {
         $this->autoRender = false;
@@ -230,6 +245,7 @@ class UserController extends AppController
             $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
         }
     }
+
     function logout()
     {
         $this->autoRender = false;
@@ -244,6 +260,7 @@ class UserController extends AppController
         $this->Session->delete('user');
         $this->redirect($this->referer());
     }
+
     function uploadSkin()
     {
         $this->autoRender = false;
@@ -280,6 +297,7 @@ class UserController extends AppController
             throw new ForbiddenException();
         }
     }
+
     function uploadCape()
     {
         $this->autoRender = false;
@@ -316,6 +334,7 @@ class UserController extends AppController
             throw new ForbiddenException();
         }
     }
+
     function profile()
     {
         if ($this->isConnected) {
@@ -323,9 +342,9 @@ class UserController extends AppController
             $this->loadModel('Authentification');
             $infos = $this->Authentification->find('first', array('conditions' => array('user_id' => $this->User->getKey('id'), 'enabled' => true)));
             if (empty($infos)) // no two factor auth
-              $this->set('twoFactorAuthStatus', false);
+                $this->set('twoFactorAuthStatus', false);
             else
-              $this->set('twoFactorAuthStatus', true);
+                $this->set('twoFactorAuthStatus', true);
             $this->loadModel('User');
             $this->set('title_for_layout', $this->User->getKey('pseudo'));
             $this->layout = $this->Configuration->getKey('layout');
@@ -335,7 +354,7 @@ class UserController extends AppController
                 $histories = $this->ItemsBuyHistory->find('all', array(
                     'recursive' => 1,
                     'order' => 'ItemsBuyHistory.created DESC',
-                                'conditions' => ['user_id' => $this->User->getKey('id')]
+                    'conditions' => ['user_id' => $this->User->getKey('id')]
                 ));
                 $this->set(compact('histories'));
                 $this->set('shop_active', true);
@@ -366,6 +385,7 @@ class UserController extends AppController
             $this->redirect('/');
         }
     }
+
     function resend_confirmation()
     {
         if (!$this->isConnected && !$this->Session->check('email.confirm.user.id'))
@@ -402,6 +422,7 @@ class UserController extends AppController
         else
             $this->redirect('/');
     }
+
     function change_pw()
     {
         $this->autoRender = false;
@@ -432,6 +453,7 @@ class UserController extends AppController
             $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED'))));
         }
     }
+
     function change_email()
     {
         $this->autoRender = false;
@@ -464,6 +486,7 @@ class UserController extends AppController
             throw new ForbiddenException();
         }
     }
+
     function admin_index()
     {
         if ($this->isConnected AND $this->Permissions->can('MANAGE_USERS')) {
@@ -474,6 +497,7 @@ class UserController extends AppController
             $this->redirect('/');
         }
     }
+
     function admin_liveSearch($query = false)
     {
         $this->autoRender = false;
@@ -493,6 +517,7 @@ class UserController extends AppController
             $this->response->body(json_encode(array('status' => false)));
         }
     }
+
     public function admin_get_users()
     {
         if ($this->isConnected AND $this->Permissions->can('MANAGE_USERS')) {
@@ -544,6 +569,7 @@ class UserController extends AppController
             }
         }
     }
+
     function admin_edit($search = false)
     {
         if ($this->isConnected AND $this->Permissions->can('MANAGE_USERS')) {
@@ -586,6 +612,7 @@ class UserController extends AppController
             $this->redirect('/');
         }
     }
+
     function admin_confirm($user_id = false)
     {
         $this->autoRender = false;
@@ -609,6 +636,7 @@ class UserController extends AppController
             throw new NotFoundException();
         }
     }
+
     function admin_edit_ajax()
     {
         $this->autoRender = false;
@@ -629,9 +657,10 @@ class UserController extends AppController
                     $data = array(
                         'email' => $this->request->data['email'],
                         'rank' => $this->request->data['rank'],
-						'pseudo' => $this->request->data['pseudo']
+                        'pseudo' => $this->request->data['pseudo'],
+                        'uuid' => $this->request->data['uuid']
                     );
-					
+
                     if (!empty($this->request->data['password'])) {
                         $data['password'] = $this->Util->password($this->request->data['password'], $findUser['User']['pseudo']);
                         $password_updated = true;
@@ -662,6 +691,7 @@ class UserController extends AppController
             throw new ForbiddenException();
         }
     }
+
     function admin_delete($id = false)
     {
         $this->autoRender = false;

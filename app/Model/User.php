@@ -31,12 +31,17 @@ class User extends AppModel
             if ($data['password'] == $data['password_confirmation']) {
                 if (filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
                     $search_member_by_pseudo = $this->find('all', array('conditions' => array('pseudo' => $data['pseudo'])));
+                    $search_member_by_uuid = $this->find('all', array('conditions' => array('uuid' => $data['uuid'])));
                     $search_member_by_email = $this->find('all', array('conditions' => array('email' => $data['email'])));
                     if (empty($search_member_by_pseudo)) {
-                        if (empty($search_member_by_email)) {
-                            return true;
+                        if (empty($search_member_by_uuid)) {
+                            if (empty($search_member_by_email)) {
+                                return true;
+                            } else {
+                                return 'USER__ERROR_EMAIL_ALREADY_REGISTERED';
+                            }
                         } else {
-                            return 'USER__ERROR_EMAIL_ALREADY_REGISTERED';
+                            return 'USER__ERROR_UUID_ALREADY_REGISTERED';
                         }
                     } else {
                         return 'USER__ERROR_PSEUDO_ALREADY_REGISTERED';
@@ -63,6 +68,8 @@ class User extends AppModel
         $data_to_save['ip'] = isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? htmlentities($_SERVER["HTTP_CF_CONNECTING_IP"]) : $_SERVER["REMOTE_ADDR"];
         $data_to_save['rank'] = 0;
 
+        $data_to_save['uuid'] = htmlentities($data['uuid']);
+
         $data_to_save['password'] = $UtilComponent->password($data['password'], $data['pseudo']);
 
         $this->create();
@@ -71,37 +78,66 @@ class User extends AppModel
         return $this->getLastInsertId();
     }
 
-    public function login($data, $confirmEmailIsNeeded = false, $controller)
+    public function login($data, $confirmEmailIsNeeded = false, $checkUUID = false, $controller)
     {
         $UtilComponent = $controller->Util;
         $LoginRetryTable = ClassRegistry::init('LoginRetry');
         $ip = $UtilComponent->getIP();
+        App::uses('CakeTime', 'Utility');
         $findRetryWithIP = $LoginRetryTable->find('first', ['conditions' => [
             'ip' => $ip,
-            'modified >=' => strtotime('-2 hours'),
-            'count >=' => 10
-        ]]);
-        if (!empty($findRetryWithIP))
+            'modified >= ' => CakeTime::format('-5 minutes', '%Y-%m-%d %H:%M:%S')
+        ], 'order' => 'created DESC']);
+
+        if (!empty($findRetryWithIP) && $findRetryWithIP['LoginRetry']['count'] >= 10)
             return 'LOGIN__BLOCKED';
 
         $user = $this->find('first', ['conditions' => [
             'pseudo' => $data['pseudo'],
             'password' => $UtilComponent->password($data['password'], $data['pseudo'])
         ]]);
+        $date = date('Y-m-d H:i:s');
         if (empty($user)) {
-            $LoginRetryTable->updateAll(
-                ['count' => 'count + 1'],
-                ['ip' => $ip]
-            );
-            return 'USER__ERROR_INVALID_CREDENTIALS';
+            if (empty($findRetryWithIP) or $findRetryWithIP['LoginRetry']['count'] >= 10) {
+                $LoginRetryTable->create();
+                $LoginRetryTable->set(array(
+                    'ip' => $ip,
+                    'count' => 1
+                ));
+                $LoginRetryTable->save();
+                return 'USER__ERROR_INVALID_CREDENTIALS';
+            } else {
+                $LoginRetryTable->updateAll(
+                    ['count' => 'count + 1', 'modified' => "'$date'"],
+                    ['ip' => $ip]
+                );
+                return 'USER__ERROR_INVALID_CREDENTIALS';
+            }
         }
         $user = $user['User'];
         $LoginRetryTable->deleteAll(['ip' => $ip]);
+        $conditions = array();
 
         if ($confirmEmailIsNeeded && !empty($user['confirmed']) && date('Y-m-d H:i:s', strtotime($user['confirmed'])) != $user['confirmed']) {
             $controller->Session->write('email.confirm.user.id', $user['id']);
             return 'USER__MSG_NOT_CONFIRMED_EMAIL';
         }
+        if ($checkUUID) {
+            if (!isset($user['uuid'])) {
+                $pseudoToUUID = file_get_contents("https://api.mojang.com/users/profiles/minecraft/" . $user['pseudo']);
+                $conditions['uuid'] = json_decode($pseudoToUUID, true)['id'];
+
+            } else {
+                $uuidToPseudo = file_get_contents("https://api.mojang.com/user/profiles/" . $user['uuid'] . "/names");
+                if (!empty($uuidToPseudo))
+                    $conditions['pseudo'] = end(json_decode($uuidToPseudo, true))['name'];
+            }
+        }
+        $conditions['ip'] = $ip;
+
+        $this->read(null, $user['id']);
+        $this->set($conditions);
+        $this->save();
 
         return ['status' => true, 'session' => $user['id']];
     }
