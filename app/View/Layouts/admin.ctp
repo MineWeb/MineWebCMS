@@ -132,6 +132,8 @@
                 <?php
                 function displayNav($nav, $context) {
                     foreach ($nav as $name => $value) {
+                        if (!isset($value['menu']) && !isset($value['route']))
+                            continue;
                         if (!isset($value['menu']) && isset($value['permission']) && !$context->Permissions->can($value['permission'])) // Check perms
                             continue;
                         if (isset($value['menu']))
