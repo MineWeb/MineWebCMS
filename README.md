@@ -48,3 +48,5 @@ Il vaut mieux créer plusieurs branches (_dev_ pour le développement par exempl
 
 Si vous souhaitez contribuer au CMS vous êtes libres de soumettre des pull-requests que je me ferait une joie de regarder et merge.
 De plus vous pouvez également encore développer des thèmes ou des plugins pour la communauté. 
+
+Suertzz
