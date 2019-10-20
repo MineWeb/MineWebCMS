@@ -1,7 +1,7 @@
 # MineWebCMS
 
 
-## C'est quoi MineWeb ?
+## C'est quoi MineWeb
 
 Le CMS est en bêta depuis 15 août 2015 et en version finale depuis le 3 mai 2016.
 
