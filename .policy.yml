@@ -1,0 +1,34 @@
+policy:
+  approval:
+    - or:
+      - community approved
+
+approval_rules:
+  # "name" is required, and is used to reference rules in the "policy" block
+  - name: "community approved"
+    if:
+      targets_branch:
+        pattern: "^(development)$"
+  # "options" specifies a set of restrictions on approvals. If the block does not
+  # exist, the default values are used.
+    options:
+    # If true, pushing new commits to a pull request will invalidate existing
+    # approvals for this rule. False by default.
+      invalidate_on_push: true
+    # "methods" defines how users may express approval. The defaults are below.
+      methods:
+        comments:
+          - ":+1:"
+          - "👍"
+        github_review: true
+  # "requires" specifies the approval requirements for the rule. If the block
+  # does not exist, the rule is automatically approved.
+    requires:
+    # "count" is the number of required approvals. The default is 0, meaning no
+    # approval is necessary.
+      count: 2
+      organizations: ["MineWeb"]
+    # allows approval by admins of the org or repository
+    #  admins: true
+   # allows approval by users who have write on the repository
+   #   write_collaborators: true
