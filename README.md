@@ -3,7 +3,7 @@
 
 ## C'est quoi MineWeb ?
 
-Le CMS est en bêta depuis 15 août 2015 et en version finale depuis le 3 mai 2016.
+Le CMS est en bêta depuis 15 août 2015 et en version finale depuis le 3 mai 2016. bb
 
 MineWeb est un CMS (c'est-à-dire un système de gestion de contenu), en plus simple, un site complètement personnalisable et intuitif, qui s'adaptera parfaitement à vos serveurs Minecraft !
 
