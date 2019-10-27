@@ -15,9 +15,9 @@ git pull
 git checkout development
 git pull
 git checkout master
-NUM_COMMITS=`git log --oneline master ^development | wc -l | bc`
-git rebase development
-git rebase -i HEAD~$NUM_COMMITS
+# NUM_COMMITS=`git log --oneline master ^development | wc -l | bc`
+git merge development -m "merge dev"
+# git rebase -i HEAD~$NUM_COMMITS
 echo $1 > VERSION
 git add VERSION
 git commit -m "chore: bump version to $1"
