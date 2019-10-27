@@ -23,5 +23,5 @@ git add .
 git commit -m "chore: bump version to $1"
 git tag v$1
 git push
-git push --tags
-gren release --limit 1 --data-source commits --token=$2
+# git push --tags
+# gren release --limit 1 --data-source commits --token=$2
