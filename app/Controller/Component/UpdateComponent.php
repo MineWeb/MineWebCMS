@@ -234,6 +234,15 @@ class UpdateComponent extends CakeObject
     $updateEntries = array();
     include ROOT . DS . 'app' . DS . 'Config' . DS . 'Schema' . DS . 'update-entries.php';
     $schema->after(array(), false, $updateEntries);
+    //if update fail, include modify.php
+    if (file_exists(ROOT . DS . 'modify.php')) {
+        try {
+            include(ROOT . DS . 'modify.php');
+        } catch (Exception $e) {
+            $this->log('Error on update (execute modify.php) - ' . $e->getMessage());
+        }
+        unlink(ROOT . DS . 'modify.php'); // on le supprime
+    }
 
     // End the update
     return true;
