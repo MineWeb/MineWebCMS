@@ -34,7 +34,7 @@ class User extends AppModel
                     $search_member_by_uuid = $this->find('all', array('conditions' => array('uuid' => $data['uuid'])));
                     $search_member_by_email = $this->find('all', array('conditions' => array('email' => $data['email'])));
                     if (empty($search_member_by_pseudo)) {
-                        if (empty($search_member_by_uuid)) {
+                        if (!ClassRegistry::init('Configuration')->getKey('check_uuid') || empty($search_member_by_uuid)) {
                             if (empty($search_member_by_email)) {
                                 return true;
                             } else {
