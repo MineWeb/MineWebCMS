@@ -33,7 +33,8 @@ function remove_column($table, $name) {
   }
 }
 // 1.8.0
-add_column('users', 'uuid', 'varchar(255) DEFAULT NULL');
+add_column('users', 'uuid', 'varchar(255) DEFAULT NULL AFTER `pseudo`');
+add_column('configurations', 'uuid', 'int(1) DEFAULT \'0\' AFTER `end_layout_code`');
 // end 1.8.0
 @clearFolder(ROOT.'/app/tmp/cache/models/');
 @clearFolder(ROOT.'/app/tmp/cache/persistent/');
