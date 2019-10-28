@@ -946,19 +946,24 @@ class EyPluginComponent extends CakeObject
     public function getFreePlugins($all = false, $removeInstalledPlugins = false)
     {
         $pluginsList = @json_decode($this->controller->sendGetRequest($this->reference), true);
-        $plugins = [];
-        if ($pluginsList) {
-            foreach ($pluginsList as $plugin) {
-              if ($plugin['free']) {
-                if (($pl = $this->getPluginFromRepoName($plugin['repo']))) {
-                  $pl['free'] = true;
-                  $pl['slug'] = $plugin['slug'];
-                  $plugins[] = $pl;
+        Cache::set(array('duration' => '+24 hours'));
+        $plugins = Cache::read('plugins');
+        if (!$plugins) {
+            $plugins = [];
+            if ($pluginsList) {
+                foreach ($pluginsList as $plugin) {
+                    if ($plugin['free']) {
+                        if (($pl = $this->getPluginFromRepoName($plugin['repo']))) {
+                            $pl['free'] = true;
+                            $pl['slug'] = $plugin['slug'];
+                            $plugins[] = $pl;
+                        }
+                    } else if ($all) {
+                        $plugins[] = $plugin;
+                    }
                 }
-              } else if ($all) {
-                $plugins[] = $plugin;
-              }
             }
+            Cache::write('plugins', $plugins);
         }
 
         // remove installed plugins

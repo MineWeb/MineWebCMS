@@ -9,6 +9,8 @@ Thumbs.db
 .idea
 
 app/tmp/*
+app/Plugin/*
+app/View/Themed/*
 
 /config/bypass_compatibility
 
