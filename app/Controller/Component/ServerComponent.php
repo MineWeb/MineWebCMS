@@ -20,13 +20,21 @@ class ServerComponent extends CakeObject
         $this->configModel = ClassRegistry::init('Configuration');
     }
 
-    public function startup($controller) {}
+    public function startup($controller)
+    {
+    }
 
-    public function beforeRender($controller) {}
+    public function beforeRender($controller)
+    {
+    }
 
-    public function shutdown($controller) {}
+    public function shutdown($controller)
+    {
+    }
 
-    public function beforeRedirect() {}
+    public function beforeRedirect()
+    {
+    }
 
     private function parse($methods)
     {
@@ -47,6 +55,18 @@ class ServerComponent extends CakeObject
             }
         }
         return $result;
+    }
+
+    function getServerIdConnected($username)
+    {
+        $servers = ClassRegistry::init('Server')->find('all', ['conditions' => ['type' => 0]]);
+        foreach ($servers as $srv) {
+            $server_id = $srv['Server']['id'];
+            if (!$this->userIsConnected($username, $server_id))
+                continue;
+            return $server_id;
+        }
+        return false;
     }
 
     private function parseResult($result)
