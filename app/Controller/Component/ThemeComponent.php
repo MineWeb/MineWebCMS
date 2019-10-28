@@ -43,7 +43,7 @@ class ThemeComponent extends CakeObject
     
     public function displayAvailableUpdate()
     {
-        if(!empty($this->getThemesInstalled(true))) { 
+        if(!empty($this->getThemesInstalled(true))) {
              foreach ($this->getThemesInstalled(true) as $key => $value) {
                 if(isset($value->lastVersion)) {
                     if($value->version !== $value->lastVersion) {
@@ -124,20 +124,25 @@ class ThemeComponent extends CakeObject
         if (!empty($this->themesAvailable[$type]))
             return $this->themesAvailable[$type];
 
-        // get themes
+        // get themes and cache the list
         $themesList = @json_decode($this->controller->sendGetRequest($this->reference), true);
-        $themes = [];
-        if ($themesList) {
-            foreach ($themesList as $theme) {
-              if ($theme['free']) {
-                if (($theme = $this->getThemeFromRepoName($theme['repo']))) {
-                  $theme['free'] = true;
-                  $themes[] = $theme;
+        Cache::set(array('duration' => '+24 hours'));
+        $themes = Cache::read('themes');
+        if (!$themes) {
+            $themes = [];
+            if ($themesList) {
+                foreach ($themesList as $theme) {
+                    if ($theme['free']) {
+                        if (($theme = $this->getThemeFromRepoName($theme['repo']))) {
+                            $theme['free'] = true;
+                            $themes[] = $theme;
+                        }
+                    } else if ($all) {
+                        $themes[] = $theme;
+                    }
                 }
-              } else if ($all) {
-                $themes[] = $theme;
-              }
             }
+            Cache::write('themes', $themes);
         }
 
         // delete installed themes
