@@ -23,11 +23,6 @@ if (!file_exists(ROOT . DS . 'config' . DS . 'install.txt')) {
                 if (!$sql_error) {
                     $dbFile = fopen(ROOT . DS . 'app' . DS . 'Config' . DS . 'database.php', 'w');
 
-                    if (!$dbFile) {
-                        echo json_encode(array('status' => false, 'msg' => 'Le fichier /app/Config/database.php ne peut pas être écris !'));
-                        exit;
-                    }
-
                     $databaseStructure = "<?php
 class DATABASE_CONFIG {
 
@@ -42,7 +37,7 @@ class DATABASE_CONFIG {
 	];
 }
 ";
-                    if (!fwrite($dbFile, $databaseStructure)) {
+                    if (!$dbFile || !fwrite($dbFile, $databaseStructure)) {
                         echo json_encode(array('status' => false, 'msg' => 'Le fichier /app/Config/database.php ne peut pas être écris !'));
                         exit;
                     }
