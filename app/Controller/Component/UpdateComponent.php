@@ -133,7 +133,7 @@ class UpdateComponent extends CakeObject
      */
     public function updateCMS($componentUpdated = false)
     {
-        set_time_limit(200);
+        set_time_limit(0);
         if (!$componentUpdated) {
             // Here, this is the first step of the update. We're trying to keep this component
             // updated for update (in case of we need new behavior).
