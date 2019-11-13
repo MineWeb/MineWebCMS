@@ -8,8 +8,9 @@ ehthumbs.db
 Thumbs.db
 .idea
 
-app/tmp/cache/*
-app/tmp/logs/*
+app/tmp/*
+app/Plugin/*
+app/View/Themed/*
 
 /config/bypass_compatibility
 
@@ -18,6 +19,7 @@ app/webroot/img/uploads/slider/*
 dev.json
 
 app/Config/database.php
+
 app/Config/core.php
 .gitmodules
 
