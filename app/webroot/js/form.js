@@ -99,8 +99,6 @@ function initForms() {
       }
     }
 
-    console.log(inputs);
-
     if(form.attr('data-checkData') !== undefined && form.attr('data-checkData').length > 0) {
       var check = window[form.attr('data-checkData')](inputs);
 
