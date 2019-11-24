@@ -267,7 +267,7 @@ if (!$compatible['rewriteUrl']) {
         $help['rewriteUrl'] .= "Ajoutez ces lignes : <br /> <br />";
         $help['rewriteUrl'] .= '<b>' . htmlspecialchars('<Directory "/var/www/html">') . '<br />';
         $help['rewriteUrl'] .= "AllowOverride All <br />";
-        $help['rewriteUrl'] .= htmlspecialchars('</Directory>') . "</b><br /> <br /> entre les balises <b />" . htmlspecialchars('<VirtualHost>') . "</b>, dans le fichier de configuration d'apache2 située ici /etc/apache2/sites-available/000-default.conf";
+        $help['rewriteUrl'] .= htmlspecialchars('</Directory>') . "</b><br /> <br /> entre les balises <b />" . htmlspecialchars('<VirtualHost>') . "</b>, dans le fichier de configuration d'apache2 située ici <b>/etc/apache2/sites-available/000-default.conf</b> puis veuillez redémarrer apache2 avec <b>service apache2 restart</b>";
     }
 
 }
