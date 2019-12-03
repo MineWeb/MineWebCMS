@@ -157,7 +157,7 @@
         "ERROR__403_LABEL": "Accès interdit",
         "ERROR__403_CONTENT": "Tu n'as pas la permission d'accéder à la page <b>{URL}<\/b> !",
         "ERROR__500_LABEL": "Erreur 500",
-        "ERROR__IP_WRONG": "Vous n'avez pas la même ip que lors de la création de la base de données !",
+        "ERROR__IP_WRONG": "Vous ne pouvez pas créer de compte, supprimez '/config/secure.txt' et actualisez pour y en avoir accès.",
 
         "GALLERY__MODAL_TITLE":"Galerie d'images déjà envoyées",
         "GALLERY__CHOOSE":"Choisir cette image",
