@@ -460,13 +460,10 @@ class ServerComponent extends CakeObject
     public function userIsConnected($username, $server_id = false)
     {
         $result = $this->call(['IS_CONNECTED' => $username], $server_id);
-        if(!$this->online($server_id))
-            return false;
         if ($result && isset($result['IS_CONNECTED']) && $result['IS_CONNECTED'])
             return true;
-        else if (!isset($result['IS_CONNECTED']))
-            return true;
-        return false;
+        else
+            return false;
     }
 
     public function send_command($cmd, $server_id = false)
