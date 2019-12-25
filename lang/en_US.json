@@ -322,7 +322,7 @@
         "NAVBAR__LINK_TYPE_PAGE": "Page",
         "NAVBAR__LINK_TYPE_CUSTOM": "Custom",
 		
-		"MOTD__TITLE":"Manage the MOTD",
+        "MOTD__TITLE":"Manage the MOTD",
         "MOTD__RESET":"Reset the MOTD",
         "MOTD__EDIT_TITLE": "Edit the Motd",
         "MOTD__EDIT_SUCCESS":"Motd successfully changed!",
@@ -489,7 +489,7 @@
         "PERMISSIONS__MANAGE_SLIDER": "Manage sliders (delete, add, edit)",
         "PERMISSIONS__MANAGE_PAGE": "Manage pages (delete, add, edit)",
         "PERMISSIONS__MANAGE_NAV": "Manage the navigation bar (delete, add, edit)",
-		"PERMISSIONS__MANAGE_MOTD": "Manage the MOTD of the different servers",
+        "PERMISSIONS__MANAGE_MOTD": "Manage the MOTD of the different servers",
         "PERMISSIONS__SUCCESS_SAVE": "The permissions have been saved successfully!",
         "PERMISSIONS__BYPASS_MAINTENANCE": "To be able to view the site despite maintenance",
         "PERMISSIONS__MANAGE_MAINTENANCE": "Manage the maintenance",

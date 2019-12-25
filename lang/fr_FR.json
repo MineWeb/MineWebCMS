@@ -320,7 +320,7 @@
         "NAVBAR__LINK_TYPE_PAGE":"Page",
         "NAVBAR__LINK_TYPE_CUSTOM":"Personnalisé",
 		
-		"MOTD__TITLE":"Gérer les MOTD",
+        "MOTD__TITLE":"Gérer les MOTD",
         "MOTD__RESET":"Réinitialiser le MOTD",
         "MOTD__EDIT_TITLE": "Modifier votre Motd",
         "MOTD__EDIT_SUCCESS":"Motd modifié avec succès !",
@@ -486,7 +486,7 @@
         "PERMISSIONS__MANAGE_SLIDER": "Gérer les sliders (suppression, ajout, édition)",
         "PERMISSIONS__MANAGE_PAGE": "Gérer les pages (suppression, ajout, édition)",
         "PERMISSIONS__MANAGE_NAV": "Gérer la barre de navigation (suppression, ajout, édition)",
-		"PERMISSIONS__MANAGE_MOTD": "Gérer le MOTD des différents serveurs",
+        "PERMISSIONS__MANAGE_MOTD": "Gérer le MOTD des différents serveurs",
         "PERMISSIONS__SUCCESS_SAVE": "Les permissions ont été sauvegardées avec succès !",
         "PERMISSIONS__BYPASS_MAINTENANCE":"Pouvoir voir le site malgré la maintenance",
         "PERMISSIONS__MANAGE_MAINTENANCE":"Gérer la maintenance",
