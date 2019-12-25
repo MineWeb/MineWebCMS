@@ -242,6 +242,11 @@ class AppController extends Controller
                         'icon' => 'bars',
                         'permission' => 'MANAGE_NAV',
                         'route' => ['controller' => 'navbar', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
+                    'Motd' => [
+                        'icon' => 'sort-amount-desc',
+                        'permission' => 'MANAGE_MOTD',
+                        'route' => ['controller' => 'motd', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ]
                 ]
             ],
