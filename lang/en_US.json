@@ -323,6 +323,7 @@
         "NAVBAR__LINK_TYPE_CUSTOM": "Custom",
 		
         "MOTD__TITLE":"Manage the MOTD",
+        "MOTD__TITLE_DESC":"You can in this section edit the MOTD of all your servers easily and instantly, however you must link your bukkit / bungee (or other fork) server with the MineWeb plugin (in version 3.0.2 or higher) so that your server displayed in this list! <br> In addition you can reset your MOTD so that the config of your server or another plugin can take over!",
         "MOTD__RESET":"Reset the MOTD",
         "MOTD__EDIT_TITLE": "Edit the Motd",
         "MOTD__EDIT_SUCCESS":"Motd successfully changed!",
