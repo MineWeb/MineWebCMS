@@ -23,7 +23,6 @@ class MotdController extends AppController
             if (!$this->ServerComponent->online($key))
                 continue;
             $call = array_values($this->ServerComponent->call($calls, $key));
-            $this->log($call);
             $get_servers[$key]['name'] = $value;
             $motd = explode("\n", $call[0]);
             $get_servers[$key]['motd_line1'] = $motd[0];
