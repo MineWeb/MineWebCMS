@@ -243,7 +243,7 @@ class AppController extends Controller
                         'permission' => 'MANAGE_NAV',
                         'route' => ['controller' => 'navbar', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
-                    'Motd' => [
+                    'MOTD__TITLE' => [
                         'icon' => 'sort-amount-desc',
                         'permission' => 'MANAGE_MOTD',
                         'route' => ['controller' => 'motd', 'action' => 'index', 'admin' => true, 'plugin' => false]
