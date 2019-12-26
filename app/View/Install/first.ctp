@@ -86,7 +86,7 @@
                 </tr>
 			<?php endif; ?>
             <tr>
-                <td>Version de PHP >= 5.6 <= 7.3</td>
+                <td>Version de PHP >= 5.6 <= 7.4</td>
                 <td><?= affichImg($compatible['phpVersion']) ?></td>
             </tr>
 			<?php if(!$compatible['phpVersion'] && isset($help['phpVersion'])): ?>
