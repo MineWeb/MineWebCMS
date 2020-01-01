@@ -35,7 +35,9 @@ class InstallController extends AppController
         if(file_exists(ROOT.DS.'config'.DS.'secure.txt')) {
             $secure = file_get_contents(ROOT . DS . 'config' . DS . 'secure.txt');
             $secure = json_decode($secure, true);
-            if ($secure['ip'] != $_SERVER['HTTP_X_FORWARDED_FOR']) {
+            $ip = isset($_SERVER['HTTP_CF_CONNECTING_IP']) ? $_SERVER['HTTP_CF_CONNECTING_IP'] : $_SERVER['REMOTE_ADDR'];
+
+            if ($secure['ip'] != $ip) {
                 return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__IP_WRONG'))));
             }
         }
@@ -46,7 +48,7 @@ class InstallController extends AppController
         if (!filter_var($this->request->data['email'], FILTER_VALIDATE_EMAIL))
             return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID'))));
 
-        $this->request->data['ip'] = $_SERVER["REMOTE_ADDR"];
+        $this->request->data['ip'] = $ip;
         $this->request->data['rank'] = 4;
         $this->request->data['password'] = $this->Util->password($this->request->data['password'], $this->request->data['pseudo']);
 
