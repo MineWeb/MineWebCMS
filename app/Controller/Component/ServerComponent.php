@@ -62,10 +62,19 @@ class ServerComponent extends CakeObject
         $servers = ClassRegistry::init('Server')->find('all', ['conditions' => ['type' => 0]]);
         foreach ($servers as $srv) {
             $server_id = $srv['Server']['id'];
-            if ($this->userIsConnected($username, $server_id))
+            if ($this->userIsConnected($username, $server_id) && $this->getServerType($server_id) != "BUNGEE") {
                 return $server_id;
+            }
         }
         return false;
+    }
+
+    public function getServerType($server_id = false)
+    {
+        if (!$server_id)
+            $server_id = $this->getFirstServerID();
+        $call = ['GET_PLUGIN_TYPE' => []];
+        return $this->call($call, $server_id)['GET_PLUGIN_TYPE'];
     }
 
     private function parseResult($result)
