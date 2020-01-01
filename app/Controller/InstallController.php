@@ -32,10 +32,11 @@ class InstallController extends AppController
 
         if (!$this->request->is('ajax'))
             throw new NotFoundException();
+        
+        $ip = $this->Util->getIP();
         if(file_exists(ROOT.DS.'config'.DS.'secure.txt')) {
             $secure = file_get_contents(ROOT . DS . 'config' . DS . 'secure.txt');
             $secure = json_decode($secure, true);
-            $ip = isset($_SERVER['HTTP_CF_CONNECTING_IP']) ? $_SERVER['HTTP_CF_CONNECTING_IP'] : $_SERVER['REMOTE_ADDR'];
 
             if ($secure['ip'] != $ip) {
                 return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__IP_WRONG'))));
