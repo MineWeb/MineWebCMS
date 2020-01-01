@@ -57,18 +57,18 @@ class ServerComponent extends CakeObject
         return $result;
     }
 
-    function getServerIdConnected($username, $server_type = "BUKKIT")
+    function getServerIdConnected($username, $type = "BUKKIT")
     {
         $servers = ClassRegistry::init('Server')->find('all', ['conditions' => ['type' => 0]]);
         foreach ($servers as $srv) {
             $server_id = $srv['Server']['id'];
-            $check = ($this->getServerType($server_id) != "BUNGEE" && $server_type == "BUKKIT") || ($this->getServerType($server_id) != "BUKKIT" && $server_type == "BUNGEE") || $server_type == "ALL";
+            $server_type = $this->getServerType($server_id);
+            $check = ($server_type != "BUNGEE" && $type == "BUKKIT") || ($server_type != "BUKKIT" && $type == "BUNGEE") || $type == "ALL";
             if ($this->userIsConnected($username, $server_id) && $check) {
                 return $server_id;
             }
         }
         return false;
-
     }
 
     public function getServerType($server_id = false)
