@@ -229,13 +229,24 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label><?= $Lang->get('CONFIG__KEY_SKYPE') ?></label>
+                                        <label><?= $Lang->get('CONFIG__KEY_DISCORD') ?></label>
                                         <?= $this->Form->input(false, array(
                                             'div' => false,
                                             'type' => 'text',
-                                            'name' => 'skype',
+                                            'name' => 'discord',
                                             'class' => 'form-control',
-                                            'value' => $config['skype']
+                                            'value' => $config['discord']
+                                        )); ?>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label><?= $Lang->get('CONFIG__KEY_TEAMSPEAK') ?></label>
+                                        <?= $this->Form->input(false, array(
+                                            'div' => false,
+                                            'type' => 'text',
+                                            'name' => 'teamspeak',
+                                            'class' => 'form-control',
+                                            'value' => $config['teamspeak']
                                         )); ?>
                                     </div>
 
