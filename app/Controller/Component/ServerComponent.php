@@ -63,7 +63,7 @@ class ServerComponent extends CakeObject
         foreach ($servers as $srv) {
             $server_id = $srv['Server']['id'];
             $server_type = $this->getServerType($server_id);
-            $check = ($server_type != "BUNGEE" && $type == "BUKKIT") || ($server_type != "BUKKIT" && $type == "BUNGEE") || $type == "ALL";
+            $check = $server_type == $type || $type == "ALL";
             if ($this->userIsConnected($username, $server_id) && $check) {
                 return $server_id;
             }
