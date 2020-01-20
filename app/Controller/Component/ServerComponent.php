@@ -62,9 +62,8 @@ class ServerComponent extends CakeObject
         $servers = ClassRegistry::init('Server')->find('all', ['conditions' => ['type' => 0]]);
         foreach ($servers as $srv) {
             $server_id = $srv['Server']['id'];
-            if (!$this->userIsConnected($username, $server_id))
-                continue;
-            return $server_id;
+            if ($this->userIsConnected($username, $server_id))
+                return $server_id;
         }
         return false;
     }
@@ -462,8 +461,6 @@ class ServerComponent extends CakeObject
     {
         $result = $this->call(['IS_CONNECTED' => $username], $server_id);
         if ($result && isset($result['IS_CONNECTED']) && $result['IS_CONNECTED'])
-            return true;
-        else if (!isset($result['IS_CONNECTED']))
             return true;
         return false;
     }
