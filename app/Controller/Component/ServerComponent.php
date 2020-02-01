@@ -57,16 +57,26 @@ class ServerComponent extends CakeObject
         return $result;
     }
 
-    function getServerIdConnected($username)
+    function getServerIdConnected($username, $type = "BUKKIT")
     {
         $servers = ClassRegistry::init('Server')->find('all', ['conditions' => ['type' => 0]]);
         foreach ($servers as $srv) {
             $server_id = $srv['Server']['id'];
-            if (!$this->userIsConnected($username, $server_id))
-                continue;
-            return $server_id;
+            $server_type = $this->getServerType($server_id);
+            $check = $server_type == $type || $type == "ALL";
+            if ($this->userIsConnected($username, $server_id) && $check) {
+                return $server_id;
+            }
         }
         return false;
+    }
+
+    public function getServerType($server_id = false)
+    {
+        if (!$server_id)
+            $server_id = $this->getFirstServerID();
+        $call = ['GET_PLUGIN_TYPE' => []];
+        return $this->call($call, $server_id)['GET_PLUGIN_TYPE'];
     }
 
     private function parseResult($result)
@@ -461,9 +471,7 @@ class ServerComponent extends CakeObject
     public function userIsConnected($username, $server_id = false)
     {
         $result = $this->call(['IS_CONNECTED' => $username], $server_id);
-        if ($result && isset($result['IS_CONNECTED']) && $result['IS_CONNECTED'])
-            return true;
-        else if (!isset($result['IS_CONNECTED']))
+        if ($result && isset($result['IS_CONNECTED']) && $result['IS_CONNECTED'] || $this->getConfig($server_id)['type'] == 1)
             return true;
         return false;
     }
