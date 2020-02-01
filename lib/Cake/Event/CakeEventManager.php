@@ -1,20 +1,21 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright	  Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link		  http://cakephp.org CakePHP(tm) Project
+ * @copyright	  Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link		  https://cakephp.org CakePHP(tm) Project
  * @package		  Cake.Event
  * @since		  CakePHP(tm) v 2.1
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('CakeEventListener', 'Event');
+App::uses('CakeEvent', 'Event');
 
 /**
  * The event manager is responsible for keeping track of event listeners, passing the correct
@@ -67,14 +68,14 @@ class CakeEventManager {
  */
 	public static function instance($manager = null) {
 		if ($manager instanceof CakeEventManager) {
-			self::$_generalManager = $manager;
+			static::$_generalManager = $manager;
 		}
-		if (empty(self::$_generalManager)) {
-			self::$_generalManager = new CakeEventManager();
+		if (empty(static::$_generalManager)) {
+			static::$_generalManager = new CakeEventManager();
 		}
 
-		self::$_generalManager->_isGlobal = true;
-		return self::$_generalManager;
+		static::$_generalManager->_isGlobal = true;
+		return static::$_generalManager;
 	}
 
 /**
@@ -105,7 +106,7 @@ class CakeEventManager {
 			$this->_attachSubscriber($callable);
 			return;
 		}
-		$options = $options + array('priority' => self::$defaultPriority, 'passParams' => false);
+		$options = $options + array('priority' => static::$defaultPriority, 'passParams' => false);
 		$this->_listeners[$eventKey][$options['priority']][] = array(
 			'callable' => $callable,
 			'passParams' => $options['passParams'],
@@ -221,6 +222,7 @@ class CakeEventManager {
  *
  * @param string|CakeEvent $event the event key name or instance of CakeEvent
  * @return CakeEvent
+ * @triggers $event
  */
 	public function dispatch($event) {
 		if (is_string($event)) {
@@ -264,7 +266,7 @@ class CakeEventManager {
 			$localListeners = $this->prioritisedListeners($eventKey);
 			$localListeners = empty($localListeners) ? array() : $localListeners;
 		}
-		$globalListeners = self::instance()->prioritisedListeners($eventKey);
+		$globalListeners = static::instance()->prioritisedListeners($eventKey);
 		$globalListeners = empty($globalListeners) ? array() : $globalListeners;
 
 		$priorities = array_merge(array_keys($globalListeners), array_keys($localListeners));

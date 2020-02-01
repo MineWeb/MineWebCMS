@@ -1,27 +1,26 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @package       Cake.Core
  * @since         CakePHP(tm) v 0.2.9
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('CakeLog', 'Log');
 App::uses('Dispatcher', 'Routing');
 App::uses('Router', 'Routing');
 App::uses('Set', 'Utility');
-App::uses('CakeLog', 'Log');
 
 /**
- * Object class provides a few generic methods used in several subclasses.
+ * CakeObject class provides a few generic methods used in several subclasses.
  *
  * Also includes methods for logging and the special method RequestAction,
  * to call other Controllers' Actions from anywhere.
@@ -32,13 +31,12 @@ class CakeObject {
 
 /**
  * Constructor, no-op
- *
  */
 	public function __construct() {
 	}
 
 /**
- * Object-to-string conversion.
+ * CakeObject-to-string conversion.
  * Each class can override this method as necessary.
  *
  * @return string The name of this class
@@ -150,7 +148,7 @@ class CakeObject {
  * Convenience method to write a message to CakeLog. See CakeLog::write()
  * for more information on writing to logs.
  *
- * @param string $msg Log message
+ * @param mixed $msg Log message
  * @param int $type Error type constant. Defined in app/Config/core.php.
  * @param null|string|array $scope The scope(s) a log message is being created in.
  *    See CakeLog::config() for more information on logging scopes.
@@ -197,8 +195,7 @@ class CakeObject {
 	protected function _mergeVars($properties, $class, $normalize = true) {
 		$classProperties = get_class_vars($class);
 		foreach ($properties as $var) {
-			if (
-				isset($classProperties[$var]) &&
+			if (isset($classProperties[$var]) &&
 				!empty($classProperties[$var]) &&
 				is_array($this->{$var}) &&
 				$this->{$var} != $classProperties[$var]

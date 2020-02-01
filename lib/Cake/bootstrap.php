@@ -4,18 +4,18 @@
  *
  * Handles loading of core files needed on every request
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @package       Cake
  * @since         CakePHP(tm) v 0.2.9
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 define('TIME_START', microtime(true));
@@ -54,6 +54,13 @@ if (!defined('APP')) {
 }
 
 /**
+ * Config Directory
+ */
+if (!defined('CONFIG')) {
+	define('CONFIG', ROOT . DS . APP_DIR . DS . 'Config' . DS);
+}
+
+/**
  * Path to the application's libs directory.
  */
 	define('APPLIBS', APP . 'Lib' . DS);
@@ -77,13 +84,6 @@ if (!defined('JS')) {
  */
 if (!defined('IMAGES')) {
 	define('IMAGES', WWW_ROOT . 'img' . DS);
-}
-
-/**
- * Path to the tests directory.
- */
-if (!defined('TESTS')) {
-	define('TESTS', APP . 'Test' . DS);
 }
 
 /**
@@ -146,14 +146,17 @@ App::uses('Configure', 'Core');
 App::uses('CakePlugin', 'Core');
 App::uses('Cache', 'Cache');
 App::uses('CakeObject', 'Core');
+App::uses('Object', 'Core');
 App::uses('Multibyte', 'I18n');
+
+App::$bootstrapping = true;
 
 /**
  * Full URL prefix
  */
 if (!defined('FULL_BASE_URL')) {
 	$s = null;
-	if (env('SERVER_PORT') == 443 || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) || (isset($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] == 'https')) {
+    if (env('SERVER_PORT') == 443 || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) || (isset($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] == 'https')) {
 		$s = 's';
 	}
 
@@ -170,19 +173,6 @@ Configure::write('App.imageBaseUrl', IMAGES_URL);
 Configure::write('App.cssBaseUrl', CSS_URL);
 Configure::write('App.jsBaseUrl', JS_URL);
 
-App::$bootstrapping = true;
-
-Configure::bootstrap(isset($boot) ? $boot : true);
-
-if (function_exists('mb_internal_encoding')) {
-	$encoding = Configure::read('App.encoding');
-	if (!empty($encoding)) {
-		mb_internal_encoding($encoding);
-	}
-	if (!empty($encoding) && function_exists('mb_regex_encoding')) {
-		mb_regex_encoding($encoding);
-	}
-}
 
 if (!function_exists('mb_stripos')) {
 
@@ -437,4 +427,16 @@ if (!function_exists('mb_encode_mimeheader')) {
 		return Multibyte::mimeEncode($str, $charset, $linefeed);
 	}
 
+}
+
+Configure::bootstrap(isset($boot) ? $boot : true);
+
+if (function_exists('mb_internal_encoding')) {
+	$encoding = Configure::read('App.encoding');
+	if (!empty($encoding)) {
+		mb_internal_encoding($encoding);
+	}
+	if (!empty($encoding) && function_exists('mb_regex_encoding')) {
+		mb_regex_encoding($encoding);
+	}
 }

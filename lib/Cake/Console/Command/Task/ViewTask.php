@@ -2,17 +2,17 @@
 /**
  * The View Tasks handles creating and updating view files.
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         CakePHP(tm) v 1.2
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('AppShell', 'Console/Command');
@@ -89,7 +89,7 @@ class ViewTask extends BakeTask {
 			$this->_interactive();
 		}
 		if (empty($this->args[0])) {
-			return;
+			return null;
 		}
 		if (!isset($this->connection)) {
 			$this->connection = 'default';
@@ -206,7 +206,7 @@ class ViewTask extends BakeTask {
 		$this->Controller->connection = $this->connection;
 		$this->controllerName = $this->Controller->getName();
 
-		$prompt = __d('cake_console', "Would you like bake to build your views interactively?\nWarning: Choosing no will overwrite %s views if it exist.", $this->controllerName);
+		$prompt = __d('cake_console', "Would you like bake to build your views interactively?\nWarning: Choosing no will overwrite %s views if they exist.", $this->controllerName);
 		$interactive = $this->in($prompt, array('y', 'n'), 'n');
 
 		if (strtolower($interactive) === 'n') {
@@ -248,7 +248,7 @@ class ViewTask extends BakeTask {
  *	'singularHumanName', 'pluralHumanName', 'fields', 'foreignKeys',
  *	'belongsTo', 'hasOne', 'hasMany', 'hasAndBelongsToMany'
  *
- * @return array Returns an variables to be made available to a view template
+ * @return array Returns a variables to be made available to a view template
  */
 	protected function _loadController() {
 		if (!$this->controllerName) {

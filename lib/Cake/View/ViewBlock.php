@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         CakePHP(tm) v2.1
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 /**
@@ -75,7 +75,7 @@ class ViewBlock {
  */
 	public function start($name) {
 		if (in_array($name, $this->_active)) {
-			throw new CakeException(__("A view block with the name '%s' is already/still open.", $name));
+			throw new CakeException(__d('cake', "A view block with the name '%s' is already/still open.", $name));
 		}
 		$this->_active[] = $name;
 		ob_start();
@@ -164,7 +164,7 @@ class ViewBlock {
  * @param string $name Name of the block
  * @param string $value The content for the block.
  * @return void
- * @deprecated As of 2.3 use ViewBlock::concat() instead.
+ * @deprecated 3.0.0 As of 2.3 use ViewBlock::concat() instead.
  */
 	public function append($name, $value = null) {
 		$this->concat($name, $value);
@@ -194,6 +194,16 @@ class ViewBlock {
 			return $default;
 		}
 		return $this->_blocks[$name];
+	}
+
+/**
+ * Check if a block exists
+ *
+ * @param string $name Name of the block
+ * @return bool
+ */
+	public function exists($name) {
+		return isset($this->_blocks[$name]);
 	}
 
 /**

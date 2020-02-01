@@ -1,15 +1,15 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('BasicAuthenticate', 'Controller/Component/Auth');
@@ -28,13 +28,13 @@ App::uses('BasicAuthenticate', 'Controller/Component/Auth');
  * ### Using Digest auth
  *
  * In your controller's components array, add auth + the required settings.
- * {{{
+ * ```
  *	public $components = array(
  *		'Auth' => array(
  *			'authenticate' => array('Digest')
  *		)
  *	);
- * }}}
+ * ```
  *
  * In your login function just call `$this->Auth->login()` without any checks for POST data. This
  * will send the authentication headers, and trigger the login dialog in the browser/client.
@@ -44,7 +44,7 @@ App::uses('BasicAuthenticate', 'Controller/Component/Auth');
  * Due to the Digest authentication specification, digest auth requires a special password value. You
  * can generate this password using `DigestAuthenticate::password()`
  *
- * `$digestPass = DigestAuthenticate::password($username, env('SERVER_NAME'), $password);`
+ * `$digestPass = DigestAuthenticate::password($username, $password, env('SERVER_NAME'));`
  *
  * Its recommended that you store this digest auth only password separate from password hashes used for other
  * login methods. For example `User.digest_pass` could be used for a digest password, while `User.password` would
@@ -60,6 +60,7 @@ class DigestAuthenticate extends BasicAuthenticate {
  *
  * - `fields` The fields to use to identify a user by.
  * - `userModel` The model name of the User, defaults to User.
+ * - `userFields` Array of fields to retrieve from User model, null to retrieve all. Defaults to null.
  * - `scope` Additional conditions to use when looking up and authenticating users,
  *    i.e. `array('User.is_active' => 1).`
  * - `recursive` The value of the recursive key passed to find(). Defaults to 0.
@@ -78,6 +79,7 @@ class DigestAuthenticate extends BasicAuthenticate {
 			'password' => 'password'
 		),
 		'userModel' => 'User',
+		'userFields' => null,
 		'scope' => array(),
 		'recursive' => 0,
 		'contain' => null,
@@ -134,7 +136,7 @@ class DigestAuthenticate extends BasicAuthenticate {
 /**
  * Gets the digest headers from the request/environment.
  *
- * @return array Array of digest information.
+ * @return array|bool|null Array of digest information.
  */
 	protected function _getDigest() {
 		$digest = env('PHP_AUTH_DIGEST');
@@ -154,7 +156,7 @@ class DigestAuthenticate extends BasicAuthenticate {
  * Parse the digest authentication headers and split them up.
  *
  * @param string $digest The raw digest authentication headers.
- * @return array An array of digest authentication headers
+ * @return array|null An array of digest authentication headers
  */
 	public function parseAuthData($digest) {
 		if (substr($digest, 0, 7) === 'Digest ') {
@@ -162,7 +164,7 @@ class DigestAuthenticate extends BasicAuthenticate {
 		}
 		$keys = $match = array();
 		$req = array('nonce' => 1, 'nc' => 1, 'cnonce' => 1, 'qop' => 1, 'username' => 1, 'uri' => 1, 'response' => 1);
-		preg_match_all('/(\w+)=([\'"]?)([a-zA-Z0-9\:\#\%@=.\/_-]+)\2/', $digest, $match, PREG_SET_ORDER);
+		preg_match_all('/(\w+)=([\'"]?)([a-zA-Z0-9\:\#\%\?\&@=\.\/_-]+)\2/', $digest, $match, PREG_SET_ORDER);
 
 		foreach ($match as $i) {
 			$keys[$i[1]] = $i[3];
