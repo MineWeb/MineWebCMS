@@ -328,7 +328,7 @@ class EyPluginComponent extends CakeObject
             $this->log('File : ' . $slug . ' is not a valid plugin! SQL Schema is not created!');
             return $this->alreadyCheckValid[$slug] = false;
         }
-        App::import('Model', 'CakeSchema');
+        /**App::import('Model', 'CakeSchema');
         $nameClass = ucfirst(strtolower($slug)) . 'AppSchema';
         if (!class_exists($nameClass))
             require_once $filenameTables;
@@ -359,7 +359,7 @@ class EyPluginComponent extends CakeObject
                     }
                 }
             }
-        }
+        }**/
 
         return $this->alreadyCheckValid[$slug] = true;
     }
