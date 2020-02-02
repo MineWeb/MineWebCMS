@@ -424,26 +424,30 @@ class EyPluginComponent extends CakeObject
 
         // Init & compare
         App::uses('CakeSchema', 'Model');
-        $this->Schema = new CakeSchema(array('name' => ucfirst(strtolower($slug)) . 'App', 'path' => ROOT . DS . 'app' . DS . 'Plugin' . DS . $slug . DS . 'SQL', 'file' => 'schema.php', 'connection' => 'default', 'plugin' => null, 'models' => false));
-        App::uses('SchemaShell', 'Console/Command');
-        $schemaShell = new SchemaShell();
+
+        $options = array(
+            'name' => ucfirst(strtolower($slug)) . 'AppUpdate',
+            'path' => ROOT . DS . 'app' . DS . 'Plugin' . DS . $slug . DS . 'SQL',
+            'file' => 'schemaUpdate.php',
+            'plugin' => null,
+            'connection' => 'default',
+            'models' => false
+        );
+
+        $get_new_file = file_get_contents($options['path'] . DS . 'schema.php');
+        $replace_class_name = str_replace('AppSchema', 'AppUpdateSchema', $get_new_file);
+        file_put_contents($options['path'] . DS . $options['file'] , $replace_class_name);
+        $this->Schema = new CakeSchema($options);
 
         $db = ConnectionManager::getDataSource($this->Schema->connection);
         $db->cacheSources = false;
 
-        $options = array(
-            'name' => $this->Schema->name,
-            'path' => $this->Schema->path,
-            'file' => $this->Schema->file,
-            'plugin' => null,
-            'connection' => $this->Schema->connection,
-            'models' => false
-        );
         $currentSchema = $this->Schema->read($options);
 
         if ($type === 'CREATE') {
             $pluginSchema = $this->Schema->load($options);
             $compare = $this->Schema->compare($currentSchema, $pluginSchema);
+            unlink($options['path'] . DS . $options['file']);
 
             // Check edits
             $contents = [];
