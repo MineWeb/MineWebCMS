@@ -433,7 +433,11 @@ class EyPluginComponent extends CakeObject
             'connection' => 'default',
             'models' => false
         );
-
+        
+        // Here we need to copy the new schema file to be able to require it
+		// Indeed, the old schema file has already been loaded (in plugin validation)
+		// and we can't load a file twice (we'll have some conflicts about re-defining
+		// the class, so we need to update the class name too)
         $get_new_file = file_get_contents($options['path'] . DS . 'schema.php');
         $replace_class_name = str_replace('AppSchema', 'AppUpdateSchema', $get_new_file);
         file_put_contents($options['path'] . DS . $options['file'] , $replace_class_name);
