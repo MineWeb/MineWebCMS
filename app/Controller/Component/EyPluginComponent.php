@@ -443,11 +443,11 @@ class EyPluginComponent extends CakeObject
         $db->cacheSources = false;
 
         $currentSchema = $this->Schema->read($options);
+        $pluginSchema = $this->Schema->load($options);
+        $compare = $this->Schema->compare($currentSchema, $pluginSchema);
+        unlink($options['path'] . DS . $options['file']);
 
         if ($type === 'CREATE') {
-            $pluginSchema = $this->Schema->load($options);
-            $compare = $this->Schema->compare($currentSchema, $pluginSchema);
-
             // Check edits
             $contents = [];
             foreach ($compare as $table => $changes) {
@@ -504,7 +504,6 @@ class EyPluginComponent extends CakeObject
                 }
             }
         }
-        unlink($options['path'] . DS . $options['file']);
 
         // Execute queries
         $error = array();
