@@ -447,7 +447,6 @@ class EyPluginComponent extends CakeObject
         if ($type === 'CREATE') {
             $pluginSchema = $this->Schema->load($options);
             $compare = $this->Schema->compare($currentSchema, $pluginSchema);
-            unlink($options['path'] . DS . $options['file']);
 
             // Check edits
             $contents = [];
@@ -505,6 +504,7 @@ class EyPluginComponent extends CakeObject
                 }
             }
         }
+        unlink($options['path'] . DS . $options['file']);
 
         // Execute queries
         $error = array();
