@@ -146,10 +146,6 @@ class UpdateComponent extends CakeObject
             $path = DS . 'app' . DS . 'Controller' . DS . 'Component' . DS . 'UpdateComponent.php';
             $newContent = $zip->getFromName("{$this->source['repo']}-{$this->lastVersion}{$path}");
             file_put_contents(ROOT . $path, $newContent);
-
-            $path = DS . 'app' . DS . 'Controller' . DS . 'Component' . DS . 'EyPluginComponent.php';
-            $newContent = $zip->getFromName("{$this->source['repo']}-{$this->lastVersion}{$path}");
-            file_put_contents(ROOT . $path, $newContent);
             $zip->close();
             return true;
         }
