@@ -194,18 +194,40 @@ class UpdateComponent extends CakeObject
      * This read new app/Config/Schema/schema.php and compare it with a generated
      * one from database.
      */
+
     public function updateDb()
     {
         // Load updated schema
         App::uses('CakeSchema', 'Model');
-        $schema = new CakeSchema();
 
-        $newSchema = $schema->load(['models' => false]); // This is a new instance of CakeSchema from schema.php loaded
+        $options = array(
+            'name' => 'App',
+            'path' => ROOT . DS . 'app' . DS . 'Config' . DS . 'Schema',
+            'file' => 'schemaUpdate.php',
+            'plugin' => null,
+            'connection' => 'default',
+            'models' => false
+        );
+
+		// Here we need to copy the new schema file to be able to require it
+		// Indeed, the old schema file has already been loaded (in plugin validation)
+		// and we can't load a file twice (we'll have some conflicts about re-defining
+		// the class, so we need to update the class name too)
+        $get_new_file = file_get_contents($options['path'] . DS . 'schema.php');
+        $replace_class_name = str_replace('AppSchema', 'AppUpdateSchema', $get_new_file);
+        file_put_contents($options['path'] . DS . $options['file'] , $replace_class_name);
+
+        $schema = new CakeSchema($options);
+
+        $newSchema = $schema->load($options); // This is a new instance of CakeSchema from schema.php loaded
         // Generate a schema from database
-        $currentSchema = $schema->read(['models' => false]); // This is the current CakeShema instance
+        $currentSchema = $schema->read($options); // This is the current CakeShema instance
+
 
         // Compare them
         $diffSchema = $schema->compare($currentSchema, $newSchema); // This is an object of diff between schemas
+
+        unlink($options['path'] . DS . $options['file']);
 
         $db = ConnectionManager::getDataSource('default');
         $queries = [];

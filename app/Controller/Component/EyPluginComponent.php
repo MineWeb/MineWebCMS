@@ -424,27 +424,34 @@ class EyPluginComponent extends CakeObject
 
         // Init & compare
         App::uses('CakeSchema', 'Model');
-        $this->Schema = new CakeSchema(array('name' => ucfirst(strtolower($slug)) . 'App', 'path' => ROOT . DS . 'app' . DS . 'Plugin' . DS . $slug . DS . 'SQL', 'file' => 'schema.php', 'connection' => 'default', 'plugin' => null, 'models' => false));
-        App::uses('SchemaShell', 'Console/Command');
-        $schemaShell = new SchemaShell();
+
+        $options = array(
+            'name' => ucfirst(strtolower($slug)) . 'AppUpdate',
+            'path' => ROOT . DS . 'app' . DS . 'Plugin' . DS . $slug . DS . 'SQL',
+            'file' => 'schemaUpdate.php',
+            'plugin' => null,
+            'connection' => 'default',
+            'models' => false
+        );
+        
+        // Here we need to copy the new schema file to be able to require it
+		// Indeed, the old schema file has already been loaded (in plugin validation)
+		// and we can't load a file twice (we'll have some conflicts about re-defining
+		// the class, so we need to update the class name too)
+        $get_new_file = file_get_contents($options['path'] . DS . 'schema.php');
+        $replace_class_name = str_replace('AppSchema', 'AppUpdateSchema', $get_new_file);
+        file_put_contents($options['path'] . DS . $options['file'] , $replace_class_name);
+        $this->Schema = new CakeSchema($options);
 
         $db = ConnectionManager::getDataSource($this->Schema->connection);
         $db->cacheSources = false;
 
-        $options = array(
-            'name' => $this->Schema->name,
-            'path' => $this->Schema->path,
-            'file' => $this->Schema->file,
-            'plugin' => null,
-            'connection' => $this->Schema->connection,
-            'models' => false
-        );
         $currentSchema = $this->Schema->read($options);
+        $pluginSchema = $this->Schema->load($options);
+        $compare = $this->Schema->compare($currentSchema, $pluginSchema);
+        unlink($options['path'] . DS . $options['file']);
 
         if ($type === 'CREATE') {
-            $pluginSchema = $this->Schema->load($options);
-            $compare = $this->Schema->compare($currentSchema, $pluginSchema);
-
             // Check edits
             $contents = [];
             foreach ($compare as $table => $changes) {
