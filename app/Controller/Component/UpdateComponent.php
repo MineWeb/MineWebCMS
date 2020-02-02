@@ -199,17 +199,6 @@ class UpdateComponent extends CakeObject
      * one from database.
      */
 
-    public function getCakeSchema($option)
-    {
-
-        App::uses('CakeSchema', 'Model');
-        $schema = new CakeSchema($option);
-        return $schema;
-
-
-    }
-
-
     public function updateDb()
     {
         // Load updated schema
