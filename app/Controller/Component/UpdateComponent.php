@@ -81,14 +81,6 @@ class UpdateComponent extends CakeObject
         }
     }
 
-    public function getCakeSchemaLoad($options)
-    {
-        App::uses('CakeSchema', 'Model');
-        $schema = new CakeSchema($options);
-        $pluginSchema = $schema->load($options);
-        return $pluginSchema;
-    }
-
     /**
      * Used to retrieve last release
      */
