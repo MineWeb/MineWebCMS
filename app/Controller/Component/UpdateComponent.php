@@ -201,7 +201,7 @@ class UpdateComponent extends CakeObject
         App::uses('CakeSchema', 'Model');
 
         $options = array(
-            'name' => 'App',
+            'name' => 'AppUpdate',
             'path' => ROOT . DS . 'app' . DS . 'Config' . DS . 'Schema',
             'file' => 'schemaUpdate.php',
             'plugin' => null,
@@ -209,10 +209,10 @@ class UpdateComponent extends CakeObject
             'models' => false
         );
 
-		// Here we need to copy the new schema file to be able to require it
-		// Indeed, the old schema file has already been loaded (in plugin validation)
-		// and we can't load a file twice (we'll have some conflicts about re-defining
-		// the class, so we need to update the class name too)
+        // Here we need to copy the new schema file to be able to require it
+        // Indeed, the old schema file has already been loaded (in plugin validation)
+        // and we can't load a file twice (we'll have some conflicts about re-defining
+        // the class, so we need to update the class name too)
         $get_new_file = file_get_contents($options['path'] . DS . 'schema.php');
         $replace_class_name = str_replace('AppSchema', 'AppUpdateSchema', $get_new_file);
         file_put_contents($options['path'] . DS . $options['file'] , $replace_class_name);
@@ -232,6 +232,10 @@ class UpdateComponent extends CakeObject
         $db = ConnectionManager::getDataSource('default');
         $queries = [];
         foreach ($diffSchema as $table => $changes) {
+            // If we have actions (maybe we've removed the only action `drop`)
+            if (count($diffSchema[$table]) > 0) {
+                $queries[$table] = $db->alterSchema(array($table => $diffSchema[$table]), $table);
+            }
             if (isset($diffSchema[$table]['create'])) {
                 $queries[$table] = $db->createSchema($newSchema, $table);
             } else {
@@ -248,11 +252,6 @@ class UpdateComponent extends CakeObject
             // Just delete `drop` action if we have removed all columns to drop (above)
             if (isset($diffSchema[$table]['drop']) && count($diffSchema[$table]['drop']) <= 0) {
                 unset($diffSchema[$table]['drop']);
-            }
-
-            // If we have actions (maybe we've removed the only action `drop`)
-            if (count($diffSchema[$table]) > 0) {
-                $queries[$table] = $db->alterSchema(array($table => $diffSchema[$table]), $table);
             }
         }
 
