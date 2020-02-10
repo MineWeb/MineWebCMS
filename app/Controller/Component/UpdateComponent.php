@@ -233,7 +233,7 @@ class UpdateComponent extends CakeObject
         $queries = [];
         foreach ($diffSchema as $table => $changes) {
             
-            // Just delete `drop` action if we have removed all columns to drop (above)
+            // If we have columns to drop, we need to check this is not about a plugin
             if (isset($diffSchema[$table]['drop'])) {
                 foreach ($diffSchema[$table]['drop'] as $column => $structure) { // For each drop, check column name
                     if (count(explode('-', $column)) > 1) { // Plugin columns are prefixed by `pluginname-<column>`
