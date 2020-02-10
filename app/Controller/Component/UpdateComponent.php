@@ -232,29 +232,19 @@ class UpdateComponent extends CakeObject
         $db = ConnectionManager::getDataSource('default');
         $queries = [];
         foreach ($diffSchema as $table => $changes) {
-            
-            
 
             // Just delete `drop` action if we have removed all columns to drop (above)
             if (isset($diffSchema[$table]['drop']) && count($diffSchema[$table]['drop']) <= 0) {
                 unset($diffSchema[$table]['drop']);
             }
-            
+
             // If we have actions (maybe we've removed the only action `drop`)
             if (count($diffSchema[$table]) > 0) {
                 $queries[$table] = $db->alterSchema(array($table => $diffSchema[$table]), $table);
             }
+
             if (isset($diffSchema[$table]['create'])) {
                 $queries[$table] = $db->createSchema($newSchema, $table);
-            } else {
-                // If we have columns to drop, we need to check this is not about a plugin
-                if (isset($diffSchema[$table]['drop'])) {
-                    foreach ($diffSchema[$table]['drop'] as $column => $structure) { // For each drop, check column name
-                        if (count(explode('-', $column)) > 1) { // Plugin columns are prefixed by `pluginname-<column>`
-                            unset($diffSchema[$table]['drop'][$column]);
-                        }
-                    }
-                }
             }
         }
 
