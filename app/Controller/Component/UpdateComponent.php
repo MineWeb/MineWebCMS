@@ -241,6 +241,10 @@ class UpdateComponent extends CakeObject
                     }
                 }
             }
+            // Just delete `drop` action if we have removed all columns to drop (above)
+            if (isset($diffSchema[$table]['drop']) && count($diffSchema[$table]['drop']) <= 0) {
+                unset($diffSchema[$table]['drop']);
+            }
 
             // If we have actions (maybe we've removed the only action `drop`)
             if (count($diffSchema[$table]) > 0) {
