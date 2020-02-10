@@ -232,6 +232,14 @@ class UpdateComponent extends CakeObject
         $db = ConnectionManager::getDataSource('default');
         $queries = [];
         foreach ($diffSchema as $table => $changes) {
+            
+            
+
+            // Just delete `drop` action if we have removed all columns to drop (above)
+            if (isset($diffSchema[$table]['drop']) && count($diffSchema[$table]['drop']) <= 0) {
+                unset($diffSchema[$table]['drop']);
+            }
+            
             // If we have actions (maybe we've removed the only action `drop`)
             if (count($diffSchema[$table]) > 0) {
                 $queries[$table] = $db->alterSchema(array($table => $diffSchema[$table]), $table);
@@ -247,11 +255,6 @@ class UpdateComponent extends CakeObject
                         }
                     }
                 }
-            }
-
-            // Just delete `drop` action if we have removed all columns to drop (above)
-            if (isset($diffSchema[$table]['drop']) && count($diffSchema[$table]['drop']) <= 0) {
-                unset($diffSchema[$table]['drop']);
             }
         }
 
