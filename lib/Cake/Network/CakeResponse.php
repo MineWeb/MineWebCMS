@@ -2,18 +2,18 @@
 /**
  * CakeResponse
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @package       Cake.Network
  * @since         CakePHP(tm) v 2.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('File', 'Utility');
@@ -68,14 +68,13 @@ class CakeResponse {
 		415 => 'Unsupported Media Type',
 		416 => 'Requested range not satisfiable',
 		417 => 'Expectation Failed',
+		429 => 'Too Many Requests',
 		500 => 'Internal Server Error',
 		501 => 'Not Implemented',
 		502 => 'Bad Gateway',
 		503 => 'Service Unavailable',
 		504 => 'Gateway Time-out',
-		505 => 'Unsupported Version',
-		900 => 'License exception',
-		901 => 'Mineweb custom message exception'
+		505 => 'Unsupported Version'
 	);
 
 /**
@@ -97,7 +96,7 @@ class CakeResponse {
 		'cpio' => 'application/x-cpio',
 		'cpt' => 'application/mac-compactpro',
 		'csh' => 'application/x-csh',
-		'csv' => array('text/csv', 'application/vnd.ms-excel', 'text/plain'),
+		'csv' => array('text/csv', 'application/vnd.ms-excel'),
 		'dcr' => 'application/x-director',
 		'dir' => 'application/x-director',
 		'dms' => 'application/octet-stream',
@@ -123,6 +122,7 @@ class CakeResponse {
 		'ips' => 'application/x-ipscript',
 		'ipx' => 'application/x-ipix',
 		'js' => 'application/javascript',
+		'jsonapi' => 'application/vnd.api+json',
 		'latex' => 'application/x-latex',
 		'lha' => 'application/octet-stream',
 		'lsp' => 'application/x-lisp',
@@ -265,6 +265,14 @@ class CakeResponse {
 		'xbm' => 'image/x-xbitmap',
 		'xpm' => 'image/x-xpixmap',
 		'xwd' => 'image/x-xwindowdump',
+		'psd' => array(
+			'application/photoshop',
+			'application/psd',
+			'image/psd',
+			'image/x-photoshop',
+			'image/photoshop',
+			'zz-application/zz-winassoc-psd'
+		),
 		'ice' => 'x-conference/x-cooltalk',
 		'iges' => 'model/iges',
 		'igs' => 'model/iges',
@@ -301,7 +309,8 @@ class CakeResponse {
 		'vcf' => 'text/x-vcard',
 		'vtt' => 'text/vtt',
 		'mkv' => 'video/x-matroska',
-		'pkpass' => 'application/vnd.apple.pkpass'
+		'pkpass' => 'application/vnd.apple.pkpass',
+		'ajax' => 'text/html'
 	);
 
 /**
@@ -322,7 +331,7 @@ class CakeResponse {
  * Content type to send. This can be an 'extension' that will be transformed using the $_mimetypes array
  * or a complete mime-type
  *
- * @var int
+ * @var string
  */
 	protected $_contentType = 'text/html';
 
@@ -365,7 +374,7 @@ class CakeResponse {
  * Holds all the cache directives that will be converted
  * into headers when sending the request
  *
- * @var string
+ * @var array
  */
 	protected $_cacheDirectives = array();
 
@@ -453,7 +462,7 @@ class CakeResponse {
 
 /**
  * Formats the Content-Type header based on the configured contentType and charset
- * the charset will only be set in the header if the response is of type text/*
+ * the charset will only be set in the header if the response is of type text
  *
  * @return void
  */
@@ -466,8 +475,7 @@ class CakeResponse {
 		);
 
 		$charset = false;
-		if (
-			$this->_charset &&
+		if ($this->_charset &&
 			(strpos($this->_contentType, 'text/') === 0 || in_array($this->_contentType, $whitelist))
 		) {
 			$charset = true;
@@ -516,17 +524,20 @@ class CakeResponse {
 /**
  * Sends a header to the client.
  *
+ * Will skip sending headers if headers have already been sent.
+ *
  * @param string $name the header name
  * @param string $value the header value
  * @return void
  */
 	protected function _sendHeader($name, $value = null) {
-		if (!headers_sent()) {
-			if ($value === null) {
-				header($name);
-			} else {
-				header("{$name}: {$value}");
-			}
+		if (headers_sent($filename, $linenum)) {
+			return;
+		}
+		if ($value === null) {
+			header($name);
+		} else {
+			header("{$name}: {$value}");
 		}
 	}
 
@@ -576,7 +587,7 @@ class CakeResponse {
 			if (is_numeric($header)) {
 				list($header, $value) = array($value, null);
 			}
-			if ($value === null) {
+			if ($value === null && strpos($header, ':') !== false) {
 				list($header, $value) = explode(':', $header, 2);
 			}
 			$this->_headers[$header] = is_array($value) ? array_map('trim', $value) : trim($value);
@@ -599,6 +610,7 @@ class CakeResponse {
 			return isset($headers['Location']) ? $headers['Location'] : null;
 		}
 		$this->header('Location', $url);
+		return null;
 	}
 
 /**
@@ -660,8 +672,9 @@ class CakeResponse {
  *
  *        For more on HTTP status codes see: http://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html#sec6.1
  *
- * @return mixed associative array of the HTTP codes as keys, and the message
- *    strings as values, or null of the given $code does not exist.
+ * @return array|null|true associative array of the HTTP codes as keys, and the message
+ *    strings as values, or null of the given $code does not exist. `true` if `$code` is
+ *    an array of valid codes.
  * @throws CakeException If an attempt is made to add an invalid status code
  */
 	public function httpCodes($code = null) {
@@ -705,8 +718,8 @@ class CakeResponse {
  *
  * e.g `type(array('jpg' => 'text/plain'));`
  *
- * @param string $contentType Content type key.
- * @return mixed current content type or false if supplied an invalid content type
+ * @param array|string|null $contentType Content type key.
+ * @return string|false current content type or false if supplied an invalid content type
  */
 	public function type($contentType = null) {
 		if ($contentType === null) {
@@ -794,8 +807,8 @@ class CakeResponse {
 /**
  * Sets the correct headers to instruct the client to cache the response.
  *
- * @param string $since a valid time since the response text has not been modified
- * @param string $time a valid time for cache expiry
+ * @param string|int $since a valid time since the response text has not been modified
+ * @param string|int $time a valid time for cache expiry
  * @return void
  */
 	public function cache($since, $time = '+1 day') {
@@ -830,7 +843,7 @@ class CakeResponse {
 			if (!$public && !$private && !$noCache) {
 				return null;
 			}
-			$sharable = $public || ! ($private || $noCache);
+			$sharable = $public || !($private || $noCache);
 			return $sharable;
 		}
 		if ($public) {
@@ -842,7 +855,7 @@ class CakeResponse {
 		}
 
 		$this->maxAge($time);
-		if (!$time) {
+		if ((int)$time === 0) {
 			$this->_setCacheControl();
 		}
 		return (bool)$public;
@@ -952,7 +965,7 @@ class CakeResponse {
 	}
 
 /**
- * Sets the Last-Modified header for the response by taking an modification time
+ * Sets the Last-Modified header for the response by taking a modification time
  * If called with no parameters it will return the current Last-Modified value
  *
  * ## Examples:
@@ -1005,7 +1018,7 @@ class CakeResponse {
  * parameters are passed, then an array with the current Vary header
  * value is returned
  *
- * @param string|array $cacheVariances a single Vary string or a array
+ * @param string|array $cacheVariances a single Vary string or an array
  *   containing the list for variances.
  * @return array
  */
@@ -1055,7 +1068,7 @@ class CakeResponse {
  * Returns a DateTime object initialized at the $time param and using UTC
  * as timezone
  *
- * @param string|DateTime $time Valid time string or unix timestamp or DateTime object.
+ * @param DateTime|int|string $time Valid time string or unix timestamp or DateTime object.
  * @return DateTime
  */
 	protected function _getUTCDate($time = null) {
@@ -1137,7 +1150,7 @@ class CakeResponse {
 /**
  * Checks whether a response has not been modified according to the 'If-None-Match'
  * (Etags) and 'If-Modified-Since' (last modification date) request
- * headers headers. If the response is detected to be not modified, it
+ * headers. If the response is detected to be not modified, it
  * is marked as so accordingly so the client can be informed of that.
  *
  * In order to mark a response as not modified, you need to set at least
@@ -1148,15 +1161,19 @@ class CakeResponse {
  * @return bool whether the response was marked as not modified or not.
  */
 	public function checkNotModified(CakeRequest $request) {
-		$etags = preg_split('/\s*,\s*/', $request->header('If-None-Match'), null, PREG_SPLIT_NO_EMPTY);
+		$ifNoneMatchHeader = $request->header('If-None-Match');
+		$etags = array();
+		if (is_string($ifNoneMatchHeader)) {
+			$etags = preg_split('/\s*,\s*/', $ifNoneMatchHeader, null, PREG_SPLIT_NO_EMPTY);
+		}
 		$modifiedSince = $request->header('If-Modified-Since');
+		$checks = array();
 		if ($responseTag = $this->etag()) {
-			$etagMatches = in_array('*', $etags) || in_array($responseTag, $etags);
+			$checks[] = in_array('*', $etags) || in_array($responseTag, $etags);
 		}
 		if ($modifiedSince) {
-			$timeMatches = strtotime($this->modified()) === strtotime($modifiedSince);
+			$checks[] = strtotime($this->modified()) === strtotime($modifiedSince);
 		}
-		$checks = compact('etagMatches', 'timeMatches');
 		if (empty($checks)) {
 			return false;
 		}
@@ -1189,9 +1206,6 @@ class CakeResponse {
  * If the method is called with an array as argument, it will set the cookie
  * configuration to the cookie container.
  *
- * @param array $options Either null to get all cookies, string for a specific cookie
- *  or array to set cookie.
- *
  * ### Options (when setting a configuration)
  *  - name: The Cookie name
  *  - value: Value of the cookie
@@ -1215,6 +1229,8 @@ class CakeResponse {
  *
  * `$this->cookie((array) $options)`
  *
+ * @param array|string $options Either null to get all cookies, string for a specific cookie
+ *  or array to set cookie.
  * @return mixed
  */
 	public function cookie($options = null) {
@@ -1249,7 +1265,7 @@ class CakeResponse {
  * This method allow multiple ways to setup the domains, see the examples
  *
  * ### Full URI
- * e.g `cors($request, 'http://www.cakephp.org');`
+ * e.g `cors($request, 'https://www.cakephp.org');`
  *
  * ### URI with wildcard
  * e.g `cors($request, 'http://*.cakephp.org');`
@@ -1261,7 +1277,7 @@ class CakeResponse {
  * e.g `cors($request, '*');`
  *
  * ### Whitelist of URIs
- * e.g `cors($request, array('http://www.cakephp.org', '*.google.com', 'https://myproject.github.io'));`
+ * e.g `cors($request, array('https://www.cakephp.org', '*.google.com', 'https://myproject.github.io'));`
  *
  * @param CakeRequest $request Request object
  * @param string|array $allowedDomains List of allowed domains, see method description for more details
@@ -1301,11 +1317,7 @@ class CakeResponse {
 				$result[] = array('preg' => '@.@', 'original' => '*');
 				continue;
 			}
-
-			$original = $preg = $domain;
-			if (strpos($domain, '://') === false) {
-				$preg = ($requestIsSSL ? 'https://' : 'http://') . $domain;
-			}
+			$original = $domain;
 			$preg = '@' . str_replace('*', '.*', $domain) . '@';
 			$result[] = compact('original', 'preg');
 		}
@@ -1335,7 +1347,7 @@ class CakeResponse {
 			'download' => null
 		);
 
-		if (strpos($path, '..') !== false) {
+		if (strpos($path, '../') !== false || strpos($path, '..\\') !== false) {
 			throw new NotFoundException(__d(
 				'cake_dev',
 				'The requested file contains `..` and will not be read.'
@@ -1379,18 +1391,17 @@ class CakeResponse {
 				$name = $options['name'];
 			}
 			$this->download($name);
-			$this->header('Accept-Ranges', 'bytes');
 			$this->header('Content-Transfer-Encoding', 'binary');
+		}
 
-			$httpRange = env('HTTP_RANGE');
-			if (isset($httpRange)) {
-				$this->_fileRange($file, $httpRange);
-			} else {
-				$this->header('Content-Length', $fileSize);
-			}
+		$this->header('Accept-Ranges', 'bytes');
+		$httpRange = env('HTTP_RANGE');
+		if (isset($httpRange)) {
+			$this->_fileRange($file, $httpRange);
 		} else {
 			$this->header('Content-Length', $fileSize);
 		}
+
 		$this->_clearBuffer();
 		$this->_file = $file;
 	}
@@ -1406,11 +1417,16 @@ class CakeResponse {
  * @return void
  */
 	protected function _fileRange($file, $httpRange) {
-		list(, $range) = explode('=', $httpRange);
-		list($start, $end) = explode('-', $range);
-
 		$fileSize = $file->size();
 		$lastByte = $fileSize - 1;
+		$start = 0;
+		$end = $lastByte;
+
+		preg_match('/^bytes\s*=\s*(\d+)?\s*-\s*(\d+)?$/', $httpRange, $matches);
+		if ($matches) {
+			$start = $matches[1];
+			$end = isset($matches[2]) ? $matches[2] : '';
+		}
 
 		if ($start === '') {
 			$start = $fileSize - $end;
@@ -1449,7 +1465,7 @@ class CakeResponse {
 		$file->open('rb');
 
 		$end = $start = false;
-		if ($range) {
+		if ($range && is_array($range)) {
 			list($start, $end) = $range;
 		}
 		if ($start !== false) {
@@ -1495,9 +1511,10 @@ class CakeResponse {
  * @return bool
  */
 	protected function _clearBuffer() {
-		//@codingStandardsIgnoreStart
-		return @ob_end_clean();
-		//@codingStandardsIgnoreEnd
+		if (ob_get_length()) {
+			return ob_end_clean();
+		}
+		return true;
 	}
 
 /**
@@ -1508,7 +1525,9 @@ class CakeResponse {
 	protected function _flushBuffer() {
 		//@codingStandardsIgnoreStart
 		@flush();
-		@ob_flush();
+		if (ob_get_level()) {
+			@ob_flush();
+		}
 		//@codingStandardsIgnoreEnd
 	}
 

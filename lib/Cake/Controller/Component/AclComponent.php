@@ -1,17 +1,17 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @package       Cake.Controller.Component
  * @since         CakePHP(tm) v 0.10.0.1076
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('Component', 'Controller');
@@ -25,7 +25,7 @@ App::uses('AclInterface', 'Controller/Component/Acl');
  * you specify must implement `AclInterface`
  *
  * @package       Cake.Controller.Component
- * @link http://book.cakephp.org/2.0/en/core-libraries/components/access-control-lists.html
+ * @link https://book.cakephp.org/2.0/en/core-libraries/components/access-control-lists.html
  */
 class AclComponent extends Component {
 
@@ -79,7 +79,7 @@ class AclComponent extends Component {
  * Will call the initialize method on the adapter if setting a new one.
  *
  * @param AclInterface|string $adapter Instance of AclInterface or a string name of the class to use. (optional)
- * @return AclInterface|void either null, or the adapter implementation.
+ * @return AclInterface|null Either null, or the adapter implementation.
  * @throws CakeException when the given class is not an instance of AclInterface
  */
 	public function adapter($adapter = null) {
@@ -92,7 +92,7 @@ class AclComponent extends Component {
 			}
 			$this->_Instance = $adapter;
 			$this->_Instance->initialize($this);
-			return;
+			return null;
 		}
 		return $this->_Instance;
 	}
@@ -156,7 +156,7 @@ class AclComponent extends Component {
  * @param array|string|Model $aco ACO The controlled object identifier. See `AclNode::node()` for possible formats
  * @param string $action Action (defaults to *)
  * @return bool Success
- * @deprecated Will be removed in 3.0.
+ * @deprecated 3.0.0 Will be removed in 3.0.
  */
 	public function grant($aro, $aco, $action = "*") {
 		trigger_error(__d('cake_dev', '%s is deprecated, use %s instead', 'AclComponent::grant()', 'allow()'), E_USER_WARNING);
@@ -170,7 +170,7 @@ class AclComponent extends Component {
  * @param array|string|Model $aco ACO The controlled object identifier. See `AclNode::node()` for possible formats
  * @param string $action Action (defaults to *)
  * @return bool Success
- * @deprecated Will be removed in 3.0.
+ * @deprecated 3.0.0 Will be removed in 3.0.
  */
 	public function revoke($aro, $aco, $action = "*") {
 		trigger_error(__d('cake_dev', '%s is deprecated, use %s instead', 'AclComponent::revoke()', 'deny()'), E_USER_WARNING);

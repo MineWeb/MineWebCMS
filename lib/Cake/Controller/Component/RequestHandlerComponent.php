@@ -6,18 +6,18 @@
  * and the like. These units have no use for Ajax requests, and this Component can tell how Cake
  * should respond to the different needs of a handheld computer and a desktop machine.
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @package       Cake.Controller.Component
  * @since         CakePHP(tm) v 0.10.4.1076
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('Component', 'Controller');
@@ -31,8 +31,7 @@ App::uses('Xml', 'Utility');
  * should respond to the different needs of a handheld computer and a desktop machine.
  *
  * @package       Cake.Controller.Component
- * @link http://book.cakephp.org/2.0/en/core-libraries/components/request-handling.html
- *
+ * @link https://book.cakephp.org/2.0/en/core-libraries/components/request-handling.html
  */
 class RequestHandlerComponent extends Component {
 
@@ -72,6 +71,13 @@ class RequestHandlerComponent extends Component {
  * @see Router::parseExtensions()
  */
 	public $ext = null;
+
+/**
+ * Array of parameters parsed from the URL.
+ *
+ * @var array|null
+ */
+	public $params = null;
 
 /**
  * The template to use when rendering the given content type.
@@ -133,7 +139,7 @@ class RequestHandlerComponent extends Component {
 		if (empty($this->ext) || $this->ext === 'html') {
 			$this->_setExtension();
 		}
-		$this->params = $controller->params;
+		$this->params = $controller->request->params;
 		if (!empty($this->settings['viewClassMap'])) {
 			$this->viewClassMap($this->settings['viewClassMap']);
 		}
@@ -162,7 +168,7 @@ class RequestHandlerComponent extends Component {
 		$accepts = $this->response->mapType($accept);
 		$preferedTypes = current($accepts);
 		if (array_intersect($preferedTypes, array('html', 'xhtml'))) {
-			return null;
+			return;
 		}
 
 		$extensions = Router::extensions();
@@ -214,7 +220,7 @@ class RequestHandlerComponent extends Component {
 
 		foreach ($this->_inputTypeMap as $type => $handler) {
 			if ($this->requestedWith($type)) {
-				$input = call_user_func_array(array($controller->request, 'input'), $handler);
+				$input = (array)call_user_func_array(array($controller->request, 'input'), $handler);
 				$controller->request->data = $input;
 			}
 		}
@@ -229,7 +235,7 @@ class RequestHandlerComponent extends Component {
  */
 	public function convertXml($xml) {
 		try {
-			$xml = Xml::build($xml);
+			$xml = Xml::build($xml, array('readFile' => false));
 			if (isset($xml->data)) {
 				return Xml::toArray($xml->data);
 			}
@@ -265,8 +271,10 @@ class RequestHandlerComponent extends Component {
 		}
 		if (!empty($status)) {
 			$statusCode = $this->response->httpCodes($status);
-			$code = key($statusCode);
-			$this->response->statusCode($code);
+			if (is_array($statusCode)) {
+				$code = key($statusCode);
+				$this->response->statusCode($code);
+			}
 		}
 		$this->response->body($this->requestAction($url, array('return', 'bare' => false)));
 		$this->response->send();
@@ -280,7 +288,7 @@ class RequestHandlerComponent extends Component {
  * "304 Not Modified" header.
  *
  * @param Controller $controller Controller instance.
- * @return bool false if the render process should be aborted
+ * @return bool False if the render process should be aborted.
  */
 	public function beforeRender(Controller $controller) {
 		if ($this->settings['checkHttpCache'] && $this->response->checkNotModified($this->request)) {
@@ -292,7 +300,7 @@ class RequestHandlerComponent extends Component {
  * Returns true if the current HTTP request is Ajax, false otherwise
  *
  * @return bool True if call is Ajax
- * @deprecated use `$this->request->is('ajax')` instead.
+ * @deprecated 3.0.0 Use `$this->request->is('ajax')` instead.
  */
 	public function isAjax() {
 		return $this->request->is('ajax');
@@ -302,7 +310,7 @@ class RequestHandlerComponent extends Component {
  * Returns true if the current HTTP request is coming from a Flash-based client
  *
  * @return bool True if call is from Flash
- * @deprecated use `$this->request->is('flash')` instead.
+ * @deprecated 3.0.0 Use `$this->request->is('flash')` instead.
  */
 	public function isFlash() {
 		return $this->request->is('flash');
@@ -312,7 +320,7 @@ class RequestHandlerComponent extends Component {
  * Returns true if the current request is over HTTPS, false otherwise.
  *
  * @return bool True if call is over HTTPS
- * @deprecated use `$this->request->is('ssl')` instead.
+ * @deprecated 3.0.0 Use `$this->request->is('ssl')` instead.
  */
 	public function isSSL() {
 		return $this->request->is('ssl');
@@ -368,7 +376,7 @@ class RequestHandlerComponent extends Component {
  * Returns true if the current call a POST request
  *
  * @return bool True if call is a POST
- * @deprecated Use $this->request->is('post'); from your controller.
+ * @deprecated 3.0.0 Use $this->request->is('post'); from your controller.
  */
 	public function isPost() {
 		return $this->request->is('post');
@@ -378,7 +386,7 @@ class RequestHandlerComponent extends Component {
  * Returns true if the current call a PUT request
  *
  * @return bool True if call is a PUT
- * @deprecated Use $this->request->is('put'); from your controller.
+ * @deprecated 3.0.0 Use $this->request->is('put'); from your controller.
  */
 	public function isPut() {
 		return $this->request->is('put');
@@ -388,7 +396,7 @@ class RequestHandlerComponent extends Component {
  * Returns true if the current call a GET request
  *
  * @return bool True if call is a GET
- * @deprecated Use $this->request->is('get'); from your controller.
+ * @deprecated 3.0.0 Use $this->request->is('get'); from your controller.
  */
 	public function isGet() {
 		return $this->request->is('get');
@@ -398,7 +406,7 @@ class RequestHandlerComponent extends Component {
  * Returns true if the current call a DELETE request
  *
  * @return bool True if call is a DELETE
- * @deprecated Use $this->request->is('delete'); from your controller.
+ * @deprecated 3.0.0 Use $this->request->is('delete'); from your controller.
  */
 	public function isDelete() {
 		return $this->request->is('delete');
@@ -425,7 +433,7 @@ class RequestHandlerComponent extends Component {
  * @param string|array $type The Content-type or array of Content-types assigned to the name,
  *    i.e. "text/html", or "application/xml"
  * @return void
- * @deprecated use `$this->response->type()` instead.
+ * @deprecated 3.0.0 Use `$this->response->type()` instead.
  */
 	public function setContent($name, $type = null) {
 		$this->response->type(array($name => $type));
@@ -435,7 +443,7 @@ class RequestHandlerComponent extends Component {
  * Gets the server name from which this request was referred
  *
  * @return string Server address
- * @deprecated use $this->request->referer() from your controller instead
+ * @deprecated 3.0.0 Use $this->request->referer() from your controller instead
  */
 	public function getReferer() {
 		return $this->request->referer(false);
@@ -447,7 +455,7 @@ class RequestHandlerComponent extends Component {
  * @param bool $safe Use safe = false when you think the user might manipulate
  *   their HTTP_CLIENT_IP header. Setting $safe = false will also look at HTTP_X_FORWARDED_FOR
  * @return string Client IP address
- * @deprecated use $this->request->clientIp() from your, controller instead.
+ * @deprecated 3.0.0 Use $this->request->clientIp() from your, controller instead.
  */
 	public function getClientIP($safe = true) {
 		return $this->request->clientIp($safe);
@@ -506,7 +514,12 @@ class RequestHandlerComponent extends Component {
  *   in the request content type will be returned.
  */
 	public function requestedWith($type = null) {
-		if (!$this->request->is('post') && !$this->request->is('put')) {
+		if (
+			!$this->request->is('patch') &&
+			!$this->request->is('post') &&
+			!$this->request->is('put') &&
+			!$this->request->is('delete')
+		) {
 			return null;
 		}
 		if (is_array($type)) {
@@ -714,7 +727,7 @@ class RequestHandlerComponent extends Component {
  *
  * @param string|array $cType Either a string content type to map, or an array of types.
  * @return string|array Aliases for the types provided.
- * @deprecated Use $this->response->mapType() in your controller instead.
+ * @deprecated 3.0.0 Use $this->response->mapType() in your controller instead.
  */
 	public function mapType($cType) {
 		return $this->response->mapType($cType);
@@ -724,7 +737,7 @@ class RequestHandlerComponent extends Component {
  * Maps a content type alias back to its mime-type(s)
  *
  * @param string|array $alias String alias to convert back into a content type. Or an array of aliases to map.
- * @return string Null on an undefined alias. String value of the mapped alias type. If an
+ * @return string|null Null on an undefined alias. String value of the mapped alias type. If an
  *   alias maps to more than one content type, the first one will be returned.
  */
 	public function mapAlias($alias) {

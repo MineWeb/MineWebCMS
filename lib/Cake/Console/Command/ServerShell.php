@@ -2,17 +2,17 @@
 /**
  * built-in Server Shell
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         CakePHP(tm) v 2.3.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('AppShell', 'Console/Command');
@@ -65,8 +65,8 @@ class ServerShell extends AppShell {
  * @return void
  */
 	public function initialize() {
-		$this->_host = self::DEFAULT_HOST;
-		$this->_port = self::DEFAULT_PORT;
+		$this->_host = static::DEFAULT_HOST;
+		$this->_port = static::DEFAULT_PORT;
 		$this->_documentRoot = WWW_ROOT;
 	}
 
@@ -78,7 +78,7 @@ class ServerShell extends AppShell {
  * or otherwise modify the pre-command flow.
  *
  * @return void
- * @link http://book.cakephp.org/2.0/en/console-and-shells.html#Shell::startup
+ * @link https://book.cakephp.org/2.0/en/console-and-shells.html#Shell::startup
  */
 	public function startup() {
 		if (!empty($this->params['host'])) {
@@ -91,7 +91,7 @@ class ServerShell extends AppShell {
 			$this->_documentRoot = $this->params['document_root'];
 		}
 
-		// for windows
+		// for Windows
 		if (substr($this->_documentRoot, -1, 1) === DIRECTORY_SEPARATOR) {
 			$this->_documentRoot = substr($this->_documentRoot, 0, strlen($this->_documentRoot) - 1);
 		}
@@ -135,7 +135,7 @@ class ServerShell extends AppShell {
 			escapeshellarg($this->_documentRoot . '/index.php')
 		);
 
-		$port = ($this->_port == self::DEFAULT_PORT) ? '' : ':' . $this->_port;
+		$port = ($this->_port == static::DEFAULT_PORT) ? '' : ':' . $this->_port;
 		$this->out(__d('cake_console', 'built-in server is running in http://%s%s/', $this->_host, $port));
 		system($command);
 	}

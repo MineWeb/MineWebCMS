@@ -4,18 +4,18 @@
  *
  * Adds methods and automagic functionality to CakePHP Models.
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @package       Cake.Model
  * @since         CakePHP(tm) v 1.2.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 /**
@@ -30,11 +30,11 @@
  * Behaviors can provide mixin like features by declaring public methods. These methods should expect
  * the model instance to be shifted onto the parameter list.
  *
- * {{{
+ * ```
  * function doSomething(Model $model, $arg1, $arg2) {
  *		//do something
  * }
- * }}}
+ * ```
  *
  * Would be called like `$this->Model->doSomething($arg1, $arg2);`.
  *
@@ -45,13 +45,13 @@
  * be declared in your behaviors `$mapMethods` array. The method signature for a mapped method is slightly different
  * than a normal behavior mixin method.
  *
- * {{{
+ * ```
  * public $mapMethods = array('/do(\w+)/' => 'doSomething');
  *
  * function doSomething(Model $model, $method, $arg1, $arg2) {
  *		//do something
  * }
- * }}}
+ * ```
  *
  * The above will map every doXXX() method call to the behavior. As you can see, the model is
  * still the first parameter, but the called method name will be the 2nd parameter. This allows
@@ -61,7 +61,7 @@
  * @see Model::$actsAs
  * @see BehaviorCollection::load()
  */
-class ModelBehavior extends Object {
+class ModelBehavior extends CakeObject {
 
 /**
  * Contains configuration settings for use with individual model objects. This
