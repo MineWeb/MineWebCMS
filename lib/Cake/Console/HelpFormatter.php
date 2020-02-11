@@ -2,19 +2,19 @@
 /**
  * HelpFormatter
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-App::uses('CakeString', 'Utility');
+App::uses('CakeText', 'Utility');
 
 /**
  * HelpFormatter formats help for console shells. Can format to either
@@ -45,7 +45,7 @@ class HelpFormatter {
 	protected $_maxOptions = 6;
 
 /**
- * Build the help formatter for a an OptionParser
+ * Build the help formatter for an OptionParser
  *
  * @param ConsoleOptionParser $parser The option parser help is being generated for.
  */
@@ -64,7 +64,7 @@ class HelpFormatter {
 		$out = array();
 		$description = $parser->description();
 		if (!empty($description)) {
-			$out[] = CakeString::wrap($description, $width);
+			$out[] = CakeText::wrap($description, $width);
 			$out[] = '';
 		}
 		$out[] = __d('cake_console', '<info>Usage:</info>');
@@ -76,7 +76,7 @@ class HelpFormatter {
 			$out[] = '';
 			$max = $this->_getMaxLength($subcommands) + 2;
 			foreach ($subcommands as $command) {
-				$out[] = CakeString::wrap($command->help($max), array(
+				$out[] = CakeText::wrap($command->help($max), array(
 					'width' => $width,
 					'indent' => str_repeat(' ', $max),
 					'indentAt' => 1
@@ -93,7 +93,7 @@ class HelpFormatter {
 			$out[] = __d('cake_console', '<info>Options:</info>');
 			$out[] = '';
 			foreach ($options as $option) {
-				$out[] = CakeString::wrap($option->help($max), array(
+				$out[] = CakeText::wrap($option->help($max), array(
 					'width' => $width,
 					'indent' => str_repeat(' ', $max),
 					'indentAt' => 1
@@ -108,7 +108,7 @@ class HelpFormatter {
 			$out[] = __d('cake_console', '<info>Arguments:</info>');
 			$out[] = '';
 			foreach ($arguments as $argument) {
-				$out[] = CakeString::wrap($argument->help($max), array(
+				$out[] = CakeText::wrap($argument->help($max), array(
 					'width' => $width,
 					'indent' => str_repeat(' ', $max),
 					'indentAt' => 1
@@ -118,7 +118,7 @@ class HelpFormatter {
 		}
 		$epilog = $parser->epilog();
 		if (!empty($epilog)) {
-			$out[] = CakeString::wrap($epilog, $width);
+			$out[] = CakeText::wrap($epilog, $width);
 			$out[] = '';
 		}
 		return implode("\n", $out);
@@ -182,7 +182,6 @@ class HelpFormatter {
 		$xml->addChild('command', $parser->command());
 		$xml->addChild('description', $parser->description());
 
-		$xml->addChild('epilog', $parser->epilog());
 		$subcommands = $xml->addChild('subcommands');
 		foreach ($parser->subcommands() as $command) {
 			$command->xml($subcommands);
@@ -195,6 +194,7 @@ class HelpFormatter {
 		foreach ($parser->arguments() as $argument) {
 			$argument->xml($arguments);
 		}
+		$xml->addChild('epilog', $parser->epilog());
 		return $string ? $xml->asXml() : $xml;
 	}
 

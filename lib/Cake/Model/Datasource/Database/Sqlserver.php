@@ -2,18 +2,18 @@
 /**
  * MS SQL Server layer for DBO
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @package       Cake.Model.Datasource.Database
  * @since         CakePHP(tm) v 0.10.5.1790
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('DboSource', 'Model/Datasource');
@@ -72,7 +72,6 @@ class Sqlserver extends DboSource {
  * @var array
  */
 	protected $_baseConfig = array(
-		'persistent' => true,
 		'host' => 'localhost\SQLEXPRESS',
 		'login' => '',
 		'password' => '',
@@ -85,12 +84,15 @@ class Sqlserver extends DboSource {
  * MS SQL column definition
  *
  * @var array
+ * @link https://msdn.microsoft.com/en-us/library/ms187752.aspx SQL Server Data Types
  */
 	public $columns = array(
 		'primary_key' => array('name' => 'IDENTITY (1, 1) NOT NULL'),
 		'string' => array('name' => 'nvarchar', 'limit' => '255'),
 		'text' => array('name' => 'nvarchar', 'limit' => 'MAX'),
 		'integer' => array('name' => 'int', 'formatter' => 'intval'),
+		'smallinteger' => array('name' => 'smallint', 'formatter' => 'intval'),
+		'tinyinteger' => array('name' => 'tinyint', 'formatter' => 'intval'),
 		'biginteger' => array('name' => 'bigint'),
 		'numeric' => array('name' => 'decimal', 'formatter' => 'floatval'),
 		'decimal' => array('name' => 'decimal', 'formatter' => 'floatval'),
@@ -115,15 +117,24 @@ class Sqlserver extends DboSource {
 /**
  * Connects to the database using options in the given configuration array.
  *
+ * Please note that the PDO::ATTR_PERSISTENT attribute is not supported by
+ * the SQL Server PHP PDO drivers.  As a result you cannot use the
+ * persistent config option when connecting to a SQL Server  (for more
+ * information see: https://github.com/Microsoft/msphpsql/issues/65).
+ *
  * @return bool True if the database could be connected, else false
+ * @throws InvalidArgumentException if an unsupported setting is in the database config
  * @throws MissingConnectionException
  */
 	public function connect() {
 		$config = $this->config;
 		$this->connected = false;
 
+		if (isset($config['persistent']) && $config['persistent']) {
+			throw new InvalidArgumentException('Config setting "persistent" cannot be set to true, as the Sqlserver PDO driver does not support PDO::ATTR_PERSISTENT');
+		}
+
 		$flags = $config['flags'] + array(
-			PDO::ATTR_PERSISTENT => $config['persistent'],
 			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 		);
 
@@ -291,6 +302,10 @@ class Sqlserver extends DboSource {
 					$prepend = 'DISTINCT ';
 					$fields[$i] = trim(str_replace('DISTINCT', '', $fields[$i]));
 				}
+				if (strpos($fields[$i], 'COUNT(DISTINCT') !== false) {
+					$prepend = 'COUNT(DISTINCT ';
+					$fields[$i] = trim(str_replace('COUNT(DISTINCT', '', $this->_quoteFields($fields[$i])));
+				}
 
 				if (!preg_match('/\s+AS\s+/i', $fields[$i])) {
 					if (substr($fields[$i], -1) === '*') {
@@ -400,7 +415,7 @@ class Sqlserver extends DboSource {
 				$rt = ' TOP';
 			}
 			$rt .= sprintf(' %u', $limit);
-			if (is_int($offset) && $offset > 0) {
+			if ((is_int($offset) || ctype_digit($offset)) && $offset > 0) {
 				$rt = sprintf(' OFFSET %u ROWS FETCH FIRST %u ROWS ONLY', $offset, $limit);
 			}
 			return $rt;
@@ -434,6 +449,12 @@ class Sqlserver extends DboSource {
 		}
 		if (strpos($col, 'bigint') !== false) {
 			return 'biginteger';
+		}
+		if (strpos($col, 'smallint') !== false) {
+			return 'smallinteger';
+		}
+		if (strpos($col, 'tinyint') !== false) {
+			return 'tinyinteger';
 		}
 		if (strpos($col, 'int') !== false) {
 			return 'integer';
@@ -473,6 +494,9 @@ class Sqlserver extends DboSource {
 			}
 			if (in_array($length->Type, array('nchar', 'nvarchar'))) {
 				return floor($length->Length / 2);
+			}
+			if ($length->Type === 'text') {
+				return null;
 			}
 			return $length->Length;
 		}
@@ -523,6 +547,9 @@ class Sqlserver extends DboSource {
 				extract($data);
 				$fields = trim($fields);
 
+				$having = !empty($having) ? " $having" : '';
+				$lock = !empty($lock) ? " $lock" : '';
+
 				if (strpos($limit, 'TOP') !== false && strpos($fields, 'DISTINCT ') === 0) {
 					$limit = 'DISTINCT ' . trim($limit);
 					$fields = substr($fields, 9);
@@ -537,14 +564,14 @@ class Sqlserver extends DboSource {
 				if (version_compare($this->getVersion(), '11', '<') && preg_match('/FETCH\sFIRST\s+([0-9]+)/i', $limit, $offset)) {
 					preg_match('/OFFSET\s*(\d+)\s*.*?(\d+)\s*ROWS/', $limit, $limitOffset);
 
-					$limit = 'TOP ' . intval($limitOffset[2]);
-					$page = intval($limitOffset[1] / $limitOffset[2]);
-					$offset = intval($limitOffset[2] * $page);
+					$limit = 'TOP ' . (int)$limitOffset[2];
+					$page = (int)($limitOffset[1] / $limitOffset[2]);
+					$offset = (int)($limitOffset[2] * $page);
 
-					$rowCounter = self::ROW_COUNTER;
+					$rowCounter = static::ROW_COUNTER;
 					$sql = "SELECT {$limit} * FROM (
 							SELECT {$fields}, ROW_NUMBER() OVER ({$order}) AS {$rowCounter}
-							FROM {$table} {$alias} {$joins} {$conditions} {$group}
+							FROM {$table} {$alias}{$lock} {$joins} {$conditions} {$group}{$having}
 						) AS _cake_paging_
 						WHERE _cake_paging_.{$rowCounter} > {$offset}
 						ORDER BY _cake_paging_.{$rowCounter}
@@ -552,9 +579,9 @@ class Sqlserver extends DboSource {
 					return trim($sql);
 				}
 				if (strpos($limit, 'FETCH') !== false) {
-					return trim("SELECT {$fields} FROM {$table} {$alias} {$joins} {$conditions} {$group} {$order} {$limit}");
+					return trim("SELECT {$fields} FROM {$table} {$alias}{$lock} {$joins} {$conditions} {$group}{$having} {$order} {$limit}");
 				}
-				return trim("SELECT {$limit} {$fields} FROM {$table} {$alias} {$joins} {$conditions} {$group} {$order}");
+				return trim("SELECT {$limit} {$fields} FROM {$table} {$alias}{$lock} {$joins} {$conditions} {$group}{$having} {$order}");
 			case "schema":
 				extract($data);
 
@@ -581,11 +608,12 @@ class Sqlserver extends DboSource {
  *
  * @param string $data String to be prepared for use in an SQL statement
  * @param string $column The column into which this data will be inserted
+ * @param bool $null Column allows NULL values
  * @return string Quoted and escaped data
  */
-	public function value($data, $column = null) {
+	public function value($data, $column = null, $null = true) {
 		if ($data === null || is_array($data) || is_object($data)) {
-			return parent::value($data, $column);
+			return parent::value($data, $column, $null);
 		}
 		if (in_array($data, array('{$__cakeID__$}', '{$__cakeForeignKey__$}'), true)) {
 			return $data;
@@ -600,7 +628,7 @@ class Sqlserver extends DboSource {
 			case 'text':
 				return 'N' . $this->_connection->quote($data, PDO::PARAM_STR);
 			default:
-				return parent::value($data, $column);
+				return parent::value($data, $column, $null);
 		}
 	}
 
@@ -630,7 +658,7 @@ class Sqlserver extends DboSource {
 			$resultRow = array();
 			foreach ($this->map as $col => $meta) {
 				list($table, $column, $type) = $meta;
-				if ($table === 0 && $column === self::ROW_COUNTER) {
+				if ($table === 0 && $column === static::ROW_COUNTER) {
 					continue;
 				}
 				$resultRow[$table][$column] = $row[$col];
@@ -810,4 +838,18 @@ class Sqlserver extends DboSource {
 		return $this->config['schema'];
 	}
 
+/**
+ * Returns a locking hint for the given mode.
+ *
+ * Currently, this method only returns WITH (UPDLOCK) when the mode is set to true.
+ *
+ * @param mixed $mode Lock mode
+ * @return string|null WITH (UPDLOCK) clause or null
+ */
+	public function getLockingHint($mode) {
+		if ($mode !== true) {
+			return null;
+		}
+		return ' WITH (UPDLOCK)';
+	}
 }

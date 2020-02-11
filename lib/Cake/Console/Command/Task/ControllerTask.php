@@ -2,17 +2,17 @@
 /**
  * The ControllerTask handles creating and updating controller files.
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         CakePHP(tm) v 1.2
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('AppShell', 'Console/Command');
@@ -182,11 +182,11 @@ class ControllerTask extends BakeTask {
 				$components = $this->doComponents();
 
 				$wannaUseSession = $this->in(
-					__d('cake_console', "Would you like to use Session flash messages?"), array('y', 'n'), 'y'
+					__d('cake_console', "Would you like to use the FlashComponent to display flash messages?"), array('y', 'n'), 'y'
 				);
 
 				if (strtolower($wannaUseSession) === 'y') {
-					array_push($components, 'Session');
+					array_push($components, 'Session', 'Flash');
 				}
 				array_unique($components);
 			}
@@ -248,10 +248,10 @@ class ControllerTask extends BakeTask {
 		);
 
 		foreach ($properties as $var => $title) {
-			if (count($$var)) {
+			if (count(${$var})) {
 				$output = '';
-				$length = count($$var);
-				foreach ($$var as $i => $propElement) {
+				$length = count(${$var});
+				foreach (${$var} as $i => $propElement) {
 					if ($i != $length - 1) {
 						$output .= ucfirst($propElement) . ', ';
 					} else {
@@ -331,6 +331,12 @@ class ControllerTask extends BakeTask {
 	public function bake($controllerName, $actions = '', $helpers = null, $components = null) {
 		$this->out("\n" . __d('cake_console', 'Baking controller class for %s...', $controllerName), 1, Shell::QUIET);
 
+		if ($helpers === null) {
+			$helpers = array();
+		}
+		if ($components === null) {
+			$components = array();
+		}
 		$isScaffold = ($actions === 'scaffold') ? true : false;
 
 		$this->Template->set(array(
@@ -452,14 +458,14 @@ class ControllerTask extends BakeTask {
 				return $this->_stop();
 			}
 
-			if (!$enteredController || intval($enteredController) > count($controllers)) {
+			if (!$enteredController || (int)$enteredController > count($controllers)) {
 				$this->err(__d('cake_console', "The Controller name you supplied was empty,\nor the number you selected was not an option. Please try again."));
 				$enteredController = '';
 			}
 		}
 
-		if (intval($enteredController) > 0 && intval($enteredController) <= count($controllers)) {
-			$controllerName = $controllers[intval($enteredController) - 1];
+		if ((int)$enteredController > 0 && (int)$enteredController <= count($controllers)) {
+			$controllerName = $controllers[(int)$enteredController - 1];
 		} else {
 			$controllerName = Inflector::camelize($enteredController);
 		}

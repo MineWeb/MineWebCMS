@@ -6,17 +6,17 @@
  *
  * You can configure a FileEngine cache, using Cache::config()
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         CakePHP(tm) v 1.2.0.4933
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 /**
@@ -109,7 +109,7 @@ class FileEngine extends CacheEngine {
  * @return bool True if the data was successfully cached, false on failure
  */
 	public function write($key, $data, $duration) {
-		if ($data === '' || !$this->_init) {
+		if (!$this->_init) {
 			return false;
 		}
 
@@ -132,7 +132,7 @@ class FileEngine extends CacheEngine {
 		}
 
 		$expires = time() + $duration;
-		$contents = $expires . $lineBreak . $data . $lineBreak;
+		$contents = implode(array($expires, $lineBreak, $data, $lineBreak));
 
 		if ($this->settings['lock']) {
 			$this->_File->flock(LOCK_EX);
@@ -165,7 +165,7 @@ class FileEngine extends CacheEngine {
 
 		$this->_File->rewind();
 		$time = time();
-		$cachetime = intval($this->_File->current());
+		$cachetime = (int)$this->_File->current();
 
 		if ($cachetime !== false && ($cachetime < $time || ($time + $this->settings['duration']) < $cachetime)) {
 			if ($this->settings['lock']) {
@@ -267,15 +267,20 @@ class FileEngine extends CacheEngine {
 		}
 
 		$dir = dir($path);
+		if ($dir === false) {
+			return;
+		}
+
 		while (($entry = $dir->read()) !== false) {
 			if (substr($entry, 0, $prefixLength) !== $this->settings['prefix']) {
 				continue;
 			}
-			$filePath = $path . $entry;
-			if (!file_exists($filePath) || is_dir($filePath)) {
+
+			try {
+				$file = new SplFileObject($path . $entry, 'r');
+			} catch (Exception $e) {
 				continue;
 			}
-			$file = new SplFileObject($path . $entry, 'r');
 
 			if ($threshold) {
 				$mtime = $file->getMTime();
@@ -347,7 +352,11 @@ class FileEngine extends CacheEngine {
 		if (!$createKey && !$path->isFile()) {
 			return false;
 		}
-		if (empty($this->_File) || $this->_File->getBaseName() !== $key) {
+		if (
+			empty($this->_File) ||
+			$this->_File->getBaseName() !== $key ||
+			$this->_File->valid() === false
+		) {
 			$exists = file_exists($path->getPathname());
 			try {
 				$this->_File = $path->openFile('c+');
@@ -373,16 +382,16 @@ class FileEngine extends CacheEngine {
  */
 	protected function _active() {
 		$dir = new SplFileInfo($this->settings['path']);
-		$path = $dir->getPathname();
-		if (!is_dir($path)) {
-			if(!mkdir($path, 0775, true)) {
-				exit(file_get_contents(ROOT.'/lib/Cake/View/Errors/permissions_errors.ctp'));
-				return false;
-			} 
-		}
+        $path = $dir->getPathname();
+        if (!is_dir($path)) {
+            if(!mkdir($path, 0775, true)) {
+                exit(file_get_contents(ROOT.'/lib/Cake/View/Errors/permissions_errors.ctp'));
+                return false;
+            }
+        }
 		if ($this->_init && !($dir->isDir() && $dir->isWritable())) {
 			$this->_init = false;
-			exit(file_get_contents(ROOT.'/lib/Cake/View/Errors/permissions_errors.ctp'));
+            exit(file_get_contents(ROOT.'/lib/Cake/View/Errors/permissions_errors.ctp'));
 			return false;
 		}
 		return true;
@@ -428,5 +437,22 @@ class FileEngine extends CacheEngine {
 			}
 		}
 		return true;
+	}
+
+/**
+ * Write data for key into cache if it doesn't exist already.
+ * If it already exists, it fails and returns false.
+ *
+ * @param string $key Identifier for the data.
+ * @param mixed $value Data to be cached.
+ * @param int $duration How long to cache the data, in seconds.
+ * @return bool True if the data was successfully cached, false on failure.
+ */
+	public function add($key, $value, $duration) {
+		$cachedValue = $this->read($key);
+		if ($cachedValue === false) {
+			return $this->write($key, $value, $duration);
+		}
+		return false;
 	}
 }

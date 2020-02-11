@@ -1,17 +1,17 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @package       Cake.View.Scaffolds
  * @since         CakePHP(tm) v 0.10.0.1076
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 ?>
 <div class="<?php echo $pluralVar; ?> form">
@@ -35,9 +35,9 @@
 		<li><?php echo $this->Html->link(__d('cake', 'List') . ' ' . $pluralHumanName, array('action' => 'index')); ?></li>
 <?php
 		$done = array();
-		foreach ($associations as $_type => $_data) {
-			foreach ($_data as $_alias => $_details) {
-				if ($_details['controller'] != $this->name && !in_array($_details['controller'], $done)) {
+		foreach ($associations as $_type => $_data):
+			foreach ($_data as $_alias => $_details):
+				if ($_details['controller'] != $this->name && !in_array($_details['controller'], $done)):
 					echo "\t\t<li>" . $this->Html->link(
 						__d('cake', 'List %s', Inflector::humanize($_details['controller'])),
 						array('plugin' => $_details['plugin'], 'controller' => $_details['controller'], 'action' => 'index')
@@ -47,9 +47,9 @@
 						array('plugin' => $_details['plugin'], 'controller' => $_details['controller'], 'action' => 'add')
 					) . "</li>\n";
 					$done[] = $_details['controller'];
-				}
-			}
-		}
+				endif;
+			endforeach;
+		endforeach;
 ?>
 	</ul>
 </div>

@@ -2,18 +2,18 @@
 /**
  * Basic authentication
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @package       Cake.Network.Http
  * @since         CakePHP(tm) v 2.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 /**
@@ -33,7 +33,7 @@ class BasicAuthentication {
  */
 	public static function authentication(HttpSocket $http, &$authInfo) {
 		if (isset($authInfo['user'], $authInfo['pass'])) {
-			$http->request['header']['Authorization'] = self::_generateHeader($authInfo['user'], $authInfo['pass']);
+			$http->request['header']['Authorization'] = static::_generateHeader($authInfo['user'], $authInfo['pass']);
 		}
 	}
 
@@ -47,7 +47,7 @@ class BasicAuthentication {
  */
 	public static function proxyAuthentication(HttpSocket $http, &$proxyInfo) {
 		if (isset($proxyInfo['user'], $proxyInfo['pass'])) {
-			$http->request['header']['Proxy-Authorization'] = self::_generateHeader($proxyInfo['user'], $proxyInfo['pass']);
+			$http->request['header']['Proxy-Authorization'] = static::_generateHeader($proxyInfo['user'], $proxyInfo['pass']);
 		}
 	}
 

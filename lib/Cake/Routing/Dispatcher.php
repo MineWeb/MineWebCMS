@@ -5,18 +5,18 @@
  *
  * This is the heart of CakePHP's operation.
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @package       Cake.Routing
  * @since         CakePHP(tm) v 0.2.9
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('Router', 'Routing');
@@ -97,7 +97,7 @@ class Dispatcher implements CakeEventListener {
 
 		foreach ($filters as $index => $filter) {
 			$settings = array();
-			if (is_array($filter) && !is_int($index)) {
+			if (is_array($filter) && !is_int($index) && class_exists($index)) {
 				$settings = $filter;
 				$filter = $index;
 			}
@@ -137,7 +137,9 @@ class Dispatcher implements CakeEventListener {
  * @param CakeRequest $request Request object to dispatch.
  * @param CakeResponse $response Response object to put the results of the dispatch into.
  * @param array $additionalParams Settings array ("bare", "return") which is melded with the GET and POST params
- * @return string|void if `$request['return']` is set then it returns response body, null otherwise
+ * @return string|null if `$request['return']` is set then it returns response body, null otherwise
+ * @triggers Dispatcher.beforeDispatch $this, compact('request', 'response', 'additionalParams')
+ * @triggers Dispatcher.afterDispatch $this, compact('request', 'response')
  * @throws MissingControllerException When the controller is missing.
  */
 	public function dispatch(CakeRequest $request, CakeResponse $response, $additionalParams = array()) {
@@ -150,7 +152,7 @@ class Dispatcher implements CakeEventListener {
 				return $beforeEvent->result->body();
 			}
 			$beforeEvent->result->send();
-			return;
+			return null;
 		}
 
 		$controller = $this->_getController($request, $response);
