@@ -2,17 +2,17 @@
 /**
  * Acl Shell provides Acl access in the CLI environment
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         CakePHP(tm) v 1.2.0.5012
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('AppShell', 'Console/Command');
@@ -89,7 +89,7 @@ class AclShell extends AppShell {
 				$this->args = null;
 				return $this->DbConfig->execute();
 			}
-			require_once APP . 'Config' . DS . 'database.php';
+			require_once CONFIG . 'database.php';
 
 			if (!in_array($this->command, array('initdb'))) {
 				$collection = new ComponentCollection();
@@ -558,7 +558,7 @@ class AclShell extends AppShell {
  * or an array of properties to use in AcoNode::node()
  *
  * @param string $class Class type you want (Aro/Aco)
- * @param string|array $identifier A mixed identifier for finding the node.
+ * @param string|array|null $identifier A mixed identifier for finding the node, otherwise null.
  * @return int Integer of NodeId. Will trigger an error if nothing is found.
  */
 	protected function _getNodeId($class, $identifier) {
@@ -568,7 +568,7 @@ class AclShell extends AppShell {
 				$identifier = var_export($identifier, true);
 			}
 			$this->error(__d('cake_console', 'Could not find node using reference "%s"', $identifier));
-			return;
+			return null;
 		}
 		return Hash::get($node, "0.{$class}.id");
 	}
@@ -579,8 +579,8 @@ class AclShell extends AppShell {
  * @return array aro, aco, action
  */
 	protected function _getParams() {
-		$aro = is_numeric($this->args[0]) ? intval($this->args[0]) : $this->args[0];
-		$aco = is_numeric($this->args[1]) ? intval($this->args[1]) : $this->args[1];
+		$aro = is_numeric($this->args[0]) ? (int)$this->args[0] : $this->args[0];
+		$aco = is_numeric($this->args[1]) ? (int)$this->args[1] : $this->args[1];
 		$aroName = $aro;
 		$acoName = $aco;
 

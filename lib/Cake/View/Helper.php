@@ -1,23 +1,22 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @package       Cake.View
  * @since         CakePHP(tm) v 0.2.9
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('Router', 'Routing');
 App::uses('Hash', 'Utility');
 App::uses('Inflector', 'Utility');
-App::uses('CakeObject', 'Core');
 
 /**
  * Abstract base class for all other Helpers in CakePHP.
@@ -146,9 +145,48 @@ class Helper extends CakeObject {
  * @var array
  */
 	protected $_minimizedAttributes = array(
-		'compact', 'checked', 'declare', 'readonly', 'disabled', 'selected',
-		'defer', 'ismap', 'nohref', 'noshade', 'nowrap', 'multiple', 'noresize',
-		'autoplay', 'controls', 'loop', 'muted', 'required', 'novalidate', 'formnovalidate'
+		'allowfullscreen',
+		'async',
+		'autofocus',
+		'autoplay',
+		'checked',
+		'compact',
+		'controls',
+		'declare',
+		'default',
+		'defaultchecked',
+		'defaultmuted',
+		'defaultselected',
+		'defer',
+		'disabled',
+		'enabled',
+		'formnovalidate',
+		'hidden',
+		'indeterminate',
+		'inert',
+		'ismap',
+		'itemscope',
+		'loop',
+		'multiple',
+		'muted',
+		'nohref',
+		'noresize',
+		'noshade',
+		'novalidate',
+		'nowrap',
+		'open',
+		'pauseonexit',
+		'readonly',
+		'required',
+		'reversed',
+		'scoped',
+		'seamless',
+		'selected',
+		'sortable',
+		'spellcheck',
+		'truespeed',
+		'typemustmatch',
+		'visible'
 	);
 
 /**
@@ -198,7 +236,7 @@ class Helper extends CakeObject {
  *
  * @param string $name Name of the property being accessed.
  * @return mixed Helper or property found at $name
- * @deprecated Accessing request properties through this method is deprecated and will be removed in 3.0.
+ * @deprecated 3.0.0 Accessing request properties through this method is deprecated and will be removed in 3.0.
  */
 	public function __get($name) {
 		if (isset($this->_helperMap[$name]) && !isset($this->{$name})) {
@@ -227,7 +265,7 @@ class Helper extends CakeObject {
  * @param string $name Name of the property being accessed.
  * @param mixed $value Value to set.
  * @return void
- * @deprecated This method will be removed in 3.0
+ * @deprecated 3.0.0 This method will be removed in 3.0
  */
 	public function __set($name, $value) {
 		switch ($name) {
@@ -254,7 +292,7 @@ class Helper extends CakeObject {
  *    the reverse routing features of CakePHP.
  * @param bool $full If true, the full base URL will be prepended to the result
  * @return string Full translated URL with base path.
- * @link http://book.cakephp.org/2.0/en/views/helpers.html
+ * @link https://book.cakephp.org/2.0/en/views/helpers.html
  */
 	public function url($url = null, $full = false) {
 		return h(Router::url($url, $full));
@@ -321,8 +359,7 @@ class Helper extends CakeObject {
 		if (!empty($options['pathPrefix']) && $path[0] !== '/') {
 			$path = $options['pathPrefix'] . $path;
 		}
-		if (
-			!empty($options['ext']) &&
+		if (!empty($options['ext']) &&
 			strpos($path, '?') === false &&
 			substr($path, -strlen($options['ext'])) !== $options['ext']
 		) {
@@ -407,8 +444,8 @@ class Helper extends CakeObject {
  * content is the best way to prevent all possible attacks.
  *
  * @param string|array $output Either an array of strings to clean or a single string to clean.
- * @return string|array cleaned content for output
- * @deprecated This method will be removed in 3.0
+ * @return string|array|null Cleaned content for output
+ * @deprecated 3.0.0 This method will be removed in 3.0
  */
 	public function clean($output) {
 		$this->_reset();
@@ -450,7 +487,7 @@ class Helper extends CakeObject {
  * @param string $insertBefore String to be inserted before options.
  * @param string $insertAfter String to be inserted after options.
  * @return string Composed attributes.
- * @deprecated This method will be moved to HtmlHelper in 3.0
+ * @deprecated 3.0.0 This method will be moved to HtmlHelper in 3.0
  */
 	protected function _parseAttributes($options, $exclude = null, $insertBefore = ' ', $insertAfter = null) {
 		if (!is_string($options)) {
@@ -484,7 +521,7 @@ class Helper extends CakeObject {
  * @param string $value The value of the attribute to create.
  * @param bool $escape Define if the value must be escaped
  * @return string The composed attribute.
- * @deprecated This method will be moved to HtmlHelper in 3.0
+ * @deprecated 3.0.0 This method will be moved to HtmlHelper in 3.0
  */
 	protected function _formatAttribute($key, $value, $escape = true) {
 		if (is_array($value)) {
@@ -509,7 +546,7 @@ class Helper extends CakeObject {
  *
  * @param string $message Message to be displayed
  * @param string $okCode Code to be executed after user chose 'OK'
- * @param string $cancelCode Code to be executed after user chose 'Cancel'
+ * @param string $cancelCode Code to be executed after user chose 'Cancel', also executed when okCode doesn't return
  * @param array $options Array of options
  * @return string onclick JS code
  */
@@ -544,8 +581,7 @@ class Helper extends CakeObject {
 		$lastPart = isset($parts[$count - 1]) ? $parts[$count - 1] : null;
 
 		// Either 'body' or 'date.month' type inputs.
-		if (
-			($count === 1 && $this->_modelScope && !$setScope) ||
+		if (($count === 1 && $this->_modelScope && !$setScope) ||
 			(
 				$count === 2 &&
 				in_array($lastPart, $this->_fieldSuffixes) &&
@@ -557,8 +593,7 @@ class Helper extends CakeObject {
 		}
 
 		// 0.name, 0.created.month style inputs. Excludes inputs with the modelScope in them.
-		if (
-			$count >= 2 &&
+		if ($count >= 2 &&
 			is_numeric($parts[0]) &&
 			!is_numeric($parts[1]) &&
 			$this->_modelScope &&
@@ -802,7 +837,7 @@ class Helper extends CakeObject {
  *
  * @param string $str String to be output.
  * @return string
- * @deprecated This method will be removed in future versions.
+ * @deprecated 3.0.0 This method will be removed in future versions.
  */
 	public function output($str) {
 		return $str;

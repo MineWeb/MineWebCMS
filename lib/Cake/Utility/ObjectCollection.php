@@ -1,15 +1,15 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 /**
@@ -56,7 +56,7 @@ abstract class ObjectCollection {
  *
  * @param string $name Name of object to load.
  * @param array $options Array of configuration options for the object to be constructed.
- * @return object the constructed object
+ * @return CakeObject the constructed object
  */
 	abstract public function load($name, $options = array());
 
@@ -95,6 +95,7 @@ abstract class ObjectCollection {
 		if (empty($this->_enabled)) {
 			return true;
 		}
+		$subject = null;
 		if ($callback instanceof CakeEvent) {
 			$event = $callback;
 			if (is_array($event->data)) {
@@ -125,12 +126,11 @@ abstract class ObjectCollection {
 		}
 		$result = null;
 		foreach ($list as $name) {
-			$result = call_user_func_array(array($this->_loaded[$name], $callback), compact('subject') + $params);
+			$result = call_user_func_array(array($this->_loaded[$name], $callback), array_filter(compact('subject')) + $params);
 			if ($options['collectReturn'] === true) {
 				$collected[] = $result;
 			}
-			if (
-				$options['break'] && ($result === $options['breakOn'] ||
+			if ($options['break'] && ($result === $options['breakOn'] ||
 				(is_array($options['breakOn']) && in_array($result, $options['breakOn'], true)))
 			) {
 				return $result;
@@ -177,6 +177,7 @@ abstract class ObjectCollection {
 	public function enable($name, $prioritize = true) {
 		$enabled = false;
 		foreach ((array)$name as $object) {
+			list(, $object) = pluginSplit($object);
 			if (isset($this->_loaded[$object]) && !isset($this->_enabled[$object])) {
 				$priority = $this->defaultPriority;
 				if (isset($this->_loaded[$object]->settings['priority'])) {
@@ -220,6 +221,7 @@ abstract class ObjectCollection {
 			$name = array($name => $priority);
 		}
 		foreach ($name as $object => $objectPriority) {
+			list(, $object) = pluginSplit($object);
 			if (isset($this->_loaded[$object])) {
 				if ($objectPriority === null) {
 					$objectPriority = $this->defaultPriority;
@@ -234,7 +236,7 @@ abstract class ObjectCollection {
 	}
 
 /**
- * Disables callbacks on a object or array of objects. Public object methods are still
+ * Disables callbacks on an object or array of objects. Public object methods are still
  * callable as normal.
  *
  * @param string|array $name CamelCased name of the objects(s) to disable (string or array)
@@ -242,6 +244,7 @@ abstract class ObjectCollection {
  */
 	public function disable($name) {
 		foreach ((array)$name as $object) {
+			list(, $object) = pluginSplit($object);
 			unset($this->_enabled[$object]);
 		}
 	}
@@ -256,6 +259,7 @@ abstract class ObjectCollection {
  */
 	public function enabled($name = null) {
 		if (!empty($name)) {
+			list(, $name) = pluginSplit($name);
 			return isset($this->_enabled[$name]);
 		}
 		return array_keys($this->_enabled);
@@ -268,7 +272,7 @@ abstract class ObjectCollection {
  *   returns an array of currently-attached objects
  * @return mixed If $name is specified, returns the boolean status of the corresponding object.
  *    Otherwise, returns an array of all attached objects.
- * @deprecated Will be removed in 3.0. Use loaded instead.
+ * @deprecated 3.0.0 Will be removed in 3.0. Use loaded instead.
  */
 	public function attached($name = null) {
 		return $this->loaded($name);
@@ -284,6 +288,7 @@ abstract class ObjectCollection {
  */
 	public function loaded($name = null) {
 		if (!empty($name)) {
+			list(, $name) = pluginSplit($name);
 			return isset($this->_loaded[$name]);
 		}
 		return array_keys($this->_loaded);
@@ -304,7 +309,7 @@ abstract class ObjectCollection {
  * Adds or overwrites an instantiated object to the collection
  *
  * @param string $name Name of the object
- * @param Object $object The object to use
+ * @param CakeObject $object The object to use
  * @return array Loaded objects
  */
 	public function set($name = null, $object = null) {

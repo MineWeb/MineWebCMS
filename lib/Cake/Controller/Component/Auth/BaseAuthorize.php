@@ -1,15 +1,15 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('Hash', 'Utility');
@@ -124,21 +124,21 @@ abstract class BaseAuthorize {
  *
  * Create additional mappings for a standard CRUD operation:
  *
- * {{{
+ * ```
  * $this->Auth->mapActions(array('create' => array('add', 'register'));
- * }}}
+ * ```
  *
  * Or equivalently:
  *
- * {{{
+ * ```
  * $this->Auth->mapActions(array('register' => 'create', 'add' => 'create'));
- * }}}
+ * ```
  *
  * Create mappings for custom CRUD operations:
  *
- * {{{
+ * ```
  * $this->Auth->mapActions(array('range' => 'search'));
- * }}}
+ * ```
  *
  * You can use the custom CRUD operations to create additional generic permissions
  * that behave like CRUD operations. Doing this will require additional columns on the

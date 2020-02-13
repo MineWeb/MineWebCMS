@@ -1,18 +1,16 @@
 <?php
 /**
- * The Plugin Task handles creating an empty plugin, ready to be used
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         CakePHP(tm) v 1.2
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('AppShell', 'Console/Command');
@@ -47,7 +45,7 @@ class PluginTask extends AppShell {
  */
 	public function initialize() {
 		$this->path = current(App::path('plugins'));
-		$this->bootstrap = APP . 'Config' . DS . 'bootstrap.php';
+		$this->bootstrap = CONFIG . 'bootstrap.php';
 	}
 
 /**
@@ -108,18 +106,25 @@ class PluginTask extends AppShell {
 			$Folder = new Folder($this->path . $plugin);
 			$directories = array(
 				'Config' . DS . 'Schema',
-				'Model' . DS . 'Behavior',
-				'Model' . DS . 'Datasource',
 				'Console' . DS . 'Command' . DS . 'Task',
+				'Console' . DS . 'Templates',
 				'Controller' . DS . 'Component',
 				'Lib',
-				'View' . DS . 'Helper',
+				'Locale' . DS . 'eng' . DS . 'LC_MESSAGES',
+				'Model' . DS . 'Behavior',
+				'Model' . DS . 'Datasource',
 				'Test' . DS . 'Case' . DS . 'Controller' . DS . 'Component',
-				'Test' . DS . 'Case' . DS . 'View' . DS . 'Helper',
+				'Test' . DS . 'Case' . DS . 'Lib',
 				'Test' . DS . 'Case' . DS . 'Model' . DS . 'Behavior',
+				'Test' . DS . 'Case' . DS . 'Model' . DS . 'Datasource',
+				'Test' . DS . 'Case' . DS . 'View' . DS . 'Helper',
 				'Test' . DS . 'Fixture',
-				'Vendor',
-				'webroot'
+				'View' . DS . 'Elements',
+				'View' . DS . 'Helper',
+				'View' . DS . 'Layouts',
+				'webroot' . DS . 'css',
+				'webroot' . DS . 'js',
+				'webroot' . DS . 'img',
 			);
 
 			foreach ($directories as $directory) {
@@ -203,7 +208,7 @@ class PluginTask extends AppShell {
 			}
 			$prompt = __d('cake_console', 'Choose a plugin path from the paths above.');
 			$choice = $this->in($prompt, null, 1);
-			if (intval($choice) > 0 && intval($choice) <= $max) {
+			if ((int)$choice > 0 && (int)$choice <= $max) {
 				$valid = true;
 			}
 		}

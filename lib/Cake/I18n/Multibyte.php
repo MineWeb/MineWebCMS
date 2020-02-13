@@ -2,18 +2,18 @@
 /**
  * Multibyte handling methods.
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @package       Cake.I18n
  * @since         CakePHP(tm) v 1.2.0.6833
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 /**
@@ -550,11 +550,11 @@ class Multibyte {
 				$matched = true;
 			} else {
 				$matched = false;
-				$keys = self::_find($char, 'upper');
+				$keys = static::_find($char, 'upper');
 
 				if (!empty($keys)) {
 					foreach ($keys as $key => $value) {
-						if ($keys[$key]['upper'] == $char && count($keys[$key]['lower'][0]) === 1) {
+						if ($keys[$key]['upper'] == $char && count($keys[$key]['lower']) > 0) {
 							$lowerCase[] = $keys[$key]['lower'][0];
 							$matched = true;
 							break 1;
@@ -596,7 +596,7 @@ class Multibyte {
 
 			} else {
 				$matched = false;
-				$keys = self::_find($char);
+				$keys = static::_find($char);
 				$keyCount = count($keys);
 
 				if (!empty($keys)) {
@@ -815,7 +815,7 @@ class Multibyte {
 		} else {
 			$return = false;
 		}
-		self::$_codeRange[$decimal] = $return;
+		static::$_codeRange[$decimal] = $return;
 		return $return;
 	}
 
@@ -828,31 +828,31 @@ class Multibyte {
  */
 	protected static function _find($char, $type = 'lower') {
 		$found = array();
-		if (!isset(self::$_codeRange[$char])) {
-			$range = self::_codepoint($char);
+		if (!isset(static::$_codeRange[$char])) {
+			$range = static::_codepoint($char);
 			if ($range === false) {
-				return null;
+				return array();
 			}
 			if (!Configure::configured('_cake_core_')) {
 				App::uses('PhpReader', 'Configure');
 				Configure::config('_cake_core_', new PhpReader(CAKE . 'Config' . DS));
 			}
 			Configure::load('unicode' . DS . 'casefolding' . DS . $range, '_cake_core_');
-			self::$_caseFold[$range] = Configure::read($range);
+			static::$_caseFold[$range] = Configure::read($range);
 			Configure::delete($range);
 		}
 
-		if (!self::$_codeRange[$char]) {
-			return null;
+		if (!static::$_codeRange[$char]) {
+			return array();
 		}
-		self::$_table = self::$_codeRange[$char];
-		$count = count(self::$_caseFold[self::$_table]);
+		static::$_table = static::$_codeRange[$char];
+		$count = count(static::$_caseFold[static::$_table]);
 
 		for ($i = 0; $i < $count; $i++) {
-			if ($type === 'lower' && self::$_caseFold[self::$_table][$i][$type][0] === $char) {
-				$found[] = self::$_caseFold[self::$_table][$i];
-			} elseif ($type === 'upper' && self::$_caseFold[self::$_table][$i][$type] === $char) {
-				$found[] = self::$_caseFold[self::$_table][$i];
+			if ($type === 'lower' && static::$_caseFold[static::$_table][$i][$type][0] === $char) {
+				$found[] = static::$_caseFold[static::$_table][$i];
+			} elseif ($type === 'upper' && static::$_caseFold[static::$_table][$i][$type] === $char) {
+				$found[] = static::$_caseFold[static::$_table][$i];
 			}
 		}
 		return $found;

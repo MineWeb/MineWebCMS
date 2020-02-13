@@ -4,16 +4,14 @@
  *
  * Use it to configure database for ACL
  *
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @package       app.Config.Schema
  * @since         CakePHP(tm) v 0.2.9
  */
 
-/*
- *
+/**
  * Using the Schema command line utility
  * cake schema run create DbAcl
- *
  */
 class DbAclSchema extends CakeSchema {
 

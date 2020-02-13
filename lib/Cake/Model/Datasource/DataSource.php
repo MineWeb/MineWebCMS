@@ -2,18 +2,18 @@
 /**
  * DataSource base class
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @package       Cake.Model.Datasource
  * @since         CakePHP(tm) v 0.10.5.1790
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 /**
@@ -21,12 +21,9 @@
  *
  * DataSources are the link between models and the source of data that models represent.
  *
- * @link          http://book.cakephp.org/2.0/en/models/datasources.html#basic-api-for-datasources
+ * @link          https://book.cakephp.org/2.0/en/models/datasources.html#basic-api-for-datasources
  * @package       Cake.Model.Datasource
  */
- 
-App::uses('CakeObject', 'Core');
-
 class DataSource extends CakeObject {
 
 /**
@@ -93,7 +90,7 @@ class DataSource extends CakeObject {
  * Caches/returns cached results for child instances
  *
  * @param mixed $data Unused in this class.
- * @return array Array of sources available in this datasource.
+ * @return array|null Array of sources available in this datasource.
  */
 	public function listSources($data = null) {
 		if ($this->cacheSources === false) {
@@ -120,7 +117,7 @@ class DataSource extends CakeObject {
  * Returns a Model description (metadata) or null if none found.
  *
  * @param Model|string $model The model to describe.
- * @return array Array of Metadata for the $model
+ * @return array|null Array of Metadata for the $model
  */
 	public function describe($model) {
 		if ($this->cacheSources === false) {
@@ -371,7 +368,7 @@ class DataSource extends CakeObject {
 				} else {
 					$found = false;
 					foreach (array_reverse($stack) as $assocData) {
-						if (isset($data[$assocData]) && isset($data[$assocData][$insertKey])) {
+						if (is_string($assocData) && isset($data[$assocData]) && isset($data[$assocData][$insertKey])) {
 							$val = $data[$assocData][$insertKey];
 							$found = true;
 							break;
@@ -410,14 +407,14 @@ class DataSource extends CakeObject {
 /**
  * Returns the schema name. Override this in subclasses.
  *
- * @return string schema name
+ * @return string|null The schema name
  */
 	public function getSchemaName() {
 		return null;
 	}
 
 /**
- * Closes a connection. Override in subclasses
+ * Closes a connection. Override in subclasses.
  *
  * @return bool
  */

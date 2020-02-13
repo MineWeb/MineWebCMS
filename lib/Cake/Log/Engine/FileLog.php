@@ -2,18 +2,18 @@
 /**
  * File Storage stream for Logging
  *
- * CakePHP(tm) :  Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
  * @package       Cake.Log.Engine
  * @since         CakePHP(tm) v 1.3
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('BaseLog', 'Log/Engine');
@@ -138,11 +138,9 @@ class FileLog extends BaseLog {
 		}
 
 		$pathname = $this->_path . $filename;
-
-		if(!is_dir($this->_path)) {
-			mkdir($this->_path, 0755, true);
-		}
-
+        if(!is_dir($this->_path)) {
+            mkdir($this->_path, 0755, true);
+        }
 		if (empty($this->_config['mask'])) {
 			return file_put_contents($pathname, $output, FILE_APPEND);
 		}
@@ -187,7 +185,7 @@ class FileLog extends BaseLog {
  * Also if `rotate` count is reached oldest file is removed.
  *
  * @param string $filename Log file name
- * @return mixed True if rotated successfully or false in case of error.
+ * @return mixed True if rotated successfully or false in case of error, otherwise null.
  *   Void if file doesn't need to be rotated.
  */
 	protected function _rotateFile($filename) {
@@ -201,7 +199,7 @@ class FileLog extends BaseLog {
 		if (!file_exists($filepath) ||
 			filesize($filepath) < $this->_size
 		) {
-			return;
+			return null;
 		}
 
 		if ($this->_config['rotate'] === 0) {
