@@ -94,7 +94,7 @@ class AppSchema extends CakeSchema
                 'confirm_mail_signup' => 0,
                 'confirm_mail_signup_block' => 0,
                 'member_page_type' => 0,
-                'passwords_hash' => 'sha256',
+                'passwords_hash' => 'blowfish',
                 'passwords_salt' => 0,
                 'forced_updates' => 1,
                 'session_type' => 'php'

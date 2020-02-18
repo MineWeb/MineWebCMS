@@ -91,10 +91,10 @@ class User extends AppModel
 
         if (!empty($findRetryWithIP) && $findRetryWithIP['LoginRetry']['count'] >= 10)
             return 'LOGIN__BLOCKED';
-
+        $username = $data['pseudo'];
         $user = $this->find('first', ['conditions' => [
-            'pseudo' => $data['pseudo'],
-            'password' => $UtilComponent->password($data['password'], $data['pseudo'])
+            'pseudo' => $username,
+            'password' => $UtilComponent->password($data['password'], $username, $this->getFromUser('password', $username))
         ]]);
         $date = date('Y-m-d H:i:s');
         if (empty($user)) {

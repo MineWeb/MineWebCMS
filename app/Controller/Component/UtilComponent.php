@@ -48,7 +48,7 @@ class UtilComponent extends CakeObject
 
     // Encoder un mot de passe
 
-    public function password($password, $username)
+    public function password($password, $username, $hash_bcrypt = false)
     {
         $event = new CakeEvent('beforeEncodePassword', $this, array('password' => $password, 'username' => $username));
         $this->controller->getEventManager()->dispatch($event);
@@ -56,15 +56,19 @@ class UtilComponent extends CakeObject
             return $event->result;
         }
 
+
         $hash = $this->controller->Configuration->getKey('passwords_hash');
         $salt = $this->controller->Configuration->getKey('passwords_salt');
-
         if (!isset($hash) || empty($hash)) {
             $hash = 'sha256';
         }
         if (!isset($salt) || empty($salt)) {
             $salt = false;
         }
+        if ($hash == 'blowfish' && $hash_bcrypt) {
+            $salt = $hash_bcrypt;
+        }
+
 
         return Security::hash($password, $hash, $salt);
     }
