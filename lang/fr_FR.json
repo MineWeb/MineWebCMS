@@ -571,7 +571,7 @@
         "UPDATE__LOGS_CREATE_FILE": "Création d'un fichier",
         "UPDATE__LOGS_CREATE_FOLDER": "Création d'un dossier",
         "UPDATE__FILE": "Dossier\/Fichier",
-        "UPDATE__FAILED_FILE": "Le fichier '{FILE}' ne peut pas être écris, vérifiez ses permissions et refaites la mise à jour !",
+        "UPDATE__FAILED_FILE": "Le fichier '{FILE}' ne peut pas être écrit, vérifiez ses permissions et refaites la mise à jour !",
         "UPDATE__FAILED": "La mise à jour a échoué",
         "UPDATE__SUCCESS": "La mise à jour s'est bien déroulée",
         "UPDATE__LOADING": "Mise à jour en cours ...",
