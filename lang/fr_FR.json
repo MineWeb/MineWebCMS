@@ -229,7 +229,7 @@
         "CONFIG__EDIT_LANG_SUCCESS": "Langage sauvegardé avec succès !",
         "CONFIG__KEY_PASSWORDS_HASH":"Hachage des mots de passes",
         "CONFIG__KEY_PASSWORDS_SALT":"Voulez-vous utiliser un salt ? (Un salt est inutile avec bcrypt)",
-        "CONFIG__KEY_PASSWORDS_ADVERTISSEMENT":"Attention ! En modifiant ces réglages, les mots de passe actuels de votre site ne seront plus bons. Et forcera vos utilisateurs à utiliser la fonction 'mot de passe oublié.",
+        "CONFIG__KEY_PASSWORDS_ADVERTISSEMENT":"Si vous changez en cours de fonctionnement le mots de passe se changera automatiquement quand la personne va se connecter !",
         "CONFIG__KEY_SESSION_TYPE":"Type d'enregistrement des sessions",
         "CONFIG__KEY_SESSION_TYPE_INFO":"Ceci est un réglage avancé de votre site, il n'est pas nécessaire de le modifier si vous n'en avez pas l'utilité. Par défaut, le CMS utilise les sessions php.",
         "CONFIG__KEY_SESSION_TYPE_PHP":"PHP / Par défaut",
