@@ -71,6 +71,7 @@ class User extends AppModel
         $data_to_save['uuid'] = htmlentities($data['uuid']);
 
         $data_to_save['password'] = $UtilComponent->password($data['password'], $data['pseudo']);
+        $data_to_save['password_hash'] = $UtilComponent->getPasswordHashType();
 
         $this->create();
         $this->set($data_to_save);
@@ -94,7 +95,7 @@ class User extends AppModel
         $username = $data['pseudo'];
         $user = $this->find('first', ['conditions' => [
             'pseudo' => $username,
-            'password' => $UtilComponent->password($data['password'], $username, $this->getFromUser('password', $username))
+            'password' => $UtilComponent->password($data['password'], $username, $this->getFromUser('password', $username), $this->getFromUser('password_hash', $username))
         ]]);
         $date = date('Y-m-d H:i:s');
         if (empty($user)) {
@@ -117,6 +118,11 @@ class User extends AppModel
         $user = $user['User'];
         $LoginRetryTable->deleteAll(['ip' => $ip]);
         $conditions = array();
+        
+        if($this->getFromUser('password_hash', $username) != $UtilComponent->getPasswordHashType()) {
+            $conditions['password'] = $UtilComponent->password($data['password'], $username);
+            $conditions['password_hash'] =  $UtilComponent->getPasswordHashType();
+        }
 
         if ($confirmEmailIsNeeded && !empty($user['confirmed']) && date('Y-m-d H:i:s', strtotime($user['confirmed'])) != $user['confirmed']) {
             $controller->Session->write('email.confirm.user.id', $user['id']);
@@ -155,6 +161,7 @@ class User extends AppModel
                 if (!empty($Lostpassword) && strtotime('+1 hour', strtotime($Lostpassword[0]['Lostpassword']['created'])) >= time()) {
 
                     $data_to_save['password'] = $UtilComponent->password($data['password'], $search['0']['User']['pseudo']);
+                    $data_to_save['password_hash'] = $UtilComponent->getPasswordHashType();
 
                     $event = new CakeEvent('beforeResetPassword', $this, array('user_id' => $search[0]['User']['id'], 'new_password' => $data_to_save['password']));
                     $controller->getEventManager()->dispatch($event);
