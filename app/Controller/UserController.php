@@ -439,6 +439,7 @@ class UserController extends AppController
                             return $event->result;
                         }
                         $this->User->setKey('password', $password);
+                        $this->User->setKey('password_hash', $this->Util->getPasswordHashType());
                         $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__PASSWORD_UPDATE_SUCCESS'))));
                     } else {
                         $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_PASSWORDS_NOT_SAME'))));
