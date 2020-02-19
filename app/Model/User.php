@@ -27,7 +27,7 @@ class User extends AppModel
     {
         if (preg_match('`^([a-zA-Z0-9_]{2,16})$`', $data['pseudo'])) {
             $data['password'] = $UtilComponent->password($data['password'], $data['pseudo']);
-            $data['password_confirmation'] = $UtilComponent->password($data['password_confirmation'], $data['pseudo']);
+            $data['password_confirmation'] = $UtilComponent->password($data['password_confirmation'], $data['pseudo'], $data['password']);
             if ($data['password'] == $data['password_confirmation']) {
                 if (filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
                     $search_member_by_pseudo = $this->find('all', array('conditions' => array('pseudo' => $data['pseudo'])));
