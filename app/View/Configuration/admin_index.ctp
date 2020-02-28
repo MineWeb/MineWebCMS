@@ -107,7 +107,8 @@
                                                     'sha256' => 'sha256',
                                                     'sha1' => 'sha1',
                                                     'sha386' => 'sha386',
-                                                    'sha512' => 'sha512'
+                                                    'sha512' => 'sha512',
+                                                    'blowfish' => 'bcrypt'
                                                 ),
                                                 'selected' => $config['passwords_hash']
                                             )); ?>
