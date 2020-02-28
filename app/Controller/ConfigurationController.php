@@ -60,6 +60,13 @@ class ConfigurationController extends AppController {
 					}
 				}
 
+                $this->loadModel('User');
+                $hash = $this->Configuration->getKey('passwords_hash');
+                $this->User->updateAll(
+                    ['password_hash' => "'$hash'"],
+                    ['password_hash' => null]
+                );
+
 				$this->Configuration->read(null, 1);
 				$this->Configuration->set($data);
 				$this->Configuration->save();
