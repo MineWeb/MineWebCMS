@@ -571,6 +571,7 @@
         "UPDATE__LOGS_CREATE_FILE": "Creating a file",
         "UPDATE__LOGS_CREATE_FOLDER": "Creating a folder",
         "UPDATE__FILE": "Folder / File",
+        "UPDATE__FAILED_FILE": "The file '${FILE}' can't be written, check file's permissions and try again!",
         "UPDATE__FAILED": "The update failed",
         "UPDATE__SUCCESS": "The update went well",
         "UPDATE__LOADING": "Update in progress ...",
