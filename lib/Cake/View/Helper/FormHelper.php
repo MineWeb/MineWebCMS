@@ -1330,7 +1330,7 @@ class FormHelper extends AppHelper {
 			return false;
 		}
 
-		$label = false;
+		$label = null;
 		if (isset($options['label'])) {
 			$label = $options['label'];
 		}
@@ -2060,7 +2060,7 @@ class FormHelper extends AppHelper {
 			$tag = $this->Html->useTag('submitimage', $caption, $options);
 		} elseif ($isImage) {
 			unset($options['type']);
-			if ($caption{0} !== '/') {
+			if ($caption[0] !== '/') {
 				$url = $this->webroot(Configure::read('App.imageBaseUrl') . $caption);
 			} else {
 				$url = $this->webroot(trim($caption, '/'));

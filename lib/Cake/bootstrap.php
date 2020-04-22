@@ -156,7 +156,7 @@ App::$bootstrapping = true;
  */
 if (!defined('FULL_BASE_URL')) {
 	$s = null;
-    if (env('SERVER_PORT') == 443 || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) || (isset($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] == 'https')) {
+	if (env('HTTPS')) {
 		$s = 's';
 	}
 
