@@ -27,7 +27,7 @@ class User extends AppModel
     {
         if (preg_match('`^([a-zA-Z0-9_]{2,16})$`', $data['pseudo'])) {
             $data['password'] = $UtilComponent->password($data['password'], $data['pseudo']);
-            $data['password_confirmation'] = $UtilComponent->password($data['password_confirmation'], $data['pseudo']);
+            $data['password_confirmation'] = $UtilComponent->password($data['password_confirmation'], $data['pseudo'], $data['password']);
             if ($data['password'] == $data['password_confirmation']) {
                 if (filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
                     $search_member_by_pseudo = $this->find('all', array('conditions' => array('pseudo' => $data['pseudo'])));
@@ -71,6 +71,7 @@ class User extends AppModel
         $data_to_save['uuid'] = htmlentities($data['uuid']);
 
         $data_to_save['password'] = $UtilComponent->password($data['password'], $data['pseudo']);
+        $data_to_save['password_hash'] = $UtilComponent->getPasswordHashType();
 
         $this->create();
         $this->set($data_to_save);
@@ -91,10 +92,10 @@ class User extends AppModel
 
         if (!empty($findRetryWithIP) && $findRetryWithIP['LoginRetry']['count'] >= 10)
             return 'LOGIN__BLOCKED';
-
+        $username = $data['pseudo'];
         $user = $this->find('first', ['conditions' => [
-            'pseudo' => $data['pseudo'],
-            'password' => $UtilComponent->password($data['password'], $data['pseudo'])
+            'pseudo' => $username,
+            'password' => $UtilComponent->password($data['password'], $username, $this->getFromUser('password', $username), $this->getFromUser('password_hash', $username))
         ]]);
         $date = date('Y-m-d H:i:s');
         if (empty($user)) {
@@ -117,6 +118,11 @@ class User extends AppModel
         $user = $user['User'];
         $LoginRetryTable->deleteAll(['ip' => $ip]);
         $conditions = array();
+        
+        if($this->getFromUser('password_hash', $username) != $UtilComponent->getPasswordHashType()) {
+            $conditions['password'] = $UtilComponent->password($data['password'], $username);
+            $conditions['password_hash'] =  $UtilComponent->getPasswordHashType();
+        }
 
         if ($confirmEmailIsNeeded && !empty($user['confirmed']) && date('Y-m-d H:i:s', strtotime($user['confirmed'])) != $user['confirmed']) {
             $controller->Session->write('email.confirm.user.id', $user['id']);
@@ -155,6 +161,7 @@ class User extends AppModel
                 if (!empty($Lostpassword) && strtotime('+1 hour', strtotime($Lostpassword[0]['Lostpassword']['created'])) >= time()) {
 
                     $data_to_save['password'] = $UtilComponent->password($data['password'], $search['0']['User']['pseudo']);
+                    $data_to_save['password_hash'] = $UtilComponent->getPasswordHashType();
 
                     $event = new CakeEvent('beforeResetPassword', $this, array('user_id' => $search[0]['User']['id'], 'new_password' => $data_to_save['password']));
                     $controller->getEventManager()->dispatch($event);

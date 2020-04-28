@@ -431,7 +431,7 @@ class UserController extends AppController
             if ($this->request->is('ajax')) {
                 if (!empty($this->request->data['password']) AND !empty($this->request->data['password_confirmation'])) {
                     $password = $this->Util->password($this->request->data['password'], $this->User->getKey('pseudo'));
-                    $password_confirmation = $this->Util->password($this->request->data['password_confirmation'], $this->User->getKey('pseudo'));
+                    $password_confirmation = $this->Util->password($this->request->data['password_confirmation'], $this->User->getKey('pseudo'), $password);
                     if ($password == $password_confirmation) {
                         $event = new CakeEvent('beforeUpdatePassword', $this, array('user' => $this->User->getAllFromCurrentUser(), 'new_password' => $password));
                         $this->getEventManager()->dispatch($event);
@@ -439,6 +439,7 @@ class UserController extends AppController
                             return $event->result;
                         }
                         $this->User->setKey('password', $password);
+                        $this->User->setKey('password_hash', $this->Util->getPasswordHashType());
                         $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__PASSWORD_UPDATE_SUCCESS'))));
                     } else {
                         $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_PASSWORDS_NOT_SAME'))));

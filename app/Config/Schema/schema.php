@@ -94,7 +94,7 @@ class AppSchema extends CakeSchema
                 'confirm_mail_signup' => 0,
                 'confirm_mail_signup_block' => 0,
                 'member_page_type' => 0,
-                'passwords_hash' => 'sha256',
+                'passwords_hash' => 'blowfish',
                 'passwords_salt' => 0,
                 'forced_updates' => 1,
                 'session_type' => 'php'
@@ -430,6 +430,7 @@ class AppSchema extends CakeSchema
         'pseudo' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
         'uuid' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
         'password' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+        'password_hash' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
         'email' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
         'rank' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 1, 'unsigned' => false),
         'money' => array('type' => 'string', 'null' => false, 'default' => '0', 'length' => 20, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
