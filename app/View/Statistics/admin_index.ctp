@@ -1,3 +1,52 @@
+<?php
+            $colors = array('#1abc9c', '#2ecc71', '#3498db', '#e67e22', '#e74c3c');
+            $hosts = array();
+            $ref_pie = array();
+            $i = 0;
+            foreach ($referers as $ref => $visitcount) {
+                $host = parse_url($ref, PHP_URL_HOST);
+                if (!in_array($host, $hosts)){
+                    // Check page URL not null
+                    if ($host != 'null') {
+                        $hosts[] = $host;
+                    } else {
+                        $hosts[] = 'N/A';
+                    }
+                    // Loop color if needed
+                    if(!isset($colors[$i])) {
+                      $i = 0;
+                    }
+                    $color = $colors[$i];
+                    
+                    $ref_pie[] = array(
+                        'color' => $color,
+                        'value' => $visitcount,
+                        'label' => $host
+                    );
+                    // Next color
+                    $i++;
+                }
+            }
+            
+            $pages_pie = array();
+            $i = 0;
+            foreach ($pages as $page => $visitcount) {
+                $page = addslashes(urldecode($page));
+                // Loop color if needed
+                if(!isset($colors[$i])) {
+                  $i = 0;
+                }
+                $color = $colors[$i];
+                
+                $pages_pie[] = array(
+                    'color' => $color,
+                    'value' => $visitcount,
+                    'label' => $page
+                );
+                // Next color
+                $i++;
+            }
+?>
 <section class="content">
   <div class="row">
 
@@ -17,36 +66,7 @@
           <script>
           var pieChartCanvas = $("#pieChart_referers").get(0).getContext("2d");
           var pieChart = new Chart(pieChartCanvas);
-          var PieData = [
-            <?php
-            $colors = array('1abc9c', '2ecc71', '3498db', 'e67e22', 'e74c3c');
-            $i = 0;
-            $hostes = array();
-            foreach ($referers as $key => $value) {
-              if(!in_array(parse_url($key, PHP_URL_HOST), $hostes)) {
-                if($key != 'null') {
-                  $hostes[] = parse_url($key, PHP_URL_HOST);
-                } else {
-                  $hostes[] = 'N/A';
-                }
-
-                if(!isset($colors[$i])) {
-                  $i = 0;
-                }
-
-                echo '{value: '.$value.',';
-                echo 'color:"#'.$colors[$i].'",';
-                if($key != 'null') {
-                  echo 'label : \''.addslashes(urldecode(parse_url($key, PHP_URL_HOST))).'\'';
-                } else {
-                  echo 'label : \'N/A\'';
-                }
-                echo '},';
-                $i++;
-              }
-            }
-            ?>
-          ];
+          var PieData = <?= json_encode($ref_pie); ?>;
           var pieOptions = {
             //Boolean - Whether we should show a stroke on each segment
             segmentShowStroke: true,
@@ -91,27 +111,7 @@
           <script>
           var pieChartCanvas = $("#pieChart_pages").get(0).getContext("2d");
           var pieChart = new Chart(pieChartCanvas);
-          var PieData = [
-            <?php
-            $colors = array('1abc9c', '2ecc71', '3498db', 'e67e22', 'e74c3c');
-            $i = 0;
-            foreach ($pages as $key => $value) {
-                if(!isset($colors[$i])) {
-                  $i = 0;
-                }
-
-                echo '{value: '.$value.',';
-                echo 'color:"#'.$colors[$i].'",';
-                if($key != 'null') {
-                  echo 'label : \''.addslashes(urldecode($key)).'\'';
-                } else {
-                  echo 'label : \'undefined\'';
-                }
-                echo '},';
-                $i++;
-            }
-            ?>
-          ];
+          var PieData = <?= json_encode($pages_pie); ?>;
           var pieOptions = {
             //Boolean - Whether we should show a stroke on each segment
             segmentShowStroke: true,
