@@ -95,7 +95,7 @@ class PermissionsController extends AppController {
 				$this->Rank->delete($search['Rank']['id']);
 
 				$this->loadModel('Permission');
-				$search_perm = $this->Permission->find('first', array('conditions' => array('id' => $id)));
+				$search_perm = $this->Permission->find('first', array('conditions' => array('rank' => $id)));
 				if(!empty($search_perm)) {
 					$this->Permission->delete($search_perm['Permission']['id']);
 				}
