@@ -248,7 +248,7 @@ class ServerController extends AppController
 		$this->autoRender = false;
 		$this->response->type('json');
 		
-		if (!$this->isConnected AND $this->Permissions->can('MANAGE_SERVERS'))
+		if (!$this->isConnected || !$this->Permissions->can('MANAGE_SERVERS'))
 			return $this->redirect('/');
 		if (!$this->request->is('ajax'))
 			return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
