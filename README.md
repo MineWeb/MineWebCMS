@@ -1,4 +1,4 @@
-# MineWebCMS
+# MineWebCMS an Amazing Product
 
 
 ## C'est quoi MineWeb ?
