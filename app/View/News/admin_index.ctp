@@ -1,16 +1,16 @@
 <section class="content">
   <div class="row">
     <div class="col-md-12">
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('NEWS__LIST_PUBLISHED') ?></h3>
+      <div class="card">
+        <div class="card-header with-border">
+          <h3 class="card-title"><?= $Lang->get('NEWS__LIST_PUBLISHED') ?></h3>
         </div>
-        <div class="box-body">
+        <div class="card-body">
           <a class="btn btn-large btn-block btn-primary" href="<?= $this->Html->url(array('controller' => 'news', 'action' => 'add', 'admin' => true)) ?>"><?= $Lang->get('NEWS__ADD_NEWS') ?></a>
 
             <hr>
 
-            <table class="table table-bordered table-responsive">
+            <table class="table table-bordered">
               <thead>
                 <tr>
                   <th><?= $Lang->get('GLOBAL__TITLE') ?></th>

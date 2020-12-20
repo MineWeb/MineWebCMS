@@ -1,11 +1,11 @@
 <section class="content">
   <div class="row">
     <div class="col-md-6">
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('HELP__CHOOSE_QUESTION') ?></h3>
+      <div class="card">
+        <div class="card-header with-border">
+          <h3 class="card-title"><?= $Lang->get('HELP__CHOOSE_QUESTION') ?></h3>
         </div>
-        <div class="box-body">
+        <div class="card-body">
           <label><?= $Lang->get('HELP__CHOOSE_QUESTION') ?></label>
 
           <?= $this->Html->script('admin/bootstrap-select') ?>
@@ -19,11 +19,11 @@
       </div>
     </div>
     <div class="col-md-6">
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('HELP__PAGE_EXPLAIN_TITLE') ?></h3>
+      <div class="card">
+        <div class="card-header with-border">
+          <h3 class="card-title"><?= $Lang->get('HELP__PAGE_EXPLAIN_TITLE') ?></h3>
         </div>
-        <div class="box-body">
+        <div class="card-body">
           <blockquote cite="http://mineweb.org">
             <?= $Lang->get('HELP__PAGE_EXPLAIN_CONTENT') ?>
           </blockquote>
@@ -31,11 +31,11 @@
       </div>
     </div>
     <div class="col-md-6">
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('HELP__ANSWER_TITLE') ?></h3>
+      <div class="card">
+        <div class="card-header with-border">
+          <h3 class="card-title"><?= $Lang->get('HELP__ANSWER_TITLE') ?></h3>
         </div>
-        <div class="box-body">
+        <div class="card-body">
           <div id="answers">
             <blockquote>
               <small><i><?= $Lang->get('HELP__CHOOSE_QUESTION') ?></i></small>
@@ -45,11 +45,11 @@
       </div>
     </div>
     <div class="col-md-6">
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('HELP__POST_TICKET_TITLE_BOX') ?></h3>
+      <div class="card">
+        <div class="card-header with-border">
+          <h3 class="card-title"><?= $Lang->get('HELP__POST_TICKET_TITLE_BOX') ?></h3>
         </div>
-        <div class="box-body">
+        <div class="card-body">
           <p><?= $Lang->get('HELP__POST_TICKET_EXPLAIN') ?></p>
           <form action="<?= $this->Html->url(array('action' => 'submitTicket')) ?>" method="post" data-ajax="true" data-callback="afterSubmitTicket">
             <div class="form-group">
