@@ -26,7 +26,7 @@
                 <tr style="cursor:move;" id="<?= $value['Navbar']['name'] ?>-<?= $i ?>">
                   <td>
 				  <?php if(!empty($value['Navbar']['icon'])): ?> 
-                     <i class="fa fa-<?= $value['Navbar']['icon'] ?>"></i>
+                     <i class="<?= ((strpos($value['Navbar']['icon'], "fa-")) ? $value['Navbar']['icon'] : "fa fa-" . $value['Navbar']['icon']) ?>"></i>
                      <?php endif; ?>
                      <?= $value['Navbar']['name'] ?></td>
                   <?php if($value['Navbar']['url'] != '#' && $value['Navbar']['url'] !== false) { ?>

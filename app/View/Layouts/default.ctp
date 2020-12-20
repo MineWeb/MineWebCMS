@@ -11,10 +11,11 @@
 
     <title><?= (isset($title_for_layout)) ? $title_for_layout : 'Error' ?> - <?= (isset($website_name)) ? $website_name : 'MineWeb' ?></title>
 
+    <!-- Font Awesome 5 -->
+    <script src="https://kit.fontawesome.com/fb032ab5a6.js" crossorigin="anonymous"></script>
     <?= $this->Html->css('bootstrap.css') ?>
     <?= $this->Html->css('modern-business.css') ?>
     <?= $this->Html->css('animate.css') ?>
-    <?= $this->Html->css('font-awesome.min.css') ?>
     <?= $this->Html->css('flat.css') ?>
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,900' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700' rel='stylesheet' type='text/css'>
@@ -62,7 +63,7 @@
                               <li class="li-nav<?php if($this->params['controller'] == $value['Navbar']['name']) { ?> actived<?php } ?>">
                                   <a href="<?= $value['Navbar']['url'] ?>"<?= ($value['Navbar']['open_new_tab']) ? ' target="_blank"' : '' ?>>
 								  <?php if(!empty($value['Navbar']['icon'])): ?> 
-									<i class="fa fa-<?= $value['Navbar']['icon'] ?>"></i>
+									<i class="<?= ((strpos($value['Navbar']['icon'], "fa-")) ? $value['Navbar']['icon'] : "fa fa-" . $value['Navbar']['icon']) ?>"></i>
                                   <?php endif; ?>
                                     <?= $value['Navbar']['name'] ?>
                                   </a>
