@@ -1,11 +1,11 @@
 <section class="content">
   <div class="row">
     <div class="col-md-3">
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('THEME__CUSTOM_FILES_FILES') ?></h3>
+      <div class="card">
+        <div class="card-header with-border">
+          <h3 class="card-title"><?= $Lang->get('THEME__CUSTOM_FILES_FILES') ?></h3>
         </div>
-        <div class="box-body">
+        <div class="card-body">
           <ul>
             <?php
             foreach ($css_files as $file) {
@@ -18,11 +18,11 @@
       </div>
     </div>
     <div class="col-md-9">
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('THEME__CUSTOM_FILES_FILE_CONTENT') ?></h3>
+      <div class="card">
+        <div class="card-header with-border">
+          <h3 class="card-title"><?= $Lang->get('THEME__CUSTOM_FILES_FILE_CONTENT') ?></h3>
         </div>
-        <div class="box-body" style="position:relative;height:1000px;">
+        <div class="card-body" style="position:relative;height:1000px;">
           <p id="content">
             <i class="text-muted"><?= $Lang->get('THEME__CUSTOM_FILES_FILE_CONTENT_CHOOSE') ?></i>
           </p>

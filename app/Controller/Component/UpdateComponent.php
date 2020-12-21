@@ -30,6 +30,7 @@ class UpdateComponent extends CakeObject
         'owner' => 'MineWeb',
         'versionFile' => 'VERSION'
     ];
+    public $errorUpdate;
 
     private $controller;
 
@@ -60,6 +61,7 @@ class UpdateComponent extends CakeObject
 
         $this->updateLogFile = ROOT . DS . 'app' . DS . 'tmp' . DS . 'logs' . DS . 'update' . DS;
         $this->updateCacheFile = ROOT . DS . 'config' . DS . 'update';
+        $this->errorUpdate = $this->Lang->get('UPDATE__FAILED');
 
         // Check if an update is available
         $this->check();
@@ -74,7 +76,7 @@ class UpdateComponent extends CakeObject
             return "<div class='alert alert-info'>" .
                 "{$this->Lang->get('UPDATE__AVAILABLE')} {$this->Lang->get('UPDATE__CMS_VERSION')} : " .
                 "{$this->cmsVersion}, {$this->Lang->get('UPDATE__LAST_VERSION')} : {$this->lastVersion} " .
-                "<a href='" . Router::url(array('controller' => 'update', 'action' => 'index', 'admin' => true)) . "' style='margin-top: -6px;' class='btn btn-info pull-right'>" .
+                "<a href='" . Router::url(array('controller' => 'update', 'action' => 'index', 'admin' => true)) . "' style='margin-top: -6px;' class='btn btn-warning float-right'>" .
                 $this->Lang->get('GLOBAL__UPDATE') .
                 "</a>" .
                 "</div>";
@@ -171,6 +173,9 @@ class UpdateComponent extends CakeObject
                 // We stop here if the copy fail
                 $path = "zip://" . ROOT . DS . "app" . DS . "tmp" . DS . $this->lastVersion . ".zip#{$this->source['repo']}-{$this->lastVersion}/" . "$filename";
                 if (!copy($path, ROOT . DS . $filename)) {
+                    $this->errorUpdate = $this->Lang->get('UPDATE__FAILED_FILE', array(
+                        '{FILE}' => ROOT . DS . $filename,
+                    ));
                     $this->log("Failed to copy file from $path to " . ROOT . DS . $filename);
                     return false;
                 }

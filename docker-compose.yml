@@ -1,0 +1,19 @@
+version: '3.6'
+services:
+    php:
+        build: docker/php
+        restart: always
+        volumes:
+            - './:/var/www/html/'
+        ports:
+            - '80:80'
+    database:
+        image: 'mariadb:10.5'
+        restart: always
+        volumes:
+            - ./docker/mariadb/data:/var/lib/mysql
+        environment:
+            - MYSQL_DATABASE=mineweb
+            - MYSQL_USER=mineweb
+            - MYSQL_PASSWORD=pass
+            - MYSQL_ROOT_PASSWORD=pass_root

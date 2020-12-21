@@ -1,11 +1,11 @@
 <section class="content">
     <div class="callout callout-info"><h4><?= $Lang->get('MOTD__TITLE') ?></h4><?= $Lang->get('MOTD__TITLE_DESC') ?>
     </div>
-    <div class="box">
-        <div class="box-header with-border">
-            <h3 class="box-title"><?= $Lang->get('MOTD__TITLE') ?></h3>
+    <div class="card">
+        <div class="card-header with-border">
+            <h3 class="card-title"><?= $Lang->get('MOTD__TITLE') ?></h3>
         </div>
-        <div class="box-body">
+        <div class="card-body">
             <hr>
             <table class="table table-bordered">
                 <thead>

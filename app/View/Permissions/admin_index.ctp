@@ -1,11 +1,11 @@
 <section class="content">
   <div class="row">
     <div class="col-md-12">
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('PERMISSIONS__LABEL') ?></h3>
+      <div class="card">
+        <div class="card-header with-border">
+          <h3 class="card-title"><?= $Lang->get('PERMISSIONS__LABEL') ?></h3>
         </div>
-        <div class="box-body">
+        <div class="card-body">
 
           <button data-toggle="modal" data-target="#addRank" class="btn btn-block btn-success"><?= $Lang->get('USER__RANK_ADD') ?></button>
 
@@ -14,7 +14,7 @@
           <form action="" method="post">
             <input name="data[_Token][key]" value="<?= $csrfToken ?>" type="hidden">
 
-            <table class="table table-bordered">
+            <table class="table table-bordered table-responsive-sm">
                 <thead>
                   <tr>
                     <th><?= $Lang->get('PERMISSIONS__LABEL') ?></th>

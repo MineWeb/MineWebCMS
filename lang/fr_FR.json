@@ -303,7 +303,7 @@
 
         "NAVBAR__TITLE":"Barre de navigation",
         "NAVBAR__ICON":"Icones",
-        "NAVBAR__ICON__DESC":"Exemple : (angle-up) ; liste disponible depuis ce lien : ",
+        "NAVBAR__ICON__DESC":"Exemple : (fas fa-angle-up) ; liste disponible depuis ce lien : ",
         "NAVBAR__OPEN_IN_NEW_TAB": "Ouvrir dans un nouvel onglet",
         "NAVBAR__EDIT_TITLE": "Modifier un lien",
         "NAVBAR__SAVE_IN_PROGRESS":"Sauvegarde automatique...",
@@ -571,6 +571,7 @@
         "UPDATE__LOGS_CREATE_FILE": "Création d'un fichier",
         "UPDATE__LOGS_CREATE_FOLDER": "Création d'un dossier",
         "UPDATE__FILE": "Dossier\/Fichier",
+        "UPDATE__FAILED_FILE": "Le fichier '{FILE}' ne peut pas être écrit, vérifiez ses permissions et relancez la mise à jour !",
         "UPDATE__FAILED": "La mise à jour a échoué",
         "UPDATE__SUCCESS": "La mise à jour s'est bien déroulée",
         "UPDATE__LOADING": "Mise à jour en cours ...",

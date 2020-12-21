@@ -48,7 +48,7 @@ class ThemeComponent extends CakeObject
                 if(isset($value->lastVersion)) {
                     if($value->version !== $value->lastVersion) {
                         $this->Lang = $this->controller->Lang;
-                        return '<div class="alert alert-warning">' . $this->Lang->get('UPDATE__AVAILABLE') . ' ' . $this->Lang->get('UPDATE__THEME') . ' <a href="' . Router::url(array('controller' => 'theme', 'action' => 'index', 'admin' => true)) . '" style="margin-top: -6px;" class="btn btn-warning pull-right">' . $this->Lang->get('GLOBAL__UPDATE_LOOK') . '</a></div>';
+                        return '<div class="alert alert-warning">' . $this->Lang->get('UPDATE__AVAILABLE') . ' ' . $this->Lang->get('UPDATE__THEME') . '<a href="' . Router::url(array('controller' => 'theme', 'action' => 'index', 'admin' => true)) . '" class="btn btn-info float-right">' . $this->Lang->get('GLOBAL__UPDATE_LOOK') . '</a></div>';
                     }
                 }
             }

@@ -114,7 +114,7 @@
                 </tr>
 			<?php endif; ?>
             <tr>
-                <td>cURL</td>
+                <td>cURL (Extension PHP)</td>
                 <td><?= affichImg($compatible['curl']) ?></td>
             </tr>
 			<?php if(!$compatible['curl'] && isset($help['curl'])): ?>
