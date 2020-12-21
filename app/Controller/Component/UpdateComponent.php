@@ -76,7 +76,7 @@ class UpdateComponent extends CakeObject
             return "<div class='alert alert-info'>" .
                 "{$this->Lang->get('UPDATE__AVAILABLE')} {$this->Lang->get('UPDATE__CMS_VERSION')} : " .
                 "{$this->cmsVersion}, {$this->Lang->get('UPDATE__LAST_VERSION')} : {$this->lastVersion} " .
-                "<a href='" . Router::url(array('controller' => 'update', 'action' => 'index', 'admin' => true)) . "' style='margin-top: -6px;' class='btn btn-info pull-right'>" .
+                "<a href='" . Router::url(array('controller' => 'update', 'action' => 'index', 'admin' => true)) . "' style='margin-top: -6px;' class='btn btn-warning float-right'>" .
                 $this->Lang->get('GLOBAL__UPDATE') .
                 "</a>" .
                 "</div>";

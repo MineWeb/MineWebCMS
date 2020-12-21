@@ -1,11 +1,11 @@
 <section class="content">
     <div class="row">
         <div class="col-md-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><?= $Lang->get('NAVBAR__ADD_LINK') ?></h3>
+            <div class="card">
+                <div class="card-header with-border">
+                    <h3 class="card-title"><?= $Lang->get('NAVBAR__ADD_LINK') ?></h3>
                 </div>
-                <div class="box-body">
+                <div class="card-body">
                     <form method="post" action="<?= $this->Html->url(array('action' => 'add_ajax')) ?>" data-ajax="true"
                           data-redirect-url="<?= $this->Html->url(array('action' => 'index')) ?>"
                           data-custom-function="formatteData">
@@ -14,14 +14,19 @@
                             <label><?= $Lang->get('GLOBAL__NAME') ?></label>
                             <input name="name" class="form-control" type="text">
                         </div>
-			<div class="form-group">
-				<label><?= $Lang->get('NAVBAR__ICON') ?></label>
-				<p><?= $Lang->get('NAVBAR__ICON__DESC') ?><a target="_blank" href="https://fontawesome.com/v4.7.0/icons/">https://fontawesome.com/v4.7.0/icons/</a></p>
-				<div class="input-group">
-				  <div class="input-group-addon">fa-</div>
-				   <input name="icon" class="form-control" type="text">
-				</div>
-			</div>
+
+                        <div class="form-group">
+
+                            <label><?= $Lang->get('NAVBAR__ICON') ?></label>
+                            <p><?= $Lang->get('NAVBAR__ICON__DESC') ?><a target="_blank"
+                                                                         href="https://fontawesome.com/">https://fontawesome.com/</a>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">FA</span>
+                                </div>
+                                <input name="icon" class="form-control" type="text">
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label><?= $Lang->get('GLOBAL__TYPE') ?></label>
@@ -35,14 +40,14 @@
                             </div>
                         </div>
 
-                        <div id="type-normal" class="hidden">
+                        <div id="type-normal" class="d-none">
                             <div class="form-group">
                                 <label><?= $Lang->get('URL') ?></label>
                                 <div class="radio">
                                     <input type="radio" class="type_plugin" name="url_type" value="plugin">
                                     <label><?= $Lang->get('NAVBAR__LINK_TYPE_PLUGIN') ?></label>
                                 </div>
-                                <div class="hidden plugin">
+                                <div class="d-none plugin">
                                     <select class="form-control" name="url_plugin">
                                         <?php
                                         foreach ($url_plugins as $pluginId => $data) {
@@ -57,7 +62,7 @@
                                     <input type="radio" class="type_page" name="url_type" value="page">
                                     <label><?= $Lang->get('NAVBAR__LINK_TYPE_PAGE') ?></label>
                                 </div>
-                                <div class="hidden page">
+                                <div class="d-none page">
                                     <select class="form-control" name="url_page">
                                         <?php foreach ($url_pages as $key => $value) { ?>
                                             <option value="<?= $key ?>"><?= $value ?></option>
@@ -69,14 +74,14 @@
                                     <label><?= $Lang->get('NAVBAR__LINK_TYPE_CUSTOM') ?></label>
                                 </div>
                                 </label>
-                                <input type="text" class="form-control hidden custom"
+                                <input type="text" class="form-control d-none custom"
                                        placeholder="<?= $Lang->get('NAVBAR__CUSTOM_URL') ?>" name="url_custom">
                             </div>
                         </div>
 
-                        <div id="type-dropdown" class="hidden">
+                        <div id="type-dropdown" class="d-none">
                             <div class="form-group">
-                                <div class="well" id="nav-1">
+                                <div class="card card-body bg-light" id="nav-1">
                                     <div class="form-group">
                                         <label><?= $Lang->get('NAVBAR__LINK_NAME') ?></label>
                                         <input type="text" class="form-control name_of_nav" name="name_of_nav">
@@ -87,7 +92,7 @@
                                                placeholder="<?= $Lang->get('NAVBAR__CUSTOM_URL') ?>" name="url">
                                     </div>
                                     <a href="#"
-                                       class="text-danger delete-nav pull-right"><?= $Lang->get('GLOBAL__DELETE') ?></a>
+                                       class="text-danger delete-nav float-right"><?= $Lang->get('GLOBAL__DELETE') ?></a>
                                     <br>
                                 </div>
                             </div>
@@ -105,7 +110,7 @@
                             </div>
                         </div>
 
-                        <div class="pull-right">
+                        <div class="float-right">
                             <a href="<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'admin_index', 'admin' => true)) ?>"
                                class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
                             <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
@@ -121,7 +126,7 @@
         e.preventDefault();
         var how = $('#add-js').attr('data-number');
         how = parseInt(how) + 1;
-        var add = '<div class="form-group"><div class="well" id="nav-' + how + '"><div class="form-group"><label><?= addslashes($Lang->get('NAVBAR__LINK_NAME')) ?></label><input type="text" class="form-control name_of_nav" name="name_of_nav"></div><div class="form-group"><label><?= $Lang->get('URL') ?></label><input type="text" class="form-control url_of_nav" placeholder="<?= $Lang->get('NAVBAR__CUSTOM_URL') ?>" name="url"></div><a href="#" class="text-danger delete-nav pull-right"><?= $Lang->get('GLOBAL__DELETE') ?></a><br></div></div>';
+        var add = '<div class="form-group"><div class="card card-body bg-light" id="nav-' + how + '"><div class="form-group"><label><?= addslashes($Lang->get('NAVBAR__LINK_NAME')) ?></label><input type="text" class="form-control name_of_nav" name="name_of_nav"></div><div class="form-group"><label><?= $Lang->get('URL') ?></label><input type="text" class="form-control url_of_nav" placeholder="<?= $Lang->get('NAVBAR__CUSTOM_URL') ?>" name="url"></div><a href="#" class="text-danger delete-nav float-right"><?= $Lang->get('GLOBAL__DELETE') ?></a><br></div></div>';
         $('#add-js').append(add);
         $('#add-js').attr('data-number', how);
         deleteNavEvents();
@@ -142,57 +147,57 @@
 <script type="text/javascript">
     $("#normal").change(function () {
         if ($("#normal").is(':checked')) {
-            $("#type-normal").removeClass('hidden');
-            $("#type-dropdown").addClass('hidden');
+            $("#type-normal").removeClass('d-none');
+            $("#type-dropdown").addClass('d-none');
         } else {
-            $("#type-normal").addClass('hidden');
-            $("#type-dropdown").removeClass('hidden');
+            $("#type-normal").addClass('d-none');
+            $("#type-dropdown").removeClass('d-none');
         }
     });
     $("#dropdown").change(function () {
         if ($("dropdown").is(':checked')) {
-            $("#type-dropdown").addClass('hidden');
-            $("#type-normal").removeClass('hidden');
+            $("#type-dropdown").addClass('d-none');
+            $("#type-normal").removeClass('d-none');
         } else {
-            $("#type-dropdown").removeClass('hidden');
-            $("#type-normal").addClass('hidden');
+            $("#type-dropdown").removeClass('d-none');
+            $("#type-normal").addClass('d-none');
         }
     });
 
     $(".type_plugin").change(function () {
         if ($(".type_plugin").is(':checked')) {
-            $(".page").addClass('hidden');
-            $(".custom").addClass('hidden');
-            $(".plugin").removeClass('hidden');
+            $(".page").addClass('d-none');
+            $(".custom").addClass('d-none');
+            $(".plugin").removeClass('d-none');
         } else {
-            $(".plugin").addClass('hidden');
+            $(".plugin").addClass('d-none');
         }
     });
 
     $(".type_page").change(function () {
         if ($(".type_page").is(':checked')) {
-            $(".page").removeClass('hidden');
-            $(".custom").addClass('hidden');
-            $(".plugin").addClass('hidden');
+            $(".page").removeClass('d-none');
+            $(".custom").addClass('d-none');
+            $(".plugin").addClass('d-none');
         } else {
-            $(".page").addClass('hidden');
+            $(".page").addClass('d-none');
         }
     });
 
     $(".type_custom").change(function () {
         if ($(".type_custom").is(':checked')) {
-            $(".page").addClass('hidden');
-            $(".custom").removeClass('hidden');
-            $(".plugin").addClass('hidden');
+            $(".page").addClass('d-none');
+            $(".custom").removeClass('d-none');
+            $(".plugin").addClass('d-none');
         } else {
-            $(".custom").addClass('hidden');
+            $(".custom").addClass('d-none');
         }
     });
 </script>
 <script type="text/javascript">
     function formatteData($form) {
         var name = $form.find("input[name='name']").val();
-		var icon = $form.find("input[name='icon']").val();
+        var icon = $form.find("input[name='icon']").val();
         var type = $form.find("input[type='radio'][name='type']:checked").val();
         var url;
         if (type === "normal") {
