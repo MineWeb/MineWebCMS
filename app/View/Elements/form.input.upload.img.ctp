@@ -5,8 +5,8 @@
           <span class="file-input btn btn-primary btn-block btn-file"><span class="browse"><?= $Lang->get('FORM__BROWSE') ?>&hellip;</span> <input name="image" type="file" multiple></span>
           <a id="choose_from_uploaded_files" class="btn btn-default btn-block" data-toggle="modal" href="#galery"><?= $Lang->get('FORM__CHOOSE_FROM_UPLOADED_FILES') ?>&hellip;</a>
           <button id="delete_upload_file" class="btn btn-block btn-danger"><?= $Lang->get('FORM__DELETE_UPLOADED_FILE') ?></button>
-          <?= (isset($img)) ? '<img src="'.$img.'" class="pull-left" width="150" style="margin-top:10px;">' : $this->Html->image('form_img.png', array('class' => 'pull-left', 'width' => '150', 'id' => 'img-form', 'style' => 'margin-top:10px;')) ?>
-          <div class="caption pull-right">
+          <?= (isset($img)) ? '<img src="'.$img.'" class="float-left" width="150" style="margin-top:10px;">' : $this->Html->image('form_img.png', array('class' => 'float-left', 'width' => '150', 'id' => 'img-form', 'style' => 'margin-top:10px;')) ?>
+          <div class="caption float-right">
               <h5 id="img-name"><?= (isset($filename)) ? $filename.'<input name="img_edit" value="1" type="hidden">' : '' ?></h5>
               <p></p>
           </div>

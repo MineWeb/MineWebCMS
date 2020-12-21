@@ -1,11 +1,11 @@
 <section class="content">
     <div class="row">
         <div class="col-md-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><?= $Lang->get('USER__EDIT_TITLE') ?></h3>
+            <div class="card">
+                <div class="card-header with-border">
+                    <h3 class="card-title"><?= $Lang->get('USER__EDIT_TITLE') ?></h3>
                 </div>
-                <div class="box-body">
+                <div class="card-body">
                     <form action="<?= $this->Html->url(array('controller' => 'user', 'action' => 'edit_ajax')) ?>"
                           method="post" data-ajax="true"
                           data-redirect-url="<?= $this->Html->url(array('controller' => 'user', 'action' => 'index', 'admin' => 'true')) ?>">
@@ -32,13 +32,13 @@
                         <?php } else { ?>
                             <div class="form-group">
                                 <label><?= $Lang->get('USER__EMAIL') ?></label>
-                                <div class="input-group">
+                                <div class="input-group mb-3">
                                     <input value="<?= $search_user['email'] ?>" type="email" name="email"
                                            class="form-control">
-                                    <span class="input-group-btn">
-                    <a class="btn btn-success<?= ($search_user['confirmed']) ? ' disabled' : '' ?>"
-                       href="<?= ($search_user['confirmed']) ? '#' : $this->Html->url(array('action' => 'confirm', $search_user['id'])) ?>"><?= ($search_user['confirmed']) ? $Lang->get('USER__EMAIL_CONFIRMED') : $Lang->get('USER__CONFIRM_EMAIL') ?></a>
-                  </span>
+                                    <div class="input-group-append">
+                                        <a class="btn btn-success<?= ($search_user['confirmed']) ? ' disabled' : '' ?>"
+                                           href="<?= ($search_user['confirmed']) ? '#' : $this->Html->url(array('action' => 'confirm', $search_user['id'])) ?>"><?= ($search_user['confirmed']) ? $Lang->get('USER__EMAIL_CONFIRMED') : $Lang->get('USER__CONFIRM_EMAIL') ?></a>
+                                    </div>
                                 </div>
                             </div>
                         <?php } ?>
@@ -77,7 +77,7 @@
 
                         <?= $Module->loadModules('admin_user_edit_form') ?>
 
-                        <div class="pull-right">
+                        <div class="float-right">
                             <a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'index', 'admin' => true)) ?>"
                                class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
                             <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
@@ -89,11 +89,11 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><?= $Lang->get('USER__HIS_HISTORIES') ?></h3>
+            <div class="card">
+                <div class="card-header with-border">
+                    <h3 class="card-title"><?= $Lang->get('USER__HIS_HISTORIES') ?></h3>
                 </div>
-                <div class="box-body">
+                <div class="card-body">
 
                     <table class="table table-bordered dataTable">
                         <thead>

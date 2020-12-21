@@ -1,30 +1,29 @@
 <section class="content">
     <div class="row">
         <div class="col-md-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><?= $Lang->get('CONFIG__GENERAL_PREFERENCES') ?></h3>
+            <div class="card">
+                <div class="card-header with-border">
+                    <h3 class="card-title"><?= $Lang->get('CONFIG__GENERAL_PREFERENCES') ?></h3>
                 </div>
-                <div class="box-body">
+                <div class="card-body">
 
                     <form method="post">
 
                         <div class="nav-tabs-custom">
+
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="#tab_1" data-toggle="tab"
+                                <li class="nav-item"><a class="nav-link text-dark active" href="#tab_1" data-toggle="tab"
                                                       aria-expanded="true"><?= $Lang->get('CONFIG__GENERAL_PREFERENCES') ?></a>
                                 </li>
-                                <li class=""><a href="#tab_2" data-toggle="tab"
+                                <li class="nav-item"><a class="nav-link text-dark" href="#tab_2" data-toggle="tab"
                                                 aria-expanded="false"><?= $Lang->get('CONFIG__SOCIAL_PREFERENCES') ?></a>
                                 </li>
-                                <li class=""><a href="#tab_3" data-toggle="tab"
+                                <li class="nav-item"><a class="nav-link text-dark" href="#tab_3" data-toggle="tab"
                                                 aria-expanded="false"><?= $Lang->get('CONFIG__OTHER_PREFERENCES') ?></a>
-                                </li>
-                                <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a>
                                 </li>
                             </ul>
                             <div class="tab-content">
-                                <div class="tab-pane active" id="tab_1">
+                                <div class="tab-pane fade show active" id="tab_1">
 
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_NAME') ?></label>
@@ -74,8 +73,8 @@
 
                                     <?php } ?>
 
-                                    <?= $this->Html->script('admin/bootstrap-select') ?>
-                                    <?= $this->Html->css('bootstrap-select.min.css') ?>
+                                    <?= $this->Html->script('bootstrap-4/plugins/bootstrap-select/bootstrap-select.min.js') ?>
+                                    <?= $this->Html->css('bootstrap-4/plugins/bootstrap-select/bootstrap-select.min.css') ?>
 
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_LANG') ?></label>
@@ -130,6 +129,8 @@
                                         <small class="text-danger"><?= $Lang->get('CONFIG__KEY_PASSWORDS_ADVERTISSEMENT') ?></small>
                                     </div>
 
+                                    <hr>
+
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__CHECK_UUID') ?></label>
                                         <div class="form-group">
@@ -147,7 +148,6 @@
                                             })
                                         </script>
                                     </div>
-                                    <hr>
 
                                     <hr>
                                     <div class="form-group">
@@ -194,7 +194,7 @@
 
                                 </div>
                                 <!-- /.tab-pane -->
-                                <div class="tab-pane" id="tab_2">
+                                <div class="tab-pane fade" id="tab_2">
 
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_TWITTER') ?></label>
@@ -282,7 +282,7 @@
                                                 echo '</div>';
                                                 echo '<script>$(\'#color_social_btn_' . $i . '\').colorPicker()</script>';
 
-                                                echo '<button id="' . $i . '-' . $value['SocialButton']['id'] . '" class="btn btn-danger pull-right delete-social-btn-added">' . $Lang->get('GLOBAL__DELETE') . '</button>';
+                                                echo '<button id="' . $i . '-' . $value['SocialButton']['id'] . '" class="btn btn-danger float-right delete-social-btn-added">' . $Lang->get('GLOBAL__DELETE') . '</button>';
 
                                                 echo '</div>';
                                                 echo '<div class="clearfix"></div>';
@@ -323,7 +323,7 @@
                                             html_content += '<input type="text" name="social_btn[' + i + '][color]" class="form-control" id="color_social_btn_' + i + '">';
                                             html_content += '</div>';
 
-                                            html_content += '<button id="' + i + '" class="btn btn-danger pull-right delete-social-btn"><?= $Lang->get('GLOBAL__DELETE') ?></button>';
+                                            html_content += '<button id="' + i + '" class="btn btn-danger float-right delete-social-btn"><?= $Lang->get('GLOBAL__DELETE') ?></button>';
 
                                             html_content += '</div>';
                                             html_content += '<div class="clearfix"></div>';
@@ -366,7 +366,7 @@
 
                                 </div>
                                 <!-- /.tab-pane -->
-                                <div class="tab-pane" id="tab_3">
+                                <div class="tab-pane fade" id="tab_3">
 
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_MEMBER_PAGE_TYPE') ?></label>
