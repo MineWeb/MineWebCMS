@@ -73,10 +73,10 @@ class UpdateComponent extends CakeObject
     public function available()
     {
         if (version_compare($this->cmsVersion, $this->lastVersion, '<')) {
-            return "<div class='alert alert-info'>" .
-                "{$this->Lang->get('UPDATE__AVAILABLE')} {$this->Lang->get('UPDATE__CMS_VERSION')} : " .
+            return "<div class='alert alert-secondary'>" .
+                "{$this->Lang->get('UPDATE__AVAILABLE_TYPE_CMS')} {$this->Lang->get('UPDATE__AVAILABLE')} {$this->Lang->get('UPDATE__CMS_VERSION')} : " .
                 "{$this->cmsVersion}, {$this->Lang->get('UPDATE__LAST_VERSION')} : {$this->lastVersion} " .
-                "<a href='" . Router::url(array('controller' => 'update', 'action' => 'index', 'admin' => true)) . "' style='margin-top: -6px;' class='btn btn-warning float-right'>" .
+                "<a href='" . Router::url(array('controller' => 'update', 'action' => 'index', 'admin' => true)) . "' style='margin-top: -6px;' class='btn float-right'>" .
                 $this->Lang->get('GLOBAL__UPDATE') .
                 "</a>" .
                 "</div>";

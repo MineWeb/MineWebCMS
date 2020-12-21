@@ -1,6 +1,4 @@
 <div class="content-header">
-    <?= $Theme->displayAvailableUpdate() ?>
-    <?= $EyPlugin->displayAvailableUpdate() ?>
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
@@ -20,31 +18,38 @@
 <section class="content">
     <div class="row">
         <div class="col-md-3 col-sm-6 col-xs-12">
-            <div class="small-box bg-info">
-                <div class="inner">
-                    <h3><?= $registered_users ?></h3>
-                    <p><?= $Lang->get('USER__NBR_REGISTERED') ?></p>
-                </div>
-                <div class="icon">
+            <div class="info-box bg-lightblue">
+                <span class="info-box-icon">
                     <i class="fa fa-user"></i>
+                </span>
+                <div class="info-box-content">
+                    <span class="info-box-text"><?= $Lang->get('USER__NBR_REGISTERED') ?></span>
+
+                    <span class="info-box-number"><?= $registered_users ?></span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width:0%"></div>
+                    </div>
+                    <span class="progress-description">
+                        + <?= $registered_users_today ?> <?= $Lang->get('GLOBAL__TODAY') ?>
+                    </span>
                 </div>
-                <a href="#" class="small-box-footer">
-                    + <?= $registered_users_today ?> <?= $Lang->get('GLOBAL__TODAY') ?>
-                </a>
             </div>
         </div>
         <div class="col-md-3 col-sm-6 col-xs-12">
-            <div class="small-box bg-red">
-                <div class="inner">
-                    <h3><?= $count_visits ?></h3>
-                    <p><?= $Lang->get('STATS__NBR_VISITS') ?></p>
-                </div>
-                <div class="icon">
+            <div class="info-box bg-red">
+                <span class="info-box-icon">
                     <i class="fa fa-rss"></i>
+                </span>
+                <div class="info-box-content">
+                    <span class="info-box-text"><?= $Lang->get('STATS__NBR_VISITS') ?></span>
+                    <span class="info-box-number"><?= $count_visits ?></span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width:0%"></div>
+                    </div>
+                    <span class="progress-description">
+                        + <?= $count_visits_today ?> <?= $Lang->get('GLOBAL__TODAY') ?>
+                    </span>
                 </div>
-                <a href="#" class="small-box-footer">
-                    + <?= $count_visits_today ?> <?= $Lang->get('GLOBAL__TODAY') ?>
-                </a>
             </div>
         </div>
 
@@ -52,42 +57,50 @@
 
         <?php if ($EyPlugin->isInstalled('eywek.shop')) { ?>
             <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="small-box bg-green">
-                    <div class="inner">
-                        <h3><?= $purchase ?></h3>
-                        <p><?= $Lang->get('DASHBOARD__PURCHASES') ?></p>
-                    </div>
-                    <div class="icon">
-                        <i class="fa fa-shopping-cart"></i>
-                    </div>
-                    <a href="#" class="small-box-footer">
+                <div class="info-box bg-green">
+                <span class="info-box-icon">
+                    <i class="fa fa-shopping-cart"></i>
+                </span>
+                    <div class="info-box-content">
+                        <span class="info-box-text"><?= $Lang->get('DASHBOARD__PURCHASES') ?></span>
+                        <span class="info-box-number"><?= $purchase ?></span>
+                        <div class="progress">
+                            <div class="progress-bar" style="width:0%"></div>
+                        </div>
+                        <span class="progress-description">
                         + <?= $purchase_today ?> <?= $Lang->get('GLOBAL__TODAY') ?>
-                    </a>
+                    </span>
+                    </div>
                 </div>
             </div>
         <?php } ?>
         <div class="col-md-3 col-sm-6 col-xs-12">
-            <div class="small-box bg-olive">
-                <div class="inner">
-                    <h3><?= $nbr_news ?></h3>
-                    <p><?= $Lang->get('DASHBOARD__NEWS_WRITTEN') ?></p>
-                </div>
-                <div class="icon">
+            <div class="info-box bg-olive">
+                <span class="info-box-icon">
                     <i class="fas fa-pencil-ruler"></i>
+                </span>
+                <div class="info-box-content">
+                    <span class="info-box-text"><?= $Lang->get('DASHBOARD__NEWS_WRITTEN') ?></span>
+                    <span class="info-box-number"><?= $nbr_news ?></span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width:0%"></div>
+                    </div>
+                    <span class="progress-description">
+                        <?php
+                        if ($nbr_comments_type == "today") {
+                            echo '+ ';
+                        }
+                        echo $nbr_comments;
+                        ?>
+                        <?= $Lang->get('NEWS__COMMENTS_TITLE') ?>
+                    </span>
                 </div>
-                <a href="#" class="small-box-footer">
-                    <?php
-                    if ($nbr_comments_type == "today") {
-                        echo '+ ';
-                    }
-                    echo $nbr_comments;
-                    ?>
-                    <?= $Lang->get('NEWS__COMMENTS_TITLE') ?>
-                </a>
             </div>
         </div>
     </div>
 
+    <?= $Theme->displayAvailableUpdate() ?>
+    <?= $EyPlugin->displayAvailableUpdate() ?>
     <div class="row">
         <div class="col-md-8">
             <div class="card">
@@ -183,23 +196,23 @@
                                 </div>
                                 <div class="col-md-4">
                                     <ul class="chart-legend clearfix">
-                                        <li><i class="far fa-circle"
+                                        <li><i class="fa fa-circle-o"
                                                style="color:#1abc9c;"></i> <?= $items_solded[0]['item_name'] ?>
                                             (<?= $items_solded[0]['count'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)
                                         </li>
-                                        <li><i class="far fa-circle"
+                                        <li><i class="fa fa-circle-o"
                                                style="color:#2ecc71;"></i> <?= $items_solded[1]['item_name'] ?>
                                             (<?= $items_solded[1]['count'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)
                                         </li>
-                                        <li><i class="far fa-circle"
+                                        <li><i class="fa fa-circle-o"
                                                style="color:#3498db;"></i> <?= $items_solded[2]['item_name'] ?>
                                             (<?= $items_solded[2]['count'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)
                                         </li>
-                                        <li><i class="far fa-circle"
+                                        <li><i class="fa fa-circle-o"
                                                style="color:#e67e22;"></i> <?= $items_solded[3]['item_name'] ?>
                                             (<?= $items_solded[3]['count'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)
                                         </li>
-                                        <li><i class="far fa-circle"
+                                        <li><i class="fa fa-circle-o"
                                                style="color:#e74c3c;"></i> <?= $items_solded[4]['item_name'] ?>
                                             (<?= $items_solded[4]['count'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)
                                         </li>
