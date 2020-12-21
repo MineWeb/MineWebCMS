@@ -561,9 +561,9 @@
 
         "UPDATE__CHECK_STATUS": "Check if an update is available",
         "UPDATE__VIEW_CHANGELOG": "See the changes",
-            "UPDATE__AVAILABLE_TYPE_CMS": "<b>CMS :</b>",
-            "UPDATE__AVAILABLE_TYPE_PLUGIN": "<b>Plugin :</b>",
-            "UPDATE__AVAILABLE_TYPE_THEME": "<b>Theme :</b>",
+        "UPDATE__AVAILABLE_TYPE_CMS": "<b>CMS :</b>",
+        "UPDATE__AVAILABLE_TYPE_PLUGIN": "<b>Plugin :</b>",
+        "UPDATE__AVAILABLE_TYPE_THEME": "<b>Theme :</b>",
         "UPDATE__AVAILABLE": "An update is available!",
         "UPDATE__CMS_VERSION": "Your version",
         "UPDATE__LAST_VERSION": "The latest version of the available CMS",
