@@ -32,13 +32,13 @@
                         <?php } else { ?>
                             <div class="form-group">
                                 <label><?= $Lang->get('USER__EMAIL') ?></label>
-                                <div class="input-group">
+                                <div class="input-group mb-3">
                                     <input value="<?= $search_user['email'] ?>" type="email" name="email"
                                            class="form-control">
-                                    <span class="input-group-btn">
-                    <a class="btn btn-success<?= ($search_user['confirmed']) ? ' disabled' : '' ?>"
-                       href="<?= ($search_user['confirmed']) ? '#' : $this->Html->url(array('action' => 'confirm', $search_user['id'])) ?>"><?= ($search_user['confirmed']) ? $Lang->get('USER__EMAIL_CONFIRMED') : $Lang->get('USER__CONFIRM_EMAIL') ?></a>
-                  </span>
+                                    <div class="input-group-append">
+                                        <a class="btn btn-success<?= ($search_user['confirmed']) ? ' disabled' : '' ?>"
+                                           href="<?= ($search_user['confirmed']) ? '#' : $this->Html->url(array('action' => 'confirm', $search_user['id'])) ?>"><?= ($search_user['confirmed']) ? $Lang->get('USER__EMAIL_CONFIRMED') : $Lang->get('USER__CONFIRM_EMAIL') ?></a>
+                                    </div>
                                 </div>
                             </div>
                         <?php } ?>

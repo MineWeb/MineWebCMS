@@ -183,23 +183,23 @@
                                 </div>
                                 <div class="col-md-4">
                                     <ul class="chart-legend clearfix">
-                                        <li><i class="fa fa-circle-o"
+                                        <li><i class="far fa-circle"
                                                style="color:#1abc9c;"></i> <?= $items_solded[0]['item_name'] ?>
                                             (<?= $items_solded[0]['count'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)
                                         </li>
-                                        <li><i class="fa fa-circle-o"
+                                        <li><i class="far fa-circle"
                                                style="color:#2ecc71;"></i> <?= $items_solded[1]['item_name'] ?>
                                             (<?= $items_solded[1]['count'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)
                                         </li>
-                                        <li><i class="fa fa-circle-o"
+                                        <li><i class="far fa-circle"
                                                style="color:#3498db;"></i> <?= $items_solded[2]['item_name'] ?>
                                             (<?= $items_solded[2]['count'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)
                                         </li>
-                                        <li><i class="fa fa-circle-o"
+                                        <li><i class="far fa-circle"
                                                style="color:#e67e22;"></i> <?= $items_solded[3]['item_name'] ?>
                                             (<?= $items_solded[3]['count'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)
                                         </li>
-                                        <li><i class="fa fa-circle-o"
+                                        <li><i class="far fa-circle"
                                                style="color:#e74c3c;"></i> <?= $items_solded[4]['item_name'] ?>
                                             (<?= $items_solded[4]['count'] ?> <?= $Lang->get('GLOBAL__SALES') ?>)
                                         </li>
