@@ -8,9 +8,7 @@
     <link rel="icon" type="image/png"
           href="<?= (isset($theme_config) && isset($theme_config['favicon_url'])) ? $theme_config['favicon_url'] : '' ?>"/>
     <!-- Font Awesome 5 -->
-    <script src="https://kit.fontawesome.com/fb032ab5a6.js" crossorigin="anonymous"></script>
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <?= $this->Html->css('fontawesome-5/css/all.css'); ?>
     <!-- Tempusdominus Bbootstrap 4 -->
     <?= $this->Html->css('bootstrap-4/plugins/tempusdominus/tempusdominus-bootstrap-4.min.css'); ?>
     <!-- iCheck -->
