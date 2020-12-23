@@ -90,6 +90,8 @@ class AppController extends Controller
         }
 		$LoginCondition = ($this->here != "/login") || !$this->EyPlugin->isInstalled('phpierre.signinup');
         // Maintenance / Bans
+        $this->params['controller'] = strtolower($this->params['controller']);
+        $this->params['action'] = strtolower($this->params['action']);
         if ($this->isConnected AND $this->User->getKey('rank') == 5 AND $this->params['controller'] != "maintenance" AND $this->params['action'] != "logout" AND $this->params['controller'] != "api")
             $this->redirect(array('controller' => 'maintenance', 'action' => 'index/banned', 'plugin' => false, 'admin' => false));
         else if ($this->params['controller'] != "user" && $this->params['controller'] != "maintenance" && $this->Configuration->getKey('maintenance') != '0' && !$this->Permissions->can('BYPASS_MAINTENANCE') && $LoginCondition)
