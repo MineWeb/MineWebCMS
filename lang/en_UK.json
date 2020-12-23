@@ -100,7 +100,7 @@
         "GLOBAL__SAVE": "Save",
         "GLOBAL__CATEGORY": "Category",
         "GLOBAL__TEMPORALY_DISABLED": "Temporarily disabled",
-        
+
         "HELP__TITLE": "I need help",
         "HELP__TICKET_ADD_SUCCESS": "Your ticket has been sent!",
         "HELP__CHOOSE_QUESTION": "Choose a question",
@@ -112,7 +112,7 @@
         "HELP__POST_TICKET_TITLE": "Title",
         "HELP__POST_TICKET_TITLE_BOX": "Ask for help",
         "HELP__POST_TICKET_CONTENT": "Explain your problem as clearly as possible",
-        
+
         "NOTIFICATION__SUCCESS_SET": "The notification has been sent!",
         "NOTIFICATION__SUCCESS_REMOVE": "The notifications have been deleted!",
         "NOTIFICATION__TITLE": "Notifications",
@@ -141,7 +141,7 @@
         "NOTIFICATION__TYPE": "Type",
         "NOTIFICATION__TYPE_USER": "User",
         "NOTIFICATION__TYPE_ADMIN": "Administrator",
-        
+
         "ERROR__PLUGIN_CANT_BE_DOWNLOADED": "The plugin cannot be downloaded.",
         "ERROR__PLUGIN_REQUIREMENTS": "Could not be installed: the prerequisites of the plugin have not been satisfied.",
         "ERROR__PLUGIN_NOT_VALID": "The plugin is invalid, it can not be installed.",
@@ -236,7 +236,7 @@
         "CONFIG__KEY_SESSION_TYPE_INFO": "This is an advanced tuning of your site, you do not need to change it if you do not use it, by default the CMS uses PHP sessions.",
         "CONFIG__KEY_SESSION_TYPE_PHP": "PHP/Default",
         "CONFIG__KEY_SESSION_TYPE_DB": "Database",
-        
+
         "EMAIL__TITLE_CONFIRM_MAIL": "Confirm your email",
         "EMAIL__CONTENT_CONFIRM_MAIL": "Hi {USERNAME}! <br> You registered on {DATE} with IP <b>{IP}</b>, you have to confirm your email by going to this link <a href=\"{LINK}\">{LINK}</a>. <br> <br> <br> This email is automatic, please do not reply. ",
 
@@ -265,7 +265,7 @@
         "THEME__SUPPORTED_EXPLAIN": "Some features <br> <br> may not be available with this theme.",
         "THEME__ERROR_INSTALL_DOWNLOAD_FAILED": "The theme could not be downloaded from mineweb.org servers.",
         "THEME__ERROR_INSTALL_UNZIP": "The theme could not be installed, check that the <code>/app/View/Themed</code> folder is writable.",
-        
+
         "INSTALL__STEP_1_TITLE": "Step 1",
         "INSTALL__STEP_1_DESC": "You can now configure your Administrator account",
         "INSTALL__STEP_2_TITLE": "Step 2",
@@ -300,7 +300,7 @@
         "NEWS__EDIT": "Editing an article",
         "NEWS__PUBLISHED": "Published",
         "NEWS__WANT_TO_PUBLISH": "Publish?",
-        
+
         "NAVBAR__TITLE": "Navigation bar",
         "NAVBAR__ICON":"Icons",
         "NAVBAR__ICON__DESC":"Name of a fa-icon : <a>https://fontawesome.com/v4.7.0/icons/</a> . E.g. 'fas fa-angle-up'",
@@ -336,7 +336,7 @@
         "FORM__INVALID_CAPTCHA": "Invalid security code",
         "FORM__RELOAD_CAPTCHA": "Reload the security code",
         "FORM__ERROR_WHEN_UPLOAD": "An error occurred while saving the image",
-        
+
         "LOGIN__BLOCKED": "You have been blocked! You tried to login without success 10 times, please wait before trying again.",
 
         "USER__MSG_NOT_CONFIRMED_EMAIL": "Your email address has not been confirmed! You have received an email with a link to confirm your email address. <a style=\"text-decoration:underline;\" class=\"text-warning pull-right\" href=\"{URL_RESEND_EMAIL}\">Resend the email</a> ",
@@ -421,7 +421,7 @@
         "USER__VALID_CODE": "Enable two-factor authentication",
         "USER__SECRET_NOT_FOUND": "Information is missing, please reload the page and try again",
         "USER__SUCCESS_ENABLED_TWO_FACTOR_AUTH": "Two-factor authentication has been activated!",
-		
+
 		"HISTORY__CATEGORY_NEWS": "News",
         "HISTORY__CATEGORY_VOTE": "Vote",
         "HISTORY__CATEGORY_USER": "User",
@@ -463,7 +463,7 @@
         "HISTORY__ACTION_DELETE_USER": "Deleting a user",
         "HISTORY__ACTION_EDIT_LANG": "Change the language file",
         "HISTORY__VIEW_GLOBAL": "Site History",
-        
+
         "PERMISSIONS__LABEL": "Permissions",
         "PERMISSIONS__COMMENT_NEWS": "Comment a news",
         "PERMISSIONS__LIKE_NEWS": "Like news",
@@ -545,6 +545,9 @@
 
         "UPDATE__CHECK_STATUS": "Check if an update is available",
         "UPDATE__VIEW_CHANGELOG": "See the changes",
+        "UPDATE__AVAILABLE_TYPE_CMS": "<b>CMS :</b>",
+        "UPDATE__AVAILABLE_TYPE_PLUGIN": "<b>Plugin :</b>",
+        "UPDATE__AVAILABLE_TYPE_THEME": "<b>Theme :</b>",
         "UPDATE__AVAILABLE": "An update is available!",
         "UPDATE__CMS_VERSION": "Your version",
         "UPDATE__LAST_VERSION": "The latest version of the available CMS",
