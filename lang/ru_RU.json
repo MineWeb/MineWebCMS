@@ -549,6 +549,9 @@
 
        "UPDATE__CHECK_STATUS" : "Проверить, доступно ли обновление" ,
        "UPDATE__VIEW_CHANGELOG": "Посмотреть изменения",
+       "UPDATE__AVAILABLE_TYPE_CMS": "<b>CMS :</b>",
+       "UPDATE__AVAILABLE_TYPE_PLUGIN": "<b>Плагин :</b>",
+       "UPDATE__AVAILABLE_TYPE_THEME": "<b>Тема :</b>",
        "UPDATE__AVAILABLE" : "Доступно обновление!" ,
        "UPDATE__CMS_VERSION": "Ваша версия",
        "UPDATE__LAST_VERSION" : "Последняя версия доступной CMS" ,

@@ -192,7 +192,7 @@ class AppController extends Controller
     {
         $nav = array(
             'Dashboard' => [
-                'icon' => 'dashboard',
+                'icon' => 'fas fa-tachometer-alt',
                 'route' => ['controller' => 'admin', 'action' => 'index', 'admin' => true, 'plugin' => false]
             ],
             'GLOBAL__ADMIN_GENERAL' => [
@@ -214,37 +214,37 @@ class AppController extends Controller
                         'route' => ['controller' => 'configuration', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
 			        'STATS__TITLE' => [
-			            'icon' => 'bar-chart-o',
+			            'icon' => 'far fa-chart-bar',
 			            'permission' => 'VIEW_STATISTICS',
 			            'route' => ['controller' => 'statistics', 'action' => 'index', 'admin' => true, 'plugin' => false]
 			        ],
 		            'MAINTENANCE__TITLE' => [
-		                'icon' => 'hand-paper-o',
+		                'icon' => 'fas fa-hand-paper',
 		                'permission' => 'MANAGE_MAINTENANCE',
 		                'route' => ['controller' => 'maintenance', 'action' => 'index', 'admin' => true, 'plugin' => false]
 		            ],
                 ]
             ],
             'GLOBAL__CUSTOMIZE' => [
-                'icon' => 'files-o',
+                'icon' => 'fas fa-copy',
                 'menu' => [
                     'NEWS__TITLE' => [
-                        'icon' => 'pencil',
+                        'icon' => 'fas fa-pencil-ruler',
                         'permission' => 'MANAGE_NEWS',
                         'route' => ['controller' => 'news', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
                     'PAGE__TITLE' => [
-                        'icon' => 'file-text-o',
+                        'icon' => 'fas fa-file-alt',
                         'permission' => 'MANAGE_PAGE',
                         'route' => ['controller' => 'pages', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
                     'NAVBAR__TITLE' => [
-                        'icon' => 'bars',
+                        'icon' => 'fas fa-bars',
                         'permission' => 'MANAGE_NAV',
                         'route' => ['controller' => 'navbar', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
                     'MOTD__TITLE' => [
-                        'icon' => 'sort-amount-desc',
+                        'icon' => 'fas fa-sort-amount-up-alt',
                         'permission' => 'MANAGE_MOTD',
                         'route' => ['controller' => 'motd', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ]
@@ -255,7 +255,7 @@ class AppController extends Controller
                 'permission' => 'MANAGE_SERVERS',
                 'menu' => [
                     'SERVER__LINK' => [
-                        'icon' => 'arrows-h',
+                        'icon' => 'fas fa-arrows-alt-h',
                         'route' => ['controller' => 'server', 'action' => 'link', 'admin' => true, 'plugin' => false]
                     ],
                     'SERVER__BANLIST' => [
@@ -280,7 +280,7 @@ class AppController extends Controller
                 'icon' => 'puzzle-piece'
             ],
             'GLOBAL__ADMIN_OTHER_TITLE' => [
-                'icon' => 'folder-o',
+                'icon' => 'fas fa-folder-open',
                 'menu' => [
                     'PLUGIN__TITLE' => [
                         'icon' => 'plus',
@@ -349,7 +349,7 @@ class AppController extends Controller
         $themeConfig = $this->Theme->getConfig(Configure::read('theme'));
         if (isset($themeConfig->slider) && $themeConfig->slider)
             $nav['GLOBAL__CUSTOMIZE']['menu'] = addToArrayAt($nav['GLOBAL__CUSTOMIZE']['menu'], count($nav['GLOBAL__CUSTOMIZE']['menu']), ['SLIDER__TITLE' => [
-                'icon' => 'picture-o',
+                'icon' => 'far fa-image',
                 'permission' => 'MANAGE_SLIDER',
                 'route' => ['controller' => 'slider', 'action' => 'index', 'admin' => true, 'plugin' => false]
             ]]);

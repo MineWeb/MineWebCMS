@@ -303,7 +303,7 @@
 
         "NAVBAR__TITLE":"Barre de navigation",
         "NAVBAR__ICON":"Icones",
-        "NAVBAR__ICON__DESC":"Exemple : (angle-up) ; liste disponible depuis ce lien : ",
+        "NAVBAR__ICON__DESC":"Exemple : (fas fa-angle-up) ; liste disponible depuis ce lien : ",
         "NAVBAR__OPEN_IN_NEW_TAB": "Ouvrir dans un nouvel onglet",
         "NAVBAR__EDIT_TITLE": "Modifier un lien",
         "NAVBAR__SAVE_IN_PROGRESS":"Sauvegarde automatique...",
@@ -561,6 +561,9 @@
 
         "UPDATE__CHECK_STATUS": "Vérifier si une mise à jour est disponible",
         "UPDATE__VIEW_CHANGELOG": "Voir les modifications",
+        "UPDATE__AVAILABLE_TYPE_CMS": "<b>CMS :</b>",
+        "UPDATE__AVAILABLE_TYPE_PLUGIN": "<b>Plugin :</b>",
+        "UPDATE__AVAILABLE_TYPE_THEME": "<b>Thème :</b>",
         "UPDATE__AVAILABLE": "Une mise à jour est disponible !",
         "UPDATE__CMS_VERSION": "Votre version",
         "UPDATE__LAST_VERSION": "Dernière version du CMS disponible",

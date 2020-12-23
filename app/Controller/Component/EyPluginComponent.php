@@ -83,7 +83,7 @@ class EyPluginComponent extends CakeObject
                 $lastVersion = (isset($versions[$value->slug])) ? $versions[$value->slug] : false;
                 if($lastVersion && $value->version != $lastVersion) {
                    $this->Lang = $this->controller->Lang;
-                    return '<div class="alert alert-warning">' . $this->Lang->get('UPDATE__AVAILABLE') . ' ' . $this->Lang->get('UPDATE__PLUGIN') . ' <a href="' . Router::url(array('controller' => 'plugin', 'action' => 'index', 'admin' => true)) . '" style="margin-top: -6px;" class="btn btn-warning pull-right">' . $this->Lang->get('GLOBAL__UPDATE_LOOK') . '</a></div>';
+                   return '<div class="alert alert-secondary">' . $this->Lang->get('UPDATE__AVAILABLE_TYPE_PLUGIN') . ' ' . $this->Lang->get('UPDATE__AVAILABLE') . ' ' . $this->Lang->get('UPDATE__PLUGIN') . ' <a href="' . Router::url(array('controller' => 'plugin', 'action' => 'index', 'admin' => true)) . '" style="margin-top: -6px;" class="btn float-right">' . $this->Lang->get('GLOBAL__UPDATE_LOOK') . '</a></div>';
                 }
             }
         }

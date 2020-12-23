@@ -1,11 +1,11 @@
 <section class="content">
   <div class="row">
     <div class="col-md-12">
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('SLIDER__ADD') ?></h3>
+      <div class="card">
+        <div class="card-header with-border">
+          <h3 class="card-title"><?= $Lang->get('SLIDER__ADD') ?></h3>
         </div>
-        <div class="box-body">
+        <div class="card-body">
           <form action="<?= $this->Html->url(array('controller' => 'slider', 'action' => 'add_ajax')) ?>" method="post" data-ajax="true" data-upload-image="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'slider', 'action' => 'index', 'admin' => 'true')) ?>">
 
             <div class="ajax-msg"></div>
@@ -14,7 +14,7 @@
               <?= $this->element('form.input.upload.img') ?>
             </div>
 
-            <div class="col-md-8">
+            <div class="col-md-12">
 
               <div class="form-group">
                 <label><?= $Lang->get('GLOBAL__TITLE') ?></label>
@@ -26,7 +26,7 @@
                 <input name="subtitle" class="form-control" type="text">
               </div>
 
-              <div class="pull-right">
+              <div class="float-right">
                 <a href="<?= $this->Html->url(array('controller' => 'slider', 'action' => 'index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
                 <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
               </div>
