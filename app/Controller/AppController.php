@@ -90,6 +90,7 @@ class AppController extends Controller
         }
 		$LoginCondition = ($this->here != "/login") || !$this->EyPlugin->isInstalled('phpierre.signinup');
         // Maintenance / Bans
+	// lowercase to avoid errors when the controller is called with uppercase
         $this->params['controller'] = strtolower($this->params['controller']);
         $this->params['action'] = strtolower($this->params['action']);
         if ($this->isConnected AND $this->User->getKey('rank') == 5 AND $this->params['controller'] != "maintenance" AND $this->params['action'] != "logout" AND $this->params['controller'] != "api")
