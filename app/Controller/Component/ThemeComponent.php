@@ -2,6 +2,7 @@
 
 use PharIo\Version\Version;
 use PharIo\Version\VersionConstraintParser;
+
 App::uses('CakeObject', 'Core');
 
 class ThemeComponent extends CakeObject
@@ -20,13 +21,21 @@ class ThemeComponent extends CakeObject
         $this->themesFolder = ROOT . DS . 'app' . DS . 'View' . DS . 'Themed';
     }
 
-    public function shutdown($controller) {}
+    public function shutdown($controller)
+    {
+    }
 
-    public function beforeRender($controller) {}
+    public function beforeRender($controller)
+    {
+    }
 
-    public function beforeRedirect() {}
+    public function beforeRedirect()
+    {
+    }
 
-    public function startup($controller) {}
+    public function startup($controller)
+    {
+    }
 
     // init
     public function initialize($controller)
@@ -40,15 +49,15 @@ class ThemeComponent extends CakeObject
         // versioning
         App::import('Vendor', 'load', array('file' => 'phar-io/version-master/load.php'));
     }
-    
+
     public function displayAvailableUpdate()
     {
-        if(!empty($this->getThemesInstalled(true))) {
-             foreach ($this->getThemesInstalled(true) as $key => $value) {
-                if(isset($value->lastVersion)) {
-                    if($value->version !== $value->lastVersion) {
+        if (!empty($this->getThemesInstalled(true))) {
+            foreach ($this->getThemesInstalled(true) as $key => $value) {
+                if (isset($value->lastVersion)) {
+                    if ($value->version !== $value->lastVersion) {
                         $this->Lang = $this->controller->Lang;
-                        return '<div class="alert alert-secondary">'. $this->Lang->get('UPDATE__AVAILABLE_TYPE_THEME') . ' ' . $this->Lang->get('UPDATE__AVAILABLE') . ' ' . $this->Lang->get('UPDATE__THEME') . '<a href="' . Router::url(array('controller' => 'theme', 'action' => 'index', 'admin' => true)) . '" class="btn float-right">' . $this->Lang->get('GLOBAL__UPDATE_LOOK') . '</a></div>';
+                        return '<div class="alert alert-secondary">'. $this->Lang->get('UPDATE__AVAILABLE_TYPE_THEME') . ' ' . $this->Lang->get('UPDATE__AVAILABLE') . ' ' . $this->Lang->get('UPDATE__THEME') . '<a href="' . Router::url(array('controller' => 'theme', 'action' => 'index', 'admin' => true)) . '" style="margin-top: -6px;" class="btn float-right">' . $this->Lang->get('GLOBAL__UPDATE_LOOK') . '</a></div>';
                     }
                 }
             }
@@ -315,93 +324,95 @@ class ThemeComponent extends CakeObject
         $errors = array();
 
         $versionParser = new VersionConstraintParser();
-        foreach ($supported as $type => $version) { // on parcours tout les pré-requis
-            // Set version to compare
-            if ($type == 'CMS')
-                $versionToCompare = trim(@file_get_contents(ROOT . DS . 'VERSION'));
-            else {
-                // find plugin
-                $search = $this->EyPlugin->findPlugin('id', $type);
-                if (empty($search)) // plugin not installed
+        if (is_array($supported))
+            foreach ($supported as $type => $version) { // on parcours tout les pré-requis
+                // Set version to compare
+                if ($type == 'CMS')
+                    $versionToCompare = trim(@file_get_contents(ROOT . DS . 'VERSION'));
+                else {
+                    // find plugin
+                    $search = $this->EyPlugin->findPlugin('id', $type);
+                    if (empty($search)) // plugin not installed
+                        continue;
+                    $versionToCompare = $search->version;
+                }
+
+                // Check
+                try {
+                    $neededVersion = $versionParser->parse($version); // ex: ^7.0
+                } catch (Exception $e) {
+                    $errors[$type] = $e->getMessage();
                     continue;
-                $versionToCompare = $search->version;
-            }
+                }
 
-            // Check
-            try {
-                $neededVersion = $versionParser->parse($version); // ex: ^7.0
-            } catch (Exception $e) {
-                $errors[$type] = $e->getMessage();
-                continue;
+                try {
+                    if (!$neededVersion->complies(new Version($versionToCompare)))
+                        $errors[$type] = $version;
+                } catch (Exception $exception) {
+                    if (isset($search))
+                        $this->log('Theme (' . $slug . ') check supported: Plugin (' . $search->slug . ') invalid version: ' . $versionToCompare);
+                    else
+                        $this->log('Theme (' . $slug . ') check supported: Invalid version : ' . $versionToCompare . '(' . $type . ' => ' . $version . ')');
+                }
             }
-
-            try {
-                if (!$neededVersion->complies(new Version($versionToCompare)))
-                    $errors[$type] = $version;
-            } catch (Exception $exception) {
-                if (isset($search))
-                    $this->log('Theme (' . $slug . ') check supported: Plugin (' . $search->slug . ') invalid version: ' . $versionToCompare);
-                else
-                    $this->log('Theme (' . $slug . ') check supported: Invalid version : ' . $versionToCompare . '(' . $type . ' => ' . $version . ')');
-            }
-        }
 
         return $errors;
     }
 
-    private function download($slug) {
-      $zip = $this->controller->sendGetRequest('https://github.com/MineWeb/Theme-' . $slug . '/archive/master.zip');
-      if (!$zip)
-          return 'THEME__ERROR_INSTALL_DOWNLOAD_FAILED';
+    private function download($slug)
+    {
+        $zip = $this->controller->sendGetRequest('https://github.com/MineWeb/Theme-' . $slug . '/archive/master.zip');
+        if (!$zip)
+            return 'THEME__ERROR_INSTALL_DOWNLOAD_FAILED';
 
-      // Temporary file
-      $zipFile = ROOT . DS . 'app' . DS . 'tmp' . DS . 'theme-' . $slug . '.zip';
-      $file = fopen($zipFile, 'w+');
-      if (!fwrite($file, $zip)) {
-          $this->log('Error when downloading theme, save files failed.');
-          return 'THEME__ERROR_INSTALL_UNZIP';
-      }
-      fclose($file);
-
-      // Set into plugin folder
-      $zip = new ZipArchive;
-      $res = $zip->open($zipFile);
-      if ($res !== TRUE) {
-          $this->log('Error when downloading theme, unable to open zip. (CODE: ' . $res . ')');
-          return 'THEME__ERROR_INSTALL_UNZIP';
-      }
-      if (!file_exists(ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug) && !mkdir(ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug))
-        return 'THEME__ERROR_INSTALL_UNZIP';
-      for($i = 0; $i < $zip->numFiles; $i++) {
-        $filename = $zip->getNameIndex($i);
-        $fileinfo = pathinfo($filename);
-        $stat = $zip->statIndex($i);
-        if ($fileinfo['basename'] === 'Theme-' . $slug . '-master') continue;
-
-        $target = "zip://".$zipFile."#".$filename;
-        $dest = ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug . substr($filename, strlen('Theme-' . $slug . '-master'));
-        if ($stat['size'] === 0 && strpos($filename, '.') === false) {
-          if (!file_exists($dest)) mkdir($dest);
-          continue;
+        // Temporary file
+        $zipFile = ROOT . DS . 'app' . DS . 'tmp' . DS . 'theme-' . $slug . '.zip';
+        $file = fopen($zipFile, 'w+');
+        if (!fwrite($file, $zip)) {
+            $this->log('Error when downloading theme, save files failed.');
+            return 'THEME__ERROR_INSTALL_UNZIP';
         }
-        if (!copy($target, $dest)) return 'THEME__ERROR_INSTALL_UNZIP';
-      }
-      $zip->close();
+        fclose($file);
 
-      // Delete temporary file
-      unlink($zipFile);
-      return true;
+        // Set into plugin folder
+        $zip = new ZipArchive;
+        $res = $zip->open($zipFile);
+        if ($res !== TRUE) {
+            $this->log('Error when downloading theme, unable to open zip. (CODE: ' . $res . ')');
+            return 'THEME__ERROR_INSTALL_UNZIP';
+        }
+        if (!file_exists(ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug) && !mkdir(ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug))
+            return 'THEME__ERROR_INSTALL_UNZIP';
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $filename = $zip->getNameIndex($i);
+            $fileinfo = pathinfo($filename);
+            $stat = $zip->statIndex($i);
+            if ($fileinfo['basename'] === 'Theme-' . $slug . '-master') continue;
+
+            $target = "zip://" . $zipFile . "#" . $filename;
+            $dest = ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug . substr($filename, strlen('Theme-' . $slug . '-master'));
+            if ($stat['size'] === 0 && strpos($filename, '.') === false) {
+                if (!file_exists($dest)) mkdir($dest);
+                continue;
+            }
+            if (!copy($target, $dest)) return 'THEME__ERROR_INSTALL_UNZIP';
+        }
+        $zip->close();
+
+        // Delete temporary file
+        unlink($zipFile);
+        return true;
     }
- 
+
     // install plugin
     public function install($slug, $update = false)
     {
         // ask to api
         $download = $this->download($slug);
         if ($download !== true)
-          return $download;
+            return $download;
         if ($update)
-          $oldConfig = $this->getCustomData($slug)[1];
+            $oldConfig = $this->getCustomData($slug)[1];
         App::uses('Folder', 'Utility');
         $folder = new Folder($this->themesFolder . DS . '__MACOSX');
         $folder->delete();
