@@ -18,6 +18,7 @@ class UpdateComponent extends CakeObject
     private $updateLogFileName;
     private $bypassFiles = array(
         '.DS_Store',
+        '.htaccess',
         'empty',
         'app/Config/database.php',
         'config/secure',
