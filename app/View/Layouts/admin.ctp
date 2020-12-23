@@ -135,14 +135,15 @@
 
                     function checkCurrent($nav, $context)
                     {
-                        foreach ($nav as $name => $value) {
-                            if (isset($value['menu']))
-                                return checkCurrent($value['menu'], $context);
-                            $route = (isset($value['route']) ? $context->Html->url($value['route']) : '#');
-                            $current = $route == $context->Html->url(null, false);
-                            if ($current == $route)
-                                return true;
-                        }
+                        if (is_array($nav))
+                            foreach ($nav as $name => $value) {
+                                if (isset($v['menu']))
+                                    return checkCurrent($v['menu'], $context);
+                                $route = (isset($value['route']) ? $context->Html->url($value['route']) : '#');
+                                $current = $route == $context->Html->url(null, false);
+                                if ($current == $route)
+                                    return true;
+                            }
                         return false;
                     }
 

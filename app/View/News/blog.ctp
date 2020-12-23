@@ -16,6 +16,6 @@
 					<hr>
 				<p><?php $nmsg = substr($news['News']['content'], 0, 500); echo $nmsg; ?> ...</p>
 			</div>
-		<php? } ?>
+		<?php } ?>
 	</div>
 </div>
