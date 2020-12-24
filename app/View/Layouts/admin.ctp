@@ -30,7 +30,7 @@
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed <?= $admin_dark_mode ? "dark-mode" : "" ?> ">
 <div class="wrapper">
 
     <nav class="main-header navbar navbar-expand navbar-dark navbar-lightblue">
@@ -40,6 +40,31 @@
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+
+                <div class="nav-link custom-control custom-switch custom-switch-off-danger custom-switch-on-success" data-children-count="1">
+                    <input type="checkbox" class="custom-control-input switchAdminDarkMode" id="customSwitch3" <?= (isset($admin_dark_mode) && $admin_dark_mode) ? 'checked' : '' ?>>
+                    <label class="custom-control-label" for="customSwitch3">Dark-Mode</label>
+                </div>
+            </li>
+            <script>
+                $('.switchAdminDarkMode').change(function (e) {
+                    e.preventDefault();
+
+                    var btn = $(this);
+
+                    if (btn.is(':checked')) {
+                        $('body').addClass("dark-mode");
+                    } else {
+
+                        $('body').removeClass("dark-mode");
+                    }
+
+                    $.get('<?= $this->Html->url(array('action' => 'switchAdminDarkMode', 'controller' => 'admin', 'admin' => true)) ?>');
+
+                    return false;
+                });
+            </script>
             <li class="nav-item dropdown">
                 <a class="nav-link" onclick="notification.markAllAsSeen(1)" data-toggle="dropdown" href="#">
                     <i class="far fa-bell"></i>
@@ -157,13 +182,12 @@
                             $currentMenu = checkCurrent($value['menu'], $context) ? "menu-open" : "";
                             if (isset($value['menu'])) {
                                 echo '<li class="nav-item has-treeview ' . ($currentMenu ? "menu-open" : "") . '">';
-                            }
-                            else
+                            } else
                                 echo '<li class="nav-item">';
                             // Link
                             $route = (isset($value['route']) ? $context->Html->url($value['route']) : '#');
                             $current = $route == $context->Html->url(null, false);
-                            echo '<a class="nav-link  ' . ($current || $currentMenu  ? " active" : "") . '" href="' . $route . '">';
+                            echo '<a class="nav-link  ' . ($current || $currentMenu ? " active" : "") . '" href="' . $route . '">';
                             echo '<i class=" ' . (strpos($value['icon'], "fa-") ? $value['icon'] : "fa fa-" . $value['icon']) . ' nav-icon"></i>  <p>' . $context->Lang->get($name);
                             if (isset($value['menu']))
                                 echo '<i class="fas fa-angle-left right"></i></p>';
