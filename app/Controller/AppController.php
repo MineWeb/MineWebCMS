@@ -434,8 +434,9 @@ class AppController extends Controller
         $users_count_today = $this->User->find('count', array('conditions' => array('created LIKE' => date('Y-m-d').'%')));
         $visits_count = $this->Visit->getVisitsCount();
         $visits_count_today = $this->Visit->getVisitsByDay(date('Y-m-d'))['count'];
-        $this->set(compact('users_count', 'users_last', 'users_count_today', 'visits_count', 'visits_count_today'));
-        
+        $admin_dark_mode = $this->Cookie->read('use_admin_dark_mode');
+        $this->set(compact('users_count', 'users_last', 'users_count_today', 'visits_count', 'visits_count_today', 'admin_dark_mode'));
+
     }
 
     public function beforeRender()
