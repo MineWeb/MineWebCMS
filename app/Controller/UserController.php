@@ -267,12 +267,22 @@ class UserController extends AppController
         $this->response->type('json');
         if ($this->isConnected && $this->API->can_skin()) {
             if ($this->request->is('post')) {
-                $skin_max_size = 10000000; // octet
+                $username = $this->User->getKey('pseudo');
                 $this->loadModel('ApiConfiguration');
                 $ApiConfiguration = $this->ApiConfiguration->find('first');
+
+                $useSkinRestorer = $ApiConfiguration['ApiConfiguration']['use_skin_restorer'];
+                $serverSkinRestorerID = $ApiConfiguration['ApiConfiguration']['skin_restorer_server_id'];
+
+                if ($useSkinRestorer & !$this->Server->userIsConnected($username, $serverSkinRestorerID)) {
+                    $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('API__SKIN_RESTORER_NOT_CONNECTED'))));
+                    return;
+                }
+                $skin_max_size = 10000000; // octet
+
                 $target_config = $ApiConfiguration['ApiConfiguration']['skin_filename'];
                 $filename = substr($target_config, (strrpos($target_config, '/') + 1));
-                $filename = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $filename);
+                $filename = str_replace('{PLAYER}', $username, $filename);
                 $filename = str_replace('php', '', $filename);
                 $filename = str_replace('.', '', $filename);
                 $filename = $filename . '.png';
@@ -291,6 +301,12 @@ class UserController extends AppController
                     $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD'))));
                     return;
                 }
+
+                $skinURL = $this->Html->url(array('action' => str_replace("{PLAYER}", $username, $ApiConfiguration['ApiConfiguration']['skin_filename']) . ".png", 'controller' => '', 'admin' => false));
+
+                $skinRestorerCommand = str_replace(['{PLAYER}', '{URL}'], [$username, $skinURL], "skin set {PLAYER} {URL}");
+                $this->Server->commands($skinRestorerCommand, $serverSkinRestorerID);
+
                 $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__UPLOAD_SKIN_SUCCESS'))));
             }
         } else {
