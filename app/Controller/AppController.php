@@ -90,6 +90,8 @@ class AppController extends Controller
         }
 		$LoginCondition = ($this->here != "/login") || !$this->EyPlugin->isInstalled('phpierre.signinup');
         // Maintenance / Bans
+        $this->params['controller'] = strtolower($this->params['controller']);
+        $this->params['action'] = strtolower($this->params['action']);
         if ($this->isConnected AND $this->User->getKey('rank') == 5 AND $this->params['controller'] != "maintenance" AND $this->params['action'] != "logout" AND $this->params['controller'] != "api")
             $this->redirect(array('controller' => 'maintenance', 'action' => 'index/banned', 'plugin' => false, 'admin' => false));
         else if ($this->params['controller'] != "user" && $this->params['controller'] != "maintenance" && $this->Configuration->getKey('maintenance') != '0' && !$this->Permissions->can('BYPASS_MAINTENANCE') && $LoginCondition)
@@ -431,8 +433,9 @@ class AppController extends Controller
         $users_count_today = $this->User->find('count', array('conditions' => array('created LIKE' => date('Y-m-d').'%')));
         $visits_count = $this->Visit->getVisitsCount();
         $visits_count_today = $this->Visit->getVisitsByDay(date('Y-m-d'))['count'];
-        $this->set(compact('users_count', 'users_last', 'users_count_today', 'visits_count', 'visits_count_today'));
-        
+        $admin_dark_mode = $this->Cookie->read('use_admin_dark_mode');
+        $this->set(compact('users_count', 'users_last', 'users_count_today', 'visits_count', 'visits_count_today', 'admin_dark_mode'));
+
     }
 
     public function beforeRender()
