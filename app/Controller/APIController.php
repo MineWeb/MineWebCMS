@@ -18,6 +18,8 @@ class APIController extends AppController {
 
 			$this->loadModel('ApiConfiguration');
 			$config = $this->ApiConfiguration->find('first')['ApiConfiguration'];
+            $this->loadModel('Server');
+            $get_all_servers = $this->Server->findSelectableServers(false);
 
 			if($this->request->is('post')) {
 				if(isset($this->request->data['skins']) AND isset($this->request->data['skin_free']) AND !empty($this->request->data['skin_filename']) AND isset($this->request->data['capes']) AND isset($this->request->data['cape_free']) AND !empty($this->request->data['cape_filename'])) {
@@ -35,7 +37,7 @@ class APIController extends AppController {
 					$this->Session->setFlash($this->Lang->get('ERROR__FILL_ALL_FIELDS'), 'default.error');
 				}
 			}
-
+            $this->set('get_all_servers', $get_all_servers);
 			$this->set('config', $config);
 		} else {
 			$this->redirect('/');

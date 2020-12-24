@@ -51,6 +51,8 @@ class AppSchema extends CakeSchema
                 'cape_free' => 0,
                 'cape_width' => '64',
                 'cape_height' => '32',
+                'use_skin_restorer' => 0,
+                'skin_restorer_server_id' => 0,
             ));
             $api->save();
 
@@ -170,6 +172,8 @@ class AppSchema extends CakeSchema
         'cape_free' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1, 'unsigned' => false),
         'cape_width' => array('type' => 'integer', 'null' => true, 'default' => '64', 'unsigned' => false),
         'cape_height' => array('type' => 'integer', 'null' => true, 'default' => '32', 'unsigned' => false),
+        'use_skin_restorer' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1, 'unsigned' => false),
+        'skin_restorer_server_id' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 8, 'unsigned' => false),
         'indexes' => array(
             'PRIMARY' => array('column' => 'id', 'unique' => 1)
         ),

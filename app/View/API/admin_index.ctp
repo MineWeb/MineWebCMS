@@ -161,6 +161,41 @@
 
                         <hr>
 
+
+                        <div class="form-group">
+                            <label><?= $Lang->get('API__USE_SKIN_RESTORER') ?></label>
+                            <div class="radio">
+                                <input type="radio" name="use_skin_restorer"
+                                       value="1"<?php if ($config['use_skin_restorer'] == 1) {
+                                    echo ' checked="checked"';
+                                } ?>>
+                                <label>
+                                    <?= $Lang->get('GLOBAL__ENABLED') ?>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <input type="radio" name="use_skin_restorer"
+                                       value="0"<?php if ($config['use_skin_restorer'] == 0) {
+                                    echo ' checked="checked"';
+                                } ?>>
+                                <label>
+                                    <?= $Lang->get('GLOBAL__DISABLED') ?>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label><?= $Lang->get('API__SKIN_RESTORER_SERVER') ?></label>
+                            <em><?= $Lang->get('API__SKIN_RESTORER_SERVER_DESC') ?></em>
+                            <select class="form-control" name="servers">
+                                <?php foreach ($get_all_servers as $key => $value) { ?>
+                                    <option value="<?= $key ?>"<?= (isset($selected_server) && in_array($key, $selected_server)) ? ' selected' : '' ?>><?= $value ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+
+                        <hr>
+
                         <input type="hidden" name="data[_Token][key]" value="<?= $csrfToken ?>">
 
                         <div class="float-right">
