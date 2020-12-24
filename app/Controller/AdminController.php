@@ -105,11 +105,7 @@ class AdminController extends AppController {
         $this->autoRender = false;
         if ($this->isConnected) {
             $admin_dark_mode = $this->Cookie->read('use_admin_dark_mode');
-            if ($admin_dark_mode) {
-                $this->Cookie->write('use_admin_dark_mode', false);
-            } else {
-                $this->Cookie->write('use_admin_dark_mode', true);
-            }
+            $this->Cookie->write('use_admin_dark_mode', !$admin_dark_mode);
         } else {
             throw new ForbiddenException();
         }
