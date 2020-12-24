@@ -31,6 +31,13 @@
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed <?= $admin_dark_mode ? "dark-mode" : "" ?> ">
+<?php if($admin_dark_mode) { ?>
+    <style>
+        .text-dark {
+            color: white !important
+        }
+    </style>
+<?php } ?>
 <div class="wrapper">
 
     <nav class="main-header navbar navbar-expand navbar-dark navbar-lightblue">
