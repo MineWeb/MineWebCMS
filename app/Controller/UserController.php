@@ -302,7 +302,7 @@ class UserController extends AppController
                     return;
                 }
 
-                $skinURL = $this->Html->url(array('action' => str_replace("{PLAYER}", $username, $ApiConfiguration['ApiConfiguration']['skin_filename']) . ".png", 'controller' => '', 'admin' => false));
+                $skinURL = Router::url(array('action' => str_replace("{PLAYER}", $username, $ApiConfiguration['ApiConfiguration']['skin_filename']) . ".png", 'controller' => '', 'admin' => false), true);
 
                 $skinRestorerCommand = str_replace(['{PLAYER}', '{URL}'], [$username, $skinURL], "skin set {PLAYER} {URL}");
                 $this->Server->commands($skinRestorerCommand, $serverSkinRestorerID);
