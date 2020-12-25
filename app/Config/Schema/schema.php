@@ -173,7 +173,7 @@ class AppSchema extends CakeSchema
         'cape_free' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1, 'unsigned' => false),
         'cape_width' => array('type' => 'integer', 'null' => true, 'default' => '64', 'unsigned' => false),
         'cape_height' => array('type' => 'integer', 'null' => true, 'default' => '32', 'unsigned' => false),
-        'get_premium_skins' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1, 'unsigned' => false),
+        'get_premium_skins' => array('type' => 'integer', 'null' => false, 'default' => '1', 'length' => 1, 'unsigned' => false),
         'use_skin_restorer' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1, 'unsigned' => false),
         'skin_restorer_server_id' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 8, 'unsigned' => false),
         'indexes' => array(
