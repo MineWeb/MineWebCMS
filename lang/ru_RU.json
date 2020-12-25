@@ -305,7 +305,7 @@
         
        "NAVBAR__TITLE": "Панель навигации",
        "NAVBAR__ICON": "Иконы",
-       "NAVBAR__ICON__DESC": "Имя значка fa:  <a> https://fontawesome.com/v4.7.0/icons/ </a>. Например, под углом вверх",
+       "NAVBAR__ICON__DESC": "Пример: (fas fa-angle-up); список доступен по этой ссылке:",
        "NAVBAR__OPEN_IN_NEW_TAB": "Открыть в новой вкладке",
        "NAVBAR__EDIT_TITLE": "Изменить ссылку",
        "NAVBAR__SAVE_IN_PROGRESS": "Автоматическое резервное копирование ...",
