@@ -21,9 +21,9 @@
                                                                          href="https://fontawesome.com/">https://fontawesome.com/</a>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" >fa-</span>
+                                    <span class="input-group-text">FA</span>
                                 </div>
-                                <input name="icon" class="form-control" type="text">
+                                <input name="icon" class="form-control" type="text" value="<?= $nav['icon'] ?>">
                             </div>
                         </div>
 
