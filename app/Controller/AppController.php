@@ -360,7 +360,7 @@ class AppController extends Controller
         // Handle plugins
         $plugins = $this->EyPlugin->pluginsLoaded;
         foreach ($plugins as $plugin) {
-            if (!isset($plugin->admin_menus))
+            if (!isset($plugin->admin_menus) || !$plugin->active)
                 continue;
             $menus = json_decode(json_encode($plugin->admin_menus), true);
             $nav = addToNav($menus, $nav);
