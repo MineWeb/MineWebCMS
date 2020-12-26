@@ -623,13 +623,21 @@
         "API__IP_INVALID": "IP invalide",
         "API__IP_ADD_SUCCESS": "IP ajoutée avec succès !",
         "API__LABEL": "API",
-        "API__SKIN_LABEL": "Skin",
-        "API__CAPE_LABEL": "Cape",
+        "API__SKIN": "Skins",
+        "API__SKIN_LABEL": "Utiliser le système de Skin",
+        "API__SKIN_PREMIUM_LABEL": "Récupération du Skin Mojang",
+        "API__SKIN_PREMIUM_DESC": " (Récupére automatiquement le skin Mojang si un skin n'est pas déjà disponible pour cet utilisateur !)",
+        "API__CAPE": "Capes",
+        "API__CAPE_LABEL": "Utiliser le système de Cape",
         "API__FILENAME": "Nom du fichier",
-        "API__SKIN_FREE": "Skin disponible <br>pour tous",
-        "API__CAPE_FREE": "Cape disponible <br>pour tous",
+        "API__SKIN_FREE": "Skin modifiable par tous",
+        "API__CAPE_FREE": "Cape modifiable par tous",
         "API__UPLOAD_SKIN_SUCCESS": "Le skin a bien été enregistré !",
         "API__UPLOAD_CAPE_SUCCESS": "La cape a bien été enregistrée !",
-        "API__FILE_SIZE":"Taille du fichier (Largeur par Hauteur)"
+        "API__FILE_SIZE":"Taille du fichier (Largeur par Hauteur)",
+        "API__USE_SKIN_RESTORER": "Utiliser SkinRestorer ?",
+        "API__SKIN_RESTORER_SERVER": "Serveur SkinRestorer",
+        "API__SKIN_RESTORER_SERVER_DESC": "Si vous utilisez SkinRestorer vous devez choisir un serveur où le skin sera mis (le serveur doit être lié avec le plugin de liaison)",
+        "API__SKIN_RESTORER_NOT_CONNECTED": "Vous devez être connecté en jeu !"
     }
 }

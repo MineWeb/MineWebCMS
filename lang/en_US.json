@@ -100,7 +100,7 @@
         "GLOBAL__SAVE": "Save",
         "GLOBAL__CATEGORY": "Category",
         "GLOBAL__TEMPORALY_DISABLED": "Temporarily disabled",
-        
+
         "HELP__TITLE": "I need help",
         "HELP__TICKET_ADD_SUCCESS": "Your ticket has been sent!",
         "HELP__CHOOSE_QUESTION": "Choose a question",
@@ -112,7 +112,7 @@
         "HELP__POST_TICKET_TITLE": "Title",
         "HELP__POST_TICKET_TITLE_BOX": "Ask for help",
         "HELP__POST_TICKET_CONTENT": "Explain your problem as clearly as possible",
-        
+
         "NOTIFICATION__SUCCESS_SET": "The notification has been sent!",
         "NOTIFICATION__SUCCESS_REMOVE": "The notifications have been deleted!",
         "NOTIFICATION__TITLE": "Notifications",
@@ -141,7 +141,7 @@
         "NOTIFICATION__TYPE": "Type",
         "NOTIFICATION__TYPE_USER": "User",
         "NOTIFICATION__TYPE_ADMIN": "Administrator",
-        
+
         "ERROR__PLUGIN_CANT_BE_DOWNLOADED": "The plugin cannot be downloaded.",
         "ERROR__PLUGIN_REQUIREMENTS": "Could not be installed: the prerequisites of the plugin have not been satisfied.",
         "ERROR__PLUGIN_NOT_VALID": "The plugin is invalid, it can not be installed.",
@@ -238,7 +238,7 @@
         "CONFIG__KEY_SESSION_TYPE_DB": "Database",
         "CONFIG__CHECK_UUID":"Allow only premium users to register",
         "CONFIG__CHECK_UUID_CHANGE":"As well as activating the UUID backup to automatically change the player's nickname?",
-        
+
         "EMAIL__TITLE_CONFIRM_MAIL": "Confirm your email",
         "EMAIL__CONTENT_CONFIRM_MAIL": "Hi {USERNAME}! <br> You registered on {DATE} with IP <b>{IP}</b>, you have to confirm your email by going to this link <a href=\"{LINK}\">{LINK}</a>. <br> <br> <br> This email is automatic, please do not reply. ",
 
@@ -267,7 +267,7 @@
         "THEME__SUPPORTED_EXPLAIN": "Some features <br> <br> may not be available with this theme.",
         "THEME__ERROR_INSTALL_DOWNLOAD_FAILED": "The theme could not be downloaded from mineweb.org servers.",
         "THEME__ERROR_INSTALL_UNZIP": "The theme could not be installed, check that the <code>/app/View/Themed</code> folder is writable.",
-        
+
         "INSTALL__STEP_1_TITLE": "Step 1",
         "INSTALL__STEP_1_DESC": "You can now configure your Administrator account",
         "INSTALL__STEP_2_TITLE": "Step 2",
@@ -302,10 +302,10 @@
         "NEWS__EDIT": "Editing an article",
         "NEWS__PUBLISHED": "Published",
         "NEWS__WANT_TO_PUBLISH": "Publish?",
-        
+
         "NAVBAR__TITLE": "Navigation bar",
         "NAVBAR__ICON":"Icons",
-        "NAVBAR__ICON__DESC":"Name of a fa-icon : <a>https://fontawesome.com/v4.7.0/icons/</a> . E.g. 'fas fa-angle-up'",
+        "NAVBAR__ICON__DESC":"Example: (fas fa-angle-up); list available from this link:",
         "NAVBAR__OPEN_IN_NEW_TAB": "Open in a new tab",
         "NAVBAR__EDIT_TITLE": "Edit a link",
         "NAVBAR__SAVE_IN_PROGRESS": "Automatic backup...",
@@ -321,7 +321,7 @@
         "NAVBAR__LINK_TYPE_PLUGIN": "Plugin",
         "NAVBAR__LINK_TYPE_PAGE": "Page",
         "NAVBAR__LINK_TYPE_CUSTOM": "Custom",
-		
+
         "MOTD__TITLE":"Manage the MOTD",
         "MOTD__TITLE_DESC":"You can in this section edit the MOTD of all your servers easily and instantly, however you must link your bukkit / bungee (or other fork) server with the MineWeb plugin (in version 3.0.2 or higher) so that your server displayed in this list! <br> In addition you can reset your MOTD so that the config of your server or another plugin can take over!",
         "MOTD__RESET":"Reset the MOTD",
@@ -349,7 +349,7 @@
         "FORM__INVALID_CAPTCHA": "Invalid security code",
         "FORM__RELOAD_CAPTCHA": "Reload the security code",
         "FORM__ERROR_WHEN_UPLOAD": "An error occurred while saving the image",
-        
+
         "LOGIN__BLOCKED": "You have been blocked! You tried to login without success 10 times, please wait before trying again.",
 
         "USER__MSG_NOT_CONFIRMED_EMAIL": "Your email address has not been confirmed! You have received an email with a link to confirm your email address. <a style=\"text-decoration:underline;\" class=\"text-warning pull-right\" href=\"{URL_RESEND_EMAIL}\">Resend the email</a> ",
@@ -436,7 +436,7 @@
         "USER__VALID_CODE": "Enable two-factor authentication",
         "USER__SECRET_NOT_FOUND": "Information is missing, please reload the page and try again",
         "USER__SUCCESS_ENABLED_TWO_FACTOR_AUTH": "Two-factor authentication has been activated!",
-		
+
 		"HISTORY__CATEGORY_NEWS": "News",
         "HISTORY__CATEGORY_VOTE": "Vote",
         "HISTORY__CATEGORY_USER": "User",
@@ -478,7 +478,7 @@
         "HISTORY__ACTION_DELETE_USER": "Deleting a user",
         "HISTORY__ACTION_EDIT_LANG": "Change the language file",
         "HISTORY__VIEW_GLOBAL": "Site History",
-        
+
         "PERMISSIONS__LABEL": "Permissions",
         "PERMISSIONS__COMMENT_NEWS": "Comment a news",
         "PERMISSIONS__LIKE_NEWS": "Like news",
@@ -620,16 +620,24 @@
         "DASHBOARD__NEWS_WRITTEN": "Written Articles",
         "DASHBOARD__PURCHASES": "Purchasing",
 
-        "API__IP_INVALID": "Invalid IP",
-        "API__IP_ADD_SUCCESS": "IP successfully added!",
+        "API__IP_INVALID": "Invalid IP Address",
+        "API__IP_ADD_SUCCESS": "IP added successfully!",
         "API__LABEL": "API",
-        "API__SKIN_LABEL": "Skin",
-        "API__CAPE_LABEL": "Cape",
-        "API__FILENAME": "Filename",
-        "API__SKIN_FREE": "Skin available for everyone",
-        "API__CAPE_FREE": "Cape available for all",
+        "API__SKIN": "Skins",
+        "API__SKIN_LABEL": "Using the Skin system",
+        "API__SKIN_PREMIUM_LABEL": "Retrieving the Mojang Skin",
+        "API__SKIN_PREMIUM_DESC": " (Automatically get the Mojang skin if a skin is not already available for that user!)",
+        "API__CAPE": "Capes",
+        "API__CAPE_LABEL": "Using the Capes System",
+        "API__FILENAME": "File name",
+        "API__SKIN_FREE": "Skin modifiable by all",
+        "API__CAPE_FREE": "Cape modifiable by all",
         "API__UPLOAD_SKIN_SUCCESS": "The skin has been saved!",
-        "API__UPLOAD_CAPE_SUCCESS": "The cloak has been saved!",
-        "API__FILE_SIZE": "File Size (Width by Height)"
+        "API__UPLOAD_CAPE_SUCCESS": "The cape has been saved!",
+        "API__FILE_SIZE":"File Size (Width by Height)",
+        "API__USE_SKIN_RESTORER": "Use SkinRestorer?",
+        "API__SKIN_RESTORER_SERVER": "SkinRestorer Server",
+        "API__SKIN_RESTORER_SERVER_DESC": "If you are using SkinRestorer you must choose a server where the skin will be put (the server must be linked with the link plugin)",
+        "API__SKIN_RESTORER_NOT_CONNECTED": "You must be logged in in-game!"
 	}
 }
