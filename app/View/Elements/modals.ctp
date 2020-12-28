@@ -146,15 +146,21 @@
                   <h5><?= $Lang->get('USER__EMAIL') ?> </h5>
                   <input type="email" class="form-control" name="email" placeholder="<?= $Lang->get('USER__EMAIL_LABEL') ?>">
               </div>
-              
-              <?php if($reCaptcha['type'] == "google") { ?>
+              <?php if($captcha['type'] == "google") { ?>
                 <script src='https://www.google.com/recaptcha/api.js'></script>
                 <div class="form-group">
                     <h5><?= $Lang->get('FORM__CAPTCHA') ?></h5>
-                    <div class="g-recaptcha" data-sitekey="<?= $reCaptcha['siteKey'] ?>"></div>
+                    <div class="g-recaptcha" data-sitekey="<?= $captcha['siteKey'] ?>"></div>
                 </div>
+
+              <?php } else if($captcha['type'] == "hcaptcha") { ?>
+                  <script src='https://www.google.com/recaptcha/api.js'></script>
+                  <div class="form-group">
+                      <h5><?= $Lang->get('FORM__CAPTCHA') ?></h5>
+                      <script src='https://www.hCaptcha.com/1/api.js' async defer></script>
+                      <div class="h-captcha" data-sitekey="<?= $captcha['siteKey'] ?>"></div>
+                  </div>
               <?php } else { ?>
-              
                 <div class="form-group">
                     <h5><?= $Lang->get('FORM__CAPTCHA') ?></h5>
                     <?php
