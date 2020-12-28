@@ -6,10 +6,16 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
     <meta name="author" content="Eywek">
 
-    <title><?= (isset($title_for_layout)) ? $title_for_layout : 'Error' ?> - <?= (isset($website_name)) ? $website_name : 'MineWeb' ?></title>
+    <title><?= $seo_config['title'] ?></title>
+    <link rel="icon" type="image/png" href="<?= $seo_config['favicon_url'] ?>"/>
+    <meta name="title" content="<?= $seo_config['title'] ?>">
+    <meta property="og:title" content="<?= $seo_config['title'] ?>">
+    <meta name="description" content="<?= $seo_config['description'] ?>">
+    <meta property="og:description" content="<?= $seo_config['description'] ?>">
+    <meta name="keywords" content="<?= $seo_config['keywords'] ?>">
+    <meta property="og:image" content="<?= $seo_config['img_url'] ?>">
 
     <!-- Font Awesome 5 -->
     <script src="https://kit.fontawesome.com/fb032ab5a6.js" crossorigin="anonymous"></script>
@@ -21,7 +27,6 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700' rel='stylesheet' type='text/css'>
     <?= $this->Html->script('jquery-1.11.0.js') ?>
     <?= $this->Html->script('easy_paginate.js') ?>
-    <link rel="icon" type="image/png" href="<?= (isset($theme_config) && isset($theme_config['favicon_url'])) ? $theme_config['favicon_url'] : '' ?>" />
 
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
