@@ -260,6 +260,11 @@ class AppController extends Controller
                         'permission' => 'MANAGE_NAV',
                         'route' => ['controller' => 'navbar', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
+                    'SEO__TITLE' => [
+                        'icon' => 'fab fa-google',
+                        'permission' => 'MANAGE_SEO',
+                        'route' => ['controller' => 'seo', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
                     'MOTD__TITLE' => [
                         'icon' => 'fas fa-sort-amount-up-alt',
                         'permission' => 'MANAGE_MOTD',
@@ -456,6 +461,7 @@ class AppController extends Controller
 
     public function beforeRender()
     {
+        $this->__initSeoConfiguration();
         $event = new CakeEvent('onLoadPage', $this, $this->request->data);
         $this->getEventManager()->dispatch($event);
         if ($event->isStopped()) {
@@ -472,8 +478,22 @@ class AppController extends Controller
             }
         }
         $this->__setTheme();
+    }
 
+    public function __initSeoConfiguration()
+    {
+        $this->loadModel('Seo');
+        $default = $this->Seo->find('first', ["conditions" => ['page' => null]])['Seo'];
+        $current_url = $this->here;
+        $get_page = $this->Seo->find('first', ["conditions" => ['page' => $current_url]])['Seo'];
+        $seo_config['title'] = (!empty($get_page['title'])) ? $get_page['title'] : $default['title'];
+        $seo_config['description'] = (!empty($get_page['description'])) ? $get_page['description'] : $default['description'];
+        $seo_config['img_url'] = (!empty($get_page['img_url'])) ? $get_page['img_url'] : $default['img_url'];
+        $seo_config['favicon_url'] = (!empty($get_page['favicon_url'])) ? $get_page['favicon_url'] : $default['favicon_url'];
+        $seo_config['img_url'] = (empty($seo_config['img_url'])) ? $seo_config['favicon_url'] : $seo_config['img_url'];
+        $seo_config['title'] = str_replace(["{TITLE}", "{WEBSITE_NAME}"], [$this->viewVars['title_for_layout'], $this->viewVars['website_name']], $seo_config['title']);
 
+        $this->set(compact('seo_config'));
     }
 
     public function afterFilter()

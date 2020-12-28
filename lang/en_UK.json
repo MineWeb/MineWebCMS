@@ -476,6 +476,7 @@
         "PERMISSIONS__MANAGE_SLIDER": "Manage sliders (delete, add, edit)",
         "PERMISSIONS__MANAGE_PAGE": "Manage pages (delete, add, edit)",
         "PERMISSIONS__MANAGE_NAV": "Manage the navigation bar (delete, add, edit)",
+        "PERMISSIONS__MANAGE_SEO": "Manage the SEO of the website (delete, add, edit)",
         "PERMISSIONS__SUCCESS_SAVE": "The permissions have been saved successfully!",
         "PERMISSIONS__BYPASS_MAINTENANCE": "To be able to view the site despite maintenance",
         "PERMISSIONS__MANAGE_MAINTENANCE": "Manage the maintenance",
