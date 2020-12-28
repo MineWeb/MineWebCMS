@@ -229,7 +229,7 @@ class UserController extends AppController
         $this->autoRender = false;
         $this->response->type('json');
         if ($this->request->is('ajax')) {
-            if (!empty($this->request->data['password']) AND !empty($this->request->data['password2']) AND !empty($this->request->data['email']) && !empty($this->request->data['key'])) {
+            if (!empty($this->request->data['password']) and !empty($this->request->data['password2']) and !empty($this->request->data['email']) && !empty($this->request->data['key'])) {
                 $reset = $this->User->resetPass($this->request->data, $this);
                 if (isset($reset['status']) && $reset['status'] === true) {
                     $this->Session->write('user', $reset['session']);
@@ -267,12 +267,22 @@ class UserController extends AppController
         $this->response->type('json');
         if ($this->isConnected && $this->API->can_skin()) {
             if ($this->request->is('post')) {
-                $skin_max_size = 10000000; // octet
+                $username = $this->User->getKey('pseudo');
                 $this->loadModel('ApiConfiguration');
                 $ApiConfiguration = $this->ApiConfiguration->find('first');
+
+                $useSkinRestorer = $ApiConfiguration['ApiConfiguration']['use_skin_restorer'];
+                $serverSkinRestorerID = $ApiConfiguration['ApiConfiguration']['skin_restorer_server_id'];
+
+                if ($useSkinRestorer & !$this->Server->userIsConnected($username, $serverSkinRestorerID)) {
+                    $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('API__SKIN_RESTORER_NOT_CONNECTED'))));
+                    return;
+                }
+                $skin_max_size = 10000000; // octet
+
                 $target_config = $ApiConfiguration['ApiConfiguration']['skin_filename'];
                 $filename = substr($target_config, (strrpos($target_config, '/') + 1));
-                $filename = str_replace('{PLAYER}', $this->User->getKey('pseudo'), $filename);
+                $filename = str_replace('{PLAYER}', $username, $filename);
                 $filename = str_replace('php', '', $filename);
                 $filename = str_replace('.', '', $filename);
                 $filename = $filename . '.png';
@@ -291,6 +301,12 @@ class UserController extends AppController
                     $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD'))));
                     return;
                 }
+
+                $skinURL = Router::url(array('action' => str_replace("{PLAYER}", $username, $ApiConfiguration['ApiConfiguration']['skin_filename']) . ".png", 'controller' => '', 'admin' => false), true);
+
+                $skinRestorerCommand = str_replace(['{PLAYER}', '{URL}'], [$username, $skinURL], "skin set {PLAYER} {URL}");
+                $this->Server->commands($skinRestorerCommand, $serverSkinRestorerID);
+
                 $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__UPLOAD_SKIN_SUCCESS'))));
             }
         } else {
@@ -429,7 +445,7 @@ class UserController extends AppController
         $this->response->type('json');
         if ($this->isConnected) {
             if ($this->request->is('ajax')) {
-                if (!empty($this->request->data['password']) AND !empty($this->request->data['password_confirmation'])) {
+                if (!empty($this->request->data['password']) and !empty($this->request->data['password_confirmation'])) {
                     $password = $this->Util->password($this->request->data['password'], $this->User->getKey('pseudo'));
                     $password_confirmation = $this->Util->password($this->request->data['password_confirmation'], $this->User->getKey('pseudo'), $password);
                     if ($password == $password_confirmation) {
@@ -461,7 +477,7 @@ class UserController extends AppController
         $this->response->type('json');
         if ($this->isConnected && $this->Permissions->can('EDIT_HIS_EMAIL')) {
             if ($this->request->is('ajax')) {
-                if (!empty($this->request->data['email']) AND !empty($this->request->data['email_confirmation'])) {
+                if (!empty($this->request->data['email']) and !empty($this->request->data['email_confirmation'])) {
                     if ($this->request->data['email'] == $this->request->data['email_confirmation']) {
                         if (filter_var($this->request->data['email'], FILTER_VALIDATE_EMAIL)) {
                             $event = new CakeEvent('beforeUpdateEmail', $this, array('user' => $this->User->getAllFromCurrentUser(), 'new_email' => $this->request->data['email']));
@@ -490,7 +506,7 @@ class UserController extends AppController
 
     function admin_index()
     {
-        if ($this->isConnected AND $this->Permissions->can('MANAGE_USERS')) {
+        if ($this->isConnected and $this->Permissions->can('MANAGE_USERS')) {
             $this->set('title_for_layout', $this->Lang->get('USER__TITLE'));
             $this->layout = 'admin';
             $this->set('type', $this->Configuration->getKey('member_page_type'));
@@ -503,7 +519,7 @@ class UserController extends AppController
     {
         $this->autoRender = false;
         $this->response->type('json');
-        if ($this->isConnected AND $this->Permissions->can('MANAGE_USERS')) {
+        if ($this->isConnected and $this->Permissions->can('MANAGE_USERS')) {
             if ($query != false) {
                 $result = $this->User->find('all', array('conditions' => array('pseudo LIKE' => $query . '%')));
                 foreach ($result as $key => $value) {
@@ -521,7 +537,7 @@ class UserController extends AppController
 
     public function admin_get_users()
     {
-        if ($this->isConnected AND $this->Permissions->can('MANAGE_USERS')) {
+        if ($this->isConnected and $this->Permissions->can('MANAGE_USERS')) {
             $this->autoRender = false;
             $this->response->type('json');
             if ($this->request->is('ajax')) {
@@ -573,7 +589,7 @@ class UserController extends AppController
 
     function admin_edit($search = false)
     {
-        if ($this->isConnected AND $this->Permissions->can('MANAGE_USERS')) {
+        if ($this->isConnected and $this->Permissions->can('MANAGE_USERS')) {
             if ($search != false) {
                 $this->layout = 'admin';
                 $this->set('title_for_layout', $this->Lang->get('USER__EDIT_TITLE'));
@@ -617,7 +633,7 @@ class UserController extends AppController
     function admin_confirm($user_id = false)
     {
         $this->autoRender = false;
-        if (isset($user_id) && $this->isConnected AND $this->Permissions->can('MANAGE_USERS')) {
+        if (isset($user_id) && $this->isConnected and $this->Permissions->can('MANAGE_USERS')) {
             $find = $this->User->find('first', array('conditions' => array('id' => $user_id)));
             if (!empty($find)) {
                 $event = new CakeEvent('beforeConfirmAccount', $this, array('user_id' => $find['User']['id'], 'manual' => true));
@@ -696,7 +712,7 @@ class UserController extends AppController
     function admin_delete($id = false)
     {
         $this->autoRender = false;
-        if ($this->isConnected AND $this->Permissions->can('MANAGE_USERS')) {
+        if ($this->isConnected and $this->Permissions->can('MANAGE_USERS')) {
             if ($id != false) {
                 $this->loadModel('User');
                 $find = $this->User->find('all', array('conditions' => array('id' => $id)));
