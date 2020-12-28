@@ -88,15 +88,16 @@ class AppController extends Controller
             if ($event->isStopped())
                 return $event->result;
         }
-		$LoginCondition = ($this->here != "/login") || !$this->EyPlugin->isInstalled('phpierre.signinup');
+        $LoginCondition = ($this->here != "/login") || !$this->EyPlugin->isInstalled('phpierre.signinup');
         // Maintenance / Bans
-	// lowercase to avoid errors when the controller is called with uppercase
+        // lowercase to avoid errors when the controller is called with uppercase
         $this->params['controller'] = strtolower($this->params['controller']);
         $this->params['action'] = strtolower($this->params['action']);
-        if ($this->isConnected AND $this->User->getKey('rank') == 5 AND $this->params['controller'] != "maintenance" AND $this->params['action'] != "logout" AND $this->params['controller'] != "api")
+        if ($this->isConnected and $this->User->getKey('rank') == 5 and $this->params['controller'] != "maintenance" and $this->params['action'] != "logout" and $this->params['controller'] != "api")
             $this->redirect(array('controller' => 'maintenance', 'action' => 'index/banned', 'plugin' => false, 'admin' => false));
         else if ($this->params['controller'] != "user" && $this->params['controller'] != "maintenance" && $this->Configuration->getKey('maintenance') != '0' && !$this->Permissions->can('BYPASS_MAINTENANCE') && $LoginCondition)
             $this->redirect(array('controller' => 'maintenance', 'action' => 'index', 'plugin' => false, 'admin' => false));
+
     }
 
     public function __initConfiguration()
@@ -128,7 +129,7 @@ class AppController extends Controller
         // Variables
         $google_analytics = $this->Configuration->getKey('google_analytics');
         $configuration_end_code = $this->Configuration->getKey('end_layout_code');
-		$condition = $this->Configuration->getKey('condition');
+        $condition = $this->Configuration->getKey('condition');
 
         $this->loadModel('SocialButton');
         $findSocialButtons = $this->SocialButton->find('all');
@@ -138,7 +139,7 @@ class AppController extends Controller
 
         $this->set(compact(
             'reCaptcha',
-			'condition',
+            'condition',
             'website_name',
             'theme_config',
             'facebook_link',
@@ -216,16 +217,16 @@ class AppController extends Controller
                         'permission' => 'MANAGE_CONFIGURATION',
                         'route' => ['controller' => 'configuration', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
-			        'STATS__TITLE' => [
-			            'icon' => 'far fa-chart-bar',
-			            'permission' => 'VIEW_STATISTICS',
-			            'route' => ['controller' => 'statistics', 'action' => 'index', 'admin' => true, 'plugin' => false]
-			        ],
-		            'MAINTENANCE__TITLE' => [
-		                'icon' => 'fas fa-hand-paper',
-		                'permission' => 'MANAGE_MAINTENANCE',
-		                'route' => ['controller' => 'maintenance', 'action' => 'index', 'admin' => true, 'plugin' => false]
-		            ],
+                    'STATS__TITLE' => [
+                        'icon' => 'far fa-chart-bar',
+                        'permission' => 'VIEW_STATISTICS',
+                        'route' => ['controller' => 'statistics', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
+                    'MAINTENANCE__TITLE' => [
+                        'icon' => 'fas fa-hand-paper',
+                        'permission' => 'MANAGE_MAINTENANCE',
+                        'route' => ['controller' => 'maintenance', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
                 ]
             ],
             'GLOBAL__CUSTOMIZE' => [
@@ -245,6 +246,11 @@ class AppController extends Controller
                         'icon' => 'fas fa-bars',
                         'permission' => 'MANAGE_NAV',
                         'route' => ['controller' => 'navbar', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
+                    'SEO__TITLE' => [
+                        'icon' => 'fab fa-google',
+                        'permission' => 'MANAGE_SEO',
+                        'route' => ['controller' => 'seo', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
                     'MOTD__TITLE' => [
                         'icon' => 'fas fa-sort-amount-up-alt',
@@ -321,7 +327,8 @@ class AppController extends Controller
 
         // Functions
         if (!function_exists('addToNav')) {
-            function addToArrayAt($where, $index, $array) {
+            function addToArrayAt($where, $index, $array)
+            {
                 return array_slice($where, 0, $index, true) +
                     $array +
                     array_slice($where, $index, count($where) - $index, true);
@@ -421,17 +428,17 @@ class AppController extends Controller
             '{ONLINE}' => @$server_infos['GET_PLAYER_COUNT'],
             '{ONLINE_LIMIT}' => @$server_infos['GET_MAX_PLAYERS']
         )), 'server_infos' => $server_infos]);
-        
+
     }
-    
+
     public function __initWebsiteInfos()
     {
         $this->loadModel('User');
         $this->loadModel('Visit');
         $users_count = $this->User->find('count');
-        $users_last = $this->User->find('first', array('order' =>'created DESC'));
+        $users_last = $this->User->find('first', array('order' => 'created DESC'));
         $users_last = $users_last['User'];
-        $users_count_today = $this->User->find('count', array('conditions' => array('created LIKE' => date('Y-m-d').'%')));
+        $users_count_today = $this->User->find('count', array('conditions' => array('created LIKE' => date('Y-m-d') . '%')));
         $visits_count = $this->Visit->getVisitsCount();
         $visits_count_today = $this->Visit->getVisitsByDay(date('Y-m-d'))['count'];
         $admin_dark_mode = $this->Cookie->read('use_admin_dark_mode');
@@ -441,6 +448,7 @@ class AppController extends Controller
 
     public function beforeRender()
     {
+        $this->__initSeoConfiguration();
         $event = new CakeEvent('onLoadPage', $this, $this->request->data);
         $this->getEventManager()->dispatch($event);
         if ($event->isStopped()) {
@@ -457,6 +465,25 @@ class AppController extends Controller
             }
         }
         $this->__setTheme();
+
+
+    }
+
+    public function __initSeoConfiguration()
+    {
+        $this->loadModel('Seo');
+        $default = $this->Seo->find('first', ["conditions" => ['page' => null]])['Seo'];
+        $current_url = $this->here;
+        $get_page = $this->Seo->find('first', ["conditions" => ['page' => $current_url]])['Seo'];
+        $seo_config['title'] = (!empty($get_page['title'])) ? $get_page['title'] : $default['title'];
+        $seo_config['description'] = (!empty($get_page['description'])) ? $get_page['description'] : $default['description'];
+        $seo_config['img_url'] = (!empty($get_page['img_url'])) ? $get_page['img_url'] : $default['img_url'];
+        $seo_config['favicon_url'] = (!empty($get_page['favicon_url'])) ? $get_page['favicon_url'] : $default['favicon_url'];
+        $seo_config['img_url'] = (empty($seo_config['img_url'])) ? $seo_config['favicon_url'] : $seo_config['img_url'];
+        $seo_config['title'] = str_replace(["{TITLE}", "{WEBSITE_NAME}"], [$this->viewVars['title_for_layout'], $this->viewVars['website_name']], $seo_config['title']);
+
+        $this->set(compact('seo_config'));
+
     }
 
     public function afterFilter()
@@ -467,11 +494,12 @@ class AppController extends Controller
             $this->__setTheme();
             return $event->result;
         }
+
     }
 
     protected function __setTheme()
     {
-        if (!isset($this->params['prefix']) OR $this->params['prefix'] !== "admin")
+        if (!isset($this->params['prefix']) or $this->params['prefix'] !== "admin")
             $this->theme = Configure::read('theme');
     }
 
