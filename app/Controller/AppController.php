@@ -148,8 +148,9 @@ class AppController extends Controller
 
         $captcha['type'] = $type;
         $captcha['siteKey'] = $this->Configuration->getKey('captcha_sitekey');
-
+        $reCaptcha = $captcha;
         $this->set(compact(
+            'reCaptcha',
             'captcha',
             'condition',
             'website_name',
