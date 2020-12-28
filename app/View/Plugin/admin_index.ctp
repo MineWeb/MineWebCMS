@@ -4,12 +4,12 @@
 
       <div class="ajax"></div>
 
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('PLUGIN__LIST') ?></h3>
+      <div class="card">
+        <div class="card-header with-border">
+          <h3 class="card-title"><?= $Lang->get('PLUGIN__LIST') ?></h3>
         </div>
 
-        <div class="box-body table-responsive">
+        <div class="card-body table-responsive">
 
           <?php
           $pluginList = $EyPlugin->pluginsLoaded;
@@ -71,11 +71,11 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title"><?= $Lang->get('PLUGIN__AVAILABLE') ?></h3>
+      <div class="card">
+        <div class="card-header with-border">
+          <h3 class="card-title"><?= $Lang->get('PLUGIN__AVAILABLE') ?></h3>
         </div>
-        <div class="box-body table-responsive">
+        <div class="card-body table-responsive">
           <?php
           $free_plugins = $EyPlugin->getFreePlugins(true, true);
           if(!empty($free_plugins)) { ?>

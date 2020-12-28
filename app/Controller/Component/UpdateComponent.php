@@ -157,6 +157,7 @@ class UpdateComponent extends CakeObject
         // We avoid extractTo() method because we need to avoid copying $bypassFiles
         $zip = new ZipArchive;
         if ($zip->open(ROOT . DS . 'app' . DS . 'tmp' . DS . $this->lastVersion . '.zip') !== true) return false;
+        $updateFile = [];
         for ($i = 0; $i < $zip->numFiles; $i++) {
             // Get some infos on file
             $filename = $zip->getNameIndex($i);
@@ -171,17 +172,30 @@ class UpdateComponent extends CakeObject
             if (!is_dir(ROOT . DS . $dirname)) mkdir(ROOT . DS . $dirname, 0775, true);
             // Copy file content if it's a file
             if ($stats['size'] > 0) {
-                // We stop here if the copy fail
+                // We stop here if the file isn't writable
                 $path = "zip://" . ROOT . DS . "app" . DS . "tmp" . DS . $this->lastVersion . ".zip#{$this->source['repo']}-{$this->lastVersion}/" . "$filename";
-                if (!copy($path, ROOT . DS . $filename)) {
+                $updateFile[$path] = ROOT . DS . $filename;
+                if (file_exists($updateFile[$path]) && !is_writable($updateFile[$path])) {
                     $this->errorUpdate = $this->Lang->get('UPDATE__FAILED_FILE', array(
-                        '{FILE}' => ROOT . DS . $filename,
+                        '{FILE}' => $updateFile[$path],
                     ));
-                    $this->log("Failed to copy file from $path to " . ROOT . DS . $filename);
+                    $this->log("The file " . $updateFile[$path] . " is not writable!");
                     return false;
                 }
             }
         }
+
+        // We copy the files here
+        foreach ($updateFile as $key => $v) {
+            if (!copy($key, $v)) {
+                $this->errorUpdate = $this->Lang->get('UPDATE__FAILED_FILE', array(
+                    '{FILE}' => $v,
+                ));
+                $this->log("Failed to copy file from $key to " . $v);
+                return false;
+            }
+        }
+
         $zip->close();
 
         // Remove zip

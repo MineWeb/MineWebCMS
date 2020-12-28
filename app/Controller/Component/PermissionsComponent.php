@@ -16,6 +16,7 @@ class PermissionsComponent extends CakeObject
         'MANAGE_SLIDER',
         'MANAGE_PAGE',
         'MANAGE_NAV',
+        'MANAGE_SEO',
         'BYPASS_MAINTENANCE',
         'MANAGE_MAINTENANCE',
         'MANAGE_CONFIGURATION',

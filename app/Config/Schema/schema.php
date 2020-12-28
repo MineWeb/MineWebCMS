@@ -51,6 +51,9 @@ class AppSchema extends CakeSchema
                 'cape_free' => 0,
                 'cape_width' => '64',
                 'cape_height' => '32',
+                'get_premium_skins' => 1,
+                'use_skin_restorer' => 0,
+                'skin_restorer_server_id' => 0,
             ));
             $api->save();
 
@@ -89,8 +92,8 @@ class AppSchema extends CakeSchema
                 'end_layout_code' => null,
                 'check_uuid' => 0,
                 'captcha_type' => 1,
-                'captcha_google_sitekey' => null,
-                'captcha_google_secret' => null,
+                'captcha_sitekey' => null,
+                'captcha_secret' => null,
                 'confirm_mail_signup' => 0,
                 'confirm_mail_signup_block' => 0,
                 'member_page_type' => 0,
@@ -170,6 +173,9 @@ class AppSchema extends CakeSchema
         'cape_free' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1, 'unsigned' => false),
         'cape_width' => array('type' => 'integer', 'null' => true, 'default' => '64', 'unsigned' => false),
         'cape_height' => array('type' => 'integer', 'null' => true, 'default' => '32', 'unsigned' => false),
+        'get_premium_skins' => array('type' => 'integer', 'null' => false, 'default' => '1', 'length' => 1, 'unsigned' => false),
+        'use_skin_restorer' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1, 'unsigned' => false),
+        'skin_restorer_server_id' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 8, 'unsigned' => false),
         'indexes' => array(
             'PRIMARY' => array('column' => 'id', 'unique' => 1)
         ),
@@ -223,9 +229,9 @@ class AppSchema extends CakeSchema
         'google_analytics' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 15, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
         'end_layout_code' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
         'check_uuid' => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 1, 'unsigned' => false),
-        'captcha_type' => array('type' => 'integer', 'null' => true, 'default' => '1', 'length' => 1, 'unsigned' => false, 'comment' => '1 = default, 2 = google'),
-        'captcha_google_sitekey' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 60, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
-        'captcha_google_secret' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 60, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+        'captcha_type' => array('type' => 'integer', 'null' => true, 'default' => '1', 'length' => 1, 'unsigned' => false, 'comment' => '1 = default, 2 = google, 3 = h-captcha'),
+        'captcha_sitekey' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 60, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+        'captcha_secret' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 60, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
         'confirm_mail_signup' => array('type' => 'integer', 'null' => false, 'default' => 0, 'length' => 1, 'unsigned' => false),
         'confirm_mail_signup_block' => array('type' => 'integer', 'null' => false, 'default' => 0, 'length' => 1, 'unsigned' => false),
         'member_page_type' => array('type' => 'integer', 'null' => false, 'default' => 0, 'length' => 1, 'unsigned' => false),
@@ -372,6 +378,19 @@ class AppSchema extends CakeSchema
         'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
         'rank_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
         'name' => array('type' => 'string', 'null' => false, 'length' => 20, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+        'indexes' => array(
+            'PRIMARY' => array('column' => 'id', 'unique' => 1)
+        ),
+        'tableParameters' => array('charset' => 'latin1', 'collate' => 'latin1_swedish_ci', 'engine' => 'InnoDB')
+    );
+
+    public $seo = array(
+        'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'),
+        'title' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 255, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+        'description' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+        'favicon_url' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 255, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+        'img_url' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 255, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+        'page' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 255, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
         'indexes' => array(
             'PRIMARY' => array('column' => 'id', 'unique' => 1)
         ),
