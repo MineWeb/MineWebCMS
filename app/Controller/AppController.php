@@ -133,12 +133,25 @@ class AppController extends Controller
 
         $this->loadModel('SocialButton');
         $findSocialButtons = $this->SocialButton->find('all');
+        $type = "";
+        switch ($this->Configuration->getKey('captcha_type')) {
+            case "1":
+                $type = "default";
+                break;
+            case "2":
+                $type = "google";
+                break;
+            case "3":
+                $type = "hcaptcha";
+                break;
+        }
 
-        $reCaptcha['type'] = ($this->Configuration->getKey('captcha_type') == '2') ? 'google' : 'default';
-        $reCaptcha['siteKey'] = $this->Configuration->getKey('captcha_google_sitekey');
-
+        $captcha['type'] = $type;
+        $captcha['siteKey'] = $this->Configuration->getKey('captcha_sitekey');
+        $reCaptcha = $captcha;
         $this->set(compact(
             'reCaptcha',
+            'captcha',
             'condition',
             'website_name',
             'theme_config',
@@ -465,8 +478,6 @@ class AppController extends Controller
             }
         }
         $this->__setTheme();
-
-
     }
 
     public function __initSeoConfiguration()
@@ -483,7 +494,6 @@ class AppController extends Controller
         $seo_config['title'] = str_replace(["{TITLE}", "{WEBSITE_NAME}"], [$this->viewVars['title_for_layout'], $this->viewVars['website_name']], $seo_config['title']);
 
         $this->set(compact('seo_config'));
-
     }
 
     public function afterFilter()

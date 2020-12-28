@@ -443,39 +443,45 @@
                                                    value="2" <?= ($config['captcha_type'] == '2') ? 'checked=""' : '' ?>>
                                             <label><?= $Lang->get('CONFIG__TYPE_CAPTCHA_GOOGLE') ?></label>
                                         </div>
+
+                                        <div class="radio">
+                                            <input type="radio" name="captcha_type"
+                                                   value="3" <?= ($config['captcha_type'] == '3') ? 'checked=""' : '' ?>>
+                                            <label><?= $Lang->get('CONFIG__TYPE_CAPTCHA_HCAPTCHA') ?></label>
+                                        </div>
                                     </div>
 
                                     <script type="text/javascript">
                                         $('input[name="captcha_type"]').on('change', function (e) {
-                                            if ($(this).val() == '2') {
-                                                $('#captcha-google').slideDown(250);
+                                            if ($(this).val() == '2' || $(this).val() == '3') {
+                                                $('#captcha').slideDown(250);
                                             } else {
-                                                $('#captcha-google').slideUp(250);
+                                                $('#captcha').slideUp(250);
                                             }
                                         });
                                     </script>
 
-                                    <div id="captcha-google"
-                                         style="display:<?= ($config['captcha_type'] == '2') ? 'block' : 'none' ?>;">
+                                    <div id="captcha"
+                                         style="display:<?= ($config['captcha_type'] == '2' || $config['captcha_type'] == '3') ? 'block' : 'none' ?>;">
                                         <div class="form-group">
-                                            <label><?= $Lang->get('CONFIG__KEY_CAPTCHA_GOOGLE_SITEKEY') ?></label>
+                                            <label><?= $Lang->get('CONFIG__KEY_CAPTCHA_SITEKEY') ?></label>
                                             <?= $this->Form->input(false, array(
                                                 'div' => false,
                                                 'type' => 'text',
-                                                'name' => 'captcha_google_sitekey',
+                                                'name' => 'captcha_sitekey',
                                                 'class' => 'form-control',
-                                                'value' => $config['captcha_google_sitekey'],
+                                                'value' => $config['captcha_sitekey'],
                                             )); ?>
                                         </div>
 
                                         <div class="form-group">
-                                            <label><?= $Lang->get('CONFIG__KEY_CAPTCHA_GOOGLE_SECRET') ?></label>
+                                            <label><?= $Lang->get('CONFIG__KEY_CAPTCHA_SECRET') ?></label>
                                             <?= $this->Form->input(false, array(
                                                 'div' => false,
                                                 'type' => 'text',
-                                                'name' => 'captcha_google_secret',
+                                                'name' => 'captcha_secret',
                                                 'class' => 'form-control',
-                                                'value' => $config['captcha_google_secret'],
+                                                'value' => $config['captcha_secret'],
                                             )); ?>
                                         </div>
                                     </div>
