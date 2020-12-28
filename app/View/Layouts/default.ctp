@@ -14,7 +14,6 @@
     <meta property="og:title" content="<?= $seo_config['title'] ?>">
     <meta name="description" content="<?= $seo_config['description'] ?>">
     <meta property="og:description" content="<?= $seo_config['description'] ?>">
-    <meta name="keywords" content="<?= $seo_config['keywords'] ?>">
     <meta property="og:image" content="<?= $seo_config['img_url'] ?>">
 
     <!-- Font Awesome 5 -->

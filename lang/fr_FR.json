@@ -330,8 +330,6 @@
         "SEO__FORM_TITLE_DESC_T": "Titre de la page géré par le CMS",
         "SEO__FORM_TITLE_DESC_W": "Nom du site dans les paramètres généraux",
         "SEO__FORM_DESCRIPTION": "Description",
-        "SEO__FORM_KEYWORDS": "Mots Clés",
-        "SEO__FORM_KEYWORDS_DESC": "Séparez les mots clés par des virgules",
         "SEO__FORM_FAVICON": "Favicon",
         "SEO__FORM_FAVICON_DESC": " (Petit icône dans la barre du navigateur)",
         "SEO__FORM_IMG_URL": "Url de l'image",

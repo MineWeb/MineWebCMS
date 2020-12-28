@@ -477,7 +477,6 @@ class AppController extends Controller
         $get_page = $this->Seo->find('first', ["conditions" => ['page' => $current_url]])['Seo'];
         $seo_config['title'] = (!empty($get_page['title'])) ? $get_page['title'] : $default['title'];
         $seo_config['description'] = (!empty($get_page['description'])) ? $get_page['description'] : $default['description'];
-        $seo_config['keywords'] = (!empty($seo_config['keywords'])) ? $seo_config['keywords'] : $default['keywords'];
         $seo_config['img_url'] = (!empty($get_page['img_url'])) ? $get_page['img_url'] : $default['img_url'];
         $seo_config['favicon_url'] = (!empty($get_page['favicon_url'])) ? $get_page['favicon_url'] : $default['favicon_url'];
         $seo_config['img_url'] = (empty($seo_config['img_url'])) ? $seo_config['favicon_url'] : $seo_config['img_url'];

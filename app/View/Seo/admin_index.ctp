@@ -34,13 +34,6 @@
 
                             <div class="col-12">
                                 <hr>
-                                <div class="form-group">
-                                    <label><?= $Lang->get('SEO__FORM_KEYWORDS') ?></label>
-                                    <em><?= $Lang->get('SEO__FORM_KEYWORDS_DESC') ?></em>
-                                    <input type="text" class="form-control" value="<?= $default['keywords'] ?>"
-                                           name="keywords">
-                                </div>
-                                <hr>
                             </div>
 
                             <div class="col-sm-6">
@@ -84,7 +77,6 @@
                             <th><?= $Lang->get('SEO__PAGE') ?></th>
                             <th><?= $Lang->get('SEO__FORM_TITLE') ?></th>
                             <th><?= $Lang->get('SEO__FORM_DESCRIPTION') ?></th>
-                            <th><?= $Lang->get('SEO__FORM_KEYWORDS') ?></th>
                             <th><?= $Lang->get('SEO__FORM_FAVICON') ?></th>
                             <th><?= $Lang->get('SEO__FORM_IMG_URL') ?></th>
                             <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
@@ -96,7 +88,6 @@
                                 <td><?= $v["Seo"]["page"] ?></td>
                                 <td><?= ($v["Seo"]['title']) ? $v["Seo"]['title'] : $Lang->get('SEO__DEFAULT_VALUE') ?></td>
                                 <td><?= ($v["Seo"]['description']) ? $v["Seo"]['description'] : $Lang->get('SEO__DEFAULT_VALUE') ?></td>
-                                <td><?= ($v["Seo"]['keywords']) ? $v["Seo"]['keywords'] : $Lang->get('SEO__DEFAULT_VALUE') ?></td>
                                 <td><?= ($v["Seo"]['favicon_url']) ? $v["Seo"]['favicon_url'] : $Lang->get('SEO__DEFAULT_VALUE') ?></td>
                                 <td><?= ($v["Seo"]['img_url']) ? $v["Seo"]['img_url'] : $Lang->get('SEO__DEFAULT_VALUE') ?></td>
                                 <td>

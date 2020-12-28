@@ -42,15 +42,6 @@
 
                             <div class="col-12">
                                 <hr>
-                                <div class="form-group">
-                                    <label><?= $Lang->get('SEO__FORM_KEYWORDS') ?></label>
-                                    <em><?= $Lang->get('SEO__FORM_KEYWORDS_DESC') ?></em>
-                                    <br>
-                                    <em><?= $Lang->get('SEO__KEEP_EMPTY') ?></em>
-                                    <input type="text" class="form-control" value="<?= $page['keywords'] ?>"
-                                           name="keywords">
-                                </div>
-                                <hr>
                             </div>
 
                             <div class="col-sm-6">
