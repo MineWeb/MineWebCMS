@@ -88,7 +88,7 @@ class ThemeComponent extends CakeObject
         }
         // result
         $themesList = (object)array();
-        $bypassedFiles = array('.', '..', '.DS_Store', '__MACOSX'); // not a theme
+        $bypassedFiles = array('.', '..', '.DS_Store', '__MACOSX', '.gitkeep'); // not a theme
         // set themes on $this->themesAvailable
         if ($api)
             $this->getThemesOnAPI(true);
