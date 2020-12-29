@@ -204,7 +204,7 @@ class EyPluginComponent extends CakeObject
             $this->log('Unable to scan plugins folder.');
             return array();
         }
-        $bypassedFiles = array('.', '..', '.DS_Store', '__MACOSX'); // invalid plugins
+        $bypassedFiles = array('.', '..', '.DS_Store', '__MACOSX', '.gitkeep'); // invalid plugins
         $pluginsList = array('all' => array(), 'onlyValid' => array()); // result var
         // each files
         foreach ($plugins as $key => $value) { // On parcours tout ce qu'on à trouvé dans le dossier
