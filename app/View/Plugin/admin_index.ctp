@@ -196,9 +196,9 @@
             $('table#plugin-installed tr:last').after(tr);
 
           } else if(data.statut == "error") {
-            $('.ajax').empty().html('<div class="alert alert-error"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b>'+data.msg+'</div>').fadeIn(500);
+            $('.ajax').empty().html('<div class="alert alert-danger"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b>'+data.msg+'</div>').fadeIn(500);
           } else {
-            $('.ajax').empty().html('<div class="alert alert-error"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b><?= addslashes($Lang->get('ERROR__INTERNAL_ERROR')) ?></div>').fadeIn(500);
+            $('.ajax').empty().html('<div class="alert alert-danger"><b><?= $Lang->get('GLOBAL__ERROR') ?> : </b><?= addslashes($Lang->get('ERROR__INTERNAL_ERROR')) ?></div>').fadeIn(500);
           }
 
         }
