@@ -491,7 +491,9 @@ class AppController extends Controller
         $seo_config['img_url'] = (!empty($get_page['img_url'])) ? $get_page['img_url'] : $default['img_url'];
         $seo_config['favicon_url'] = (!empty($get_page['favicon_url'])) ? $get_page['favicon_url'] : $default['favicon_url'];
         $seo_config['img_url'] = (empty($seo_config['img_url'])) ? $seo_config['favicon_url'] : $seo_config['img_url'];
-        $seo_config['title'] = str_replace(["{TITLE}", "{WEBSITE_NAME}"], [$this->viewVars['title_for_layout'], $this->viewVars['website_name']], $seo_config['title']);
+        $title = $this->viewVars['title_for_layout'];
+        $website_name = $this->viewVars['website_name'];
+        $seo_config['title'] = str_replace(["{TITLE}", "{WEBSITE_NAME}"], [($title ? $title : "Error"), ($website_name ? $website_name : "MineWeb")], $seo_config['title']);
 
         $this->set(compact('seo_config'));
     }
