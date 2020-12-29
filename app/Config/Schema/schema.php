@@ -270,7 +270,7 @@ class AppSchema extends CakeSchema
 
     public $login_retries = array(
         'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'),
-        'ip' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 16, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+        'ip' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
         'count' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 11, 'unsigned' => false),
         'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
         'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
