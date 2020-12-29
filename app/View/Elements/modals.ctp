@@ -154,10 +154,9 @@
                 </div>
 
               <?php } else if($captcha['type'] == "hcaptcha") { ?>
-                  <script src='https://www.google.com/recaptcha/api.js'></script>
+                  <script src='https://www.hCaptcha.com/1/api.js' async defer></script>
                   <div class="form-group">
                       <h5><?= $Lang->get('FORM__CAPTCHA') ?></h5>
-                      <script src='https://www.hCaptcha.com/1/api.js' async defer></script>
                       <div class="h-captcha" data-sitekey="<?= $captcha['siteKey'] ?>"></div>
                   </div>
               <?php } else { ?>
