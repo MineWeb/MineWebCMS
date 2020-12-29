@@ -453,8 +453,7 @@ class AppSchema extends CakeSchema
         'email' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
         'rank' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 1, 'unsigned' => false),
         'money' => array('type' => 'float', 'null' => false, 'default' => 0, 'unsigned' => false),
-        'ip' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
-        'allowed_ip' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+        'ip' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
         'skin' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1, 'unsigned' => false),
         'cape' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1, 'unsigned' => false),
         'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
@@ -477,7 +476,7 @@ class AppSchema extends CakeSchema
 
     public $visits = array(
         'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'),
-        'ip' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 40, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+        'ip' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
         'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
         'referer' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
         'lang' => array('type' => 'string', 'null' => true, 'default' => 'fr', 'length' => 4, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
