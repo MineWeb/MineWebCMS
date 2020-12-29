@@ -321,7 +321,6 @@
         "NAVBAR__LINK_TYPE_PAGE":"Page",
         "NAVBAR__LINK_TYPE_CUSTOM":"Personnalisé",
 
-
         "SEO__TITLE":"SEO",
         "SEO__CALLOUT": "SEO",
         "SEO__CALLOUT_MESSAGE": "L'optimisation pour les moteurs de recherche (SEO pour Search Engine Optimization) permet d'aider les moteurs de recherche à chercher les informations de votre site et de ses pages.<br>Les paramètres par défaut seront appliqués sur toutes les pages de votre site sauf si vous avez modifié les informations pour une page en particulier.",
@@ -345,7 +344,6 @@
         "SEO__PAGE_EDIT_SUCCESS": "Page modifiée avec succès !",
         "SEO__PAGE_DELETE_SUCCESS": "Page supprimée avec succès !",
         "SEO__KEEP_EMPTY": "Laisser vide pour utiliser les valeurs par défaut",
-
 		
         "MOTD__TITLE":"Gérer les MOTD",
         "MOTD__TITLE_DESC":"Vous pouvez dans cette section éditer facilement et instantanément le MOTD de tous vos serveurs, il faut cependant lier votre serveur Bukkit/Bungee (ou autres fork) avec le plugin de MineWeb (en version 3.0.2 ou supérieur) pour que votre serveur s'affiche dans cette liste ! <br>De plus vous pouvez réinitialiser votre MOTD pour que la config de votre serveur ou d'un autre plugin puisse prendre le dessus !",
