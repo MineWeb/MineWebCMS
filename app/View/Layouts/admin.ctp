@@ -5,8 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title><?= $title_for_layout ?> | Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png"
-          href="<?= (isset($theme_config) && isset($theme_config['favicon_url'])) ? $theme_config['favicon_url'] : '' ?>"/>
+    <link rel="icon" type="image/png" href="<?= $seo_config['favicon_url'] ?>"/>
     <!-- Font Awesome 5 -->
     <?= $this->Html->css('fontawesome-5/css/all.css'); ?>
     <!-- Tempusdominus Bbootstrap 4 -->
