@@ -483,18 +483,16 @@ class AppController extends Controller
     public function __initSeoConfiguration()
     {
         $this->loadModel('Seo');
-        $default = $this->Seo->find('first', ["conditions" => ['page' => null]])['Seo'];
+        $default = $this->Seo->find('first', ["conditions" => ['page' => null]]);
         $current_url = $this->here;
-        $get_page = $this->Seo->find('first', ["conditions" => ['page' => $current_url]])['Seo'];
-        $seo_config['title'] = (!empty($get_page['title'])) ? $get_page['title'] : $default['title'];
-        $seo_config['description'] = (!empty($get_page['description'])) ? $get_page['description'] : $default['description'];
-        $seo_config['img_url'] = (!empty($get_page['img_url'])) ? $get_page['img_url'] : $default['img_url'];
-        $seo_config['favicon_url'] = (!empty($get_page['favicon_url'])) ? $get_page['favicon_url'] : $default['favicon_url'];
-        $seo_config['img_url'] = (empty($seo_config['img_url'])) ? $seo_config['favicon_url'] : $seo_config['img_url'];
-        $title = $this->viewVars['title_for_layout'];
-        $website_name = $this->viewVars['website_name'];
-        $seo_config['title'] = str_replace(["{TITLE}", "{WEBSITE_NAME}"], [($title ? $title : "Error"), ($website_name ? $website_name : "MineWeb")], $seo_config['title']);
-
+        $get_page = $this->Seo->find('first', ["conditions" => ['page' => $current_url]]);
+        $seo_config['title'] = (!empty($default['Seo']['title']) ? $default['Seo']['title'] : "{TITLE} - {WEBSITE_NAME}");
+        $seo_config['title'] = (!empty($get_page['Seo']['title']) ? $get_page['Seo']['title'] : $seo_config['title']);
+        $seo_config['description'] = (!empty($get_page['Seo']['description']) ? $get_page['Seo']['description'] : (!empty($default['Seo']['description']) ? $default['Seo']['description'] : ""));
+        $seo_config['img_url'] = (!empty($get_page['Seo']['img_url']) ? $get_page['Seo']['img_url'] : (!empty($default['Seo']['img_url']) ? $default['Seo']['img_url'] : ""));
+        $seo_config['favicon_url'] = (!empty($get_page['Seo']['favicon_url']) ? $get_page['Seo']['favicon_url'] : (!empty($default['Seo']['favicon_url']) ? $default['Seo']['favicon_url'] : ""));
+        $seo_config['img_url'] = (empty($seo_config['img_url']) ? $seo_config['favicon_url'] : $seo_config['img_url']);
+        $seo_config['title'] = str_replace(["{TITLE}", "{WEBSITE_NAME}"], [(!empty($this->viewVars['title_for_layout']) ? $this->viewVars['title_for_layout'] : "Error"), (!empty($this->viewVars['website_name']) ? $this->viewVars['website_name'] : "MineWeb")], $seo_config['title']);
         $this->set(compact('seo_config'));
     }
 
