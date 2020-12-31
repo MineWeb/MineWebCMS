@@ -37,14 +37,18 @@ class UserController extends AppController
                 //check uuid if needed
                 if ($this->Configuration->getKey('check_uuid')) {
                     $pseudoToUUID = file_get_contents("https://api.mojang.com/users/profiles/minecraft/" . htmlentities($this->request->data['pseudo']));
-                    if (!$pseudoToUUID)
-                        return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_UUID'))));
+                    if (!$pseudoToUUID) {
+                        return $this->response->body(json_encode(array(
+                            'statut' => false,
+                            'msg' => $this->Lang->get('USER__ERROR_UUID')
+                        )));
+                    }
 
                     $this->request->data['uuid'] = json_decode($pseudoToUUID, true)['id'];
                 }
                 // Captcha
                 if ($this->Configuration->getKey('captcha_type') == "2" || $this->Configuration->getKey('captcha_type') == "3") { // ReCaptcha and h-captcha
-                    $validCaptcha = $this->Util->isValidReCaptcha($this->request->data['recaptcha'], $this->Util->getIP(), $this->Configuration->getKey('captcha_secret'), $this->Configuration->getKey('captcha_type'));
+                    $validCaptcha = $this->Util->isValidReCaptcha($this->request->data['recaptcha'], $this->Util->getIP(), $this->Configuration->getKey('captcha_google_secret'));
                 } else {
                     $captcha = $this->Session->read('captcha_code');
                     $validCaptcha = (!empty($captcha) && $captcha == $this->request->data['captcha']);
@@ -93,27 +97,44 @@ class UserController extends AppController
                             }
                         }
                         // on dis que c'est bon
-                        $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_SUCCESS'))));
+                        $this->response->body(json_encode(array(
+                            'statut' => true,
+                            'msg' => $this->Lang->get('USER__REGISTER_SUCCESS')
+                        )));
                     } else { // si c'est pas bon, on envoie le message d'erreur retourné par l'étape de validation
-                        $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get($isValid))));
+                        $this->response->body(json_encode(array(
+                            'statut' => false,
+                            'msg' => $this->Lang->get($isValid)
+                        )));
                     }
                 } else {
-                    $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__INVALID_CAPTCHA'))));
+                    $this->response->body(json_encode(array(
+                        'statut' => false,
+                        'msg' => $this->Lang->get('FORM__INVALID_CAPTCHA')
+                    )));
                 }
             } else {
-                $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
+                $this->response->body(json_encode(array(
+                    'statut' => false,
+                    'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')
+                )));
             }
         } else {
-            $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
+            $this->response->body(json_encode(array(
+                'statut' => false,
+                'msg' => $this->Lang->get('ERROR__BAD_REQUEST')
+            )));
         }
     }
 
     function ajax_login()
     {
-        if (!$this->request->is('post'))
+        if (!$this->request->is('post')) {
             throw new BadRequestException();
-        if (empty($this->request->data['pseudo']) || empty($this->request->data['password']))
+        }
+        if (empty($this->request->data['pseudo']) || empty($this->request->data['password'])) {
             return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]);
+        }
         $this->autoRender = false;
         $this->response->type('json');
         $this->loadModel('Authentification');
@@ -122,20 +143,33 @@ class UserController extends AppController
         $infos = $this->Authentification->find('first', array('conditions' => array('user_id' => $user_login['id'], 'enabled' => true)));
 
         $confirmEmailIsNeeded = ($this->Configuration->getKey('confirm_mail_signup') && $this->Configuration->getKey('confirm_mail_signup_block'));
-        $login = $this->User->login($this->request->data, $confirmEmailIsNeeded, $this->Configuration->getKey('check_uuid'), $this);
-        if (!isset($login['status']) || $login['status'] !== true)
-            return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get($login, array('{URL_RESEND_EMAIL}' => Router::url(array('action' => 'resend_confirmation'))))]);
+        $login = $this->User->login($user_login, $this->request->data, $confirmEmailIsNeeded, $this->Configuration->getKey('check_uuid'), $this);
+        if (!isset($login['status']) || $login['status'] !== true) {
+            return $this->sendJSON([
+                'statut' => false,
+                'msg' => $this->Lang->get($login, array('{URL_RESEND_EMAIL}' => Router::url(array('action' => 'resend_confirmation'))))
+            ]);
+        }
 
         $event = new CakeEvent('onLogin', $this, array('user' => $user_login));
         $this->getEventManager()->dispatch($event);
-        if ($event->isStopped())
+        if ($event->isStopped()) {
             return $event->result;
+        }
         if ($infos) {
             $this->Session->write('user_id_two_factor_auth', $user_login['id']);
-            $this->sendJSON(['statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN'), 'two-factor-auth' => true]);
+            $this->sendJSON([
+                'statut' => true,
+                'msg' => $this->Lang->get('USER__REGISTER_LOGIN'),
+                'two-factor-auth' => true
+            ]);
         } else {
-            if ($this->request->data['remember_me'])
-                $this->Cookie->write('remember_me', array('pseudo' => $this->request->data['pseudo'], 'password' => $this->User->getFromUser('password', $this->request->data['pseudo'])), true, '1 week');
+            if ($this->request->data['remember_me']) {
+                $this->Cookie->write('remember_me', array(
+                    'pseudo' => $this->request->data['pseudo'],
+                    'password' => $this->User->getFromUser('password', $this->request->data['pseudo'])
+                ), true, '1 week');
+            }
             $this->Session->write('user', $login['session']);
             $this->sendJSON(['statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN')]);
         }
@@ -206,21 +240,39 @@ class UserController extends AppController
                                 'key' => $key
                             ));
                             $this->Lostpassword->save();
-                            $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__PASSWORD_FORGOT_EMAIL_SUCCESS'))));
+                            $this->response->body(json_encode(array(
+                                'statut' => true,
+                                'msg' => $this->Lang->get('USER__PASSWORD_FORGOT_EMAIL_SUCCESS')
+                            )));
                         } else {
-                            $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__INTERNAL_ERROR'))));
+                            $this->response->body(json_encode(array(
+                                'statut' => false,
+                                'msg' => $this->Lang->get('ERROR__INTERNAL_ERROR')
+                            )));
                         }
                     } else {
-                        $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_NOT_FOUND'))));
+                        $this->response->body(json_encode(array(
+                            'statut' => false,
+                            'msg' => $this->Lang->get('USER__ERROR_NOT_FOUND')
+                        )));
                     }
                 } else {
-                    $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID'))));
+                    $this->response->body(json_encode(array(
+                        'statut' => false,
+                        'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID')
+                    )));
                 }
             } else {
-                $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
+                $this->response->body(json_encode(array(
+                    'statut' => false,
+                    'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')
+                )));
             }
         } else {
-            $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
+            $this->response->body(json_encode(array(
+                'statut' => false,
+                'msg' => $this->Lang->get('ERROR__BAD_REQUEST')
+            )));
         }
     }
 
@@ -234,15 +286,24 @@ class UserController extends AppController
                 if (isset($reset['status']) && $reset['status'] === true) {
                     $this->Session->write('user', $reset['session']);
                     $this->History->set('RESET_PASSWORD', 'user');
-                    $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__PASSWORD_RESET_SUCCESS'))));
+                    $this->response->body(json_encode(array(
+                        'statut' => true,
+                        'msg' => $this->Lang->get('USER__PASSWORD_RESET_SUCCESS')
+                    )));
                 } else {
                     $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get($reset))));
                 }
             } else {
-                $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
+                $this->response->body(json_encode(array(
+                    'statut' => false,
+                    'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')
+                )));
             }
         } else {
-            $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
+            $this->response->body(json_encode(array(
+                'statut' => false,
+                'msg' => $this->Lang->get('ERROR__BAD_REQUEST')
+            )));
         }
     }
 
@@ -298,7 +359,10 @@ class UserController extends AppController
                     $infos = $isValidImg['infos'];
                 }
                 if (!$this->Util->uploadImage($this->request, $target . $filename)) {
-                    $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD'))));
+                    $this->response->body(json_encode(array(
+                        'statut' => false,
+                        'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD')
+                    )));
                     return;
                 }
 
@@ -307,7 +371,10 @@ class UserController extends AppController
                 $skinRestorerCommand = str_replace(['{PLAYER}', '{URL}'], [$username, $skinURL], "skin set {PLAYER} {URL}");
                 $this->Server->commands($skinRestorerCommand, $serverSkinRestorerID);
 
-                $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__UPLOAD_SKIN_SUCCESS'))));
+                $this->response->body(json_encode(array(
+                    'statut' => true,
+                    'msg' => $this->Lang->get('API__UPLOAD_SKIN_SUCCESS')
+                )));
             }
         } else {
             throw new ForbiddenException();
@@ -341,10 +408,16 @@ class UserController extends AppController
                     $infos = $isValidImg['infos'];
                 }
                 if (!$this->Util->uploadImage($this->request, $target . $filename)) {
-                    $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD'))));
+                    $this->response->body(json_encode(array(
+                        'statut' => false,
+                        'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD')
+                    )));
                     return;
                 }
-                $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('API__UPLOAD_CAPE_SUCCESS'))));
+                $this->response->body(json_encode(array(
+                    'statut' => true,
+                    'msg' => $this->Lang->get('API__UPLOAD_CAPE_SUCCESS')
+                )));
             }
         } else {
             throw new ForbiddenException();
@@ -358,9 +431,11 @@ class UserController extends AppController
             $this->loadModel('Authentification');
             $infos = $this->Authentification->find('first', array('conditions' => array('user_id' => $this->User->getKey('id'), 'enabled' => true)));
             if (empty($infos)) // no two factor auth
+            {
                 $this->set('twoFactorAuthStatus', false);
-            else
+            } else {
                 $this->set('twoFactorAuthStatus', true);
+            }
             $this->loadModel('User');
             $this->set('title_for_layout', $this->User->getKey('pseudo'));
             $this->layout = $this->Configuration->getKey('layout');
@@ -377,7 +452,13 @@ class UserController extends AppController
             } else {
                 $this->set('shop_active', false);
             }
-            $available_ranks = array(0 => $this->Lang->get('USER__RANK_MEMBER'), 2 => $this->Lang->get('USER__RANK_MODERATOR'), 3 => $this->Lang->get('USER__RANK_ADMINISTRATOR'), 4 => $this->Lang->get('USER__RANK_ADMINISTRATOR'), 5 => $this->Lang->get('USER__RANK_BANNED'));
+            $available_ranks = array(
+                0 => $this->Lang->get('USER__RANK_MEMBER'),
+                2 => $this->Lang->get('USER__RANK_MODERATOR'),
+                3 => $this->Lang->get('USER__RANK_ADMINISTRATOR'),
+                4 => $this->Lang->get('USER__RANK_ADMINISTRATOR'),
+                5 => $this->Lang->get('USER__RANK_BANNED')
+            );
             $this->loadModel('Rank');
             $custom_ranks = $this->Rank->find('all');
             foreach ($custom_ranks as $key => $value) {
@@ -404,20 +485,25 @@ class UserController extends AppController
 
     function resend_confirmation()
     {
-        if (!$this->isConnected && !$this->Session->check('email.confirm.user.id'))
+        if (!$this->isConnected && !$this->Session->check('email.confirm.user.id')) {
             throw new ForbiddenException();
-        if ($this->isConnected)
+        }
+        if ($this->isConnected) {
             $user = $this->User->getAllFromCurrentUser();
-        else
+        } else {
             $user = $this->User->find('first', array('conditions' => array('id' => $this->Session->read('email.confirm.user.id'))));
+        }
         $this->Session->delete('email.confirm.user.id');
-        if (!$user || empty($user))
+        if (!$user || empty($user)) {
             throw new NotFoundException();
-        if (isset($user['User']))
+        }
+        if (isset($user['User'])) {
             $user = $user['User'];
+        }
         $confirmed = $user['confirmed'];
-        if (!$this->Configuration->getKey('confirm_mail_signup') || empty($confirmed) || date('Y-m-d H:i:s', strtotime($confirmed)) == $confirmed)
+        if (!$this->Configuration->getKey('confirm_mail_signup') || empty($confirmed) || date('Y-m-d H:i:s', strtotime($confirmed)) == $confirmed) {
             throw new NotFoundException();
+        }
         $emailMsg = $this->Lang->get('EMAIL__CONTENT_CONFIRM_MAIL', array(
             '{LINK}' => Router::url('/user/confirm/', true) . $confirmed,
             '{IP}' => $this->Util->getIP(),
@@ -429,14 +515,16 @@ class UserController extends AppController
             $this->Lang->get('EMAIL__TITLE_CONFIRM_MAIL'),
             $emailMsg
         )->sendMail();
-        if ($email)
+        if ($email) {
             $this->Session->setFlash($this->Lang->get('USER__CONFIRM_EMAIL_RESEND_SUCCESS'), 'default.success');
-        else
+        } else {
             $this->Session->setFlash($this->Lang->get('USER__CONFIRM_EMAIL_RESEND_FAIL'), 'default.error');
-        if ($this->isConnected)
+        }
+        if ($this->isConnected) {
             $this->redirect(array('action' => 'profile'));
-        else
+        } else {
             $this->redirect('/');
+        }
     }
 
     function change_pw()
@@ -447,7 +535,8 @@ class UserController extends AppController
             if ($this->request->is('ajax')) {
                 if (!empty($this->request->data['password']) and !empty($this->request->data['password_confirmation'])) {
                     $password = $this->Util->password($this->request->data['password'], $this->User->getKey('pseudo'));
-                    $password_confirmation = $this->Util->password($this->request->data['password_confirmation'], $this->User->getKey('pseudo'), $password);
+                    $password_confirmation = $this->Util->password($this->request->data['password_confirmation'],
+                        $this->User->getKey('pseudo'), $password);
                     if ($password == $password_confirmation) {
                         $event = new CakeEvent('beforeUpdatePassword', $this, array('user' => $this->User->getAllFromCurrentUser(), 'new_password' => $password));
                         $this->getEventManager()->dispatch($event);
@@ -456,18 +545,33 @@ class UserController extends AppController
                         }
                         $this->User->setKey('password', $password);
                         $this->User->setKey('password_hash', $this->Util->getPasswordHashType());
-                        $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__PASSWORD_UPDATE_SUCCESS'))));
+                        $this->response->body(json_encode(array(
+                            'statut' => true,
+                            'msg' => $this->Lang->get('USER__PASSWORD_UPDATE_SUCCESS')
+                        )));
                     } else {
-                        $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_PASSWORDS_NOT_SAME'))));
+                        $this->response->body(json_encode(array(
+                            'statut' => false,
+                            'msg' => $this->Lang->get('USER__ERROR_PASSWORDS_NOT_SAME')
+                        )));
                     }
                 } else {
-                    $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
+                    $this->response->body(json_encode(array(
+                        'statut' => false,
+                        'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')
+                    )));
                 }
             } else {
-                $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
+                $this->response->body(json_encode(array(
+                    'statut' => false,
+                    'msg' => $this->Lang->get('ERROR__BAD_REQUEST')
+                )));
             }
         } else {
-            $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED'))));
+            $this->response->body(json_encode(array(
+                'statut' => false,
+                'msg' => $this->Lang->get('USER__ERROR_MUST_BE_LOGGED')
+            )));
         }
     }
 
@@ -480,24 +584,42 @@ class UserController extends AppController
                 if (!empty($this->request->data['email']) and !empty($this->request->data['email_confirmation'])) {
                     if ($this->request->data['email'] == $this->request->data['email_confirmation']) {
                         if (filter_var($this->request->data['email'], FILTER_VALIDATE_EMAIL)) {
-                            $event = new CakeEvent('beforeUpdateEmail', $this, array('user' => $this->User->getAllFromCurrentUser(), 'new_email' => $this->request->data['email']));
+                            $event = new CakeEvent('beforeUpdateEmail', $this, array(
+                                'user' => $this->User->getAllFromCurrentUser(),
+                                'new_email' => $this->request->data['email']
+                            ));
                             $this->getEventManager()->dispatch($event);
                             if ($event->isStopped()) {
                                 return $event->result;
                             }
                             $this->User->setKey('email', htmlentities($this->request->data['email']));
-                            $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EMAIL_UPDATE_SUCCESS'))));
+                            $this->response->body(json_encode(array(
+                                'statut' => true,
+                                'msg' => $this->Lang->get('USER__EMAIL_UPDATE_SUCCESS')
+                            )));
                         } else {
-                            $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID'))));
+                            $this->response->body(json_encode(array(
+                                'statut' => false,
+                                'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID')
+                            )));
                         }
                     } else {
-                        $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_SAME'))));
+                        $this->response->body(json_encode(array(
+                            'statut' => false,
+                            'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_SAME')
+                        )));
                     }
                 } else {
-                    $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
+                    $this->response->body(json_encode(array(
+                        'statut' => false,
+                        'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')
+                    )));
                 }
             } else {
-                $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST'))));
+                $this->response->body(json_encode(array(
+                    'statut' => false,
+                    'msg' => $this->Lang->get('ERROR__BAD_REQUEST')
+                )));
             }
         } else {
             throw new ForbiddenException();
@@ -551,7 +673,10 @@ class UserController extends AppController
                 $this->loadModel('Rank');
                 $custom_ranks = $this->Rank->find('all');
                 foreach ($custom_ranks as $key => $value) {
-                    $available_ranks[$value['Rank']['rank_id']] = array('label' => 'info', 'name' => $value['Rank']['name']);
+                    $available_ranks[$value['Rank']['rank_id']] = array(
+                        'label' => 'info',
+                        'name' => $value['Rank']['name']
+                    );
                 }
                 $this->DataTable = $this->Components->load('DataTable');
                 $this->modelClass = 'User';
@@ -569,8 +694,16 @@ class UserController extends AppController
                     $rank_label = (isset($available_ranks[$value['User']['rank']])) ? $available_ranks[$value['User']['rank']]['label'] : $available_ranks[0]['label'];
                     $rank_name = (isset($available_ranks[$value['User']['rank']])) ? $available_ranks[$value['User']['rank']]['name'] : $available_ranks[0]['name'];
                     $rank = '<span class="label label-' . $rank_label . '">' . $rank_name . '</span>';
-                    $btns = '<a href="' . Router::url(array('controller' => 'user', 'action' => 'edit/' . $value["User"]["id"], 'admin' => true)) . '" class="btn btn-info">' . $this->Lang->get('GLOBAL__EDIT') . '</a>';
-                    $btns .= '&nbsp;<a onClick="confirmDel(\'' . Router::url(array('controller' => 'user', 'action' => 'delete/' . $value["User"]["id"], 'admin' => true)) . '\')" class="btn btn-danger">' . $this->Lang->get('GLOBAL__DELETE') . '</button>';
+                    $btns = '<a href="' . Router::url(array(
+                            'controller' => 'user',
+                            'action' => 'edit/' . $value["User"]["id"],
+                            'admin' => true
+                        )) . '" class="btn btn-info">' . $this->Lang->get('GLOBAL__EDIT') . '</a>';
+                    $btns .= '&nbsp;<a onClick="confirmDel(\'' . Router::url(array(
+                            'controller' => 'user',
+                            'action' => 'delete/' . $value["User"]["id"],
+                            'admin' => true
+                        )) . '\')" class="btn btn-danger">' . $this->Lang->get('GLOBAL__DELETE') . '</button>';
                     $data[] = array(
                         'User' => array(
                             'pseudo' => $username,
@@ -662,13 +795,20 @@ class UserController extends AppController
             if ($this->request->is('post')) {
                 $this->loadModel('User');
                 if (!empty($this->request->data['id']) && !empty($this->request->data['email']) && !empty($this->request->data['pseudo']) && (!empty($this->request->data['rank']) || $this->request->data['rank'] == 0)) {
-                    $findUser = $this->User->find('first', array('conditions' => array('id' => intval($this->request->data['id']))));
+                    $findUser = $this->User->find('first',
+                        array('conditions' => array('id' => intval($this->request->data['id']))));
                     if (empty($findUser)) {
-                        $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__EDIT_ERROR_UNKNOWN'))));
+                        $this->response->body(json_encode(array(
+                            'statut' => false,
+                            'msg' => $this->Lang->get('USER__EDIT_ERROR_UNKNOWN')
+                        )));
                         return;
                     }
                     if ($findUser['User']['id'] == $this->User->getKey('id') && $this->request->data['rank'] != $this->User->getKey('rank')) {
-                        $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__EDIT_ERROR_YOURSELF'))));
+                        $this->response->body(json_encode(array(
+                            'statut' => false,
+                            'msg' => $this->Lang->get('USER__EDIT_ERROR_YOURSELF')
+                        )));
                         return;
                     }
                     $data = array(
@@ -687,7 +827,11 @@ class UserController extends AppController
                     if ($this->EyPlugin->isInstalled('eywek.shop')) {
                         $data['money'] = $this->request->data['money'];
                     }
-                    $event = new CakeEvent('beforeEditUser', $this, array('user_id' => $findUser['User']['id'], 'data' => $data, 'password_updated' => $password_updated));
+                    $event = new CakeEvent('beforeEditUser', $this, array(
+                        'user_id' => $findUser['User']['id'],
+                        'data' => $data,
+                        'password_updated' => $password_updated
+                    ));
                     $this->getEventManager()->dispatch($event);
                     if ($event->isStopped()) {
                         return $event->result;
@@ -697,9 +841,15 @@ class UserController extends AppController
                     $this->User->save();
                     $this->History->set('EDIT_USER', 'user');
                     $this->Session->setFlash($this->Lang->get('USER__EDIT_SUCCESS'), 'default.success');
-                    $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__EDIT_SUCCESS'))));
+                    $this->response->body(json_encode(array(
+                        'statut' => true,
+                        'msg' => $this->Lang->get('USER__EDIT_SUCCESS')
+                    )));
                 } else {
-                    $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
+                    $this->response->body(json_encode(array(
+                        'statut' => false,
+                        'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')
+                    )));
                 }
             } else {
                 throw new NotFoundException();

@@ -65,38 +65,57 @@ class AppController extends Controller
         $this->__initWebsiteInfos();
 
         // Navbar
-        if ($this->params['prefix'] == "admin" && !$this->request->is('ajax'))
+        if ($this->params['prefix'] == "admin" && !$this->request->is('ajax')) {
             $this->__initAdminNavbar();
-        else if (!$this->request->is('ajax'))
-            $this->__initNavbar();
+        } else {
+            if (!$this->request->is('ajax')) {
+                $this->__initNavbar();
+            }
+        }
 
         // Server
-        if ($this->params['prefix'] !== "admin" && !$this->request->is('ajax'))
+        if ($this->params['prefix'] !== "admin" && !$this->request->is('ajax')) {
             $this->__initServerInfos();
+        }
 
         // Plugins events
         $this->EyPlugin->initEventsListeners($this);
 
         $event = new CakeEvent('requestPage', $this, $this->request->data);
         $this->getEventManager()->dispatch($event);
-        if ($event->isStopped())
+        if ($event->isStopped()) {
             return $event->result;
+        }
 
         if ($this->request->is('post')) {
             $event = new CakeEvent('onPostRequest', $this, $this->request->data);
             $this->getEventManager()->dispatch($event);
-            if ($event->isStopped())
+            if ($event->isStopped()) {
                 return $event->result;
+            }
         }
         $LoginCondition = ($this->here != "/login") || !$this->EyPlugin->isInstalled('phpierre.signinup');
         // Maintenance / Bans
         // lowercase to avoid errors when the controller is called with uppercase
         $this->params['controller'] = strtolower($this->params['controller']);
         $this->params['action'] = strtolower($this->params['action']);
-        if ($this->isConnected and $this->User->getKey('rank') == 5 and $this->params['controller'] != "maintenance" and $this->params['action'] != "logout" and $this->params['controller'] != "api")
-            $this->redirect(array('controller' => 'maintenance', 'action' => 'index/banned', 'plugin' => false, 'admin' => false));
-        else if ($this->params['controller'] != "user" && $this->params['controller'] != "maintenance" && $this->Configuration->getKey('maintenance') != '0' && !$this->Permissions->can('BYPASS_MAINTENANCE') && $LoginCondition)
-            $this->redirect(array('controller' => 'maintenance', 'action' => 'index', 'plugin' => false, 'admin' => false));
+        if ($this->isConnected and $this->User->getKey('rank') == 5 and $this->params['controller'] != "maintenance" and $this->params['action'] != "logout" and $this->params['controller'] != "api") {
+            $this->redirect(array(
+                'controller' => 'maintenance',
+                'action' => 'index/banned',
+                'plugin' => false,
+                'admin' => false
+            ));
+        } else {
+            if ($this->params['controller'] != "user" && $this->params['controller'] != "maintenance" && $this->Configuration->getKey('maintenance') != '0' && !$this->Permissions->can('BYPASS_MAINTENANCE') && $LoginCondition) {
+                $this->redirect(array(
+                    'controller' => 'maintenance',
+                    'action' => 'index',
+                    'plugin' => false,
+                    'admin' => false
+                ));
+            }
+        }
 
     }
 
@@ -170,23 +189,20 @@ class AppController extends Controller
         $this->loadModel('User');
 
         if (!$this->User->isConnected() && ($cookie = $this->Cookie->read('remember_me')) && isset($cookie['pseudo']) && isset($cookie['password'])) {
-            $user = $this->User->find('first', array(
-                'conditions' => array(
-                    'pseudo' => $cookie['pseudo'],
-                    'password' => $cookie['password']
-                )
-            ));
+            $user = $this->User->find('first', array('conditions' => array('pseudo' => $cookie['pseudo'])));
 
-            if (!empty($user))
+            if (!empty($user) && $user['User']['password'] == $cookie['password']) {
                 $this->Session->write('user', $user['User']['id']);
+            }
         }
 
         $this->isConnected = $this->User->isConnected();
         $this->set('isConnected', $this->isConnected);
 
         $user = ($this->isConnected) ? $this->User->getAllFromCurrentUser() : array();
-        if (!empty($user))
+        if (!empty($user)) {
             $user['isAdmin'] = $this->User->isAdmin();
+        }
 
         $this->set(compact('user'));
     }
@@ -350,18 +366,27 @@ class AppController extends Controller
         if (!function_exists('addToNav')) {
             function addToNav($menus, $nav, $index = 0)
             {
-                if (!is_array($menus))
+                if (!is_array($menus)) {
                     return $nav;
+                }
                 foreach ($menus as $name => $menu) {
                     if (isset($nav[$name])) // Multidimensional
+                    {
                         $nav[$name] = addToNav($menu, $nav[$name], $index + 1);
-                    else { // Add
+                    } else { // Add
                         if (!isset($nav['menu']) && $index !== 0) // No others submenu
+                        {
                             $nav['menu'] = [];
+                        }
                         if ($index === 0) // Add
-                            $nav = addToArrayAt($nav, (isset($menu['index']) ? $menu['index'] : count($nav)), [$name => $menu]);
-                        else // Add into submenu
-                            $nav['menu'] = addToArrayAt($nav['menu'], (isset($menu['index']) ? $menu['index'] : count($nav['menu'])), [$name => $menu]);
+                        {
+                            $nav = addToArrayAt($nav, (isset($menu['index']) ? $menu['index'] : count($nav)),
+                                [$name => $menu]);
+                        } else // Add into submenu
+                        {
+                            $nav['menu'] = addToArrayAt($nav['menu'],
+                                (isset($menu['index']) ? $menu['index'] : count($nav['menu'])), [$name => $menu]);
+                        }
                     }
                 }
                 return $nav;
@@ -370,18 +395,23 @@ class AppController extends Controller
 
         // Add slider if !useless
         $themeConfig = $this->Theme->getConfig(Configure::read('theme'));
-        if (isset($themeConfig->slider) && $themeConfig->slider)
-            $nav['GLOBAL__CUSTOMIZE']['menu'] = addToArrayAt($nav['GLOBAL__CUSTOMIZE']['menu'], count($nav['GLOBAL__CUSTOMIZE']['menu']), ['SLIDER__TITLE' => [
-                'icon' => 'far fa-image',
-                'permission' => 'MANAGE_SLIDER',
-                'route' => ['controller' => 'slider', 'action' => 'index', 'admin' => true, 'plugin' => false]
-            ]]);
+        if (isset($themeConfig->slider) && $themeConfig->slider) {
+            $nav['GLOBAL__CUSTOMIZE']['menu'] = addToArrayAt($nav['GLOBAL__CUSTOMIZE']['menu'],
+                count($nav['GLOBAL__CUSTOMIZE']['menu']), [
+                    'SLIDER__TITLE' => [
+                        'icon' => 'far fa-image',
+                        'permission' => 'MANAGE_SLIDER',
+                        'route' => ['controller' => 'slider', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ]
+                ]);
+        }
 
         // Handle plugins
         $plugins = $this->EyPlugin->pluginsLoaded;
         foreach ($plugins as $plugin) {
-            if (!isset($plugin->admin_menus) || !$plugin->active)
+            if (!isset($plugin->admin_menus) || !$plugin->active) {
                 continue;
+            }
             $menus = json_decode(json_encode($plugin->admin_menus), true);
             $nav = addToNav($menus, $nav);
         }
@@ -393,29 +423,35 @@ class AppController extends Controller
     {
         $this->loadModel('Navbar');
         $nav = $this->Navbar->find('all', array('order' => 'order'));
-        if (empty($nav))
+        if (empty($nav)) {
             return $this->set('nav', false);
+        }
         $this->loadModel('Page');
         $pages = $this->Page->find('all', array('fields' => array('id', 'slug')));
-        foreach ($pages as $key => $value)
+        foreach ($pages as $key => $value) {
             $pages_listed[$value['Page']['id']] = $value['Page']['slug'];
+        }
         foreach ($nav as $key => $value) {
-            if (!isset($value['Navbar']['url']['type']))
+            if (!isset($value['Navbar']['url']['type'])) {
                 continue;
+            }
             if ($value['Navbar']['url']['type'] == "plugin") {
-                if (isset($value['Navbar']['url']['route']))
+                if (isset($value['Navbar']['url']['route'])) {
                     $plugin = $this->EyPlugin->findPlugin('slug', $value['Navbar']['url']['id']);
-                else
+                } else {
                     $plugin = $this->EyPlugin->findPlugin('DBid', $value['Navbar']['url']['id']);
-                if (is_object($plugin))
+                }
+                if (is_object($plugin)) {
                     $nav[$key]['Navbar']['url'] = (isset($value['Navbar']['url']['route'])) ? Router::url($value['Navbar']['url']['route']) : Router::url('/' . strtolower($plugin->slug));
-                else
+                } else {
                     $nav[$key]['Navbar']['url'] = '#';
+                }
             } elseif ($value['Navbar']['url']['type'] == "page") {
-                if (isset($pages_listed) && isset($pages_listed[$value['Navbar']['url']['id']]))
+                if (isset($pages_listed) && isset($pages_listed[$value['Navbar']['url']['id']])) {
                     $nav[$key]['Navbar']['url'] = Router::url('/p/' . $pages_listed[$value['Navbar']['url']['id']]);
-                else
+                } else {
                     $nav[$key]['Navbar']['url'] = '#';
+                }
             } elseif ($value['Navbar']['url']['type'] == "custom") {
                 $nav[$key]['Navbar']['url'] = $value['Navbar']['url']['url'];
             }
@@ -426,21 +462,28 @@ class AppController extends Controller
     public function __initServerInfos()
     {
         $configuration = $this->Configuration->getKey('banner_server');
-        if (empty($configuration) && $this->Server->online())
+        if (empty($configuration) && $this->Server->online()) {
             $server_infos = $this->Server->banner_infos();
-        else if (!empty($configuration))
-            $server_infos = $this->Server->banner_infos(unserialize($configuration));
-        else
-            return $this->set(['banner_server' => false, 'server_infos' => false]);
-        if (!isset($server_infos['GET_MAX_PLAYERS']) || !isset($server_infos['GET_PLAYER_COUNT']) || $server_infos['GET_MAX_PLAYERS'] === 0)
+        } else {
+            if (!empty($configuration)) {
+                $server_infos = $this->Server->banner_infos(unserialize($configuration));
+            } else {
+                return $this->set(['banner_server' => false, 'server_infos' => false]);
+            }
+        }
+        if (!isset($server_infos['GET_MAX_PLAYERS']) || !isset($server_infos['GET_PLAYER_COUNT']) || $server_infos['GET_MAX_PLAYERS'] === 0) {
             return $this->set(['banner_server' => false, 'server_infos' => $server_infos]);
+        }
 
-        $this->set(['banner_server' => $this->Lang->get('SERVER__STATUS_MESSAGE', array(
-            '{MOTD}' => @$server_infos['getMOTD'],
-            '{VERSION}' => @$server_infos['getVersion'],
-            '{ONLINE}' => @$server_infos['GET_PLAYER_COUNT'],
-            '{ONLINE_LIMIT}' => @$server_infos['GET_MAX_PLAYERS']
-        )), 'server_infos' => $server_infos]);
+        $this->set([
+            'banner_server' => $this->Lang->get('SERVER__STATUS_MESSAGE', array(
+                '{MOTD}' => @$server_infos['getMOTD'],
+                '{VERSION}' => @$server_infos['getVersion'],
+                '{ONLINE}' => @$server_infos['GET_PLAYER_COUNT'],
+                '{ONLINE_LIMIT}' => @$server_infos['GET_MAX_PLAYERS']
+            )),
+            'server_infos' => $server_infos
+        ]);
 
     }
 
@@ -451,7 +494,8 @@ class AppController extends Controller
         $users_count = $this->User->find('count');
         $users_last = $this->User->find('first', array('order' => 'created DESC'));
         $users_last = $users_last['User'];
-        $users_count_today = $this->User->find('count', array('conditions' => array('created LIKE' => date('Y-m-d') . '%')));
+        $users_count_today = $this->User->find('count',
+            array('conditions' => array('created LIKE' => date('Y-m-d') . '%')));
         $visits_count = $this->Visit->getVisitsCount();
         $visits_count_today = $this->Visit->getVisitsByDay(date('Y-m-d'))['count'];
         $admin_dark_mode = $this->Cookie->read('use_admin_dark_mode');
@@ -493,7 +537,8 @@ class AppController extends Controller
         $seo_config['img_url'] = (empty($seo_config['img_url'])) ? $seo_config['favicon_url'] : $seo_config['img_url'];
         $title = $this->viewVars['title_for_layout'];
         $website_name = $this->viewVars['website_name'];
-        $seo_config['title'] = str_replace(["{TITLE}", "{WEBSITE_NAME}"], [($title ? $title : "Error"), ($website_name ? $website_name : "MineWeb")], $seo_config['title']);
+        $seo_config['title'] = str_replace(["{TITLE}", "{WEBSITE_NAME}"],
+            [($title ? $title : "Error"), ($website_name ? $website_name : "MineWeb")], $seo_config['title']);
 
         $this->set(compact('seo_config'));
     }
@@ -511,8 +556,9 @@ class AppController extends Controller
 
     protected function __setTheme()
     {
-        if (!isset($this->params['prefix']) or $this->params['prefix'] !== "admin")
+        if (!isset($this->params['prefix']) or $this->params['prefix'] !== "admin") {
             $this->theme = Configure::read('theme');
+        }
     }
 
     public function blackhole($type)
