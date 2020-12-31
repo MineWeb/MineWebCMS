@@ -185,18 +185,16 @@ class AppController extends Controller
         if (!$this->User->isConnected() && ($cookie = $this->Cookie->read('remember_me')) && isset($cookie['pseudo']) && isset($cookie['password'])) {
             $user = $this->User->find('first', array('conditions' => array('pseudo' => $cookie['pseudo'])));
 
-            if (!empty($user) && $user['User']['password'] == $cookie['password']) {
+            if (!empty($user) && $user['User']['password'] == $cookie['password'])
                 $this->Session->write('user', $user['User']['id']);
-            }
         }
 
         $this->isConnected = $this->User->isConnected();
         $this->set('isConnected', $this->isConnected);
 
         $user = ($this->isConnected) ? $this->User->getAllFromCurrentUser() : array();
-        if (!empty($user)) {
+        if (!empty($user))
             $user['isAdmin'] = $this->User->isAdmin();
-        }
 
         $this->set(compact('user'));
     }
@@ -360,27 +358,20 @@ class AppController extends Controller
         if (!function_exists('addToNav')) {
             function addToNav($menus, $nav, $index = 0)
             {
-                if (!is_array($menus)) {
+                if (!is_array($menus))
                     return $nav;
-                }
                 foreach ($menus as $name => $menu) {
                     if (isset($nav[$name])) // Multidimensional
-                    {
                         $nav[$name] = addToNav($menu, $nav[$name], $index + 1);
-                    } else { // Add
+                    else { // Add
                         if (!isset($nav['menu']) && $index !== 0) // No others submenu
                         {
                             $nav['menu'] = [];
                         }
                         if ($index === 0) // Add
-                        {
-                            $nav = addToArrayAt($nav, (isset($menu['index']) ? $menu['index'] : count($nav)),
-                                [$name => $menu]);
-                        } else // Add into submenu
-                        {
-                            $nav['menu'] = addToArrayAt($nav['menu'],
-                                (isset($menu['index']) ? $menu['index'] : count($nav['menu'])), [$name => $menu]);
-                        }
+                            $nav = addToArrayAt($nav, (isset($menu['index']) ? $menu['index'] : count($nav)), [$name => $menu]);
+                        else // Add into submenu
+                            $nav['menu'] = addToArrayAt($nav['menu'], (isset($menu['index']) ? $menu['index'] : count($nav['menu'])), [$name => $menu]);
                     }
                 }
                 return $nav;
@@ -403,9 +394,8 @@ class AppController extends Controller
         // Handle plugins
         $plugins = $this->EyPlugin->pluginsLoaded;
         foreach ($plugins as $plugin) {
-            if (!isset($plugin->admin_menus) || !$plugin->active) {
+            if (!isset($plugin->admin_menus) || !$plugin->active)
                 continue;
-            }
             $menus = json_decode(json_encode($plugin->admin_menus), true);
             $nav = addToNav($menus, $nav);
         }
@@ -452,7 +442,7 @@ class AppController extends Controller
         $configuration = $this->Configuration->getKey('banner_server');
         if (empty($configuration) && $this->Server->online())
             $server_infos = $this->Server->banner_infos();
-        else if (!empty($configuration)) {
+        else if (!empty($configuration))
             $server_infos = $this->Server->banner_infos(unserialize($configuration));
         else
             return $this->set(['banner_server' => false, 'server_infos' => false]);

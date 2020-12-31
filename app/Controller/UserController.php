@@ -48,7 +48,7 @@ class UserController extends AppController
                 }
                 // Captcha
                 if ($this->Configuration->getKey('captcha_type') == "2" || $this->Configuration->getKey('captcha_type') == "3") { // ReCaptcha and h-captcha
-                    $validCaptcha = $this->Util->isValidReCaptcha($this->request->data['recaptcha'], $this->Util->getIP(), $this->Configuration->getKey('captcha_google_secret'));
+                    $validCaptcha = $this->Util->isValidReCaptcha($this->request->data['recaptcha'], $this->Util->getIP(), $this->Configuration->getKey('captcha_secret'), $this->Configuration->getKey('captcha_type'));
                 } else {
                     $captcha = $this->Session->read('captcha_code');
                     $validCaptcha = (!empty($captcha) && $captcha == $this->request->data['captcha']);
