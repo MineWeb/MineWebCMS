@@ -365,9 +365,7 @@ class AppController extends Controller
                         $nav[$name] = addToNav($menu, $nav[$name], $index + 1);
                     else { // Add
                         if (!isset($nav['menu']) && $index !== 0) // No others submenu
-                        {
                             $nav['menu'] = [];
-                        }
                         if ($index === 0) // Add
                             $nav = addToArrayAt($nav, (isset($menu['index']) ? $menu['index'] : count($nav)), [$name => $menu]);
                         else // Add into submenu
