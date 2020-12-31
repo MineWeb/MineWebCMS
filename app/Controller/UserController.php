@@ -129,12 +129,10 @@ class UserController extends AppController
 
     function ajax_login()
     {
-        if (!$this->request->is('post')) {
+        if (!$this->request->is('post'))
             throw new BadRequestException();
-        }
-        if (empty($this->request->data['pseudo']) || empty($this->request->data['password'])) {
+        if (empty($this->request->data['pseudo']) || empty($this->request->data['password']))
             return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]);
-        }
         $this->autoRender = false;
         $this->response->type('json');
         $this->loadModel('Authentification');
@@ -153,9 +151,8 @@ class UserController extends AppController
 
         $event = new CakeEvent('onLogin', $this, array('user' => $user_login));
         $this->getEventManager()->dispatch($event);
-        if ($event->isStopped()) {
+        if ($event->isStopped())
             return $event->result;
-        }
         if ($infos) {
             $this->Session->write('user_id_two_factor_auth', $user_login['id']);
             $this->sendJSON([
@@ -431,11 +428,9 @@ class UserController extends AppController
             $this->loadModel('Authentification');
             $infos = $this->Authentification->find('first', array('conditions' => array('user_id' => $this->User->getKey('id'), 'enabled' => true)));
             if (empty($infos)) // no two factor auth
-            {
                 $this->set('twoFactorAuthStatus', false);
-            } else {
+            else
                 $this->set('twoFactorAuthStatus', true);
-            }
             $this->loadModel('User');
             $this->set('title_for_layout', $this->User->getKey('pseudo'));
             $this->layout = $this->Configuration->getKey('layout');
@@ -485,25 +480,20 @@ class UserController extends AppController
 
     function resend_confirmation()
     {
-        if (!$this->isConnected && !$this->Session->check('email.confirm.user.id')) {
+        if (!$this->isConnected && !$this->Session->check('email.confirm.user.id'))
             throw new ForbiddenException();
-        }
-        if ($this->isConnected) {
+        if ($this->isConnected)
             $user = $this->User->getAllFromCurrentUser();
-        } else {
+        else
             $user = $this->User->find('first', array('conditions' => array('id' => $this->Session->read('email.confirm.user.id'))));
-        }
         $this->Session->delete('email.confirm.user.id');
-        if (!$user || empty($user)) {
+        if (!$user || empty($user))
             throw new NotFoundException();
-        }
-        if (isset($user['User'])) {
+        if (isset($user['User']))
             $user = $user['User'];
-        }
         $confirmed = $user['confirmed'];
-        if (!$this->Configuration->getKey('confirm_mail_signup') || empty($confirmed) || date('Y-m-d H:i:s', strtotime($confirmed)) == $confirmed) {
+        if (!$this->Configuration->getKey('confirm_mail_signup') || empty($confirmed) || date('Y-m-d H:i:s', strtotime($confirmed)) == $confirmed)
             throw new NotFoundException();
-        }
         $emailMsg = $this->Lang->get('EMAIL__CONTENT_CONFIRM_MAIL', array(
             '{LINK}' => Router::url('/user/confirm/', true) . $confirmed,
             '{IP}' => $this->Util->getIP(),
@@ -515,16 +505,14 @@ class UserController extends AppController
             $this->Lang->get('EMAIL__TITLE_CONFIRM_MAIL'),
             $emailMsg
         )->sendMail();
-        if ($email) {
+        if ($email)
             $this->Session->setFlash($this->Lang->get('USER__CONFIRM_EMAIL_RESEND_SUCCESS'), 'default.success');
-        } else {
+        else
             $this->Session->setFlash($this->Lang->get('USER__CONFIRM_EMAIL_RESEND_FAIL'), 'default.error');
-        }
-        if ($this->isConnected) {
+        if ($this->isConnected)
             $this->redirect(array('action' => 'profile'));
-        } else {
+        else
             $this->redirect('/');
-        }
     }
 
     function change_pw()
@@ -535,8 +523,7 @@ class UserController extends AppController
             if ($this->request->is('ajax')) {
                 if (!empty($this->request->data['password']) and !empty($this->request->data['password_confirmation'])) {
                     $password = $this->Util->password($this->request->data['password'], $this->User->getKey('pseudo'));
-                    $password_confirmation = $this->Util->password($this->request->data['password_confirmation'],
-                        $this->User->getKey('pseudo'), $password);
+                    $password_confirmation = $this->Util->password($this->request->data['password_confirmation'], $this->User->getKey('pseudo'), $password);
                     if ($password == $password_confirmation) {
                         $event = new CakeEvent('beforeUpdatePassword', $this, array('user' => $this->User->getAllFromCurrentUser(), 'new_password' => $password));
                         $this->getEventManager()->dispatch($event);
