@@ -36,10 +36,10 @@ require ROOT . '/config/function.php';
 class AppController extends Controller
 {
 
-    $components = array('Util', 'Module', 'Session', 'Cookie', 'Security', 'EyPlugin', 'Lang', 'Theme', 'History', 'Statistics', 'Permissions', 'Update', 'Server');
-    $helpers = array('Session');
+    public $components = array('Util', 'Module', 'Session', 'Cookie', 'Security', 'EyPlugin', 'Lang', 'Theme', 'History', 'Statistics', 'Permissions', 'Update', 'Server');
+    public $helpers = array('Session');
 
-    $view = 'Theme';
+    public $view = 'Theme';
 
     protected $isConnected = false;
 
