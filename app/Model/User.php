@@ -26,9 +26,9 @@ class User extends AppModel
     public function validRegister($data, $UtilComponent)
     {
         if (preg_match('`^([a-zA-Z0-9_]{2,16})$`', $data['pseudo'])) {
-            $data['password'] = $UtilComponent->password($data['password'], $data['pseudo']);
-            $data['password_confirmation'] = $UtilComponent->password($data['password_confirmation'], $data['pseudo'], $data['password']);
             if ($data['password'] == $data['password_confirmation']) {
+                $data['password'] = $data['password_confirmation'] = $UtilComponent->password($data['password'], $data['pseudo']);
+
                 if (filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
                     $search_member_by_pseudo = $this->find('all', array('conditions' => array('pseudo' => $data['pseudo'])));
                     $search_member_by_uuid = $this->find('all', array('conditions' => array('uuid' => $data['uuid'])));
@@ -79,7 +79,7 @@ class User extends AppModel
         return $this->getLastInsertId();
     }
 
-    public function login($data, $confirmEmailIsNeeded = false, $checkUUID = false, $controller)
+    public function login($user, $data, $confirmEmailIsNeeded = false, $checkUUID = false, $controller)
     {
         $UtilComponent = $controller->Util;
         $LoginRetryTable = ClassRegistry::init('LoginRetry');
@@ -92,13 +92,9 @@ class User extends AppModel
 
         if (!empty($findRetryWithIP) && $findRetryWithIP['LoginRetry']['count'] >= 10)
             return 'LOGIN__BLOCKED';
-        $username = $data['pseudo'];
-        $user = $this->find('first', ['conditions' => [
-            'pseudo' => $username,
-            'password' => $UtilComponent->password($data['password'], $username, $this->getFromUser('password', $username), $this->getFromUser('password_hash', $username))
-        ]]);
+        $username = $user['pseudo'];
         $date = date('Y-m-d H:i:s');
-        if (empty($user)) {
+        if ($user['password'] != $UtilComponent->password($data['password'], $username, $user['password'], $user['password_hash'])) {
             if (empty($findRetryWithIP) or $findRetryWithIP['LoginRetry']['count'] >= 10) {
                 $LoginRetryTable->create();
                 $LoginRetryTable->set(array(
@@ -115,7 +111,6 @@ class User extends AppModel
                 return 'USER__ERROR_INVALID_CREDENTIALS';
             }
         }
-        $user = $user['User'];
         $LoginRetryTable->deleteAll(['ip' => $ip]);
         $conditions = array();
         

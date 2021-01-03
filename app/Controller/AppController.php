@@ -36,10 +36,10 @@ require ROOT . '/config/function.php';
 class AppController extends Controller
 {
 
-    var $components = array('Util', 'Module', 'Session', 'Cookie', 'Security', 'EyPlugin', 'Lang', 'Theme', 'History', 'Statistics', 'Permissions', 'Update', 'Server');
-    var $helpers = array('Session');
+    public $components = array('Util', 'Module', 'Session', 'Cookie', 'Security', 'EyPlugin', 'Lang', 'Theme', 'History', 'Statistics', 'Permissions', 'Update', 'Server');
+    public $helpers = array('Session');
 
-    var $view = 'Theme';
+    public $view = 'Theme';
 
     protected $isConnected = false;
 
@@ -93,10 +93,23 @@ class AppController extends Controller
         // lowercase to avoid errors when the controller is called with uppercase
         $this->params['controller'] = strtolower($this->params['controller']);
         $this->params['action'] = strtolower($this->params['action']);
-        if ($this->isConnected and $this->User->getKey('rank') == 5 and $this->params['controller'] != "maintenance" and $this->params['action'] != "logout" and $this->params['controller'] != "api")
-            $this->redirect(array('controller' => 'maintenance', 'action' => 'index/banned', 'plugin' => false, 'admin' => false));
-        else if ($this->params['controller'] != "user" && $this->params['controller'] != "maintenance" && $this->Configuration->getKey('maintenance') != '0' && !$this->Permissions->can('BYPASS_MAINTENANCE') && $LoginCondition)
-            $this->redirect(array('controller' => 'maintenance', 'action' => 'index', 'plugin' => false, 'admin' => false));
+        if ($this->isConnected and $this->User->getKey('rank') == 5 and $this->params['controller'] != "maintenance" and $this->params['action'] != "logout" and $this->params['controller'] != "api") {
+            $this->redirect(array(
+                'controller' => 'maintenance',
+                'action' => 'index/banned',
+                'plugin' => false,
+                'admin' => false
+            ));
+        } else {
+            if ($this->params['controller'] != "user" && $this->params['controller'] != "maintenance" && $this->Configuration->getKey('maintenance') != '0' && !$this->Permissions->can('BYPASS_MAINTENANCE') && $LoginCondition) {
+                $this->redirect(array(
+                    'controller' => 'maintenance',
+                    'action' => 'index',
+                    'plugin' => false,
+                    'admin' => false
+                ));
+            }
+        }
 
     }
 
@@ -170,14 +183,9 @@ class AppController extends Controller
         $this->loadModel('User');
 
         if (!$this->User->isConnected() && ($cookie = $this->Cookie->read('remember_me')) && isset($cookie['pseudo']) && isset($cookie['password'])) {
-            $user = $this->User->find('first', array(
-                'conditions' => array(
-                    'pseudo' => $cookie['pseudo'],
-                    'password' => $cookie['password']
-                )
-            ));
+            $user = $this->User->find('first', array('conditions' => array('pseudo' => $cookie['pseudo'])));
 
-            if (!empty($user))
+            if (!empty($user) && $user['User']['password'] == $cookie['password'])
                 $this->Session->write('user', $user['User']['id']);
         }
 
@@ -370,12 +378,16 @@ class AppController extends Controller
 
         // Add slider if !useless
         $themeConfig = $this->Theme->getConfig(Configure::read('theme'));
-        if (isset($themeConfig->slider) && $themeConfig->slider)
-            $nav['GLOBAL__CUSTOMIZE']['menu'] = addToArrayAt($nav['GLOBAL__CUSTOMIZE']['menu'], count($nav['GLOBAL__CUSTOMIZE']['menu']), ['SLIDER__TITLE' => [
-                'icon' => 'far fa-image',
-                'permission' => 'MANAGE_SLIDER',
-                'route' => ['controller' => 'slider', 'action' => 'index', 'admin' => true, 'plugin' => false]
-            ]]);
+        if (isset($themeConfig->slider) && $themeConfig->slider) {
+            $nav['GLOBAL__CUSTOMIZE']['menu'] = addToArrayAt($nav['GLOBAL__CUSTOMIZE']['menu'],
+                count($nav['GLOBAL__CUSTOMIZE']['menu']), [
+                    'SLIDER__TITLE' => [
+                        'icon' => 'far fa-image',
+                        'permission' => 'MANAGE_SLIDER',
+                        'route' => ['controller' => 'slider', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ]
+                ]);
+        }
 
         // Handle plugins
         $plugins = $this->EyPlugin->pluginsLoaded;
@@ -435,12 +447,15 @@ class AppController extends Controller
         if (!isset($server_infos['GET_MAX_PLAYERS']) || !isset($server_infos['GET_PLAYER_COUNT']) || $server_infos['GET_MAX_PLAYERS'] === 0)
             return $this->set(['banner_server' => false, 'server_infos' => $server_infos]);
 
-        $this->set(['banner_server' => $this->Lang->get('SERVER__STATUS_MESSAGE', array(
-            '{MOTD}' => @$server_infos['getMOTD'],
-            '{VERSION}' => @$server_infos['getVersion'],
-            '{ONLINE}' => @$server_infos['GET_PLAYER_COUNT'],
-            '{ONLINE_LIMIT}' => @$server_infos['GET_MAX_PLAYERS']
-        )), 'server_infos' => $server_infos]);
+        $this->set([
+            'banner_server' => $this->Lang->get('SERVER__STATUS_MESSAGE', array(
+                '{MOTD}' => @$server_infos['getMOTD'],
+                '{VERSION}' => @$server_infos['getVersion'],
+                '{ONLINE}' => @$server_infos['GET_PLAYER_COUNT'],
+                '{ONLINE_LIMIT}' => @$server_infos['GET_MAX_PLAYERS']
+            )),
+            'server_infos' => $server_infos
+        ]);
 
     }
 
