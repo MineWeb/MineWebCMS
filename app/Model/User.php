@@ -87,33 +87,31 @@ class User extends AppModel
         App::uses('CakeTime', 'Utility');
         $findRetryWithIP = $LoginRetryTable->find('first', ['conditions' => [
             'ip' => $ip,
-            'modified >= ' => CakeTime::format('-5 minutes', '%Y-%m-%d %H:%M:%S')
+            'modified >= ' => CakeTime::format('-10 minutes', '%Y-%m-%d %H:%M:%S')
         ], 'order' => 'created DESC']);
-
-        if (!empty($findRetryWithIP) && $findRetryWithIP['LoginRetry']['count'] >= 10)
-            return 'LOGIN__BLOCKED';
-        $username = $user['pseudo'];
         $date = date('Y-m-d H:i:s');
-        if ($user['password'] != $UtilComponent->password($data['password'], $username, $user['password'], $user['password_hash'])) {
-            if (empty($findRetryWithIP) or $findRetryWithIP['LoginRetry']['count'] >= 10) {
-                $LoginRetryTable->create();
-                $LoginRetryTable->set(array(
-                    'ip' => $ip,
-                    'count' => 1
-                ));
-                $LoginRetryTable->save();
-                return 'USER__ERROR_INVALID_CREDENTIALS';
-            } else {
-                $LoginRetryTable->updateAll(
-                    ['count' => 'count + 1', 'modified' => "'$date'"],
-                    ['ip' => $ip]
-                );
-                return 'USER__ERROR_INVALID_CREDENTIALS';
-            }
+        if (empty($findRetryWithIP)) {
+            $LoginRetryTable->create();
+            $LoginRetryTable->set(array(
+                'ip' => $ip,
+                'count' => 1
+            ));
+            $LoginRetryTable->save();
+        } else {
+            $LoginRetryTable->updateAll(
+                ['count' => 'count + 1', 'modified' => "'$date'"],
+                ['ip' => $ip]
+            );
         }
+        if (!empty($findRetryWithIP) && $findRetryWithIP['LoginRetry']['count'] >= 5)
+            return 'LOGIN__BLOCKED';
+
+        $username = $user['pseudo'];
+        if ($user['password'] != $UtilComponent->password($data['password'], $username, $user['password'], $user['password_hash']))
+            return 'USER__ERROR_INVALID_CREDENTIALS';
         $LoginRetryTable->deleteAll(['ip' => $ip]);
-        $conditions = array();
-        
+        $conditions = [];
+
         if($this->getFromUser('password_hash', $username) != $UtilComponent->getPasswordHashType()) {
             $conditions['password'] = $UtilComponent->password($data['password'], $username);
             $conditions['password_hash'] =  $UtilComponent->getPasswordHashType();
