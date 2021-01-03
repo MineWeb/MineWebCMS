@@ -186,16 +186,17 @@
                                 continue;
                             if (!isset($value['menu']) && isset($value['permission']) && !$context->Permissions->can($value['permission'])) // Check perms
                                 continue;
-                            $currentMenu = checkCurrent($value['menu'], $context) ? "menu-open" : "";
+                            $currentMenu = false;
                             if (isset($value['menu'])) {
+                                $currentMenu = checkCurrent($value['menu'], $context) ? "menu-open" : "";
                                 echo '<li class="nav-item has-treeview ' . ($currentMenu ? "menu-open" : "") . '">';
                             } else
                                 echo '<li class="nav-item">';
                             // Link
                             $route = (isset($value['route']) ? $context->Html->url($value['route']) : '#');
                             $current = $route == $context->Html->url(null, false);
-                            echo '<a class="nav-link  ' . ($current || $currentMenu ? " active" : "") . '" href="' . $route . '">';
-                            echo '<i class=" ' . (strpos($value['icon'], "fa-") ? $value['icon'] : "fa fa-" . $value['icon']) . ' nav-icon"></i>  <p>' . $context->Lang->get($name);
+                            echo '<a class="nav-link' . ($current || $currentMenu ? " active" : "") . '" href="' . $route . '">';
+                            echo '<i class="' . (strpos($value['icon'], "fa-") ? $value['icon'] : "fa fa-" . $value['icon']) . ' nav-icon"></i>  <p>' . $context->Lang->get($name);
                             if (isset($value['menu']))
                                 echo '<i class="fas fa-angle-left right"></i></p>';
                             else echo '</p>';
