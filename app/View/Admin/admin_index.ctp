@@ -272,7 +272,7 @@
 
                     <div class="card card-body bg-light">
                         <?php if ($Server->online($value['Server']['id'])) { ?>
-                            <?php if ($value['Server']['type'] != 1 && $Permissions->can('SEND_SERVER_COMMAND_FROM_DASHBOARD')) { ?>
+                            <?php if ($value['Server']['type'] != 1 && $value['Server']['type'] != 3 && $Permissions->can('SEND_SERVER_COMMAND_FROM_DASHBOARD')) { ?>
                                 <div class="row-fluid text-center">
                                     <button class="btn" type="button" data-toggle="modal"
                                             onClick="$('#server_id').val(<?= $value['Server']['id'] ?>)"

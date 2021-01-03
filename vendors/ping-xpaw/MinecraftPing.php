@@ -32,11 +32,12 @@ class MinecraftPing
 
     const RAKNET_MAGIC = "\x00\xff\xff\x00\xfe\xfe\xfe\xfe\xfd\xfd\xfd\xfd\x12\x34\x56\x78";
 
-    public function __construct($Address, $Port = 25565, $Timeout = 2, $ResolveSRV = true)
+    public function __construct($Address, $Port = 25565, $Timeout = 2, $udp = false, $ResolveSRV = true)
     {
         $this->ServerAddress = $Address;
         $this->ServerPort = (int)$Port;
         $this->Timeout = (int)$Timeout;
+        $this->UDP = (bool)$udp;
 
         if ($ResolveSRV) {
             $this->ResolveSRV();
@@ -69,13 +70,9 @@ class MinecraftPing
 
         if (!$this->Socket) {
             $this->Socket = null;
-            if ($this->UDP)
-                throw new MinecraftPingException("Failed to connect or create a socket: $errno ($errstr)");
-            $this->UDP = true;
-            $this->Connect();
+            throw new MinecraftPingException("Failed to connect or create a socket: $errno ($errstr)");
 
         }
-
         // Set Read/Write timeout
         stream_set_timeout($this->Socket, $connectTimeout);
     }

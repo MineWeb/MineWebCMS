@@ -537,6 +537,7 @@
         "SERVER__TYPE": "Type of connection",
         "SERVER__TYPE_DEFAULT": "Default",
         "SERVER__TYPE_QUERY": "Ping (no need for plugin)",
+        "SERVER__TYPE_QUERY_MCPE": "Ping MCPE (no need for plugin)",
         "SERVER__TYPE_RCON": "RCON (no need for plugin)",
         "SERVER__TYPE_DEFAULT_INFOS": "You need to install the MineWebBridge plugin on your server to use this type of link.All information related to this manipulation is available on <a href=\"http://docs.mineweb.org/#link-server-site\"> documentation </a>",
         "SERVER__TYPE_QUERY_INFOS": "You do not need to install the MineWebBridge plugin on your server to use this type of link, this type of link only allows you to display the number of connected on your infrastructure. this manipulation are available on <a href=\"http://docs.mineweb.org/#lier-server-site\"> documentation </a> ",

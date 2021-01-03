@@ -73,6 +73,7 @@
                     <option value="0"<?= ($value['Server']['type'] == '0') ? ' selected' : '' ?>><?= $Lang->get('SERVER__TYPE_DEFAULT') ?></option>
                     <option value="1"<?= ($value['Server']['type'] == '1') ? ' selected' : '' ?>><?= $Lang->get('SERVER__TYPE_QUERY') ?></option>
                     <option value="2"<?= ($value['Server']['type'] == '2') ? ' selected' : '' ?>><?= $Lang->get('SERVER__TYPE_RCON') ?></option>
+                    <option value="3"<?= ($value['Server']['type'] == '3') ? ' selected' : '' ?>><?= $Lang->get('SERVER__TYPE_QUERY_MCPE') ?></option>
                   </select>
                 </div>
 
@@ -160,7 +161,7 @@ function selectInfos(select, init) {
         var infos = '<div class="alert alert-info"><?= addslashes($Lang->get('SERVER__TYPE_DEFAULT_INFOS')) ?></div>'
         select.parent().parent().find('input[name="server_data[rcon_port]"]').parent().remove()
         select.parent().parent().find('input[name="server_data[rcon_password]"]').parent().remove()
-    } else if (type == 1) {
+    } else if (type == 1 || type == 3) {
       var infos = '<div class="alert alert-info"><?= addslashes($Lang->get('SERVER__TYPE_QUERY_INFOS')) ?></div>'
         select.parent().parent().find('input[name="server_data[rcon_port]"]').parent().remove()
         select.parent().parent().find('input[name="server_data[rcon_password]"]').parent().remove()

@@ -260,6 +260,7 @@ class ServerController extends AppController
 		 * 0 : Plugin
 		 * 1 : Ping
 		 * 2 : Rcon
+		 * 3 : Ping MCPE
 		 */
 		
 		if ($this->request->data['type'] == 0) {
@@ -274,8 +275,8 @@ class ServerController extends AppController
 			}
 			
 		} // use simple ping to retrieve data from MC protocol
-		else if ($this->request->data['type'] == 1) {
-			if (!$this->Server->ping(array('ip' => $this->request->data['host'], 'port' => $this->request->data['port']))) {
+		else if ($this->request->data['type'] == 1 || $this->request->data['type'] == 3) {
+			if (!$this->Server->ping(array('ip' => $this->request->data['host'], 'port' => $this->request->data['port'], 'udp' => $this->request->data['type'] == 3))) {
 				$msg = $this->Lang->get('SERVER__LINK_ERROR_FAILED');
 				$msg .= $this->linkDebugPing();
 				return $this->response->body(json_encode(array('statut' => false, 'msg' => $msg)));
@@ -372,14 +373,14 @@ class ServerController extends AppController
 		$this->set('title_for_layout', $this->Lang->get('SERVER__STATUS_ONLINE'));
 	}
 	
-	private function linkDebugFull($msg, $host, $port)
+	private function linkDebugFull($msg, $host, $port, $udp = false)
 	{
 		$msg .= $this->linkDebugPing();
 		
 		$msg .= "<br /><br />";
 		$msg .= "<i class=\"fa fa-times\"></i> ";
 		
-		if ($this->Server->ping(array('ip' => $host, 'port' => $port)))
+		if ($this->Server->ping(array('ip' => $host, 'port' => $port, 'udp' => $udp)))
 			$msg .= $this->Lang->get('SERVER__SEEMS_USED');
 		else
 			$msg .= $this->Lang->get('SERVER__PORT_CLOSE_OR_BAD');
@@ -392,7 +393,7 @@ class ServerController extends AppController
 		$msg = "<br /><br />";
 		
 		$hypixelIp = gethostbyname('mc.hypixel.net');
-		if ($this->Server->ping(array('ip' => $hypixelIp, 'port' => 25565))) {
+		if ($this->Server->ping(array('ip' => $hypixelIp, 'port' => 25565, 'udp' => false))) {
 			$msg .= "<i class=\"fa fa-check\"></i> ";
 			$msg .= $this->Lang->get('SERVER__PORT_OPEN');
 		} else {

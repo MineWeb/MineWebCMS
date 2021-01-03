@@ -110,7 +110,7 @@ class ServerComponent extends CakeObject
             $multi = false;
         }
 
-        if ($config['type'] == 1 || $config['type'] == 2) {
+        if ($config['type'] == 1 || $config['type'] == 2 || $config['type'] == 3) {
             $methodsName = array_map(function ($method) {
                 return array_keys($method)[0];
             }, $methods);
@@ -125,7 +125,7 @@ class ServerComponent extends CakeObject
             }
 
             if (count($methodsName) > 0) {
-                $ping = $this->ping(array('ip' => $config['ip'], 'port' => $config['port']));
+                $ping = $this->ping(array('ip' => $config['ip'], 'port' => $config['port'], 'udp' => $config['type'] == 3));
                 foreach ($methods as $key => $method) {
                     $name = array_keys($method)[0];
                     if (isset($ping[$name]))
@@ -289,7 +289,7 @@ class ServerComponent extends CakeObject
         App::import('Vendor', 'MinecraftPingException', array('file' => 'ping-xpaw/MinecraftPingException.php'));
 
         try {
-            $Query = new MinecraftPing($config['ip'], $config['port'], $this->getTimeout());
+            $Query = new MinecraftPing($config['ip'], $config['port'], $this->getTimeout(), $config['udp']);
             $Info = $Query->Query();
         } catch (MinecraftPingException $e) {
             return false;
@@ -342,8 +342,8 @@ class ServerComponent extends CakeObject
         if (!$config) // server not found
             return $this->online[$server_id] = false;
 
-        if ($config['type'] == 1 || $config['type'] == 2) // ping only
-            return $this->online[$server_id] = ($this->ping(array('ip' => $config['ip'], 'port' => $config['port']))) ? true : false;
+        if ($config['type'] == 1 || $config['type'] == 2 || $config['type'] == 3) // ping only
+            return $this->online[$server_id] = ($this->ping(array('ip' => $config['ip'], 'port' => $config['port'], 'udp' => $config['type'] == 3))) ? true : false;
 
         list($return, $code, $error) = $this->request($this->getUrl($server_id), $this->encryptWithKey("[]"));
         if ($return && $code === 200)
