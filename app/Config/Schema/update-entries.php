@@ -18,5 +18,5 @@ $updateContent = array(
 )
 */
 
-$updateEntries = array();
+$updateEntries = [];
 ?>

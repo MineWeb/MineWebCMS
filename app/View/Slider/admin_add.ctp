@@ -1,41 +1,45 @@
 <section class="content">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="card">
-        <div class="card-header with-border">
-          <h3 class="card-title"><?= $Lang->get('SLIDER__ADD') ?></h3>
-        </div>
-        <div class="card-body">
-          <form action="<?= $this->Html->url(array('controller' => 'slider', 'action' => 'add_ajax')) ?>" method="post" data-ajax="true" data-upload-image="true" data-redirect-url="<?= $this->Html->url(array('controller' => 'slider', 'action' => 'index', 'admin' => 'true')) ?>">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header with-border">
+                    <h3 class="card-title"><?= $Lang->get('SLIDER__ADD') ?></h3>
+                </div>
+                <div class="card-body">
+                    <form action="<?= $this->Html->url(['controller' => 'slider', 'action' => 'add_ajax']) ?>"
+                          method="post" data-ajax="true" data-upload-image="true"
+                          data-redirect-url="<?= $this->Html->url(['controller' => 'slider', 'action' => 'index', 'admin' => 'true']) ?>">
 
-            <div class="ajax-msg"></div>
+                        <div class="ajax-msg"></div>
 
-            <div class="col-md-4">
-              <?= $this->element('form.input.upload.img') ?>
-            </div>
+                        <div class="col-md-4">
+                            <?= $this->element('form.input.upload.img') ?>
+                        </div>
 
-            <div class="col-md-12">
+                        <div class="col-md-12">
 
-              <div class="form-group">
-                <label><?= $Lang->get('GLOBAL__TITLE') ?></label>
-                <input name="title" class="form-control" type="text">
-              </div>
+                            <div class="form-group">
+                                <label><?= $Lang->get('GLOBAL__TITLE') ?></label>
+                                <input name="title" class="form-control" type="text">
+                            </div>
 
-              <div class="form-group">
-                <label><?= $Lang->get('SLIDER__SUBTITLE') ?></label>
-                <input name="subtitle" class="form-control" type="text">
-              </div>
+                            <div class="form-group">
+                                <label><?= $Lang->get('SLIDER__SUBTITLE') ?></label>
+                                <input name="subtitle" class="form-control" type="text">
+                            </div>
 
-              <div class="float-right">
-                <a href="<?= $this->Html->url(array('controller' => 'slider', 'action' => 'index', 'admin' => true)) ?>" class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
-                <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
-              </div>
+                            <div class="float-right">
+                                <a href="<?= $this->Html->url(['controller' => 'slider', 'action' => 'index', 'admin' => true]) ?>"
+                                   class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
+                                <button class="btn btn-primary"
+                                        type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
+                            </div>
 
-            </div>
-          </form>
+                        </div>
+                    </form>
 
 
-          <script type="text/javascript">/*
+                    <script type="text/javascript">/*
           $(function () {
   $('#my_form').on('submit', function (e) {
       // On empêche le navigateur de soumettre le formulaire
@@ -57,12 +61,11 @@
           }
       });
   });*/
-</script>
+                    </script>
 
 
-
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </section>

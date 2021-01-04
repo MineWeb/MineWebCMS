@@ -1,2 +1,5 @@
 <?php
-class Plugin extends AppModel {}
+
+class Plugin extends AppModel
+{
+}

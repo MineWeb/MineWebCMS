@@ -9,9 +9,9 @@
                     <h3 class="card-title"><?= $Lang->get('SEO__TITLE_DEFAULT') ?></h3>
                 </div>
                 <div class="card-body">
-                    <form action="<?= $this->Html->url(array('controller' => 'seo', 'action' => 'edit_default', 'admin' => 'true')) ?>"
+                    <form action="<?= $this->Html->url(['controller' => 'seo', 'action' => 'edit_default', 'admin' => 'true']) ?>"
                           method="post" data-ajax="true" data-upload-image="true"
-                          data-redirect-url="<?= $this->Html->url(array('controller' => 'seo', 'action' => 'index', 'admin' => 'true')) ?>">
+                          data-redirect-url="<?= $this->Html->url(['controller' => 'seo', 'action' => 'index', 'admin' => 'true']) ?>">
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
@@ -39,7 +39,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <em><?= $Lang->get('SEO__FORM_FAVICON_DESC') ?></em>
-                                    <?= $this->element('form.input.upload.img', array('img' => $default['favicon_url'], 'filename' => "favicon.png", 'title' => $Lang->get('SEO__FORM_FAVICON'))); ?>
+                                    <?= $this->element('form.input.upload.img', ['img' => $default['favicon_url'], 'filename' => "favicon.png", 'title' => $Lang->get('SEO__FORM_FAVICON')]); ?>
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -66,7 +66,7 @@
                 <div class="card-body">
 
                     <a class="btn btn-large btn-block btn-primary"
-                       href="<?= $this->Html->url(array('controller' => 'seo', 'action' => 'add', 'admin' => true)) ?>"><?= $Lang->get('SEO__ADD_PAGE') ?></a>
+                       href="<?= $this->Html->url(['controller' => 'seo', 'action' => 'add', 'admin' => true]) ?>"><?= $Lang->get('SEO__ADD_PAGE') ?></a>
 
                     <hr>
 
@@ -92,8 +92,8 @@
                                 <td><?= ($v["Seo"]['img_url']) ? $v["Seo"]['img_url'] : $Lang->get('SEO__DEFAULT_VALUE') ?></td>
                                 <td>
                                     <a class="btn btn-info"
-                                       href="<?= $this->Html->url(array('action' => 'edit', $v["Seo"]['id'])) ?>"><?= $Lang->get('GLOBAL__EDIT') ?></a>
-                                    <a onClick="confirmDel('<?= $this->Html->url(array('action' => 'delete', $v["Seo"]['id'])) ?>')"
+                                       href="<?= $this->Html->url(['action' => 'edit', $v["Seo"]['id']]) ?>"><?= $Lang->get('GLOBAL__EDIT') ?></a>
+                                    <a onClick="confirmDel('<?= $this->Html->url(['action' => 'delete', $v["Seo"]['id']]) ?>')"
                                        class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
                                 </td>
                             </tr>

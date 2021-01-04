@@ -57,11 +57,11 @@ class StatisticsComponent extends CakeObject
     function startup($controller)
     {
         $cookie = CakeSession::read('visit_check');
-        if (!isset($cookie) OR empty($cookie)) {
+        if (!isset($cookie) or empty($cookie)) {
             $this->Visit = ClassRegistry::init('Visit');
             $this->Util = $this->controller->Util;
             $ip = $this->Util->getIP();
-            $visits = $this->Visit->find('all', array('conditions' => array('ip' => $ip, 'created LIKE' => date('Y-m-d') . '%')));
+            $visits = $this->Visit->find('all', ['conditions' => ['ip' => $ip, 'created LIKE' => date('Y-m-d') . '%']]);
             if (empty($visits)) {
                 if (!empty($_SERVER['HTTP_REFERER'])) {
                     $referer = htmlentities($_SERVER['HTTP_REFERER']);
@@ -73,7 +73,7 @@ class StatisticsComponent extends CakeObject
 
                 $language = $language{0} . $language{1};
                 $this->Visit->read(null, null);
-                $this->Visit->set(array('ip' => $ip, 'referer' => $referer, 'lang' => $language, 'navigator' => $user_agent, 'page' => "http://" . htmlentities($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'])));
+                $this->Visit->set(['ip' => $ip, 'referer' => $referer, 'lang' => $language, 'navigator' => $user_agent, 'page' => "http://" . htmlentities($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'])]);
                 $this->Visit->save();
             }
             CakeSession::write('visit_check', true, true, '1 day');

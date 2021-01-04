@@ -42,17 +42,24 @@ class MinecraftPing
         $this->Connect();
     }
 
-    public function __destruct()
+    private function ResolveSRV()
     {
-        $this->Close();
-    }
+        if (ip2long($this->ServerAddress) !== false) {
+            return;
+        }
 
-    public function Close()
-    {
-        if ($this->Socket !== null) {
-            fclose($this->Socket);
+        $Record = @dns_get_record('_minecraft._tcp.' . $this->ServerAddress, DNS_SRV);
 
-            $this->Socket = null;
+        if (empty($Record)) {
+            return;
+        }
+
+        if (isset($Record[0]['target'])) {
+            $this->ServerAddress = $Record[0]['target'];
+        }
+
+        if (isset($Record[0]['port'])) {
+            $this->ServerPort = $Record[0]['port'];
         }
     }
 
@@ -69,6 +76,20 @@ class MinecraftPing
 
         // Set Read/Write timeout
         stream_set_timeout($this->Socket, $this->Timeout);
+    }
+
+    public function __destruct()
+    {
+        $this->Close();
+    }
+
+    public function Close()
+    {
+        if ($this->Socket !== null) {
+            fclose($this->Socket);
+
+            $this->Socket = null;
+        }
     }
 
     public function Query()
@@ -133,43 +154,6 @@ class MinecraftPing
         return $Data;
     }
 
-    public function QueryOldPre17()
-    {
-        fwrite($this->Socket, "\xFE\x01");
-        $Data = fread($this->Socket, 512);
-        $Len = StrLen($Data);
-
-        if ($Len < 4 || $Data[0] !== "\xFF") {
-            return FALSE;
-        }
-
-        $Data = SubStr($Data, 3); // Strip packet header (kick message packet and short length)
-        $Data = iconv('UTF-16BE', 'UTF-8', $Data);
-
-        // Are we dealing with Minecraft 1.4+ server?
-        if ($Data[1] === "\xA7" && $Data[2] === "\x31") {
-            $Data = Explode("\x00", $Data);
-
-            return Array(
-                'HostName' => $Data[3],
-                'Players' => IntVal($Data[4]),
-                'MaxPlayers' => IntVal($Data[5]),
-                'Protocol' => IntVal($Data[1]),
-                'Version' => $Data[2]
-            );
-        }
-
-        $Data = Explode("\xA7", $Data);
-
-        return Array(
-            'HostName' => SubStr($Data[0], 0, -1),
-            'Players' => isset($Data[1]) ? IntVal($Data[1]) : 0,
-            'MaxPlayers' => isset($Data[2]) ? IntVal($Data[2]) : 0,
-            'Protocol' => 0,
-            'Version' => '1.3'
-        );
-    }
-
     private function ReadVarInt()
     {
         $i = 0;
@@ -198,24 +182,40 @@ class MinecraftPing
         return $i;
     }
 
-    private function ResolveSRV()
+    public function QueryOldPre17()
     {
-        if (ip2long($this->ServerAddress) !== false) {
-            return;
+        fwrite($this->Socket, "\xFE\x01");
+        $Data = fread($this->Socket, 512);
+        $Len = StrLen($Data);
+
+        if ($Len < 4 || $Data[0] !== "\xFF") {
+            return FALSE;
         }
 
-        $Record = @dns_get_record('_minecraft._tcp.' . $this->ServerAddress, DNS_SRV);
+        $Data = SubStr($Data, 3); // Strip packet header (kick message packet and short length)
+        $Data = iconv('UTF-16BE', 'UTF-8', $Data);
 
-        if (empty($Record)) {
-            return;
+        // Are we dealing with Minecraft 1.4+ server?
+        if ($Data[1] === "\xA7" && $Data[2] === "\x31") {
+            $Data = Explode("\x00", $Data);
+
+            return [
+                'HostName' => $Data[3],
+                'Players' => IntVal($Data[4]),
+                'MaxPlayers' => IntVal($Data[5]),
+                'Protocol' => IntVal($Data[1]),
+                'Version' => $Data[2]
+            ];
         }
 
-        if (isset($Record[0]['target'])) {
-            $this->ServerAddress = $Record[0]['target'];
-        }
+        $Data = Explode("\xA7", $Data);
 
-        if (isset($Record[0]['port'])) {
-            $this->ServerPort = $Record[0]['port'];
-        }
+        return [
+            'HostName' => SubStr($Data[0], 0, -1),
+            'Players' => isset($Data[1]) ? IntVal($Data[1]) : 0,
+            'MaxPlayers' => isset($Data[2]) ? IntVal($Data[2]) : 0,
+            'Protocol' => 0,
+            'Version' => '1.3'
+        ];
     }
 }

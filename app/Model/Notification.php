@@ -7,15 +7,15 @@ class Notification extends AppModel
 
     public function getFromUser($user_id, $type)
     {
-        $query = $this->find('all', array(
-            'conditions' => array(
+        $query = $this->find('all', [
+            'conditions' => [
                 'user_id' => $user_id,
                 'type' => $type
-            ),
+            ],
             'order' => 'id DESC'
-        ));
+        ]);
 
-        $data = array();
+        $data = [];
 
         $UserModel = ClassRegistry::init('User');
         App::uses('CakeTime', 'Utility');
@@ -29,22 +29,24 @@ class Notification extends AppModel
                 $from = $UserModel->getFromUser('pseudo', $notification['Notification']['from']);
             }
 
-            $data[] = array(
+            $data[] = [
                 'id' => intval($notification['Notification']['id']),
                 'from' => $from,
                 'content' => $notification['Notification']['content'],
                 'time' => CakeTime::timeAgoInWords($notification['Notification']['created']),
                 'seen' => ($notification['Notification']['seen'] == 1)
-            );
+            ];
 
         }
 
         return $data;
     }
 
-    private function generateGroup()
+    public function setToAdmin($content, $from = NULL)
     {
-        return substr(md5(microtime()),rand(0,26),10);
+        $group = $this->generateGroup();
+        $this->setToRank($content, 4, $from, 'admin', $group);
+        $this->setToRank($content, 3, $from, 'admin', $group);
     }
 
     /*
@@ -53,6 +55,25 @@ class Notification extends AppModel
       FROM: INT or NULL (for all)
       CONTENT: TEXT LIMIT 255
     */
+
+    private function generateGroup()
+    {
+        return substr(md5(microtime()), rand(0, 26), 10);
+    }
+
+    public function setToRank($content, $rank_id, $from = NULL, $type = 'user', $group = NULL)
+    {
+        if (!$group)
+            $group = $this->generateGroup();
+        $UserModel = ClassRegistry::init('User');
+        $usersToNotify = $UserModel->find('all', ['conditions' => ['rank' => $rank_id]]);
+
+        foreach ($usersToNotify as $user) {
+            $this->setToUser($content, $user['User']['id'], $from, $type, $group);
+        }
+
+    }
+
     public function setToUser($content, $user_id, $from = NULL, $type = 'user', $group = NULL)
     {
         if (empty($content) || strlen($content) > 255 || empty($user_id))
@@ -61,34 +82,14 @@ class Notification extends AppModel
             $group = $this->generateGroup();
 
         $this->create();
-        $this->set(array(
+        $this->set([
             'group' => $group,
             'content' => $content,
             'user_id' => $user_id,
             'from' => $from,
             'type' => $type
-        ));
+        ]);
         return $this->save();
-    }
-
-    public function setToRank($content, $rank_id, $from = NULL, $type = 'user', $group = NULL)
-    {
-        if (!$group)
-            $group = $this->generateGroup();
-        $UserModel = ClassRegistry::init('User');
-        $usersToNotify = $UserModel->find('all', array('conditions' => array('rank' => $rank_id)));
-
-        foreach ($usersToNotify as $user) {
-            $this->setToUser($content, $user['User']['id'], $from, $type, $group);
-        }
-
-    }
-
-    public function setToAdmin($content, $from = NULL)
-    {
-        $group = $this->generateGroup();
-        $this->setToRank($content, 4, $from, 'admin', $group);
-        $this->setToRank($content, 3, $from, 'admin', $group);
     }
 
     public function setToAll($content, $from = NULL)
@@ -103,46 +104,46 @@ class Notification extends AppModel
 
     public function clearFromUser($id, $user_id)
     {
-        return $this->deleteAll(array('user_id' => $user_id, 'Notification.id' => $id));
+        return $this->deleteAll(['user_id' => $user_id, 'Notification.id' => $id]);
     }
 
     public function clearAllFromUser($user_id)
     {
-        return $this->deleteAll(array('user_id' => $user_id));
+        return $this->deleteAll(['user_id' => $user_id]);
     }
 
     public function markAsSeenFromUser($id, $user_id)
     {
-        return $this->updateAll(array('seen' => 1), array('user_id' => $user_id, 'Notification.id' => $id));
+        return $this->updateAll(['seen' => 1], ['user_id' => $user_id, 'Notification.id' => $id]);
     }
 
     public function markAllAsSeenFromUser($user_id)
     {
-        return $this->updateAll(array('seen' => 1), array('user_id' => $user_id));
+        return $this->updateAll(['seen' => 1], ['user_id' => $user_id]);
     }
 
     public function clearFromAllUsers($id)
     {
-        return $this->deleteAll(array('id' => $id));
+        return $this->deleteAll(['id' => $id]);
     }
 
     public function markAsSeenFromAllUsers($id)
     {
-        return $this->updateAll(array('seen' => 1), array('Notification.id' => $id));
+        return $this->updateAll(['seen' => 1], ['Notification.id' => $id]);
     }
 
     public function clearAllFromGroup($group)
     {
-        return $this->deleteAll(array('group' => $group));
+        return $this->deleteAll(['group' => $group]);
     }
 
     public function clearAllFromAllUsers()
     {
-        return $this->deleteAll(array('1' => '1'));
+        return $this->deleteAll(['1' => '1']);
     }
 
     public function markAllAsSeenFromAllUsers()
     {
-        return $this->updateAll(array('seen' => 1), array('1' => '1'));
+        return $this->updateAll(['seen' => 1], ['1' => '1']);
     }
 }

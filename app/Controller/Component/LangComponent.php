@@ -4,17 +4,15 @@ App::uses('CakeObject', 'Core');
 class LangComponent extends CakeObject
 {
 
-    public $components = array('Cookie');
+    public $components = ['Cookie'];
 
     public $langFolder;
 
     public $languages;
 
     public $lang;
-
-    private $controller;
-
-    public $mode = 'config'; // config ou cookie (pour choisir le language)
+    public $mode = 'config';
+    private $controller; // config ou cookie (pour choisir le language)
 
     function __construct()
     {
@@ -50,13 +48,9 @@ class LangComponent extends CakeObject
         $this->lang = $this->getLang();
     }
 
-    function startup($controller)
-    {
-    }
-
     public function getLanguages()
     {
-        $languages_available = array();
+        $languages_available = [];
 
         $dh = opendir($this->langFolder);
         while (false !== ($filename = readdir($dh))) {
@@ -123,13 +117,13 @@ class LangComponent extends CakeObject
             $lang = file_get_contents($this->langFolder . DS . $language['path'] . '.json');
             $language['messages'] = json_decode($lang, true)['MESSAGES'];
         } else {
-            $language = array();
+            $language = [];
             $language['name'] = null;
             $language['author'] = null;
             $language['version'] = null;
             $language['path'] = null;
             $language['fullpath'] = $this->langFolder . DS;
-            $language['messages'] = array();
+            $language['messages'] = [];
         }
 
         $this->EyPlugin = $this->controller->EyPlugin;
@@ -181,13 +175,17 @@ class LangComponent extends CakeObject
 
     }
 
-    public function get($msg, $vars = array())
+    function startup($controller)
+    {
+    }
+
+    public function get($msg, $vars = [])
     {
 
         $language = $this->lang;
 
         if (!is_array($vars)) {
-            $vars = array();
+            $vars = [];
         }
 
         if (isset($language['messages'][$msg])) { // et si le msg existe
@@ -195,39 +193,6 @@ class LangComponent extends CakeObject
         }
 
         return $msg; // le msg tel quel ou modifié
-    }
-
-    public function getAll()
-    {
-
-        $language = $this->lang;
-
-        $lang = file_get_contents($this->langFolder . DS . $language['path'] . '.json');
-        $messages['CMS'] = json_decode($lang, true)['MESSAGES'];
-
-        $this->EyPlugin = $this->controller->EyPlugin;
-
-        $plugins = $this->EyPlugin->getPluginsActive();
-
-        if (!empty($plugins)) {
-
-            foreach ($plugins as $key => $value) {
-                $name = $value->slug;
-
-                if (file_exists($this->EyPlugin->pluginsFolder . DS . $name . DS . 'lang' . DS . $language['path'] . '.json')) {
-                    $language_file = file_get_contents($this->EyPlugin->pluginsFolder . DS . $name . DS . 'lang' . DS . $language['path'] . '.json');
-                    $language_file = json_decode($language_file, true);
-                } elseif (file_exists($this->EyPlugin->pluginsFolder . DS . $name . DS . 'lang' . DS . 'fr_FR.json')) {
-                    $language_file = file_get_contents($this->EyPlugin->pluginsFolder . DS . $name . DS . 'lang' . DS . 'fr_FR.json');
-                    $language_file = json_decode($language_file, true);
-                }
-
-                $messages[$name] = $language_file; // on le rajoute aux messages
-            }
-
-        }
-
-        return $messages; // le msg tel quel ou modifié
     }
 
     public function set($msg, $value)
@@ -282,7 +247,7 @@ class LangComponent extends CakeObject
                             $log = file_get_contents(ROOT . DS . 'app' . DS . 'tmp' . DS . 'logs' . DS . 'update' . DS . 'lang' . DS . $path . '.log.json');
                             $log = json_decode($log, true);
                         } else {
-                            $log['update'] = array();
+                            $log['update'] = [];
                         }
 
                         $log['update'][$key] = date('Y-m-d H:i:s');
@@ -321,6 +286,39 @@ class LangComponent extends CakeObject
 
     }
 
+    public function getAll()
+    {
+
+        $language = $this->lang;
+
+        $lang = file_get_contents($this->langFolder . DS . $language['path'] . '.json');
+        $messages['CMS'] = json_decode($lang, true)['MESSAGES'];
+
+        $this->EyPlugin = $this->controller->EyPlugin;
+
+        $plugins = $this->EyPlugin->getPluginsActive();
+
+        if (!empty($plugins)) {
+
+            foreach ($plugins as $key => $value) {
+                $name = $value->slug;
+
+                if (file_exists($this->EyPlugin->pluginsFolder . DS . $name . DS . 'lang' . DS . $language['path'] . '.json')) {
+                    $language_file = file_get_contents($this->EyPlugin->pluginsFolder . DS . $name . DS . 'lang' . DS . $language['path'] . '.json');
+                    $language_file = json_decode($language_file, true);
+                } elseif (file_exists($this->EyPlugin->pluginsFolder . DS . $name . DS . 'lang' . DS . 'fr_FR.json')) {
+                    $language_file = file_get_contents($this->EyPlugin->pluginsFolder . DS . $name . DS . 'lang' . DS . 'fr_FR.json');
+                    $language_file = json_decode($language_file, true);
+                }
+
+                $messages[$name] = $language_file; // on le rajoute aux messages
+            }
+
+        }
+
+        return $messages; // le msg tel quel ou modifié
+    }
+
     /*
     Update le fichier de langue
     */
@@ -356,7 +354,7 @@ class LangComponent extends CakeObject
                     $log = file_get_contents(ROOT . DS . 'app' . DS . 'tmp' . DS . 'logs' . DS . 'update' . DS . 'lang' . DS . $path . '.log.json');
                     $log = json_decode($log, true);
                 } else {
-                    $log['update'] = array();
+                    $log['update'] = [];
                 }
 
                 if (!isset($log['update'][$key])) { // si ca a pas était modifié par l'utilisateur

@@ -15,7 +15,7 @@ if (!file_exists(ROOT . DS . 'config' . DS . 'install.txt')) {
                 $sql_pass = $_POST['password'];
 
                 try {
-                    $pdo = new PDO("mysql:host=$sql_host;dbname=$sql_name;", $sql_user, $sql_pass, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+                    $pdo = new PDO("mysql:host=$sql_host;dbname=$sql_name;", $sql_user, $sql_pass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
                     $sql_error = false;
                 } catch (PDOException $mysqlException) {
                     $sql_error = true;
@@ -38,7 +38,7 @@ class DATABASE_CONFIG {
 }
 ";
                     if (!$dbFile || !fwrite($dbFile, $databaseStructure)) {
-                        echo json_encode(array('status' => false, 'msg' => 'Le fichier /app/Config/database.php ne peut pas être écris !'));
+                        echo json_encode(['status' => false, 'msg' => 'Le fichier /app/Config/database.php ne peut pas être écris !']);
                         exit;
                     }
 
@@ -53,16 +53,16 @@ class DATABASE_CONFIG {
                         fclose($fp);
                     }
 
-                    echo json_encode(array('status' => true));
+                    echo json_encode(['status' => true]);
                     exit;
 
                 } else {
-                    echo json_encode(array('status' => false, 'msg' => 'Erreur lors de la connexion ! (<em>' . $mysqlException->getMessage() . '</em>)'));
+                    echo json_encode(['status' => false, 'msg' => 'Erreur lors de la connexion ! (<em>' . $mysqlException->getMessage() . '</em>)']);
                     exit;
                 }
 
             } else {
-                echo json_encode(array('status' => false, 'msg' => 'Veuillez remplir tout les champs !'));
+                echo json_encode(['status' => false, 'msg' => 'Veuillez remplir tout les champs !']);
                 exit;
             }
 
@@ -126,15 +126,15 @@ function phpinfo2array()
     ob_start();
     phpinfo(-1);
 
-    $phpinfo = array('phpinfo' => array());
+    $phpinfo = ['phpinfo' => []];
 
     // Strip everything after the <h1>Configuration</h1> tag (other h1's)
     if (!preg_match('#(.*<h1[^>]*>\s*Configuration.*)<h1#s', ob_get_clean(), $matches)) {
-        return array();
+        return [];
     }
 
     $input = $matches[1];
-    $matches = array();
+    $matches = [];
 
     if (preg_match_all(
         '#(?:<h2.*?>(?:<a.*?>)?(.*?)(?:<\/a>)?<\/h2>)|' .
@@ -146,10 +146,10 @@ function phpinfo2array()
         foreach ($matches as $match) {
             $fn = strpos($match[0], '<th') === false ? $plainText : $titlePlainText;
             if (strlen($match[1])) {
-                $phpinfo[$match[1]] = array();
+                $phpinfo[$match[1]] = [];
             } elseif (isset($match[3])) {
                 $keys1 = array_keys($phpinfo);
-                $phpinfo[end($keys1)][$fn($match[2])] = isset($match[4]) ? array($fn($match[3]), $fn($match[4])) : $fn($match[3]);
+                $phpinfo[end($keys1)][$fn($match[2])] = isset($match[4]) ? [$fn($match[3]), $fn($match[4])] : $fn($match[3]);
             } else {
                 $keys1 = array_keys($phpinfo);
                 $phpinfo[end($keys1)][] = $fn($match[2]);
