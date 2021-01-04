@@ -100,7 +100,7 @@ class ServerComponent extends CakeObject
             }
 
             if (count($methodsName) > 0) {
-                $ping = $this->ping(array('ip' => $config['ip'], 'port' => $config['port'], 'udp' => $config['type'] == 3));
+                $ping = $this->ping(['ip' => $config['ip'], 'port' => $config['port'], 'udp' => $config['type'] == 3]);
                 foreach ($methods as $key => $method) {
                     $name = array_keys($method)[0];
                     if (isset($ping[$name]))
@@ -370,7 +370,7 @@ class ServerComponent extends CakeObject
         if (!$config) // server not found
             return $this->online[$server_id] = false;
         if ($config['type'] == 1 || $config['type'] == 2 || $config['type'] == 3) // ping only
-            return $this->online[$server_id] = ($this->ping(array('ip' => $config['ip'], 'port' => $config['port'], 'udp' => $config['type'] == 3))) ? true : false;
+            return $this->online[$server_id] = ($this->ping(['ip' => $config['ip'], 'port' => $config['port'], 'udp' => $config['type'] == 3])) ? true : false;
         list($return, $code, $error) = $this->request($this->getUrl($server_id), $this->encryptWithKey("[]"));
         if ($return && $code === 200)
             return $this->online[$server_id] = true;
