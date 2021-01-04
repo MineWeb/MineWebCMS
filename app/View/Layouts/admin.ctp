@@ -70,7 +70,7 @@
                 <a class="nav-link" onclick="notification.markAllAsSeen(1)" data-toggle="dropdown" href="#">
                     <i class="far fa-bell"></i>
                 </a>
-                <div id="notification-container" class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                <div id="notification-container" class="dropdown-menu dropdown-menu-right">
 
                 </div>
             </li>
@@ -89,6 +89,7 @@
         </ul>
 
         <?= $this->Html->script('notification.js') ?>
+
         <script type="text/javascript">
             var notification = new $.Notification({
                 'notification_type': 'admin',
@@ -113,15 +114,15 @@
                 'list': {
                     'element': '#notification-container',
                     'container': {
-                        'type': 'ul',
-                        'class': 'menu',
-                        'style': 'overflow: hidden; width: 100%;'
+                        'type': '',
+                        'class': '',
+                        'style': ''
                     },
                     'notification': {
-                        'type': 'li',
-                        'class': '',
+                        'type': 'a',
+                        'class': 'dropdown-item',
                         'style': '',
-                        'content': '<a href="#">{CONTENT}</a>',
+                        'content': '{CONTENT}',
                         'from': {
                             'type': '',
                             'class': '',
