@@ -90,10 +90,10 @@ class User extends AppModel
         $date = date('Y-m-d H:i:s');
         if (empty($findRetryWithIP)) {
             $LoginRetryTable->create();
-            $LoginRetryTable->set(array(
+            $LoginRetryTable->set([
                 'ip' => $ip,
                 'count' => 1
-            ));
+            ]);
             $LoginRetryTable->save();
         } else {
             $LoginRetryTable->updateAll(
