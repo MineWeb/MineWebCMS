@@ -30,7 +30,7 @@ class UtilComponent extends CakeObject
     {
         $this->controller = $controller;
 
-        if ($this->controller->Configuration === NULL) {
+        if ($this->controller->Configuration === null) {
             $this->controller->Configuration = ClassRegistry::init('Configuration');
         }
     }
@@ -225,7 +225,7 @@ class UtilComponent extends CakeObject
 
         $infos = getimagesize($request->params['form']['image']['tmp_name']);
 
-        if ($infos[2] < 1 || $infos[2] > 14 || $infos[0] === NULL || $infos[1] === NULL) {
+        if ($infos[2] < 1 || $infos[2] > 14 || $infos[0] === null || $infos[1] === null) {
             return ['status' => false, 'msg' => $Lang->get('FORM__INVALID_IMG')];
         }
 

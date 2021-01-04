@@ -144,7 +144,7 @@ class User extends AppModel
     public function getFromUser($key, $search)
     {
         $search_user = $this->find('first', ['conditions' => $this->__makeCondition($search)]);
-        return (!empty($search_user)) ? $search_user['User'][$key] : NULL;
+        return (!empty($search_user)) ? $search_user['User'][$key] : null;
     }
 
     public function __makeCondition($search)
@@ -260,7 +260,7 @@ class User extends AppModel
     {
         if (CakeSession::check('user')) {
             $search_user = $this->getDataBySession(CakeSession::read('user'));
-            return ($search_user) ? $search_user['User'] : NULL;
+            return ($search_user) ? $search_user['User'] : null;
         }
     }
 
@@ -268,7 +268,7 @@ class User extends AppModel
     {
         $search_user = $this->find('first', ['conditions' => $this->__makeCondition($search)]);
         if (!empty($search_user)) {
-            return ($search_user) ? $search_user['User'] : NULL;
+            return ($search_user) ? $search_user['User'] : null;
         }
         return [];
     }

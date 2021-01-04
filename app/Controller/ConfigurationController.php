@@ -19,7 +19,7 @@ class ConfigurationController extends AppController
                             $value = serialize($value);
                         }
                         $data[$key] = $value;
-                    } elseif ($key == "social_btn") { // si c'est pour les boutons sociaux personnalisés
+                    } else if ($key == "social_btn") { // si c'est pour les boutons sociaux personnalisés
 
                         $this->loadModel('SocialButton');
                         foreach ($value as $k => $v) { // on enregistre le tout
@@ -35,7 +35,7 @@ class ConfigurationController extends AppController
                             }
                         }
 
-                    } elseif ($key == "social_btn_edited") { // si c'est pour les boutons sociaux personnalisés
+                    } else if ($key == "social_btn_edited") { // si c'est pour les boutons sociaux personnalisés
 
                         $this->loadModel('SocialButton');
                         foreach ($value as $k => $v) { // on enregistre le tout
@@ -51,7 +51,7 @@ class ConfigurationController extends AppController
                             }
                         }
 
-                    } elseif ($key == "social_btn_added") {
+                    } else if ($key == "social_btn_added") {
                         $this->loadModel('SocialButton');
                         foreach ($value['deleted'] as $k => $v) { // on enregistre le tout
                             $find = $this->SocialButton->findById($v);
@@ -111,7 +111,7 @@ class ConfigurationController extends AppController
 
             if ($this->request->is('post')) {
 
-                if (stripos($this->request->data['GLOBAL__FOOTER'], '<a href="http://mineweb.org">mineweb.org</a>') === FALSE) {
+                if (stripos($this->request->data['GLOBAL__FOOTER'], '<a href="http://mineweb.org">mineweb.org</a>') === false) {
                     $this->Session->setFlash($this->Lang->get('CONFIG__ERROR_SAVE_LANG'), 'default.error');
                 } else {
 

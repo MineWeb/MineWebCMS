@@ -83,7 +83,7 @@ function affichImg($bool)
             'kg+lEj4mwBe5bC5h1OUqcwpdC60dxegRmR06TyjCF9G9z+qM2uCJmuMJmaNZaUrCSIi6X+jJIBBYtW5Cge7cd7sgoHDfDaAvKQGAlRZ' .
             'Yc6ltJlMxX03UzlaRlBdQrzSCwksLRbOpHUSb7pcsnxCCwngvM2Rm/ugUCi84fycr4l2t8Bb6iqTxSCgNIAAAAAElFTkSuQmCC' .
             '" alt="Oui"/>';
-    } elseif (!$bool) {
+    } else if (!$bool) {
         return '<img src="data:image/x-icon;base64,' .
             'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2V' .
             'SZWFkeXHJZTwAAAIhSURBVDjLlZPrThNRFIWJicmJz6BWiYbIkYDEG0JbBiitDQgm0PuFXqSAtKXtpE2hNuoPTXwSnwtExd6w0pl2Ot' .
@@ -147,7 +147,7 @@ function phpinfo2array()
             $fn = strpos($match[0], '<th') === false ? $plainText : $titlePlainText;
             if (strlen($match[1])) {
                 $phpinfo[$match[1]] = [];
-            } elseif (isset($match[3])) {
+            } else if (isset($match[3])) {
                 $keys1 = array_keys($phpinfo);
                 $phpinfo[end($keys1)][$fn($match[2])] = isset($match[4]) ? [$fn($match[3]), $fn($match[4])] : $fn($match[3]);
             } else {
@@ -291,7 +291,7 @@ $compatible['openSSL'] = function_exists('openssl_pkey_new');
 //allow_url_fopen
 if (function_exists('ini_get') && ini_get('allow_url_fopen') == "1") {
     $compatible['allowGetURL'] = true;
-} elseif (file_exists(ROOT . DS . 'config' . DS . 'installed.txt') || @file_get_contents('https://google.fr')) {
+} else if (file_exists(ROOT . DS . 'config' . DS . 'installed.txt') || @file_get_contents('https://google.fr')) {
     $compatible['allowGetURL'] = true;
 }
 

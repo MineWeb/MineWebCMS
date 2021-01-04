@@ -8,9 +8,9 @@ class ServerComponent extends CakeObject
     public $linkErrorCode = null;
     public $controller;
     public $components = ['Session', 'Configuration'];
-    private $timeout = NULL;
-    private $config = NULL;
-    private $online = NULL;
+    private $timeout = null;
+    private $config = null;
+    private $online = null;
 
     public function initialize($controller)
     {

@@ -446,7 +446,7 @@ class AppSchema extends CakeSchema
 
                             }
 
-                        } elseif ($action == "update") { // si on doit update une entrée
+                        } else if ($action == "update") { // si on doit update une entrée
 
                             foreach ($data as $key => $value) { // on parcours les entrées à update
 

@@ -36,7 +36,7 @@
                                     <?php if ($value['Navbar']['url'] != '#' && $value['Navbar']['url'] !== false) { ?>
                                         <td><a href="<?= $value['Navbar']['url'] ?>"><?= $value['Navbar']['url'] ?></a>
                                         </td>
-                                    <?php } elseif ($value['Navbar']['url'] === false) { ?>
+                                    <?php } else if ($value['Navbar']['url'] === false) { ?>
                                         <td>
                                             <span class="label label-danger"><?= $Lang->get('PLUGIN__ERROR_UNINSTALLED') ?></span>
                                         </td>

@@ -413,7 +413,7 @@ class ThemeComponent extends CakeObject
         // Set into plugin folder
         $zip = new ZipArchive;
         $res = $zip->open($zipFile);
-        if ($res !== TRUE) {
+        if ($res !== true) {
             $this->log('Error when downloading theme, unable to open zip. (CODE: ' . $res . ')');
             return 'THEME__ERROR_INSTALL_UNZIP';
         }

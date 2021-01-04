@@ -112,7 +112,7 @@ class MinecraftPing
         $Length = $this->ReadVarInt(); // full packet length
 
         if ($Length < 10) {
-            return FALSE;
+            return false;
         }
 
         $this->ReadVarInt(); // packet type, in server ping it's 0
@@ -135,7 +135,7 @@ class MinecraftPing
             $Data .= $block;
         } while (StrLen($Data) < $Length);
 
-        if ($Data === FALSE) {
+        if ($Data === false) {
             throw new MinecraftPingException('Server didn\'t return any data');
         }
 
@@ -148,7 +148,7 @@ class MinecraftPing
                 throw new MinecraftPingException('JSON parsing failed');
             }
 
-            return FALSE;
+            return false;
         }
 
         return $Data;
@@ -162,7 +162,7 @@ class MinecraftPing
         while (true) {
             $k = @fgetc($this->Socket);
 
-            if ($k === FALSE) {
+            if ($k === false) {
                 return 0;
             }
 
@@ -189,7 +189,7 @@ class MinecraftPing
         $Len = StrLen($Data);
 
         if ($Len < 4 || $Data[0] !== "\xFF") {
-            return FALSE;
+            return false;
         }
 
         $Data = SubStr($Data, 3); // Strip packet header (kick message packet and short length)

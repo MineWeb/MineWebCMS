@@ -444,12 +444,12 @@ class AppController extends Controller
                     $nav[$key]['Navbar']['url'] = (isset($value['Navbar']['url']['route'])) ? Router::url($value['Navbar']['url']['route']) : Router::url('/' . strtolower($plugin->slug));
                 else
                     $nav[$key]['Navbar']['url'] = '#';
-            } elseif ($value['Navbar']['url']['type'] == "page") {
+            } else if ($value['Navbar']['url']['type'] == "page") {
                 if (isset($pages_listed) && isset($pages_listed[$value['Navbar']['url']['id']]))
                     $nav[$key]['Navbar']['url'] = Router::url('/p/' . $pages_listed[$value['Navbar']['url']['id']]);
                 else
                     $nav[$key]['Navbar']['url'] = '#';
-            } elseif ($value['Navbar']['url']['type'] == "custom") {
+            } else if ($value['Navbar']['url']['type'] == "custom") {
                 $nav[$key]['Navbar']['url'] = $value['Navbar']['url']['url'];
             }
         }

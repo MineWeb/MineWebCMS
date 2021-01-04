@@ -25,7 +25,7 @@ function htmLawed($t, $C = 1, $S = [])
     $x = !empty($C['elements']) ? str_replace(["\n", "\r", "\t", ' '], '', $C['elements']) : '*';
     if ($x == '-*') {
         $e = [];
-    } elseif (strpos($x, '*') === false) {
+    } else if (strpos($x, '*') === false) {
         $e = array_flip(explode(',', $x));
     } else {
         if (isset($x[1])) {
@@ -254,14 +254,14 @@ function hl_bal($t, $do = 1, $in = 'div')
     }
     if (isset($cS[$in])) {
         $inOk = $cS[$in];
-    } elseif (isset($cI[$in])) {
+    } else if (isset($cI[$in])) {
         $inOk = $eI;
         $cI['del'] = 1;
         $cI['ins'] = 1;
-    } elseif (isset($cF[$in])) {
+    } else if (isset($cF[$in])) {
         $inOk = $eF;
         unset($cI['del'], $cI['ins']);
-    } elseif (isset($cB[$in])) {
+    } else if (isset($cB[$in])) {
         $inOk = $eB;
         unset($cI['del'], $cI['ins']);
     }
@@ -283,14 +283,14 @@ function hl_bal($t, $do = 1, $in = 'div')
             $q[] = $p;
             if (isset($cS[$p])) {
                 $ok = $cS[$p];
-            } elseif (isset($cI[$p])) {
+            } else if (isset($cI[$p])) {
                 $ok = $eI;
                 $cI['del'] = 1;
                 $cI['ins'] = 1;
-            } elseif (isset($cF[$p])) {
+            } else if (isset($cF[$p])) {
                 $ok = $eF;
                 unset($cI['del'], $cI['ins']);
-            } elseif (isset($cB[$p])) {
+            } else if (isset($cB[$p])) {
                 $ok = $eB;
                 unset($cI['del'], $cI['ins']);
             }
@@ -311,13 +311,13 @@ function hl_bal($t, $do = 1, $in = 'div')
         if (isset($x[0])) {
             if (strlen(trim($x)) && (($ql && isset($cB[$p])) or (isset($cB[$in]) && !$ql))) {
                 echo '<div>', $x, '</div>';
-            } elseif ($do < 3 or isset($ok['#pcdata'])) {
+            } else if ($do < 3 or isset($ok['#pcdata'])) {
                 echo $x;
-            } elseif (strpos($x, "\x02\x04")) {
+            } else if (strpos($x, "\x02\x04")) {
                 foreach (preg_split('`(\x01\x02[^\x01\x02]+\x02\x01)`', $x, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY) as $v) {
                     echo(substr($v, 0, 2) == "\x01\x02" ? $v : ($do > 4 ? preg_replace('`\S`', '', $v) : ''));
                 }
-            } elseif ($do > 4) {
+            } else if ($do > 4) {
                 echo preg_replace('`\S`', '', $x);
             }
         }
@@ -442,14 +442,14 @@ function hl_bal($t, $do = 1, $in = 'div')
         $q[] = $p;
         if (isset($cS[$p])) {
             $ok = $cS[$p];
-        } elseif (isset($cI[$p])) {
+        } else if (isset($cI[$p])) {
             $ok = $eI;
             $cI['del'] = 1;
             $cI['ins'] = 1;
-        } elseif (isset($cF[$p])) {
+        } else if (isset($cF[$p])) {
             $ok = $eF;
             unset($cI['del'], $cI['ins']);
-        } elseif (isset($cB[$p])) {
+        } else if (isset($cB[$p])) {
             $ok = $eB;
             unset($cI['del'], $cI['ins']);
         }
@@ -469,13 +469,13 @@ function hl_bal($t, $do = 1, $in = 'div')
     if (isset($x[0])) {
         if (strlen(trim($x)) && (($ql && isset($cB[$p])) or (isset($cB[$in]) && !$ql))) {
             echo '<div>', $x, '</div>';
-        } elseif ($do < 3 or isset($ok['#pcdata'])) {
+        } else if ($do < 3 or isset($ok['#pcdata'])) {
             echo $x;
-        } elseif (strpos($x, "\x02\x04")) {
+        } else if (strpos($x, "\x02\x04")) {
             foreach (preg_split('`(\x01\x02[^\x01\x02]+\x02\x01)`', $x, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY) as $v) {
                 echo(substr($v, 0, 2) == "\x01\x02" ? $v : ($do > 4 ? preg_replace('`\S`', '', $v) : ''));
             }
-        } elseif ($do > 4) {
+        } else if ($do > 4) {
             echo preg_replace('`\S`', '', $x);
         }
     }
@@ -550,12 +550,12 @@ function hl_prot($p, $c = null)
     if ($C['abs_url']) {
         if ($C['abs_url'] == -1 && strpos($p, $C['base_url']) === 0) { // Make url rel
             $p = substr($p, strlen($C['base_url']));
-        } elseif (empty($m[1])) { // Make URL abs
+        } else if (empty($m[1])) { // Make URL abs
             if (substr($p, 0, 2) == '//') {
                 $p = substr($C['base_url'], 0, strpos($C['base_url'], ':') + 1) . $p;
-            } elseif ($p[0] == '/') {
+            } else if ($p[0] == '/') {
                 $p = preg_replace('`(^.+?://[^/]+)(.*)`', '$1', $C['base_url']) . $p;
-            } elseif (strcspn($p, './')) {
+            } else if (strcspn($p, './')) {
                 $p = $C['base_url'] . $p;
             } else {
                 preg_match('`^([a-zA-Z\d\-+.]+://[^/]+)(.*)`', $C['base_url'], $m);
@@ -693,7 +693,7 @@ function hl_tag($t)
     }
     if (!preg_match('`^<(/?)([a-zA-Z][a-zA-Z1-6]*)([^>]*?)\s?>$`m', $t, $m)) {
         return str_replace(['<', '>'], ['&lt;', '&gt;'], $t);
-    } elseif (!isset($C['elements'][($e = strtolower($m[2]))])) {
+    } else if (!isset($C['elements'][($e = strtolower($m[2]))])) {
         return (($C['keep_bad'] % 2) ? str_replace(['<', '>'], ['&lt;', '&gt;'], $t) : '');
     }
 // attr string
@@ -793,7 +793,7 @@ function hl_tag($t)
         if (((isset($d['*']) ? isset($d[$k]) : !isset($d[$k])) && (isset($aN[$k][$e]) or isset($aNU[$k]) or (isset($aNO[$k]) && !isset($d['on*'])) or (isset($aNA[$k]) && !isset($d['aria*'])) or (!isset($d['data*']) && preg_match('`data-((?!xml)[^:]+$)`', $k))) && !isset($rl['n'][$k]) && !isset($rl['n']['*'])) or isset($rl[$k])) {
             if (isset($aNE[$k])) {
                 $v = $k;
-            } elseif (!empty($lcase) && (($e != 'button' or $e != 'input') or $k == 'type')) { // Rather loose but ?not cause issues
+            } else if (!empty($lcase) && (($e != 'button' or $e != 'input') or $k == 'type')) { // Rather loose but ?not cause issues
                 $v = (isset($aNL[($v2 = strtolower($v))])) ? $v2 : $v;
             }
             if ($k == 'style' && !$C['style_pass']) {
@@ -803,7 +803,7 @@ function hl_tag($t)
                 }
                 $v = preg_replace_callback('`(url(?:\()(?: )*(?:\'|"|&(?:quot|apos);)?)(.+?)((?:\'|"|&(?:quot|apos);)?(?: )*(?:\)))`iS', 'hl_prot', $v);
                 $v = !$C['css_expression'] ? preg_replace('`expression`i', ' ', preg_replace('`\\\\\S|(/|(%2f))(\*|(%2a))`i', ' ', $v)) : $v;
-            } elseif (isset($aNP[$k]) or isset($aNO[$k])) {
+            } else if (isset($aNP[$k]) or isset($aNO[$k])) {
                 $v = str_replace("­", ' ', (strpos($v, '&') !== false ? str_replace(['&#xad;', '&#173;', '&shy;'], ' ', $v) : $v)); # double-quoted char: soft-hyphen; appears here as "­" or hyphen or something else depending on viewing software
                 if ($k == 'srcset') {
                     $v2 = '';
@@ -831,7 +831,7 @@ function hl_tag($t)
                 if ($k == 'href') { // X-spam
                     if ($C['anti_mail_spam'] && strpos($v, 'mailto:') === 0) {
                         $v = str_replace('@', htmlspecialchars($C['anti_mail_spam']), $v);
-                    } elseif ($C['anti_link_spam']) {
+                    } else if ($C['anti_link_spam']) {
                         $r1 = $C['anti_link_spam'][1];
                         if (!empty($r1) && preg_match($r1, $v)) {
                             continue;
@@ -842,7 +842,7 @@ function hl_tag($t)
                                 if (!preg_match('`\bnofollow\b`i', $a['rel'])) {
                                     $a['rel'] .= ' nofollow';
                                 }
-                            } elseif (isset($aA['rel'])) {
+                            } else if (isset($aA['rel'])) {
                                 if (!preg_match('`\bnofollow\b`i', $aA['rel'])) {
                                     $nfr = 1;
                                 }
@@ -885,55 +885,55 @@ function hl_tag($t)
                 unset($a['align']);
                 if ($e == 'img' && ($v == 'left' or $v == 'right')) {
                     $c[] = 'float: ' . $v;
-                } elseif (($e == 'div' or $e == 'table') && $v == 'center') {
+                } else if (($e == 'div' or $e == 'table') && $v == 'center') {
                     $c[] = 'margin: auto';
                 } else {
                     $c[] = 'text-align: ' . $v;
                 }
-            } elseif ($k == 'bgcolor') {
+            } else if ($k == 'bgcolor') {
                 unset($a['bgcolor']);
                 $c[] = 'background-color: ' . $v;
-            } elseif ($k == 'border') {
+            } else if ($k == 'border') {
                 unset($a['border']);
                 $c[] = "border: {$v}px";
-            } elseif ($k == 'bordercolor') {
+            } else if ($k == 'bordercolor') {
                 unset($a['bordercolor']);
                 $c[] = 'border-color: ' . $v;
-            } elseif ($k == 'cellspacing') {
+            } else if ($k == 'cellspacing') {
                 unset($a['cellspacing']);
                 $c[] = "border-spacing: {$v}px";
-            } elseif ($k == 'clear') {
+            } else if ($k == 'clear') {
                 unset($a['clear']);
                 $c[] = 'clear: ' . ($v != 'all' ? $v : 'both');
-            } elseif ($k == 'compact') {
+            } else if ($k == 'compact') {
                 unset($a['compact']);
                 $c[] = 'font-size: 85%';
-            } elseif ($k == 'height' or $k == 'width') {
+            } else if ($k == 'height' or $k == 'width') {
                 unset($a[$k]);
                 $c[] = $k . ': ' . ($v[0] != '*' ? $v . (ctype_digit($v) ? 'px' : '') : 'auto');
-            } elseif ($k == 'hspace') {
+            } else if ($k == 'hspace') {
                 unset($a['hspace']);
                 $c[] = "margin-left: {$v}px; margin-right: {$v}px";
-            } elseif ($k == 'language' && !isset($a['type'])) {
+            } else if ($k == 'language' && !isset($a['type'])) {
                 unset($a['language']);
                 $a['type'] = 'text/' . strtolower($v);
-            } elseif ($k == 'name') {
+            } else if ($k == 'name') {
                 if ($C['no_deprecated_attr'] == 2 or ($e != 'a' && $e != 'map')) {
                     unset($a['name']);
                 }
                 if (!isset($a['id']) && !preg_match('`\W`', $v)) {
                     $a['id'] = $v;
                 }
-            } elseif ($k == 'noshade') {
+            } else if ($k == 'noshade') {
                 unset($a['noshade']);
                 $c[] = 'border-style: none; border: 0; background-color: gray; color: gray';
-            } elseif ($k == 'nowrap') {
+            } else if ($k == 'nowrap') {
                 unset($a['nowrap']);
                 $c[] = 'white-space: nowrap';
-            } elseif ($k == 'size') {
+            } else if ($k == 'size') {
                 unset($a['size']);
                 $c[] = 'size: ' . $v . 'px';
-            } elseif ($k == 'vspace') {
+            } else if ($k == 'vspace') {
                 unset($a['vspace']);
                 $c[] = "margin-top: {$v}px; margin-bottom: {$v}px";
             }
@@ -1086,11 +1086,11 @@ function hl_tidy($t, $w, $p)
                 } else {
                     echo $f, $e, $r;
                 }
-            } elseif (isset($b[$y])) {
+            } else if (isset($b[$y])) {
                 echo $f, $e, $r;
-            } elseif (isset($a[$y])) {
+            } else if (isset($a[$y])) {
                 echo $e, $f, $r;
-            } elseif (!$y) {
+            } else if (!$y) {
                 echo $f, $e, $f, $r;
             } else {
                 echo $e, $r;

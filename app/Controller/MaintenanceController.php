@@ -9,7 +9,7 @@ class MaintenanceController extends AppController
     {
         if ($this->Configuration->getKey('maintenance') != '0') {
             $msg = $this->Configuration->getKey('maintenance');
-        } elseif ($banned) {
+        } else if ($banned) {
             $msg = $this->Lang->get('USER__BANNED_MSG');
         } else {
             $this->redirect('/');
@@ -27,7 +27,7 @@ class MaintenanceController extends AppController
                 if ($this->request->data['state'] == 'enabled') {
                     $maintenance = $this->request->data['reason'];
                     $this->History->set('ADD_MAINTENANCE', 'maintenance');
-                } elseif ($this->request->data['state'] == 'disabled') {
+                } else if ($this->request->data['state'] == 'disabled') {
                     $maintenance = '0';
                     $this->History->set('DELETE_MAINTENANCE', 'maintenance');
                 }

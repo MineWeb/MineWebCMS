@@ -94,7 +94,7 @@ class LangComponent extends CakeObject
         if ($mode == 'cookie') {
             if (isset($_COOKIE['language'])) {
                 $language = $_COOKIE['language'];
-            } elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+            } else if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
                 $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
                 $language = $language{0} . $language{1};
             }
@@ -167,7 +167,7 @@ class LangComponent extends CakeObject
         if (file_exists($path . DS . 'lang' . DS . $lang . '.json')) {
             $language_file = file_get_contents($path . DS . 'lang' . DS . $lang . '.json');
             $language_file = json_decode($language_file, true);
-        } elseif (file_exists($path . DS . 'lang' . DS . 'fr_FR.json')) {
+        } else if (file_exists($path . DS . 'lang' . DS . 'fr_FR.json')) {
             $language_file = file_get_contents($path . DS . 'lang' . DS . 'fr_FR.json');
             $language_file = json_decode($language_file, true);
         }
@@ -306,7 +306,7 @@ class LangComponent extends CakeObject
                 if (file_exists($this->EyPlugin->pluginsFolder . DS . $name . DS . 'lang' . DS . $language['path'] . '.json')) {
                     $language_file = file_get_contents($this->EyPlugin->pluginsFolder . DS . $name . DS . 'lang' . DS . $language['path'] . '.json');
                     $language_file = json_decode($language_file, true);
-                } elseif (file_exists($this->EyPlugin->pluginsFolder . DS . $name . DS . 'lang' . DS . 'fr_FR.json')) {
+                } else if (file_exists($this->EyPlugin->pluginsFolder . DS . $name . DS . 'lang' . DS . 'fr_FR.json')) {
                     $language_file = file_get_contents($this->EyPlugin->pluginsFolder . DS . $name . DS . 'lang' . DS . 'fr_FR.json');
                     $language_file = json_decode($language_file, true);
                 }
@@ -399,34 +399,34 @@ class LangComponent extends CakeObject
                     if ($time['0'] == 13) { // je remplace tout les chiffre par leur équivalent en 12h
                         $hour = '01';
                         $pm_or_am = 'PM'; // et je dis bien que c'est l'après-midi
-                    } elseif ($time['0'] == 14) {
+                    } else if ($time['0'] == 14) {
                         $hour = '02';
                         $pm_or_am = 'PM';
-                    } elseif ($time['0'] == 15) {
+                    } else if ($time['0'] == 15) {
                         $hour = '03';
                         $pm_or_am = 'PM';
-                    } elseif ($time['0'] == 16) {
+                    } else if ($time['0'] == 16) {
                         $hour = '04';
                         $pm_or_am = 'PM';
-                    } elseif ($time['0'] == 17) {
+                    } else if ($time['0'] == 17) {
                         $hour = '05';
                         $pm_or_am = 'PM';
-                    } elseif ($time['0'] == 18) {
+                    } else if ($time['0'] == 18) {
                         $hour = '06';
                         $pm_or_am = 'PM';
-                    } elseif ($time['0'] == 19) {
+                    } else if ($time['0'] == 19) {
                         $hour = '07';
                         $pm_or_am = 'PM';
-                    } elseif ($time['0'] == 20) {
+                    } else if ($time['0'] == 20) {
                         $hour = '08';
                         $pm_or_am = 'PM';
-                    } elseif ($time['0'] == 21) {
+                    } else if ($time['0'] == 21) {
                         $hour = '09';
                         $pm_or_am = 'PM';
-                    } elseif ($time['0'] == 22) {
+                    } else if ($time['0'] == 22) {
                         $hour = '10';
                         $pm_or_am = 'PM';
-                    } elseif ($time['0'] == 23) {
+                    } else if ($time['0'] == 23) {
                         $hour = '11';
                         $pm_or_am = 'PM';
                     }
@@ -436,7 +436,7 @@ class LangComponent extends CakeObject
                 }
                 $return = str_replace('{%hour|12}', $hour, $return); // je change donc les variables
                 $return = str_replace('{%PM_OR_AM}', $pm_or_am, $return);
-            } elseif ($if['0'] == 24) { // et si c'est du 24h
+            } else if ($if['0'] == 24) { // et si c'est du 24h
                 $hour = $time['0']; // je laisse comme c'est en bdd
                 $return = str_replace('{%hour|24}', $hour, $return); // et je remplace
             } else {

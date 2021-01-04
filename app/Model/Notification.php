@@ -42,7 +42,7 @@ class Notification extends AppModel
         return $data;
     }
 
-    public function setToAdmin($content, $from = NULL)
+    public function setToAdmin($content, $from = null)
     {
         $group = $this->generateGroup();
         $this->setToRank($content, 4, $from, 'admin', $group);
@@ -61,7 +61,7 @@ class Notification extends AppModel
         return substr(md5(microtime()), rand(0, 26), 10);
     }
 
-    public function setToRank($content, $rank_id, $from = NULL, $type = 'user', $group = NULL)
+    public function setToRank($content, $rank_id, $from = null, $type = 'user', $group = null)
     {
         if (!$group)
             $group = $this->generateGroup();
@@ -74,11 +74,11 @@ class Notification extends AppModel
 
     }
 
-    public function setToUser($content, $user_id, $from = NULL, $type = 'user', $group = NULL)
+    public function setToUser($content, $user_id, $from = null, $type = 'user', $group = null)
     {
         if (empty($content) || strlen($content) > 255 || empty($user_id))
             return false;
-        if ($group === NULL)
+        if ($group === null)
             $group = $this->generateGroup();
 
         $this->create();
@@ -92,7 +92,7 @@ class Notification extends AppModel
         return $this->save();
     }
 
-    public function setToAll($content, $from = NULL)
+    public function setToAll($content, $from = null)
     {
         if (empty($from)) {
             $from = 'NULL';
