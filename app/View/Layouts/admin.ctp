@@ -5,8 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title><?= $title_for_layout ?> | Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png"
-          href="<?= (isset($theme_config) && isset($theme_config['favicon_url'])) ? $theme_config['favicon_url'] : '' ?>"/>
+    <link rel="icon" type="image/png" href="<?= $seo_config['favicon_url'] ?>"/>
     <!-- Font Awesome 5 -->
     <?= $this->Html->css('fontawesome-5/css/all.css'); ?>
     <!-- Tempusdominus Bbootstrap 4 -->
@@ -31,13 +30,6 @@
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed <?= $admin_dark_mode ? "dark-mode" : "" ?> ">
-<?php if($admin_dark_mode) { ?>
-    <style>
-        .text-dark {
-            color: white !important
-        }
-    </style>
-<?php } ?>
 <div class="wrapper">
 
     <nav class="main-header navbar navbar-expand navbar-dark navbar-lightblue">
@@ -49,8 +41,10 @@
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
 
-                <div class="nav-link custom-control custom-switch custom-switch-off-danger custom-switch-on-success" data-children-count="1">
-                    <input type="checkbox" class="custom-control-input switchAdminDarkMode" id="customSwitch3" <?= (isset($admin_dark_mode) && $admin_dark_mode) ? 'checked' : '' ?>>
+                <div class="nav-link custom-control custom-switch custom-switch-off-danger custom-switch-on-success"
+                     data-children-count="1">
+                    <input type="checkbox" class="custom-control-input switchAdminDarkMode"
+                           id="customSwitch3" <?= (isset($admin_dark_mode) && $admin_dark_mode) ? 'checked' : '' ?>>
                     <label class="custom-control-label" for="customSwitch3">Dark-Mode</label>
                 </div>
             </li>
@@ -67,7 +61,7 @@
                         $('body').removeClass("dark-mode");
                     }
 
-                    $.get('<?= $this->Html->url(array('action' => 'switchAdminDarkMode', 'controller' => 'admin', 'admin' => true)) ?>');
+                    $.get('<?= $this->Html->url(['action' => 'switchAdminDarkMode', 'controller' => 'admin', 'admin' => true]) ?>');
 
                     return false;
                 });
@@ -89,7 +83,7 @@
 
             <li class="nav-item">
                 <a class="nav-link"
-                   href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'logout', 'admin' => false, 'plugin' => false)); ?>"><i
+                   href="<?= $this->Html->url(['controller' => 'user', 'action' => 'logout', 'admin' => false, 'plugin' => false]); ?>"><i
                             class="fa fa-power-off"></i> <?= $Lang->get('USER__LOGOUT') ?></a>
             </li>
         </ul>
@@ -100,11 +94,11 @@
                 'notification_type': 'admin',
                 'limit': 5,
                 'url': {
-                    'get': '<?= $this->Html->url(array('plugin' => false, 'admin' => false, 'controller' => 'notifications', 'action' => 'getAll')) ?>',
-                    'clear': '<?= $this->Html->url(array('plugin' => false, 'admin' => false, 'controller' => 'notifications', 'action' => 'clear', 'NOTIF_ID')) ?>',
-                    'clearAll': '<?= $this->Html->url(array('plugin' => false, 'admin' => false, 'controller' => 'notifications', 'action' => 'clearAll')) ?>',
-                    'markAsSeen': '<?= $this->Html->url(array('plugin' => false, 'admin' => false, 'controller' => 'notifications', 'action' => 'markAsSeen', 'NOTIF_ID')) ?>',
-                    'markAllAsSeen': '<?= $this->Html->url(array('plugin' => false, 'admin' => false, 'controller' => 'notifications', 'action' => 'markAllAsSeen')) ?>'
+                    'get': '<?= $this->Html->url(['plugin' => false, 'admin' => false, 'controller' => 'notifications', 'action' => 'getAll']) ?>',
+                    'clear': '<?= $this->Html->url(['plugin' => false, 'admin' => false, 'controller' => 'notifications', 'action' => 'clear', 'NOTIF_ID']) ?>',
+                    'clearAll': '<?= $this->Html->url(['plugin' => false, 'admin' => false, 'controller' => 'notifications', 'action' => 'clearAll']) ?>',
+                    'markAsSeen': '<?= $this->Html->url(['plugin' => false, 'admin' => false, 'controller' => 'notifications', 'action' => 'markAsSeen', 'NOTIF_ID']) ?>',
+                    'markAllAsSeen': '<?= $this->Html->url(['plugin' => false, 'admin' => false, 'controller' => 'notifications', 'action' => 'markAllAsSeen']) ?>'
                 },
                 'messages': {
                     'markAsSeen': '<?= $Lang->get('NOTIFICATION__MARK_AS_SEEN') ?>',
@@ -186,16 +180,17 @@
                                 continue;
                             if (!isset($value['menu']) && isset($value['permission']) && !$context->Permissions->can($value['permission'])) // Check perms
                                 continue;
-                            $currentMenu = checkCurrent($value['menu'], $context) ? "menu-open" : "";
+                            $currentMenu = false;
                             if (isset($value['menu'])) {
+                                $currentMenu = checkCurrent($value['menu'], $context) ? "menu-open" : "";
                                 echo '<li class="nav-item has-treeview ' . ($currentMenu ? "menu-open" : "") . '">';
                             } else
                                 echo '<li class="nav-item">';
                             // Link
                             $route = (isset($value['route']) ? $context->Html->url($value['route']) : '#');
                             $current = $route == $context->Html->url(null, false);
-                            echo '<a class="nav-link  ' . ($current || $currentMenu ? " active" : "") . '" href="' . $route . '">';
-                            echo '<i class=" ' . (strpos($value['icon'], "fa-") ? $value['icon'] : "fa fa-" . $value['icon']) . ' nav-icon"></i>  <p>' . $context->Lang->get($name);
+                            echo '<a class="nav-link' . ($current || $currentMenu ? " active" : "") . '" href="' . $route . '">';
+                            echo '<i class="' . (strpos($value['icon'], "fa-") ? $value['icon'] : "fa fa-" . $value['icon']) . ' nav-icon"></i>  <p>' . $context->Lang->get($name);
                             if (isset($value['menu']))
                                 echo '<i class="fas fa-angle-left right"></i></p>';
                             else echo '</p>';

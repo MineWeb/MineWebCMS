@@ -4,7 +4,7 @@ App::uses('CakeObject', 'Core');
 class PermissionsComponent extends CakeObject
 {
 
-    public $permissions = array(
+    public $permissions = [
         'COMMENT_NEWS',
         'LIKE_NEWS',
         'DELETE_HIS_COMMENT',
@@ -30,21 +30,24 @@ class PermissionsComponent extends CakeObject
         'MANAGE_THEMES',
         'MANAGE_USERS',
         'VIEW_WEBSITE_HISTORY'
-    );
+    ];
 
-    public $components = array('Session');
-
+    public $components = ['Session'];
+    public $ranks = [];
     private $userModel;
-
     private $controller;
 
-    public $ranks = [];
+    function shutdown($controller)
+    {
+    }
 
-    function shutdown($controller) {}
+    function beforeRender($controller)
+    {
+    }
 
-    function beforeRender($controller) {}
-
-    function beforeRedirect() {}
+    function beforeRedirect()
+    {
+    }
 
     function initialize($controller)
     {
@@ -68,6 +71,13 @@ class PermissionsComponent extends CakeObject
         return $this->have($this->userModel->getKey('rank'), $perm);
     }
 
+    public function have($rank, $perm)
+    {
+        if ($rank == 3 || $rank == 4)
+            return true;
+        return in_array($perm, $this->getRankPermissions($rank));
+    }
+
     public function getRankPermissions($rank)
     {
         if (isset($this->ranks[$rank]))
@@ -76,13 +86,6 @@ class PermissionsComponent extends CakeObject
         if (empty($search) || !is_array(($search = unserialize($search['Permission']['permissions']))))
             return $this->ranks[$rank] = [];
         return $this->ranks[$rank] = $search;
-    }
-
-    public function have($rank, $perm)
-    {
-        if ($rank == 3 || $rank == 4)
-            return true;
-        return in_array($perm, $this->getRankPermissions($rank));
     }
 
     public function get_all()

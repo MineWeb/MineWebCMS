@@ -1,24 +1,27 @@
 <?php
-class Navbar extends AppModel {
 
-  public function afterFind($results, $primary = false) {
+class Navbar extends AppModel
+{
 
-    if(!empty($results)) {
+    public function afterFind($results, $primary = false)
+    {
 
-      foreach ($results as $key => $value) {
+        if (!empty($results)) {
 
-        if($value['Navbar']['url'] == "#") {
-          $results[$key]['Navbar']['url'] = array('type' => 'submenu');
-        } else {
-          $results[$key]['Navbar']['url'] = json_decode($value['Navbar']['url'], true);
+            foreach ($results as $key => $value) {
+
+                if ($value['Navbar']['url'] == "#") {
+                    $results[$key]['Navbar']['url'] = ['type' => 'submenu'];
+                } else {
+                    $results[$key]['Navbar']['url'] = json_decode($value['Navbar']['url'], true);
+                }
+
+            }
+
         }
 
-      }
+        return $results;
 
     }
-
-    return $results;
-
-  }
 
 }

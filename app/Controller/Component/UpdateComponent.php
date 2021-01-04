@@ -9,14 +9,14 @@ if (file_exists(ROOT . DS . 'lib' . DS . 'Cake' . DS . 'Core' . DS . 'CakeObject
 
 class UpdateComponent extends CakeObject
 {
-    public $components = array('Session', 'Configuration', 'Lang');
+    public $components = ['Session', 'Configuration', 'Lang'];
 
     public $cmsVersion;
     public $lastVersion;
-
+    public $errorUpdate;
     private $updateLogFile;
     private $updateLogFileName;
-    private $bypassFiles = array(
+    private $bypassFiles = [
         '.DS_Store',
         '.htaccess',
         'empty',
@@ -25,14 +25,12 @@ class UpdateComponent extends CakeObject
         '__MACOSX',
         'config.json',
         'theme.default.json'
-    );
+    ];
     private $source = [
         'repo' => 'MineWebCMS',
         'owner' => 'MineWeb',
         'versionFile' => 'VERSION'
     ];
-    public $errorUpdate;
-
     private $controller;
 
     public function shutdown($controller)
@@ -69,19 +67,19 @@ class UpdateComponent extends CakeObject
     }
 
     /**
-     * Return HTML content if an update is available
+     * Used to check via cache or Github if a new version is available
      */
-    public function available()
+    private function check()
     {
-        if (version_compare($this->cmsVersion, $this->lastVersion, '<')) {
-            return "<div class='alert alert-secondary'>" .
-                "{$this->Lang->get('UPDATE__AVAILABLE_TYPE_CMS')} {$this->Lang->get('UPDATE__AVAILABLE')} {$this->Lang->get('UPDATE__CMS_VERSION')} : " .
-                "{$this->cmsVersion}, {$this->Lang->get('UPDATE__LAST_VERSION')} : {$this->lastVersion} " .
-                "<a href='" . Router::url(array('controller' => 'update', 'action' => 'index', 'admin' => true)) . "' style='margin-top: -6px;' class='btn float-right'>" .
-                $this->Lang->get('GLOBAL__UPDATE') .
-                "</a>" .
-                "</div>";
+        $cmsVersion = file_get_contents(ROOT . DS . $this->source['versionFile']);
+        $this->cmsVersion = trim($cmsVersion);
+
+        if (!file_exists($this->updateCacheFile) || strtotime('+5 hours', filemtime(ROOT . DS . 'config' . DS . 'update')) < time()) {
+            $remoteVersion = $this->getLatestRelease();
+            if ($remoteVersion) file_put_contents($this->updateCacheFile, $remoteVersion);
         }
+        $this->lastVersion = trim(isset($remoteVersion) ? $remoteVersion : file_get_contents($this->updateCacheFile));
+        if (!$this->lastVersion) $this->lastVersion = $this->cmsVersion;
     }
 
     /**
@@ -99,36 +97,19 @@ class UpdateComponent extends CakeObject
     }
 
     /**
-     * Used to check via cache or Github if a new version is available
+     * Return HTML content if an update is available
      */
-    private function check()
+    public function available()
     {
-        $cmsVersion = file_get_contents(ROOT . DS . $this->source['versionFile']);
-        $this->cmsVersion = trim($cmsVersion);
-
-        if (!file_exists($this->updateCacheFile) || strtotime('+5 hours', filemtime(ROOT . DS . 'config' . DS . 'update')) < time()) {
-            $remoteVersion = $this->getLatestRelease();
-            if ($remoteVersion) file_put_contents($this->updateCacheFile, $remoteVersion);
+        if (version_compare($this->cmsVersion, $this->lastVersion, '<')) {
+            return "<div class='alert alert-secondary'>" .
+                "{$this->Lang->get('UPDATE__AVAILABLE_TYPE_CMS')} {$this->Lang->get('UPDATE__AVAILABLE')} {$this->Lang->get('UPDATE__CMS_VERSION')} : " .
+                "{$this->cmsVersion}, {$this->Lang->get('UPDATE__LAST_VERSION')} : {$this->lastVersion} " .
+                "<a href='" . Router::url(['controller' => 'update', 'action' => 'index', 'admin' => true]) . "' style='margin-top: -6px;' class='btn float-right'>" .
+                $this->Lang->get('GLOBAL__UPDATE') .
+                "</a>" .
+                "</div>";
         }
-        $this->lastVersion = trim(isset($remoteVersion) ? $remoteVersion : file_get_contents($this->updateCacheFile));
-        if (!$this->lastVersion) $this->lastVersion = $this->cmsVersion;
-    }
-
-    /**
-     * Used to download update from Github
-     */
-    private function downloadUpdate()
-    {
-        // We download the release we need
-        if (!($filesContent = $this->controller->sendGetRequest("https://github.com/{$this->source['owner']}/{$this->source['repo']}/archive/v{$this->lastVersion}.zip")))
-            return false;
-        $write = fopen(ROOT . DS . 'app' . DS . 'tmp' . DS . $this->lastVersion . '.zip', 'w+');
-        if (!fwrite($write, $filesContent)) {
-            $this->log('[Update] Save files failed.');
-            return false;
-        }
-        fclose($write);
-        return true;
     }
 
     /**
@@ -176,9 +157,9 @@ class UpdateComponent extends CakeObject
                 $path = "zip://" . ROOT . DS . "app" . DS . "tmp" . DS . $this->lastVersion . ".zip#{$this->source['repo']}-{$this->lastVersion}/" . "$filename";
                 $updateFile[$path] = ROOT . DS . $filename;
                 if (file_exists($updateFile[$path]) && !is_writable($updateFile[$path])) {
-                    $this->errorUpdate = $this->Lang->get('UPDATE__FAILED_FILE', array(
+                    $this->errorUpdate = $this->Lang->get('UPDATE__FAILED_FILE', [
                         '{FILE}' => $updateFile[$path],
-                    ));
+                    ]);
                     $this->log("The file " . $updateFile[$path] . " is not writable!");
                     return false;
                 }
@@ -188,9 +169,9 @@ class UpdateComponent extends CakeObject
         // We copy the files here
         foreach ($updateFile as $key => $v) {
             if (!copy($key, $v)) {
-                $this->errorUpdate = $this->Lang->get('UPDATE__FAILED_FILE', array(
+                $this->errorUpdate = $this->Lang->get('UPDATE__FAILED_FILE', [
                     '{FILE}' => $v,
-                ));
+                ]);
                 $this->log("Failed to copy file from $key to " . $v);
                 return false;
             }
@@ -210,6 +191,23 @@ class UpdateComponent extends CakeObject
     }
 
     /**
+     * Used to download update from Github
+     */
+    private function downloadUpdate()
+    {
+        // We download the release we need
+        if (!($filesContent = $this->controller->sendGetRequest("https://github.com/{$this->source['owner']}/{$this->source['repo']}/archive/v{$this->lastVersion}.zip")))
+            return false;
+        $write = fopen(ROOT . DS . 'app' . DS . 'tmp' . DS . $this->lastVersion . '.zip', 'w+');
+        if (!fwrite($write, $filesContent)) {
+            $this->log('[Update] Save files failed.');
+            return false;
+        }
+        fclose($write);
+        return true;
+    }
+
+    /**
      * Used to update database schema.
      * This read new app/Config/Schema/schema.php and compare it with a generated
      * one from database.
@@ -220,14 +218,14 @@ class UpdateComponent extends CakeObject
         // Load updated schema
         App::uses('CakeSchema', 'Model');
 
-        $options = array(
+        $options = [
             'name' => 'AppUpdate',
             'path' => ROOT . DS . 'app' . DS . 'Config' . DS . 'Schema',
             'file' => 'schemaUpdate.php',
             'plugin' => null,
             'connection' => 'default',
             'models' => false
-        );
+        ];
 
         // Here we need to copy the new schema file to be able to require it
         // Indeed, the old schema file has already been loaded (in plugin validation)
@@ -235,7 +233,7 @@ class UpdateComponent extends CakeObject
         // the class, so we need to update the class name too)
         $get_new_file = file_get_contents($options['path'] . DS . 'schema.php');
         $replace_class_name = str_replace('AppSchema', 'AppUpdateSchema', $get_new_file);
-        file_put_contents($options['path'] . DS . $options['file'] , $replace_class_name);
+        file_put_contents($options['path'] . DS . $options['file'], $replace_class_name);
 
         $schema = new CakeSchema($options);
 
@@ -252,7 +250,7 @@ class UpdateComponent extends CakeObject
         $db = ConnectionManager::getDataSource('default');
         $queries = [];
         foreach ($diffSchema as $table => $changes) {
-            
+
             // If we have columns to drop, we need to check this is not about a plugin
             if (isset($diffSchema[$table]['drop'])) {
                 foreach ($diffSchema[$table]['drop'] as $column => $structure) { // For each drop, check column name
@@ -268,7 +266,7 @@ class UpdateComponent extends CakeObject
 
             // If we have actions (maybe we've removed the only action `drop`)
             if (count($diffSchema[$table]) > 0) {
-                $queries[$table] = $db->alterSchema(array($table => $diffSchema[$table]), $table);
+                $queries[$table] = $db->alterSchema([$table => $diffSchema[$table]], $table);
             }
 
             if (isset($diffSchema[$table]['create'])) {
@@ -294,9 +292,9 @@ class UpdateComponent extends CakeObject
         }
 
         // Hook method to update databases data if needed
-        $updateEntries = array();
+        $updateEntries = [];
         include ROOT . DS . 'app' . DS . 'Config' . DS . 'Schema' . DS . 'update-entries.php';
-        $schema->after(array(), false, $updateEntries);
+        $schema->after([], false, $updateEntries);
         //if update fail, include modify.php
         if (file_exists(ROOT . DS . 'modify.php')) {
             try {

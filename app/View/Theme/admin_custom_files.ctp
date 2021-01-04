@@ -1,75 +1,84 @@
 <section class="content">
-  <div class="row">
-    <div class="col-md-3">
-      <div class="card">
-        <div class="card-header with-border">
-          <h3 class="card-title"><?= $Lang->get('THEME__CUSTOM_FILES_FILES') ?></h3>
-        </div>
-        <div class="card-body">
-          <ul>
-            <?php
-            foreach ($css_files as $file) {
-              echo '<li class="file text-muted"><a href="#" class="viewFile" data-file="'.$file['basename'].'" data-filename="'.$file['name'].'">'.$file['basename'].'</a></li>';
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header with-border">
+                    <h3 class="card-title"><?= $Lang->get('THEME__CUSTOM_FILES_FILES') ?></h3>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <?php
+                        foreach ($css_files as $file) {
+                            echo '<li class="file text-muted"><a href="#" class="viewFile" data-file="' . $file['basename'] . '" data-filename="' . $file['name'] . '">' . $file['basename'] . '</a></li>';
 
-            }
-            ?>
-          </ul>
+                        }
+                        ?>
+                    </ul>
+                </div>
+            </div>
         </div>
-      </div>
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header with-border">
+                    <h3 class="card-title"><?= $Lang->get('THEME__CUSTOM_FILES_FILE_CONTENT') ?></h3>
+                </div>
+                <div class="card-body" style="position:relative;height:1000px;">
+                    <p id="content">
+                        <i class="text-muted"><?= $Lang->get('THEME__CUSTOM_FILES_FILE_CONTENT_CHOOSE') ?></i>
+                    </p>
+                    <div class="clearfix"></div>
+                    <form data-ajax="true" action="<?= $this->Html->url(['action' => 'save_custom_file', $slug]) ?>"
+                          data-custom-function="getFileContent">
+                        <div class="ajax-msg"></div>
+                        <button id="saveButton" style="display:none;" type="submit"
+                                class="btn btn-primary"><?= $Lang->get('GLOBAL__SAVE') ?></button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-9">
-      <div class="card">
-        <div class="card-header with-border">
-          <h3 class="card-title"><?= $Lang->get('THEME__CUSTOM_FILES_FILE_CONTENT') ?></h3>
-        </div>
-        <div class="card-body" style="position:relative;height:1000px;">
-          <p id="content">
-            <i class="text-muted"><?= $Lang->get('THEME__CUSTOM_FILES_FILE_CONTENT_CHOOSE') ?></i>
-          </p>
-          <div class="clearfix"></div>
-          <form data-ajax="true" action="<?= $this->Html->url(array('action' => 'save_custom_file', $slug)) ?>" data-custom-function="getFileContent">
-            <div class="ajax-msg"></div>
-            <button id="saveButton" style="display:none;" type="submit" class="btn btn-primary"><?= $Lang->get('GLOBAL__SAVE') ?></button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
 </section>
 <div style="height:30px"></div>
 <style media="screen">
-  #saveButton {
-    bottom: -40px;
-    position: absolute;
-    right: 0;
-  }
-  .ajax-msg div {
-    padding:10px;
-  }
-  .ajax-msg {
-    bottom: -70px;
-    position: absolute;
-    left: 0;
-  }
-  ul {
-    padding-left: 0;
-  }
-  ul li {
-    list-style-type: none;
-  }
-  ul li a {
-    color: inherit;
-    text-decoration: none;
-  }
-  ul li a:hover {
-    color: black;
-  }
-  ul li.file:before {
-    content: "\f15b\00a0\00a0\00a0";
-    font-family: 'FontAwesome';
-  }
+    #saveButton {
+        bottom: -40px;
+        position: absolute;
+        right: 0;
+    }
 
-  #editor {
+    .ajax-msg div {
+        padding: 10px;
+    }
+
+    .ajax-msg {
+        bottom: -70px;
+        position: absolute;
+        left: 0;
+    }
+
+    ul {
+        padding-left: 0;
+    }
+
+    ul li {
+        list-style-type: none;
+    }
+
+    ul li a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    ul li a:hover {
+        color: black;
+    }
+
+    ul li.file:before {
+        content: "\f15b\00a0\00a0\00a0";
+        font-family: 'FontAwesome';
+    }
+
+    #editor {
         position: absolute;
         top: 0;
         right: 0;
@@ -80,37 +89,37 @@
 
 <?= $this->Html->script('ace') ?>
 <script type="text/javascript">
-  $('.viewFile').on('click', function(e) {
-    e.preventDefault();
+    $('.viewFile').on('click', function (e) {
+        e.preventDefault();
 
-    var btn = $(this);
-    var file = btn.attr('data-file');
-    var filename = btn.attr('data-filename');
+        var btn = $(this);
+        var file = btn.attr('data-file');
+        var filename = btn.attr('data-filename');
 
-    $.ajax({
-      method: 'get',
-      url: '<?= $this->Html->url(array('action' => 'get_custom_file', $slug)) ?>'+file,
-      success: function(data) {
-        $('#content').html('<div id="editor">'+data+'</div>');
+        $.ajax({
+            method: 'get',
+            url: '<?= $this->Html->url(['action' => 'get_custom_file', $slug]) ?>' + file,
+            success: function (data) {
+                $('#content').html('<div id="editor">' + data + '</div>');
 
-        var editor = ace.edit("editor");
-        editor.setTheme("ace/theme/monokai");
-        editor.getSession().setMode("ace/mode/css");
+                var editor = ace.edit("editor");
+                editor.setTheme("ace/theme/monokai");
+                editor.getSession().setMode("ace/mode/css");
 
-        $('#saveButton').attr('data-file', file).fadeIn(150);
+                $('#saveButton').attr('data-file', file).fadeIn(150);
 
-      },
-      error: function() {
-        alert('<?= $Lang->get('ERROR__INTERNAL_ERROR') ?>');
-      }
+            },
+            error: function () {
+                alert('<?= $Lang->get('ERROR__INTERNAL_ERROR') ?>');
+            }
+        });
+
     });
 
-  });
-
-  function getFileContent() {
-    return {
-      'file': $('#saveButton').attr('data-file'),
-      'content': ace.edit("editor").getValue()
+    function getFileContent() {
+        return {
+            'file': $('#saveButton').attr('data-file'),
+            'content': ace.edit("editor").getValue()
+        }
     }
-  }
 </script>

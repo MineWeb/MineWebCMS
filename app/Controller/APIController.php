@@ -3,7 +3,7 @@
 class APIController extends AppController
 {
 
-    public $components = array('Session', 'API');
+    public $components = ['Session', 'API'];
 
     public function launcher($username, $password, $args = null)
     {

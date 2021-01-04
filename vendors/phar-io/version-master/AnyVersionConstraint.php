@@ -10,20 +10,23 @@
 
 namespace PharIo\Version;
 
-class AnyVersionConstraint implements VersionConstraint {
+class AnyVersionConstraint implements VersionConstraint
+{
     /**
      * @param Version $version
      *
      * @return bool
      */
-    public function complies(Version $version) {
+    public function complies(Version $version)
+    {
         return true;
     }
 
     /**
      * @return string
      */
-    public function asString() {
+    public function asString()
+    {
         return '*';
     }
 }

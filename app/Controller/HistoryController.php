@@ -22,11 +22,11 @@ class HistoryController extends AppController
         $this->DataTable = $this->Components->load('DataTable');
         $this->modelClass = 'History';
         $this->DataTable->initialize($this);
-        $this->paginate = array(
-            'fields' => array('History.id', 'User.pseudo', 'History.action', 'History.user_id', 'History.category', 'History.created'),
+        $this->paginate = [
+            'fields' => ['History.id', 'User.pseudo', 'History.action', 'History.user_id', 'History.category', 'History.created'],
             'order' => 'id DESC',
             'recursive' => 1
-        );
+        ];
         $this->DataTable->mDataProp = true;
 
         $response = $this->DataTable->getResponse();

@@ -33,17 +33,17 @@ class InstallController extends AppController
         if (!$this->request->is('ajax'))
             throw new NotFoundException();
         $ip = $this->Util->getIP();
-        if(file_exists(ROOT.DS.'config'.DS.'secure.txt')) {
+        if (file_exists(ROOT . DS . 'config' . DS . 'secure.txt')) {
             $secure = json_decode(file_get_contents(ROOT . DS . 'config' . DS . 'secure.txt'), true);
             if ($secure['ip'] != $ip)
-                return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__IP_WRONG'))));
+                return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('ERROR__IP_WRONG')]));
         }
         if (empty($this->request->data['pseudo']) || empty($this->request->data['password']) || empty($this->request->data['password_confirmation']) || empty($this->request->data['email']))
-            return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
+            return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]));
         if ($this->request->data['password'] !== $this->request->data['password_confirmation'])
-            return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_PASSWORDS_NOT_SAME'))));
+            return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('USER__ERROR_PASSWORDS_NOT_SAME')]));
         if (!filter_var($this->request->data['email'], FILTER_VALIDATE_EMAIL))
-            return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID'))));
+            return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID')]));
 
         $this->request->data['ip'] = $ip;
         $this->request->data['rank'] = 4;
@@ -54,7 +54,7 @@ class InstallController extends AppController
         $this->User->set($this->request->data);
         $this->User->save();
 
-        $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_SUCCESS'))));
+        $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_SUCCESS')]));
     }
 
     public function end()
@@ -64,7 +64,7 @@ class InstallController extends AppController
             file_put_contents(ROOT . DS . 'config' . DS . 'installed.txt', "\n");
             $this->redirect('/');
         } else {
-            $this->redirect(array('controller' => 'install', 'action' => 'index'));
+            $this->redirect(['controller' => 'install', 'action' => 'index']);
         }
     }
 

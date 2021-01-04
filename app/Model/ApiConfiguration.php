@@ -1,3 +1,5 @@
 <?php
-class ApiConfiguration extends AppModel {
+
+class ApiConfiguration extends AppModel
+{
 }

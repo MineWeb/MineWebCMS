@@ -6,8 +6,8 @@
                     <h3 class="card-title"><?= $Lang->get('NAVBAR__EDIT_TITLE') ?></h3>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="<?= $this->Html->url(array('action' => 'edit_ajax', $nav['id'])) ?>"
-                          data-ajax="true" data-redirect-url="<?= $this->Html->url(array('action' => 'index')) ?>"
+                    <form method="post" action="<?= $this->Html->url(['action' => 'edit_ajax', $nav['id']]) ?>"
+                          data-ajax="true" data-redirect-url="<?= $this->Html->url(['action' => 'index']) ?>"
                           data-custom-function="formatteData">
 
                         <div class="form-group">
@@ -125,7 +125,7 @@
                         </div>
 
                         <div class="float-right">
-                            <a href="<?= $this->Html->url(array('controller' => 'navbar', 'action' => 'admin_index', 'admin' => true)) ?>"
+                            <a href="<?= $this->Html->url(['controller' => 'navbar', 'action' => 'admin_index', 'admin' => true]) ?>"
                                class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
                             <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
                         </div>
