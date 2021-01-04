@@ -104,7 +104,7 @@
 
                             $.ajax({
                                 type: 'POST',
-                                url: "<?= $this->Html->url(array('action' => 'step_1')) ?>",
+                                url: "<?= $this->Html->url(['action' => 'step_1']) ?>",
                                 data: inputs,
                                 dataType: 'JSON',
                                 async: false,
@@ -176,7 +176,7 @@
             });
 
             $('#tabsleft .finish').click(function () {
-                document.location.href = "<?= $this->Html->url(array('controller' => 'install', 'action' => 'end')) ?>";
+                document.location.href = "<?= $this->Html->url(['controller' => 'install', 'action' => 'end']) ?>";
             });
         });
     </script>

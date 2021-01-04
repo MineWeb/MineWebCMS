@@ -4,12 +4,10 @@ App::uses('CakeObject', 'Core');
 class APIComponent extends CakeObject
 {
 
-    public $components = array('Session', 'Configuration', 'Lang');
-
-    private $controller;
-
+    public $components = ['Session', 'Configuration', 'Lang'];
     public $skin_active;
     public $cape_active;
+    private $controller;
 
     function shutdown($controller)
     {
@@ -48,7 +46,7 @@ class APIComponent extends CakeObject
     public function set($key, $value)
     {
         $this->ApiConfiguration->read(null, 1);
-        $this->ApiConfiguration->setKey(array($key => $value));
+        $this->ApiConfiguration->setKey([$key => $value]);
         return ($this->ApiConfiguration->save());
     }
 
@@ -66,27 +64,28 @@ class APIComponent extends CakeObject
         return $this->User->getKey('cape') == 1;
     }
 
-    private function _getSkinFromUsername($username)
+    public function get_skin($username)
     {
-        // We need to get UUID
-        $user = @json_decode(@file_get_contents("https://api.mojang.com/users/profiles/minecraft/$username"), true);
-        if (!$user) return false;
-        $uuid = $user['id'];
-        // Get profile with skin as base64
-        $profile = @json_decode(@file_get_contents("https://sessionserver.mojang.com/session/minecraft/profile/$uuid"), true);
-        if (!$profile) return false;
-        // Get texture item
-        $properties = $profile['properties'];
-        $textures = null;
-        foreach ($properties as $property)
-            if ($property['name'] === 'textures')
-                $textures = $property;
-        if (!$textures) return false;
-        // Decode value
-        $texturesObject = @json_decode(@base64_decode($textures['value']), true);
-        if (!$texturesObject) return false;
-        $url = $texturesObject['textures']['SKIN']['url'];
-        return file_get_contents($url);
+        $rendered = imagecreatetruecolor(240, 480);
+        $source = $this->_getSkinImage($username);
+        $b = 120;
+        $s = 8;
+        $pink = imagecolorallocate($rendered, 255, 0, 255);
+        imagefilledrectangle($rendered, 0, 0, 240, 480, $pink);
+        imagecolortransparent($rendered, $pink);
+        $size_x = imagesx($source);
+        $size_y = imagesy($source);
+        $temp = imagecreatetruecolor($size_x, $size_y);
+        $x = imagecopyresampled($temp, $source, 0, 0, ($size_x - 1), 0, $size_x, $size_y, 0 - $size_x, $size_y);
+        $fsource = $temp;
+        imagecopyresampled($rendered, $source, $b / 2, 0, $s, $s, $b, $b, $s, $s);
+        imagecopyresampled($rendered, $source, $b / 2, 0, $s * 5, $s, $b, $b, $s, $s);
+        imagecopyresampled($rendered, $source, $b / 2, $b, $s * 2.5, $s * 2.5, $b, $b * 1.5, $s, $s * 1.5);
+        imagecopyresampled($rendered, $source, $b * 1.5, $b, $s * 5.5, $s * 2.5, $b / 2, $b * 1.5, $s / 2, $s * 1.5);
+        imagecopyresampled($rendered, $fsource, 0, $b, $s * 2, $s * 2.5, $b / 2, $b * 1.5, $s / 2, $s * 1.5);
+        imagecopyresampled($rendered, $source, 60, $b * 2.5, $s / 2, $s * 2.5, $b / 2, $b * 1.5, $s / 2, $s * 1.5);
+        imagecopyresampled($rendered, $fsource, $b * 1, $b * 2.5, $s * 7, $s * 2.5, $b / 2, $b * 1.5, $s / 2, $s * 1.5);
+        imagepng($rendered);
     }
 
     private function _getSkinImage($username)
@@ -143,28 +142,27 @@ class APIComponent extends CakeObject
             'SUVORK5CYII='));
     }
 
-    public function get_skin($username)
+    private function _getSkinFromUsername($username)
     {
-        $rendered = imagecreatetruecolor(240, 480);
-        $source = $this->_getSkinImage($username);
-        $b = 120;
-        $s = 8;
-        $pink = imagecolorallocate($rendered, 255, 0, 255);
-        imagefilledrectangle($rendered, 0, 0, 240, 480, $pink);
-        imagecolortransparent($rendered, $pink);
-        $size_x = imagesx($source);
-        $size_y = imagesy($source);
-        $temp = imagecreatetruecolor($size_x, $size_y);
-        $x = imagecopyresampled($temp, $source, 0, 0, ($size_x - 1), 0, $size_x, $size_y, 0 - $size_x, $size_y);
-        $fsource = $temp;
-        imagecopyresampled($rendered, $source, $b / 2, 0, $s, $s, $b, $b, $s, $s);
-        imagecopyresampled($rendered, $source, $b / 2, 0, $s * 5, $s, $b, $b, $s, $s);
-        imagecopyresampled($rendered, $source, $b / 2, $b, $s * 2.5, $s * 2.5, $b, $b * 1.5, $s, $s * 1.5);
-        imagecopyresampled($rendered, $source, $b * 1.5, $b, $s * 5.5, $s * 2.5, $b / 2, $b * 1.5, $s / 2, $s * 1.5);
-        imagecopyresampled($rendered, $fsource, 0, $b, $s * 2, $s * 2.5, $b / 2, $b * 1.5, $s / 2, $s * 1.5);
-        imagecopyresampled($rendered, $source, 60, $b * 2.5, $s / 2, $s * 2.5, $b / 2, $b * 1.5, $s / 2, $s * 1.5);
-        imagecopyresampled($rendered, $fsource, $b * 1, $b * 2.5, $s * 7, $s * 2.5, $b / 2, $b * 1.5, $s / 2, $s * 1.5);
-        imagepng($rendered);
+        // We need to get UUID
+        $user = @json_decode(@file_get_contents("https://api.mojang.com/users/profiles/minecraft/$username"), true);
+        if (!$user) return false;
+        $uuid = $user['id'];
+        // Get profile with skin as base64
+        $profile = @json_decode(@file_get_contents("https://sessionserver.mojang.com/session/minecraft/profile/$uuid"), true);
+        if (!$profile) return false;
+        // Get texture item
+        $properties = $profile['properties'];
+        $textures = null;
+        foreach ($properties as $property)
+            if ($property['name'] === 'textures')
+                $textures = $property;
+        if (!$textures) return false;
+        // Decode value
+        $texturesObject = @json_decode(@base64_decode($textures['value']), true);
+        if (!$texturesObject) return false;
+        $url = $texturesObject['textures']['SKIN']['url'];
+        return file_get_contents($url);
     }
 
     public function get_head_skin($username, $size = 50)
@@ -202,7 +200,7 @@ class APIComponent extends CakeObject
         if (!is_array($args))
             return ['status' => false];
 
-        $user = $this->User->find('first', array('conditions' => array('pseudo' => $username, 'password' => $password)));
+        $user = $this->User->find('first', ['conditions' => ['pseudo' => $username, 'password' => $password]]);
         if (empty($user))
             return ['status' => false];
         $user = $user['User'];

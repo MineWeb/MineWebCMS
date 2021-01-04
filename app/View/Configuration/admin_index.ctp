@@ -12,14 +12,15 @@
                         <div class="nav-tabs-custom">
 
                             <ul class="nav nav-tabs">
-                                <li class="nav-item"><a class="nav-link text-dark active" href="#tab_1" data-toggle="tab"
-                                                      aria-expanded="true"><?= $Lang->get('CONFIG__GENERAL_PREFERENCES') ?></a>
+                                <li class="nav-item"><a class="nav-link text-dark active" href="#tab_1"
+                                                        data-toggle="tab"
+                                                        aria-expanded="true"><?= $Lang->get('CONFIG__GENERAL_PREFERENCES') ?></a>
                                 </li>
                                 <li class="nav-item"><a class="nav-link text-dark" href="#tab_2" data-toggle="tab"
-                                                aria-expanded="false"><?= $Lang->get('CONFIG__SOCIAL_PREFERENCES') ?></a>
+                                                        aria-expanded="false"><?= $Lang->get('CONFIG__SOCIAL_PREFERENCES') ?></a>
                                 </li>
                                 <li class="nav-item"><a class="nav-link text-dark" href="#tab_3" data-toggle="tab"
-                                                aria-expanded="false"><?= $Lang->get('CONFIG__OTHER_PREFERENCES') ?></a>
+                                                        aria-expanded="false"><?= $Lang->get('CONFIG__OTHER_PREFERENCES') ?></a>
                                 </li>
                             </ul>
                             <div class="tab-content">
@@ -27,48 +28,48 @@
 
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_NAME') ?></label>
-                                        <?= $this->Form->input(false, array(
+                                        <?= $this->Form->input(false, [
                                             'div' => false,
                                             'type' => 'text',
                                             'name' => 'name',
                                             'class' => 'form-control',
                                             'value' => $config['name']
-                                        )); ?>
+                                        ]); ?>
                                     </div>
 
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_EMAIL') ?></label>
-                                        <?= $this->Form->input(false, array(
+                                        <?= $this->Form->input(false, [
                                             'div' => false,
                                             'type' => 'text',
                                             'name' => 'email',
                                             'class' => 'form-control',
                                             'value' => $config['email']
-                                        )); ?>
+                                        ]); ?>
                                     </div>
 
                                     <?php if ($shopIsInstalled) { ?>
 
                                         <div class="form-group">
                                             <label><?= $Lang->get('CONFIG__KEY_MONEY_NAME_SINGULAR') ?></label>
-                                            <?= $this->Form->input(false, array(
+                                            <?= $this->Form->input(false, [
                                                 'div' => false,
                                                 'type' => 'text',
                                                 'name' => 'money_name_singular',
                                                 'class' => 'form-control',
                                                 'value' => $config['money_name_singular']
-                                            )); ?>
+                                            ]); ?>
                                         </div>
 
                                         <div class="form-group">
                                             <label><?= $Lang->get('CONFIG__KEY_MONEY_NAME_PLURAL') ?></label>
-                                            <?= $this->Form->input(false, array(
+                                            <?= $this->Form->input(false, [
                                                 'div' => false,
                                                 'type' => 'text',
                                                 'name' => 'money_name_plural',
                                                 'class' => 'form-control',
                                                 'value' => $config['money_name_plural']
-                                            )); ?>
+                                            ]); ?>
                                         </div>
 
                                     <?php } ?>
@@ -79,15 +80,15 @@
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_LANG') ?></label>
                                         <div class="form-group">
-                                            <?= $this->Form->input(false, array(
+                                            <?= $this->Form->input(false, [
                                                 'div' => false,
                                                 'data-live-search' => 'true',
                                                 'name' => 'lang',
                                                 'class' => 'selectpicker',
                                                 'options' => $config['languages_available'],
                                                 'selected' => $config['lang']
-                                            )); ?>
-                                            <a href="<?= $this->Html->url(array('action' => 'editLang')) ?>"
+                                            ]); ?>
+                                            <a href="<?= $this->Html->url(['action' => 'editLang']) ?>"
                                                class="btn btn-info"><?= $Lang->get('CONFIG__EDIT_LANG_FILE') ?></a>
                                         </div>
                                     </div>
@@ -97,20 +98,20 @@
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_PASSWORDS_HASH') ?></label>
                                         <div class="form-group">
-                                            <?= $this->Form->input(false, array(
+                                            <?= $this->Form->input(false, [
                                                 'div' => false,
                                                 'data-live-search' => 'true',
                                                 'name' => 'passwords_hash',
                                                 'class' => 'selectpicker',
-                                                'options' => array(
+                                                'options' => [
                                                     'sha256' => 'sha256',
                                                     'sha1' => 'sha1',
                                                     'sha384' => 'sha384',
                                                     'sha512' => 'sha512',
                                                     'blowfish' => 'bcrypt'
-                                                ),
+                                                ],
                                                 'selected' => $config['passwords_hash']
-                                            )); ?>
+                                            ]); ?>
                                         </div>
                                         <div class="form-group">
                                             <input type="hidden" name="passwords_salt"
@@ -153,13 +154,13 @@
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__CONDITION_TITLE') ?></label>
                                         <div class="form-group">
-                                            <?= $this->Form->input(false, array(
+                                            <?= $this->Form->input(false, [
                                                 'div' => false,
                                                 'type' => 'text',
                                                 'name' => 'condition',
                                                 'class' => 'form-control',
                                                 'value' => $config['condition']
-                                            )); ?>
+                                            ]); ?>
                                         </div>
                                         <small class="text-danger"><?= $Lang->get('CONFIG__CONDITION') ?></small>
                                     </div>
@@ -169,17 +170,17 @@
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_SESSION_TYPE') ?></label>
                                         <div class="form-group">
-                                            <?= $this->Form->input(false, array(
+                                            <?= $this->Form->input(false, [
                                                 'div' => false,
                                                 'data-live-search' => 'true',
                                                 'name' => 'session_type',
                                                 'class' => 'selectpicker',
-                                                'options' => array(
+                                                'options' => [
                                                     'php' => $Lang->get('CONFIG__KEY_SESSION_TYPE_PHP'),
                                                     'database' => $Lang->get('CONFIG__KEY_SESSION_TYPE_DB')
-                                                ),
+                                                ],
                                                 'selected' => (!$config['session_type']) ? 'php' : $config['session_type']
-                                            )); ?>
+                                            ]); ?>
                                         </div>
                                         <small class="text-info"><?= $Lang->get('CONFIG__KEY_SESSION_TYPE_INFO') ?></small>
                                     </div>
@@ -198,46 +199,46 @@
 
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_TWITTER') ?></label>
-                                        <?= $this->Form->input(false, array(
+                                        <?= $this->Form->input(false, [
                                             'div' => false,
                                             'type' => 'text',
                                             'name' => 'twitter',
                                             'class' => 'form-control',
                                             'value' => $config['twitter']
-                                        )); ?>
+                                        ]); ?>
                                     </div>
 
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_FACEBOOK') ?></label>
-                                        <?= $this->Form->input(false, array(
+                                        <?= $this->Form->input(false, [
                                             'div' => false,
                                             'type' => 'text',
                                             'name' => 'facebook',
                                             'class' => 'form-control',
                                             'value' => $config['facebook']
-                                        )); ?>
+                                        ]); ?>
                                     </div>
 
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_YOUTUBE') ?></label>
-                                        <?= $this->Form->input(false, array(
+                                        <?= $this->Form->input(false, [
                                             'div' => false,
                                             'type' => 'text',
                                             'name' => 'youtube',
                                             'class' => 'form-control',
                                             'value' => $config['youtube']
-                                        )); ?>
+                                        ]); ?>
                                     </div>
 
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_SKYPE') ?></label>
-                                        <?= $this->Form->input(false, array(
+                                        <?= $this->Form->input(false, [
                                             'div' => false,
                                             'type' => 'text',
                                             'name' => 'skype',
                                             'class' => 'form-control',
                                             'value' => $config['skype']
-                                        )); ?>
+                                        ]); ?>
                                     </div>
 
                                     <hr>
@@ -465,24 +466,24 @@
                                          style="display:<?= ($config['captcha_type'] == '2' || $config['captcha_type'] == '3') ? 'block' : 'none' ?>;">
                                         <div class="form-group">
                                             <label><?= $Lang->get('CONFIG__KEY_CAPTCHA_SITEKEY') ?></label>
-                                            <?= $this->Form->input(false, array(
+                                            <?= $this->Form->input(false, [
                                                 'div' => false,
                                                 'type' => 'text',
                                                 'name' => 'captcha_sitekey',
                                                 'class' => 'form-control',
                                                 'value' => $config['captcha_sitekey'],
-                                            )); ?>
+                                            ]); ?>
                                         </div>
 
                                         <div class="form-group">
                                             <label><?= $Lang->get('CONFIG__KEY_CAPTCHA_SECRET') ?></label>
-                                            <?= $this->Form->input(false, array(
+                                            <?= $this->Form->input(false, [
                                                 'div' => false,
                                                 'type' => 'text',
                                                 'name' => 'captcha_secret',
                                                 'class' => 'form-control',
                                                 'value' => $config['captcha_secret'],
-                                            )); ?>
+                                            ]); ?>
                                         </div>
                                     </div>
 
@@ -490,28 +491,28 @@
 
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_GOOGLE_ANALYTICS') ?></label>
-                                        <?= $this->Form->input(false, array(
+                                        <?= $this->Form->input(false, [
                                             'div' => false,
                                             'type' => 'text',
                                             'name' => 'google_analytics',
                                             'class' => 'form-control',
                                             'value' => $config['google_analytics'],
                                             'maxlength' => '15'
-                                        )); ?>
+                                        ]); ?>
                                     </div>
 
                                     <hr>
 
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_END_LAYOUT_COE') ?></label>
-                                        <?= $this->Form->textarea(false, array(
+                                        <?= $this->Form->textarea(false, [
                                             'div' => false,
                                             'rows' => '5',
                                             'type' => 'text',
                                             'name' => 'end_layout_code',
                                             'class' => 'form-control',
                                             'value' => $config['end_layout_code']
-                                        )); ?>
+                                        ]); ?>
                                     </div>
 
                                     <hr>
@@ -545,50 +546,50 @@
 
                                         <div class="form-group">
                                             <label><?= $Lang->get('CONFIG__KEY_SMTP_HOST') ?></label>
-                                            <?= $this->Form->input(false, array(
+                                            <?= $this->Form->input(false, [
                                                 'div' => false,
                                                 'type' => 'text',
                                                 'name' => 'smtpHost',
                                                 'class' => 'form-control',
                                                 'value' => $config['smtpHost'],
                                                 'autocomplete' => 'off'
-                                            )); ?>
+                                            ]); ?>
                                         </div>
 
                                         <div class="form-group">
                                             <label><?= $Lang->get('CONFIG__KEY_SMTP_USERNAME') ?></label>
-                                            <?= $this->Form->input(false, array(
+                                            <?= $this->Form->input(false, [
                                                 'div' => false,
                                                 'type' => 'text',
                                                 'name' => 'smtpUsername',
                                                 'class' => 'form-control',
                                                 'value' => $config['smtpUsername'],
                                                 'autocomplete' => 'off'
-                                            )); ?>
+                                            ]); ?>
                                         </div>
 
                                         <div class="form-group">
                                             <label><?= $Lang->get('CONFIG__KEY_SMTP_PORT') ?></label>
-                                            <?= $this->Form->input(false, array(
+                                            <?= $this->Form->input(false, [
                                                 'div' => false,
                                                 'type' => 'text',
                                                 'name' => 'smtpPort',
                                                 'class' => 'form-control',
                                                 'value' => $config['smtpPort'],
                                                 'autocomplete' => 'off'
-                                            )); ?>
+                                            ]); ?>
                                         </div>
 
                                         <div class="form-group">
                                             <label><?= $Lang->get('CONFIG__KEY_SMTP_PASSWORD') ?></label>
-                                            <?= $this->Form->input(false, array(
+                                            <?= $this->Form->input(false, [
                                                 'div' => false,
                                                 'type' => 'password',
                                                 'name' => 'smtpPassword',
                                                 'class' => 'form-control',
                                                 'value' => $config['smtpPassword'],
                                                 'autocomplete' => 'off'
-                                            )); ?>
+                                            ]); ?>
                                         </div>
 
                                     </div>
@@ -602,7 +603,7 @@
                         <input type="hidden" name="data[_Token][key]" value="<?= $csrfToken ?>">
 
                         <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
-                        <a href="<?= $this->Html->url(array('controller' => '', 'action' => '', 'admin' => true)) ?>"
+                        <a href="<?= $this->Html->url(['controller' => '', 'action' => '', 'admin' => true]) ?>"
                            type="button" class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
                     </form>
 

@@ -3,7 +3,7 @@
 class SeoController extends AppController
 {
 
-    public $components = array('Session');
+    public $components = ['Session'];
 
     public function admin_index()
     {
@@ -33,9 +33,9 @@ class SeoController extends AppController
             if ($already_uploaded) {
                 $this->request->data['favicon_url'] = Router::url('/') . 'img' . DS . 'uploads' . DS . $this->request->data['img-uploaded'];
             } else {
-                $isValidImg = $this->Util->isValidImage($this->request, array('png', 'jpg', 'jpeg'));
+                $isValidImg = $this->Util->isValidImage($this->request, ['png', 'jpg', 'jpeg']);
                 if (!$isValidImg['status']) {
-                    $this->response->body(json_encode(array('statut' => false, 'msg' => $isValidImg['msg'])));
+                    $this->response->body(json_encode(['statut' => false, 'msg' => $isValidImg['msg']]));
                     return;
                 } else {
                     $infos = $isValidImg['infos'];
@@ -46,7 +46,7 @@ class SeoController extends AppController
                 $url_img = WWW_ROOT . 'img' . DS . 'uploads' . DS . 'favicons' . DS . $time . '.' . $infos['extension'];
 
                 if (!$this->Util->uploadImage($this->request, $url_img)) {
-                    $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD'))));
+                    $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD')]));
                     return;
                 }
                 $this->request->data['favicon_url'] = Router::url('/') . 'img' . DS . 'uploads' . DS . 'favicons' . DS . $time . '.' . $infos['extension'];
@@ -60,7 +60,7 @@ class SeoController extends AppController
         $this->Seo->set($this->request->data);
         $this->Seo->save();
 
-        $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('SEO__EDIT_SUCCESS'))));
+        $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('SEO__EDIT_SUCCESS')]));
 
     }
 
@@ -79,9 +79,9 @@ class SeoController extends AppController
                 if ($already_uploaded) {
                     $this->request->data['favicon_url'] = Router::url('/') . 'img' . DS . 'uploads' . DS . $this->request->data['img-uploaded'];
                 } else {
-                    $isValidImg = $this->Util->isValidImage($this->request, array('png', 'jpg', 'jpeg'));
+                    $isValidImg = $this->Util->isValidImage($this->request, ['png', 'jpg', 'jpeg']);
                     if (!$isValidImg['status']) {
-                        $this->response->body(json_encode(array('statut' => false, 'msg' => $isValidImg['msg'])));
+                        $this->response->body(json_encode(['statut' => false, 'msg' => $isValidImg['msg']]));
                         return;
                     } else {
                         $infos = $isValidImg['infos'];
@@ -92,7 +92,7 @@ class SeoController extends AppController
                     $url_img = WWW_ROOT . 'img' . DS . 'uploads' . DS . 'favicons' . DS . $time . '.' . $infos['extension'];
 
                     if (!$this->Util->uploadImage($this->request, $url_img)) {
-                        $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD'))));
+                        $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD')]));
                         return;
                     }
                     $this->request->data['favicon_url'] = Router::url('/') . 'img' . DS . 'uploads' . DS . 'favicons' . DS . $time . '.' . $infos['extension'];
@@ -100,12 +100,12 @@ class SeoController extends AppController
             }
 
             if (empty($this->request->data['page']) || (empty($this->request->data['title']) && empty($this->request->data['description']) && empty($this->request->data['favicon_url']) && empty($this->request->data['img-url'])))
-                return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
+                return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]));
             $this->Seo->create();
             $this->Seo->set($this->request->data);
             $this->Seo->save();
 
-            $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('SEO__PAGE_ADD_SUCCESS'))));
+            $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('SEO__PAGE_ADD_SUCCESS')]));
 
         }
 
@@ -131,9 +131,9 @@ class SeoController extends AppController
                 if ($already_uploaded) {
                     $this->request->data['favicon_url'] = Router::url('/') . 'img' . DS . 'uploads' . DS . $this->request->data['img-uploaded'];
                 } else {
-                    $isValidImg = $this->Util->isValidImage($this->request, array('png', 'jpg', 'jpeg'));
+                    $isValidImg = $this->Util->isValidImage($this->request, ['png', 'jpg', 'jpeg']);
                     if (!$isValidImg['status']) {
-                        $this->response->body(json_encode(array('statut' => false, 'msg' => $isValidImg['msg'])));
+                        $this->response->body(json_encode(['statut' => false, 'msg' => $isValidImg['msg']]));
                         return;
                     } else {
                         $infos = $isValidImg['infos'];
@@ -144,7 +144,7 @@ class SeoController extends AppController
                     $url_img = WWW_ROOT . 'img' . DS . 'uploads' . DS . 'favicons' . DS . $time . '.' . $infos['extension'];
 
                     if (!$this->Util->uploadImage($this->request, $url_img)) {
-                        $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD'))));
+                        $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('FORM__ERROR_WHEN_UPLOAD')]));
                         return;
                     }
                     $this->request->data['favicon_url'] = Router::url('/') . 'img' . DS . 'uploads' . DS . 'favicons' . DS . $time . '.' . $infos['extension'];
@@ -152,14 +152,14 @@ class SeoController extends AppController
             }
 
             if (empty($this->request->data['page']) || (empty($this->request->data['title']) && empty($this->request->data['description']) && empty($this->request->data['favicon_url']) && empty($this->request->data['img-url'])))
-                return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
+                return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]));
 
 
             $this->Seo->read(null, $page['id']);
             $this->Seo->set($this->request->data);
             $this->Seo->save();
 
-            $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('SEO__EDIT_SUCCESS'))));
+            $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('SEO__EDIT_SUCCESS')]));
         }
 
     }
@@ -173,7 +173,7 @@ class SeoController extends AppController
         $this->loadModel('Seo');
         $this->Seo->delete($id);
         $this->Session->setFlash($this->Lang->get('SEO__PAGE_DELETE_SUCCESS'), 'default.success');
-        $this->redirect(array('controller' => 'seo', 'action' => 'index', 'admin' => true));
+        $this->redirect(['controller' => 'seo', 'action' => 'index', 'admin' => true]);
     }
 
 }

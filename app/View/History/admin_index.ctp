@@ -24,7 +24,7 @@
     </div>
 </section>
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('table').DataTable({
             "paging": true,
             "lengthChange": false,
@@ -34,7 +34,7 @@
             'searching': true,
             "bProcessing": true,
             "bServerSide": true,
-            "sAjaxSource": "<?= $this->Html->url(array('action' => 'getAll')) ?>",
+            "sAjaxSource": "<?= $this->Html->url(['action' => 'getAll']) ?>",
             "aoColumns": [
                 {mData: "User.pseudo"},
                 {mData: "History.action"},

@@ -1,2 +1,5 @@
 <?php
-class Page extends AppModel {}
+
+class Page extends AppModel
+{
+}

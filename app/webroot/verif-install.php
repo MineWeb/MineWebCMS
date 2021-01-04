@@ -15,7 +15,7 @@ if (!file_exists(ROOT . DS . 'config' . DS . 'install.txt')) {
                 $sql_pass = $_POST['password'];
 
                 try {
-                    $pdo = new PDO("mysql:host=$sql_host;dbname=$sql_name;", $sql_user, $sql_pass, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+                    $pdo = new PDO("mysql:host=$sql_host;dbname=$sql_name;", $sql_user, $sql_pass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
                     $sql_error = false;
                 } catch (PDOException $mysqlException) {
                     $sql_error = true;
@@ -38,7 +38,7 @@ class DATABASE_CONFIG {
 }
 ";
                     if (!$dbFile || !fwrite($dbFile, $databaseStructure)) {
-                        echo json_encode(array('status' => false, 'msg' => 'Le fichier /app/Config/database.php ne peut pas être écris !'));
+                        echo json_encode(['status' => false, 'msg' => 'Le fichier /app/Config/database.php ne peut pas être écris !']);
                         exit;
                     }
 
@@ -53,16 +53,16 @@ class DATABASE_CONFIG {
                         fclose($fp);
                     }
 
-                    echo json_encode(array('status' => true));
+                    echo json_encode(['status' => true]);
                     exit;
 
                 } else {
-                    echo json_encode(array('status' => false, 'msg' => 'Erreur lors de la connexion ! (<em>' . $mysqlException->getMessage() . '</em>)'));
+                    echo json_encode(['status' => false, 'msg' => 'Erreur lors de la connexion ! (<em>' . $mysqlException->getMessage() . '</em>)']);
                     exit;
                 }
 
             } else {
-                echo json_encode(array('status' => false, 'msg' => 'Veuillez remplir tout les champs !'));
+                echo json_encode(['status' => false, 'msg' => 'Veuillez remplir tout les champs !']);
                 exit;
             }
 
@@ -83,7 +83,7 @@ function affichImg($bool)
             'kg+lEj4mwBe5bC5h1OUqcwpdC60dxegRmR06TyjCF9G9z+qM2uCJmuMJmaNZaUrCSIi6X+jJIBBYtW5Cge7cd7sgoHDfDaAvKQGAlRZ' .
             'Yc6ltJlMxX03UzlaRlBdQrzSCwksLRbOpHUSb7pcsnxCCwngvM2Rm/ugUCi84fycr4l2t8Bb6iqTxSCgNIAAAAAElFTkSuQmCC' .
             '" alt="Oui"/>';
-    } elseif (!$bool) {
+    } else if (!$bool) {
         return '<img src="data:image/x-icon;base64,' .
             'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2V' .
             'SZWFkeXHJZTwAAAIhSURBVDjLlZPrThNRFIWJicmJz6BWiYbIkYDEG0JbBiitDQgm0PuFXqSAtKXtpE2hNuoPTXwSnwtExd6w0pl2Ot' .
@@ -126,15 +126,15 @@ function phpinfo2array()
     ob_start();
     phpinfo(-1);
 
-    $phpinfo = array('phpinfo' => array());
+    $phpinfo = ['phpinfo' => []];
 
     // Strip everything after the <h1>Configuration</h1> tag (other h1's)
     if (!preg_match('#(.*<h1[^>]*>\s*Configuration.*)<h1#s', ob_get_clean(), $matches)) {
-        return array();
+        return [];
     }
 
     $input = $matches[1];
-    $matches = array();
+    $matches = [];
 
     if (preg_match_all(
         '#(?:<h2.*?>(?:<a.*?>)?(.*?)(?:<\/a>)?<\/h2>)|' .
@@ -146,10 +146,10 @@ function phpinfo2array()
         foreach ($matches as $match) {
             $fn = strpos($match[0], '<th') === false ? $plainText : $titlePlainText;
             if (strlen($match[1])) {
-                $phpinfo[$match[1]] = array();
-            } elseif (isset($match[3])) {
+                $phpinfo[$match[1]] = [];
+            } else if (isset($match[3])) {
                 $keys1 = array_keys($phpinfo);
-                $phpinfo[end($keys1)][$fn($match[2])] = isset($match[4]) ? array($fn($match[3]), $fn($match[4])) : $fn($match[3]);
+                $phpinfo[end($keys1)][$fn($match[2])] = isset($match[4]) ? [$fn($match[3]), $fn($match[4])] : $fn($match[3]);
             } else {
                 $keys1 = array_keys($phpinfo);
                 $phpinfo[end($keys1)][] = $fn($match[2]);
@@ -291,7 +291,7 @@ $compatible['openSSL'] = function_exists('openssl_pkey_new');
 //allow_url_fopen
 if (function_exists('ini_get') && ini_get('allow_url_fopen') == "1") {
     $compatible['allowGetURL'] = true;
-} elseif (file_exists(ROOT . DS . 'config' . DS . 'installed.txt') || @file_get_contents('https://google.fr')) {
+} else if (file_exists(ROOT . DS . 'config' . DS . 'installed.txt') || @file_get_contents('https://google.fr')) {
     $compatible['allowGetURL'] = true;
 }
 

@@ -1,7 +1,7 @@
 <?php
-$colors = array('#1abc9c', '#2ecc71', '#3498db', '#e67e22', '#e74c3c');
-$hosts = array();
-$ref_pie = array();
+$colors = ['#1abc9c', '#2ecc71', '#3498db', '#e67e22', '#e74c3c'];
+$hosts = [];
+$ref_pie = [];
 $i = 0;
 foreach ($referers as $ref => $visitcount) {
     $host = parse_url($ref, PHP_URL_HOST);
@@ -26,7 +26,7 @@ foreach ($referers as $ref => $visitcount) {
     }
 }
 
-$pages_pie = array();
+$pages_pie = [];
 $i = 0;
 foreach ($pages as $page => $visitcount) {
     $page = addslashes(urldecode($page));
@@ -47,7 +47,7 @@ foreach ($pages as $page => $visitcount) {
     <div class="row">
 
         <div class="col-md-12">
-            <a href="<?= $this->Html->url(array('action' => 'reset')) ?>"
+            <a href="<?= $this->Html->url(['action' => 'reset']) ?>"
                class="btn btn-info btn-block"><?= $Lang->get('STATS__RESET_LABEL') ?></a>
         </div>
         <br><br>
@@ -128,7 +128,7 @@ foreach ($pages as $page => $visitcount) {
 </section>
 <script type="text/javascript">
     $(function () {
-        $.getJSON('<?= $this->Html->url(array('action' => 'get_visits')) ?>', function (data) {
+        $.getJSON('<?= $this->Html->url(['action' => 'get_visits']) ?>', function (data) {
 
             $('#visits').highcharts({
                 chart: {

@@ -1,3 +1,5 @@
 <?php
-class Slider extends AppModel {
+
+class Slider extends AppModel
+{
 }
