@@ -1,4 +1,6 @@
 <?php
-class Authentification extends AppModel {
-	public $useTable = 'users__twofactorauth';
+
+class Authentification extends AppModel
+{
+    public $useTable = 'users__twofactorauth';
 }

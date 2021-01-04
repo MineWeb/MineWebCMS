@@ -22,7 +22,7 @@
  * Use the DS to separate the directories in other defines
  */
 if (!defined('DS')) {
-	define('DS', DIRECTORY_SEPARATOR);
+    define('DS', DIRECTORY_SEPARATOR);
 }
 
 /**
@@ -36,7 +36,7 @@ if (!defined('DS')) {
  *
  */
 if (!defined('ROOT')) {
-	define('ROOT', dirname(dirname(dirname(__FILE__))));
+    define('ROOT', dirname(dirname(dirname(__FILE__))));
 }
 
 /**
@@ -44,7 +44,7 @@ if (!defined('ROOT')) {
  *
  */
 if (!defined('APP_DIR')) {
-	define('APP_DIR', basename(dirname(dirname(__FILE__))));
+    define('APP_DIR', basename(dirname(dirname(__FILE__))));
 }
 
 /**
@@ -69,47 +69,47 @@ if (!defined('APP_DIR')) {
  *
  */
 if (!defined('WEBROOT_DIR')) {
-	define('WEBROOT_DIR', basename(dirname(__FILE__)));
+    define('WEBROOT_DIR', basename(dirname(__FILE__)));
 }
 if (!defined('WWW_ROOT')) {
-	define('WWW_ROOT', dirname(__FILE__) . DS);
+    define('WWW_ROOT', dirname(__FILE__) . DS);
 }
 
 require 'verif-install.php';
-if((!file_exists(ROOT.DS.'config'.DS.'install.txt') && $needDisplayDatabase) || $needAffichCompatibility) {
-	require ROOT.DS.'app'.DS.'View'.DS.'Install'.DS.'first.ctp';
-	die();
+if ((!file_exists(ROOT . DS . 'config' . DS . 'install.txt') && $needDisplayDatabase) || $needAffichCompatibility) {
+    require ROOT . DS . 'app' . DS . 'View' . DS . 'Install' . DS . 'first.ctp';
+    die();
 }
 
 
 // for built-in server
 if (php_sapi_name() === 'cli-server') {
-	if ($_SERVER['REQUEST_URI'] !== '/' && file_exists(WWW_ROOT . $_SERVER['PHP_SELF'])) {
-		return false;
-	}
-	$_SERVER['PHP_SELF'] = '/' . basename(__FILE__);
+    if ($_SERVER['REQUEST_URI'] !== '/' && file_exists(WWW_ROOT . $_SERVER['PHP_SELF'])) {
+        return false;
+    }
+    $_SERVER['PHP_SELF'] = '/' . basename(__FILE__);
 }
 
 if (!defined('CAKE_CORE_INCLUDE_PATH')) {
-	if (function_exists('ini_set')) {
-		ini_set('include_path', ROOT . DS . 'lib' . PATH_SEPARATOR . ini_get('include_path'));
-	}
-	if (!include 'Cake' . DS . 'bootstrap.php') {
-		$failed = true;
-	}
+    if (function_exists('ini_set')) {
+        ini_set('include_path', ROOT . DS . 'lib' . PATH_SEPARATOR . ini_get('include_path'));
+    }
+    if (!include 'Cake' . DS . 'bootstrap.php') {
+        $failed = true;
+    }
 } else {
-	if (!include CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'bootstrap.php') {
-		$failed = true;
-	}
+    if (!include CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'bootstrap.php') {
+        $failed = true;
+    }
 }
 if (!empty($failed)) {
-	trigger_error("CakePHP core could not be found. Check the value of CAKE_CORE_INCLUDE_PATH in APP/webroot/index.php. It should point to the directory containing your " . DS . "cake core directory and your " . DS . "vendors root directory.", E_USER_ERROR);
+    trigger_error("CakePHP core could not be found. Check the value of CAKE_CORE_INCLUDE_PATH in APP/webroot/index.php. It should point to the directory containing your " . DS . "cake core directory and your " . DS . "vendors root directory.", E_USER_ERROR);
 }
 
 App::uses('Dispatcher', 'Routing');
 
 $Dispatcher = new Dispatcher();
 $Dispatcher->dispatch(
-	new CakeRequest(),
-	new CakeResponse()
+    new CakeRequest(),
+    new CakeResponse()
 );

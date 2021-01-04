@@ -1,4 +1,5 @@
 <?php
+
 namespace PharIo\Version;
 
 class PreReleaseSuffix
@@ -14,12 +15,12 @@ class PreReleaseSuffix
     private $number;
 
     /**
-     * @param string   $value
+     * @param string $value
      * @param int|null $number
      */
     public function __construct($value, $number = null)
     {
-        $this->value  = $value;
+        $this->value = $value;
         $this->number = $number;
     }
 

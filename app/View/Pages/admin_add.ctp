@@ -6,9 +6,9 @@
                     <h3 class="card-title"><?= $Lang->get('PAGE__ADD') ?></h3>
                 </div>
                 <div class="card-body">
-                    <form action="<?= $this->Html->url(array('controller' => 'pages', 'action' => 'add_ajax')) ?>"
+                    <form action="<?= $this->Html->url(['controller' => 'pages', 'action' => 'add_ajax']) ?>"
                           method="post" data-ajax="true"
-                          data-redirect-url="<?= $this->Html->url(array('controller' => 'pages', 'action' => 'index', 'admin' => 'true')) ?>">
+                          data-redirect-url="<?= $this->Html->url(['controller' => 'pages', 'action' => 'index', 'admin' => 'true']) ?>">
 
                         <div class="ajax-msg"></div>
 
@@ -27,7 +27,8 @@
                                 <input name="slug" id="slug" class="form-control"
                                        placeholder="<?= $Lang->get('GLOBAL__SLUG') ?>" type="text">
                                 <div class="input-group-append">
-                                    <a href="#" id="generate_slug" class="btn btn-info"><?= $Lang->get('GLOBAL__GENERATE') ?></a>
+                                    <a href="#" id="generate_slug"
+                                       class="btn btn-info"><?= $Lang->get('GLOBAL__GENERATE') ?></a>
                                 </div>
                             </div>
                         </div>
@@ -48,7 +49,7 @@
                         </div>
 
                         <div class="float-right">
-                            <a href="<?= $this->Html->url(array('controller' => 'pages', 'action' => 'admin_index', 'admin' => true)) ?>"
+                            <a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'admin_index', 'admin' => true]) ?>"
                                class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
                             <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
                         </div>

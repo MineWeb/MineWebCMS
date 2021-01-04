@@ -3,9 +3,9 @@
  * Requests collector.
  *
  *  This file collects requests if:
- *	- no mod_rewrite is available or .htaccess files are not supported
+ *    - no mod_rewrite is available or .htaccess files are not supported
  *  - requires App.baseUrl to be uncommented in app/Config/core.php
- *	- app/webroot is not set as a document root.
+ *    - app/webroot is not set as a document root.
  *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -35,7 +35,7 @@ define('WWW_ROOT', ROOT . DS . APP_DIR . DS . WEBROOT_DIR . DS);
  * Full path to the directory containing "cake". Do not add trailing directory separator
  */
 if (!defined('CAKE_CORE_INCLUDE_PATH')) {
-	define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'lib');
+    define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'lib');
 }
 
 $InstallRewrite = false;

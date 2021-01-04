@@ -30,8 +30,8 @@
                         </td>
                         <td>
                             <a class="btn btn-info"
-                               href="<?= $this->Html->url(array('action' => 'edit', $key)) ?>"><?= $Lang->get('GLOBAL__EDIT') ?></a>
-                            <a onClick="confirmDel('<?= $this->Html->url(array('action' => 'reset', $key)) ?>')"
+                               href="<?= $this->Html->url(['action' => 'edit', $key]) ?>"><?= $Lang->get('GLOBAL__EDIT') ?></a>
+                            <a onClick="confirmDel('<?= $this->Html->url(['action' => 'reset', $key]) ?>')"
                                class="btn btn-danger"><?= $Lang->get('MOTD__RESET') ?></a>
                         </td>
                     </tr>

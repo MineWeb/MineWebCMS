@@ -10,7 +10,7 @@ class NotificationsController extends AppController
         if ($this->params['action'] != "admin_index") {
             $this->response->type('json');
             $this->autoRender = false;
-            $this->response->body(json_encode(array()));
+            $this->response->body(json_encode([]));
         }
     }
 
@@ -26,7 +26,7 @@ class NotificationsController extends AppController
     {
         if ($this->isConnected) {
             $notifications = $this->Notification->clearFromUser($id, $this->User->getKey('id'));
-            $this->response->body(json_encode(array('status' => $notifications)));
+            $this->response->body(json_encode(['status' => $notifications]));
         }
     }
 
@@ -34,7 +34,7 @@ class NotificationsController extends AppController
     {
         if ($this->isConnected) {
             $notifications = $this->Notification->clearAllFromUser($this->User->getKey('id'));
-            $this->response->body(json_encode(array('status' => $notifications)));
+            $this->response->body(json_encode(['status' => $notifications]));
         }
     }
 
@@ -42,7 +42,7 @@ class NotificationsController extends AppController
     {
         if ($this->isConnected) {
             $notifications = $this->Notification->markAsSeenFromUser($id, $this->User->getKey('id'));
-            $this->response->body(json_encode(array('status' => $notifications)));
+            $this->response->body(json_encode(['status' => $notifications]));
         }
     }
 
@@ -50,7 +50,7 @@ class NotificationsController extends AppController
     {
         if ($this->isConnected) {
             $notifications = $this->Notification->markAllAsSeenFromUser($this->User->getKey('id'));
-            $this->response->body(json_encode(array('status' => $notifications)));
+            $this->response->body(json_encode(['status' => $notifications]));
         }
     }
 
@@ -69,15 +69,15 @@ class NotificationsController extends AppController
             $this->DataTable = $this->Components->load('DataTable');
             $this->modelClass = 'Notification';
             $this->DataTable->initialize($this);
-            $this->paginate = array(
-                'fields' => array('Notification.id', 'User.pseudo', 'Notification.group', 'Notification.user_id', 'Notification.from', 'Notification.content', 'Notification.seen', 'Notification.type', 'Notification.created'),
+            $this->paginate = [
+                'fields' => ['Notification.id', 'User.pseudo', 'Notification.group', 'Notification.user_id', 'Notification.from', 'Notification.content', 'Notification.seen', 'Notification.type', 'Notification.created'],
                 'recursive' => 1
-            );
+            ];
             $this->DataTable->mDataProp = true;
 
             $response = $this->DataTable->getResponse();
 
-            $data = array();
+            $data = [];
             foreach ($response['aaData'] as $notification) {
 
                 if ($notification['Notification']['from'] == null) {
@@ -90,9 +90,9 @@ class NotificationsController extends AppController
                 if ($notification['Notification']['seen']) {
                     $actions .= '<btn class="btn btn-default disabled active" disabled>' . $this->Lang->get('NOTIFICATION__SEEN') . '</btn>';
                 } else {
-                    $actions .= '<a class="btn btn-default mark-as-seen" data-seen="' . $this->Lang->get('NOTIFICATION__SEEN') . '" href="' . Router::url(array('action' => 'markAsSeenFromUser', $notification['Notification']['id'], $notification['Notification']['user_id'])) . '">' . $this->Lang->get('NOTIFICATION__MARK_AS_SEEN') . '</a>';
+                    $actions .= '<a class="btn btn-default mark-as-seen" data-seen="' . $this->Lang->get('NOTIFICATION__SEEN') . '" href="' . Router::url(['action' => 'markAsSeenFromUser', $notification['Notification']['id'], $notification['Notification']['user_id']]) . '">' . $this->Lang->get('NOTIFICATION__MARK_AS_SEEN') . '</a>';
                 }
-                $actions .= '<a class="btn btn-danger delete-notification" href="' . Router::url(array('action' => 'clearFromUser', $notification['Notification']['id'], $notification['Notification']['user_id'])) . '">' . $this->Lang->get('GLOBAL__DELETE') . '</a>';
+                $actions .= '<a class="btn btn-danger delete-notification" href="' . Router::url(['action' => 'clearFromUser', $notification['Notification']['id'], $notification['Notification']['user_id']]) . '">' . $this->Lang->get('GLOBAL__DELETE') . '</a>';
                 $actions .= '</div>';
 
                 if ($notification['Notification']['type'] == "admin") {
@@ -101,17 +101,17 @@ class NotificationsController extends AppController
                     $type = '<span class="label label-success">' . $this->Lang->get('NOTIFICATION__TYPE_USER') . '</span>';
                 }
 
-                $data[] = array(
-                    'Notification' => array(
+                $data[] = [
+                    'Notification' => [
                         'group' => (!empty($notification['Notification']['group']) ? '#' . $notification['Notification']['group'] : '<small class="text-muted">' . $this->Lang->get('NOTIFICATION__NO_FROM') . '</small>'),
                         'from' => $from,
                         'content' => $notification['Notification']['content'],
                         'type' => $type,
                         'created' => $notification['Notification']['created'],
                         'actions' => $actions
-                    ),
+                    ],
                     'User' => $notification['User']
-                );
+                ];
             }
             $response['aaData'] = $data;
 
@@ -139,17 +139,17 @@ class NotificationsController extends AppController
                         $user_id = $this->User->getFromUser('id', $this->request->data['user_pseudo']);
 
                         if (empty($user_id)) {
-                            $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('USER__EDIT_ERROR_UNKNOWN'))));
+                            $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('USER__EDIT_ERROR_UNKNOWN')]));
                             return;
                         }
 
                         $this->Notification->setToUser($this->request->data['content'], $user_id, $from);
                     }
 
-                    $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('NOTIFICATION__SUCCESS_SET'))));
+                    $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('NOTIFICATION__SUCCESS_SET')]));
 
                 } else {
-                    $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
+                    $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]));
                 }
 
             } else {
@@ -165,7 +165,7 @@ class NotificationsController extends AppController
     {
         if ($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
             $notifications = $this->Notification->clearFromUser($id, $user_id);
-            $this->response->body(json_encode(array('status' => $notifications)));
+            $this->response->body(json_encode(['status' => $notifications]));
         } else {
             throw new ForbiddenException();
         }
@@ -175,7 +175,7 @@ class NotificationsController extends AppController
     {
         if ($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
             $notifications = $this->Notification->clearAllFromUser($user_id);
-            $this->response->body(json_encode(array('status' => $notifications)));
+            $this->response->body(json_encode(['status' => $notifications]));
         } else {
             throw new ForbiddenException();
         }
@@ -185,7 +185,7 @@ class NotificationsController extends AppController
     {
         if ($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
             $notifications = $this->Notification->clearFromAllUsers($id);
-            $this->response->body(json_encode(array('status' => $notifications)));
+            $this->response->body(json_encode(['status' => $notifications]));
         } else {
             throw new ForbiddenException();
         }
@@ -195,7 +195,7 @@ class NotificationsController extends AppController
     {
         if ($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
             $notifications = $this->Notification->clearAllFromAllUsers();
-            $this->response->body(json_encode(array('status' => $notifications)));
+            $this->response->body(json_encode(['status' => $notifications]));
         } else {
             throw new ForbiddenException();
         }
@@ -205,7 +205,7 @@ class NotificationsController extends AppController
     {
         if ($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
             $notifications = $this->Notification->markAsSeenFromUser($id, $user_id);
-            $this->response->body(json_encode(array('status' => $notifications)));
+            $this->response->body(json_encode(['status' => $notifications]));
         } else {
             throw new ForbiddenException();
         }
@@ -215,7 +215,7 @@ class NotificationsController extends AppController
     {
         if ($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
             $notifications = $this->Notification->markAllAsSeenFromUser($user_id);
-            $this->response->body(json_encode(array('status' => $notifications)));
+            $this->response->body(json_encode(['status' => $notifications]));
         } else {
             throw new ForbiddenException();
         }
@@ -225,7 +225,7 @@ class NotificationsController extends AppController
     {
         if ($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
             $notifications = $this->Notification->markAsSeenFromAllUsers($id);
-            $this->response->body(json_encode(array('status' => $notifications)));
+            $this->response->body(json_encode(['status' => $notifications]));
         } else {
             throw new ForbiddenException();
         }
@@ -235,7 +235,7 @@ class NotificationsController extends AppController
     {
         if ($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
             $notifications = $this->Notification->markAllAsSeenFromAllUsers();
-            $this->response->body(json_encode(array('status' => $notifications)));
+            $this->response->body(json_encode(['status' => $notifications]));
         } else {
             throw new ForbiddenException();
         }
@@ -246,9 +246,9 @@ class NotificationsController extends AppController
         if (!$this->isConnected || !$this->Permissions->can('MANAGE_NOTIFICATIONS'))
             throw new ForbiddenException();
         if (!isset($this->request->data['group']) || empty($this->request->data['group']))
-            return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
+            return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]));
         $this->Notification->clearAllFromGroup($this->request->data['group']);
-        $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('NOTIFICATION__SUCCESS_REMOVE'))));
+        $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('NOTIFICATION__SUCCESS_REMOVE')]));
     }
 
 

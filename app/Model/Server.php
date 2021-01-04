@@ -8,11 +8,11 @@ class Server extends AppModel
         $types = [0];
         if ($rcon)
             $types = [0, 2];
-        $search_servers = $this->find('all', array('conditions' => array('type' => $types)));
+        $search_servers = $this->find('all', ['conditions' => ['type' => $types]]);
         if (empty($search_servers))
-            return array();
+            return [];
 
-        $servers = array();
+        $servers = [];
         foreach ($search_servers as $server)
             $servers[$server['Server']['id']] = $server['Server']['name'];
         return $servers;

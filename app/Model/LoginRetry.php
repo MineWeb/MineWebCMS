@@ -1,3 +1,5 @@
 <?php
-class LoginRetry extends AppModel {
+
+class LoginRetry extends AppModel
+{
 }

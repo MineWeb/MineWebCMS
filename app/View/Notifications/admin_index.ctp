@@ -7,7 +7,7 @@
                 </div>
                 <div class="card-body">
 
-                    <form action="<?= $this->Html->url(array('action' => 'setTo')) ?>" method="post" data-ajax="true"
+                    <form action="<?= $this->Html->url(['action' => 'setTo']) ?>" method="post" data-ajax="true"
                           data-callback-function="afterSendNotification">
 
                         <div class="form-group">
@@ -60,16 +60,16 @@
                 </div>
                 <div class="card-body">
 
-                    <a href="<?= $this->Html->url(array('action' => 'clearAllFromAllUsers')) ?>"
+                    <a href="<?= $this->Html->url(['action' => 'clearAllFromAllUsers']) ?>"
                        class="btn btn-danger btn-block"
                        id="delete-all"><?= $Lang->get('NOTIFICATION__DELETE_ALL_FROM_ALL_USERS') ?></a>
-                    <a href="<?= $this->Html->url(array('action' => 'markAllAsSeenFromAllUsers')) ?>"
+                    <a href="<?= $this->Html->url(['action' => 'markAllAsSeenFromAllUsers']) ?>"
                        class="btn btn-default btn-block"
                        id="mark-all-as-seen"><?= $Lang->get('NOTIFICATION__MARK_ALL_AS_SEEN_FROM_ALL_USERS') ?></a>
 
                     <hr>
 
-                    <form method="post" action="<?= $this->Html->url(array('action' => 'clearAllFromGroup')) ?>"
+                    <form method="post" action="<?= $this->Html->url(['action' => 'clearAllFromGroup']) ?>"
                           data-ajax="true" data-callback-function="afterSendNotification">
                         <div class="input-group">
                             <div class="input-group mb-3">
@@ -95,7 +95,8 @@
                     <h3 class="card-title"><?= $Lang->get('NOTIFICATION__NOTIFICATIONS_LIST') ?></h3>
                 </div>
                 <div class="card-body">
-                    <table class="table table-responsive-sm table-bordered" style="table-layout: fixed;word-wrap: break-word;">
+                    <table class="table table-responsive-sm table-bordered"
+                           style="table-layout: fixed;word-wrap: break-word;">
                         <thead>
                         <tr>
                             <th><?= $Lang->get('USER__USERNAME') ?></th>
@@ -126,7 +127,7 @@
             "autoWidth": false,
             "bProcessing": true,
             "bServerSide": true,
-            "sAjaxSource": "<?= $this->Html->url(array('action' => 'getAll')) ?>",
+            "sAjaxSource": "<?= $this->Html->url(['action' => 'getAll']) ?>",
             "aoColumns": [
                 {mData: "User.pseudo"},
                 {mData: "Notification.group"},
