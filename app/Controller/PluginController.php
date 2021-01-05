@@ -17,14 +17,12 @@ class PluginController extends AppController
             throw new ForbiddenException();
         if (!$id)
             throw new NotFoundException();
-        $slug = $this->Plugin->find('first', array('conditions' => array('id' => $id)));
+        $slug = $this->Plugin->find('first', ['conditions' => ['id' => $id]]);
 
-        if (isset($slug['Plugin']['name']) && !$this->EyPlugin->delete($slug['Plugin']['name']))
-        {
+        if (isset($slug['Plugin']['name']) && !$this->EyPlugin->delete($slug['Plugin']['name'])) {
             $this->History->set('DELETE_PLUGIN', 'plugin');
             $this->Session->setFlash($this->Lang->get('PLUGIN__DELETE_SUCCESS'), 'default.success');
-        }
-        else
+        } else
             $this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
 
         Configure::write('Cache.disable', true);
@@ -34,7 +32,7 @@ class PluginController extends AppController
             $folder->delete();
         }
 
-        $this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
+        $this->redirect(['controller' => 'plugin', 'action' => 'index', 'admin' => true]);
     }
 
     function admin_enable($id = false)
@@ -44,13 +42,12 @@ class PluginController extends AppController
         if (!$id)
             throw new NotFoundException();
 
-        if ($this->EyPlugin->enable($id))
-        {
+        if ($this->EyPlugin->enable($id)) {
             $this->History->set('ENABLE_PLUGIN', 'plugin');
             $this->Session->setFlash($this->Lang->get('PLUGIN__ENABLE_SUCCESS'), 'default.success');
         } else
             $this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
-        $this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
+        $this->redirect(['controller' => 'plugin', 'action' => 'index', 'admin' => true]);
     }
 
     function admin_disable($id = false)
@@ -65,7 +62,7 @@ class PluginController extends AppController
             $this->Session->setFlash($this->Lang->get('PLUGIN__DISABLE_SUCCESS'), 'default.success');
         } else
             $this->Session->setFlash($this->Lang->get('ERROR__INTERNAL_ERROR'), 'default.error');
-        $this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
+        $this->redirect(['controller' => 'plugin', 'action' => 'index', 'admin' => true]);
     }
 
     function admin_install($slug = false)
@@ -79,7 +76,7 @@ class PluginController extends AppController
 
         $installed = $this->EyPlugin->download($slug, true);
         if ($installed !== true)
-            return $this->response->body(json_encode(array('statut' => 'error', 'msg' => $this->Lang->get($installed))));
+            return $this->response->body(json_encode(['statut' => 'error', 'msg' => $this->Lang->get($installed)]));
 
         $this->History->set('INSTALL_PLUGIN', 'plugin');
 
@@ -93,16 +90,16 @@ class PluginController extends AppController
         $this->loadModel('Plugin');
         $this->Plugin->cacheQueries = false;
         $search = $this->Plugin->find('first', ['conditions' => ['name' => $slug]]);
-        $this->response->body(json_encode(array(
+        $this->response->body(json_encode([
             'statut' => 'success',
-            'plugin' => array(
+            'plugin' => [
                 'name' => $search['Plugin']['name'],
                 'DBid' => $search['Plugin']['id'],
                 'author' => $search['Plugin']['author'],
                 'dateformatted' => $this->Lang->date($search['Plugin']['created']),
                 'version' => $search['Plugin']['version']
-            )
-        )));
+            ]
+        ]));
     }
 
     function admin_update($slug)
@@ -114,8 +111,7 @@ class PluginController extends AppController
         $this->autoRender = false;
 
         $updated = $this->EyPlugin->update($slug);
-        if ($updated === true)
-        {
+        if ($updated === true) {
             App::uses('Folder', 'Utility');
             $folder = new Folder(ROOT . DS . 'app' . DS . 'tmp' . DS . 'cache');
             if (!empty($folder->path)) {
@@ -126,7 +122,7 @@ class PluginController extends AppController
             $this->Session->setFlash($this->Lang->get('PLUGIN__UPDATE_SUCCESS'), 'default.success');
         } else
             $this->Session->setFlash($this->Lang->get($updated), 'default.error');
-        $this->redirect(array('controller' => 'plugin', 'action' => 'index', 'admin' => true));
+        $this->redirect(['controller' => 'plugin', 'action' => 'index', 'admin' => true]);
     }
 
 }

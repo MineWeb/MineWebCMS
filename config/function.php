@@ -10,7 +10,7 @@
 // Function that deletes entries in an array (used for plugins)
 function array_delete_value($array, $search)
 {
-    $temp = array();
+    $temp = [];
     foreach ($array as $key => $value) {
         if ($value != $search) $temp[$key] = $value;
     }
@@ -27,7 +27,7 @@ function cut($data, $how)
 // Function which generates a class among all that available for news. Allows random color.
 function rand_color_news()
 {
-    $colors = array('border-top-color-dark-blue', 'border-top-color-dark-blue-2', 'border-top-color-yellow', 'border-top-color-dark-yellow', 'border-top-color-blue', 'border-top-color-magenta', 'border-top-color-green');
+    $colors = ['border-top-color-dark-blue', 'border-top-color-dark-blue-2', 'border-top-color-yellow', 'border-top-color-dark-yellow', 'border-top-color-blue', 'border-top-color-magenta', 'border-top-color-green'];
     $color = rand(0, count($colors) - 1);
     return $colors[$color];
 }
@@ -46,7 +46,7 @@ function clearDir($folder)
         while ($file = readdir($open)) {
             if ($file == '.' || $file == '..') continue;
             if (is_dir($folder . "/" . $file)) {
-                $r = clear_dir($folder . "/" . $file);
+                $r = clearDir($folder . "/" . $file);
                 if (!$r) return false;
             } else {
                 $r = unlink($folder . "/" . $file);

@@ -10,7 +10,8 @@
 
 namespace PharIo\Version;
 
-class VersionNumber {
+class VersionNumber
+{
     /**
      * @var int
      */
@@ -19,7 +20,8 @@ class VersionNumber {
     /**
      * @param mixed $value
      */
-    public function __construct($value) {
+    public function __construct($value)
+    {
         if (is_numeric($value)) {
             $this->value = $value;
         }
@@ -28,14 +30,16 @@ class VersionNumber {
     /**
      * @return bool
      */
-    public function isAny() {
+    public function isAny()
+    {
         return $this->value === null;
     }
 
     /**
      * @return int
      */
-    public function getValue() {
+    public function getValue()
+    {
         return $this->value;
     }
 }

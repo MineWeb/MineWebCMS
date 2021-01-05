@@ -7,7 +7,7 @@
                 </div>
                 <div class="card-body">
                     <form method="post" data-ajax="true" data-upload-image="true"
-                          data-redirect-url="<?= $this->Html->url(array('controller' => 'seo', 'action' => 'index', 'admin' => 'true')) ?>">
+                          data-redirect-url="<?= $this->Html->url(['controller' => 'seo', 'action' => 'index', 'admin' => 'true']) ?>">
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
@@ -49,7 +49,7 @@
                                     <em><?= $Lang->get('SEO__FORM_FAVICON_DESC') ?></em>
                                     <br>
                                     <em><?= $Lang->get('SEO__KEEP_EMPTY') ?></em>
-                                    <?= $this->element('form.input.upload.img', array('img' => $page['favicon_url'], 'filename' => "favicon.png", 'title' => $Lang->get('SEO__FORM_FAVICON'))); ?>
+                                    <?= $this->element('form.input.upload.img', ['img' => $page['favicon_url'], 'filename' => "favicon.png", 'title' => $Lang->get('SEO__FORM_FAVICON')]); ?>
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -65,7 +65,7 @@
                         </div>
 
                         <div class="float-right">
-                            <a href="<?= $this->Html->url(array('controller' => 'seo', 'action' => 'index', 'admin' => true)) ?>"
+                            <a href="<?= $this->Html->url(['controller' => 'seo', 'action' => 'index', 'admin' => true]) ?>"
                                class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
                             <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
                         </div>

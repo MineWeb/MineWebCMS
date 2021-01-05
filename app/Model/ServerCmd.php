@@ -1,3 +1,5 @@
 <?php
-class ServerCmd extends AppModel {
+
+class ServerCmd extends AppModel
+{
 }

@@ -4,8 +4,8 @@ App::uses('CakeObject', 'Core');
 class ModuleComponent extends CakeObject
 {
 
-    protected $controller;
     static public $vars;
+    protected $controller;
 
     function shutdown($controller)
     {
@@ -27,28 +27,6 @@ class ModuleComponent extends CakeObject
 
     function startup($controller)
     {
-    }
-
-    private function loadPlugins()
-    {
-        return $this->controller->EyPlugin->getPluginsActive();
-    }
-
-    private function listModules()
-    {
-        $modules = [];
-        $plugins = $this->loadPlugins();
-        foreach ($plugins as $plugin) {
-            $files = @scandir($this->controller->EyPlugin->pluginsFolder . DS . $plugin->slug . DS . 'Modules');
-            if (!$files) continue;
-            $files = array_delete_value($files, '.');
-            $files = array_delete_value($files, '..');
-            $files = array_delete_value($files, '.DS_Store');
-            foreach ($files as $filename) {
-                $modules[explode('.', $filename)[0]][] = $plugin->slug;
-            }
-        }
-        return $modules;
     }
 
     public function loadModules($name)
@@ -78,7 +56,29 @@ class ModuleComponent extends CakeObject
             include $file;
             $HTML = $HTML . "\n" . ob_get_clean();
         }
-       return $HTML;
+        return $HTML;
+    }
+
+    private function listModules()
+    {
+        $modules = [];
+        $plugins = $this->loadPlugins();
+        foreach ($plugins as $plugin) {
+            $files = @scandir($this->controller->EyPlugin->pluginsFolder . DS . $plugin->slug . DS . 'Modules');
+            if (!$files) continue;
+            $files = array_delete_value($files, '.');
+            $files = array_delete_value($files, '..');
+            $files = array_delete_value($files, '.DS_Store');
+            foreach ($files as $filename) {
+                $modules[explode('.', $filename)[0]][] = $plugin->slug;
+            }
+        }
+        return $modules;
+    }
+
+    private function loadPlugins()
+    {
+        return $this->controller->EyPlugin->getPluginsActive();
     }
 
 }

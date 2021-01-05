@@ -2,23 +2,21 @@
 
 use PharIo\Version\Version;
 use PharIo\Version\VersionConstraintParser;
+
 App::uses('CakeObject', 'Core');
 
 class EyPluginComponent extends CakeObject
 {
 
-    public $pluginsInFolder = array();
-    public $pluginsInDB = array();
-    private $alreadyCheckValid = array();
-    private $reference = 'https://raw.githubusercontent.com/MineWeb/mineweb.org/gh-pages/market/plugins.json';
-
+    public $pluginsInFolder = [];
+    public $pluginsInDB = [];
     public $pluginsFolder;
-
     public $pluginsLoaded;
-
+    private $alreadyCheckValid = [];
+    private $reference = 'https://raw.githubusercontent.com/MineWeb/mineweb.org/gh-pages/market/plugins.json';
     private $controller;
 
-    private $CmsSqlTables = array();
+    private $CmsSqlTables = [];
 
     function __construct()
     {
@@ -41,13 +39,6 @@ class EyPluginComponent extends CakeObject
     {
     }
 
-    public function clearCakeCache()
-    {
-        Cache::clearGroup(false, '_cake_core_');
-        Cache::clearGroup(false, '_cake_model_');
-    }
-
-    // init
     function initialize($controller)
     {
         $this->controller = $controller;
@@ -55,12 +46,12 @@ class EyPluginComponent extends CakeObject
         // models
         if (!class_exists('ClassRegistry')) // cakephp lol
             App::uses('ClassRegistry', 'Utility');
-        $this->models = (object)array(
+        $this->models = (object)[
             'Plugin' => ClassRegistry::init('Plugin'),
             'Permission' => ClassRegistry::init('Permission')
-        );
+        ];
         // versioning
-        App::import('Vendor', 'load', array('file' => 'phar-io/version-master/load.php'));
+        App::import('Vendor', 'load', ['file' => 'phar-io/version-master/load.php']);
         // plugins list
         $this->pluginsInFolder = $this->getPluginsInFolder();
         $this->pluginsInDB = $this->getPluginsInDB();
@@ -71,130 +62,9 @@ class EyPluginComponent extends CakeObject
         // load plugins (or unload)
         $this->pluginsLoaded = $this->loadPlugins();
     }
-    
-    public function displayAvailableUpdate()
-    {
-        $pluginList = $this->pluginsLoaded;
-        if(!empty($pluginList)) {
-            $versions = $this->getPluginsLastVersion(array_map(function ($plugin) {
-              return $plugin->slug;
-            }, (array)$pluginList));
-            foreach ($pluginList as $key => $value) {
-                $lastVersion = (isset($versions[$value->slug])) ? $versions[$value->slug] : false;
-                if($lastVersion && $value->version != $lastVersion) {
-                   $this->Lang = $this->controller->Lang;
-                   return '<div class="alert alert-secondary">' . $this->Lang->get('UPDATE__AVAILABLE_TYPE_PLUGIN') . ' ' . $this->Lang->get('UPDATE__AVAILABLE') . ' ' . $this->Lang->get('UPDATE__PLUGIN') . ' <a href="' . Router::url(array('controller' => 'plugin', 'action' => 'index', 'admin' => true)) . '" style="margin-top: -6px;" class="btn float-right">' . $this->Lang->get('GLOBAL__UPDATE_LOOK') . '</a></div>';
-                }
-            }
-        }
-    }
 
-    // events
-    public function initEventsListeners($controller)
-    {
-        foreach ($this->pluginsLoaded as $plugin) {
-            if (!$plugin->useEvents || !$plugin->loaded)
-                continue;
-            $slugFormated = ucfirst(strtolower($plugin->slug));
-            $eventFolder = $this->pluginsFolder . DS . $plugin->slug . DS . 'Event';
-            $path = $eventFolder . DS . $slugFormated . '*EventListener.php';
+    // init
 
-            foreach (glob($path) as $eventFile) {
-                $className = str_replace(".php", "", basename($eventFile));
-
-                App::uses($className, 'Plugin' . DS . $plugin->slug . DS . 'Event');
-                $controller->getEventManager()->attach(new $className($controller->request, $controller->response, $controller));
-            }
-        }
-    }
-
-    // get cms sql tables from schema.php
-    private function getCmsSqlTables()
-    {
-        if (empty($this->CmsSqlTables)) { // cache for this request
-            require_once ROOT . DS . 'app' . DS . 'Config' . DS . 'Schema' . DS . 'schema.php';
-            if (!class_exists('AppSchema')) return array(); // error
-            // init class and get vars
-            $class = new AppSchema();
-            $tables = get_class_vars(get_class($class));
-            // remove useless vars
-            $ignoredVars = array('name', 'path', 'file', 'connection', 'plugin', 'tables');
-            foreach ($tables as $key => $value) {
-                if (!in_array($key, $ignoredVars))
-                    $this->CmsSqlTables[] = $key;
-            }
-        }
-        return $this->CmsSqlTables; // return result
-    }
-
-    // get plugin json config from his folder
-    public function getPluginConfig($slug, $array = false)
-    {
-        $config = @json_decode(@file_get_contents($this->pluginsFolder . DS . $slug . DS . 'config.json'), $array);
-        if (!$config) return false; // error
-        return $config;
-    }
-
-    // unload plugins (disabled or invalid) and list plugins
-    public function loadPlugins()
-    {
-        $dbPlugins = $this->models->Plugin->find('all');
-        // result
-        $pluginList = (object)array();
-        // get cakephp loaded plugins
-        $loadedCakePlugins = CakePlugin::loaded();
-        // each db plugins
-        $count = 0;
-        foreach ($dbPlugins as $plugin) { // On les parcours tous
-            $plugin = $plugin['Plugin'];
-            // get config
-            $config = $this->getPluginConfig($plugin['name']);
-            if (!is_object($config)) { // invalid plugin
-                CakePlugin::unload($plugin['name']); // ask to cake to unload it (lol)
-                continue;
-            }
-            // set config
-            $id = strtolower($plugin['author'] . '.' . $plugin['name']); // on fais l'id - tout en minuscule
-            $pluginList->$id = (object)array(); // init
-            $pluginList->$id = $config; // add file config
-            $pluginList->$id->id = $id;
-            $pluginList->$id->slug = $plugin['name'];
-            $pluginList->$id->slugLower = strtolower($plugin['name']);
-            $pluginList->$id->DBid = $plugin['id'];
-            $pluginList->$id->DBinstall = $plugin['created'];
-            $pluginList->$id->active = ($plugin['state']) ? true : false;
-            if ($pluginList->$id->active)
-                $count++;
-            $pluginList->$id->isValid = $this->isValid($pluginList->$id->slug); // plugin valid
-            $pluginList->$id->loaded = false;
-            // check if loaded
-            if (in_array($plugin['name'], $loadedCakePlugins)) // cakephp have load it ? (or not because fucking cache)
-                $pluginList->$id->loaded = true;
-            // unload if invalid
-            if (!$pluginList->$id->isValid || !$pluginList->$id->active) {
-                $pluginList->$id->loaded = false;
-                CakePlugin::unload($pluginList->$id->slug);
-            }
-        }
-        // return list
-        return $pluginList;
-    }
-
-    // get loaded plugins
-    public function getPluginsActive()
-    {
-        $plugins = $this->pluginsLoaded;
-        $pluginList = (object)array(); // result
-
-        foreach ($plugins as $key => $value) {
-            if ($value->loaded) // loaded (by cake) + active + valid
-                $pluginList->$key = $value; // on ajoute dans la liste
-        }
-        // result
-        return $pluginList;
-    }
-
-    // get plugins in folder
     private function getPluginsInFolder()
     {
         // config
@@ -202,10 +72,10 @@ class EyPluginComponent extends CakeObject
         $plugins = scandir($dir);
         if ($plugins === false) { // can't scan folder
             $this->log('Unable to scan plugins folder.');
-            return array();
+            return [];
         }
-        $bypassedFiles = array('.', '..', '.DS_Store', '__MACOSX'); // invalid plugins
-        $pluginsList = array('all' => array(), 'onlyValid' => array()); // result var
+        $bypassedFiles = ['.', '..', '.DS_Store', '__MACOSX', '.gitkeep']; // invalid plugins
+        $pluginsList = ['all' => [], 'onlyValid' => []]; // result var
         // each files
         foreach ($plugins as $key => $value) { // On parcours tout ce qu'on à trouvé dans le dossier
             if (in_array($value, $bypassedFiles)) continue; // invalid plugin
@@ -216,22 +86,6 @@ class EyPluginComponent extends CakeObject
         return $pluginsList;
     }
 
-    // get db plugins
-    private function getPluginsInDB()
-    {
-        // get from database
-        $search = $this->models->Plugin->find('all');
-        if (empty($search)) return array(); // not plugins
-        // result var
-        $pluginsList = array();
-        // each row, formatting
-        foreach ($search as $key => $value) {
-            $pluginsList[] = $value['Plugin']['name'];
-        }
-        return $pluginsList;
-    }
-
-    // Vérifier si le plugin donné (nom/chemin) est bien un dossier contenant tout les pré-requis d'un plugin
     private function isValid($slug)
     {
         $slug = ucfirst($slug);
@@ -246,16 +100,16 @@ class EyPluginComponent extends CakeObject
         }
         if (!is_dir($file)) {
             if (strstr($file, '.gitkeep') === false)
-              $this->log('File : ' . $file . ' is not a folder! Plugin not valid! Please remove this file from the plugin folder.'); // ce n'est pas un dossier
+                $this->log('File : ' . $file . ' is not a folder! Plugin not valid! Please remove this file from the plugin folder.'); // ce n'est pas un dossier
             return $this->alreadyCheckValid[$slug] = false;
         }
 
         // REQUIRED FILES
-        $neededFiles = array('Config/routes.php', 'Config/bootstrap.php', 'lang/fr_FR.json', 'lang/en_US.json', 'Controller', /*'Controller/Component',*/
+        $neededFiles = ['Config/routes.php', 'Config/bootstrap.php', 'lang/fr_FR.json', 'lang/en_US.json', 'Controller', /*'Controller/Component',*/
             'Model', /*'Model/Behavior',*/
             'View', /*'View/Helper',*/
             'View', /*'View/Layouts',*/
-            'config.json', 'SQL/schema.php');
+            'config.json', 'SQL/schema.php'];
         foreach ($neededFiles as $key => $value) {
             if (!file_exists($file . DS . $value)) {
                 $this->log('Plugin "' . $slug . '" not valid! The file or folder "' . $file . DS . $value . '" doesn\'t exist! Please verify documentation for more informations.');
@@ -264,7 +118,7 @@ class EyPluginComponent extends CakeObject
         }
 
         // Check JSON files
-        $needToBeJSON = array('lang/fr_FR.json', 'lang/en_US.json', 'config.json');
+        $needToBeJSON = ['lang/fr_FR.json', 'lang/en_US.json', 'config.json'];
         foreach ($needToBeJSON as $key => $value) {
             if (json_decode(file_get_contents($file . DS . $value)) === false || json_decode(file_get_contents($file . DS . $value)) === null) { // si le JSON n'est pas valide
                 $this->log('Plugin "' . $slug . '" not valid! The file "' . $file . DS . $value . '" is not at JSON format! Please verify documentation for more informations.');
@@ -274,7 +128,7 @@ class EyPluginComponent extends CakeObject
 
         // Check config
         $config = json_decode(file_get_contents($file . DS . 'config.json'), true);
-        $needConfigKey = array('name' => 'string', 'author' => 'string', 'version' => 'string', 'useEvents' => 'bool', 'permissions' => 'array', 'permissions-available' => 'array', 'permissions-default' => 'array', 'requirements' => 'array');
+        $needConfigKey = ['name' => 'string', 'author' => 'string', 'version' => 'string', 'useEvents' => 'bool', 'permissions' => 'array', 'permissions-available' => 'array', 'permissions-default' => 'array', 'requirements' => 'array'];
         foreach ($needConfigKey as $key => $value) {
             $key = (is_array(explode('-', $key))) ? explode('-', $key) : $key; // si c'est une key multi-dimensionnel
             if (is_array($key) && count($key) > 1) { // si la clé est multi-dimensionnel
@@ -344,7 +198,7 @@ class EyPluginComponent extends CakeObject
         }
 
         $tables = get_class_vars(get_class($class));
-        $ignoredVars = array('name', 'path', 'file', 'connection', 'plugin', 'tables');
+        $ignoredVars = ['name', 'path', 'file', 'connection', 'plugin', 'tables'];
         foreach ($tables as $key => $value) { // on les parcours si elles sont pas vides
             if (!in_array($key, $ignoredVars)) {
                 // On vérifie que le nom de la table ne soit pas parmis ceux du CMS de base
@@ -364,7 +218,44 @@ class EyPluginComponent extends CakeObject
         return $this->alreadyCheckValid[$slug] = true;
     }
 
-    // Installation des plugins non installés
+    // events
+
+    private function getCmsSqlTables()
+    {
+        if (empty($this->CmsSqlTables)) { // cache for this request
+            require_once ROOT . DS . 'app' . DS . 'Config' . DS . 'Schema' . DS . 'schema.php';
+            if (!class_exists('AppSchema')) return []; // error
+            // init class and get vars
+            $class = new AppSchema();
+            $tables = get_class_vars(get_class($class));
+            // remove useless vars
+            $ignoredVars = ['name', 'path', 'file', 'connection', 'plugin', 'tables'];
+            foreach ($tables as $key => $value) {
+                if (!in_array($key, $ignoredVars))
+                    $this->CmsSqlTables[] = $key;
+            }
+        }
+        return $this->CmsSqlTables; // return result
+    }
+
+    // get cms sql tables from schema.php
+
+    private function getPluginsInDB()
+    {
+        // get from database
+        $search = $this->models->Plugin->find('all');
+        if (empty($search)) return []; // not plugins
+        // result var
+        $pluginsList = [];
+        // each row, formatting
+        foreach ($search as $key => $value) {
+            $pluginsList[] = $value['Plugin']['name'];
+        }
+        return $pluginsList;
+    }
+
+    // get plugin json config from his folder
+
     private function checkIfNeedToBeInstalled($pluginsInFolder, $pluginsInDB)
     {
         if (empty($pluginsInFolder)) return false; // no plugins
@@ -378,69 +269,79 @@ class EyPluginComponent extends CakeObject
         }
     }
 
-    // Suppression des plugins non installés
-    private function checkIfNeedToBeDeleted($pluginsInFolder, $pluginsInDB)
+    // unload plugins (disabled or invalid) and list plugins
+
+    public function install($slug, $downloaded = false)
     {
-        if (empty($pluginsInFolder)) return false; // no plugins
-
-        $diff = array_diff($pluginsInDB, $pluginsInFolder);
-        if (empty($diff)) return false; // no plugins
-
-        // each plugins
-        foreach ($diff as $key => $value) {
-            $this->delete($value, true);
+        if (!$this->isValid($slug)) { // invalid plugin
+            if ($downloaded)
+                clearDir($this->pluginsFolder . DS . $slug); // delete
+            CakePlugin::unload($slug); // unload
+            return 'ERROR__PLUGIN_NOT_VALID';
         }
 
-        $this->refreshPermissions();
-        $this->clearCakeCache();
-    }
+        // Add tables
+        $addTables = $this->editDatabaseWithSchema($slug, 'CREATE'); // On ajoute les tables
+        if ($addTables['status'])
+            $tablesName = $addTables['tables'];
+        else
+            return 'ERROR__PLUGIN_SQL_INSTALLATION';
 
-    // Fonction de suppression
-    public function delete($slug)
-    {
-        if (empty($slug)) return false;
+        // Get config
+        $config = json_decode(file_get_contents($this->pluginsFolder . DS . $slug . DS . 'config.json'));
 
-        // onDisable event
-        if (file_exists($this->pluginsFolder . $slug . DS . 'Controller' . DS . 'Component' . DS . 'MainComponent.php')) {
+        // Add permissions
+        $this->addPermissions($config->permissions);
+
+        // Add into database
+        $id = null;
+        if (($findPlugin = $this->models->Plugin->find('first', ['conditions' => ['name' => $config->name]])))
+            $id = $findPlugin['Plugin']['id'];
+        $this->models->Plugin->read(null, $id);
+        $this->models->Plugin->set([
+            'name' => $slug,
+            'author' => $config->author,
+            'version' => $config->version
+        ]);
+        $this->models->Plugin->save(); // On sauvegarde le tout
+
+        // onEnable callback
+        if (file_exists($this->pluginsFolder . $slug . DS . 'Controller' . DS . 'Component' . DS . 'MainComponent.php')) { // On fais le onEnable si il existe
             App::uses('MainComponent', 'Plugin' . DS . $slug . DS . 'Controller' . DS . 'Component');
             $this->Main = new MainComponent();
-            $this->Main->onDisable(); // on le lance
+            $this->Main->onEnable(); // on le lance
         }
 
-        $this->editDatabaseWithSchema($slug, 'DROP'); // delete custom columns
-
-        $plugin = $this->models->Plugin->find('first', array('conditions' => array('name' => $slug)));
-        if (!empty($plugin))
-            $this->models->Plugin->delete($plugin['Plugin']['id']); // On supprime le plugin de la db
-
-        clearDir($this->pluginsFolder . DS . $slug);
-        CakePlugin::unload($slug); // On unload sur cake
-        $this->clearCakeCache();
+        // Load it
+        CakePlugin::load([$slug => ['routes' => true, 'bootstrap' => true]]); // On load sur cake
+        return true;
     }
+
+    // get loaded plugins
 
     private function editDatabaseWithSchema($slug, $type, $update = false)
     {
-        if (!$slug || !in_array($type, array('CREATE', 'DROP'))) return false; // invalid
+        if (!$slug || !in_array($type, ['CREATE', 'DROP'])) return false; // invalid
 
         // Init & compare
         App::uses('CakeSchema', 'Model');
 
-        $options = array(
+        $options = [
             'name' => ucfirst(strtolower($slug)) . 'AppUpdate',
             'path' => ROOT . DS . 'app' . DS . 'Plugin' . DS . $slug . DS . 'SQL',
             'file' => 'schemaUpdate.php',
             'plugin' => null,
             'connection' => 'default',
             'models' => false
-        );
-        
+        ];
+
         // Here we need to copy the new schema file to be able to require it
-		// Indeed, the old schema file has already been loaded (in plugin validation)
-		// and we can't load a file twice (we'll have some conflicts about re-defining
-		// the class, so we need to update the class name too)
+        // Indeed, the old schema file has already been loaded (in plugin validation)
+        // and we can't load a file twice (we'll have some conflicts about re-defining
+        // the class, so we need to update the class name too)
         $get_new_file = file_get_contents($options['path'] . DS . 'schema.php');
         $replace_class_name = str_replace('AppSchema', 'AppUpdateSchema', $get_new_file);
-        file_put_contents($options['path'] . DS . $options['file'] , $replace_class_name);
+        file_put_contents($options['path'] . DS . $options['file'], $replace_class_name);
         $this->Schema = new CakeSchema($options);
 
         $db = ConnectionManager::getDataSource($this->Schema->connection);
@@ -476,10 +377,10 @@ class EyPluginComponent extends CakeObject
                 if (count($compare[$table]['add']) <= 0) unset($compare[$table]['add']);
                 // set sql schema
                 if (count($compare[$table]) > 0)
-                    $contents[$table] = $db->alterSchema(array($table => $compare[$table]), $table);
+                    $contents[$table] = $db->alterSchema([$table => $compare[$table]], $table);
             }
             // add tables
-            $pluginTables = array();
+            $pluginTables = [];
             foreach ($compare as $table => $changes) {
                 if (isset($compare[$table]['create'])) { // is create
                     $contents[$table] = $db->createSchema($pluginSchema, $table);
@@ -510,7 +411,7 @@ class EyPluginComponent extends CakeObject
         }
 
         // Execute queries
-        $error = array();
+        $error = [];
         if (!empty($contents)) {
             foreach ($contents as $table => $query) {
                 if (empty($query)) continue;
@@ -525,12 +426,12 @@ class EyPluginComponent extends CakeObject
 
         // Others actions on install
         if ($type === 'CREATE') {
-            $updateEntries = array();
+            $updateEntries = [];
             // custom
             if (file_exists($this->pluginsFolder . DS . $slug . DS . 'Schema' . DS . 'update-entries.php'))
                 include $this->pluginsFolder . DS . $slug . DS . 'Schema' . DS . 'update-entries.php';
             // callback
-            $this->Schema->after(array(), !$update, $updateEntries);
+            $this->Schema->after([], !$update, $updateEntries);
 
             if (!empty($error)) {
                 foreach ($error as $key => $value) {
@@ -542,120 +443,319 @@ class EyPluginComponent extends CakeObject
 
         // Return
         if (empty($error) && $type === 'CREATE')
-            return array('status' => true, 'tables' => $pluginTables);
+            return ['status' => true, 'tables' => $pluginTables];
         else if (empty($error) && $type === 'DROP')
-            return array('status' => true);
+            return ['status' => true];
         else
-            return array('status' => false, 'error' => $error);
+            return ['status' => false, 'error' => $error];
+    }
+
+    // get plugins in folder
+
+    private function addPermissions($permissionConfig)
+    {
+        if (!isset($permissionConfig->default) || empty($permissionConfig->default))
+            return; // no permissions
+
+        // each rank
+        foreach ($permissionConfig->default as $rank => $permissions) {
+            // get rank permission
+            $searchRank = $this->models->Permission->find('first', ['conditions' => ['rank' => $rank]]);
+            if (empty($searchRank)) continue; // no rank found
+            $rankPermissions = unserialize($searchRank['Permission']['permissions']);
+            if (!is_array($rankPermissions)) // is not an array (wtf?)
+                $rankPermissions = [];
+            // each permissions for each rank
+            foreach ($rankPermissions as $permission) {
+                foreach ($permissions as $perm) {
+                    $rankPermissions[] = $perm; // add permission to this rank
+                }
+            }
+
+            // save
+            $this->models->Permission->read(null, $searchRank['Permission']['id']);
+            $this->models->Permission->set(['permissions' => serialize($rankPermissions)]);
+            $this->models->Permission->save();
+        }
+    }
+
+    // get db plugins
+
+    private function checkIfNeedToBeDeleted($pluginsInFolder, $pluginsInDB)
+    {
+        if (empty($pluginsInFolder)) return false; // no plugins
+
+        $diff = array_diff($pluginsInDB, $pluginsInFolder);
+        if (empty($diff)) return false; // no plugins
+
+        // each plugins
+        foreach ($diff as $key => $value) {
+            $this->delete($value, true);
+        }
+
+        $this->refreshPermissions();
+        $this->clearCakeCache();
+    }
+
+    // Vérifier si le plugin donné (nom/chemin) est bien un dossier contenant tout les pré-requis d'un plugin
+
+    public function delete($slug)
+    {
+        if (empty($slug)) return false;
+
+        // onDisable event
+        if (file_exists($this->pluginsFolder . $slug . DS . 'Controller' . DS . 'Component' . DS . 'MainComponent.php')) {
+            App::uses('MainComponent', 'Plugin' . DS . $slug . DS . 'Controller' . DS . 'Component');
+            $this->Main = new MainComponent();
+            $this->Main->onDisable(); // on le lance
+        }
+
+        $this->editDatabaseWithSchema($slug, 'DROP'); // delete custom columns
+
+        $plugin = $this->models->Plugin->find('first', ['conditions' => ['name' => $slug]]);
+        if (!empty($plugin))
+            $this->models->Plugin->delete($plugin['Plugin']['id']); // On supprime le plugin de la db
+
+        clearDir($this->pluginsFolder . DS . $slug);
+        CakePlugin::unload($slug); // On unload sur cake
+        $this->clearCakeCache();
+    }
+
+    // Installation des plugins non installés
+
+    public function clearCakeCache()
+    {
+        Cache::clearGroup(false, '_cake_core_');
+        Cache::clearGroup(false, '_cake_model_');
+    }
+
+    // Suppression des plugins non installés
+
+    private function refreshPermissions()
+    {
+        // define permissions
+        $defaultPermissions = $this->controller->Permissions->permissions;
+        $pluginsPermissions = [];
+
+        foreach ($this->loadPlugins() as $id => $data) {
+            if (!isset($data->permissions->available)) continue; // no permissions on this plugin
+            foreach ($data->permissions->available as $key => $permission) {
+                $pluginsPermissions[] = $permission; // add permission to plugins permissions
+            }
+        }
+
+        // get permissions on database
+        $searchPermissions = $this->models->Permission->find('all');
+
+        foreach ($searchPermissions as $rank) {
+            $permissions = unserialize($rank['Permission']['permissions']);
+            $permissionsBeforeCheck = $permissions;
+
+            // check each permission for each rank
+            $permissionsChecked = [];
+            foreach ($permissions as $key => $perm) {
+                // remove double or permission of a deleted plugin
+                if ((!in_array($perm, $defaultPermissions) && !in_array($perm, $pluginsPermissions)) || (in_array($perm, $permissionsChecked)))
+                    unset($permissions[$key]); // remove this permission
+                $permissionsChecked[] = $perm;
+            }
+            // save (optionnal) update
+            if (count($permissions) != count($permissionsBeforeCheck)) {
+                $this->models->Permission->read(null, $rank['Permission']['id']);
+                $this->models->Permission->set(['permissions' => serialize($permissions)]);
+                $this->models->Permission->save();
+            }
+        }
+    }
+
+    // Fonction de suppression
+
+    public function loadPlugins()
+    {
+        $dbPlugins = $this->models->Plugin->find('all');
+        // result
+        $pluginList = (object)[];
+        // get cakephp loaded plugins
+        $loadedCakePlugins = CakePlugin::loaded();
+        // each db plugins
+        $count = 0;
+        foreach ($dbPlugins as $plugin) { // On les parcours tous
+            $plugin = $plugin['Plugin'];
+            // get config
+            $config = $this->getPluginConfig($plugin['name']);
+            if (!is_object($config)) { // invalid plugin
+                CakePlugin::unload($plugin['name']); // ask to cake to unload it (lol)
+                continue;
+            }
+            // set config
+            $id = strtolower($plugin['author'] . '.' . $plugin['name']); // on fais l'id - tout en minuscule
+            $pluginList->$id = (object)[]; // init
+            $pluginList->$id = $config; // add file config
+            $pluginList->$id->id = $id;
+            $pluginList->$id->slug = $plugin['name'];
+            $pluginList->$id->slugLower = strtolower($plugin['name']);
+            $pluginList->$id->DBid = $plugin['id'];
+            $pluginList->$id->DBinstall = $plugin['created'];
+            $pluginList->$id->active = ($plugin['state']) ? true : false;
+            if ($pluginList->$id->active)
+                $count++;
+            $pluginList->$id->isValid = $this->isValid($pluginList->$id->slug); // plugin valid
+            $pluginList->$id->loaded = false;
+            // check if loaded
+            if (in_array($plugin['name'], $loadedCakePlugins)) // cakephp have load it ? (or not because fucking cache)
+                $pluginList->$id->loaded = true;
+            // unload if invalid
+            if (!$pluginList->$id->isValid || !$pluginList->$id->active) {
+                $pluginList->$id->loaded = false;
+                CakePlugin::unload($pluginList->$id->slug);
+            }
+        }
+        // return list
+        return $pluginList;
+    }
+
+    public function getPluginConfig($slug, $array = false)
+    {
+        $config = @json_decode(@file_get_contents($this->pluginsFolder . DS . $slug . DS . 'config.json'), $array);
+        if (!$config) return false; // error
+        return $config;
     }
 
     // Fonction de download (pré-installation)
-    public function download($slug, $install = false)
+
+    public function displayAvailableUpdate()
     {
-        // Check requirements
-        $config = $this->getPluginFromAPI($slug);
-        if (!$this->requirements($slug, $config))
-            return 'ERROR__PLUGIN_REQUIREMENTS';
-
-        // get files
-        $zip = $this->controller->sendGetRequest('https://github.com/MineWeb/Plugin-' . $slug . '/archive/master.zip');
-        if (!$zip)
-            return 'ERROR__PLUGIN_CANT_BE_DOWNLOADED';
-
-        // Temporary file
-        $zipFile = ROOT . DS . 'app' . DS . 'tmp' . DS . 'plugin-' . $slug . '.zip';
-        $file = fopen($zipFile, 'w+');
-        if (!fwrite($file, $zip)) {
-            $this->log('Error when downloading plugin, save files failed.');
-            return 'ERROR__PLUGIN_PERMISSIONS';
+        $pluginList = $this->pluginsLoaded;
+        if (!empty($pluginList)) {
+            $versions = $this->getPluginsLastVersion(array_map(function ($plugin) {
+                return $plugin->slug;
+            }, (array)$pluginList));
+            foreach ($pluginList as $key => $value) {
+                $lastVersion = (isset($versions[$value->slug])) ? $versions[$value->slug] : false;
+                if ($lastVersion && $value->version != $lastVersion) {
+                    $this->Lang = $this->controller->Lang;
+                    return '<div class="alert alert-secondary">' . $this->Lang->get('UPDATE__AVAILABLE_TYPE_PLUGIN') . ' ' . $this->Lang->get('UPDATE__AVAILABLE') . ' ' . $this->Lang->get('UPDATE__PLUGIN') . ' <a href="' . Router::url(['controller' => 'plugin', 'action' => 'index', 'admin' => true]) . '" style="margin-top: -6px;" class="btn float-right">' . $this->Lang->get('GLOBAL__UPDATE_LOOK') . '</a></div>';
+                }
+            }
         }
-        fclose($file);
-
-        // Set into plugin folder
-        $zip = new ZipArchive;
-        $res = $zip->open($zipFile);
-        if ($res !== TRUE) {
-            $this->log('Error when downloading plugin, unable to open zip. (CODE: ' . $res . ')');
-            return 'ERROR__PLUGIN_PERMISSIONS';
-        }
-        if (!file_exists(ROOT . DS . 'app' . DS . 'Plugin' . DS . $slug) && !mkdir(ROOT . DS . 'app' . DS . 'Plugin' . DS . $slug))
-          return 'ERROR__PLUGIN_PERMISSIONS';
-        for($i = 0; $i < $zip->numFiles; $i++) {
-          $filename = $zip->getNameIndex($i);
-          $fileinfo = pathinfo($filename);
-          $stat = $zip->statIndex($i);
-          if ($fileinfo['basename'] === 'Plugin-' . $slug . '-master') continue;
-
-          $target = "zip://".$zipFile."#".$filename;
-          $dest = ROOT . DS . 'app' . DS . 'Plugin' . DS . $slug . substr($filename, strlen('Plugin-' . $slug . '-master'));
-          if ($stat['size'] === 0 && strpos($filename, '.') === false) {
-            if (!file_exists($dest)) mkdir($dest);
-            continue;
-          }
-          if (!copy($target, $dest)) return 'ERROR__PLUGIN_PERMISSIONS';
-        }
-        $zip->close();
-
-        // Delete temporary file
-        unlink($zipFile);
-
-        // Delete MacOS hidden files
-        App::uses('Folder', 'Utility');
-        $folder = new Folder($this->pluginsFolder . DS . '__MACOSX');
-        $folder->delete();
-
-        // Return (& install if needed)
-        return ($install) ? $this->install($slug, true) : true;
     }
 
     // Fonction d'installation
-    public function install($slug, $downloaded = false)
+
+    public function getPluginsLastVersion(array $slug)
     {
-        if (!$this->isValid($slug)) { // invalid plugin
-            if ($downloaded)
-                clearDir($this->pluginsFolder . DS . $slug); // delete
-            CakePlugin::unload($slug); // unload
-            return 'ERROR__PLUGIN_NOT_VALID';
+        $plugins = $this->getPluginsFromAPI($slug);
+        if ($plugins === false) return false;
+        $versions = [];
+        foreach ($plugins as $plugin) {
+            $versions[$plugin->slug] = $plugin->version;
         }
-
-        // Add tables
-        $addTables = $this->editDatabaseWithSchema($slug, 'CREATE'); // On ajoute les tables
-        if ($addTables['status'])
-            $tablesName = $addTables['tables'];
-        else
-            return 'ERROR__PLUGIN_SQL_INSTALLATION';
-
-        // Get config
-        $config = json_decode(file_get_contents($this->pluginsFolder . DS . $slug . DS . 'config.json'));
-
-        // Add permissions
-        $this->addPermissions($config->permissions);
-
-        // Add into database
-        $id = null;
-        if (($findPlugin = $this->models->Plugin->find('first', ['conditions' => ['name' => $config->name]])))
-            $id = $findPlugin['Plugin']['id'];
-        $this->models->Plugin->read(null, $id);
-        $this->models->Plugin->set(array(
-            'name' => $slug,
-            'author' => $config->author,
-            'version' => $config->version
-        ));
-        $this->models->Plugin->save(); // On sauvegarde le tout
-
-        // onEnable callback
-        if (file_exists($this->pluginsFolder . $slug . DS . 'Controller' . DS . 'Component' . DS . 'MainComponent.php')) { // On fais le onEnable si il existe
-            App::uses('MainComponent', 'Plugin' . DS . $slug . DS . 'Controller' . DS . 'Component');
-            $this->Main = new MainComponent();
-            $this->Main->onEnable(); // on le lance
-        }
-
-        // Load it
-        CakePlugin::load(array($slug => array('routes' => true, 'bootstrap' => true))); // On load sur cake
-        return true;
+        return $versions;
     }
 
     // Fonction d'update
+
+    public function getPluginsFromAPI(array $slugs)
+    {
+        $plugins = $this->getFreePlugins(true);
+        // each plugin
+        $pluginsToFind = [];
+        foreach ($plugins as $plugin) {
+            $plugin = json_decode(json_encode($plugin)); // to object
+            foreach ($slugs as $slug) {
+                if ($plugin->slug == $slug)
+                    $pluginsToFind[$plugin->slug] = $plugin;
+            }
+        }
+        return $pluginsToFind;
+    }
+
+    // Fonctions de recherche parmis les plugins chargés
+
+    public function getFreePlugins($all = false, $removeInstalledPlugins = false)
+    {
+        $pluginsList = @json_decode($this->controller->sendGetRequest($this->reference), true);
+        Cache::set(['duration' => '+24 hours']);
+        $plugins = Cache::read('plugins');
+        if (!$plugins) {
+            $plugins = [];
+            if ($pluginsList) {
+                foreach ($pluginsList as $plugin) {
+                    if ($plugin['free']) {
+                        if (($pl = $this->getPluginFromRepoName($plugin['repo']))) {
+                            $pl['free'] = true;
+                            $pl['slug'] = $plugin['slug'];
+                            $plugins[] = $pl;
+                        }
+                    } else if ($all) {
+                        $plugins[] = $plugin;
+                    }
+                }
+            }
+            Cache::write('plugins', $plugins);
+        }
+
+        // remove installed plugins
+        if ($removeInstalledPlugins) {
+            $installedPlugins = [];
+            foreach ($this->pluginsLoaded as $id => $config) {
+                $installedPlugins[] = $config->slug;
+            }
+            foreach ($plugins as $key => $plugin) {
+                if (in_array($plugin['slug'], $installedPlugins)) // if already installed
+                    unset($plugins[$key]); // remove
+            }
+        }
+
+        return $plugins;
+    }
+
+    // Vérifier si un plugin est installé
+
+    private function getPluginFromRepoName($repo, $assoc = true)
+    {
+        $configUrl = "https://raw.githubusercontent.com/$repo/master/config.json";
+        if (!($config = @json_decode($this->controller->sendGetRequest($configUrl), $assoc)))
+            return false;
+        $config['repo'] = $repo;
+        return $config;
+    }
+
+    // Récupérer les plugins ou la navbar est activé (pour la nav)
+
+    public function initEventsListeners($controller)
+    {
+        foreach ($this->pluginsLoaded as $plugin) {
+            if (!$plugin->useEvents || !$plugin->loaded)
+                continue;
+            $slugFormated = ucfirst(strtolower($plugin->slug));
+            $eventFolder = $this->pluginsFolder . DS . $plugin->slug . DS . 'Event';
+            $path = $eventFolder . DS . $slugFormated . '*EventListener.php';
+
+            foreach (glob($path) as $eventFile) {
+                $className = str_replace(".php", "", basename($eventFile));
+
+                App::uses($className, 'Plugin' . DS . $plugin->slug . DS . 'Event');
+                $controller->getEventManager()->attach(new $className($controller->request, $controller->response, $controller));
+            }
+        }
+    }
+
+    // Changer d'état un plugin
+
+    public function getPluginsActive()
+    {
+        $plugins = $this->pluginsLoaded;
+        $pluginList = (object)[]; // result
+
+        foreach ($plugins as $key => $value) {
+            if ($value->loaded) // loaded (by cake) + active + valid
+                $pluginList->$key = $value; // on ajoute dans la liste
+        }
+        // result
+        return $pluginList;
+    }
+
     public function update($slug)
     {
         // get config from api
@@ -676,7 +776,7 @@ class EyPluginComponent extends CakeObject
         $pluginVersion = $pluginConfig['version']; // récupére la nouvelle version
 
         // Get db id
-        $searchPlugin = $this->models->Plugin->find('first', array('conditions' => array('name' => $slug)))['Plugin'];
+        $searchPlugin = $this->models->Plugin->find('first', ['conditions' => ['name' => $slug]])['Plugin'];
         $pluginDBID = $searchPlugin['id'];
 
         // Custom actions
@@ -708,117 +808,89 @@ class EyPluginComponent extends CakeObject
 
         // Edit version and tables
         $this->models->Plugin->read(null, $pluginDBID);
-        $this->models->Plugin->set(array('version' => $pluginVersion, 'tables' => serialize($pluginTables)));
+        $this->models->Plugin->set(['version' => $pluginVersion, 'tables' => serialize($pluginTables)]);
         $this->models->Plugin->save();
         // Permissions
         $this->refreshPermissions(); // On met les jours les permissions
 
         // Cakephp
         $this->clearCakeCache();
-        CakePlugin::load(array($slug => array('routes' => true, 'bootstrap' => true)));
-
-        return true;
-    }
-
-    // Fonctions de recherche parmis les plugins chargés
-    public function findPlugin($key, $value)
-    {
-        foreach ($this->pluginsLoaded as $id => $data) {
-            if ($data->$key == $value)
-                return $data;
-        }
-    }
-
-    // Vérifier si un plugin est installé
-    public function isInstalled($id)
-    { // on le recherche avec son ID (auteur.name)
-        $find = $this->findPlugin('id', $id);
-        return (!empty($find) && $find->loaded);
-    }
-
-    // Récupérer les plugins ou la navbar est activé (pour la nav)
-    public function findPluginsLinks()
-    {
-        $plugins = array();
-        foreach ($this->pluginsLoaded as $id => $data) {
-            if (isset($data->navbar_routes))
-                $plugins[$data->slug] = (object)['name' => $data->name, 'routes' => $data->navbar_routes];
-        }
-        return $plugins;
-    }
-
-    // Changer d'état un plugin
-    public function enable($dbID)
-    {
-        $this->models->Plugin->read(null, $dbID);
-        $this->models->Plugin->set(array('state' => 1));  // On change l'état dans la bdd
-        $this->models->Plugin->save();
-
-        $plugin = $this->models->Plugin->find('first', array('id' => $dbID)); // On récupére le nom
-        $pluginName = $plugin['Plugin']['name'];
-
-        // Custom callback
-        if (file_exists($this->pluginsFolder . DS . $pluginName . DS . 'Controller' . DS . 'Component' . DS . 'MainComponent.php')) {
-            App::uses('MainComponent', $this->pluginsFolder . DS . $pluginName . DS . 'Controller' . DS . 'Component');
-            if (class_exists('MainComponent')) {
-                $this->Main = new MainComponent();        // On lance l'event onEnable
-                $this->Main->onEnable();
-            }
-        }
-
-        // load
-        CakePlugin::load(array($pluginName => array('routes' => true, 'bootstrap' => true)));
-
-        return true;
-    }
-
-    public function disable($dbID)
-    {
-        $this->models->Plugin->read(null, $dbID);
-        $this->models->Plugin->set(array('state' => 0));  // On change l'état dans la bdd
-        $this->models->Plugin->save();
-
-        $plugin = $this->models->Plugin->find('first', array('id' => $dbID)); // On récupére le nom
-        $pluginName = $plugin['Plugin']['name'];
-
-        // Custom callback
-        if (file_exists($this->pluginsFolder . DS . $pluginName . DS . 'Controller' . DS . 'Component' . DS . 'MainComponent.php')) {
-            App::uses('MainComponent', $this->pluginsFolder . DS . $pluginName . DS . 'Controller' . DS . 'Component');
-            if (class_exists('MainComponent')) {
-                $this->Main = new MainComponent();        // On lance l'event onDisable
-                $this->Main->onDisable();
-            }
-        }
-
-        CakePlugin::unload($pluginName);
-        $this->clearCakeCache();
+        CakePlugin::load([$slug => ['routes' => true, 'bootstrap' => true]]);
 
         return true;
     }
 
     // find theme version
-    private function __findThemeVersion($id)
+
+    public function getPluginFromAPI($slug)
     {
-        // define paths
-        $themeFolder = ROOT . DS . 'app' . DS . 'View' . DS . 'Themed';
-        $themeFolderContent = scandir($themeFolder); // scan theme folder
-        if ($themeFolderContent === false) return false; // unable to scan
-
-        // not a valid theme
-        $bypassedFiles = array('.', '..', '.DS_Store', '__MACOSX');
-        // each folder
-        foreach ($themeFolderContent as $key => $value) {
-            if (in_array($value, $bypassedFiles)) continue; // not a theme
-            // get config & theme id
-            $themeConfig = json_decode(file_get_contents($themeFolder . $value)); // on récup la config
-            $themeId = $themeConfig['author'] . '.' . $value; // on fais l'id
-
-            if ($themeId == $id)
-                return $themeConfig['version'];
-        }
+        $plugins = $this->getPluginsFromAPI([$slug]);
+        if (!$plugins || !isset($plugins[$slug])) return false;
+        return $plugins[$slug];
     }
 
     // Vérifie les pré-requis d'un plugin
+
+    public function download($slug, $install = false)
+    {
+        // Check requirements
+        $config = $this->getPluginFromAPI($slug);
+        if (!$this->requirements($slug, $config))
+            return 'ERROR__PLUGIN_REQUIREMENTS';
+
+        // get files
+        $zip = $this->controller->sendGetRequest('https://github.com/MineWeb/Plugin-' . $slug . '/archive/master.zip');
+        if (!$zip)
+            return 'ERROR__PLUGIN_CANT_BE_DOWNLOADED';
+
+        // Temporary file
+        $zipFile = ROOT . DS . 'app' . DS . 'tmp' . DS . 'plugin-' . $slug . '.zip';
+        $file = fopen($zipFile, 'w+');
+        if (!fwrite($file, $zip)) {
+            $this->log('Error when downloading plugin, save files failed.');
+            return 'ERROR__PLUGIN_PERMISSIONS';
+        }
+        fclose($file);
+
+        // Set into plugin folder
+        $zip = new ZipArchive;
+        $res = $zip->open($zipFile);
+        if ($res !== true) {
+            $this->log('Error when downloading plugin, unable to open zip. (CODE: ' . $res . ')');
+            return 'ERROR__PLUGIN_PERMISSIONS';
+        }
+        if (!file_exists(ROOT . DS . 'app' . DS . 'Plugin' . DS . $slug) && !mkdir(ROOT . DS . 'app' . DS . 'Plugin' . DS . $slug))
+            return 'ERROR__PLUGIN_PERMISSIONS';
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $filename = $zip->getNameIndex($i);
+            $fileinfo = pathinfo($filename);
+            $stat = $zip->statIndex($i);
+            if ($fileinfo['basename'] === 'Plugin-' . $slug . '-master') continue;
+
+            $target = "zip://" . $zipFile . "#" . $filename;
+            $dest = ROOT . DS . 'app' . DS . 'Plugin' . DS . $slug . substr($filename, strlen('Plugin-' . $slug . '-master'));
+            if ($stat['size'] === 0 && strpos($filename, '.') === false) {
+                if (!file_exists($dest)) mkdir($dest);
+                continue;
+            }
+            if (!copy($target, $dest)) return 'ERROR__PLUGIN_PERMISSIONS';
+        }
+        $zip->close();
+
+        // Delete temporary file
+        unlink($zipFile);
+
+        // Delete MacOS hidden files
+        App::uses('Folder', 'Utility');
+        $folder = new Folder($this->pluginsFolder . DS . '__MACOSX');
+        $folder->delete();
+
+        // Return (& install if needed)
+        return ($install) ? $this->install($slug, true) : true;
+    }
+
+    // Rafraichi les permssions (ne laisse que celle de base + celles des plugins installés)
+
     private function requirements($name, $config = false)
     {
         if (!$config) // Get config if not configured
@@ -884,150 +956,99 @@ class EyPluginComponent extends CakeObject
         return true; // it's okay
     }
 
-    // Rafraichi les permssions (ne laisse que celle de base + celles des plugins installés)
-    private function refreshPermissions()
-    {
-        // define permissions
-        $defaultPermissions = $this->controller->Permissions->permissions;
-        $pluginsPermissions = array();
-
-        foreach ($this->loadPlugins() as $id => $data) {
-            if (!isset($data->permissions->available)) continue; // no permissions on this plugin
-            foreach ($data->permissions->available as $key => $permission) {
-                $pluginsPermissions[] = $permission; // add permission to plugins permissions
-            }
-        }
-
-        // get permissions on database
-        $searchPermissions = $this->models->Permission->find('all');
-
-        foreach ($searchPermissions as $rank) {
-            $permissions = unserialize($rank['Permission']['permissions']);
-            $permissionsBeforeCheck = $permissions;
-
-            // check each permission for each rank
-            $permissionsChecked = array();
-            foreach ($permissions as $key => $perm) {
-                // remove double or permission of a deleted plugin
-                if ((!in_array($perm, $defaultPermissions) && !in_array($perm, $pluginsPermissions)) || (in_array($perm, $permissionsChecked)))
-                    unset($permissions[$key]); // remove this permission
-                $permissionsChecked[] = $perm;
-            }
-            // save (optionnal) update
-            if (count($permissions) != count($permissionsBeforeCheck)) {
-                $this->models->Permission->read(null, $rank['Permission']['id']);
-                $this->models->Permission->set(array('permissions' => serialize($permissions)));
-                $this->models->Permission->save();
-            }
-        }
-    }
-
     // Ajoute les permission du plugins avec la config spécifié
-    private function addPermissions($permissionConfig)
+
+    public function findPlugin($key, $value)
     {
-        if (!isset($permissionConfig->default) || empty($permissionConfig->default))
-            return; // no permissions
-
-        // each rank
-        foreach ($permissionConfig->default as $rank => $permissions) {
-            // get rank permission
-            $searchRank = $this->models->Permission->find('first', array('conditions' => array('rank' => $rank)));
-            if (empty($searchRank)) continue; // no rank found
-            $rankPermissions = unserialize($searchRank['Permission']['permissions']);
-            if (!is_array($rankPermissions)) // is not an array (wtf?)
-                $rankPermissions = array();
-            // each permissions for each rank
-            foreach ($rankPermissions as $permission) {
-                foreach ($permissions as $perm) {
-                    $rankPermissions[] = $perm; // add permission to this rank
-                }
-            }
-
-            // save
-            $this->models->Permission->read(null, $searchRank['Permission']['id']);
-            $this->models->Permission->set(array('permissions' => serialize($rankPermissions)));
-            $this->models->Permission->save();
+        foreach ($this->pluginsLoaded as $id => $data) {
+            if ($data->$key == $value)
+                return $data;
         }
     }
 
-    public function getFreePlugins($all = false, $removeInstalledPlugins = false)
+    private function __findThemeVersion($id)
     {
-        $pluginsList = @json_decode($this->controller->sendGetRequest($this->reference), true);
-        Cache::set(array('duration' => '+24 hours'));
-        $plugins = Cache::read('plugins');
-        if (!$plugins) {
-            $plugins = [];
-            if ($pluginsList) {
-                foreach ($pluginsList as $plugin) {
-                    if ($plugin['free']) {
-                        if (($pl = $this->getPluginFromRepoName($plugin['repo']))) {
-                            $pl['free'] = true;
-                            $pl['slug'] = $plugin['slug'];
-                            $plugins[] = $pl;
-                        }
-                    } else if ($all) {
-                        $plugins[] = $plugin;
-                    }
-                }
-            }
-            Cache::write('plugins', $plugins);
-        }
+        // define paths
+        $themeFolder = ROOT . DS . 'app' . DS . 'View' . DS . 'Themed';
+        $themeFolderContent = scandir($themeFolder); // scan theme folder
+        if ($themeFolderContent === false) return false; // unable to scan
 
-        // remove installed plugins
-        if ($removeInstalledPlugins) {
-            $installedPlugins = array();
-            foreach ($this->pluginsLoaded as $id => $config) {
-                $installedPlugins[] = $config->slug;
-            }
-            foreach ($plugins as $key => $plugin) {
-                if (in_array($plugin['slug'], $installedPlugins)) // if already installed
-                    unset($plugins[$key]); // remove
-            }
-        }
+        // not a valid theme
+        $bypassedFiles = ['.', '..', '.DS_Store', '__MACOSX'];
+        // each folder
+        foreach ($themeFolderContent as $key => $value) {
+            if (in_array($value, $bypassedFiles)) continue; // not a theme
+            // get config & theme id
+            $themeConfig = json_decode(file_get_contents($themeFolder . $value)); // on récup la config
+            $themeId = $themeConfig['author'] . '.' . $value; // on fais l'id
 
+            if ($themeId == $id)
+                return $themeConfig['version'];
+        }
+    }
+
+    public function isInstalled($id)
+    { // on le recherche avec son ID (auteur.name)
+        $find = $this->findPlugin('id', $id);
+        return (!empty($find) && $find->loaded);
+    }
+
+    public function findPluginsLinks()
+    {
+        $plugins = [];
+        foreach ($this->pluginsLoaded as $id => $data) {
+            if (isset($data->navbar_routes))
+                $plugins[$data->slug] = (object)['name' => $data->name, 'routes' => $data->navbar_routes];
+        }
         return $plugins;
     }
 
-    private function getPluginFromRepoName($repo, $assoc = true)
+    public function enable($dbID)
     {
-        $configUrl = "https://raw.githubusercontent.com/$repo/master/config.json";
-        if (!($config = @json_decode($this->controller->sendGetRequest($configUrl), $assoc)))
-            return false;
-        $config['repo'] = $repo;
-        return $config;
-    }
+        $this->models->Plugin->read(null, $dbID);
+        $this->models->Plugin->set(['state' => 1]);  // On change l'état dans la bdd
+        $this->models->Plugin->save();
 
-    public function getPluginsFromAPI(array $slugs)
-    {
-        $plugins = $this->getFreePlugins(true);
-        // each plugin
-        $pluginsToFind = array();
-        foreach ($plugins as $plugin) {
-            $plugin = json_decode(json_encode($plugin)); // to object
-            foreach ($slugs as $slug) {
-                if ($plugin->slug == $slug)
-                    $pluginsToFind[$plugin->slug] = $plugin;
+        $plugin = $this->models->Plugin->find('first', ['id' => $dbID]); // On récupére le nom
+        $pluginName = $plugin['Plugin']['name'];
+
+        // Custom callback
+        if (file_exists($this->pluginsFolder . DS . $pluginName . DS . 'Controller' . DS . 'Component' . DS . 'MainComponent.php')) {
+            App::uses('MainComponent', $this->pluginsFolder . DS . $pluginName . DS . 'Controller' . DS . 'Component');
+            if (class_exists('MainComponent')) {
+                $this->Main = new MainComponent();        // On lance l'event onEnable
+                $this->Main->onEnable();
             }
         }
-        return $pluginsToFind;
+
+        // load
+        CakePlugin::load([$pluginName => ['routes' => true, 'bootstrap' => true]]);
+
+        return true;
     }
 
-    public function getPluginsLastVersion(array $slug)
+    public function disable($dbID)
     {
-        $plugins = $this->getPluginsFromAPI($slug);
-        if ($plugins === false) return false;
-        $versions = array();
-        foreach ($plugins as $plugin) {
-            $versions[$plugin->slug] = $plugin->version;
+        $this->models->Plugin->read(null, $dbID);
+        $this->models->Plugin->set(['state' => 0]);  // On change l'état dans la bdd
+        $this->models->Plugin->save();
+
+        $plugin = $this->models->Plugin->find('first', ['id' => $dbID]); // On récupére le nom
+        $pluginName = $plugin['Plugin']['name'];
+
+        // Custom callback
+        if (file_exists($this->pluginsFolder . DS . $pluginName . DS . 'Controller' . DS . 'Component' . DS . 'MainComponent.php')) {
+            App::uses('MainComponent', $this->pluginsFolder . DS . $pluginName . DS . 'Controller' . DS . 'Component');
+            if (class_exists('MainComponent')) {
+                $this->Main = new MainComponent();        // On lance l'event onDisable
+                $this->Main->onDisable();
+            }
         }
-        return $versions;
-    }
 
-    public function getPluginFromAPI($slug)
-    {
-        $plugins = $this->getPluginsFromAPI(array($slug));
-        if (!$plugins || !isset($plugins[$slug])) return false;
-        return $plugins[$slug];
+        CakePlugin::unload($pluginName);
+        $this->clearCakeCache();
+
+        return true;
     }
 
     public function getPluginLastVersion($slug)

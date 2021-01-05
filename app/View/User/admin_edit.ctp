@@ -6,9 +6,9 @@
                     <h3 class="card-title"><?= $Lang->get('USER__EDIT_TITLE') ?></h3>
                 </div>
                 <div class="card-body">
-                    <form action="<?= $this->Html->url(array('controller' => 'user', 'action' => 'edit_ajax')) ?>"
+                    <form action="<?= $this->Html->url(['controller' => 'user', 'action' => 'edit_ajax']) ?>"
                           method="post" data-ajax="true"
-                          data-redirect-url="<?= $this->Html->url(array('controller' => 'user', 'action' => 'index', 'admin' => 'true')) ?>">
+                          data-redirect-url="<?= $this->Html->url(['controller' => 'user', 'action' => 'index', 'admin' => 'true']) ?>">
 
                         <input type="hidden" value="<?= $search_user['id'] ?>" name="id">
 
@@ -37,7 +37,7 @@
                                            class="form-control">
                                     <div class="input-group-append">
                                         <a class="btn btn-success<?= ($search_user['confirmed']) ? ' disabled' : '' ?>"
-                                           href="<?= ($search_user['confirmed']) ? '#' : $this->Html->url(array('action' => 'confirm', $search_user['id'])) ?>"><?= ($search_user['confirmed']) ? $Lang->get('USER__EMAIL_CONFIRMED') : $Lang->get('USER__CONFIRM_EMAIL') ?></a>
+                                           href="<?= ($search_user['confirmed']) ? '#' : $this->Html->url(['action' => 'confirm', $search_user['id']]) ?>"><?= ($search_user['confirmed']) ? $Lang->get('USER__EMAIL_CONFIRMED') : $Lang->get('USER__CONFIRM_EMAIL') ?></a>
                                     </div>
                                 </div>
                             </div>
@@ -78,7 +78,7 @@
                         <?= $Module->loadModules('admin_user_edit_form') ?>
 
                         <div class="float-right">
-                            <a href="<?= $this->Html->url(array('controller' => 'user', 'action' => 'index', 'admin' => true)) ?>"
+                            <a href="<?= $this->Html->url(['controller' => 'user', 'action' => 'index', 'admin' => true]) ?>"
                                class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
                             <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
                         </div>

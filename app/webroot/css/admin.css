@@ -1,3 +1,7 @@
+.dark-mode .text-dark {
+    color: white !important
+}
+
 .checkbox {
     padding: 5px 0px 5px 0px;
 }

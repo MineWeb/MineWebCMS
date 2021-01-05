@@ -3,7 +3,7 @@
 class MotdController extends AppController
 {
 
-    public $components = array('Session');
+    public $components = ['Session'];
 
     public function admin_index()
     {
@@ -71,7 +71,7 @@ class MotdController extends AppController
             $data = implode("\n", [$this->request->data['motd_line1'], $this->request->data['motd_line2']]);
         $this->ServerComponent->call(['SET_MOTD' => $data], $server_id);
         $this->History->set('EDIT_MOTD', 'motd');
-        $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('MOTD__EDIT_SUCCESS'))));
+        $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('MOTD__EDIT_SUCCESS')]));
         $this->Session->setFlash($this->Lang->get('MOTD__EDIT_SUCCESS'), 'default.success');
     }
 

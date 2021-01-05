@@ -47,7 +47,7 @@ class ThemeComponent extends CakeObject
         $this->EyPlugin = $this->controller->EyPlugin;
 
         // versioning
-        App::import('Vendor', 'load', array('file' => 'phar-io/version-master/load.php'));
+        App::import('Vendor', 'load', ['file' => 'phar-io/version-master/load.php']);
     }
 
     public function displayAvailableUpdate()
@@ -57,23 +57,13 @@ class ThemeComponent extends CakeObject
                 if (isset($value->lastVersion)) {
                     if ($value->version !== $value->lastVersion) {
                         $this->Lang = $this->controller->Lang;
-                        return '<div class="alert alert-secondary">'. $this->Lang->get('UPDATE__AVAILABLE_TYPE_THEME') . ' ' . $this->Lang->get('UPDATE__AVAILABLE') . ' ' . $this->Lang->get('UPDATE__THEME') . '<a href="' . Router::url(array('controller' => 'theme', 'action' => 'index', 'admin' => true)) . '" style="margin-top: -6px;" class="btn float-right">' . $this->Lang->get('GLOBAL__UPDATE_LOOK') . '</a></div>';
+                        return '<div class="alert alert-secondary">' . $this->Lang->get('UPDATE__AVAILABLE_TYPE_THEME') . ' ' . $this->Lang->get('UPDATE__AVAILABLE') . ' ' . $this->Lang->get('UPDATE__THEME') . '<a href="' . Router::url(['controller' => 'theme', 'action' => 'index', 'admin' => true]) . '" style="margin-top: -6px;" class="btn float-right">' . $this->Lang->get('GLOBAL__UPDATE_LOOK') . '</a></div>';
                     }
                 }
             }
         }
     }
 
-    private function getThemeFromAPI($slug)
-    {
-        if (isset($this->themesAvailable['all']))
-            foreach ($this->themesAvailable['all'] as $theme)
-                if (strtolower($theme['slug']) === strtolower($slug))
-                    return $theme;
-        return false;
-    }
-
-    // get themes in folder
     public function getThemesInstalled($api = true)
     {
         if (!empty($this->themesInstalled[$api]))
@@ -84,11 +74,11 @@ class ThemeComponent extends CakeObject
         $themes = scandir($dir);
         if ($themes === false) {
             $this->log('Unable to scan theme folder.');
-            return $this->themesInstalled[$api] = (object)array();
+            return $this->themesInstalled[$api] = (object)[];
         }
         // result
-        $themesList = (object)array();
-        $bypassedFiles = array('.', '..', '.DS_Store', '__MACOSX'); // not a theme
+        $themesList = (object)[];
+        $bypassedFiles = ['.', '..', '.DS_Store', '__MACOSX', '.gitkeep']; // not a theme
         // set themes on $this->themesAvailable
         if ($api)
             $this->getThemesOnAPI(true);
@@ -117,16 +107,8 @@ class ThemeComponent extends CakeObject
         return $this->themesInstalled[$api] = $themesList;
     }
 
-    private function getThemeFromRepoName($repo)
-    {
-        $configUrl = "https://raw.githubusercontent.com/$repo/master/Config/config.json";
-        if (!($config = @json_decode($this->controller->sendGetRequest($configUrl), true)))
-            return false;
-        $config['repo'] = $repo;
-        return $config;
-    }
+    // get themes in folder
 
-    // get themes on api
     public function getThemesOnAPI($all = true, $deleteInstalledThemes = false)
     {
         $type = ($all) ? 'all' : 'free';
@@ -135,7 +117,7 @@ class ThemeComponent extends CakeObject
 
         // get themes and cache the list
         $themesList = @json_decode($this->controller->sendGetRequest($this->reference), true);
-        Cache::set(array('duration' => '+24 hours'));
+        Cache::set(['duration' => '+24 hours']);
         $themes = Cache::read('themes');
         if (!$themes) {
             $themes = [];
@@ -171,12 +153,17 @@ class ThemeComponent extends CakeObject
         return $themes;
     }
 
-    public function getPath($slug)
+    private function getThemeFromRepoName($repo)
     {
-        return $this->themesFolder . DS . $slug;
+        $configUrl = "https://raw.githubusercontent.com/$repo/master/Config/config.json";
+        if (!($config = @json_decode($this->controller->sendGetRequest($configUrl), true)))
+            return false;
+        $config['repo'] = $repo;
+        return $config;
     }
 
-    // get config
+    // get themes on api
+
     public function getConfig($slug, $array = false)
     {
         $path = $this->getPath($slug) . DS . 'Config' . DS . 'config.json';
@@ -188,33 +175,55 @@ class ThemeComponent extends CakeObject
         return @json_decode(@file_get_contents($path), $array);
     }
 
-    public function setConfig($slug, $config = array())
+    public function getPath($slug)
     {
-        $path = $this->getPath($slug) . DS . 'Config' . DS . 'config.json';
-        if (strtolower($slug) === 'default' || !file_exists($path))
-            return @file_put_contents(ROOT . DS . 'config' . DS . 'theme.default.json', json_encode($config));
-        return @file_put_contents($path, json_encode($config));
+        return $this->themesFolder . DS . $slug;
     }
 
-    // get version
-    public function getVersion($slug)
+    // get config
+
+    public function checkSupported($slug)
     {
-        $config = $this->getConfig($slug);
-        if (!$config)
-            return false;
-        return $config->version;
+        $config = $this->getConfig($slug); // on récup la config
+        $supported = (is_object($config) && isset($config->supported) && !empty($config->supported)) ? $config->supported : null;
+        $errors = [];
+
+        $versionParser = new VersionConstraintParser();
+        if (is_array($supported))
+            foreach ($supported as $type => $version) { // on parcours tout les pré-requis
+                // Set version to compare
+                if ($type == 'CMS')
+                    $versionToCompare = trim(@file_get_contents(ROOT . DS . 'VERSION'));
+                else {
+                    // find plugin
+                    $search = $this->EyPlugin->findPlugin('id', $type);
+                    if (empty($search)) // plugin not installed
+                        continue;
+                    $versionToCompare = $search->version;
+                }
+
+                // Check
+                try {
+                    $neededVersion = $versionParser->parse($version); // ex: ^7.0
+                } catch (Exception $e) {
+                    $errors[$type] = $e->getMessage();
+                    continue;
+                }
+
+                try {
+                    if (!$neededVersion->complies(new Version($versionToCompare)))
+                        $errors[$type] = $version;
+                } catch (Exception $exception) {
+                    if (isset($search))
+                        $this->log('Theme (' . $slug . ') check supported: Plugin (' . $search->slug . ') invalid version: ' . $versionToCompare);
+                    else
+                        $this->log('Theme (' . $slug . ') check supported: Invalid version : ' . $versionToCompare . '(' . $type . ' => ' . $version . ')');
+                }
+            }
+
+        return $errors;
     }
 
-    public function getCurrentTheme()
-    {
-        $configuredTheme = $this->controller->Configuration->getKey('theme');
-        foreach ($this->getThemesInstalled(false) as $theme)
-            if ($configuredTheme === $theme->slug && $theme->valid)
-                return [$theme->slug, (array)$theme->configurations];
-        return ['default', $this->getConfig('default', true)['configurations']];
-    }
-
-    // check if valid
     private function isValid($slug)
     {
         $slug = ucfirst($slug);
@@ -236,7 +245,7 @@ class ThemeComponent extends CakeObject
         }
 
         // required files
-        $neededFiles = array('Config/config.json');
+        $neededFiles = ['Config/config.json'];
         foreach ($neededFiles as $key => $value) {
             if (!file_exists($file . DS . $value)) { // si le fichier existe bien
                 $this->log('Theme "' . $slug . '" not valid! The file or folder "' . $file . DS . $value . '" doesn\'t exist! Please verify documentation for more informations.');
@@ -246,7 +255,7 @@ class ThemeComponent extends CakeObject
         }
 
         // json configuration
-        $needToBeJSON = array('Config/config.json');
+        $needToBeJSON = ['Config/config.json'];
         foreach ($needToBeJSON as $key => $value) {
             if (json_decode(file_get_contents($file . DS . $value)) === false || json_decode(file_get_contents($file . DS . $value)) === null) { // si le JSON n'est pas valide
                 $this->log('Theme "' . $slug . '" not valid! The file "' . $file . DS . $value . '" is not at JSON format! Please verify documentation for more informations.');
@@ -257,7 +266,7 @@ class ThemeComponent extends CakeObject
 
         // check config
         $config = json_decode(file_get_contents($file . DS . 'Config' . DS . 'config.json'), true);
-        $needConfigKey = array('name' => 'string', 'slug' => 'string', 'author' => 'string', 'version' => 'string', 'configurations' => 'array', 'supported' => 'array');
+        $needConfigKey = ['name' => 'string', 'slug' => 'string', 'author' => 'string', 'version' => 'string', 'configurations' => 'array', 'supported' => 'array'];
         foreach ($needConfigKey as $key => $value) {
 
             $key = (is_array(explode('-', $key))) ? explode('-', $key) : $key; // si c'est une key multi-dimensionnel
@@ -316,95 +325,38 @@ class ThemeComponent extends CakeObject
         return $this->alreadyCheckValid[$slug] = true;
     }
 
+    // get version
+
+    private function getThemeFromAPI($slug)
+    {
+        if (isset($this->themesAvailable['all']))
+            foreach ($this->themesAvailable['all'] as $theme)
+                if (strtolower($theme['slug']) === strtolower($slug))
+                    return $theme;
+        return false;
+    }
+
+    public function getVersion($slug)
+    {
+        $config = $this->getConfig($slug);
+        if (!$config)
+            return false;
+        return $config->version;
+    }
+
+    // check if valid
+
+    public function getCurrentTheme()
+    {
+        $configuredTheme = $this->controller->Configuration->getKey('theme');
+        foreach ($this->getThemesInstalled(false) as $theme)
+            if ($configuredTheme === $theme->slug && $theme->valid)
+                return [$theme->slug, (array)$theme->configurations];
+        return ['default', $this->getConfig('default', true)['configurations']];
+    }
+
     // check if is outdated
-    public function checkSupported($slug)
-    {
-        $config = $this->getConfig($slug); // on récup la config
-        $supported = (is_object($config) && isset($config->supported) && !empty($config->supported)) ? $config->supported : null;
-        $errors = array();
 
-        $versionParser = new VersionConstraintParser();
-        if (is_array($supported))
-            foreach ($supported as $type => $version) { // on parcours tout les pré-requis
-                // Set version to compare
-                if ($type == 'CMS')
-                    $versionToCompare = trim(@file_get_contents(ROOT . DS . 'VERSION'));
-                else {
-                    // find plugin
-                    $search = $this->EyPlugin->findPlugin('id', $type);
-                    if (empty($search)) // plugin not installed
-                        continue;
-                    $versionToCompare = $search->version;
-                }
-
-                // Check
-                try {
-                    $neededVersion = $versionParser->parse($version); // ex: ^7.0
-                } catch (Exception $e) {
-                    $errors[$type] = $e->getMessage();
-                    continue;
-                }
-
-                try {
-                    if (!$neededVersion->complies(new Version($versionToCompare)))
-                        $errors[$type] = $version;
-                } catch (Exception $exception) {
-                    if (isset($search))
-                        $this->log('Theme (' . $slug . ') check supported: Plugin (' . $search->slug . ') invalid version: ' . $versionToCompare);
-                    else
-                        $this->log('Theme (' . $slug . ') check supported: Invalid version : ' . $versionToCompare . '(' . $type . ' => ' . $version . ')');
-                }
-            }
-
-        return $errors;
-    }
-
-    private function download($slug)
-    {
-        $zip = $this->controller->sendGetRequest('https://github.com/MineWeb/Theme-' . $slug . '/archive/master.zip');
-        if (!$zip)
-            return 'THEME__ERROR_INSTALL_DOWNLOAD_FAILED';
-
-        // Temporary file
-        $zipFile = ROOT . DS . 'app' . DS . 'tmp' . DS . 'theme-' . $slug . '.zip';
-        $file = fopen($zipFile, 'w+');
-        if (!fwrite($file, $zip)) {
-            $this->log('Error when downloading theme, save files failed.');
-            return 'THEME__ERROR_INSTALL_UNZIP';
-        }
-        fclose($file);
-
-        // Set into plugin folder
-        $zip = new ZipArchive;
-        $res = $zip->open($zipFile);
-        if ($res !== TRUE) {
-            $this->log('Error when downloading theme, unable to open zip. (CODE: ' . $res . ')');
-            return 'THEME__ERROR_INSTALL_UNZIP';
-        }
-        if (!file_exists(ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug) && !mkdir(ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug))
-            return 'THEME__ERROR_INSTALL_UNZIP';
-        for ($i = 0; $i < $zip->numFiles; $i++) {
-            $filename = $zip->getNameIndex($i);
-            $fileinfo = pathinfo($filename);
-            $stat = $zip->statIndex($i);
-            if ($fileinfo['basename'] === 'Theme-' . $slug . '-master') continue;
-
-            $target = "zip://" . $zipFile . "#" . $filename;
-            $dest = ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug . substr($filename, strlen('Theme-' . $slug . '-master'));
-            if ($stat['size'] === 0 && strpos($filename, '.') === false) {
-                if (!file_exists($dest)) mkdir($dest);
-                continue;
-            }
-            if (!copy($target, $dest)) return 'THEME__ERROR_INSTALL_UNZIP';
-        }
-        $zip->close();
-
-        // Delete temporary file
-        unlink($zipFile);
-        return true;
-    }
-
-    // install plugin
     public function install($slug, $update = false)
     {
         // ask to api
@@ -443,10 +395,56 @@ class ThemeComponent extends CakeObject
         return true;
     }
 
-    // return config + name
+    private function download($slug)
+    {
+        $zip = $this->controller->sendGetRequest('https://github.com/MineWeb/Theme-' . $slug . '/archive/master.zip');
+        if (!$zip)
+            return 'THEME__ERROR_INSTALL_DOWNLOAD_FAILED';
+
+        // Temporary file
+        $zipFile = ROOT . DS . 'app' . DS . 'tmp' . DS . 'theme-' . $slug . '.zip';
+        $file = fopen($zipFile, 'w+');
+        if (!fwrite($file, $zip)) {
+            $this->log('Error when downloading theme, save files failed.');
+            return 'THEME__ERROR_INSTALL_UNZIP';
+        }
+        fclose($file);
+
+        // Set into plugin folder
+        $zip = new ZipArchive;
+        $res = $zip->open($zipFile);
+        if ($res !== true) {
+            $this->log('Error when downloading theme, unable to open zip. (CODE: ' . $res . ')');
+            return 'THEME__ERROR_INSTALL_UNZIP';
+        }
+        if (!file_exists(ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug) && !mkdir(ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug))
+            return 'THEME__ERROR_INSTALL_UNZIP';
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $filename = $zip->getNameIndex($i);
+            $fileinfo = pathinfo($filename);
+            $stat = $zip->statIndex($i);
+            if ($fileinfo['basename'] === 'Theme-' . $slug . '-master') continue;
+
+            $target = "zip://" . $zipFile . "#" . $filename;
+            $dest = ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug . substr($filename, strlen('Theme-' . $slug . '-master'));
+            if ($stat['size'] === 0 && strpos($filename, '.') === false) {
+                if (!file_exists($dest)) mkdir($dest);
+                continue;
+            }
+            if (!copy($target, $dest)) return 'THEME__ERROR_INSTALL_UNZIP';
+        }
+        $zip->close();
+
+        // Delete temporary file
+        unlink($zipFile);
+        return true;
+    }
+
+    // install plugin
+
     public function getCustomData($slug)
     {
-        $config = (object)array();
+        $config = (object)[];
         if ($slug == "default") {
             $config = json_decode(file_get_contents(ROOT . DS . 'config' . DS . 'theme.default.json'), true);
             $theme_name = "Bootstrap";
@@ -464,10 +462,21 @@ class ThemeComponent extends CakeObject
         if (isset($config))
             $config = (array)$config;
         // return
-        return (isset($theme_name)) ? array($theme_name, $config) : false;
+        return (isset($theme_name)) ? [$theme_name, $config] : false;
+    }
+
+    // return config + name
+
+    public function setConfig($slug, $config = [])
+    {
+        $path = $this->getPath($slug) . DS . 'Config' . DS . 'config.json';
+        if (strtolower($slug) === 'default' || !file_exists($path))
+            return @file_put_contents(ROOT . DS . 'config' . DS . 'theme.default.json', json_encode($config));
+        return @file_put_contents($path, json_encode($config));
     }
 
     // Traite et enregistre les données passé pour la configurations perso d'un thème
+
     public function processCustomData($slug, $request)
     {
 
@@ -517,7 +526,7 @@ class ThemeComponent extends CakeObject
 
             } else {
 
-                $isValidImg = $this->Util->isValidImage($request, array('png', 'jpg', 'jpeg'));
+                $isValidImg = $this->Util->isValidImage($request, ['png', 'jpg', 'jpeg']);
 
                 if (!$isValidImg['status'] && $isValidImg['msg'] != $this->Lang->get('FORM__EMPTY_IMG')) {
                     $this->Session->setFlash($isValidImg['msg'], 'default.error');

@@ -1,8 +1,9 @@
 <?php
 App::uses('CakeEvent', 'Event');
 
-class Lostpassword extends AppModel {
+class Lostpassword extends AppModel
+{
 
-	public $belongsTo = 'User';
+    public $belongsTo = 'User';
 
 }

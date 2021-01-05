@@ -1,3 +1,5 @@
 <?php
-class Permission extends AppModel {
+
+class Permission extends AppModel
+{
 }

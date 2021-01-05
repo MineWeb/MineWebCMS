@@ -10,7 +10,8 @@
 
 namespace PharIo\Version;
 
-abstract class AbstractVersionConstraint implements VersionConstraint {
+abstract class AbstractVersionConstraint implements VersionConstraint
+{
     /**
      * @var string
      */
@@ -19,14 +20,16 @@ abstract class AbstractVersionConstraint implements VersionConstraint {
     /**
      * @param string $originalValue
      */
-    public function __construct($originalValue) {
+    public function __construct($originalValue)
+    {
         $this->originalValue = $originalValue;
     }
 
     /**
      * @return string
      */
-    public function asString() {
+    public function asString()
+    {
         return $this->originalValue;
     }
 }

@@ -6,7 +6,7 @@
     },
     "MESSAGES": {
         "GLOBAL__HOME": "Accueil",
-        "GLOBAL__FOOTER": "Tous droits réservés - 2020 <span class=\"pull-right\">Propulsé par <a href=\"http:\/\/mineweb.org\">mineweb.org<\/a><\/span>",
+        "GLOBAL__FOOTER": "Tous droits réservés - 2021 <span class=\"pull-right\">Propulsé par <a href=\"http:\/\/mineweb.org\">mineweb.org<\/a><\/span>",
         "GLOBAL__FOOTER_ADMIN": "<p>Développé par <a href=\"http:\/\/eywek.fr\">Eywek<\/a> & Designé par <a href=\"http:\/\/thisismac.fr\">Mac'<\/a>.<\/p><p>Site proposé par <a href=\"http:\/\/mineweb.org\">MineWeb<\/a> - Tous droit réservés.<\/p><p>Ce CMS est distribué sous la licence Open Source <a href=\"https://www.gnu.org/licenses/gpl-3.0.fr.html\" target=\"_blank\">GNU GPLv3</a>.<\/p><ul><li><a href=\"http:\/\/mineweb.org\">MineWeb<\/a><\/li><li class=\"muted\">·<\/li><li><a href=\"http:\/\/eywek.fr\">Eywek<\/a><\/li><li class=\"muted\">·<\/li><li><a href=\"http:\/\/thisismac.fr\">Mac'<\/a><\/li><\/ul>",
         "GLOBAL__FORMAT_DATE": "{%day}\/{%month}\/{%year} à {%hour|24}h{%minutes}",
         "GLOBAL__BY": "Par",
@@ -216,8 +216,8 @@
         "CONFIG__KEY_CAPTCHA_TYPE": "Type de captcha (Code de sécurité anti-robot)",
         "CONFIG__TYPE_CAPTCHA_GOOGLE": "ReCaptcha (Google)",
         "CONFIG__TYPE_CAPTCHA_HCAPTCHA": "H-Captcha",
-        "CONFIG__KEY_CAPTCHA_SITEKEY": "Clé du site (Diponible sur le site du Captcha)",
-        "CONFIG__KEY_CAPTCHA_SECRET": "Clé secrète (Diponible sur le site du Captcha)",
+        "CONFIG__KEY_CAPTCHA_SITEKEY": "Clé du site (Disponible sur le site du Captcha)",
+        "CONFIG__KEY_CAPTCHA_SECRET": "Clé secrète (Disponible sur le site du Captcha)",
         "CONFIG__KEY_CONFIRM_MAIL_SIGNUP": "Confirmation de l'email à l'inscription",
         "CONFIG__CONFIRM_MAIL_SIGNUP_EXPLAIN": "À l'inscription, un email sera envoyé à l'utilisateur, celui-ci devra le confirmer en cliquant sur le lien reçu dans le mail. Vous pouvez choisir si le compte est bloqué ou non si l'email n'est pas confirmé",
         "CONFIG__KEY_CONFIRM_MAIL_SIGNUP_BLOCK": "Bloquer le compte si non confirmé",
@@ -321,7 +321,6 @@
         "NAVBAR__LINK_TYPE_PAGE":"Page",
         "NAVBAR__LINK_TYPE_CUSTOM":"Personnalisé",
 
-
         "SEO__TITLE":"SEO",
         "SEO__CALLOUT": "SEO",
         "SEO__CALLOUT_MESSAGE": "L'optimisation pour les moteurs de recherche (SEO pour Search Engine Optimization) permet d'aider les moteurs de recherche à chercher les informations de votre site et de ses pages.<br>Les paramètres par défaut seront appliqués sur toutes les pages de votre site sauf si vous avez modifié les informations pour une page en particulier.",
@@ -345,7 +344,6 @@
         "SEO__PAGE_EDIT_SUCCESS": "Page modifiée avec succès !",
         "SEO__PAGE_DELETE_SUCCESS": "Page supprimée avec succès !",
         "SEO__KEEP_EMPTY": "Laisser vide pour utiliser les valeurs par défaut",
-
 		
         "MOTD__TITLE":"Gérer les MOTD",
         "MOTD__TITLE_DESC":"Vous pouvez dans cette section éditer facilement et instantanément le MOTD de tous vos serveurs, il faut cependant lier votre serveur Bukkit/Bungee (ou autres fork) avec le plugin de MineWeb (en version 3.0.2 ou supérieur) pour que votre serveur s'affiche dans cette liste ! <br>De plus vous pouvez réinitialiser votre MOTD pour que la config de votre serveur ou d'un autre plugin puisse prendre le dessus !",
@@ -537,6 +535,7 @@
         "SERVER__TYPE": "Type de la connexion",
         "SERVER__TYPE_DEFAULT": "Par défaut",
         "SERVER__TYPE_QUERY": "Ping (pas besoin de plugin)",
+        "SERVER__TYPE_QUERY_MCPE": "Ping MCPE (pas besoin de plugin)",
         "SERVER__TYPE_RCON": "RCON (pas besoin de plugin)",
         "SERVER__TYPE_DEFAULT_INFOS": "Vous avez besoin d'installer le plugin MineWebBridge sur votre serveur pour utiliser ce type de liaison. Toutes les informations relatives à cette manipulation sont disponibles sur <a href=\"http://docs.mineweb.org/#lier-serveur-site\">la documentation</a>",
         "SERVER__TYPE_QUERY_INFOS": "Vous n'avez pas besoin d'installer le plugin MineWebBridge sur votre serveur pour utiliser ce type de liaison. Ce type de liaison vous permet seulement d'afficher le nombre de connecté sur votre infrastructure. Toutes les informations relatives à cette manipulation sont disponibles sur <a href=\"http://docs.mineweb.org/#lier-serveur-site\">la documentation</a>",

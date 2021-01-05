@@ -4,35 +4,33 @@ App::uses('CakeEvent', 'Event');
 class User extends AppModel
 {
 
-    private $userData;
-
-    public $hasMany = array(
-        'Comment' => array(
+    public $hasMany = [
+        'Comment' => [
             'className' => 'Comment',
             'foreignKey' => 'user_id',
             'order' => 'Comment.created DESC',
             'dependent' => true
-        ),
-        'Like' => array(
+        ],
+        'Like' => [
             'className' => 'Like',
             'foreignKey' => 'user_id',
             'dependent' => true
-        )
-    );
-
+        ]
+    ];
+    private $userData;
     private $isConnected = null;
     private $isAdmin = null;
 
     public function validRegister($data, $UtilComponent)
     {
         if (preg_match('`^([a-zA-Z0-9_]{2,16})$`', $data['pseudo'])) {
-            $data['password'] = $UtilComponent->password($data['password'], $data['pseudo']);
-            $data['password_confirmation'] = $UtilComponent->password($data['password_confirmation'], $data['pseudo'], $data['password']);
             if ($data['password'] == $data['password_confirmation']) {
+                $data['password'] = $data['password_confirmation'] = $UtilComponent->password($data['password'], $data['pseudo']);
+
                 if (filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-                    $search_member_by_pseudo = $this->find('all', array('conditions' => array('pseudo' => $data['pseudo'])));
-                    $search_member_by_uuid = $this->find('all', array('conditions' => array('uuid' => $data['uuid'])));
-                    $search_member_by_email = $this->find('all', array('conditions' => array('email' => $data['email'])));
+                    $search_member_by_pseudo = $this->find('all', ['conditions' => ['pseudo' => $data['pseudo']]]);
+                    $search_member_by_uuid = $this->find('all', ['conditions' => ['uuid' => $data['uuid']]]);
+                    $search_member_by_email = $this->find('all', ['conditions' => ['email' => $data['email']]]);
                     if (empty($search_member_by_pseudo)) {
                         if (!ClassRegistry::init('Configuration')->getKey('check_uuid') || empty($search_member_by_uuid)) {
                             if (empty($search_member_by_email)) {
@@ -60,7 +58,7 @@ class User extends AppModel
     public function register($data, $UtilComponent)
     {
 
-        $data_to_save = array();
+        $data_to_save = [];
 
         $data_to_save['pseudo'] = htmlentities($data['pseudo']);
         $data_to_save['email'] = htmlentities($data['email']);
@@ -79,7 +77,7 @@ class User extends AppModel
         return $this->getLastInsertId();
     }
 
-    public function login($data, $confirmEmailIsNeeded = false, $checkUUID = false, $controller)
+    public function login($user, $data, $confirmEmailIsNeeded = false, $checkUUID = false, $controller)
     {
         $UtilComponent = $controller->Util;
         $LoginRetryTable = ClassRegistry::init('LoginRetry');
@@ -87,41 +85,34 @@ class User extends AppModel
         App::uses('CakeTime', 'Utility');
         $findRetryWithIP = $LoginRetryTable->find('first', ['conditions' => [
             'ip' => $ip,
-            'modified >= ' => CakeTime::format('-5 minutes', '%Y-%m-%d %H:%M:%S')
+            'modified >= ' => CakeTime::format('-10 minutes', '%Y-%m-%d %H:%M:%S')
         ], 'order' => 'created DESC']);
-
-        if (!empty($findRetryWithIP) && $findRetryWithIP['LoginRetry']['count'] >= 10)
-            return 'LOGIN__BLOCKED';
-        $username = $data['pseudo'];
-        $user = $this->find('first', ['conditions' => [
-            'pseudo' => $username,
-            'password' => $UtilComponent->password($data['password'], $username, $this->getFromUser('password', $username), $this->getFromUser('password_hash', $username))
-        ]]);
         $date = date('Y-m-d H:i:s');
-        if (empty($user)) {
-            if (empty($findRetryWithIP) or $findRetryWithIP['LoginRetry']['count'] >= 10) {
-                $LoginRetryTable->create();
-                $LoginRetryTable->set(array(
-                    'ip' => $ip,
-                    'count' => 1
-                ));
-                $LoginRetryTable->save();
-                return 'USER__ERROR_INVALID_CREDENTIALS';
-            } else {
-                $LoginRetryTable->updateAll(
-                    ['count' => 'count + 1', 'modified' => "'$date'"],
-                    ['ip' => $ip]
-                );
-                return 'USER__ERROR_INVALID_CREDENTIALS';
-            }
+        if (empty($findRetryWithIP)) {
+            $LoginRetryTable->create();
+            $LoginRetryTable->set([
+                'ip' => $ip,
+                'count' => 1
+            ]);
+            $LoginRetryTable->save();
+        } else {
+            $LoginRetryTable->updateAll(
+                ['count' => 'count + 1', 'modified' => "'$date'"],
+                ['ip' => $ip]
+            );
         }
-        $user = $user['User'];
+        if (!empty($findRetryWithIP) && $findRetryWithIP['LoginRetry']['count'] >= 5)
+            return 'LOGIN__BLOCKED';
+
+        $username = $user['pseudo'];
+        if ($user['password'] != $UtilComponent->password($data['password'], $username, $user['password'], $user['password_hash']))
+            return 'USER__ERROR_INVALID_CREDENTIALS';
         $LoginRetryTable->deleteAll(['ip' => $ip]);
-        $conditions = array();
-        
-        if($this->getFromUser('password_hash', $username) != $UtilComponent->getPasswordHashType()) {
+        $conditions = [];
+
+        if ($this->getFromUser('password_hash', $username) != $UtilComponent->getPasswordHashType()) {
             $conditions['password'] = $UtilComponent->password($data['password'], $username);
-            $conditions['password_hash'] =  $UtilComponent->getPasswordHashType();
+            $conditions['password_hash'] = $UtilComponent->getPasswordHashType();
         }
 
         if ($confirmEmailIsNeeded && !empty($user['confirmed']) && date('Y-m-d H:i:s', strtotime($user['confirmed'])) != $user['confirmed']) {
@@ -148,22 +139,41 @@ class User extends AppModel
         return ['status' => true, 'session' => $user['id']];
     }
 
+    public function getFromUser($key, $search)
+    {
+        $search_user = $this->find('first', ['conditions' => $this->__makeCondition($search)]);
+        return (!empty($search_user)) ? $search_user['User'][$key] : null;
+    }
+
+    public function __makeCondition($search)
+    {
+        if ((string)(int)$search == $search) {
+            return [
+                'id' => intval($search)
+            ];
+        } else {
+            return [
+                'pseudo' => $search
+            ];
+        }
+    }
+
     public function resetPass($data, $controller)
     {
         $UtilComponent = $controller->Util;
         if ($data['password'] == $data['password2']) {
             unset($data['password2']);
-            $search = $this->find('all', array('conditions' => array('email' => $data['email'])));
+            $search = $this->find('all', ['conditions' => ['email' => $data['email']]]);
             if (!empty($search)) {
 
                 $this->Lostpassword = ClassRegistry::init('Lostpassword');
-                $Lostpassword = $this->Lostpassword->find('all', array('conditions' => array('email' => $data['email'], 'key' => $data['key'])));
+                $Lostpassword = $this->Lostpassword->find('all', ['conditions' => ['email' => $data['email'], 'key' => $data['key']]]);
                 if (!empty($Lostpassword) && strtotime('+1 hour', strtotime($Lostpassword[0]['Lostpassword']['created'])) >= time()) {
 
                     $data_to_save['password'] = $UtilComponent->password($data['password'], $search['0']['User']['pseudo']);
                     $data_to_save['password_hash'] = $UtilComponent->getPasswordHashType();
 
-                    $event = new CakeEvent('beforeResetPassword', $this, array('user_id' => $search[0]['User']['id'], 'new_password' => $data_to_save['password']));
+                    $event = new CakeEvent('beforeResetPassword', $this, ['user_id' => $search[0]['User']['id'], 'new_password' => $data_to_save['password']]);
                     $controller->getEventManager()->dispatch($event);
                     if ($event->isStopped()) {
                         return $event->result;
@@ -175,7 +185,7 @@ class User extends AppModel
                     $this->set($data_to_save);
                     $this->save();
 
-                    return array('status' => true, 'session' => $search[0]['User']['id']);
+                    return ['status' => true, 'session' => $search[0]['User']['id']];
 
                 } else {
                     return 'USER__PASSWORD_RESET_INVALID_KEY';
@@ -188,17 +198,17 @@ class User extends AppModel
         }
     }
 
-    private function getDataBySession()
-    {
-        if (empty($this->userData))
-            $this->userData = $this->find('first', array('conditions' => array('id' => CakeSession::read('user'))));
-        return $this->userData;
-    }
-
     public function isConnected()
     {
         $user = $this->getDataBySession();
         return !empty($user);
+    }
+
+    private function getDataBySession()
+    {
+        if (empty($this->userData))
+            $this->userData = $this->find('first', ['conditions' => ['id' => CakeSession::read('user')]]);
+        return $this->userData;
     }
 
     public function isAdmin()
@@ -208,22 +218,9 @@ class User extends AppModel
         return ($user['User']['rank'] == 3 || $user['User']['rank'] == 4);
     }
 
-    public function __makeCondition($search)
-    {
-        if ((string)(int)$search == $search) {
-            return array(
-                'id' => intval($search)
-            );
-        } else {
-            return array(
-                'pseudo' => $search
-            );
-        }
-    }
-
     public function exist($search)
     { //username || id
-        $search_user = $this->find('first', array('conditions' => $this->__makeCondition($search)));
+        $search_user = $this->find('first', ['conditions' => $this->__makeCondition($search)]);
         return (!empty($search_user));
     }
 
@@ -253,36 +250,30 @@ class User extends AppModel
 
     public function getUsernameByID($id)
     {
-        $search_user = $this->find('first', array('conditions' => array('id' => $id)));
+        $search_user = $this->find('first', ['conditions' => ['id' => $id]]);
         return (!empty($search_user)) ? $search_user['User']['pseudo'] : '';
-    }
-
-    public function getFromUser($key, $search)
-    {
-        $search_user = $this->find('first', array('conditions' => $this->__makeCondition($search)));
-        return (!empty($search_user)) ? $search_user['User'][$key] : NULL;
     }
 
     public function getAllFromCurrentUser()
     {
         if (CakeSession::check('user')) {
             $search_user = $this->getDataBySession(CakeSession::read('user'));
-            return ($search_user) ? $search_user['User'] : NULL;
+            return ($search_user) ? $search_user['User'] : null;
         }
     }
 
     public function getAllFromUser($search = null)
     {
-        $search_user = $this->find('first', array('conditions' => $this->__makeCondition($search)));
+        $search_user = $this->find('first', ['conditions' => $this->__makeCondition($search)]);
         if (!empty($search_user)) {
-            return ($search_user) ? $search_user['User'] : NULL;
+            return ($search_user) ? $search_user['User'] : null;
         }
-        return array();
+        return [];
     }
 
     public function setToUser($key, $value, $search)
     {
-        $search_user = $this->find('first', array('conditions' => $this->__makeCondition($search)));
+        $search_user = $this->find('first', ['conditions' => $this->__makeCondition($search)]);
         if (!empty($search_user)) {
             $this->id = $search_user['User']['id'];
             return $this->saveField($key, $value);

@@ -36,10 +36,10 @@ require ROOT . '/config/function.php';
 class AppController extends Controller
 {
 
-    var $components = array('Util', 'Module', 'Session', 'Cookie', 'Security', 'EyPlugin', 'Lang', 'Theme', 'History', 'Statistics', 'Permissions', 'Update', 'Server');
-    var $helpers = array('Session');
+    public $components = ['Util', 'Module', 'Session', 'Cookie', 'Security', 'EyPlugin', 'Lang', 'Theme', 'History', 'Statistics', 'Permissions', 'Update', 'Server'];
+    public $helpers = ['Session'];
 
-    var $view = 'Theme';
+    public $view = 'Theme';
 
     protected $isConnected = false;
 
@@ -93,10 +93,23 @@ class AppController extends Controller
         // lowercase to avoid errors when the controller is called with uppercase
         $this->params['controller'] = strtolower($this->params['controller']);
         $this->params['action'] = strtolower($this->params['action']);
-        if ($this->isConnected and $this->User->getKey('rank') == 5 and $this->params['controller'] != "maintenance" and $this->params['action'] != "logout" and $this->params['controller'] != "api")
-            $this->redirect(array('controller' => 'maintenance', 'action' => 'index/banned', 'plugin' => false, 'admin' => false));
-        else if ($this->params['controller'] != "user" && $this->params['controller'] != "maintenance" && $this->Configuration->getKey('maintenance') != '0' && !$this->Permissions->can('BYPASS_MAINTENANCE') && $LoginCondition)
-            $this->redirect(array('controller' => 'maintenance', 'action' => 'index', 'plugin' => false, 'admin' => false));
+        if ($this->isConnected and $this->User->getKey('rank') == 5 and $this->params['controller'] != "maintenance" and $this->params['action'] != "logout" and $this->params['controller'] != "api") {
+            $this->redirect([
+                'controller' => 'maintenance',
+                'action' => 'index/banned',
+                'plugin' => false,
+                'admin' => false
+            ]);
+        } else {
+            if ($this->params['controller'] != "user" && $this->params['controller'] != "maintenance" && $this->Configuration->getKey('maintenance') != '0' && !$this->Permissions->can('BYPASS_MAINTENANCE') && $LoginCondition) {
+                $this->redirect([
+                    'controller' => 'maintenance',
+                    'action' => 'index',
+                    'plugin' => false,
+                    'admin' => false
+                ]);
+            }
+        }
 
     }
 
@@ -115,9 +128,9 @@ class AppController extends Controller
         // Session
         $session_type = $this->Configuration->getKey('session_type');
         if ($session_type) {
-            Configure::write('Session', array(
+            Configure::write('Session', [
                 'defaults' => $session_type
-            ));
+            ]);
         }
 
         // partie sociale
@@ -165,30 +178,10 @@ class AppController extends Controller
         ));
     }
 
-    private function __initUser()
+    protected function __setTheme()
     {
-        $this->loadModel('User');
-
-        if (!$this->User->isConnected() && ($cookie = $this->Cookie->read('remember_me')) && isset($cookie['pseudo']) && isset($cookie['password'])) {
-            $user = $this->User->find('first', array(
-                'conditions' => array(
-                    'pseudo' => $cookie['pseudo'],
-                    'password' => $cookie['password']
-                )
-            ));
-
-            if (!empty($user))
-                $this->Session->write('user', $user['User']['id']);
-        }
-
-        $this->isConnected = $this->User->isConnected();
-        $this->set('isConnected', $this->isConnected);
-
-        $user = ($this->isConnected) ? $this->User->getAllFromCurrentUser() : array();
-        if (!empty($user))
-            $user['isAdmin'] = $this->User->isAdmin();
-
-        $this->set(compact('user'));
+        if (!isset($this->params['prefix']) or $this->params['prefix'] !== "admin")
+            $this->theme = Configure::read('theme');
     }
 
     protected function __initSecurity()
@@ -205,9 +198,45 @@ class AppController extends Controller
         $this->set(compact('csrfToken'));
     }
 
+    private function __initUser()
+    {
+        $this->loadModel('User');
+
+        if (!$this->User->isConnected() && ($cookie = $this->Cookie->read('remember_me')) && isset($cookie['pseudo']) && isset($cookie['password'])) {
+            $user = $this->User->find('first', ['conditions' => ['pseudo' => $cookie['pseudo']]]);
+
+            if (!empty($user) && $user['User']['password'] == $cookie['password'])
+                $this->Session->write('user', $user['User']['id']);
+        }
+
+        $this->isConnected = $this->User->isConnected();
+        $this->set('isConnected', $this->isConnected);
+
+        $user = ($this->isConnected) ? $this->User->getAllFromCurrentUser() : [];
+        if (!empty($user))
+            $user['isAdmin'] = $this->User->isAdmin();
+
+        $this->set(compact('user'));
+    }
+
+    public function __initWebsiteInfos()
+    {
+        $this->loadModel('User');
+        $this->loadModel('Visit');
+        $users_count = $this->User->find('count');
+        $users_last = $this->User->find('first', ['order' => 'created DESC']);
+        $users_last = $users_last['User'];
+        $users_count_today = $this->User->find('count', ['conditions' => ['created LIKE' => date('Y-m-d') . '%']]);
+        $visits_count = $this->Visit->getVisitsCount();
+        $visits_count_today = $this->Visit->getVisitsByDay(date('Y-m-d'))['count'];
+        $admin_dark_mode = $this->Cookie->read('use_admin_dark_mode');
+        $this->set(compact('users_count', 'users_last', 'users_count_today', 'visits_count', 'visits_count_today', 'admin_dark_mode'));
+
+    }
+
     public function __initAdminNavbar()
     {
-        $nav = array(
+        $nav = [
             'Dashboard' => [
                 'icon' => 'fas fa-tachometer-alt',
                 'route' => ['controller' => 'admin', 'action' => 'index', 'admin' => true, 'plugin' => false]
@@ -336,7 +365,7 @@ class AppController extends Controller
                 'permission' => 'MANAGE_UPDATE',
                 'route' => ['controller' => 'update', 'action' => 'index', 'admin' => true, 'plugin' => false]
             ]
-        );
+        ];
 
         // Functions
         if (!function_exists('addToNav')) {
@@ -370,12 +399,16 @@ class AppController extends Controller
 
         // Add slider if !useless
         $themeConfig = $this->Theme->getConfig(Configure::read('theme'));
-        if (isset($themeConfig->slider) && $themeConfig->slider)
-            $nav['GLOBAL__CUSTOMIZE']['menu'] = addToArrayAt($nav['GLOBAL__CUSTOMIZE']['menu'], count($nav['GLOBAL__CUSTOMIZE']['menu']), ['SLIDER__TITLE' => [
-                'icon' => 'far fa-image',
-                'permission' => 'MANAGE_SLIDER',
-                'route' => ['controller' => 'slider', 'action' => 'index', 'admin' => true, 'plugin' => false]
-            ]]);
+        if (isset($themeConfig->slider) && $themeConfig->slider) {
+            $nav['GLOBAL__CUSTOMIZE']['menu'] = addToArrayAt($nav['GLOBAL__CUSTOMIZE']['menu'],
+                count($nav['GLOBAL__CUSTOMIZE']['menu']), [
+                    'SLIDER__TITLE' => [
+                        'icon' => 'far fa-image',
+                        'permission' => 'MANAGE_SLIDER',
+                        'route' => ['controller' => 'slider', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ]
+                ]);
+        }
 
         // Handle plugins
         $plugins = $this->EyPlugin->pluginsLoaded;
@@ -392,11 +425,11 @@ class AppController extends Controller
     public function __initNavbar()
     {
         $this->loadModel('Navbar');
-        $nav = $this->Navbar->find('all', array('order' => 'order'));
+        $nav = $this->Navbar->find('all', ['order' => 'order']);
         if (empty($nav))
             return $this->set('nav', false);
         $this->loadModel('Page');
-        $pages = $this->Page->find('all', array('fields' => array('id', 'slug')));
+        $pages = $this->Page->find('all', ['fields' => ['id', 'slug']]);
         foreach ($pages as $key => $value)
             $pages_listed[$value['Page']['id']] = $value['Page']['slug'];
         foreach ($nav as $key => $value) {
@@ -411,12 +444,12 @@ class AppController extends Controller
                     $nav[$key]['Navbar']['url'] = (isset($value['Navbar']['url']['route'])) ? Router::url($value['Navbar']['url']['route']) : Router::url('/' . strtolower($plugin->slug));
                 else
                     $nav[$key]['Navbar']['url'] = '#';
-            } elseif ($value['Navbar']['url']['type'] == "page") {
+            } else if ($value['Navbar']['url']['type'] == "page") {
                 if (isset($pages_listed) && isset($pages_listed[$value['Navbar']['url']['id']]))
                     $nav[$key]['Navbar']['url'] = Router::url('/p/' . $pages_listed[$value['Navbar']['url']['id']]);
                 else
                     $nav[$key]['Navbar']['url'] = '#';
-            } elseif ($value['Navbar']['url']['type'] == "custom") {
+            } else if ($value['Navbar']['url']['type'] == "custom") {
                 $nav[$key]['Navbar']['url'] = $value['Navbar']['url']['url'];
             }
         }
@@ -435,27 +468,15 @@ class AppController extends Controller
         if (!isset($server_infos['GET_MAX_PLAYERS']) || !isset($server_infos['GET_PLAYER_COUNT']) || $server_infos['GET_MAX_PLAYERS'] === 0)
             return $this->set(['banner_server' => false, 'server_infos' => $server_infos]);
 
-        $this->set(['banner_server' => $this->Lang->get('SERVER__STATUS_MESSAGE', array(
-            '{MOTD}' => @$server_infos['getMOTD'],
-            '{VERSION}' => @$server_infos['getVersion'],
-            '{ONLINE}' => @$server_infos['GET_PLAYER_COUNT'],
-            '{ONLINE_LIMIT}' => @$server_infos['GET_MAX_PLAYERS']
-        )), 'server_infos' => $server_infos]);
-
-    }
-
-    public function __initWebsiteInfos()
-    {
-        $this->loadModel('User');
-        $this->loadModel('Visit');
-        $users_count = $this->User->find('count');
-        $users_last = $this->User->find('first', array('order' => 'created DESC'));
-        $users_last = $users_last['User'];
-        $users_count_today = $this->User->find('count', array('conditions' => array('created LIKE' => date('Y-m-d') . '%')));
-        $visits_count = $this->Visit->getVisitsCount();
-        $visits_count_today = $this->Visit->getVisitsByDay(date('Y-m-d'))['count'];
-        $admin_dark_mode = $this->Cookie->read('use_admin_dark_mode');
-        $this->set(compact('users_count', 'users_last', 'users_count_today', 'visits_count', 'visits_count_today', 'admin_dark_mode'));
+        $this->set([
+            'banner_server' => $this->Lang->get('SERVER__STATUS_MESSAGE', [
+                '{MOTD}' => @$server_infos['getMOTD'],
+                '{VERSION}' => @$server_infos['getVersion'],
+                '{ONLINE}' => @$server_infos['GET_PLAYER_COUNT'],
+                '{ONLINE_LIMIT}' => @$server_infos['GET_MAX_PLAYERS']
+            ]),
+            'server_infos' => $server_infos
+        ]);
 
     }
 
@@ -483,16 +504,16 @@ class AppController extends Controller
     public function __initSeoConfiguration()
     {
         $this->loadModel('Seo');
-        $default = $this->Seo->find('first', ["conditions" => ['page' => null]])['Seo'];
+        $default = $this->Seo->find('first', ["conditions" => ['page' => null]]);
         $current_url = $this->here;
-        $get_page = $this->Seo->find('first', ["conditions" => ['page' => $current_url]])['Seo'];
-        $seo_config['title'] = (!empty($get_page['title'])) ? $get_page['title'] : $default['title'];
-        $seo_config['description'] = (!empty($get_page['description'])) ? $get_page['description'] : $default['description'];
-        $seo_config['img_url'] = (!empty($get_page['img_url'])) ? $get_page['img_url'] : $default['img_url'];
-        $seo_config['favicon_url'] = (!empty($get_page['favicon_url'])) ? $get_page['favicon_url'] : $default['favicon_url'];
-        $seo_config['img_url'] = (empty($seo_config['img_url'])) ? $seo_config['favicon_url'] : $seo_config['img_url'];
-        $seo_config['title'] = str_replace(["{TITLE}", "{WEBSITE_NAME}"], [$this->viewVars['title_for_layout'], $this->viewVars['website_name']], $seo_config['title']);
-
+        $get_page = $this->Seo->find('first', ["conditions" => ['page' => $current_url]]);
+        $seo_config['title'] = (!empty($default['Seo']['title']) ? $default['Seo']['title'] : "{TITLE} - {WEBSITE_NAME}");
+        $seo_config['title'] = (!empty($get_page['Seo']['title']) ? $get_page['Seo']['title'] : $seo_config['title']);
+        $seo_config['description'] = (!empty($get_page['Seo']['description']) ? $get_page['Seo']['description'] : (!empty($default['Seo']['description']) ? $default['Seo']['description'] : ""));
+        $seo_config['img_url'] = (!empty($get_page['Seo']['img_url']) ? $get_page['Seo']['img_url'] : (!empty($default['Seo']['img_url']) ? $default['Seo']['img_url'] : ""));
+        $seo_config['favicon_url'] = (!empty($get_page['Seo']['favicon_url']) ? $get_page['Seo']['favicon_url'] : (!empty($default['Seo']['favicon_url']) ? $default['Seo']['favicon_url'] : ""));
+        $seo_config['img_url'] = (empty($seo_config['img_url']) ? $seo_config['favicon_url'] : $seo_config['img_url']);
+        $seo_config['title'] = str_replace(["{TITLE}", "{WEBSITE_NAME}"], [(!empty($this->viewVars['title_for_layout']) ? $this->viewVars['title_for_layout'] : "Error"), (!empty($this->viewVars['website_name']) ? $this->viewVars['website_name'] : "MineWeb")], $seo_config['title']);
         $this->set(compact('seo_config'));
     }
 
@@ -507,19 +528,13 @@ class AppController extends Controller
 
     }
 
-    protected function __setTheme()
-    {
-        if (!isset($this->params['prefix']) or $this->params['prefix'] !== "admin")
-            $this->theme = Configure::read('theme');
-    }
-
     public function blackhole($type)
     {
         if ($type == "csrf") {
             $this->autoRender = false;
             if ($this->request->is('ajax')) {
                 $this->response->type('json');
-                $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__CSRF'))));
+                $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('ERROR__CSRF')]));
                 $this->response->send();
                 exit;
             } else {

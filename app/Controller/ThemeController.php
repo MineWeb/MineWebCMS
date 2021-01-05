@@ -26,7 +26,7 @@ class ThemeController extends AppController
         $this->Configuration->setKey('theme', $slug);
         $this->History->set('SET_THEME', 'theme');
         $this->Session->setFlash($this->Lang->get('THEME__ENABLED_SUCCESS'), 'default.success');
-        $this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
+        $this->redirect(['controller' => 'theme', 'action' => 'index', 'admin' => true]);
     }
 
     function admin_delete($slug = false)
@@ -39,13 +39,13 @@ class ThemeController extends AppController
 
         if ($this->Configuration->getKey('theme') == $slug) { // active theme
             $this->Session->setFlash($this->Lang->get('THEME__CANT_DELETE_IF_ACTIVE'), 'default.error');
-            $this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
+            $this->redirect(['controller' => 'theme', 'action' => 'index', 'admin' => true]);
         }
 
         clearDir(ROOT . '/app/View/Themed/' . $slug);
         $this->History->set('DELETE_THEME', 'theme');
         $this->Session->setFlash($this->Lang->get('THEME__DELETE_SUCCESS'), 'default.success');
-        $this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
+        $this->redirect(['controller' => 'theme', 'action' => 'index', 'admin' => true]);
     }
 
     function admin_install($slug = false)
@@ -60,12 +60,12 @@ class ThemeController extends AppController
 
         if ($error !== true) {
             $this->Session->setFlash($this->Lang->get($error), 'default.error');
-            return $this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
+            return $this->redirect(['controller' => 'theme', 'action' => 'index', 'admin' => true]);
         }
 
         $this->History->set('INSTALL_THEME', 'theme');
         $this->Session->setFlash($this->Lang->get('THEME__INSTALL_SUCCESS'), 'default.success');
-        $this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
+        $this->redirect(['controller' => 'theme', 'action' => 'index', 'admin' => true]);
     }
 
     function admin_update($slug)
@@ -79,12 +79,12 @@ class ThemeController extends AppController
         $error = $this->Theme->install($slug, true);
         if ($error !== true) {
             $this->Session->setFlash($this->Lang->get($error), 'default.error');
-            return $this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
+            return $this->redirect(['controller' => 'theme', 'action' => 'index', 'admin' => true]);
         }
 
         $this->History->set('UPDATE_THEME', 'theme');
         $this->Session->setFlash($this->Lang->get('THEME__UPDATE_SUCCESS'), 'default.success');
-        $this->redirect(array('controller' => 'theme', 'action' => 'index', 'admin' => true));
+        $this->redirect(['controller' => 'theme', 'action' => 'index', 'admin' => true]);
     }
 
     function admin_custom($slug = false)
@@ -103,7 +103,7 @@ class ThemeController extends AppController
         if ($this->request->is('post')) {
             if ($this->Theme->processCustomData($slug, $this->request)) // success save
                 $this->Session->setFlash($this->Lang->get('THEME__CUSTOMIZATION_SUCCESS'), 'default.success');
-            return $this->redirect(array('controller' => 'theme', 'action' => 'custom', 'admin' => true, $slug));
+            return $this->redirect(['controller' => 'theme', 'action' => 'custom', 'admin' => true, $slug]);
         }
 
         if ($slug != "default") // custom theme
@@ -132,10 +132,10 @@ class ThemeController extends AppController
             $file = new File($path);
             $basename = substr($path, strlen($CSSfolder));
 
-            $css_files[] = array(
+            $css_files[] = [
                 'basename' => $basename,
                 'name' => $file->name
-            );
+            ];
         }
 
         $this->set(compact('slug', 'css_files'));
@@ -185,7 +185,7 @@ class ThemeController extends AppController
             throw new NotFoundException();
 
         @file_put_contents($CSSfolder . DS . $file, $content);
-        $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('THEME__CUSTOM_FILES_FILE_CONTENT_SAVE_SUCCESS'))));
+        $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('THEME__CUSTOM_FILES_FILE_CONTENT_SAVE_SUCCESS')]));
     }
 
 }

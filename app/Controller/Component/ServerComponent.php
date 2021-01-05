@@ -4,14 +4,13 @@ App::uses('CakeObject', 'Core');
 class ServerComponent extends CakeObject
 {
 
-    private $timeout = NULL;
-    private $config = NULL;
-    private $online = NULL;
     public $lastErrorMessage = null;
     public $linkErrorCode = null;
-
     public $controller;
-    public $components = array('Session', 'Configuration');
+    public $components = ['Session', 'Configuration'];
+    private $timeout = null;
+    private $config = null;
+    private $online = null;
 
     public function initialize($controller)
     {
@@ -36,27 +35,6 @@ class ServerComponent extends CakeObject
     {
     }
 
-    private function parse($methods)
-    {
-        $result = array();
-        foreach ($methods as $method) {
-            if (!is_array($method)) {
-                $result[] = array(
-                    'name' => $method,
-                    'args' => []
-                );
-                continue;
-            }
-            foreach ($method as $name => $args) {
-                $result[] = array(
-                    'name' => $name,
-                    'args' => (is_array($args)) ? $args : [$args]
-                );
-            }
-        }
-        return $result;
-    }
-
     function getServerIdConnected($username, $type = "BUKKIT")
     {
         $servers = ClassRegistry::init('Server')->find('all', ['conditions' => ['type' => 0]]);
@@ -79,13 +57,10 @@ class ServerComponent extends CakeObject
         return $this->call($call, $server_id)['GET_PLUGIN_TYPE'];
     }
 
-    private function parseResult($result)
+    public function getFirstServerID()
     {
-        $methods = array();
-        foreach ($result as $method) {
-            $methods[] = [$method['name'] => $method['response']];
-        }
-        return $methods;
+        $get = ClassRegistry::init('Server')->find('first');
+        return (!empty($get)) ? $get['Server']['id'] : null;
     }
 
     public function call($methods = [], $server_id = false, $debug = false)
@@ -100,17 +75,17 @@ class ServerComponent extends CakeObject
         $config = $this->getConfig($server_id);
 
         if (!is_array($methods)) {// transform into array
-            $methods = array(array($methods => array()));
+            $methods = [[$methods => []]];
             $multi = false;
         } else if (!isset($methods[0])) {
-            $result = array();
+            $result = [];
             foreach ($methods as $name => $args)
                 $result[] = [$name => (is_array($args)) ? $args : [$args]];
             $methods = $result;
             $multi = false;
         }
 
-        if ($config['type'] == 1 || $config['type'] == 2) {
+        if ($config['type'] == 1 || $config['type'] == 2 || $config['type'] == 3) {
             $methodsName = array_map(function ($method) {
                 return array_keys($method)[0];
             }, $methods);
@@ -125,7 +100,7 @@ class ServerComponent extends CakeObject
             }
 
             if (count($methodsName) > 0) {
-                $ping = $this->ping(array('ip' => $config['ip'], 'port' => $config['port']));
+                $ping = $this->ping(['ip' => $config['ip'], 'port' => $config['port'], 'udp' => $config['type'] == 3]);
                 foreach ($methods as $key => $method) {
                     $name = array_keys($method)[0];
                     if (isset($ping[$name]))
@@ -156,7 +131,7 @@ class ServerComponent extends CakeObject
         if ($debug) {
             if (json_decode($return) != false)
                 $return = json_decode($return);
-            return array('get' => $url, 'return' => $return);
+            return ['get' => $url, 'return' => $return];
         }
 
         // response
@@ -186,74 +161,6 @@ class ServerComponent extends CakeObject
         }
     }
 
-    private function request($url, $data, $timeout = false)
-    {
-        if (!$timeout)
-            $timeout = $this->getTimeout();
-
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_COOKIESESSION, true);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-                'Content-Type: application/json',
-                'Content-Length: ' . strlen($data))
-        );
-
-        $return = curl_exec($curl);
-        $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        $error = curl_errno($curl);
-        curl_close($curl);
-        return array($return, $code, $error);
-    }
-
-    private function pkcs5_pad($text, $blocksize)
-    {
-        $pad = $blocksize - (strlen($text) % $blocksize);
-        return $text . str_repeat(chr($pad), $pad);
-    }
-
-    private function encryptWithKey($data)
-    {
-        if (!isset($this->key))
-            $this->key = $this->configModel->find('first')['Configuration']['server_secretkey'];
-        $iv_size = openssl_cipher_iv_length('aes-128-cbc'); // AES-128-CBC or  AES-256-CBC
-        $iv = openssl_random_pseudo_bytes($iv_size);
-
-        $data = $this->pkcs5_pad($data, 16);
-
-        $signed = openssl_encrypt($data, 'aes-128-cbc', substr($this->key, 0, 16), OPENSSL_ZERO_PADDING, $iv);
-        if ($signed === false)
-            $this->log('Server: openssl_encrypt failed.');
-        return json_encode(array('signed' => ($signed), 'iv' => base64_encode($iv)));
-    }
-
-    private function decryptWithKey($data, $iv)
-    {
-        if (!isset($this->key))
-            $this->key = $this->configModel->find('first')['Configuration']['server_secretkey'];
-        $iv = base64_decode($iv);
-        $data = base64_decode($data);
-        return openssl_decrypt($data, 'AES-128-CBC', substr($this->key, 0, 16), OPENSSL_RAW_DATA, $iv);
-    }
-
-    public function getFirstServerID()
-    {
-        $get = ClassRegistry::init('Server')->find('first');
-        return (!empty($get)) ? $get['Server']['id'] : null;
-    }
-
-    private function getTimeout()
-    {
-        if (!empty($this->timeout))
-            return $this->timeout;
-        return $this->configModel->find('first')['Configuration']['server_timeout'];
-    }
-
     public function getConfig($server_id = false)
     {
         if ($server_id === false)
@@ -268,39 +175,16 @@ class ServerComponent extends CakeObject
 
         $this->Timeout = $configuration['Configuration']['server_timeout'];
         $this->Server = ClassRegistry::init('Server');
-        $search = $this->Server->find('first', array('conditions' => array('id' => $server_id)));
+        $search = $this->Server->find('first', ['conditions' => ['id' => $server_id]]);
         if (empty($search))
             return $this->config[$server_id] = false;
 
-        return $this->config[$server_id] = array(
+        return $this->config[$server_id] = [
             'ip' => $search['Server']['ip'],
             'port' => $search['Server']['port'],
             'type' => $search['Server']['type'],
             'data' => json_decode($search['Server']['data'], true)
-        );
-    }
-
-    public function ping($config = false)
-    {
-        if (!$config || !isset($config['ip']) || !isset($config['port']))
-            return false;
-
-        App::import('Vendor', 'MinecraftPing', array('file' => 'ping-xpaw/MinecraftPing.php'));
-        App::import('Vendor', 'MinecraftPingException', array('file' => 'ping-xpaw/MinecraftPingException.php'));
-
-        try {
-            $Query = new MinecraftPing($config['ip'], $config['port'], $this->getTimeout());
-            $Info = $Query->Query();
-        } catch (MinecraftPingException $e) {
-            return false;
-        }
-        $Query->Close();
-
-        return (isset($Info['players'])) ? array(
-            'GET_MOTD' => $Info['description'],
-            'GET_VERSION' => $Info['version']['name'],
-            'GET_PLAYER_COUNT' => $Info['players']['online'],
-            'GET_MAX_PLAYERS' => $Info['players']['max']) : false;
+        ];
     }
 
     public function rcon($config = false, $cmd = '')
@@ -308,12 +192,42 @@ class ServerComponent extends CakeObject
         if (!$config || !isset($config['ip']) || !isset($config['port']) || !isset($config['password']))
             return false;
 
-        App::import('Vendor', 'Rcon', array('file' => 'rcon/Rcon.php'));
+        App::import('Vendor', 'Rcon', ['file' => 'rcon/Rcon.php']);
 
         $rcon = new Thedudeguy\Rcon($config['ip'], $config['port'], $config['password'], $this->getTimeout());
         if ($rcon->connect())
             return $rcon->sendCommand($cmd);
         return false;
+    }
+
+    private function getTimeout()
+    {
+        if (!empty($this->timeout))
+            return $this->timeout;
+        return $this->configModel->find('first')['Configuration']['server_timeout'];
+    }
+
+    public function ping($config = false)
+    {
+        if (!$config || !isset($config['ip']) || !isset($config['port']))
+            return false;
+
+        App::import('Vendor', 'MinecraftPing', ['file' => 'ping-xpaw/MinecraftPing.php']);
+        App::import('Vendor', 'MinecraftPingException', ['file' => 'ping-xpaw/MinecraftPingException.php']);
+
+        try {
+            $Query = new MinecraftPing($config['ip'], $config['port'], $this->getTimeout(), $config['udp']);
+            $Info = $Query->Query();
+        } catch (MinecraftPingException $e) {
+            return false;
+        }
+        $Query->Close();
+
+        return (isset($Info['players'])) ? [
+            'GET_MOTD' => $Info['description'],
+            'GET_VERSION' => $Info['version']['name'],
+            'GET_PLAYER_COUNT' => $Info['players']['online'],
+            'GET_MAX_PLAYERS' => $Info['players']['max']] : false;
     }
 
     public function getUrl($server_id)
@@ -324,6 +238,120 @@ class ServerComponent extends CakeObject
         if (!$config) return false;
 
         return 'http://' . $config['ip'] . ':' . $config['port'] . '/ask';
+    }
+
+    private function encryptWithKey($data)
+    {
+        if (!isset($this->key))
+            $this->key = $this->configModel->find('first')['Configuration']['server_secretkey'];
+        $iv_size = openssl_cipher_iv_length('aes-128-cbc'); // AES-128-CBC or  AES-256-CBC
+        $iv = openssl_random_pseudo_bytes($iv_size);
+
+        $data = $this->pkcs5_pad($data, 16);
+
+        $signed = openssl_encrypt($data, 'aes-128-cbc', substr($this->key, 0, 16), OPENSSL_ZERO_PADDING, $iv);
+        if ($signed === false)
+            $this->log('Server: openssl_encrypt failed.');
+        return json_encode(['signed' => ($signed), 'iv' => base64_encode($iv)]);
+    }
+
+    private function pkcs5_pad($text, $blocksize)
+    {
+        $pad = $blocksize - (strlen($text) % $blocksize);
+        return $text . str_repeat(chr($pad), $pad);
+    }
+
+    private function parse($methods)
+    {
+        $result = [];
+        foreach ($methods as $method) {
+            if (!is_array($method)) {
+                $result[] = [
+                    'name' => $method,
+                    'args' => []
+                ];
+                continue;
+            }
+            foreach ($method as $name => $args) {
+                $result[] = [
+                    'name' => $name,
+                    'args' => (is_array($args)) ? $args : [$args]
+                ];
+            }
+        }
+        return $result;
+    }
+
+    private function request($url, $data, $timeout = false)
+    {
+        if (!$timeout)
+            $timeout = $this->getTimeout();
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_COOKIESESSION, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data)]
+        );
+
+        $return = curl_exec($curl);
+        $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $error = curl_errno($curl);
+        curl_close($curl);
+        return [$return, $code, $error];
+    }
+
+    private function decryptWithKey($data, $iv)
+    {
+        if (!isset($this->key))
+            $this->key = $this->configModel->find('first')['Configuration']['server_secretkey'];
+        $iv = base64_decode($iv);
+        $data = base64_decode($data);
+        return openssl_decrypt($data, 'AES-128-CBC', substr($this->key, 0, 16), OPENSSL_RAW_DATA, $iv);
+    }
+
+    private function parseResult($result)
+    {
+        $methods = [];
+        foreach ($result as $method) {
+            $methods[] = [$method['name'] => $method['response']];
+        }
+        return $methods;
+    }
+
+    public function userIsConnected($username, $server_id = false)
+    {
+        $result = $this->call(['IS_CONNECTED' => $username], $server_id);
+        if ($result && isset($result['IS_CONNECTED']) && $result['IS_CONNECTED'] || $this->getConfig($server_id)['type'] == 2)
+            return true;
+        return false;
+    }
+
+    public function serversOnline()
+    { // savoir si au moins 1 serveur est en ligne
+        $allServers = $this->getAllServers();
+        $return = [];
+        foreach ($allServers as $server) {
+            if ($return[][$server['server_id']] = $this->online($server['server_id']) === true)
+                return true;
+        }
+        return false;
+    }
+
+    public function getAllServers()
+    {
+        $search = ClassRegistry::init('Server')->find('all');
+        $return = [];
+        foreach ($search as $key => $value) {
+            $return[]['server_id'] = $value['Server']['id'];
+        }
+        return $return;
     }
 
     public function online($server_id = false, $debug = false)
@@ -341,10 +369,8 @@ class ServerComponent extends CakeObject
         $config = $this->getConfig($server_id);
         if (!$config) // server not found
             return $this->online[$server_id] = false;
-
-        if ($config['type'] == 1 || $config['type'] == 2) // ping only
-            return $this->online[$server_id] = ($this->ping(array('ip' => $config['ip'], 'port' => $config['port']))) ? true : false;
-
+        if ($config['type'] == 1 || $config['type'] == 2 || $config['type'] == 3) // ping only
+            return $this->online[$server_id] = ($this->ping(['ip' => $config['ip'], 'port' => $config['port'], 'udp' => $config['type'] == 3])) ? true : false;
         list($return, $code, $error) = $this->request($this->getUrl($server_id), $this->encryptWithKey("[]"));
         if ($return && $code === 200)
             return $this->online[$server_id] = true;
@@ -352,54 +378,15 @@ class ServerComponent extends CakeObject
             return $this->online[$server_id] = false;
     }
 
-    public function getAllServers()
-    {
-        $search = ClassRegistry::init('Server')->find('all');
-        $return = array();
-        foreach ($search as $key => $value) {
-            $return[]['server_id'] = $value['Server']['id'];
-        }
-        return $return;
-    }
-
-    public function serversOnline()
-    { // savoir si au moins 1 serveur est en ligne
-        $allServers = $this->getAllServers();
-        $return = array();
-        foreach ($allServers as $server) {
-            if ($return[][$server['server_id']] = $this->online($server['server_id']) === true)
-                return true;
-        }
-        return false;
-    }
-
-    public function getSecretKey()
-    {
-        $config = $this->configModel->find('first');
-        $key = $config['Configuration']['server_secretkey'];
-        if (isset($key) && !empty($key))
-            return $key;
-        $key = "";
-        $possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-        for ($i = 0; $i < 32; $i++)
-            $key .= $possible[rand(0, 61)];
-        // save
-        $this->configModel->read(null, $config['Configuration']['id']);
-        $this->configModel->set(['server_secretkey' => $key]);
-        $this->configModel->save();
-        return $key;
-    }
-
     public function check($info, $value)
     {
-        if (empty($info) OR !is_array($value)) return false;
+        if (empty($info) or !is_array($value)) return false;
 
         $path = 'http://' . $value['host'] . ':' . $value['port'] . '/handshake';
-        $data = json_encode(array(
+        $data = json_encode([
             'secretKey' => substr($this->getSecretKey(), 0, 16),
             'domain' => Router::url('/', true)
-        ));
+        ]);
 
         list($return, $code, $error) = $this->request($path, $data, $value['timeout']);
 
@@ -425,12 +412,30 @@ class ServerComponent extends CakeObject
         return false;
     }
 
+    public function getSecretKey()
+    {
+        $config = $this->configModel->find('first');
+        $key = $config['Configuration']['server_secretkey'];
+        if (isset($key) && !empty($key))
+            return $key;
+        $key = "";
+        $possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for ($i = 0; $i < 32; $i++)
+            $key .= $possible[rand(0, 61)];
+        // save
+        $this->configModel->read(null, $config['Configuration']['id']);
+        $this->configModel->set(['server_secretkey' => $key]);
+        $this->configModel->save();
+        return $key;
+    }
+
     public function banner_infos($serverId = false)
     { // On précise l'ID du serveur ou vont veux les infos, ou alors on envoie "all" qui va aller chercher les infos sur tout les serveurs
         if (!$serverId)
             $serverId = $this->getFirstServerID();
         if (!is_array($serverId))
-            $serverId = array($serverId);
+            $serverId = [$serverId];
 
         // get configuration
         $configuration = $this->configModel->find('first')['Configuration'];
@@ -448,10 +453,10 @@ class ServerComponent extends CakeObject
         }
 
         // request
-        $data = array(
+        $data = [
             'GET_PLAYER_COUNT' => 0,
             'GET_MAX_PLAYERS' => 0
-        );
+        ];
         foreach ($serverId as $id) {
             $req = $this->call(['GET_PLAYER_COUNT' => [], 'GET_MAX_PLAYERS' => []], $id);
             if (!$req) continue;
@@ -462,23 +467,15 @@ class ServerComponent extends CakeObject
         // cache
         if ($configuration['server_cache']) {
             if (!is_dir($cacheFolder)) mkdir($cacheFolder, 0755, true); // create folder
-            @file_put_contents($cacheFile, serialize(array($serverIdString => $data)));
+            @file_put_contents($cacheFile, serialize([$serverIdString => $data]));
         }
         // return
         return $data;
     }
 
-    public function userIsConnected($username, $server_id = false)
-    {
-        $result = $this->call(['IS_CONNECTED' => $username], $server_id);
-        if ($result && isset($result['IS_CONNECTED']) && $result['IS_CONNECTED'] || $this->getConfig($server_id)['type'] == 2)
-            return true;
-        return false;
-    }
-
     public function send_command($cmd, $server_id = false)
     {
-        return $this->commands(array($cmd), $server_id);
+        return $this->commands([$cmd], $server_id);
     }
 
     public function commands($commands, $server_id = false)
@@ -494,7 +491,7 @@ class ServerComponent extends CakeObject
         return $this->call($calls, $server_id);
     }
 
-    public function scheduleCommands($commands, $time, $servers = array())
+    public function scheduleCommands($commands, $time, $servers = [])
     {
         if (empty($servers))
             $servers[] = $this->getFirstServerID();
@@ -516,7 +513,7 @@ class ServerComponent extends CakeObject
             }
 
             // Execute
-            $calls = array();
+            $calls = [];
             foreach ($commands as $command) {
                 $calls[] = ['RUN_SCHEDULED_COMMAND' => [$command, $this->User->getKey('pseudo'), $time]];
             }

@@ -272,7 +272,7 @@
 
                     <div class="card card-body bg-light">
                         <?php if ($Server->online($value['Server']['id'])) { ?>
-                            <?php if ($value['Server']['type'] != 1 && $Permissions->can('SEND_SERVER_COMMAND_FROM_DASHBOARD')) { ?>
+                            <?php if ($value['Server']['type'] != 1 && $value['Server']['type'] != 3 && $Permissions->can('SEND_SERVER_COMMAND_FROM_DASHBOARD')) { ?>
                                 <div class="row-fluid text-center">
                                     <button class="btn" type="button" data-toggle="modal"
                                             onClick="$('#server_id').val(<?= $value['Server']['id'] ?>)"
@@ -284,7 +284,7 @@
                             <button class="btn btn-large btn-block btn-success"
                                     type="button"><?= $Lang->get('SERVER__STATUS_ONLINE') ?> <br>
                                 <?php
-                                $get = $Server->call(array('GET_PLAYER_COUNT' => array(), 'GET_MAX_PLAYERS' => array()), $value['Server']['id']);
+                                $get = $Server->call(['GET_PLAYER_COUNT' => [], 'GET_MAX_PLAYERS' => []], $value['Server']['id']);
                                 echo $get['GET_PLAYER_COUNT'] . '/' . $get['GET_MAX_PLAYERS'];
                                 ?>
                             </button>
