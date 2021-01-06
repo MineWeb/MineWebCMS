@@ -513,7 +513,7 @@ class AppController extends Controller
         $seo_config['img_url'] = (!empty($get_page['Seo']['img_url']) ? $get_page['Seo']['img_url'] : (!empty($default['Seo']['img_url']) ? $default['Seo']['img_url'] : ""));
         $seo_config['favicon_url'] = (!empty($get_page['Seo']['favicon_url']) ? $get_page['Seo']['favicon_url'] : (!empty($default['Seo']['favicon_url']) ? $default['Seo']['favicon_url'] : ""));
         $seo_config['img_url'] = (empty($seo_config['img_url']) ? $seo_config['favicon_url'] : $seo_config['img_url']);
-        $seo_config['title'] = str_replace(["{TITLE}", "{WEBSITE_NAME}"], [(!empty($this->viewVars['title_for_layout']) ? $this->viewVars['title_for_layout'] : "Error"), (!empty($this->viewVars['website_name']) ? $this->viewVars['website_name'] : "MineWeb")], $seo_config['title']);
+        $seo_config['title'] = str_replace(["{TITLE}", "{WEBSITE_NAME}"], [(!empty($this->viewVars['title_for_layout']) ? $this->viewVars['title_for_layout'] : $this->Lang->get("GLOBAL__ERROR")), (!empty($this->viewVars['website_name']) ? $this->viewVars['website_name'] : "MineWeb")], $seo_config['title']);
         $this->set(compact('seo_config'));
     }
 
