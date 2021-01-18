@@ -219,6 +219,7 @@
         new_server += '<option value="0"><?= $Lang->get('SERVER__TYPE_DEFAULT') ?></option>';
         new_server += '<option value="1"><?= $Lang->get('SERVER__TYPE_QUERY') ?></option>';
         new_server += '<option value="2"><?= $Lang->get('SERVER__TYPE_RCON') ?></option>';
+        new_server += '<option value="3"><?= $Lang->get('SERVER__TYPE_QUERY_MCPE') ?></option>';
         new_server += '</select>';
         new_server += '</div>';
         new_server += '<div class="form-group">';
