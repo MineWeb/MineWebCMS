@@ -307,22 +307,27 @@ class AppController extends Controller
                 'menu' => [
                     'SERVER__LINK' => [
                         'icon' => 'fas fa-arrows-alt-h',
+                        'permission' => 'MANAGE_SERVERS',
                         'route' => ['controller' => 'server', 'action' => 'link', 'admin' => true, 'plugin' => false]
                     ],
                     'SERVER__BANLIST' => [
                         'icon' => 'ban',
+                        'permission' => 'MANAGE_SERVERS',
                         'route' => ['controller' => 'server', 'action' => 'banlist', 'admin' => true, 'plugin' => false]
                     ],
                     'SERVER__WHITELIST' => [
                         'icon' => 'list',
+                        'permission' => 'MANAGE_SERVERS',
                         'route' => ['controller' => 'server', 'action' => 'whitelist', 'admin' => true, 'plugin' => false]
                     ],
                     'SERVER__ONLINE_PLAYERS' => [
                         'icon' => 'list-ul',
+                        'permission' => 'MANAGE_SERVERS',
                         'route' => ['controller' => 'server', 'action' => 'online', 'admin' => true, 'plugin' => false]
                     ],
                     'SERVER__CMD' => [
                         'icon' => 'key',
+                        'permission' => 'MANAGE_SERVERS',
                         'route' => ['controller' => 'server', 'action' => 'cmd', 'admin' => true, 'plugin' => false]
                     ]
                 ]
