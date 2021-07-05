@@ -112,11 +112,23 @@ class UpdateComponent extends CakeObject
         }
     }
 
+    private function clearCache()
+    {
+        App::uses('Folder', 'Utility');
+        $folder = new Folder(ROOT . DS . 'app' . DS . 'tmp' . DS . 'cache');
+        if (!empty($folder->path)) {
+            $folder->delete();
+        }
+    }
+
     /**
      * Update CMS files
      */
     public function updateCMS($componentUpdated = false)
     {
+        // Clear cache
+        $this->clearCache();
+
         set_time_limit(0);
         if (!$componentUpdated) {
             // Here, this is the first step of the update. We're trying to keep this component
@@ -183,8 +195,7 @@ class UpdateComponent extends CakeObject
         @unlink(ROOT . DS . 'app' . DS . 'tmp' . DS . $this->lastVersion . '.zip');
 
         // Clear cache
-        Cache::clearGroup(false, '_cake_core_');
-        Cache::clearGroup(false, '_cake_model_');
+        $this->clearCache();
 
         // Update database
         return $this->updateDb();
@@ -284,12 +295,8 @@ class UpdateComponent extends CakeObject
             }
         }
 
-        // Remove cache
-        App::uses('Folder', 'Utility');
-        $folder = new Folder(ROOT . DS . 'app' . DS . 'tmp' . DS . 'cache');
-        if (!empty($folder->path)) {
-            $folder->delete();
-        }
+        // Clear cache
+        $this->clearCache();
 
         // Hook method to update databases data if needed
         $updateEntries = [];
