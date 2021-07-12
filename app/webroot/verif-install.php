@@ -193,7 +193,7 @@ $compatible = [];
  * @var string $help               Text to help user to solve his installation problems
  */
 
-$compatible['chmod'] = (is_writable(ROOT . DS . 'app' . DS . 'Config') && is_writable(ROOT . DS . 'app' . DS . 'Plugin') && is_writable(ROOT . DS . 'app' . DS . 'View' . DS . 'Themed') && is_writable(ROOT . DS . 'config') && is_writable(ROOT . DS . 'app' . DS . 'tmp') && is_writable(ROOT . DS . 'app' . DS . 'webroot/js')) ? true : false;
+$compatible['chmod'] = (is_writable(ROOT . DS . 'app' . DS . 'Config') && is_writable(ROOT . DS . 'app' . DS . 'Plugin') && is_writable(ROOT . DS . 'app' . DS . 'View' . DS . 'Themed') && is_writable(ROOT . DS . 'config') && is_writable(ROOT . DS . 'app' . DS . 'tmp') && is_writable(ROOT . DS . 'app' . DS . 'webroot' . DS . 'js')) ? true : false;
 
 if (!$compatible['chmod']) {
     $help['chmod'] = "";
