@@ -222,7 +222,7 @@ if (!$compatible['chmod']) {
         $help['chmod'] = "Le dossier app/tmp ne peut être écrit. <br /><br />";
     }
 
-    if (!is_writable(ROOT . DS . 'app' . DS . 'webroot/js')) {
+    if (!is_writable(ROOT . DS . 'app' . DS . 'webroot' . DS . 'js')) {
         $help['chmod'] = "Le dossier app/webroot/js ne peut être écrit. <br /><br />";
     }
 }
