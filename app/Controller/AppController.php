@@ -180,7 +180,7 @@ class AppController extends Controller
 
     protected function __setTheme()
     {
-        if (!isset($this->params['prefix']) or $this->params['prefix'] === "admin" and $this->response->statusCode() === 500 or $this->response->statusCode() === 404 or $this->response->statusCode() === 403 or $this->response->statusCode() === 400)
+        if (!isset($this->params['prefix']) or $this->params['prefix'] !== "admin" or (isset($this->params['prefix']) and $this->params['prefix'] === "admin" and $this->response->statusCode() >= 400))
             $this->theme = Configure::read('theme');
     }
 
