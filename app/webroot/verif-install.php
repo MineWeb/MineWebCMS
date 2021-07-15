@@ -193,7 +193,7 @@ $compatible = [];
  * @var string $help               Text to help user to solve his installation problems
  */
 
-$compatible['chmod'] = (is_writable(ROOT . DS . 'app' . DS . 'Config') && is_writable(ROOT . DS . 'app' . DS . 'Plugin') && is_writable(ROOT . DS . 'app' . DS . 'View' . DS . 'Themed') && is_writable(ROOT . DS . 'config') && is_writable(ROOT . DS . 'app' . DS . 'tmp')) ? true : false;
+$compatible['chmod'] = (is_writable(ROOT . DS . 'app' . DS . 'Config') && is_writable(ROOT . DS . 'app' . DS . 'Plugin') && is_writable(ROOT . DS . 'app' . DS . 'View' . DS . 'Themed') && is_writable(ROOT . DS . 'config') && is_writable(ROOT . DS . 'app' . DS . 'tmp') && is_writable(ROOT . DS . 'app' . DS . 'webroot' . DS . 'js')) ? true : false;
 
 if (!$compatible['chmod']) {
     $help['chmod'] = "";
@@ -220,6 +220,10 @@ if (!$compatible['chmod']) {
 
     if (!is_writable(ROOT . DS . 'app' . DS . 'tmp')) {
         $help['chmod'] = "Le dossier app/tmp ne peut être écrit. <br /><br />";
+    }
+
+    if (!is_writable(ROOT . DS . 'app' . DS . 'webroot' . DS . 'js')) {
+        $help['chmod'] = "Le dossier app/webroot/js ne peut être écrit. <br /><br />";
     }
 }
 
