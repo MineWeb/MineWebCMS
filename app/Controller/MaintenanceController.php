@@ -7,6 +7,7 @@ class MaintenanceController extends AppController
 
     public function index($banned = false)
     {
+        $this->set('title_for_layout', $this->Lang->get('MAINTENANCE__TITLE'));
         if ($this->Configuration->getKey('maintenance') != '0') {
             $msg = $this->Configuration->getKey('maintenance');
         } else if ($banned) {
