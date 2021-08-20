@@ -147,6 +147,24 @@
                 </form>
             <?php } ?>
 
+            <?php if ($Permissions->can('EDIT_HIS_USERNAME')) { ?>
+                <hr>
+
+                <h3><?= $Lang->get('USER__UPDATE_USERNAME') ?></h3>
+
+                <form method="post" class="form-inline" data-ajax="true"
+                      action="<?= $this->Html->url(['plugin' => null, 'controller' => 'user', 'action' => 'change_username']) ?>">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="username"
+                               placeholder="<?= $Lang->get('USER__USERNAME') ?>">
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
+                    </div>
+                </form>
+            <?php } ?>
+
             <?php if ($shop_active) { ?>
 
                 <hr>
