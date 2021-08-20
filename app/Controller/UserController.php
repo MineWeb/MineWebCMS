@@ -613,6 +613,43 @@ class UserController extends AppController
         }
     }
 
+    function change_username()
+    {
+        $this->autoRender = false;
+        $this->response->type('json');
+        if ($this->isConnected && $this->Permissions->can('EDIT_HIS_USERNAME')) {
+            if ($this->request->is('ajax')) {
+                if (!empty($this->request->data['username'])) {
+                    $event = new CakeEvent('beforeUpdatePseudo', $this, [
+                        'user' => $this->User->getAllFromCurrentUser(),
+                        'new_username' => $this->request->data['username']
+                    ]);
+                    $this->getEventManager()->dispatch($event);
+                    if ($event->isStopped()) {
+                        return $event->result;
+                    }
+                    $this->User->setKey('pseudo', htmlentities($this->request->data['username']));
+                    $this->response->body(json_encode([
+                        'statut' => true,
+                        'msg' => $this->Lang->get('USER__USERNAME_UPDATE_SUCCESS')
+                    ]));
+                } else {
+                    $this->response->body(json_encode([
+                        'statut' => false,
+                        'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')
+                    ]));
+                }
+            } else {
+                $this->response->body(json_encode([
+                    'statut' => false,
+                    'msg' => $this->Lang->get('ERROR__BAD_REQUEST')
+                ]));
+            }
+        } else {
+            throw new ForbiddenException();
+        }
+    }
+
     function admin_index()
     {
         if ($this->isConnected and $this->Permissions->can('MANAGE_USERS')) {
