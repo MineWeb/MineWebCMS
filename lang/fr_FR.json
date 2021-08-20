@@ -632,7 +632,6 @@
         "MAINTENANCE__TITLE":"Maintenance",
         "MAINTENANCE__EDIT_SUCCESS":"Maintenance modifiée avec succès !",
         "MAINTENANCE__REASON":"Raison de la maintenance",
-        "MAINTENANCE__ADD_PAGE_SUCCESS":"Page mise en maitenance !",
 
         "PAGE__ADD_SUCCESS":"Page ajoutée avec succès !",
         "PAGE__EDIT_SUCCESS":"Page modifiée avec succès !",
