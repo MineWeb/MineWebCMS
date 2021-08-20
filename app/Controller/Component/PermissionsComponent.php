@@ -9,6 +9,7 @@ class PermissionsComponent extends CakeObject
         'LIKE_NEWS',
         'DELETE_HIS_COMMENT',
         'DELETE_COMMENT',
+        'EDIT_HIS_USERNAME',
         'EDIT_HIS_EMAIL',
         'ACCESS_DASHBOARD',
         'SEND_SERVER_COMMAND_FROM_DASHBOARD',
