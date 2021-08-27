@@ -572,6 +572,8 @@ class AppController extends Controller
 
     public function sendMultipleGetRequests($urls)
     {
+        if(!is_array($urls))
+            $urls = [$urls];
         $multi = curl_multi_init();
         $channels = [];
         $result = [];
