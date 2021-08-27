@@ -675,24 +675,26 @@ class EyPluginComponent extends CakeObject
     public function getFreePlugins($all = false, $removeInstalledPlugins = false)
     {
         $pluginsList = @json_decode($this->controller->sendGetRequest($this->reference), true);
-        Cache::set(['duration' => '+24 hours']);
-        $plugins = Cache::read('plugins');
-        if (!$plugins) {
-            $plugins = [];
-            if ($pluginsList) {
-                foreach ($pluginsList as $plugin) {
-                    if ($plugin['free']) {
-                        if (($pl = $this->getPluginFromRepoName($plugin['repo']))) {
-                            $pl['free'] = true;
-                            $pl['slug'] = $plugin['slug'];
-                            $plugins[] = $pl;
-                        }
-                    } else if ($all) {
-                        $plugins[] = $plugin;
-                    }
+
+        $plugins = [];
+        if ($pluginsList) {
+            $free_plugins = [];
+            foreach ($pluginsList as $plugin) {
+                if ($plugin['free']) {
+                    $free_plugins[] = $plugin;
+                } else if ($all) {
+                    $plugins[] = $plugin;
                 }
             }
-            Cache::write('plugins', $plugins);
+            if (($plu = $this->getPluginsFromRepoNames(array_column($free_plugins, "repo")))) {
+                $i = 0;
+                foreach ($plu as $pl) {
+                    $pl['free'] = true;
+                    $pl['slug'] = $free_plugins[$i]['slug'];
+                    $plugins[] = $pl;
+                    $i++;
+                }
+            }
         }
 
         // remove installed plugins
@@ -712,13 +714,30 @@ class EyPluginComponent extends CakeObject
 
     // Vérifier si un plugin est installé
 
-    private function getPluginFromRepoName($repo, $assoc = true)
+    private function getPluginFromRepoName($repo)
     {
         $configUrl = "https://raw.githubusercontent.com/$repo/master/config.json";
-        if (!($config = @json_decode($this->controller->sendGetRequest($configUrl), $assoc)))
+        if (!($config = @json_decode($this->controller->sendGetRequest($configUrl), true)))
             return false;
         $config['repo'] = $repo;
         return $config;
+    }
+
+    private function getPluginsFromRepoNames($repos)
+    {
+        $urls = [];
+        foreach ($repos as $repo)
+            $urls[] = "https://raw.githubusercontent.com/$repo/master/config.json";
+        $result = $this->controller->sendMultipleGetRequests($urls);
+        $results = [];
+        $i = 0;
+        foreach ($result as $val) {
+            $json = json_decode($val, true);
+            $json['repo'] = $repos[$i];
+            $results[] = $json;
+            $i++;
+        }
+        return $results;
     }
 
     // Récupérer les plugins ou la navbar est activé (pour la nav)

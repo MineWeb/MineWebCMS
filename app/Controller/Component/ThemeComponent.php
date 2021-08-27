@@ -117,23 +117,25 @@ class ThemeComponent extends CakeObject
 
         // get themes and cache the list
         $themesList = @json_decode($this->controller->sendGetRequest($this->reference), true);
-        Cache::set(['duration' => '+24 hours']);
-        $themes = Cache::read('themes');
-        if (!$themes) {
-            $themes = [];
-            if ($themesList) {
-                foreach ($themesList as $theme) {
-                    if ($theme['free']) {
-                        if (($theme = $this->getThemeFromRepoName($theme['repo']))) {
-                            $theme['free'] = true;
-                            $themes[] = $theme;
-                        }
-                    } else if ($all) {
-                        $themes[] = $theme;
-                    }
+
+        $themes = [];
+        if ($themesList) {
+            $free_themes = [];
+            foreach ($themesList as $theme) {
+                if ($theme['free']) {
+                    $free_themes[] = $theme;
+                } else if ($all) {
+                    $themes[] = $theme;
                 }
             }
-            Cache::write('themes', $themes);
+            if (($th = $this->getThemesFromRepoNames(array_column($free_themes, "repo")))) {
+                $i = 0;
+                foreach ($th as $t) {
+                    $t['free'] = true;
+                    $themes[] = $t;
+                    $i++;
+                }
+            }
         }
 
         // delete installed themes
@@ -160,6 +162,23 @@ class ThemeComponent extends CakeObject
             return false;
         $config['repo'] = $repo;
         return $config;
+    }
+
+    private function getThemesFromRepoNames($repos)
+    {
+        $urls = [];
+        foreach ($repos as $repo)
+            $urls[] = "https://raw.githubusercontent.com/$repo/master/Config/config.json";
+        $result = $this->controller->sendMultipleGetRequests($urls);
+        $results = [];
+        $i = 0;
+        foreach ($result as $val) {
+            $json = json_decode($val, true);
+            $json['repo'] = $repos[$i];
+            $results[] = $json;
+            $i++;
+        }
+        return $results;
     }
 
     // get themes on api

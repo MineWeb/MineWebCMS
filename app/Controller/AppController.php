@@ -472,7 +472,7 @@ class AppController extends Controller
             $server_infos = $this->Server->banner_infos(unserialize($configuration));
         else {
             $this->set(['banner_server' => false, 'server_infos' => false]);
-            return ;
+            return;
         }
         if (!isset($server_infos['GET_MAX_PLAYERS']) || !isset($server_infos['GET_PLAYER_COUNT']) || $server_infos['GET_MAX_PLAYERS'] === 0) {
             $this->set(['banner_server' => false, 'server_infos' => $server_infos]);
@@ -567,6 +567,46 @@ class AppController extends Controller
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         $result = curl_exec($ch);
         curl_close($ch);
+        return $result;
+    }
+
+    public function sendMultipleGetRequests($urls)
+    {
+        $multi = curl_multi_init();
+        $channels = [];
+        $result = [];
+
+        foreach ($urls as $url) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_HEADER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            curl_multi_add_handle($multi, $ch);
+
+            $channels[$url] = $ch;
+        }
+
+        $active = null;
+        do {
+            $mrc = curl_multi_exec($multi, $active);
+        } while ($mrc == CURLM_CALL_MULTI_PERFORM);
+
+        while ($active && $mrc == CURLM_OK) {
+            if (curl_multi_select($multi) == -1) {
+                continue;
+            }
+            do {
+                $mrc = curl_multi_exec($multi, $active);
+            } while ($mrc == CURLM_CALL_MULTI_PERFORM);
+        }
+
+        foreach ($channels as $channel) {
+            $result[] = curl_multi_getcontent($channel);
+            curl_multi_remove_handle($multi, $channel);
+        }
+
+        curl_multi_close($multi);
         return $result;
     }
 
