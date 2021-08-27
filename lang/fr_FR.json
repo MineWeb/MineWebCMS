@@ -105,7 +105,6 @@
         "HELP__PAGE_EXPLAIN_TITLE":"Explications",
         "HELP__PAGE_EXPLAIN_CONTENT":"<p>Cette page recense une liste de questions et réponses vous permettant de résoudre rapidement vos problèmes.</p><p>La liste de questions est récupérée automatiquement sur mineweb.org, elle est donc actualisée en temps réel.</p>",
         "HELP__ANSWER_TITLE":"Réponse à la question",
-        "HELP__POST_TICKET_TITLE":"Problème non résolu ?",
         "HELP__POST_TICKET_EXPLAIN":"Postez directement votre question au support. Le suivi du ticket se fera sur mineweb.org. Un rapport complet de votre CMS sera envoyé à nos serveurs en même temps que le ticket.<br> Vos tickets déjà ouverts ne s'affichent pas ici, tout cela se passe sur <a href=\"http://mineweb.org/help\" target=\"_blank\">le support</a>.",
         "HELP__POST_TICKET_TITLE":"Titre",
         "HELP__POST_TICKET_TITLE_BOX":"Demander de l'aide",

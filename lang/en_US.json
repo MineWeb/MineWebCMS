@@ -107,7 +107,6 @@
         "HELP__PAGE_EXPLAIN_TITLE": "Explain",
         "HELP__PAGE_EXPLAIN_CONTENT": "<p>This page lists your questions and answers quickly.</P> <p>These list of questions have been automatically retrieved from mineweb.org, and is updated in real time.</p> ",
         "HELP__ANSWER_TITLE": "Answer to the question",
-        "HELP__POST_TICKET_TITLE": "Problem not solved?",
         "HELP__POST_TICKET_EXPLAIN": "Post your question directly to the <a href=\"http://mineweb.org/help\" target=\"_blank\">support</a>. The ticket will be tracked on mineweb.org. ",
         "HELP__POST_TICKET_TITLE": "Title",
         "HELP__POST_TICKET_TITLE_BOX": "Ask for help",

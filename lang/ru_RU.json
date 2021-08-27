@@ -107,7 +107,6 @@
        "HELP__PAGE_EXPLAIN_TITLE": "Объяснить",
        "HELP__PAGE_EXPLAIN_CONTENT": "<p> На этой странице перечислены ваши вопросы и ответы. </ P> <p> Этот список вопросов был автоматически получен с mineweb.org и обновляется в режиме реального времени. </ P>",
        "HELP__ANSWER_TITLE": "Ответ на вопрос",
-       "HELP__POST_TICKET_TITLE": "Проблема не решена?",
        "HELP__POST_TICKET_EXPLAIN": "Опубликуйте вопрос непосредственно к <a href= \"http://mineweb.org/help \"target= \"_blank \"> Поддержка </a> Билет будет отслеживаться на Mineweb.. орг.",
        "HELP__POST_TICKET_TITLE": "Заголовок",
        "HELP__POST_TICKET_TITLE_BOX": "Попросить помощи",
