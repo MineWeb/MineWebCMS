@@ -431,8 +431,10 @@ class AppController extends Controller
     {
         $this->loadModel('Navbar');
         $nav = $this->Navbar->find('all', ['order' => 'order']);
-        if (empty($nav))
-            return $this->set('nav', false);
+        if (empty($nav)) {
+            $this->set('nav', false);
+            return;
+        }
         $this->loadModel('Page');
         $pages = $this->Page->find('all', ['fields' => ['id', 'slug']]);
         foreach ($pages as $key => $value)
@@ -468,10 +470,14 @@ class AppController extends Controller
             $server_infos = $this->Server->banner_infos();
         else if (!empty($configuration))
             $server_infos = $this->Server->banner_infos(unserialize($configuration));
-        else
-            return $this->set(['banner_server' => false, 'server_infos' => false]);
-        if (!isset($server_infos['GET_MAX_PLAYERS']) || !isset($server_infos['GET_PLAYER_COUNT']) || $server_infos['GET_MAX_PLAYERS'] === 0)
-            return $this->set(['banner_server' => false, 'server_infos' => $server_infos]);
+        else {
+            $this->set(['banner_server' => false, 'server_infos' => false]);
+            return ;
+        }
+        if (!isset($server_infos['GET_MAX_PLAYERS']) || !isset($server_infos['GET_PLAYER_COUNT']) || $server_infos['GET_MAX_PLAYERS'] === 0) {
+            $this->set(['banner_server' => false, 'server_infos' => $server_infos]);
+            return;
+        }
 
         $this->set([
             'banner_server' => $this->Lang->get('SERVER__STATUS_MESSAGE', [

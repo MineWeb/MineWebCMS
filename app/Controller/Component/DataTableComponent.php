@@ -54,6 +54,7 @@ class DataTableComponent extends Component
      * @param object $controller optional
      * @param object $model optional
      * @return array
+     * @throws Exception
      */
     public function getResponse($controller = null, $model = null)
     {
@@ -235,7 +236,7 @@ class DataTableComponent extends Component
 
         $conditions = [];
 
-
+        $fields = [];
         if ($this->mDataProp == true) {
             for ($i = 0; $i < $this->controller->request->query['iColumns']; $i++) {
                 if (!isset($this->controller->request->query['bSearchable_' . $i]) || $this->controller->request->query['bSearchable_' . $i] == true) {
@@ -295,6 +296,7 @@ class DataTableComponent extends Component
      */
     private function conditionByDataType($field)
     {
+        $condition = [];
         foreach ($this->model->validate[$field] as $rule => $j) {
             switch ($rule) {
                 case 'boolean':
@@ -334,8 +336,6 @@ class DataTableComponent extends Component
                     //echo "$key.$x = $index = $i \n";
                     // index needs to be a string so array_merge handles it properly
                     $fields[chr($index)] = "$i";
-                } else {
-                    //echo "$key.$x (NOT FOUND) \n";
                 }
             } // dimension is not multi-dimensionable so add to $fields
             else if (isset($this->controller->paginate['fields'])) {
@@ -356,14 +356,15 @@ class DataTableComponent extends Component
 
     /**
      * getTimes method - returns an array of the components benchmarks
-     * @return type
+     * @return array
      */
     public function getTimes()
     {
         $times = [];
         $componentStart = 0;
+        $end = 0;
         foreach ($this->times as $x => $i) {
-            $start = $end = $desc = $startLine = $endLine = 0;
+            $start = $desc = 0;
             foreach ($i as $j) {
                 if ($j['action'] == 'start') {
                     $start = $j['time'];

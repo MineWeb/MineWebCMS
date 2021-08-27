@@ -351,17 +351,17 @@ class EyPluginComponent extends CakeObject
         $pluginSchema = $this->Schema->load($options);
         $compare = $this->Schema->compare($currentSchema, $pluginSchema);
         unlink($options['path'] . DS . $options['file']);
-
+        $pluginTables = [];
         if ($type === 'CREATE') {
             // Check edits
             $contents = [];
             foreach ($compare as $table => $changes) {
-                if (isset($compare[$table]['create'])) continue; // not handle create here
+                if (isset($changes['create'])) continue; // not handle create here
 
-                if (!isset($compare[$table]['add'])) continue; // no add
+                if (!isset($changes['add'])) continue; // no add
 
                 if (explode('__', $table)[0] != strtolower($slug)) { // other plugin
-                    foreach ($compare[$table]['add'] as $column => $structure) {
+                    foreach ($changes['add'] as $column => $structure) {
                         if (explode('-', $column)[0] != strtolower($slug)) // other plugin
                             unset($compare[$table]['add'][$column]);
                     }
@@ -380,9 +380,9 @@ class EyPluginComponent extends CakeObject
                     $contents[$table] = $db->alterSchema([$table => $compare[$table]], $table);
             }
             // add tables
-            $pluginTables = [];
+
             foreach ($compare as $table => $changes) {
-                if (isset($compare[$table]['create'])) { // is create
+                if (isset($changes['create'])) { // is create
                     $contents[$table] = $db->createSchema($pluginSchema, $table);
                     $pluginTables[] = $table; // save for delete
                 }
@@ -537,7 +537,7 @@ class EyPluginComponent extends CakeObject
         $defaultPermissions = $this->controller->Permissions->permissions;
         $pluginsPermissions = [];
 
-        foreach ($this->loadPlugins() as $id => $data) {
+        foreach ($this->loadPlugins() as $data) {
             if (!isset($data->permissions->available)) continue; // no permissions on this plugin
             foreach ($data->permissions->available as $key => $permission) {
                 $pluginsPermissions[] = $permission; // add permission to plugins permissions
@@ -596,7 +596,7 @@ class EyPluginComponent extends CakeObject
             $pluginList->$id->slugLower = strtolower($plugin['name']);
             $pluginList->$id->DBid = $plugin['id'];
             $pluginList->$id->DBinstall = $plugin['created'];
-            $pluginList->$id->active = ($plugin['state']) ? true : false;
+            $pluginList->$id->active = $plugin['state'];
             if ($pluginList->$id->active)
                 $count++;
             $pluginList->$id->isValid = $this->isValid($pluginList->$id->slug); // plugin valid

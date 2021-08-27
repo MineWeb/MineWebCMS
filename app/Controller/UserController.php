@@ -352,8 +352,6 @@ class UserController extends AppController
                 if (!$isValidImg['status']) {
                     $this->response->body(json_encode(['statut' => false, 'msg' => $isValidImg['msg']]));
                     return;
-                } else {
-                    $infos = $isValidImg['infos'];
                 }
                 if (!$this->Util->uploadImage($this->request, $target . $filename)) {
                     $this->response->body(json_encode([
@@ -401,8 +399,6 @@ class UserController extends AppController
                 if (!$isValidImg['status']) {
                     $this->response->body(json_encode(['statut' => false, 'msg' => $isValidImg['msg']]));
                     return;
-                } else {
-                    $infos = $isValidImg['infos'];
                 }
                 if (!$this->Util->uploadImage($this->request, $target . $filename)) {
                     $this->response->body(json_encode([
@@ -631,6 +627,7 @@ class UserController extends AppController
         if ($this->isConnected and $this->Permissions->can('MANAGE_USERS')) {
             if ($query != false) {
                 $result = $this->User->find('all', ['conditions' => ['pseudo LIKE' => $query . '%']]);
+                $users = [];
                 foreach ($result as $key => $value) {
                     $users[] = ['pseudo' => $value['User']['pseudo'], 'id' => $value['User']['id']];
                 }
@@ -659,7 +656,7 @@ class UserController extends AppController
                 ];
                 $this->loadModel('Rank');
                 $custom_ranks = $this->Rank->find('all');
-                foreach ($custom_ranks as $key => $value) {
+                foreach ($custom_ranks as $value) {
                     $available_ranks[$value['Rank']['rank_id']] = [
                         'label' => 'info',
                         'name' => $value['Rank']['name']
@@ -675,7 +672,7 @@ class UserController extends AppController
                 $response = $this->DataTable->getResponse();
                 $users = $response['aaData'];
                 $data = [];
-                foreach ($users as $key => $value) {
+                foreach ($users as $value) {
                     $username = $value['User']['pseudo'];
                     $date = 'Le ' . $this->Lang->date($value['User']['created']);
                     $rank_label = (isset($available_ranks[$value['User']['rank']])) ? $available_ranks[$value['User']['rank']]['label'] : $available_ranks[0]['label'];
@@ -764,7 +761,6 @@ class UserController extends AppController
                 $this->User->read(null, $find['User']['id']);
                 $this->User->set(['confirmed' => date('Y-m-d H:i:s')]);
                 $this->User->save();
-                $userSession = $find['User']['id'];
                 $this->redirect(['action' => 'edit', $user_id]);
             } else {
                 throw new NotFoundException();
@@ -862,14 +858,11 @@ class UserController extends AppController
                     $this->User->delete($id);
                     $this->History->set('DELETE_USER', 'user');
                     $this->Session->setFlash($this->Lang->get('USER__DELETE_SUCCESS'), 'default.success');
-                    $this->redirect(['controller' => 'user', 'action' => 'index', 'admin' => true]);
                 } else {
                     $this->Session->setFlash($this->Lang->get('UNKNONW_ID'), 'default.error');
-                    $this->redirect(['controller' => 'user', 'action' => 'index', 'admin' => true]);
                 }
-            } else {
-                $this->redirect(['controller' => 'user', 'action' => 'index', 'admin' => true]);
             }
+            $this->redirect(['controller' => 'user', 'action' => 'index', 'admin' => true]);
         } else {
             $this->redirect('/');
         }

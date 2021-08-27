@@ -81,7 +81,7 @@ class ThemeComponent extends CakeObject
         $bypassedFiles = ['.', '..', '.DS_Store', '__MACOSX', '.gitkeep']; // not a theme
         // set themes on $this->themesAvailable
         if ($api)
-            $this->getThemesOnAPI(true);
+            $this->getThemesOnAPI();
         // each installed themes
         foreach ($themes as $slug) {
             if (in_array($slug, $bypassedFiles)) // not a valid theme
@@ -93,7 +93,7 @@ class ThemeComponent extends CakeObject
             $id = strtolower($config->author . '.' . $config->slug);
             $themesList->$id = $config;
             $checkSupported = $this->checkSupported($slug);
-            $themesList->$id->supported = (empty($checkSupported)) ? true : false;
+            $themesList->$id->supported = empty($checkSupported);
             $themesList->$id->supportedErrors = $checkSupported;
             if ($this->isValid($slug))
                 $themesList->$id->valid = true;
@@ -502,7 +502,7 @@ class ThemeComponent extends CakeObject
         // on détermine si le thème est installé
         $finded = false;
         $themesInstalled = $this->getThemesInstalled(false);
-        foreach ($themesInstalled as $id => $data) {
+        foreach ($themesInstalled as $data) {
             if ($data->slug == $slug) {
                 $finded = true;
                 $config = $data->configurations;

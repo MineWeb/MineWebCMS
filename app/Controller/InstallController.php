@@ -17,7 +17,7 @@ class InstallController extends AppController
 
         $this->set('title_for_layout', $this->Lang->get('INSTALL__INSTALL'));
         $this->loadModel('User');
-        $admin = $this->User->find('first');
+        $admin = $this->User->find();
         if (!empty($admin)) {
             $this->set('admin_pseudo', $admin['User']['pseudo']);
             $this->set('admin_password', 1);

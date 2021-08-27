@@ -165,17 +165,7 @@ class NavbarController extends AppController
             'open_new_tab' => $open_new_tab
         ];
 
-        if ($this->request->data['type'] == "dropdown") {
-            $data['type'] = 2;
-            $data['url'] = json_encode(['type' => 'submenu']);
-            $data['submenu'] = json_encode($this->request->data['url']);
-        } else {
-            // URL
-            $data['url'] = $this->request->data['url'];
-        }
-
-        $this->Navbar->set($data);
-        $this->Navbar->save();
+        $this->extracted($data);
 
         $this->History->set('ADD_NAV', 'navbar');
 
@@ -228,6 +218,21 @@ class NavbarController extends AppController
             'type' => 1,
             'open_new_tab' => ($this->request->data['open_new_tab'] == 'true') ? 1 : 0
         ];
+        $this->extracted($data);
+
+        $this->History->set('EDIT_NAV', 'navbar');
+
+        $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('NAVBAR__EDIT_SUCCESS')]));
+        $this->Session->setFlash($this->Lang->get('NAVBAR__EDIT_SUCCESS'), 'default.success');
+    }
+
+    /**
+     * @param array $data
+     * @throws Exception
+     */
+    public function extracted(array $data)
+    {
+        $this->loadModel('Navbar');
         if ($this->request->data['type'] == "dropdown") {
             $data['type'] = 2;
             $data['url'] = json_encode(['type' => 'submenu']);
@@ -239,11 +244,6 @@ class NavbarController extends AppController
 
         $this->Navbar->set($data);
         $this->Navbar->save();
-
-        $this->History->set('EDIT_NAV', 'navbar');
-
-        $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('NAVBAR__EDIT_SUCCESS')]));
-        $this->Session->setFlash($this->Lang->get('NAVBAR__EDIT_SUCCESS'), 'default.success');
     }
 
 }

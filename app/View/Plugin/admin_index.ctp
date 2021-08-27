@@ -9,7 +9,7 @@
                     <h3 class="card-title"><?= $Lang->get('PLUGIN__LIST') ?></h3>
                 </div>
 
-                <div class="card-body table-responsive">
+                <div class="card-body">
 
                     <?php
                     $pluginList = $EyPlugin->pluginsLoaded;
@@ -80,7 +80,7 @@
                 <div class="card-header with-border">
                     <h3 class="card-title"><?= $Lang->get('PLUGIN__AVAILABLE') ?></h3>
                 </div>
-                <div class="card-body table-responsive">
+                <div class="card-body">
                     <?php
                     $free_plugins = $EyPlugin->getFreePlugins(true, true);
                     if (!empty($free_plugins)) { ?>

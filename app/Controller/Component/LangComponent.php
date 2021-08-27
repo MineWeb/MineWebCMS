@@ -345,7 +345,8 @@ class LangComponent extends CakeObject
 
             $newContent['INFORMATIONS']['VERSION'] = $updatedContent['INFORMATIONS']['VERSION']; // on change la version
 
-            $path = end(explode('/', $file));
+            $array = explode('/', $file);
+            $path = end($array);
             $path = explode('.', $path)[0];
 
             foreach ($fileContent['MESSAGES'] as $key => $value) { // on parcours les messages pour éventuellement les mettre à jours

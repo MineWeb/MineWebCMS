@@ -76,7 +76,7 @@ class StatisticsComponent extends CakeObject
                 $this->Visit->set(['ip' => $ip, 'referer' => $referer, 'lang' => $language, 'navigator' => $user_agent, 'page' => "http://" . htmlentities($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'])]);
                 $this->Visit->save();
             }
-            CakeSession::write('visit_check', true, true, '1 day');
+            CakeSession::write('visit_check', true);
         }
     }
 

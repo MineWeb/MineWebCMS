@@ -34,7 +34,9 @@ class AdminController extends AppController
             $count_visits_before_yesterday = $this->Visit->getVisitsByDay(date('Y-m-d', strtotime('-2 day')))['count'];
             $count_visits_yesterday = $this->Visit->getVisitsByDay(date('Y-m-d', strtotime('-1 day')))['count'];
             $count_visits_today = $this->Visit->getVisitsByDay(date('Y-m-d'))['count'];
-
+            $purchase = [];
+            $purchase_today = [];
+            $items_solded = [];
             if ($this->EyPlugin->isInstalled('eywek.shop')) {
 
                 $this->loadModel('Shop.ItemsBuyHistory');
@@ -54,7 +56,6 @@ class AdminController extends AppController
                     'group' => 'item_id',
                     'limit' => 5
                 ]);
-                $items_solded = [];
                 $i = 0;
 
                 foreach ($find_items_solded as $key => $value) {
