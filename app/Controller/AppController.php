@@ -579,6 +579,9 @@ class AppController extends Controller
         foreach ($urls as $url) {
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'User-Agent: MineWebCMS'
+            ]);
             curl_setopt($ch, CURLOPT_HEADER, false);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
