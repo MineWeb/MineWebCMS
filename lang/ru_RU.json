@@ -565,6 +565,7 @@
        "SERVER__INVALID_TIMEOUT": "Недопустимый тайм-аут",
        "SERVER__TIMEOUT_SAVE_SUCCESS" : "! Таймаут прописал хорошо" ,
        "SERVER__AFFICH_BANNER": "Показать этот сервер на баннере сайта",
+       "SERVER__HIDE_BANNER": "Скрыть этот сервер с баннера сайта",
        "SERVER__CONFIG_BANNER_MSG" : "Настроить сообщение, отображаемое на баннере" ,
        "SERVER__EDIT_BANNER_MSG_SUCCESS": "Сообщение было отредактировано!",
        "SERVER__DISABLE_CACHE": "Отключить кеш (баннер)",

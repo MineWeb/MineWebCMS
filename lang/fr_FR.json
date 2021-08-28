@@ -562,6 +562,7 @@
         "SERVER__INVALID_TIMEOUT": "Timeout invalide",
         "SERVER__TIMEOUT_SAVE_SUCCESS": "Le timeout s'est bien enregistré !",
         "SERVER__AFFICH_BANNER": "Afficher ce serveur sur la bannière du site",
+        "SERVER__HIDE_BANNER": "Masquer ce serveur de la bannière du site",
         "SERVER__CONFIG_BANNER_MSG": "Configurer le message affiché sur la bannière",
         "SERVER__EDIT_BANNER_MSG_SUCCESS": "Le message a bien été édité !",
         "SERVER__DISABLE_CACHE": "Désactiver le cache (bannière)",

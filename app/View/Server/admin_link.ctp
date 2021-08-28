@@ -122,8 +122,8 @@
                                 <a href="<?= $this->Html->url(['controller' => 'server', 'action' => 'delete', 'admin' => true, $value['Server']['id']]) ?>"
                                    type="submit" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
 
-                                <button class="btn btn-info switchBanner float-right<?= (isset($value['Server']['activeInBanner']) && $value['Server']['activeInBanner']) ? ' active' : '' ?>"
-                                        id="<?= $value['Server']['id'] ?>"><?= $Lang->get('SERVER__AFFICH_BANNER') ?></button>
+                                <button class="btn switchBanner float-right <?= ($value['Server']['activeInBanner']) ? 'btn-danger' : 'btn-info' ?>"
+                                        id="<?= $value['Server']['id'] ?>"><?= ($value['Server']['activeInBanner']) ? $Lang->get('SERVER__HIDE_BANNER') : $Lang->get('SERVER__AFFICH_BANNER') ?></button>
 
                             </form>
 
@@ -147,10 +147,14 @@
 
         var id = btn.attr('id');
 
-        if (btn.hasClass('active')) {
-            btn.removeClass('active');
+        if (btn.hasClass('btn-danger')) {
+            btn.removeClass('btn-danger');
+            btn.addClass('btn-info');
+            btn.text("<?= $Lang->get('SERVER__AFFICH_BANNER') ?>");
         } else {
-            btn.addClass('active');
+            btn.removeClass('btn-info');
+            btn.addClass('btn-danger');
+            btn.text("<?= $Lang->get('SERVER__HIDE_BANNER') ?>");
         }
 
         $.get('<?= $this->Html->url(['action' => 'switchBanner']) ?>/' + id);

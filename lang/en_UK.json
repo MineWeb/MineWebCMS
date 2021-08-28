@@ -561,6 +561,7 @@
         "SERVER__INVALID_TIMEOUT": "Invalid timeout",
         "SERVER__TIMEOUT_SAVE_SUCCESS": "The timeout has registered well!",
         "SERVER__AFFICH_BANNER": "Show this server on the site banner",
+        "SERVER__HIDE_BANNER": "Hide this server from the site banner",
         "SERVER__CONFIG_BANNER_MSG": "Configure the message displayed on the banner",
         "SERVER__EDIT_BANNER_MSG_SUCCESS": "The message has been edited!",
         "SERVER__DISABLE_CACHE": "Disable the cache (banner)",
