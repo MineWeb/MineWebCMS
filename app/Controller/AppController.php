@@ -60,6 +60,7 @@ class AppController extends Controller
                 'action' => 'index',
                 'plugin' => false,
                 'admin' => false,
+                explode("/", $this->here)[1]
             ]);
         }
 
@@ -532,7 +533,11 @@ class AppController extends Controller
         $this->loadModel('Seo');
         $default = $this->Seo->find('first', ["conditions" => ['page' => null]]);
         $current_url = $this->here;
-        $get_page = $this->Seo->find('first', ["conditions" => ['page LIKE' => $current_url . "%"]]);
+        $get_page = [];
+        $start_url = "/" . explode("/", $current_url)[1];
+        $check = $this->Seo->find('first', ["conditions" => ['page LIKE' => $start_url . "%"]]);
+        if ($check && ($check['Seo']["url"] == $current_url || $current_url != "/"))
+            $get_page = $check;
         $seo_config['title'] = (!empty($default['Seo']['title']) ? $default['Seo']['title'] : "{TITLE} - {WEBSITE_NAME}");
         $seo_config['title'] = (!empty($get_page['Seo']['title']) ? $get_page['Seo']['title'] : $seo_config['title']);
         $seo_config['description'] = (!empty($get_page['Seo']['description']) ? $get_page['Seo']['description'] : (!empty($default['Seo']['description']) ? $default['Seo']['description'] : ""));

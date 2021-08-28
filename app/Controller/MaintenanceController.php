@@ -9,11 +9,12 @@ class MaintenanceController extends AppController
     {
         $this->set('title_for_layout', $this->Lang->get('MAINTENANCE__TITLE'));
         $this->loadModel("Maintenance");
-
-        if ($this->Permissions->can("BYPASS_MAINTENANCE") || !$this->Maintenance->checkMaintenance("/" . $url))
+        $check = $this->Maintenance->checkMaintenance("/" . $url);
+        if ($this->Permissions->can("BYPASS_MAINTENANCE") || !$check) {
             $this->redirect("/");
+        }
 
-        $msg = $this->Maintenance->checkMaintenance("/" . $url)["Maintenance"]["reason"];
+        $msg = $check["reason"];
         $this->set(compact('msg'));
     }
 

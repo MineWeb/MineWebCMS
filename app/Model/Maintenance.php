@@ -4,20 +4,20 @@ class Maintenance extends AppModel
 {
     function checkMaintenance($url = "")
     {
-        $check = $this->find("first", ["conditions" => ["url LIKE" => $url . "%", "active" => 1]])["Maintenance"];
-        if ($check) {
-            if (!$check["sub_url"] && $check["url"] != $url)
-                return false;
-            return true;
-        }
+        $start_url = "/" . explode("/", $url)[1];
+        $check = $this->find("first", ["conditions" => ["url LIKE" => $start_url . "%", "active" => 1]])["Maintenance"];
+
+        if ($check && (($check["url"] == $url) || ($check["sub_url"] && $url != "/")))
+            return $check;
+
         $is_full = $this->isFullMaintenance();
         if ($is_full)
-            return true;
+            return $is_full;
         return false;
     }
 
     function isFullMaintenance()
     {
-        return $this->find("first", ["conditions" => ["url" => "", "active" => 1]]);
+        return $this->find("first", ["conditions" => ["url" => "", "active" => 1]])["Maintenance"];
     }
 }

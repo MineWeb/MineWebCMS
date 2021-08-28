@@ -14,6 +14,8 @@ if (file_exists(ROOT . '/config/installed.txt') and file_exists(ROOT . '/config/
 
     Router::connect('/p/*', ['controller' => 'pages', 'action' => 'index']);
 
+    Router::connect('/maintenance/*', ['controller' => 'maintenance', 'action' => 'index']);
+
     Router::connect('/profile', ['controller' => 'user', 'action' => 'profile']);
 
     Router::connect('/profile/modify', ['controller' => 'user', 'action' => 'modify_profile']);
