@@ -260,7 +260,7 @@ class AppController extends Controller
                         'route' => ['controller' => 'user', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
                     'BAN__MEMBERS' => [
-                        'icon' => 'users',
+                        'icon' => 'ban',
                         'permission' => 'MANAGE_BAN',
                         'route' => ['controller' => 'ban', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
