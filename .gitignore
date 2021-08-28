@@ -20,6 +20,8 @@ dev.json
 
 app/Config/database.php
 
+app/webroot/database.db
+
 app/Config/core.php
 .gitmodules
 
