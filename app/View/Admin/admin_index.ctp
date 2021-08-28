@@ -270,7 +270,7 @@
                         <h3 class="card-title"><?= $Lang->get('SERVER__TITLE') ?> - <?= $value['Server']['name'] ?></h3>
                     </div>
 
-                    <div class="card card-body bg-light">
+                    <div class="card card-body">
                         <?php if ($Server->online($value['Server']['id'])) { ?>
                             <?php if ($value['Server']['type'] != 1 && $value['Server']['type'] != 3 && $Permissions->can('SEND_SERVER_COMMAND_FROM_DASHBOARD')) { ?>
                                 <div class="row-fluid text-center">
