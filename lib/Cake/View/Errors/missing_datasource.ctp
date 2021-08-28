@@ -18,15 +18,15 @@ $pluginDot = empty($plugin) ? null : $plugin . '.';
 ?>
 <h2><?php echo __d('cake_dev', 'Missing Datasource'); ?></h2>
 <p class="error">
-	<strong><?php echo __d('cake_dev', 'Error'); ?>: </strong>
-	<?php echo __d('cake_dev', 'Datasource class %s could not be found.', '<em>' . h($pluginDot . $class) . '</em>'); ?>
-	<?php if (isset($message)): ?>
-		<?php echo h($message); ?>
-	<?php endif; ?>
+    <strong><?php echo __d('cake_dev', 'Error'); ?>: </strong>
+    <?php echo __d('cake_dev', 'Datasource class %s could not be found.', '<em>' . h($pluginDot . $class) . '</em>'); ?>
+    <?php if (isset($message)): ?>
+        <?php echo h($message); ?>
+    <?php endif; ?>
 </p>
 <p class="notice">
-	<strong><?php echo __d('cake_dev', 'Notice'); ?>: </strong>
-	<?php echo __d('cake_dev', 'If you want to customize this error message, create %s', APP_DIR . DS . 'View' . DS . 'Errors' . DS . 'missing_datasource.ctp'); ?>
+    <strong><?php echo __d('cake_dev', 'Notice'); ?>: </strong>
+    <?php echo __d('cake_dev', 'If you want to customize this error message, create %s', APP_DIR . DS . 'View' . DS . 'Errors' . DS . 'missing_datasource.ctp'); ?>
 </p>
 
 <?php

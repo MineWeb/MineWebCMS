@@ -23,5 +23,6 @@ App::uses('CakeText', 'Utility');
  * @package Cake.Utility
  * @deprecated 3.0.0 Deprecated since version 2.7, use CakeText class instead.
  */
-class String extends CakeText {
+class String extends CakeText
+{
 }

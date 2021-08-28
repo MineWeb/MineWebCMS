@@ -27,36 +27,38 @@ App::uses('AppController', 'Controller');
  *
  * @package       Cake.Controller
  */
-class CakeErrorController extends AppController {
+class CakeErrorController extends AppController
+{
 
-/**
- * Uses Property
- *
- * @var array
- */
-	public $uses = array();
+    /**
+     * Uses Property
+     *
+     * @var array
+     */
+    public $uses = [];
 
-/**
- * Constructor
- *
- * @param CakeRequest $request Request instance.
- * @param CakeResponse $response Response instance.
- */
-	public function __construct($request = null, $response = null) {
-		parent::__construct($request, $response);
-		$this->constructClasses();
-		if (count(Router::extensions()) &&
-			!$this->Components->attached('RequestHandler')
-		) {
-			$this->RequestHandler = $this->Components->load('RequestHandler');
-		}
-		if ($this->Components->enabled('Auth')) {
-			$this->Components->disable('Auth');
-		}
-		if ($this->Components->enabled('Security')) {
-			$this->Components->disable('Security');
-		}
-		$this->_set(array('cacheAction' => false, 'viewPath' => 'Errors'));
-	}
+    /**
+     * Constructor
+     *
+     * @param CakeRequest $request Request instance.
+     * @param CakeResponse $response Response instance.
+     */
+    public function __construct($request = null, $response = null)
+    {
+        parent::__construct($request, $response);
+        $this->constructClasses();
+        if (count(Router::extensions()) &&
+            !$this->Components->attached('RequestHandler')
+        ) {
+            $this->RequestHandler = $this->Components->load('RequestHandler');
+        }
+        if ($this->Components->enabled('Auth')) {
+            $this->Components->disable('Auth');
+        }
+        if ($this->Components->enabled('Security')) {
+            $this->Components->disable('Security');
+        }
+        $this->_set(['cacheAction' => false, 'viewPath' => 'Errors']);
+    }
 
 }

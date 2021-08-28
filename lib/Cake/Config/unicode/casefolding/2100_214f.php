@@ -27,7 +27,7 @@
  *
  * The lower filed is an array of the decimal values that form the lower case version of a character.
  *
- *	The status field is:
+ *    The status field is:
  * C: common case folding, common mappings shared by both simple and full mappings.
  * F: full case folding, mappings that cause strings to grow in length. Multiple characters are separated by spaces.
  * S: simple case folding, mappings to single characters where different from F.
@@ -37,7 +37,7 @@
  *     Note that the Turkic mappings do not maintain canonical equivalence without additional processing.
  *     See the discussions of case mapping in the Unicode Standard for more information.
  */
-$config['2100_214f'][] = array('upper' => 8486, 'status' => 'C', 'lower' => array(969)); /* OHM SIGN */
-$config['2100_214f'][] = array('upper' => 8490, 'status' => 'C', 'lower' => array(107)); /* KELVIN SIGN */
-$config['2100_214f'][] = array('upper' => 8491, 'status' => 'C', 'lower' => array(229)); /* ANGSTROM SIGN */
-$config['2100_214f'][] = array('upper' => 8498, 'status' => 'C', 'lower' => array(8526)); /* TURNED CAPITAL F */
+$config['2100_214f'][] = ['upper' => 8486, 'status' => 'C', 'lower' => [969]]; /* OHM SIGN */
+$config['2100_214f'][] = ['upper' => 8490, 'status' => 'C', 'lower' => [107]]; /* KELVIN SIGN */
+$config['2100_214f'][] = ['upper' => 8491, 'status' => 'C', 'lower' => [229]]; /* ANGSTROM SIGN */
+$config['2100_214f'][] = ['upper' => 8498, 'status' => 'C', 'lower' => [8526]]; /* TURNED CAPITAL F */

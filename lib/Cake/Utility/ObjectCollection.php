@@ -25,21 +25,8 @@
  * @package       Cake.Utility
  * @since CakePHP(tm) v 2.0
  */
-abstract class ObjectCollection {
-
-    /**
-     * List of the currently-enabled objects
-     *
-     * @var array
-     */
-    protected $_enabled = array();
-
-    /**
-     * A hash of loaded objects, indexed by name
-     *
-     * @var array
-     */
-    protected $_loaded = array();
+abstract class ObjectCollection
+{
 
     /**
      * Default object priority. A non zero integer.
@@ -47,6 +34,40 @@ abstract class ObjectCollection {
      * @var int
      */
     public $defaultPriority = 10;
+    /**
+     * List of the currently-enabled objects
+     *
+     * @var array
+     */
+    protected $_enabled = [];
+    /**
+     * A hash of loaded objects, indexed by name
+     *
+     * @var array
+     */
+    protected $_loaded = [];
+
+    /**
+     * Normalizes an object array, creates an array that makes lazy loading
+     * easier
+     *
+     * @param array $objects Array of child objects to normalize.
+     * @return array Array of normalized objects.
+     */
+    public static function normalizeObjectArray($objects)
+    {
+        $normal = [];
+        foreach ($objects as $i => $objectName) {
+            $options = [];
+            if (!is_int($i)) {
+                $options = (array)$objectName;
+                $objectName = $i;
+            }
+            list(, $name) = pluginSplit($objectName);
+            $normal[$name] = ['class' => $objectName, 'settings' => $options];
+        }
+        return $normal;
+    }
 
     /**
      * Loads a new object onto the collection. Can throw a variety of exceptions
@@ -58,7 +79,7 @@ abstract class ObjectCollection {
      * @param array $options Array of configuration options for the object to be constructed.
      * @return CakeObject the constructed object
      */
-    abstract public function load($name, $options = array());
+    abstract public function load($name, $options = []);
 
     /**
      * Trigger a callback method on every object in the collection.
@@ -91,7 +112,8 @@ abstract class ObjectCollection {
      * @return mixed Either the last result or all results if collectReturn is on.
      * @throws CakeException when modParams is used with an index that does not exist.
      */
-    public function trigger($callback, $params = array(), $options = array()) {
+    public function trigger($callback, $params = [], $options = [])
+    {
         if (empty($this->_enabled)) {
             return true;
         }
@@ -105,7 +127,7 @@ abstract class ObjectCollection {
                 $subject = $event->subject();
             }
 
-            foreach (array('break', 'breakOn', 'collectReturn', 'modParams') as $opt) {
+            foreach (['break', 'breakOn', 'collectReturn', 'modParams'] as $opt) {
                 if (isset($event->{$opt})) {
                     $options[$opt] = $event->{$opt};
                 }
@@ -113,20 +135,20 @@ abstract class ObjectCollection {
             $parts = explode('.', $event->name());
             $callback = array_pop($parts);
         }
-        $options += array(
+        $options += [
             'break' => false,
             'breakOn' => false,
             'collectReturn' => false,
             'modParams' => false
-        );
-        $collected = array();
+        ];
+        $collected = [];
         $list = array_keys($this->_enabled);
         if ($options['modParams'] !== false && !isset($params[$options['modParams']])) {
             throw new CakeException(__d('cake_dev', 'Cannot use modParams with indexes that do not exist.'));
         }
         $result = null;
         foreach ($list as $name) {
-            $result = call_user_func_array(array($this->_loaded[$name], $callback), array_values(array_filter(compact('subject')) + $params));
+            $result = call_user_func_array([$this->_loaded[$name], $callback], array_values(array_filter(compact('subject')) + $params));
             if ($options['collectReturn'] === true) {
                 $collected[] = $result;
             }
@@ -134,7 +156,7 @@ abstract class ObjectCollection {
                     (is_array($options['breakOn']) && in_array($result, $options['breakOn'], true)))
             ) {
                 return $result;
-            } elseif ($options['modParams'] !== false && !in_array($result, array(true, false, null), true)) {
+            } else if ($options['modParams'] !== false && !in_array($result, [true, false, null], true)) {
                 $params[$options['modParams']] = $result;
             }
         }
@@ -150,7 +172,8 @@ abstract class ObjectCollection {
      * @param string $name Name of property to read
      * @return mixed
      */
-    public function __get($name) {
+    public function __get($name)
+    {
         if (isset($this->_loaded[$name])) {
             return $this->_loaded[$name];
         }
@@ -163,7 +186,8 @@ abstract class ObjectCollection {
      * @param string $name Name of object being checked.
      * @return bool
      */
-    public function __isset($name) {
+    public function __isset($name)
+    {
         return isset($this->_loaded[$name]);
     }
 
@@ -174,7 +198,8 @@ abstract class ObjectCollection {
      * @param bool $prioritize Prioritize enabled list after enabling object(s)
      * @return void
      */
-    public function enable($name, $prioritize = true) {
+    public function enable($name, $prioritize = true)
+    {
         $enabled = false;
         foreach ((array)$name as $object) {
             list(, $object) = pluginSplit($object);
@@ -183,7 +208,7 @@ abstract class ObjectCollection {
                 if (isset($this->_loaded[$object]->settings['priority'])) {
                     $priority = $this->_loaded[$object]->settings['priority'];
                 }
-                $this->_enabled[$object] = array($priority);
+                $this->_enabled[$object] = [$priority];
                 $enabled = true;
             }
         }
@@ -197,7 +222,8 @@ abstract class ObjectCollection {
      *
      * @return array Prioritized list of object
      */
-    public function prioritize() {
+    public function prioritize()
+    {
         $i = 1;
         foreach ($this->_enabled as $name => $priority) {
             $priority[1] = $i++;
@@ -211,14 +237,15 @@ abstract class ObjectCollection {
      * Set priority for an object or array of objects
      *
      * @param string|array $name CamelCased name of the object(s) to enable (string or array)
-     * 	If string the second param $priority is used else it should be an associative array
-     * 	with keys as object names and values as priorities to set.
+     *    If string the second param $priority is used else it should be an associative array
+     *    with keys as object names and values as priorities to set.
      * @param int|null $priority Integer priority to set or null for default
      * @return void
      */
-    public function setPriority($name, $priority = null) {
+    public function setPriority($name, $priority = null)
+    {
         if (is_string($name)) {
-            $name = array($name => $priority);
+            $name = [$name => $priority];
         }
         foreach ($name as $object => $objectPriority) {
             list(, $object) = pluginSplit($object);
@@ -228,7 +255,7 @@ abstract class ObjectCollection {
                 }
                 $this->_loaded[$object]->settings['priority'] = $objectPriority;
                 if (isset($this->_enabled[$object])) {
-                    $this->_enabled[$object] = array($objectPriority);
+                    $this->_enabled[$object] = [$objectPriority];
                 }
             }
         }
@@ -242,7 +269,8 @@ abstract class ObjectCollection {
      * @param string|array $name CamelCased name of the objects(s) to disable (string or array)
      * @return void
      */
-    public function disable($name) {
+    public function disable($name)
+    {
         foreach ((array)$name as $object) {
             list(, $object) = pluginSplit($object);
             unset($this->_enabled[$object]);
@@ -257,7 +285,8 @@ abstract class ObjectCollection {
      * @return mixed If $name is specified, returns the boolean status of the corresponding object.
      *   Otherwise, returns an array of all enabled objects.
      */
-    public function enabled($name = null) {
+    public function enabled($name = null)
+    {
         if (!empty($name)) {
             list(, $name) = pluginSplit($name);
             return isset($this->_enabled[$name]);
@@ -274,7 +303,8 @@ abstract class ObjectCollection {
      *    Otherwise, returns an array of all attached objects.
      * @deprecated 3.0.0 Will be removed in 3.0. Use loaded instead.
      */
-    public function attached($name = null) {
+    public function attached($name = null)
+    {
         return $this->loaded($name);
     }
 
@@ -286,7 +316,8 @@ abstract class ObjectCollection {
      * @return mixed If $name is specified, returns the boolean status of the corresponding object.
      *    Otherwise, returns an array of all loaded objects.
      */
-    public function loaded($name = null) {
+    public function loaded($name = null)
+    {
         if (!empty($name)) {
             list(, $name) = pluginSplit($name);
             return isset($this->_loaded[$name]);
@@ -300,7 +331,8 @@ abstract class ObjectCollection {
      * @param string $name Name of the object to delete.
      * @return void
      */
-    public function unload($name) {
+    public function unload($name)
+    {
         list(, $name) = pluginSplit($name);
         unset($this->_loaded[$name], $this->_enabled[$name]);
     }
@@ -312,33 +344,13 @@ abstract class ObjectCollection {
      * @param CakeObject $object The object to use
      * @return array Loaded objects
      */
-    public function set($name = null, $object = null) {
+    public function set($name = null, $object = null)
+    {
         if (!empty($name) && !empty($object)) {
             list(, $name) = pluginSplit($name);
             $this->_loaded[$name] = $object;
         }
         return $this->_loaded;
-    }
-
-    /**
-     * Normalizes an object array, creates an array that makes lazy loading
-     * easier
-     *
-     * @param array $objects Array of child objects to normalize.
-     * @return array Array of normalized objects.
-     */
-    public static function normalizeObjectArray($objects) {
-        $normal = array();
-        foreach ($objects as $i => $objectName) {
-            $options = array();
-            if (!is_int($i)) {
-                $options = (array)$objectName;
-                $objectName = $i;
-            }
-            list(, $name) = pluginSplit($objectName);
-            $normal[$name] = array('class' => $objectName, 'settings' => $options);
-        }
-        return $normal;
     }
 
 }

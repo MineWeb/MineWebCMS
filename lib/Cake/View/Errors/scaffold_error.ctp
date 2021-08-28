@@ -14,18 +14,18 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 ?>
-<h2><?php echo __d('cake_dev', 'Scaffold Error'); ?></h2>
-<p class="error">
-	<strong><?php echo __d('cake_dev', 'Error'); ?>: </strong>
-	<?php echo __d('cake_dev', 'Method _scaffoldError in was not found in the controller'); ?>
-</p>
-<p class="notice">
-	<strong><?php echo __d('cake_dev', 'Notice'); ?>: </strong>
-	<?php echo __d('cake_dev', 'If you want to customize this error message, create %s', APP_DIR . DS . 'View' . DS . 'Errors' . DS . 'scaffold_error.ctp'); ?>
-</p>
-<pre>
+    <h2><?php echo __d('cake_dev', 'Scaffold Error'); ?></h2>
+    <p class="error">
+        <strong><?php echo __d('cake_dev', 'Error'); ?>: </strong>
+        <?php echo __d('cake_dev', 'Method _scaffoldError in was not found in the controller'); ?>
+    </p>
+    <p class="notice">
+        <strong><?php echo __d('cake_dev', 'Notice'); ?>: </strong>
+        <?php echo __d('cake_dev', 'If you want to customize this error message, create %s', APP_DIR . DS . 'View' . DS . 'Errors' . DS . 'scaffold_error.ctp'); ?>
+    </p>
+    <pre>
 &lt;?php
-function _scaffoldError() {<br />
+function _scaffoldError() {<br/>
 
 }
 
@@ -33,6 +33,6 @@ function _scaffoldError() {<br />
 
 <?php
 if (isset($error) && $error instanceof Exception) {
-	echo $this->element('exception_stack_trace');
+    echo $this->element('exception_stack_trace');
 }
 ?>

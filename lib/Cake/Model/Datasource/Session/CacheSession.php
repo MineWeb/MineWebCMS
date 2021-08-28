@@ -25,70 +25,77 @@ App::uses('CakeSessionHandlerInterface', 'Model/Datasource/Session');
  * @package       Cake.Model.Datasource.Session
  * @see CakeSession for configuration information.
  */
-class CacheSession implements CakeSessionHandlerInterface {
+class CacheSession implements CakeSessionHandlerInterface
+{
 
-/**
- * Method called on open of a database session.
- *
- * @return bool Success
- */
-	public function open() {
-		return true;
-	}
+    /**
+     * Method called on open of a database session.
+     *
+     * @return bool Success
+     */
+    public function open()
+    {
+        return true;
+    }
 
-/**
- * Method called on close of a database session.
- *
- * @return bool Success
- */
-	public function close() {
-		return true;
-	}
+    /**
+     * Method called on close of a database session.
+     *
+     * @return bool Success
+     */
+    public function close()
+    {
+        return true;
+    }
 
-/**
- * Method used to read from a database session.
- *
- * @param string $id The key of the value to read
- * @return mixed The value of the key or false if it does not exist
- */
-	public function read($id) {
-		$data = Cache::read($id, Configure::read('Session.handler.config'));
+    /**
+     * Method used to read from a database session.
+     *
+     * @param string $id The key of the value to read
+     * @return mixed The value of the key or false if it does not exist
+     */
+    public function read($id)
+    {
+        $data = Cache::read($id, Configure::read('Session.handler.config'));
 
-		if (!is_numeric($data) && empty($data)) {
-			return '';
-		}
-		return $data;
-	}
+        if (!is_numeric($data) && empty($data)) {
+            return '';
+        }
+        return $data;
+    }
 
-/**
- * Helper function called on write for database sessions.
- *
- * @param int $id ID that uniquely identifies session in database
- * @param mixed $data The value of the data to be saved.
- * @return bool True for successful write, false otherwise.
- */
-	public function write($id, $data) {
-		return (bool)Cache::write($id, $data, Configure::read('Session.handler.config'));
-	}
+    /**
+     * Helper function called on write for database sessions.
+     *
+     * @param int $id ID that uniquely identifies session in database
+     * @param mixed $data The value of the data to be saved.
+     * @return bool True for successful write, false otherwise.
+     */
+    public function write($id, $data)
+    {
+        return (bool)Cache::write($id, $data, Configure::read('Session.handler.config'));
+    }
 
-/**
- * Method called on the destruction of a database session.
- *
- * @param int $id ID that uniquely identifies session in cache
- * @return bool True for successful delete, false otherwise.
- */
-	public function destroy($id) {
-		return (bool)Cache::delete($id, Configure::read('Session.handler.config'));
-	}
+    /**
+     * Method called on the destruction of a database session.
+     *
+     * @param int $id ID that uniquely identifies session in cache
+     * @return bool True for successful delete, false otherwise.
+     */
+    public function destroy($id)
+    {
+        return (bool)Cache::delete($id, Configure::read('Session.handler.config'));
+    }
 
-/**
- * Helper function called on gc for cache sessions.
- *
- * @param int $expires Timestamp (defaults to current time)
- * @return bool Success
- */
-	public function gc($expires = null) {
-		return (bool)Cache::gc(Configure::read('Session.handler.config'), $expires);
-	}
+    /**
+     * Helper function called on gc for cache sessions.
+     *
+     * @param int $expires Timestamp (defaults to current time)
+     * @return bool Success
+     */
+    public function gc($expires = null)
+    {
+        return (bool)Cache::gc(Configure::read('Session.handler.config'), $expires);
+    }
 
 }

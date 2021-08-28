@@ -16,12 +16,12 @@
 ?>
 <h2><?php echo __d('cake_dev', 'Private Method in %s', $controller); ?></h2>
 <p class="error">
-	<strong><?php echo __d('cake_dev', 'Error'); ?>: </strong>
-	<?php echo __d('cake_dev', '%s%s cannot be accessed directly.', '<em>' . h($controller) . '::</em>', '<em>' . h($action) . '()</em>'); ?>
+    <strong><?php echo __d('cake_dev', 'Error'); ?>: </strong>
+    <?php echo __d('cake_dev', '%s%s cannot be accessed directly.', '<em>' . h($controller) . '::</em>', '<em>' . h($action) . '()</em>'); ?>
 </p>
 <p class="notice">
-	<strong><?php echo __d('cake_dev', 'Notice'); ?>: </strong>
-	<?php echo __d('cake_dev', 'If you want to customize this error message, create %s', APP_DIR . DS . 'View' . DS . 'Errors' . DS . 'private_action.ctp'); ?>
+    <strong><?php echo __d('cake_dev', 'Notice'); ?>: </strong>
+    <?php echo __d('cake_dev', 'If you want to customize this error message, create %s', APP_DIR . DS . 'View' . DS . 'Errors' . DS . 'private_action.ctp'); ?>
 </p>
 
 <?php

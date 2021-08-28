@@ -28,7 +28,8 @@ App::uses('CakeTestLoader', 'TestSuite');
  *
  * @package       Cake.Console.Command
  */
-class TestShell extends Shell {
+class TestShell extends Shell
+{
 
     /**
      * Dispatcher object for the run.
@@ -42,126 +43,127 @@ class TestShell extends Shell {
      *
      * @return ConsoleOptionParser
      */
-    public function getOptionParser() {
+    public function getOptionParser()
+    {
         $parser = new ConsoleOptionParser($this->name);
 
         $parser->description(
             __d('cake_console', 'The CakePHP Testsuite allows you to run test cases from the command line')
-        )->addArgument('category', array(
+        )->addArgument('category', [
             'help' => __d('cake_console', 'The category for the test, or test file, to test.'),
             'required' => false
-        ))->addArgument('file', array(
+        ])->addArgument('file', [
             'help' => __d('cake_console', 'The path to the file, or test file, to test.'),
             'required' => false
-        ))->addOption('log-junit', array(
+        ])->addOption('log-junit', [
             'help' => __d('cake_console', '<file> Log test execution in JUnit XML format to file.'),
             'default' => false
-        ))->addOption('log-json', array(
+        ])->addOption('log-json', [
             'help' => __d('cake_console', '<file> Log test execution in JSON format to file.'),
             'default' => false
-        ))->addOption('log-tap', array(
+        ])->addOption('log-tap', [
             'help' => __d('cake_console', '<file> Log test execution in TAP format to file.'),
             'default' => false
-        ))->addOption('log-dbus', array(
+        ])->addOption('log-dbus', [
             'help' => __d('cake_console', 'Log test execution to DBUS.'),
             'default' => false
-        ))->addOption('coverage-html', array(
+        ])->addOption('coverage-html', [
             'help' => __d('cake_console', '<dir> Generate code coverage report in HTML format.'),
             'default' => false
-        ))->addOption('coverage-clover', array(
+        ])->addOption('coverage-clover', [
             'help' => __d('cake_console', '<file> Write code coverage data in Clover XML format.'),
             'default' => false
-        ))->addOption('coverage-text', array(
+        ])->addOption('coverage-text', [
             'help' => __d('cake_console', 'Output code coverage report in Text format.'),
             'boolean' => true
-        ))->addOption('testdox-html', array(
+        ])->addOption('testdox-html', [
             'help' => __d('cake_console', '<file> Write agile documentation in HTML format to file.'),
             'default' => false
-        ))->addOption('testdox-text', array(
+        ])->addOption('testdox-text', [
             'help' => __d('cake_console', '<file> Write agile documentation in Text format to file.'),
             'default' => false
-        ))->addOption('filter', array(
+        ])->addOption('filter', [
             'help' => __d('cake_console', '<pattern> Filter which tests to run.'),
             'default' => false
-        ))->addOption('group', array(
+        ])->addOption('group', [
             'help' => __d('cake_console', '<name> Only runs tests from the specified group(s).'),
             'default' => false
-        ))->addOption('exclude-group', array(
+        ])->addOption('exclude-group', [
             'help' => __d('cake_console', '<name> Exclude tests from the specified group(s).'),
             'default' => false
-        ))->addOption('list-groups', array(
+        ])->addOption('list-groups', [
             'help' => __d('cake_console', 'List available test groups.'),
             'boolean' => true
-        ))->addOption('loader', array(
+        ])->addOption('loader', [
             'help' => __d('cake_console', 'TestSuiteLoader implementation to use.'),
             'default' => false
-        ))->addOption('repeat', array(
+        ])->addOption('repeat', [
             'help' => __d('cake_console', '<times> Runs the test(s) repeatedly.'),
             'default' => false
-        ))->addOption('tap', array(
+        ])->addOption('tap', [
             'help' => __d('cake_console', 'Report test execution progress in TAP format.'),
             'boolean' => true
-        ))->addOption('testdox', array(
+        ])->addOption('testdox', [
             'help' => __d('cake_console', 'Report test execution progress in TestDox format.'),
             'default' => false,
             'boolean' => true
-        ))->addOption('no-colors', array(
+        ])->addOption('no-colors', [
             'help' => __d('cake_console', 'Do not use colors in output.'),
             'boolean' => true
-        ))->addOption('stderr', array(
+        ])->addOption('stderr', [
             'help' => __d('cake_console', 'Write to STDERR instead of STDOUT.'),
             'boolean' => true
-        ))->addOption('stop-on-error', array(
+        ])->addOption('stop-on-error', [
             'help' => __d('cake_console', 'Stop execution upon first error or failure.'),
             'boolean' => true
-        ))->addOption('stop-on-failure', array(
+        ])->addOption('stop-on-failure', [
             'help' => __d('cake_console', 'Stop execution upon first failure.'),
             'boolean' => true
-        ))->addOption('stop-on-skipped', array(
+        ])->addOption('stop-on-skipped', [
             'help' => __d('cake_console', 'Stop execution upon first skipped test.'),
             'boolean' => true
-        ))->addOption('stop-on-incomplete', array(
+        ])->addOption('stop-on-incomplete', [
             'help' => __d('cake_console', 'Stop execution upon first incomplete test.'),
             'boolean' => true
-        ))->addOption('strict', array(
+        ])->addOption('strict', [
             'help' => __d('cake_console', 'Mark a test as incomplete if no assertions are made.'),
             'boolean' => true
-        ))->addOption('wait', array(
+        ])->addOption('wait', [
             'help' => __d('cake_console', 'Waits for a keystroke after each test.'),
             'boolean' => true
-        ))->addOption('process-isolation', array(
+        ])->addOption('process-isolation', [
             'help' => __d('cake_console', 'Run each test in a separate PHP process.'),
             'boolean' => true
-        ))->addOption('no-globals-backup', array(
+        ])->addOption('no-globals-backup', [
             'help' => __d('cake_console', 'Do not backup and restore $GLOBALS for each test.'),
             'boolean' => true
-        ))->addOption('static-backup', array(
+        ])->addOption('static-backup', [
             'help' => __d('cake_console', 'Backup and restore static attributes for each test.'),
             'boolean' => true
-        ))->addOption('syntax-check', array(
+        ])->addOption('syntax-check', [
             'help' => __d('cake_console', 'Try to check source files for syntax errors.'),
             'boolean' => true
-        ))->addOption('bootstrap', array(
+        ])->addOption('bootstrap', [
             'help' => __d('cake_console', '<file> A "bootstrap" PHP file that is run before the tests.'),
             'default' => false
-        ))->addOption('configuration', array(
+        ])->addOption('configuration', [
             'help' => __d('cake_console', '<file> Read configuration from XML file.'),
             'default' => false
-        ))->addOption('no-configuration', array(
+        ])->addOption('no-configuration', [
             'help' => __d('cake_console', 'Ignore default configuration file (phpunit.xml).'),
             'boolean' => true
-        ))->addOption('include-path', array(
+        ])->addOption('include-path', [
             'help' => __d('cake_console', '<path(s)> Prepend PHP include_path with given path(s).'),
             'default' => false
-        ))->addOption('directive', array(
+        ])->addOption('directive', [
             'help' => __d('cake_console', 'key[=value] Sets a php.ini value.'),
             'short' => 'd',
             'default' => false
-        ))->addOption('fixture', array(
+        ])->addOption('fixture', [
             'help' => __d('cake_console', 'Choose a custom fixture manager.')
-        ))->addOption('debug', array(
+        ])->addOption('debug', [
             'help' => __d('cake_console', 'More verbose output.')
-        ));
+        ]);
 
         return $parser;
     }
@@ -172,7 +174,8 @@ class TestShell extends Shell {
      * @return void
      * @throws Exception
      */
-    public function initialize() {
+    public function initialize()
+    {
         $this->_dispatcher = new CakeTestSuiteDispatcher();
         $success = $this->_dispatcher->loadTestFramework();
         if (!$success) {
@@ -181,81 +184,12 @@ class TestShell extends Shell {
     }
 
     /**
-     * Parse the CLI options into an array CakeTestDispatcher can use.
-     *
-     * @return array|null Array of params for CakeTestDispatcher or null.
-     */
-    protected function _parseArgs() {
-        if (empty($this->args)) {
-            return null;
-        }
-        $params = array(
-            'core' => false,
-            'app' => false,
-            'plugin' => null,
-            'output' => 'text',
-        );
-
-        if (strpos($this->args[0], '.php')) {
-            $category = $this->_mapFileToCategory($this->args[0]);
-            $params['case'] = $this->_mapFileToCase($this->args[0], $category);
-        } else {
-            $category = $this->args[0];
-            if (isset($this->args[1])) {
-                $params['case'] = $this->args[1];
-            }
-        }
-
-        if ($category === 'core') {
-            $params['core'] = true;
-        } elseif ($category === 'app') {
-            $params['app'] = true;
-        } else {
-            $params['plugin'] = $category;
-        }
-
-        return $params;
-    }
-
-    /**
-     * Converts the options passed to the shell as options for the PHPUnit cli runner
-     *
-     * @return array Array of params for CakeTestDispatcher
-     */
-    protected function _runnerOptions() {
-        $options = array();
-        $params = $this->params;
-        unset($params['help']);
-        unset($params['quiet']);
-
-        if (!empty($params['no-colors'])) {
-            unset($params['no-colors'], $params['colors']);
-        } else {
-            $params['colors'] = true;
-        }
-
-        foreach ($params as $param => $value) {
-            if ($value === false) {
-                continue;
-            }
-            if ($param === 'directive') {
-                $options[] = '-d';
-            } else {
-                $options[] = '--' . $param;
-            }
-            if (is_string($value)) {
-                $options[] = $value;
-            }
-        }
-        return $options;
-    }
-
-    /**
      * Main entry point to this shell
      *
      * @return void
      */
-    public function main() {
+    public function main()
+    {
         $this->out(__d('cake_console', 'CakePHP Test Shell'));
         $this->hr();
 
@@ -269,75 +203,63 @@ class TestShell extends Shell {
     }
 
     /**
-     * Runs the test case from $runnerArgs
+     * Parse the CLI options into an array CakeTestDispatcher can use.
      *
-     * @param array $runnerArgs list of arguments as obtained from _parseArgs()
-     * @param array $options list of options as constructed by _runnerOptions()
-     * @return void
+     * @return array|null Array of params for CakeTestDispatcher or null.
      */
-    protected function _run($runnerArgs, $options = array()) {
-        restore_error_handler();
-        restore_error_handler();
+    protected function _parseArgs()
+    {
+        if (empty($this->args)) {
+            return null;
+        }
+        $params = [
+            'core' => false,
+            'app' => false,
+            'plugin' => null,
+            'output' => 'text',
+        ];
 
-        $testCli = new CakeTestSuiteCommand('CakeTestLoader', $runnerArgs);
-        $testCli->run($options);
+        if (strpos($this->args[0], '.php')) {
+            $category = $this->_mapFileToCategory($this->args[0]);
+            $params['case'] = $this->_mapFileToCase($this->args[0], $category);
+        } else {
+            $category = $this->args[0];
+            if (isset($this->args[1])) {
+                $params['case'] = $this->args[1];
+            }
+        }
+
+        if ($category === 'core') {
+            $params['core'] = true;
+        } else if ($category === 'app') {
+            $params['app'] = true;
+        } else {
+            $params['plugin'] = $category;
+        }
+
+        return $params;
     }
 
     /**
-     * Shows a list of available test cases and gives the option to run one of them
+     * For the given file, what category of test is it? returns app, core or the name of the plugin
      *
-     * @return void
+     * @param string $file The file to map.
+     * @return string
      */
-    public function available() {
-        $params = $this->_parseArgs();
-        $testCases = CakeTestLoader::generateTestList($params);
-        $app = isset($params['app']) ? $params['app'] : null;
-        $plugin = isset($params['plugin']) ? $params['plugin'] : null;
-
-        $title = "Core Test Cases:";
-        $category = 'core';
-        if ($app) {
-            $title = "App Test Cases:";
-            $category = 'app';
-        } elseif ($plugin) {
-            $title = Inflector::humanize($plugin) . " Test Cases:";
-            $category = $plugin;
+    protected function _mapFileToCategory($file)
+    {
+        $_file = realpath($file);
+        if ($_file) {
+            $file = $_file;
         }
 
-        if (empty($testCases)) {
-            $this->out(__d('cake_console', "No test cases available \n\n"));
-            return $this->out($this->OptionParser->help());
+        $file = str_replace(DS, '/', $file);
+        if (strpos($file, 'lib/Cake/') !== false) {
+            return 'core';
+        } else if (preg_match('@(?:plugins|Plugin)/([^/]*)@', $file, $match)) {
+            return $match[1];
         }
-
-        $this->out($title);
-        $i = 1;
-        $cases = array();
-        foreach ($testCases as $testCase) {
-            $case = str_replace('Test.php', '', $testCase);
-            $this->out("[$i] $case");
-            $cases[$i] = $case;
-            $i++;
-        }
-
-        while ($choice = $this->in(__d('cake_console', 'What test case would you like to run?'), null, 'q')) {
-            if (is_numeric($choice) && isset($cases[$choice])) {
-                $this->args[0] = $category;
-                $this->args[1] = $cases[$choice];
-                $this->_run($this->_parseArgs(), $this->_runnerOptions());
-                break;
-            }
-
-            if (is_string($choice) && in_array($choice, $cases)) {
-                $this->args[0] = $category;
-                $this->args[1] = $choice;
-                $this->_run($this->_parseArgs(), $this->_runnerOptions());
-                break;
-            }
-
-            if ($choice === 'q') {
-                break;
-            }
-        }
+        return 'app';
     }
 
     /**
@@ -349,7 +271,8 @@ class TestShell extends Shell {
      * @return array array(type, case)
      * @throws Exception
      */
-    protected function _mapFileToCase($file, $category, $throwOnMissingFile = true) {
+    protected function _mapFileToCase($file, $category, $throwOnMissingFile = true)
+    {
         if (!$category || (substr($file, -4) !== '.php')) {
             return false;
         }
@@ -413,24 +336,111 @@ class TestShell extends Shell {
     }
 
     /**
-     * For the given file, what category of test is it? returns app, core or the name of the plugin
+     * Shows a list of available test cases and gives the option to run one of them
      *
-     * @param string $file The file to map.
-     * @return string
+     * @return void
      */
-    protected function _mapFileToCategory($file) {
-        $_file = realpath($file);
-        if ($_file) {
-            $file = $_file;
+    public function available()
+    {
+        $params = $this->_parseArgs();
+        $testCases = CakeTestLoader::generateTestList($params);
+        $app = isset($params['app']) ? $params['app'] : null;
+        $plugin = isset($params['plugin']) ? $params['plugin'] : null;
+
+        $title = "Core Test Cases:";
+        $category = 'core';
+        if ($app) {
+            $title = "App Test Cases:";
+            $category = 'app';
+        } else if ($plugin) {
+            $title = Inflector::humanize($plugin) . " Test Cases:";
+            $category = $plugin;
         }
 
-        $file = str_replace(DS, '/', $file);
-        if (strpos($file, 'lib/Cake/') !== false) {
-            return 'core';
-        } elseif (preg_match('@(?:plugins|Plugin)/([^/]*)@', $file, $match)) {
-            return $match[1];
+        if (empty($testCases)) {
+            $this->out(__d('cake_console', "No test cases available \n\n"));
+            return $this->out($this->OptionParser->help());
         }
-        return 'app';
+
+        $this->out($title);
+        $i = 1;
+        $cases = [];
+        foreach ($testCases as $testCase) {
+            $case = str_replace('Test.php', '', $testCase);
+            $this->out("[$i] $case");
+            $cases[$i] = $case;
+            $i++;
+        }
+
+        while ($choice = $this->in(__d('cake_console', 'What test case would you like to run?'), null, 'q')) {
+            if (is_numeric($choice) && isset($cases[$choice])) {
+                $this->args[0] = $category;
+                $this->args[1] = $cases[$choice];
+                $this->_run($this->_parseArgs(), $this->_runnerOptions());
+                break;
+            }
+
+            if (is_string($choice) && in_array($choice, $cases)) {
+                $this->args[0] = $category;
+                $this->args[1] = $choice;
+                $this->_run($this->_parseArgs(), $this->_runnerOptions());
+                break;
+            }
+
+            if ($choice === 'q') {
+                break;
+            }
+        }
+    }
+
+    /**
+     * Runs the test case from $runnerArgs
+     *
+     * @param array $runnerArgs list of arguments as obtained from _parseArgs()
+     * @param array $options list of options as constructed by _runnerOptions()
+     * @return void
+     */
+    protected function _run($runnerArgs, $options = [])
+    {
+        restore_error_handler();
+        restore_error_handler();
+
+        $testCli = new CakeTestSuiteCommand('CakeTestLoader', $runnerArgs);
+        $testCli->run($options);
+    }
+
+    /**
+     * Converts the options passed to the shell as options for the PHPUnit cli runner
+     *
+     * @return array Array of params for CakeTestDispatcher
+     */
+    protected function _runnerOptions()
+    {
+        $options = [];
+        $params = $this->params;
+        unset($params['help']);
+        unset($params['quiet']);
+
+        if (!empty($params['no-colors'])) {
+            unset($params['no-colors'], $params['colors']);
+        } else {
+            $params['colors'] = true;
+        }
+
+        foreach ($params as $param => $value) {
+            if ($value === false) {
+                continue;
+            }
+            if ($param === 'directive') {
+                $options[] = '-d';
+            } else {
+                $options[] = '--' . $param;
+            }
+            if (is_string($value)) {
+                $options[] = $value;
+            }
+        }
+        return $options;
     }
 
 }

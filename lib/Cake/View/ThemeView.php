@@ -26,6 +26,7 @@ App::uses('View', 'View');
  * @package       Cake.View
  * @deprecated 3.0.0 Deprecated since 2.1, use View class instead
  */
-class ThemeView extends View {
+class ThemeView extends View
+{
 
 }

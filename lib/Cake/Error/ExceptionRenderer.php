@@ -121,11 +121,11 @@ class ExceptionRenderer
             if (empty($template) || $template === 'internalError') {
                 $template = 'error500';
             }
-        } elseif ($exception instanceof PDOException) {
+        } else if ($exception instanceof PDOException) {
             $method = 'pdoError';
             $template = 'pdo_error';
             $code = 500;
-        } elseif (!$methodExists) {
+        } else if (!$methodExists) {
             $method = 'error500';
             if ($code >= 400 && $code < 500) {
                 $method = 'error400';
@@ -138,7 +138,7 @@ class ExceptionRenderer
         }
         if ($isNotDebug && $code == 500 && get_class($exception) != "MissingConnectionException") {
             $method = 'error500';
-        } elseif (get_class($exception) == "MissingConnectionException") {
+        } else if (get_class($exception) == "MissingConnectionException") {
             $method = 'missingConnection';
         }
         $this->template = $template;
@@ -204,7 +204,7 @@ class ExceptionRenderer
     public function render()
     {
         if ($this->method) {
-            call_user_func_array(array($this, $this->method), array($this->error));
+            call_user_func_array([$this, $this->method], [$this->error]);
         }
     }
 
@@ -216,144 +216,14 @@ class ExceptionRenderer
         }
         $url = $this->controller->request->here();
         $this->controller->response->statusCode(403);
-        $this->controller->set(array(
+        $this->controller->set([
             'name' => h($message),
             'message' => h($message),
             'url' => h($url),
             'error' => $error,
-            '_serialize' => array('name', 'message', 'url')
-        ));
+            '_serialize' => ['name', 'message', 'url']
+        ]);
         $this->_outputMessage('error403');
-    }
-
-    public function notfound($error)
-    {
-        $message = $error->getMessage();
-        if (!Configure::read('debug') && $error instanceof CakeException) {
-            $message = __d('cake', 'Not Found');
-        }
-        $url = $this->controller->request->here();
-        $this->controller->response->statusCode(404);
-        $this->controller->set(array(
-            'name' => h($message),
-            'message' => h($message),
-            'url' => h($url),
-            'error' => $error,
-            '_serialize' => array('name', 'message', 'url')
-        ));
-        $this->_outputMessage('error404');
-    }
-
-    function missingConnection($error)
-    {
-        $message = $error->getMessage();
-        if (!Configure::read('debug')) {
-            $message = __d('cake', 'Database problem.');
-        }
-        $url = $this->controller->request->here();
-        $this->controller->response->statusCode(500);
-        $this->controller->set(array(
-            'name' => h($message),
-            'message' => h($message),
-            'url' => h($url),
-            'error' => $error,
-            '_serialize' => array('name', 'message', 'url')
-        ));
-        $this->_outputMessage('missing_connection');
-    }
-
-    /**
-     * Generic handler for the internal framework errors CakePHP can generate.
-     *
-     * @param CakeException $error The exception to render.
-     * @return void
-     */
-    protected function _cakeError(CakeException $error)
-    {
-        $url = $this->controller->request->here();
-        $code = ($error->getCode() >= 400 && $error->getCode() < 506) ? $error->getCode() : 500;
-        $this->controller->response->statusCode($code);
-        $this->controller->set(array(
-            'code' => $code,
-            'name' => h($error->getMessage()),
-            'message' => h($error->getMessage()),
-            'url' => h($url),
-            'error' => $error,
-            '_serialize' => array('code', 'name', 'message', 'url')
-        ));
-        $this->controller->set($error->getAttributes());
-        $this->_outputMessage($this->template);
-    }
-
-    /**
-     * Convenience method to display a 400 series page.
-     *
-     * @param Exception $error The exception to render.
-     * @return void
-     */
-    public function error400($error)
-    {
-        $message = $error->getMessage();
-        if (!Configure::read('debug') && $error instanceof CakeException) {
-            $message = __d('cake', 'Not Found');
-        }
-        $url = $this->controller->request->here();
-        $this->controller->response->statusCode($error->getCode());
-        $this->controller->set(array(
-            'name' => h($message),
-            'message' => h($message),
-            'url' => h($url),
-            'error' => $error,
-            '_serialize' => array('name', 'message', 'url')
-        ));
-        $this->_outputMessage('error400');
-    }
-
-    /**
-     * Convenience method to display a 500 page.
-     *
-     * @param Exception $error The exception to render.
-     * @return void
-     */
-    public function error500($error)
-    {
-        $message = $error->getMessage();
-        if (!Configure::read('debug')) {
-            $message = __d('cake', 'An Internal Error Has Occurred.');
-        }
-        $url = $this->controller->request->here();
-        $code = ($error->getCode() > 500 && $error->getCode() < 506) ? $error->getCode() : 500;
-        $this->controller->response->statusCode($code);
-        $this->controller->set(array(
-            'name' => h($message),
-            'message' => h($message),
-            'url' => h($url),
-            'error' => $error,
-            '_serialize' => array('name', 'message', 'url')
-        ));
-        $this->_outputMessage('error500');
-    }
-
-    /**
-     * Convenience method to display a PDOException.
-     *
-     * @param PDOException $error The exception to render.
-     * @return void
-     */
-    public function pdoError(PDOException $error)
-    {
-        $url = $this->controller->request->here();
-        $code = 500;
-        $this->controller->response->statusCode($code);
-        $this->controller->set(array(
-            'code' => $code,
-            'name' => h($error->getMessage()),
-            'message' => h($error->getMessage()),
-            'url' => h($url),
-            'error' => $error,
-            '_serialize' => array('code', 'name', 'message', 'url', 'error')
-        ));
-        $this->_outputMessage($this->template);
     }
 
     /**
@@ -387,27 +257,6 @@ class ExceptionRenderer
     }
 
     /**
-     * A safer way to render error messages, replaces all helpers, with basics
-     * and doesn't call component methods.
-     *
-     * @param string $template The template to render
-     * @return void
-     */
-    protected function _outputMessageSafe($template)
-    {
-        $this->controller->layoutPath = null;
-        $this->controller->subDir = null;
-        $this->controller->viewPath = 'Errors';
-        $this->controller->layout = 'error';
-        $this->controller->helpers = array('Form', 'Html', 'Session');
-
-        $view = new View($this->controller);
-        $this->controller->response->body($view->render($template, 'error'));
-        $this->controller->response->type('html');
-        $this->controller->response->send();
-    }
-
-    /**
      * Run the shutdown events.
      *
      * Triggers the afterFilter and afterDispatch events.
@@ -420,11 +269,162 @@ class ExceptionRenderer
         $this->controller->getEventManager()->dispatch($afterFilterEvent);
 
         $Dispatcher = new Dispatcher();
-        $afterDispatchEvent = new CakeEvent('Dispatcher.afterDispatch', $Dispatcher, array(
+        $afterDispatchEvent = new CakeEvent('Dispatcher.afterDispatch', $Dispatcher, [
             'request' => $this->controller->request,
             'response' => $this->controller->response
-        ));
+        ]);
         $Dispatcher->getEventManager()->dispatch($afterDispatchEvent);
+    }
+
+    /**
+     * A safer way to render error messages, replaces all helpers, with basics
+     * and doesn't call component methods.
+     *
+     * @param string $template The template to render
+     * @return void
+     */
+    protected function _outputMessageSafe($template)
+    {
+        $this->controller->layoutPath = null;
+        $this->controller->subDir = null;
+        $this->controller->viewPath = 'Errors';
+        $this->controller->layout = 'error';
+        $this->controller->helpers = ['Form', 'Html', 'Session'];
+
+        $view = new View($this->controller);
+        $this->controller->response->body($view->render($template, 'error'));
+        $this->controller->response->type('html');
+        $this->controller->response->send();
+    }
+
+    public function notfound($error)
+    {
+        $message = $error->getMessage();
+        if (!Configure::read('debug') && $error instanceof CakeException) {
+            $message = __d('cake', 'Not Found');
+        }
+        $url = $this->controller->request->here();
+        $this->controller->response->statusCode(404);
+        $this->controller->set([
+            'name' => h($message),
+            'message' => h($message),
+            'url' => h($url),
+            'error' => $error,
+            '_serialize' => ['name', 'message', 'url']
+        ]);
+        $this->_outputMessage('error404');
+    }
+
+    function missingConnection($error)
+    {
+        $message = $error->getMessage();
+        if (!Configure::read('debug')) {
+            $message = __d('cake', 'Database problem.');
+        }
+        $url = $this->controller->request->here();
+        $this->controller->response->statusCode(500);
+        $this->controller->set([
+            'name' => h($message),
+            'message' => h($message),
+            'url' => h($url),
+            'error' => $error,
+            '_serialize' => ['name', 'message', 'url']
+        ]);
+        $this->_outputMessage('missing_connection');
+    }
+
+    /**
+     * Convenience method to display a 400 series page.
+     *
+     * @param Exception $error The exception to render.
+     * @return void
+     */
+    public function error400($error)
+    {
+        $message = $error->getMessage();
+        if (!Configure::read('debug') && $error instanceof CakeException) {
+            $message = __d('cake', 'Not Found');
+        }
+        $url = $this->controller->request->here();
+        $this->controller->response->statusCode($error->getCode());
+        $this->controller->set([
+            'name' => h($message),
+            'message' => h($message),
+            'url' => h($url),
+            'error' => $error,
+            '_serialize' => ['name', 'message', 'url']
+        ]);
+        $this->_outputMessage('error400');
+    }
+
+    /**
+     * Convenience method to display a 500 page.
+     *
+     * @param Exception $error The exception to render.
+     * @return void
+     */
+    public function error500($error)
+    {
+        $message = $error->getMessage();
+        if (!Configure::read('debug')) {
+            $message = __d('cake', 'An Internal Error Has Occurred.');
+        }
+        $url = $this->controller->request->here();
+        $code = ($error->getCode() > 500 && $error->getCode() < 506) ? $error->getCode() : 500;
+        $this->controller->response->statusCode($code);
+        $this->controller->set([
+            'name' => h($message),
+            'message' => h($message),
+            'url' => h($url),
+            'error' => $error,
+            '_serialize' => ['name', 'message', 'url']
+        ]);
+        $this->_outputMessage('error500');
+    }
+
+    /**
+     * Convenience method to display a PDOException.
+     *
+     * @param PDOException $error The exception to render.
+     * @return void
+     */
+    public function pdoError(PDOException $error)
+    {
+        $url = $this->controller->request->here();
+        $code = 500;
+        $this->controller->response->statusCode($code);
+        $this->controller->set([
+            'code' => $code,
+            'name' => h($error->getMessage()),
+            'message' => h($error->getMessage()),
+            'url' => h($url),
+            'error' => $error,
+            '_serialize' => ['code', 'name', 'message', 'url', 'error']
+        ]);
+        $this->_outputMessage($this->template);
+    }
+
+    /**
+     * Generic handler for the internal framework errors CakePHP can generate.
+     *
+     * @param CakeException $error The exception to render.
+     * @return void
+     */
+    protected function _cakeError(CakeException $error)
+    {
+        $url = $this->controller->request->here();
+        $code = ($error->getCode() >= 400 && $error->getCode() < 506) ? $error->getCode() : 500;
+        $this->controller->response->statusCode($code);
+        $this->controller->set([
+            'code' => $code,
+            'name' => h($error->getMessage()),
+            'message' => h($error->getMessage()),
+            'url' => h($url),
+            'error' => $error,
+            '_serialize' => ['code', 'name', 'message', 'url']
+        ]);
+        $this->controller->set($error->getAttributes());
+        $this->_outputMessage($this->template);
     }
 
 }

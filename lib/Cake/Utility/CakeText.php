@@ -21,7 +21,8 @@
  *
  * @package       Cake.Utility
  */
-class CakeText {
+class CakeText
+{
 
     /**
      * Generate a random UUID
@@ -29,7 +30,8 @@ class CakeText {
      * @see http://www.ietf.org/rfc/rfc4122.txt
      * @return string RFC 4122 UUID
      */
-    public static function uuid() {
+    public static function uuid()
+    {
         $random = function_exists('random_int') ? 'random_int' : 'mt_rand';
         return sprintf(
             '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
@@ -61,25 +63,26 @@ class CakeText {
      * @param string $rightBound The right boundary to ignore separators in.
      * @return mixed Array of tokens in $data or original input if empty.
      */
-    public static function tokenize($data, $separator = ',', $leftBound = '(', $rightBound = ')') {
+    public static function tokenize($data, $separator = ',', $leftBound = '(', $rightBound = ')')
+    {
         if (empty($data)) {
-            return array();
+            return [];
         }
 
         $depth = 0;
         $offset = 0;
         $buffer = '';
-        $results = array();
+        $results = [];
         $length = mb_strlen($data);
         $open = false;
 
         while ($offset <= $length) {
             $tmpOffset = -1;
-            $offsets = array(
+            $offsets = [
                 mb_strpos($data, $separator, $offset),
                 mb_strpos($data, $leftBound, $offset),
                 mb_strpos($data, $rightBound, $offset)
-            );
+            ];
             for ($i = 0; $i < 3; $i++) {
                 if ($offsets[$i] !== false && ($offsets[$i] < $tmpOffset || $tmpOffset == -1)) {
                     $tmpOffset = $offsets[$i];
@@ -125,7 +128,7 @@ class CakeText {
             return array_map('trim', $results);
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -149,10 +152,11 @@ class CakeText {
      * @param array $options An array of options, see description above
      * @return string
      */
-    public static function insert($str, $data, $options = array()) {
-        $defaults = array(
+    public static function insert($str, $data, $options = [])
+    {
+        $defaults = [
             'before' => ':', 'after' => null, 'escape' => '\\', 'format' => null, 'clean' => false
-        );
+        ];
         $options += $defaults;
         $format = $options['format'];
         $data = (array)$data;
@@ -213,24 +217,25 @@ class CakeText {
      * @return string
      * @see CakeText::insert()
      */
-    public static function cleanInsert($str, $options) {
+    public static function cleanInsert($str, $options)
+    {
         $clean = $options['clean'];
         if (!$clean) {
             return $str;
         }
         if ($clean === true) {
-            $clean = array('method' => 'text');
+            $clean = ['method' => 'text'];
         }
         if (!is_array($clean)) {
-            $clean = array('method' => $options['clean']);
+            $clean = ['method' => $options['clean']];
         }
         switch ($clean['method']) {
             case 'html':
-                $clean = array_merge(array(
+                $clean = array_merge([
                     'word' => '[\w,.]+',
                     'andText' => true,
                     'replacement' => '',
-                ), $clean);
+                ], $clean);
                 $kleenex = sprintf(
                     '/[\s]*[a-z]+=(")(%s%s%s[\s]*)+\\1/i',
                     preg_quote($options['before'], '/'),
@@ -239,16 +244,16 @@ class CakeText {
                 );
                 $str = preg_replace($kleenex, $clean['replacement'], $str);
                 if ($clean['andText']) {
-                    $options['clean'] = array('method' => 'text');
+                    $options['clean'] = ['method' => 'text'];
                     $str = CakeText::cleanInsert($str, $options);
                 }
                 break;
             case 'text':
-                $clean = array_merge(array(
+                $clean = array_merge([
                     'word' => '[\w,.]+',
                     'gap' => '[\s]*(?:(?:and|or)[\s]*)?',
                     'replacement' => '',
-                ), $clean);
+                ], $clean);
 
                 $kleenex = sprintf(
                     '/(%s%s%s%s|%s%s%s%s)/',
@@ -281,11 +286,12 @@ class CakeText {
      * @param array|int $options Array of options to use, or an integer to wrap the text to.
      * @return string Formatted text.
      */
-    public static function wrap($text, $options = array()) {
+    public static function wrap($text, $options = [])
+    {
         if (is_numeric($options)) {
-            $options = array('width' => $options);
+            $options = ['width' => $options];
         }
-        $options += array('width' => 72, 'wordWrap' => true, 'indent' => null, 'indentAt' => 0);
+        $options += ['width' => 72, 'wordWrap' => true, 'indent' => null, 'indentAt' => 0];
         if ($options['wordWrap']) {
             $wrapped = static::wordWrap($text, $options['width'], "\n");
         } else {
@@ -310,7 +316,8 @@ class CakeText {
      * @param bool $cut If the cut is set to true, the string is always wrapped at the specified width.
      * @return string Formatted text.
      */
-    public static function wordWrap($text, $width = 72, $break = "\n", $cut = false) {
+    public static function wordWrap($text, $width = 72, $break = "\n", $cut = false)
+    {
         $paragraphs = explode($break, $text);
         foreach ($paragraphs as &$paragraph) {
             $paragraph = static::_wordWrap($paragraph, $width, $break, $cut);
@@ -327,9 +334,10 @@ class CakeText {
      * @param bool $cut If the cut is set to true, the string is always wrapped at the specified width.
      * @return string Formatted text.
      */
-    protected static function _wordWrap($text, $width = 72, $break = "\n", $cut = false) {
+    protected static function _wordWrap($text, $width = 72, $break = "\n", $cut = false)
+    {
         if ($cut) {
-            $parts = array();
+            $parts = [];
             while (mb_strlen($text) > 0) {
                 $part = mb_substr($text, 0, $width);
                 $parts[] = trim($part);
@@ -338,7 +346,7 @@ class CakeText {
             return implode($break, $parts);
         }
 
-        $parts = array();
+        $parts = [];
         while (mb_strlen($text) > 0) {
             if ($width >= mb_strlen($text)) {
                 $parts[] = trim($text);
@@ -383,22 +391,23 @@ class CakeText {
      * @return string The highlighted text
      * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/text.html#TextHelper::highlight
      */
-    public static function highlight($text, $phrase, $options = array()) {
+    public static function highlight($text, $phrase, $options = [])
+    {
         if (empty($phrase)) {
             return $text;
         }
 
-        $defaults = array(
+        $defaults = [
             'format' => '<span class="highlight">\1</span>',
             'html' => false,
             'regex' => "|%s|iu"
-        );
+        ];
         $options += $defaults;
         extract($options);
 
         if (is_array($phrase)) {
-            $replace = array();
-            $with = array();
+            $replace = [];
+            $with = [];
 
             foreach ($phrase as $key => $segment) {
                 $segment = '(' . preg_quote($segment, '|') . ')';
@@ -428,7 +437,8 @@ class CakeText {
      * @return string The text without links
      * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/text.html#TextHelper::stripLinks
      */
-    public static function stripLinks($text) {
+    public static function stripLinks($text)
+    {
         return preg_replace('|<a\s+[^>]+>|im', '', preg_replace('|<\/a>|im', '', $text));
     }
 
@@ -448,10 +458,11 @@ class CakeText {
      * @param array $options An array of options.
      * @return string Trimmed string.
      */
-    public static function tail($text, $length = 100, $options = array()) {
-        $defaults = array(
+    public static function tail($text, $length = 100, $options = [])
+    {
+        $defaults = [
             'ellipsis' => '...', 'exact' => true
-        );
+        ];
         $options += $defaults;
         extract($options);
 
@@ -473,6 +484,51 @@ class CakeText {
     }
 
     /**
+     * Extracts an excerpt from the text surrounding the phrase with a number of characters on each side
+     * determined by radius.
+     *
+     * @param string $text CakeText to search the phrase in
+     * @param string $phrase Phrase that will be searched for
+     * @param int $radius The amount of characters that will be returned on each side of the founded phrase
+     * @param string $ellipsis Ending that will be appended
+     * @return string Modified string
+     * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/text.html#TextHelper::excerpt
+     */
+    public static function excerpt($text, $phrase, $radius = 100, $ellipsis = '...')
+    {
+        if (empty($text) || empty($phrase)) {
+            return static::truncate($text, $radius * 2, ['ellipsis' => $ellipsis]);
+        }
+
+        $append = $prepend = $ellipsis;
+
+        $phraseLen = mb_strlen($phrase);
+        $textLen = mb_strlen($text);
+
+        $pos = mb_strpos(mb_strtolower($text), mb_strtolower($phrase));
+        if ($pos === false) {
+            return mb_substr($text, 0, $radius) . $ellipsis;
+        }
+
+        $startPos = $pos - $radius;
+        if ($startPos <= 0) {
+            $startPos = 0;
+            $prepend = '';
+        }
+
+        $endPos = $pos + $phraseLen + $radius;
+        if ($endPos >= $textLen) {
+            $endPos = $textLen;
+            $append = '';
+        }
+
+        $excerpt = mb_substr($text, $startPos, $endPos - $startPos);
+        $excerpt = $prepend . $excerpt . $append;
+
+        return $excerpt;
+    }
+
+    /**
      * Truncates text.
      *
      * Cuts a string to the length of $length and replaces the last characters
@@ -490,13 +546,14 @@ class CakeText {
      * @return string Trimmed string.
      * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/text.html#TextHelper::truncate
      */
-    public static function truncate($text, $length = 100, $options = array()) {
-        $defaults = array(
+    public static function truncate($text, $length = 100, $options = [])
+    {
+        $defaults = [
             'ellipsis' => '...', 'exact' => true, 'html' => false
-        );
+        ];
         if (isset($options['ending'])) {
             $defaults['ellipsis'] = $options['ending'];
-        } elseif (!empty($options['html']) && Configure::read('App.encoding') === 'UTF-8') {
+        } else if (!empty($options['html']) && Configure::read('App.encoding') === 'UTF-8') {
             $defaults['ellipsis'] = "\xe2\x80\xa6";
         }
         $options += $defaults;
@@ -511,7 +568,7 @@ class CakeText {
                 return $text;
             }
             $totalLength = mb_strlen(strip_tags($ellipsis));
-            $openTags = array();
+            $openTags = [];
             $truncate = '';
 
             preg_match_all('/(<\/?([\w+]+)[^>]*>)?([^<>]*)/', $text, $tags, PREG_SET_ORDER);
@@ -519,7 +576,7 @@ class CakeText {
                 if (!preg_match('/img|br|input|hr|area|base|basefont|col|frame|isindex|link|meta|param/s', $tag[2])) {
                     if (preg_match('/<[\w]+[^>]*>/s', $tag[0])) {
                         array_unshift($openTags, $tag[2]);
-                    } elseif (preg_match('/<\/([\w]+)[^>]*>/s', $tag[0], $closeTag)) {
+                    } else if (preg_match('/<\/([\w]+)[^>]*>/s', $tag[0], $closeTag)) {
                         $pos = array_search($closeTag[1], $openTags);
                         if ($pos !== false) {
                             array_splice($openTags, $pos, 1);
@@ -600,50 +657,6 @@ class CakeText {
     }
 
     /**
-     * Extracts an excerpt from the text surrounding the phrase with a number of characters on each side
-     * determined by radius.
-     *
-     * @param string $text CakeText to search the phrase in
-     * @param string $phrase Phrase that will be searched for
-     * @param int $radius The amount of characters that will be returned on each side of the founded phrase
-     * @param string $ellipsis Ending that will be appended
-     * @return string Modified string
-     * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/text.html#TextHelper::excerpt
-     */
-    public static function excerpt($text, $phrase, $radius = 100, $ellipsis = '...') {
-        if (empty($text) || empty($phrase)) {
-            return static::truncate($text, $radius * 2, array('ellipsis' => $ellipsis));
-        }
-
-        $append = $prepend = $ellipsis;
-
-        $phraseLen = mb_strlen($phrase);
-        $textLen = mb_strlen($text);
-
-        $pos = mb_strpos(mb_strtolower($text), mb_strtolower($phrase));
-        if ($pos === false) {
-            return mb_substr($text, 0, $radius) . $ellipsis;
-        }
-
-        $startPos = $pos - $radius;
-        if ($startPos <= 0) {
-            $startPos = 0;
-            $prepend = '';
-        }
-
-        $endPos = $pos + $phraseLen + $radius;
-        if ($endPos >= $textLen) {
-            $endPos = $textLen;
-            $append = '';
-        }
-
-        $excerpt = mb_substr($text, $startPos, $endPos - $startPos);
-        $excerpt = $prepend . $excerpt . $append;
-
-        return $excerpt;
-    }
-
-    /**
      * Creates a comma separated list where the last two items are joined with 'and', forming natural language.
      *
      * @param array $list The list to be joined.
@@ -652,7 +665,8 @@ class CakeText {
      * @return string The glued together string.
      * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/text.html#TextHelper::toList
      */
-    public static function toList($list, $and = null, $separator = ', ') {
+    public static function toList($list, $and = null, $separator = ', ')
+    {
         if ($and === null) {
             $and = __d('cake', 'and');
         }

@@ -21,191 +21,248 @@ App::uses('DboSource', 'Model/Datasource');
  *
  * @package       Cake.Model.Datasource.Database
  */
-class Postgres extends DboSource {
+class Postgres extends DboSource
+{
 
-/**
- * Driver description
- *
- * @var string
- */
-	public $description = "PostgreSQL DBO Driver";
+    /**
+     * Driver description
+     *
+     * @var string
+     */
+    public $description = "PostgreSQL DBO Driver";
+    /**
+     * Columns
+     *
+     * @var array
+     * @link https://www.postgresql.org/docs/9.6/static/datatype.html PostgreSQL Data Types
+     */
+    public $columns = [
+        'primary_key' => ['name' => 'serial NOT NULL'],
+        'string' => ['name' => 'varchar', 'limit' => '255'],
+        'text' => ['name' => 'text'],
+        'integer' => ['name' => 'integer', 'formatter' => 'intval'],
+        'smallinteger' => ['name' => 'smallint', 'formatter' => 'intval'],
+        'tinyinteger' => ['name' => 'smallint', 'formatter' => 'intval'],
+        'biginteger' => ['name' => 'bigint', 'limit' => '20'],
+        'float' => ['name' => 'float', 'formatter' => 'floatval'],
+        'decimal' => ['name' => 'decimal', 'formatter' => 'floatval'],
+        'datetime' => ['name' => 'timestamp', 'format' => 'Y-m-d H:i:s', 'formatter' => 'date'],
+        'timestamp' => ['name' => 'timestamp', 'format' => 'Y-m-d H:i:s', 'formatter' => 'date'],
+        'time' => ['name' => 'time', 'format' => 'H:i:s', 'formatter' => 'date'],
+        'date' => ['name' => 'date', 'format' => 'Y-m-d', 'formatter' => 'date'],
+        'binary' => ['name' => 'bytea'],
+        'boolean' => ['name' => 'boolean'],
+        'number' => ['name' => 'numeric'],
+        'inet' => ['name' => 'inet'],
+        'uuid' => ['name' => 'uuid']
+    ];
+    /**
+     * Starting Quote
+     *
+     * @var string
+     */
+    public $startQuote = '"';
+    /**
+     * Ending Quote
+     *
+     * @var string
+     */
+    public $endQuote = '"';
+    /**
+     * Base driver configuration settings. Merged with user settings.
+     *
+     * @var array
+     */
+    protected $_baseConfig = [
+        'persistent' => true,
+        'host' => 'localhost',
+        'login' => 'root',
+        'password' => '',
+        'database' => 'cake',
+        'schema' => 'public',
+        'port' => 5432,
+        'encoding' => '',
+        'sslmode' => 'allow',
+        'flags' => []
+    ];
+    /**
+     * Contains mappings of custom auto-increment sequences, if a table uses a sequence name
+     * other than what is dictated by convention.
+     *
+     * @var array
+     */
+    protected $_sequenceMap = [];
 
-/**
- * Base driver configuration settings. Merged with user settings.
- *
- * @var array
- */
-	protected $_baseConfig = array(
-		'persistent' => true,
-		'host' => 'localhost',
-		'login' => 'root',
-		'password' => '',
-		'database' => 'cake',
-		'schema' => 'public',
-		'port' => 5432,
-		'encoding' => '',
-		'sslmode' => 'allow',
-		'flags' => array()
-	);
+    /**
+     * The set of valid SQL operations usable in a WHERE statement
+     *
+     * @var array
+     */
+    protected $_sqlOps = ['like', 'ilike', 'or', 'not', 'in', 'between', '~', '~\*', '\!~', '\!~\*', 'similar to'];
 
-/**
- * Columns
- *
- * @var array
- * @link https://www.postgresql.org/docs/9.6/static/datatype.html PostgreSQL Data Types
- */
-	public $columns = array(
-		'primary_key' => array('name' => 'serial NOT NULL'),
-		'string' => array('name' => 'varchar', 'limit' => '255'),
-		'text' => array('name' => 'text'),
-		'integer' => array('name' => 'integer', 'formatter' => 'intval'),
-		'smallinteger' => array('name' => 'smallint', 'formatter' => 'intval'),
-		'tinyinteger' => array('name' => 'smallint', 'formatter' => 'intval'),
-		'biginteger' => array('name' => 'bigint', 'limit' => '20'),
-		'float' => array('name' => 'float', 'formatter' => 'floatval'),
-		'decimal' => array('name' => 'decimal', 'formatter' => 'floatval'),
-		'datetime' => array('name' => 'timestamp', 'format' => 'Y-m-d H:i:s', 'formatter' => 'date'),
-		'timestamp' => array('name' => 'timestamp', 'format' => 'Y-m-d H:i:s', 'formatter' => 'date'),
-		'time' => array('name' => 'time', 'format' => 'H:i:s', 'formatter' => 'date'),
-		'date' => array('name' => 'date', 'format' => 'Y-m-d', 'formatter' => 'date'),
-		'binary' => array('name' => 'bytea'),
-		'boolean' => array('name' => 'boolean'),
-		'number' => array('name' => 'numeric'),
-		'inet' => array('name' => 'inet'),
-		'uuid' => array('name' => 'uuid')
-	);
+    /**
+     * Connects to the database using options in the given configuration array.
+     *
+     * @return bool True if successfully connected.
+     * @throws MissingConnectionException
+     */
+    public function connect()
+    {
+        $config = $this->config;
+        $this->connected = false;
 
-/**
- * Starting Quote
- *
- * @var string
- */
-	public $startQuote = '"';
+        $flags = $config['flags'] + [
+                PDO::ATTR_PERSISTENT => $config['persistent'],
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+            ];
 
-/**
- * Ending Quote
- *
- * @var string
- */
-	public $endQuote = '"';
+        try {
+            $this->_connection = new PDO(
+                "pgsql:host={$config['host']};port={$config['port']};dbname={$config['database']};sslmode={$config['sslmode']}",
+                $config['login'],
+                $config['password'],
+                $flags
+            );
 
-/**
- * Contains mappings of custom auto-increment sequences, if a table uses a sequence name
- * other than what is dictated by convention.
- *
- * @var array
- */
-	protected $_sequenceMap = array();
+            $this->connected = true;
+            if (!empty($config['encoding'])) {
+                $this->setEncoding($config['encoding']);
+            }
+            if (!empty($config['schema'])) {
+                $this->_execute('SET search_path TO "' . $config['schema'] . '"');
+            }
+            if (!empty($config['settings'])) {
+                foreach ($config['settings'] as $key => $value) {
+                    $this->_execute("SET $key TO $value");
+                }
+            }
+        } catch (PDOException $e) {
+            throw new MissingConnectionException([
+                'class' => get_class($this),
+                'message' => $e->getMessage()
+            ]);
+        }
 
-/**
- * The set of valid SQL operations usable in a WHERE statement
- *
- * @var array
- */
-	protected $_sqlOps = array('like', 'ilike', 'or', 'not', 'in', 'between', '~', '~\*', '\!~', '\!~\*', 'similar to');
+        return $this->connected;
+    }
 
-/**
- * Connects to the database using options in the given configuration array.
- *
- * @return bool True if successfully connected.
- * @throws MissingConnectionException
- */
-	public function connect() {
-		$config = $this->config;
-		$this->connected = false;
+    /**
+     * Sets the database encoding
+     *
+     * @param mixed $enc Database encoding
+     * @return bool True on success, false on failure
+     */
+    public function setEncoding($enc)
+    {
+        return $this->_execute('SET NAMES ' . $this->value($enc)) !== false;
+    }
 
-		$flags = $config['flags'] + array(
-			PDO::ATTR_PERSISTENT => $config['persistent'],
-			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-		);
+    /**
+     * {@inheritDoc}
+     */
+    public function value($data, $column = null, $null = true)
+    {
+        $value = parent::value($data, $column, $null);
+        if ($column === 'uuid' && is_scalar($data) && $data === '') {
+            return 'NULL';
+        }
+        return $value;
+    }
 
-		try {
-			$this->_connection = new PDO(
-				"pgsql:host={$config['host']};port={$config['port']};dbname={$config['database']};sslmode={$config['sslmode']}",
-				$config['login'],
-				$config['password'],
-				$flags
-			);
+    /**
+     * Check if PostgreSQL is enabled/loaded
+     *
+     * @return bool
+     */
+    public function enabled()
+    {
+        return in_array('pgsql', PDO::getAvailableDrivers());
+    }
 
-			$this->connected = true;
-			if (!empty($config['encoding'])) {
-				$this->setEncoding($config['encoding']);
-			}
-			if (!empty($config['schema'])) {
-				$this->_execute('SET search_path TO "' . $config['schema'] . '"');
-			}
-			if (!empty($config['settings'])) {
-				foreach ($config['settings'] as $key => $value) {
-					$this->_execute("SET $key TO $value");
-				}
-			}
-		} catch (PDOException $e) {
-			throw new MissingConnectionException(array(
-				'class' => get_class($this),
-				'message' => $e->getMessage()
-			));
-		}
+    /**
+     * Returns an array of tables in the database. If there are no tables, an error is raised and the application exits.
+     *
+     * @param mixed $data The sources to list.
+     * @return array Array of table names in the database
+     */
+    public function listSources($data = null)
+    {
+        $cache = parent::listSources();
 
-		return $this->connected;
-	}
+        if ($cache) {
+            return $cache;
+        }
 
-/**
- * Check if PostgreSQL is enabled/loaded
- *
- * @return bool
- */
-	public function enabled() {
-		return in_array('pgsql', PDO::getAvailableDrivers());
-	}
+        $schema = $this->config['schema'];
+        $sql = "SELECT table_name as name FROM INFORMATION_SCHEMA.tables WHERE table_schema = ?";
+        $result = $this->_execute($sql, [$schema]);
 
-/**
- * Returns an array of tables in the database. If there are no tables, an error is raised and the application exits.
- *
- * @param mixed $data The sources to list.
- * @return array Array of table names in the database
- */
-	public function listSources($data = null) {
-		$cache = parent::listSources();
+        if (!$result) {
+            return [];
+        }
 
-		if ($cache) {
-			return $cache;
-		}
+        $tables = [];
 
-		$schema = $this->config['schema'];
-		$sql = "SELECT table_name as name FROM INFORMATION_SCHEMA.tables WHERE table_schema = ?";
-		$result = $this->_execute($sql, array($schema));
+        foreach ($result as $item) {
+            $tables[] = $item->name;
+        }
 
-		if (!$result) {
-			return array();
-		}
+        $result->closeCursor();
+        parent::listSources($tables);
+        return $tables;
+    }
 
-		$tables = array();
+    /**
+     * Returns the ID generated from the previous INSERT operation.
+     *
+     * @param string $source Name of the database table
+     * @param string $field Name of the ID database field. Defaults to "id"
+     * @return int
+     */
+    public function lastInsertId($source = null, $field = 'id')
+    {
+        $seq = $this->getSequence($source, $field);
+        return $this->_connection->lastInsertId($seq);
+    }
 
-		foreach ($result as $item) {
-			$tables[] = $item->name;
-		}
+    /**
+     * Gets the associated sequence for the given table/field
+     *
+     * @param string|Model $table Either a full table name (with prefix) as a string, or a model object
+     * @param string $field Name of the ID database field. Defaults to "id"
+     * @return string The associated sequence name from the sequence map, defaults to "{$table}_{$field}_seq"
+     */
+    public function getSequence($table, $field = 'id')
+    {
+        if (is_object($table)) {
+            $table = $this->fullTableName($table, false, false);
+        }
+        if (!isset($this->_sequenceMap[$table])) {
+            $this->describe($table);
+        }
+        if (isset($this->_sequenceMap[$table][$field])) {
+            return $this->_sequenceMap[$table][$field];
+        }
+        return "{$table}_{$field}_seq";
+    }
 
-		$result->closeCursor();
-		parent::listSources($tables);
-		return $tables;
-	}
+    /**
+     * Returns an array of the fields in given table name.
+     *
+     * @param Model|string $model Name of database table to inspect
+     * @return array Fields in table. Keys are name and type
+     */
+    public function describe($model)
+    {
+        $table = $this->fullTableName($model, false, false);
+        $fields = parent::describe($table);
+        $this->_sequenceMap[$table] = [];
+        $cols = null;
+        $hasPrimary = false;
 
-/**
- * Returns an array of the fields in given table name.
- *
- * @param Model|string $model Name of database table to inspect
- * @return array Fields in table. Keys are name and type
- */
-	public function describe($model) {
-		$table = $this->fullTableName($model, false, false);
-		$fields = parent::describe($table);
-		$this->_sequenceMap[$table] = array();
-		$cols = null;
-		$hasPrimary = false;
-
-		if ($fields === null) {
-			$cols = $this->_execute(
-				'SELECT DISTINCT table_schema AS schema,
+        if ($fields === null) {
+            $cols = $this->_execute(
+                'SELECT DISTINCT table_schema AS schema,
 					column_name AS name,
 					data_type AS type,
 					is_nullable AS null,
@@ -220,284 +277,305 @@ class Postgres extends DboSource {
 				LEFT JOIN pg_catalog.pg_attribute attr ON (cl.oid = attr.attrelid AND column_name = attr.attname)
 				WHERE table_name = ? AND table_schema = ? AND table_catalog = ?
 				ORDER BY ordinal_position',
-				array($table, $this->config['schema'], $this->config['database'])
-			);
+                [$table, $this->config['schema'], $this->config['database']]
+            );
 
-			// @codingStandardsIgnoreStart
-			// Postgres columns don't match the coding standards.
-			foreach ($cols as $c) {
-				$type = $c->type;
-				if (!empty($c->oct_length) && $c->char_length === null) {
-					if ($c->type === 'character varying') {
-						$length = null;
-						$type = 'text';
-					} elseif ($c->type === 'uuid') {
-						$type = 'uuid';
-						$length = 36;
-					} else {
-						$length = (int)$c->oct_length;
-					}
-				} elseif (!empty($c->char_length)) {
-					$length = (int)$c->char_length;
-				} else {
-					$length = $this->length($c->type);
-				}
-				if (empty($length)) {
-					$length = null;
-				}
-				$fields[$c->name] = array(
-					'type' => $this->column($type),
-					'null' => ($c->null === 'NO' ? false : true),
-					'default' => preg_replace(
-						"/^'(.*)'$/",
-						"$1",
-						preg_replace('/::[\w\s]+/', '', $c->default)
-					),
-					'length' => $length,
-				);
+            // @codingStandardsIgnoreStart
+            // Postgres columns don't match the coding standards.
+            foreach ($cols as $c) {
+                $type = $c->type;
+                if (!empty($c->oct_length) && $c->char_length === null) {
+                    if ($c->type === 'character varying') {
+                        $length = null;
+                        $type = 'text';
+                    } else if ($c->type === 'uuid') {
+                        $type = 'uuid';
+                        $length = 36;
+                    } else {
+                        $length = (int)$c->oct_length;
+                    }
+                } else if (!empty($c->char_length)) {
+                    $length = (int)$c->char_length;
+                } else {
+                    $length = $this->length($c->type);
+                }
+                if (empty($length)) {
+                    $length = null;
+                }
+                $fields[$c->name] = [
+                    'type' => $this->column($type),
+                    'null' => ($c->null === 'NO' ? false : true),
+                    'default' => preg_replace(
+                        "/^'(.*)'$/",
+                        "$1",
+                        preg_replace('/::[\w\s]+/', '', $c->default)
+                    ),
+                    'length' => $length,
+                ];
 
-				// Serial columns are primary integer keys
-				if ($c->has_serial) {
-					$fields[$c->name]['key'] = 'primary';
-					$fields[$c->name]['length'] = 11;
-					$hasPrimary = true;
-				}
-				if ($hasPrimary === false &&
-					$model instanceof Model &&
-					$c->name === $model->primaryKey
-				) {
-					$fields[$c->name]['key'] = 'primary';
-					if (
-						$fields[$c->name]['type'] !== 'string' &&
-						$fields[$c->name]['type'] !== 'uuid'
-					) {
-						$fields[$c->name]['length'] = 11;
-					}
-				}
-				if (
-					$fields[$c->name]['default'] === 'NULL' ||
-					$c->default === null ||
-					preg_match('/nextval\([\'"]?([\w.]+)/', $c->default, $seq)
-				) {
-					$fields[$c->name]['default'] = null;
-					if (!empty($seq) && isset($seq[1])) {
-						if (strpos($seq[1], '.') === false) {
-							$sequenceName = $c->schema . '.' . $seq[1];
-						} else {
-							$sequenceName = $seq[1];
-						}
-						$this->_sequenceMap[$table][$c->name] = $sequenceName;
-					}
-				}
-				if ($fields[$c->name]['type'] === 'timestamp' && $fields[$c->name]['default'] === '') {
-					$fields[$c->name]['default'] = null;
-				}
-				if ($fields[$c->name]['type'] === 'boolean' && !empty($fields[$c->name]['default'])) {
-					$fields[$c->name]['default'] = constant($fields[$c->name]['default']);
-				}
-			}
-			$this->_cacheDescription($table, $fields);
-		}
-		// @codingStandardsIgnoreEnd
+                // Serial columns are primary integer keys
+                if ($c->has_serial) {
+                    $fields[$c->name]['key'] = 'primary';
+                    $fields[$c->name]['length'] = 11;
+                    $hasPrimary = true;
+                }
+                if ($hasPrimary === false &&
+                    $model instanceof Model &&
+                    $c->name === $model->primaryKey
+                ) {
+                    $fields[$c->name]['key'] = 'primary';
+                    if (
+                        $fields[$c->name]['type'] !== 'string' &&
+                        $fields[$c->name]['type'] !== 'uuid'
+                    ) {
+                        $fields[$c->name]['length'] = 11;
+                    }
+                }
+                if (
+                    $fields[$c->name]['default'] === 'NULL' ||
+                    $c->default === null ||
+                    preg_match('/nextval\([\'"]?([\w.]+)/', $c->default, $seq)
+                ) {
+                    $fields[$c->name]['default'] = null;
+                    if (!empty($seq) && isset($seq[1])) {
+                        if (strpos($seq[1], '.') === false) {
+                            $sequenceName = $c->schema . '.' . $seq[1];
+                        } else {
+                            $sequenceName = $seq[1];
+                        }
+                        $this->_sequenceMap[$table][$c->name] = $sequenceName;
+                    }
+                }
+                if ($fields[$c->name]['type'] === 'timestamp' && $fields[$c->name]['default'] === '') {
+                    $fields[$c->name]['default'] = null;
+                }
+                if ($fields[$c->name]['type'] === 'boolean' && !empty($fields[$c->name]['default'])) {
+                    $fields[$c->name]['default'] = constant($fields[$c->name]['default']);
+                }
+            }
+            $this->_cacheDescription($table, $fields);
+        }
+        // @codingStandardsIgnoreEnd
 
-		if (isset($model->sequence)) {
-			$this->_sequenceMap[$table][$model->primaryKey] = $model->sequence;
-		}
+        if (isset($model->sequence)) {
+            $this->_sequenceMap[$table][$model->primaryKey] = $model->sequence;
+        }
 
-		if ($cols) {
-			$cols->closeCursor();
-		}
-		return $fields;
-	}
+        if ($cols) {
+            $cols->closeCursor();
+        }
+        return $fields;
+    }
 
-/**
- * Returns the ID generated from the previous INSERT operation.
- *
- * @param string $source Name of the database table
- * @param string $field Name of the ID database field. Defaults to "id"
- * @return int
- */
-	public function lastInsertId($source = null, $field = 'id') {
-		$seq = $this->getSequence($source, $field);
-		return $this->_connection->lastInsertId($seq);
-	}
+    /**
+     * Gets the length of a database-native column description, or null if no length
+     *
+     * @param string $real Real database-layer column type (i.e. "varchar(255)")
+     * @return int An integer representing the length of the column
+     */
+    public function length($real)
+    {
+        $col = $real;
+        if (strpos($real, '(') !== false) {
+            list($col, $limit) = explode('(', $real);
+        }
+        if ($col === 'uuid') {
+            return 36;
+        }
+        return parent::length($real);
+    }
 
-/**
- * Gets the associated sequence for the given table/field
- *
- * @param string|Model $table Either a full table name (with prefix) as a string, or a model object
- * @param string $field Name of the ID database field. Defaults to "id"
- * @return string The associated sequence name from the sequence map, defaults to "{$table}_{$field}_seq"
- */
-	public function getSequence($table, $field = 'id') {
-		if (is_object($table)) {
-			$table = $this->fullTableName($table, false, false);
-		}
-		if (!isset($this->_sequenceMap[$table])) {
-			$this->describe($table);
-		}
-		if (isset($this->_sequenceMap[$table][$field])) {
-			return $this->_sequenceMap[$table][$field];
-		}
-		return "{$table}_{$field}_seq";
-	}
+    /**
+     * Converts database-layer column types to basic types
+     *
+     * @param string $real Real database-layer column type (i.e. "varchar(255)")
+     * @return string Abstract column type (i.e. "string")
+     */
+    public function column($real)
+    {
+        if (is_array($real)) {
+            $col = $real['name'];
+            if (isset($real['limit'])) {
+                $col .= '(' . $real['limit'] . ')';
+            }
+            return $col;
+        }
 
-/**
- * Reset a sequence based on the MAX() value of $column. Useful
- * for resetting sequences after using insertMulti().
- *
- * @param string $table The name of the table to update.
- * @param string $column The column to use when resetting the sequence value,
- *   the sequence name will be fetched using Postgres::getSequence();
- * @return bool success.
- */
-	public function resetSequence($table, $column) {
-		$tableName = $this->fullTableName($table, false, false);
-		$fullTable = $this->fullTableName($table);
+        $col = str_replace(')', '', $real);
 
-		$sequence = $this->value($this->getSequence($tableName, $column));
-		$column = $this->name($column);
-		$this->execute("SELECT setval($sequence, (SELECT MAX($column) FROM $fullTable))");
-		return true;
-	}
+        if (strpos($col, '(') !== false) {
+            list($col, $limit) = explode('(', $col);
+        }
 
-/**
- * Deletes all the records in a table and drops all associated auto-increment sequences
- *
- * @param string|Model $table A string or model class representing the table to be truncated
- * @param bool $reset true for resetting the sequence, false to leave it as is.
- *    and if 1, sequences are not modified
- * @return bool SQL TRUNCATE TABLE statement, false if not applicable.
- */
-	public function truncate($table, $reset = false) {
-		$table = $this->fullTableName($table, false, false);
-		if (!isset($this->_sequenceMap[$table])) {
-			$cache = $this->cacheSources;
-			$this->cacheSources = false;
-			$this->describe($table);
-			$this->cacheSources = $cache;
-		}
-		if ($this->execute('DELETE FROM ' . $this->fullTableName($table))) {
-			if (isset($this->_sequenceMap[$table]) && $reset != true) {
-				foreach ($this->_sequenceMap[$table] as $sequence) {
-					$quoted = $this->name($sequence);
-					$this->_execute("ALTER SEQUENCE {$quoted} RESTART WITH 1");
-				}
-			}
-			return true;
-		}
-		return false;
-	}
+        $floats = [
+            'float', 'float4', 'float8', 'double', 'double precision', 'real'
+        ];
 
-/**
- * Prepares field names to be quoted by parent
- *
- * @param string $data The name to format.
- * @return string SQL field
- */
-	public function name($data) {
-		if (is_string($data)) {
-			$data = str_replace('"__"', '__', $data);
-		}
-		return parent::name($data);
-	}
+        switch (true) {
+            case (in_array($col, ['date', 'time', 'inet', 'boolean'])):
+                return $col;
+            case (strpos($col, 'timestamp') !== false):
+                return 'datetime';
+            case (strpos($col, 'time') === 0):
+                return 'time';
+            case ($col === 'bigint'):
+                return 'biginteger';
+            case ($col === 'smallint'):
+                return 'smallinteger';
+            case (strpos($col, 'int') !== false && $col !== 'interval'):
+                return 'integer';
+            case (strpos($col, 'char') !== false):
+                return 'string';
+            case (strpos($col, 'uuid') !== false):
+                return 'uuid';
+            case (strpos($col, 'text') !== false):
+                return 'text';
+            case (strpos($col, 'bytea') !== false):
+                return 'binary';
+            case ($col === 'decimal' || $col === 'numeric'):
+                return 'decimal';
+            case (in_array($col, $floats)):
+                return 'float';
+            default:
+                return 'text';
+        }
+    }
 
-/**
- * Generates the fields list of an SQL query.
- *
- * @param Model $model The model to get fields for.
- * @param string $alias Alias table name.
- * @param mixed $fields The list of fields to get.
- * @param bool $quote Whether or not to quote identifiers.
- * @return array
- */
-	public function fields(Model $model, $alias = null, $fields = array(), $quote = true) {
-		if (empty($alias)) {
-			$alias = $model->alias;
-		}
-		$fields = parent::fields($model, $alias, $fields, false);
+    /**
+     * Reset a sequence based on the MAX() value of $column. Useful
+     * for resetting sequences after using insertMulti().
+     *
+     * @param string $table The name of the table to update.
+     * @param string $column The column to use when resetting the sequence value,
+     *   the sequence name will be fetched using Postgres::getSequence();
+     * @return bool success.
+     */
+    public function resetSequence($table, $column)
+    {
+        $tableName = $this->fullTableName($table, false, false);
+        $fullTable = $this->fullTableName($table);
 
-		if (!$quote) {
-			return $fields;
-		}
-		$count = count($fields);
+        $sequence = $this->value($this->getSequence($tableName, $column));
+        $column = $this->name($column);
+        $this->execute("SELECT setval($sequence, (SELECT MAX($column) FROM $fullTable))");
+        return true;
+    }
 
-		if ($count >= 1 && !preg_match('/^\s*COUNT\(\*/', $fields[0])) {
-			$result = array();
-			for ($i = 0; $i < $count; $i++) {
-				if (!preg_match('/^.+\\(.*\\)/', $fields[$i]) && !preg_match('/\s+AS\s+/', $fields[$i])) {
-					if (substr($fields[$i], -1) === '*') {
-						if (strpos($fields[$i], '.') !== false && $fields[$i] != $alias . '.*') {
-							$build = explode('.', $fields[$i]);
-							$AssociatedModel = $model->{$build[0]};
-						} else {
-							$AssociatedModel = $model;
-						}
+    /**
+     * Prepares field names to be quoted by parent
+     *
+     * @param string $data The name to format.
+     * @return string SQL field
+     */
+    public function name($data)
+    {
+        if (is_string($data)) {
+            $data = str_replace('"__"', '__', $data);
+        }
+        return parent::name($data);
+    }
 
-						$_fields = $this->fields($AssociatedModel, $AssociatedModel->alias, array_keys($AssociatedModel->schema()));
-						$result = array_merge($result, $_fields);
-						continue;
-					}
+    /**
+     * Deletes all the records in a table and drops all associated auto-increment sequences
+     *
+     * @param string|Model $table A string or model class representing the table to be truncated
+     * @param bool $reset true for resetting the sequence, false to leave it as is.
+     *    and if 1, sequences are not modified
+     * @return bool SQL TRUNCATE TABLE statement, false if not applicable.
+     */
+    public function truncate($table, $reset = false)
+    {
+        $table = $this->fullTableName($table, false, false);
+        if (!isset($this->_sequenceMap[$table])) {
+            $cache = $this->cacheSources;
+            $this->cacheSources = false;
+            $this->describe($table);
+            $this->cacheSources = $cache;
+        }
+        if ($this->execute('DELETE FROM ' . $this->fullTableName($table))) {
+            if (isset($this->_sequenceMap[$table]) && $reset != true) {
+                foreach ($this->_sequenceMap[$table] as $sequence) {
+                    $quoted = $this->name($sequence);
+                    $this->_execute("ALTER SEQUENCE {$quoted} RESTART WITH 1");
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 
-					$prepend = '';
-					if (strpos($fields[$i], 'DISTINCT') !== false) {
-						$prepend = 'DISTINCT ';
-						$fields[$i] = trim(str_replace('DISTINCT', '', $fields[$i]));
-					}
+    /**
+     * Generates the fields list of an SQL query.
+     *
+     * @param Model $model The model to get fields for.
+     * @param string $alias Alias table name.
+     * @param mixed $fields The list of fields to get.
+     * @param bool $quote Whether or not to quote identifiers.
+     * @return array
+     */
+    public function fields(Model $model, $alias = null, $fields = [], $quote = true)
+    {
+        if (empty($alias)) {
+            $alias = $model->alias;
+        }
+        $fields = parent::fields($model, $alias, $fields, false);
 
-					if (strrpos($fields[$i], '.') === false) {
-						$fields[$i] = $prepend . $this->name($alias) . '.' . $this->name($fields[$i]) . ' AS ' . $this->name($alias . '__' . $fields[$i]);
-					} else {
-						$build = explode('.', $fields[$i]);
-						$fields[$i] = $prepend . $this->name($build[0]) . '.' . $this->name($build[1]) . ' AS ' . $this->name($build[0] . '__' . $build[1]);
-					}
-				} else {
-					$fields[$i] = preg_replace_callback('/\(([\s\.\w]+)\)/', array(&$this, '_quoteFunctionField'), $fields[$i]);
-				}
-				$result[] = $fields[$i];
-			}
-			return $result;
-		}
-		return $fields;
-	}
+        if (!$quote) {
+            return $fields;
+        }
+        $count = count($fields);
 
-/**
- * Auxiliary function to quote matched `(Model.fields)` from a preg_replace_callback call
- * Quotes the fields in a function call.
- *
- * @param string $match matched string
- * @return string quoted string
- */
-	protected function _quoteFunctionField($match) {
-		$prepend = '';
-		if (strpos($match[1], 'DISTINCT') !== false) {
-			$prepend = 'DISTINCT ';
-			$match[1] = trim(str_replace('DISTINCT', '', $match[1]));
-		}
-		$constant = preg_match('/^\d+|NULL|FALSE|TRUE$/i', $match[1]);
+        if ($count >= 1 && !preg_match('/^\s*COUNT\(\*/', $fields[0])) {
+            $result = [];
+            for ($i = 0; $i < $count; $i++) {
+                if (!preg_match('/^.+\\(.*\\)/', $fields[$i]) && !preg_match('/\s+AS\s+/', $fields[$i])) {
+                    if (substr($fields[$i], -1) === '*') {
+                        if (strpos($fields[$i], '.') !== false && $fields[$i] != $alias . '.*') {
+                            $build = explode('.', $fields[$i]);
+                            $AssociatedModel = $model->{$build[0]};
+                        } else {
+                            $AssociatedModel = $model;
+                        }
 
-		if (!$constant && strpos($match[1], '.') === false) {
-			$match[1] = $this->name($match[1]);
-		} elseif (!$constant) {
-			$parts = explode('.', $match[1]);
-			if (!Hash::numeric($parts)) {
-				$match[1] = $this->name($match[1]);
-			}
-		}
-		return '(' . $prepend . $match[1] . ')';
-	}
+                        $_fields = $this->fields($AssociatedModel, $AssociatedModel->alias, array_keys($AssociatedModel->schema()));
+                        $result = array_merge($result, $_fields);
+                        continue;
+                    }
 
-/**
- * Returns an array of the indexes in given datasource name.
- *
- * @param string $model Name of model to inspect
- * @return array Fields in table. Keys are column and unique
- */
-	public function index($model) {
-		$index = array();
-		$table = $this->fullTableName($model, false, false);
-		if ($table) {
-			$indexes = $this->query("SELECT c2.relname, i.indisprimary, i.indisunique, i.indisclustered, i.indisvalid, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true) as statement, c2.reltablespace
+                    $prepend = '';
+                    if (strpos($fields[$i], 'DISTINCT') !== false) {
+                        $prepend = 'DISTINCT ';
+                        $fields[$i] = trim(str_replace('DISTINCT', '', $fields[$i]));
+                    }
+
+                    if (strrpos($fields[$i], '.') === false) {
+                        $fields[$i] = $prepend . $this->name($alias) . '.' . $this->name($fields[$i]) . ' AS ' . $this->name($alias . '__' . $fields[$i]);
+                    } else {
+                        $build = explode('.', $fields[$i]);
+                        $fields[$i] = $prepend . $this->name($build[0]) . '.' . $this->name($build[1]) . ' AS ' . $this->name($build[0] . '__' . $build[1]);
+                    }
+                } else {
+                    $fields[$i] = preg_replace_callback('/\(([\s\.\w]+)\)/', [&$this, '_quoteFunctionField'], $fields[$i]);
+                }
+                $result[] = $fields[$i];
+            }
+            return $result;
+        }
+        return $fields;
+    }
+
+    /**
+     * Returns an array of the indexes in given datasource name.
+     *
+     * @param string $model Name of model to inspect
+     * @return array Fields in table. Keys are column and unique
+     */
+    public function index($model)
+    {
+        $index = [];
+        $table = $this->fullTableName($model, false, false);
+        if ($table) {
+            $indexes = $this->query("SELECT c2.relname, i.indisprimary, i.indisunique, i.indisclustered, i.indisvalid, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true) as statement, c2.reltablespace
 			FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
 			WHERE c.oid  = (
 				SELECT c.oid
@@ -508,506 +586,452 @@ class Postgres extends DboSource {
 			)
 			AND c.oid = i.indrelid AND i.indexrelid = c2.oid
 			ORDER BY i.indisprimary DESC, i.indisunique DESC, c2.relname", false);
-			foreach ($indexes as $info) {
-				$key = array_pop($info);
-				if ($key['indisprimary']) {
-					$key['relname'] = 'PRIMARY';
-				}
-				preg_match('/\(([^\)]+)\)/', $key['statement'], $indexColumns);
-				$parsedColumn = $indexColumns[1];
-				if (strpos($indexColumns[1], ',') !== false) {
-					$parsedColumn = explode(', ', $indexColumns[1]);
-				}
-				$index[$key['relname']]['unique'] = $key['indisunique'];
-				$index[$key['relname']]['column'] = $parsedColumn;
-			}
-		}
-		return $index;
-	}
+            foreach ($indexes as $info) {
+                $key = array_pop($info);
+                if ($key['indisprimary']) {
+                    $key['relname'] = 'PRIMARY';
+                }
+                preg_match('/\(([^\)]+)\)/', $key['statement'], $indexColumns);
+                $parsedColumn = $indexColumns[1];
+                if (strpos($indexColumns[1], ',') !== false) {
+                    $parsedColumn = explode(', ', $indexColumns[1]);
+                }
+                $index[$key['relname']]['unique'] = $key['indisunique'];
+                $index[$key['relname']]['column'] = $parsedColumn;
+            }
+        }
+        return $index;
+    }
 
-/**
- * Alter the Schema of a table.
- *
- * @param array $compare Results of CakeSchema::compare()
- * @param string $table name of the table
- * @return array
- */
-	public function alterSchema($compare, $table = null) {
-		if (!is_array($compare)) {
-			return false;
-		}
-		$out = '';
-		$colList = array();
-		foreach ($compare as $curTable => $types) {
-			$indexes = $colList = array();
-			if (!$table || $table === $curTable) {
-				$out .= 'ALTER TABLE ' . $this->fullTableName($curTable) . " \n";
-				foreach ($types as $type => $column) {
-					if (isset($column['indexes'])) {
-						$indexes[$type] = $column['indexes'];
-						unset($column['indexes']);
-					}
-					switch ($type) {
-						case 'add':
-							foreach ($column as $field => $col) {
-								$col['name'] = $field;
-								$colList[] = 'ADD COLUMN ' . $this->buildColumn($col);
-							}
-							break;
-						case 'drop':
-							foreach ($column as $field => $col) {
-								$col['name'] = $field;
-								$colList[] = 'DROP COLUMN ' . $this->name($field);
-							}
-							break;
-						case 'change':
-							$schema = $this->describe($curTable);
-							foreach ($column as $field => $col) {
-								if (!isset($col['name'])) {
-									$col['name'] = $field;
-								}
-								$original = $schema[$field];
-								$fieldName = $this->name($field);
+    /**
+     * Alter the Schema of a table.
+     *
+     * @param array $compare Results of CakeSchema::compare()
+     * @param string $table name of the table
+     * @return array
+     */
+    public function alterSchema($compare, $table = null)
+    {
+        if (!is_array($compare)) {
+            return false;
+        }
+        $out = '';
+        $colList = [];
+        foreach ($compare as $curTable => $types) {
+            $indexes = $colList = [];
+            if (!$table || $table === $curTable) {
+                $out .= 'ALTER TABLE ' . $this->fullTableName($curTable) . " \n";
+                foreach ($types as $type => $column) {
+                    if (isset($column['indexes'])) {
+                        $indexes[$type] = $column['indexes'];
+                        unset($column['indexes']);
+                    }
+                    switch ($type) {
+                        case 'add':
+                            foreach ($column as $field => $col) {
+                                $col['name'] = $field;
+                                $colList[] = 'ADD COLUMN ' . $this->buildColumn($col);
+                            }
+                            break;
+                        case 'drop':
+                            foreach ($column as $field => $col) {
+                                $col['name'] = $field;
+                                $colList[] = 'DROP COLUMN ' . $this->name($field);
+                            }
+                            break;
+                        case 'change':
+                            $schema = $this->describe($curTable);
+                            foreach ($column as $field => $col) {
+                                if (!isset($col['name'])) {
+                                    $col['name'] = $field;
+                                }
+                                $original = $schema[$field];
+                                $fieldName = $this->name($field);
 
-								$default = isset($col['default']) ? $col['default'] : null;
-								$nullable = isset($col['null']) ? $col['null'] : null;
-								$boolToInt = $original['type'] === 'boolean' && $col['type'] === 'integer';
-								unset($col['default'], $col['null']);
-								if ($field !== $col['name']) {
-									$newName = $this->name($col['name']);
-									$out .= "\tRENAME {$fieldName} TO {$newName};\n";
-									$out .= 'ALTER TABLE ' . $this->fullTableName($curTable) . " \n";
-									$fieldName = $newName;
-								}
+                                $default = isset($col['default']) ? $col['default'] : null;
+                                $nullable = isset($col['null']) ? $col['null'] : null;
+                                $boolToInt = $original['type'] === 'boolean' && $col['type'] === 'integer';
+                                unset($col['default'], $col['null']);
+                                if ($field !== $col['name']) {
+                                    $newName = $this->name($col['name']);
+                                    $out .= "\tRENAME {$fieldName} TO {$newName};\n";
+                                    $out .= 'ALTER TABLE ' . $this->fullTableName($curTable) . " \n";
+                                    $fieldName = $newName;
+                                }
 
-								if ($boolToInt) {
-									$colList[] = 'ALTER COLUMN ' . $fieldName . '  SET DEFAULT NULL';
-									$colList[] = 'ALTER COLUMN ' . $fieldName . ' TYPE ' . str_replace(array($fieldName, 'NOT NULL'), '', $this->buildColumn($col)) . ' USING CASE WHEN TRUE THEN 1 ELSE 0 END';
-								} else {
-									if ($original['type'] === 'text' && $col['type'] === 'integer') {
-										$colList[] = 'ALTER COLUMN ' . $fieldName . ' TYPE ' . str_replace(array($fieldName, 'NOT NULL'), '', $this->buildColumn($col)) . " USING cast({$fieldName} as INTEGER)";
-									} else {
-										$colList[] = 'ALTER COLUMN ' . $fieldName . ' TYPE ' . str_replace(array($fieldName, 'NOT NULL'), '', $this->buildColumn($col));
-									}
-								}
+                                if ($boolToInt) {
+                                    $colList[] = 'ALTER COLUMN ' . $fieldName . '  SET DEFAULT NULL';
+                                    $colList[] = 'ALTER COLUMN ' . $fieldName . ' TYPE ' . str_replace([$fieldName, 'NOT NULL'], '', $this->buildColumn($col)) . ' USING CASE WHEN TRUE THEN 1 ELSE 0 END';
+                                } else {
+                                    if ($original['type'] === 'text' && $col['type'] === 'integer') {
+                                        $colList[] = 'ALTER COLUMN ' . $fieldName . ' TYPE ' . str_replace([$fieldName, 'NOT NULL'], '', $this->buildColumn($col)) . " USING cast({$fieldName} as INTEGER)";
+                                    } else {
+                                        $colList[] = 'ALTER COLUMN ' . $fieldName . ' TYPE ' . str_replace([$fieldName, 'NOT NULL'], '', $this->buildColumn($col));
+                                    }
+                                }
 
-								if (isset($nullable)) {
-									$nullable = ($nullable) ? 'DROP NOT NULL' : 'SET NOT NULL';
-									$colList[] = 'ALTER COLUMN ' . $fieldName . '  ' . $nullable;
-								}
+                                if (isset($nullable)) {
+                                    $nullable = ($nullable) ? 'DROP NOT NULL' : 'SET NOT NULL';
+                                    $colList[] = 'ALTER COLUMN ' . $fieldName . '  ' . $nullable;
+                                }
 
-								if (isset($default)) {
-									if (!$boolToInt) {
-										$colList[] = 'ALTER COLUMN ' . $fieldName . '  SET DEFAULT ' . $this->value($default, $col['type']);
-									}
-								} else {
-									$colList[] = 'ALTER COLUMN ' . $fieldName . '  DROP DEFAULT';
-								}
+                                if (isset($default)) {
+                                    if (!$boolToInt) {
+                                        $colList[] = 'ALTER COLUMN ' . $fieldName . '  SET DEFAULT ' . $this->value($default, $col['type']);
+                                    }
+                                } else {
+                                    $colList[] = 'ALTER COLUMN ' . $fieldName . '  DROP DEFAULT';
+                                }
 
-							}
-							break;
-					}
-				}
-				if (isset($indexes['drop']['PRIMARY'])) {
-					$colList[] = 'DROP CONSTRAINT ' . $curTable . '_pkey';
-				}
-				if (isset($indexes['add']['PRIMARY'])) {
-					$cols = $indexes['add']['PRIMARY']['column'];
-					if (is_array($cols)) {
-						$cols = implode(', ', $cols);
-					}
-					$colList[] = 'ADD PRIMARY KEY (' . $cols . ')';
-				}
+                            }
+                            break;
+                    }
+                }
+                if (isset($indexes['drop']['PRIMARY'])) {
+                    $colList[] = 'DROP CONSTRAINT ' . $curTable . '_pkey';
+                }
+                if (isset($indexes['add']['PRIMARY'])) {
+                    $cols = $indexes['add']['PRIMARY']['column'];
+                    if (is_array($cols)) {
+                        $cols = implode(', ', $cols);
+                    }
+                    $colList[] = 'ADD PRIMARY KEY (' . $cols . ')';
+                }
 
-				if (!empty($colList)) {
-					$out .= "\t" . implode(",\n\t", $colList) . ";\n\n";
-				} else {
-					$out = '';
-				}
-				$out .= implode(";\n\t", $this->_alterIndexes($curTable, $indexes));
-			}
-		}
-		return $out;
-	}
+                if (!empty($colList)) {
+                    $out .= "\t" . implode(",\n\t", $colList) . ";\n\n";
+                } else {
+                    $out = '';
+                }
+                $out .= implode(";\n\t", $this->_alterIndexes($curTable, $indexes));
+            }
+        }
+        return $out;
+    }
 
-/**
- * Generate PostgreSQL index alteration statements for a table.
- *
- * @param string $table Table to alter indexes for
- * @param array $indexes Indexes to add and drop
- * @return array Index alteration statements
- */
-	protected function _alterIndexes($table, $indexes) {
-		$alter = array();
-		if (isset($indexes['drop'])) {
-			foreach ($indexes['drop'] as $name => $value) {
-				$out = 'DROP ';
-				if ($name === 'PRIMARY') {
-					continue;
-				} else {
-					$out .= 'INDEX ' . $name;
-				}
-				$alter[] = $out;
-			}
-		}
-		if (isset($indexes['add'])) {
-			foreach ($indexes['add'] as $name => $value) {
-				$out = 'CREATE ';
-				if ($name === 'PRIMARY') {
-					continue;
-				} else {
-					if (!empty($value['unique'])) {
-						$out .= 'UNIQUE ';
-					}
-					$out .= 'INDEX ';
-				}
-				if (is_array($value['column'])) {
-					$out .= $name . ' ON ' . $table . ' (' . implode(', ', array_map(array(&$this, 'name'), $value['column'])) . ')';
-				} else {
-					$out .= $name . ' ON ' . $table . ' (' . $this->name($value['column']) . ')';
-				}
-				$alter[] = $out;
-			}
-		}
-		return $alter;
-	}
+    /**
+     * Generate a Postgres-native column schema string
+     *
+     * @param array $column An array structured like the following:
+     *                      array('name'=>'value', 'type'=>'value'[, options]),
+     *                      where options can be 'default', 'length', or 'key'.
+     * @return string
+     */
+    public function buildColumn($column)
+    {
+        $col = $this->columns[$column['type']];
+        if (!isset($col['length']) && !isset($col['limit'])) {
+            unset($column['length']);
+        }
+        $out = parent::buildColumn($column);
 
-/**
- * Returns a limit statement in the correct format for the particular database.
- *
- * @param int $limit Limit of results returned
- * @param int $offset Offset from which to start results
- * @return string SQL limit/offset statement
- */
-	public function limit($limit, $offset = null) {
-		if ($limit) {
-			$rt = sprintf(' LIMIT %u', $limit);
-			if ($offset) {
-				$rt .= sprintf(' OFFSET %u', $offset);
-			}
-			return $rt;
-		}
-		return null;
-	}
+        $out = preg_replace(
+            '/integer\([0-9]+\)/',
+            'integer',
+            $out
+        );
+        $out = preg_replace(
+            '/bigint\([0-9]+\)/',
+            'bigint',
+            $out
+        );
 
-/**
- * Converts database-layer column types to basic types
- *
- * @param string $real Real database-layer column type (i.e. "varchar(255)")
- * @return string Abstract column type (i.e. "string")
- */
-	public function column($real) {
-		if (is_array($real)) {
-			$col = $real['name'];
-			if (isset($real['limit'])) {
-				$col .= '(' . $real['limit'] . ')';
-			}
-			return $col;
-		}
+        $out = str_replace('integer serial', 'serial', $out);
+        $out = str_replace('bigint serial', 'bigserial', $out);
+        if (strpos($out, 'timestamp DEFAULT')) {
+            if (isset($column['null']) && $column['null']) {
+                $out = str_replace('DEFAULT NULL', '', $out);
+            } else {
+                $out = str_replace('DEFAULT NOT NULL', '', $out);
+            }
+        }
+        if (strpos($out, 'DEFAULT DEFAULT')) {
+            if (isset($column['null']) && $column['null']) {
+                $out = str_replace('DEFAULT DEFAULT', 'DEFAULT NULL', $out);
+            } else if (in_array($column['type'], ['integer', 'float'])) {
+                $out = str_replace('DEFAULT DEFAULT', 'DEFAULT 0', $out);
+            } else if ($column['type'] === 'boolean') {
+                $out = str_replace('DEFAULT DEFAULT', 'DEFAULT FALSE', $out);
+            }
+        }
+        return $out;
+    }
 
-		$col = str_replace(')', '', $real);
+    /**
+     * Generate PostgreSQL index alteration statements for a table.
+     *
+     * @param string $table Table to alter indexes for
+     * @param array $indexes Indexes to add and drop
+     * @return array Index alteration statements
+     */
+    protected function _alterIndexes($table, $indexes)
+    {
+        $alter = [];
+        if (isset($indexes['drop'])) {
+            foreach ($indexes['drop'] as $name => $value) {
+                $out = 'DROP ';
+                if ($name === 'PRIMARY') {
+                    continue;
+                } else {
+                    $out .= 'INDEX ' . $name;
+                }
+                $alter[] = $out;
+            }
+        }
+        if (isset($indexes['add'])) {
+            foreach ($indexes['add'] as $name => $value) {
+                $out = 'CREATE ';
+                if ($name === 'PRIMARY') {
+                    continue;
+                } else {
+                    if (!empty($value['unique'])) {
+                        $out .= 'UNIQUE ';
+                    }
+                    $out .= 'INDEX ';
+                }
+                if (is_array($value['column'])) {
+                    $out .= $name . ' ON ' . $table . ' (' . implode(', ', array_map([&$this, 'name'], $value['column'])) . ')';
+                } else {
+                    $out .= $name . ' ON ' . $table . ' (' . $this->name($value['column']) . ')';
+                }
+                $alter[] = $out;
+            }
+        }
+        return $alter;
+    }
 
-		if (strpos($col, '(') !== false) {
-			list($col, $limit) = explode('(', $col);
-		}
+    /**
+     * Returns a limit statement in the correct format for the particular database.
+     *
+     * @param int $limit Limit of results returned
+     * @param int $offset Offset from which to start results
+     * @return string SQL limit/offset statement
+     */
+    public function limit($limit, $offset = null)
+    {
+        if ($limit) {
+            $rt = sprintf(' LIMIT %u', $limit);
+            if ($offset) {
+                $rt .= sprintf(' OFFSET %u', $offset);
+            }
+            return $rt;
+        }
+        return null;
+    }
 
-		$floats = array(
-			'float', 'float4', 'float8', 'double', 'double precision', 'real'
-		);
+    /**
+     * resultSet method
+     *
+     * @param PDOStatement $results The results
+     * @return void
+     */
+    public function resultSet($results)
+    {
+        $this->map = [];
+        $numFields = $results->columnCount();
+        $index = 0;
+        $j = 0;
 
-		switch (true) {
-			case (in_array($col, array('date', 'time', 'inet', 'boolean'))):
-				return $col;
-			case (strpos($col, 'timestamp') !== false):
-				return 'datetime';
-			case (strpos($col, 'time') === 0):
-				return 'time';
-			case ($col === 'bigint'):
-				return 'biginteger';
-			case ($col === 'smallint'):
-				return 'smallinteger';
-			case (strpos($col, 'int') !== false && $col !== 'interval'):
-				return 'integer';
-			case (strpos($col, 'char') !== false):
-				return 'string';
-			case (strpos($col, 'uuid') !== false):
-				return 'uuid';
-			case (strpos($col, 'text') !== false):
-				return 'text';
-			case (strpos($col, 'bytea') !== false):
-				return 'binary';
-			case ($col === 'decimal' || $col === 'numeric'):
-				return 'decimal';
-			case (in_array($col, $floats)):
-				return 'float';
-			default:
-				return 'text';
-		}
-	}
+        while ($j < $numFields) {
+            $column = $results->getColumnMeta($j);
+            if (strpos($column['name'], '__')) {
+                list($table, $name) = explode('__', $column['name']);
+                $this->map[$index++] = [$table, $name, $column['native_type']];
+            } else {
+                $this->map[$index++] = [0, $column['name'], $column['native_type']];
+            }
+            $j++;
+        }
+    }
 
-/**
- * Gets the length of a database-native column description, or null if no length
- *
- * @param string $real Real database-layer column type (i.e. "varchar(255)")
- * @return int An integer representing the length of the column
- */
-	public function length($real) {
-		$col = $real;
-		if (strpos($real, '(') !== false) {
-			list($col, $limit) = explode('(', $real);
-		}
-		if ($col === 'uuid') {
-			return 36;
-		}
-		return parent::length($real);
-	}
+    /**
+     * Fetches the next row from the current result set
+     *
+     * @return array
+     */
+    public function fetchResult()
+    {
+        if ($row = $this->_result->fetch(PDO::FETCH_NUM)) {
+            $resultRow = [];
 
-/**
- * resultSet method
- *
- * @param PDOStatement $results The results
- * @return void
- */
-	public function resultSet($results) {
-		$this->map = array();
-		$numFields = $results->columnCount();
-		$index = 0;
-		$j = 0;
+            foreach ($this->map as $index => $meta) {
+                list($table, $column, $type) = $meta;
 
-		while ($j < $numFields) {
-			$column = $results->getColumnMeta($j);
-			if (strpos($column['name'], '__')) {
-				list($table, $name) = explode('__', $column['name']);
-				$this->map[$index++] = array($table, $name, $column['native_type']);
-			} else {
-				$this->map[$index++] = array(0, $column['name'], $column['native_type']);
-			}
-			$j++;
-		}
-	}
+                switch ($type) {
+                    case 'bool':
+                        $resultRow[$table][$column] = $row[$index] === null ? null : $this->boolean($row[$index]);
+                        break;
+                    case 'binary':
+                    case 'bytea':
+                        $resultRow[$table][$column] = $row[$index] === null ? null : stream_get_contents($row[$index]);
+                        break;
+                    default:
+                        $resultRow[$table][$column] = $row[$index];
+                }
+            }
+            return $resultRow;
+        }
+        $this->_result->closeCursor();
+        return false;
+    }
 
-/**
- * Fetches the next row from the current result set
- *
- * @return array
- */
-	public function fetchResult() {
-		if ($row = $this->_result->fetch(PDO::FETCH_NUM)) {
-			$resultRow = array();
+    /**
+     * Translates between PHP boolean values and PostgreSQL boolean values
+     *
+     * @param mixed $data Value to be translated
+     * @param bool $quote true to quote a boolean to be used in a query, false to return the boolean value
+     * @return bool Converted boolean value
+     */
+    public function boolean($data, $quote = false)
+    {
+        switch (true) {
+            case ($data === true || $data === false):
+                $result = $data;
+                break;
+            case ($data === 't' || $data === 'f'):
+                $result = ($data === 't');
+                break;
+            case ($data === 'true' || $data === 'false'):
+                $result = ($data === 'true');
+                break;
+            case ($data === 'TRUE' || $data === 'FALSE'):
+                $result = ($data === 'TRUE');
+                break;
+            default:
+                $result = (bool)$data;
+        }
 
-			foreach ($this->map as $index => $meta) {
-				list($table, $column, $type) = $meta;
+        if ($quote) {
+            return ($result) ? 'TRUE' : 'FALSE';
+        }
+        return (bool)$result;
+    }
 
-				switch ($type) {
-					case 'bool':
-						$resultRow[$table][$column] = $row[$index] === null ? null : $this->boolean($row[$index]);
-						break;
-					case 'binary':
-					case 'bytea':
-						$resultRow[$table][$column] = $row[$index] === null ? null : stream_get_contents($row[$index]);
-						break;
-					default:
-						$resultRow[$table][$column] = $row[$index];
-				}
-			}
-			return $resultRow;
-		}
-		$this->_result->closeCursor();
-		return false;
-	}
+    /**
+     * Gets the database encoding
+     *
+     * @return string The database encoding
+     */
+    public function getEncoding()
+    {
+        $result = $this->_execute('SHOW client_encoding')->fetch();
+        if ($result === false) {
+            return false;
+        }
+        return (isset($result['client_encoding'])) ? $result['client_encoding'] : false;
+    }
 
-/**
- * Translates between PHP boolean values and PostgreSQL boolean values
- *
- * @param mixed $data Value to be translated
- * @param bool $quote true to quote a boolean to be used in a query, false to return the boolean value
- * @return bool Converted boolean value
- */
-	public function boolean($data, $quote = false) {
-		switch (true) {
-			case ($data === true || $data === false):
-				$result = $data;
-				break;
-			case ($data === 't' || $data === 'f'):
-				$result = ($data === 't');
-				break;
-			case ($data === 'true' || $data === 'false'):
-				$result = ($data === 'true');
-				break;
-			case ($data === 'TRUE' || $data === 'FALSE'):
-				$result = ($data === 'TRUE');
-				break;
-			default:
-				$result = (bool)$data;
-		}
+    /**
+     * Format indexes for create table
+     *
+     * @param array $indexes The index to build
+     * @param string $table The table name.
+     * @return string
+     */
+    public function buildIndex($indexes, $table = null)
+    {
+        $join = [];
+        if (!is_array($indexes)) {
+            return [];
+        }
+        foreach ($indexes as $name => $value) {
+            if ($name === 'PRIMARY') {
+                $out = 'PRIMARY KEY  (' . $this->name($value['column']) . ')';
+            } else {
+                $out = 'CREATE ';
+                if (!empty($value['unique'])) {
+                    $out .= 'UNIQUE ';
+                }
+                if (is_array($value['column'])) {
+                    $value['column'] = implode(', ', array_map([&$this, 'name'], $value['column']));
+                } else {
+                    $value['column'] = $this->name($value['column']);
+                }
+                $out .= "INDEX {$name} ON {$table}({$value['column']});";
+            }
+            $join[] = $out;
+        }
+        return $join;
+    }
 
-		if ($quote) {
-			return ($result) ? 'TRUE' : 'FALSE';
-		}
-		return (bool)$result;
-	}
+    /**
+     * Overrides DboSource::renderStatement to handle schema generation with Postgres-style indexes
+     *
+     * @param string $type The query type.
+     * @param array $data The array of data to render.
+     * @return string
+     */
+    public function renderStatement($type, $data)
+    {
+        switch (strtolower($type)) {
+            case 'schema':
+                extract($data);
 
-/**
- * Sets the database encoding
- *
- * @param mixed $enc Database encoding
- * @return bool True on success, false on failure
- */
-	public function setEncoding($enc) {
-		return $this->_execute('SET NAMES ' . $this->value($enc)) !== false;
-	}
+                foreach ($indexes as $i => $index) {
+                    if (preg_match('/PRIMARY KEY/', $index)) {
+                        unset($indexes[$i]);
+                        $columns[] = $index;
+                        break;
+                    }
+                }
+                $join = ['columns' => ",\n\t", 'indexes' => "\n"];
 
-/**
- * Gets the database encoding
- *
- * @return string The database encoding
- */
-	public function getEncoding() {
-		$result = $this->_execute('SHOW client_encoding')->fetch();
-		if ($result === false) {
-			return false;
-		}
-		return (isset($result['client_encoding'])) ? $result['client_encoding'] : false;
-	}
+                foreach (['columns', 'indexes'] as $var) {
+                    if (is_array(${$var})) {
+                        ${$var} = implode($join[$var], array_filter(${$var}));
+                    }
+                }
+                return "CREATE TABLE {$table} (\n\t{$columns}\n);\n{$indexes}";
+            default:
+                return parent::renderStatement($type, $data);
+        }
+    }
 
-/**
- * Generate a Postgres-native column schema string
- *
- * @param array $column An array structured like the following:
- *                      array('name'=>'value', 'type'=>'value'[, options]),
- *                      where options can be 'default', 'length', or 'key'.
- * @return string
- */
-	public function buildColumn($column) {
-		$col = $this->columns[$column['type']];
-		if (!isset($col['length']) && !isset($col['limit'])) {
-			unset($column['length']);
-		}
-		$out = parent::buildColumn($column);
+    /**
+     * Gets the schema name
+     *
+     * @return string The schema name
+     */
+    public function getSchemaName()
+    {
+        return $this->config['schema'];
+    }
 
-		$out = preg_replace(
-			'/integer\([0-9]+\)/',
-			'integer',
-			$out
-		);
-		$out = preg_replace(
-			'/bigint\([0-9]+\)/',
-			'bigint',
-			$out
-		);
+    /**
+     * Check if the server support nested transactions
+     *
+     * @return bool
+     */
+    public function nestedTransactionSupported()
+    {
+        return $this->useNestedTransactions && version_compare($this->getVersion(), '8.0', '>=');
+    }
 
-		$out = str_replace('integer serial', 'serial', $out);
-		$out = str_replace('bigint serial', 'bigserial', $out);
-		if (strpos($out, 'timestamp DEFAULT')) {
-			if (isset($column['null']) && $column['null']) {
-				$out = str_replace('DEFAULT NULL', '', $out);
-			} else {
-				$out = str_replace('DEFAULT NOT NULL', '', $out);
-			}
-		}
-		if (strpos($out, 'DEFAULT DEFAULT')) {
-			if (isset($column['null']) && $column['null']) {
-				$out = str_replace('DEFAULT DEFAULT', 'DEFAULT NULL', $out);
-			} elseif (in_array($column['type'], array('integer', 'float'))) {
-				$out = str_replace('DEFAULT DEFAULT', 'DEFAULT 0', $out);
-			} elseif ($column['type'] === 'boolean') {
-				$out = str_replace('DEFAULT DEFAULT', 'DEFAULT FALSE', $out);
-			}
-		}
-		return $out;
-	}
+    /**
+     * Auxiliary function to quote matched `(Model.fields)` from a preg_replace_callback call
+     * Quotes the fields in a function call.
+     *
+     * @param string $match matched string
+     * @return string quoted string
+     */
+    protected function _quoteFunctionField($match)
+    {
+        $prepend = '';
+        if (strpos($match[1], 'DISTINCT') !== false) {
+            $prepend = 'DISTINCT ';
+            $match[1] = trim(str_replace('DISTINCT', '', $match[1]));
+        }
+        $constant = preg_match('/^\d+|NULL|FALSE|TRUE$/i', $match[1]);
 
-/**
- * Format indexes for create table
- *
- * @param array $indexes The index to build
- * @param string $table The table name.
- * @return string
- */
-	public function buildIndex($indexes, $table = null) {
-		$join = array();
-		if (!is_array($indexes)) {
-			return array();
-		}
-		foreach ($indexes as $name => $value) {
-			if ($name === 'PRIMARY') {
-				$out = 'PRIMARY KEY  (' . $this->name($value['column']) . ')';
-			} else {
-				$out = 'CREATE ';
-				if (!empty($value['unique'])) {
-					$out .= 'UNIQUE ';
-				}
-				if (is_array($value['column'])) {
-					$value['column'] = implode(', ', array_map(array(&$this, 'name'), $value['column']));
-				} else {
-					$value['column'] = $this->name($value['column']);
-				}
-				$out .= "INDEX {$name} ON {$table}({$value['column']});";
-			}
-			$join[] = $out;
-		}
-		return $join;
-	}
-
-/**
- * {@inheritDoc}
- */
-	public function value($data, $column = null, $null = true) {
-		$value = parent::value($data, $column, $null);
-		if ($column === 'uuid' && is_scalar($data) && $data === '') {
-			return 'NULL';
-		}
-		return $value;
-	}
-
-/**
- * Overrides DboSource::renderStatement to handle schema generation with Postgres-style indexes
- *
- * @param string $type The query type.
- * @param array $data The array of data to render.
- * @return string
- */
-	public function renderStatement($type, $data) {
-		switch (strtolower($type)) {
-			case 'schema':
-				extract($data);
-
-				foreach ($indexes as $i => $index) {
-					if (preg_match('/PRIMARY KEY/', $index)) {
-						unset($indexes[$i]);
-						$columns[] = $index;
-						break;
-					}
-				}
-				$join = array('columns' => ",\n\t", 'indexes' => "\n");
-
-				foreach (array('columns', 'indexes') as $var) {
-					if (is_array(${$var})) {
-						${$var} = implode($join[$var], array_filter(${$var}));
-					}
-				}
-				return "CREATE TABLE {$table} (\n\t{$columns}\n);\n{$indexes}";
-			default:
-				return parent::renderStatement($type, $data);
-		}
-	}
-
-/**
- * Gets the schema name
- *
- * @return string The schema name
- */
-	public function getSchemaName() {
-		return $this->config['schema'];
-	}
-
-/**
- * Check if the server support nested transactions
- *
- * @return bool
- */
-	public function nestedTransactionSupported() {
-		return $this->useNestedTransactions && version_compare($this->getVersion(), '8.0', '>=');
-	}
+        if (!$constant && strpos($match[1], '.') === false) {
+            $match[1] = $this->name($match[1]);
+        } else if (!$constant) {
+            $parts = explode('.', $match[1]);
+            if (!Hash::numeric($parts)) {
+                $match[1] = $this->name($match[1]);
+            }
+        }
+        return '(' . $prepend . $match[1] . ')';
+    }
 
 }

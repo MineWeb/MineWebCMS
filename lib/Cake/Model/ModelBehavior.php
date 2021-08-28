@@ -32,7 +32,7 @@
  *
  * ```
  * function doSomething(Model $model, $arg1, $arg2) {
- *		//do something
+ *        //do something
  * }
  * ```
  *
@@ -49,7 +49,7 @@
  * public $mapMethods = array('/do(\w+)/' => 'doSomething');
  *
  * function doSomething(Model $model, $method, $arg1, $arg2) {
- *		//do something
+ *        //do something
  * }
  * ```
  *
@@ -61,180 +61,193 @@
  * @see Model::$actsAs
  * @see BehaviorCollection::load()
  */
-class ModelBehavior extends CakeObject {
+class ModelBehavior extends CakeObject
+{
 
-/**
- * Contains configuration settings for use with individual model objects. This
- * is used because if multiple models use this Behavior, each will use the same
- * object instance. Individual model settings should be stored as an
- * associative array, keyed off of the model name.
- *
- * @var array
- * @see Model::$alias
- */
-	public $settings = array();
+    /**
+     * Contains configuration settings for use with individual model objects. This
+     * is used because if multiple models use this Behavior, each will use the same
+     * object instance. Individual model settings should be stored as an
+     * associative array, keyed off of the model name.
+     *
+     * @var array
+     * @see Model::$alias
+     */
+    public $settings = [];
 
-/**
- * Allows the mapping of preg-compatible regular expressions to public or
- * private methods in this class, where the array key is a /-delimited regular
- * expression, and the value is a class method. Similar to the functionality of
- * the findBy* / findAllBy* magic methods.
- *
- * @var array
- */
-	public $mapMethods = array();
+    /**
+     * Allows the mapping of preg-compatible regular expressions to public or
+     * private methods in this class, where the array key is a /-delimited regular
+     * expression, and the value is a class method. Similar to the functionality of
+     * the findBy* / findAllBy* magic methods.
+     *
+     * @var array
+     */
+    public $mapMethods = [];
 
-/**
- * Setup this behavior with the specified configuration settings.
- *
- * @param Model $model Model using this behavior
- * @param array $config Configuration settings for $model
- * @return void
- */
-	public function setup(Model $model, $config = array()) {
-	}
+    /**
+     * Setup this behavior with the specified configuration settings.
+     *
+     * @param Model $model Model using this behavior
+     * @param array $config Configuration settings for $model
+     * @return void
+     */
+    public function setup(Model $model, $config = [])
+    {
+    }
 
-/**
- * Clean up any initialization this behavior has done on a model. Called when a behavior is dynamically
- * detached from a model using Model::detach().
- *
- * @param Model $model Model using this behavior
- * @return void
- * @see BehaviorCollection::detach()
- */
-	public function cleanup(Model $model) {
-		if (isset($this->settings[$model->alias])) {
-			unset($this->settings[$model->alias]);
-		}
-	}
+    /**
+     * Clean up any initialization this behavior has done on a model. Called when a behavior is dynamically
+     * detached from a model using Model::detach().
+     *
+     * @param Model $model Model using this behavior
+     * @return void
+     * @see BehaviorCollection::detach()
+     */
+    public function cleanup(Model $model)
+    {
+        if (isset($this->settings[$model->alias])) {
+            unset($this->settings[$model->alias]);
+        }
+    }
 
-/**
- * beforeFind can be used to cancel find operations, or modify the query that will be executed.
- * By returning null/false you can abort a find. By returning an array you can modify/replace the query
- * that is going to be run.
- *
- * @param Model $model Model using this behavior
- * @param array $query Data used to execute this query, i.e. conditions, order, etc.
- * @return bool|array False or null will abort the operation. You can return an array to replace the
- *   $query that will be eventually run.
- */
-	public function beforeFind(Model $model, $query) {
-		return true;
-	}
+    /**
+     * beforeFind can be used to cancel find operations, or modify the query that will be executed.
+     * By returning null/false you can abort a find. By returning an array you can modify/replace the query
+     * that is going to be run.
+     *
+     * @param Model $model Model using this behavior
+     * @param array $query Data used to execute this query, i.e. conditions, order, etc.
+     * @return bool|array False or null will abort the operation. You can return an array to replace the
+     *   $query that will be eventually run.
+     */
+    public function beforeFind(Model $model, $query)
+    {
+        return true;
+    }
 
-/**
- * After find callback. Can be used to modify any results returned by find.
- *
- * @param Model $model Model using this behavior
- * @param mixed $results The results of the find operation
- * @param bool $primary Whether this model is being queried directly (vs. being queried as an association)
- * @return mixed An array value will replace the value of $results - any other value will be ignored.
- */
-	public function afterFind(Model $model, $results, $primary = false) {
-	}
+    /**
+     * After find callback. Can be used to modify any results returned by find.
+     *
+     * @param Model $model Model using this behavior
+     * @param mixed $results The results of the find operation
+     * @param bool $primary Whether this model is being queried directly (vs. being queried as an association)
+     * @return mixed An array value will replace the value of $results - any other value will be ignored.
+     */
+    public function afterFind(Model $model, $results, $primary = false)
+    {
+    }
 
-/**
- * beforeValidate is called before a model is validated, you can use this callback to
- * add behavior validation rules into a models validate array. Returning false
- * will allow you to make the validation fail.
- *
- * @param Model $model Model using this behavior
- * @param array $options Options passed from Model::save().
- * @return mixed False or null will abort the operation. Any other result will continue.
- * @see Model::save()
- */
-	public function beforeValidate(Model $model, $options = array()) {
-		return true;
-	}
+    /**
+     * beforeValidate is called before a model is validated, you can use this callback to
+     * add behavior validation rules into a models validate array. Returning false
+     * will allow you to make the validation fail.
+     *
+     * @param Model $model Model using this behavior
+     * @param array $options Options passed from Model::save().
+     * @return mixed False or null will abort the operation. Any other result will continue.
+     * @see Model::save()
+     */
+    public function beforeValidate(Model $model, $options = [])
+    {
+        return true;
+    }
 
-/**
- * afterValidate is called just after model data was validated, you can use this callback
- * to perform any data cleanup or preparation if needed
- *
- * @param Model $model Model using this behavior
- * @return mixed False will stop this event from being passed to other behaviors
- */
-	public function afterValidate(Model $model) {
-		return true;
-	}
+    /**
+     * afterValidate is called just after model data was validated, you can use this callback
+     * to perform any data cleanup or preparation if needed
+     *
+     * @param Model $model Model using this behavior
+     * @return mixed False will stop this event from being passed to other behaviors
+     */
+    public function afterValidate(Model $model)
+    {
+        return true;
+    }
 
-/**
- * beforeSave is called before a model is saved. Returning false from a beforeSave callback
- * will abort the save operation.
- *
- * @param Model $model Model using this behavior
- * @param array $options Options passed from Model::save().
- * @return mixed False if the operation should abort. Any other result will continue.
- * @see Model::save()
- */
-	public function beforeSave(Model $model, $options = array()) {
-		return true;
-	}
+    /**
+     * beforeSave is called before a model is saved. Returning false from a beforeSave callback
+     * will abort the save operation.
+     *
+     * @param Model $model Model using this behavior
+     * @param array $options Options passed from Model::save().
+     * @return mixed False if the operation should abort. Any other result will continue.
+     * @see Model::save()
+     */
+    public function beforeSave(Model $model, $options = [])
+    {
+        return true;
+    }
 
-/**
- * afterSave is called after a model is saved.
- *
- * @param Model $model Model using this behavior
- * @param bool $created True if this save created a new record
- * @param array $options Options passed from Model::save().
- * @return bool
- * @see Model::save()
- */
-	public function afterSave(Model $model, $created, $options = array()) {
-		return true;
-	}
+    /**
+     * afterSave is called after a model is saved.
+     *
+     * @param Model $model Model using this behavior
+     * @param bool $created True if this save created a new record
+     * @param array $options Options passed from Model::save().
+     * @return bool
+     * @see Model::save()
+     */
+    public function afterSave(Model $model, $created, $options = [])
+    {
+        return true;
+    }
 
-/**
- * Before delete is called before any delete occurs on the attached model, but after the model's
- * beforeDelete is called. Returning false from a beforeDelete will abort the delete.
- *
- * @param Model $model Model using this behavior
- * @param bool $cascade If true records that depend on this record will also be deleted
- * @return mixed False if the operation should abort. Any other result will continue.
- */
-	public function beforeDelete(Model $model, $cascade = true) {
-		return true;
-	}
+    /**
+     * Before delete is called before any delete occurs on the attached model, but after the model's
+     * beforeDelete is called. Returning false from a beforeDelete will abort the delete.
+     *
+     * @param Model $model Model using this behavior
+     * @param bool $cascade If true records that depend on this record will also be deleted
+     * @return mixed False if the operation should abort. Any other result will continue.
+     */
+    public function beforeDelete(Model $model, $cascade = true)
+    {
+        return true;
+    }
 
-/**
- * After delete is called after any delete occurs on the attached model.
- *
- * @param Model $model Model using this behavior
- * @return void
- */
-	public function afterDelete(Model $model) {
-	}
+    /**
+     * After delete is called after any delete occurs on the attached model.
+     *
+     * @param Model $model Model using this behavior
+     * @return void
+     */
+    public function afterDelete(Model $model)
+    {
+    }
 
-/**
- * DataSource error callback
- *
- * @param Model $model Model using this behavior
- * @param string $error Error generated in DataSource
- * @return void
- */
-	public function onError(Model $model, $error) {
-	}
+    /**
+     * DataSource error callback
+     *
+     * @param Model $model Model using this behavior
+     * @param string $error Error generated in DataSource
+     * @return void
+     */
+    public function onError(Model $model, $error)
+    {
+    }
 
-/**
- * If $model's whitelist property is non-empty, $field will be added to it.
- * Note: this method should *only* be used in beforeValidate or beforeSave to ensure
- * that it only modifies the whitelist for the current save operation. Also make sure
- * you explicitly set the value of the field which you are allowing.
- *
- * @param Model $model Model using this behavior
- * @param string $field Field to be added to $model's whitelist
- * @return void
- */
-	protected function _addToWhitelist(Model $model, $field) {
-		if (is_array($field)) {
-			foreach ($field as $f) {
-				$this->_addToWhitelist($model, $f);
-			}
-			return;
-		}
-		if (!empty($model->whitelist) && !in_array($field, $model->whitelist)) {
-			$model->whitelist[] = $field;
-		}
-	}
+    /**
+     * If $model's whitelist property is non-empty, $field will be added to it.
+     * Note: this method should *only* be used in beforeValidate or beforeSave to ensure
+     * that it only modifies the whitelist for the current save operation. Also make sure
+     * you explicitly set the value of the field which you are allowing.
+     *
+     * @param Model $model Model using this behavior
+     * @param string $field Field to be added to $model's whitelist
+     * @return void
+     */
+    protected function _addToWhitelist(Model $model, $field)
+    {
+        if (is_array($field)) {
+            foreach ($field as $f) {
+                $this->_addToWhitelist($model, $f);
+            }
+            return;
+        }
+        if (!empty($model->whitelist) && !in_array($field, $model->whitelist)) {
+            $model->whitelist[] = $field;
+        }
+    }
 
 }

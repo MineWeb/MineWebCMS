@@ -32,20 +32,21 @@ App::uses('Hash', 'Utility');
  * @property array $pass        Array of passed arguments parsed from the URL.
  * @package       Cake.Network
  */
-class CakeRequest implements ArrayAccess {
+class CakeRequest implements ArrayAccess
+{
 
     /**
      * Array of parameters parsed from the URL.
      *
      * @var array
      */
-    public $params = array(
+    public $params = [
         'plugin' => null,
         'controller' => null,
         'action' => null,
-        'named' => array(),
-        'pass' => array(),
-    );
+        'named' => [],
+        'pass' => [],
+    ];
 
     /**
      * Array of POST data. Will contain form data as well as uploaded files.
@@ -55,14 +56,14 @@ class CakeRequest implements ArrayAccess {
      *
      * @var array
      */
-    public $data = array();
+    public $data = [];
 
     /**
      * Array of querystring arguments
      *
      * @var array
      */
-    public $query = array();
+    public $query = [];
 
     /**
      * The URL string used for the request.
@@ -100,27 +101,27 @@ class CakeRequest implements ArrayAccess {
      *
      * @var array
      */
-    protected $_detectors = array(
-        'get' => array('env' => 'REQUEST_METHOD', 'value' => 'GET'),
-        'patch' => array('env' => 'REQUEST_METHOD', 'value' => 'PATCH'),
-        'post' => array('env' => 'REQUEST_METHOD', 'value' => 'POST'),
-        'put' => array('env' => 'REQUEST_METHOD', 'value' => 'PUT'),
-        'delete' => array('env' => 'REQUEST_METHOD', 'value' => 'DELETE'),
-        'head' => array('env' => 'REQUEST_METHOD', 'value' => 'HEAD'),
-        'options' => array('env' => 'REQUEST_METHOD', 'value' => 'OPTIONS'),
-        'ssl' => array('env' => 'HTTPS', 'value' => 1),
-        'ajax' => array('env' => 'HTTP_X_REQUESTED_WITH', 'value' => 'XMLHttpRequest'),
-        'flash' => array('env' => 'HTTP_USER_AGENT', 'pattern' => '/^(Shockwave|Adobe) Flash/'),
-        'mobile' => array('env' => 'HTTP_USER_AGENT', 'options' => array(
+    protected $_detectors = [
+        'get' => ['env' => 'REQUEST_METHOD', 'value' => 'GET'],
+        'patch' => ['env' => 'REQUEST_METHOD', 'value' => 'PATCH'],
+        'post' => ['env' => 'REQUEST_METHOD', 'value' => 'POST'],
+        'put' => ['env' => 'REQUEST_METHOD', 'value' => 'PUT'],
+        'delete' => ['env' => 'REQUEST_METHOD', 'value' => 'DELETE'],
+        'head' => ['env' => 'REQUEST_METHOD', 'value' => 'HEAD'],
+        'options' => ['env' => 'REQUEST_METHOD', 'value' => 'OPTIONS'],
+        'ssl' => ['env' => 'HTTPS', 'value' => 1],
+        'ajax' => ['env' => 'HTTP_X_REQUESTED_WITH', 'value' => 'XMLHttpRequest'],
+        'flash' => ['env' => 'HTTP_USER_AGENT', 'pattern' => '/^(Shockwave|Adobe) Flash/'],
+        'mobile' => ['env' => 'HTTP_USER_AGENT', 'options' => [
             'Android', 'AvantGo', 'BB10', 'BlackBerry', 'DoCoMo', 'Fennec', 'iPod', 'iPhone', 'iPad',
             'J2ME', 'MIDP', 'NetFront', 'Nokia', 'Opera Mini', 'Opera Mobi', 'PalmOS', 'PalmSource',
             'portalmmm', 'Plucker', 'ReqwirelessWeb', 'SonyEricsson', 'Symbian', 'UP\\.Browser',
             'webOS', 'Windows CE', 'Windows Phone OS', 'Xiino'
-        )),
-        'requested' => array('param' => 'requested', 'value' => 1),
-        'json' => array('accept' => array('application/json'), 'param' => 'ext', 'value' => 'json'),
-        'xml' => array('accept' => array('application/xml', 'text/xml'), 'param' => 'ext', 'value' => 'xml'),
-    );
+        ]],
+        'requested' => ['param' => 'requested', 'value' => 1],
+        'json' => ['accept' => ['application/json'], 'param' => 'ext', 'value' => 'json'],
+        'xml' => ['accept' => ['application/xml', 'text/xml'], 'param' => 'ext', 'value' => 'xml'],
+    ];
 
     /**
      * Copy of php://input. Since this stream can only be read once in most SAPI's
@@ -136,7 +137,8 @@ class CakeRequest implements ArrayAccess {
      * @param string $url Trimmed URL string to use. Should not contain the application base path.
      * @param bool $parseEnvironment Set to false to not auto parse the environment. ie. GET, POST and FILES.
      */
-    public function __construct($url = null, $parseEnvironment = true) {
+    public function __construct($url = null, $parseEnvironment = true)
+    {
         $this->_base();
         if (empty($url)) {
             $url = $this->_url();
@@ -155,142 +157,6 @@ class CakeRequest implements ArrayAccess {
     }
 
     /**
-     * process the post data and set what is there into the object.
-     * processed data is available at `$this->data`
-     *
-     * Will merge POST vars prefixed with `data`, and ones without
-     * into a single array. Variables prefixed with `data` will overwrite those without.
-     *
-     * If you have mixed POST values be careful not to make any top level keys numeric
-     * containing arrays. Hash::merge() is used to merge data, and it has possibly
-     * unexpected behavior in this situation.
-     *
-     * @return void
-     */
-    protected function _processPost() {
-        if ($_POST) {
-            $this->data = $_POST;
-        } elseif (($this->is('put') || $this->is('delete')) &&
-            strpos($this->contentType(), 'application/x-www-form-urlencoded') === 0
-        ) {
-            $data = $this->_readInput();
-            parse_str($data, $this->data);
-        }
-        if (ini_get('magic_quotes_gpc') === '1') {
-            $this->data = stripslashes_deep($this->data);
-        }
-
-        $override = null;
-        if (env('HTTP_X_HTTP_METHOD_OVERRIDE')) {
-            $this->data['_method'] = env('HTTP_X_HTTP_METHOD_OVERRIDE');
-            $override = $this->data['_method'];
-        }
-
-        $isArray = is_array($this->data);
-        if ($isArray && isset($this->data['_method'])) {
-            if (!empty($_SERVER)) {
-                $_SERVER['REQUEST_METHOD'] = $this->data['_method'];
-            } else {
-                $_ENV['REQUEST_METHOD'] = $this->data['_method'];
-            }
-            $override = $this->data['_method'];
-            unset($this->data['_method']);
-        }
-
-        if ($override && !in_array($override, array('POST', 'PUT', 'PATCH', 'DELETE'))) {
-            $this->data = array();
-        }
-
-        if ($isArray && isset($this->data['data'])) {
-            $data = $this->data['data'];
-            if (count($this->data) <= 1) {
-                $this->data = $data;
-            } else {
-                unset($this->data['data']);
-                $this->data = Hash::merge($this->data, $data);
-            }
-        }
-    }
-
-    /**
-     * Process the GET parameters and move things into the object.
-     *
-     * @return void
-     */
-    protected function _processGet() {
-        if (ini_get('magic_quotes_gpc') === '1') {
-            $query = stripslashes_deep($_GET);
-        } else {
-            $query = $_GET;
-        }
-
-        $unsetUrl = '/' . str_replace(array('.', ' '), '_', urldecode($this->url));
-        unset($query[$unsetUrl]);
-        unset($query[$this->base . $unsetUrl]);
-        if (strpos($this->url, '?') !== false) {
-            list($this->url, $querystr) = explode('?', $this->url);
-            parse_str($querystr, $queryArgs);
-            $query += $queryArgs;
-        }
-        if (isset($this->params['url'])) {
-            $query = array_merge($this->params['url'], $query);
-        }
-        $this->query = $query;
-    }
-
-    /**
-     * Get the request uri. Looks in PATH_INFO first, as this is the exact value we need prepared
-     * by PHP. Following that, REQUEST_URI, PHP_SELF, HTTP_X_REWRITE_URL and argv are checked in that order.
-     * Each of these server variables have the base path, and query strings stripped off
-     *
-     * @return string URI The CakePHP request path that is being accessed.
-     */
-    protected function _url() {
-        $uri = '';
-        if (!empty($_SERVER['PATH_INFO'])) {
-            return $_SERVER['PATH_INFO'];
-        } elseif (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '://') === false) {
-            $uri = $_SERVER['REQUEST_URI'];
-        } elseif (isset($_SERVER['REQUEST_URI'])) {
-            $qPosition = strpos($_SERVER['REQUEST_URI'], '?');
-            if ($qPosition !== false && strpos($_SERVER['REQUEST_URI'], '://') > $qPosition) {
-                $uri = $_SERVER['REQUEST_URI'];
-            } else {
-                $baseUrl = Configure::read('App.fullBaseUrl');
-                if (substr($_SERVER['REQUEST_URI'], 0, strlen($baseUrl)) === $baseUrl) {
-                    $uri = substr($_SERVER['REQUEST_URI'], strlen($baseUrl));
-                }
-            }
-        } elseif (isset($_SERVER['PHP_SELF']) && isset($_SERVER['SCRIPT_NAME'])) {
-            $uri = str_replace($_SERVER['SCRIPT_NAME'], '', $_SERVER['PHP_SELF']);
-        } elseif (isset($_SERVER['HTTP_X_REWRITE_URL'])) {
-            $uri = $_SERVER['HTTP_X_REWRITE_URL'];
-        } elseif ($var = env('argv')) {
-            $uri = $var[0];
-        }
-
-        $base = $this->base;
-
-        if (strlen($base) > 0 && strpos($uri, $base) === 0) {
-            $uri = substr($uri, strlen($base));
-        }
-        if (strpos($uri, '?') !== false) {
-            list($uri) = explode('?', $uri, 2);
-        }
-        if (empty($uri) || $uri === '/' || $uri === '//' || $uri === '/index.php') {
-            $uri = '/';
-        }
-        $endsWithIndex = '/webroot/index.php';
-        $endsWithLength = strlen($endsWithIndex);
-        if (strlen($uri) >= $endsWithLength &&
-            substr($uri, -$endsWithLength) === $endsWithIndex
-        ) {
-            $uri = '/';
-        }
-        return $uri;
-    }
-
-    /**
      * Returns a base URL and sets the proper webroot
      *
      * If CakePHP is called with index.php in the URL even though
@@ -299,7 +165,8 @@ class CakeRequest implements ArrayAccess {
      *
      * @return string Base URL
      */
-    protected function _base() {
+    protected function _base()
+    {
         $dir = $webroot = null;
         $config = Configure::read('App');
         extract($config);
@@ -360,148 +227,115 @@ class CakeRequest implements ArrayAccess {
     }
 
     /**
-     * Process $_FILES and move things into the object.
+     * Get the request uri. Looks in PATH_INFO first, as this is the exact value we need prepared
+     * by PHP. Following that, REQUEST_URI, PHP_SELF, HTTP_X_REWRITE_URL and argv are checked in that order.
+     * Each of these server variables have the base path, and query strings stripped off
      *
-     * @return void
+     * @return string URI The CakePHP request path that is being accessed.
      */
-    protected function _processFiles() {
-        if (isset($_FILES) && is_array($_FILES)) {
-            foreach ($_FILES as $name => $data) {
-                if ($name !== 'data') {
-                    $this->params['form'][$name] = $data;
-                }
-            }
-        }
-
-        if (isset($_FILES['data'])) {
-            foreach ($_FILES['data'] as $key => $data) {
-                $this->_processFileData('', $data, $key);
-            }
-        }
-    }
-
-    /**
-     * Recursively walks the FILES array restructuring the data
-     * into something sane and useable.
-     *
-     * @param string $path The dot separated path to insert $data into.
-     * @param array $data The data to traverse/insert.
-     * @param string $field The terminal field name, which is the top level key in $_FILES.
-     * @return void
-     */
-    protected function _processFileData($path, $data, $field) {
-        foreach ($data as $key => $fields) {
-            $newPath = $key;
-            if (strlen($path) > 0) {
-                $newPath = $path . '.' . $key;
-            }
-            if (is_array($fields)) {
-                $this->_processFileData($newPath, $fields, $field);
+    protected function _url()
+    {
+        $uri = '';
+        if (!empty($_SERVER['PATH_INFO'])) {
+            return $_SERVER['PATH_INFO'];
+        } else if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '://') === false) {
+            $uri = $_SERVER['REQUEST_URI'];
+        } else if (isset($_SERVER['REQUEST_URI'])) {
+            $qPosition = strpos($_SERVER['REQUEST_URI'], '?');
+            if ($qPosition !== false && strpos($_SERVER['REQUEST_URI'], '://') > $qPosition) {
+                $uri = $_SERVER['REQUEST_URI'];
             } else {
-                $newPath .= '.' . $field;
-                $this->data = Hash::insert($this->data, $newPath, $fields);
+                $baseUrl = Configure::read('App.fullBaseUrl');
+                if (substr($_SERVER['REQUEST_URI'], 0, strlen($baseUrl)) === $baseUrl) {
+                    $uri = substr($_SERVER['REQUEST_URI'], strlen($baseUrl));
+                }
+            }
+        } else if (isset($_SERVER['PHP_SELF']) && isset($_SERVER['SCRIPT_NAME'])) {
+            $uri = str_replace($_SERVER['SCRIPT_NAME'], '', $_SERVER['PHP_SELF']);
+        } else if (isset($_SERVER['HTTP_X_REWRITE_URL'])) {
+            $uri = $_SERVER['HTTP_X_REWRITE_URL'];
+        } else if ($var = env('argv')) {
+            $uri = $var[0];
+        }
+
+        $base = $this->base;
+
+        if (strlen($base) > 0 && strpos($uri, $base) === 0) {
+            $uri = substr($uri, strlen($base));
+        }
+        if (strpos($uri, '?') !== false) {
+            list($uri) = explode('?', $uri, 2);
+        }
+        if (empty($uri) || $uri === '/' || $uri === '//' || $uri === '/index.php') {
+            $uri = '/';
+        }
+        $endsWithIndex = '/webroot/index.php';
+        $endsWithLength = strlen($endsWithIndex);
+        if (strlen($uri) >= $endsWithLength &&
+            substr($uri, -$endsWithLength) === $endsWithIndex
+        ) {
+            $uri = '/';
+        }
+        return $uri;
+    }
+
+    /**
+     * process the post data and set what is there into the object.
+     * processed data is available at `$this->data`
+     *
+     * Will merge POST vars prefixed with `data`, and ones without
+     * into a single array. Variables prefixed with `data` will overwrite those without.
+     *
+     * If you have mixed POST values be careful not to make any top level keys numeric
+     * containing arrays. Hash::merge() is used to merge data, and it has possibly
+     * unexpected behavior in this situation.
+     *
+     * @return void
+     */
+    protected function _processPost()
+    {
+        if ($_POST) {
+            $this->data = $_POST;
+        } else if (($this->is('put') || $this->is('delete')) &&
+            strpos($this->contentType(), 'application/x-www-form-urlencoded') === 0
+        ) {
+            $data = $this->_readInput();
+            parse_str($data, $this->data);
+        }
+        if (ini_get('magic_quotes_gpc') === '1') {
+            $this->data = stripslashes_deep($this->data);
+        }
+
+        $override = null;
+        if (env('HTTP_X_HTTP_METHOD_OVERRIDE')) {
+            $this->data['_method'] = env('HTTP_X_HTTP_METHOD_OVERRIDE');
+            $override = $this->data['_method'];
+        }
+
+        $isArray = is_array($this->data);
+        if ($isArray && isset($this->data['_method'])) {
+            if (!empty($_SERVER)) {
+                $_SERVER['REQUEST_METHOD'] = $this->data['_method'];
+            } else {
+                $_ENV['REQUEST_METHOD'] = $this->data['_method'];
+            }
+            $override = $this->data['_method'];
+            unset($this->data['_method']);
+        }
+
+        if ($override && !in_array($override, ['POST', 'PUT', 'PATCH', 'DELETE'])) {
+            $this->data = [];
+        }
+
+        if ($isArray && isset($this->data['data'])) {
+            $data = $this->data['data'];
+            if (count($this->data) <= 1) {
+                $this->data = $data;
+            } else {
+                unset($this->data['data']);
+                $this->data = Hash::merge($this->data, $data);
             }
         }
-    }
-
-    /**
-     * Get the content type used in this request.
-     *
-     * @return string
-     */
-    public function contentType() {
-        $type = env('CONTENT_TYPE');
-        if ($type) {
-            return $type;
-        }
-        return env('HTTP_CONTENT_TYPE');
-    }
-
-    /**
-     * Get the IP the client is using, or says they are using.
-     *
-     * @param bool $safe Use safe = false when you think the user might manipulate their HTTP_CLIENT_IP
-     *   header. Setting $safe = false will also look at HTTP_X_FORWARDED_FOR
-     * @return string The client IP.
-     */
-    public function clientIp($safe = true) {
-        if (!$safe && env('HTTP_X_FORWARDED_FOR')) {
-            $ipaddr = preg_replace('/(?:,.*)/', '', env('HTTP_X_FORWARDED_FOR'));
-        } elseif (!$safe && env('HTTP_CLIENT_IP')) {
-            $ipaddr = env('HTTP_CLIENT_IP');
-        } else {
-            $ipaddr = env('REMOTE_ADDR');
-        }
-        return trim($ipaddr);
-    }
-
-    /**
-     * Returns the referer that referred this request.
-     *
-     * @param bool $local Attempt to return a local address. Local addresses do not contain hostnames.
-     * @return string The referring address for this request.
-     */
-    public function referer($local = false) {
-        $ref = env('HTTP_REFERER');
-
-        $base = Configure::read('App.fullBaseUrl') . $this->webroot;
-        if (!empty($ref) && !empty($base)) {
-            if ($local && strpos($ref, $base) === 0) {
-                $ref = substr($ref, strlen($base));
-                if (!strlen($ref) || strpos($ref, '//') === 0) {
-                    $ref = '/';
-                }
-                if ($ref[0] !== '/') {
-                    $ref = '/' . $ref;
-                }
-                return $ref;
-            } elseif (!$local) {
-                return $ref;
-            }
-        }
-        return '/';
-    }
-
-    /**
-     * Missing method handler, handles wrapping older style isAjax() type methods
-     *
-     * @param string $name The method called
-     * @param array $params Array of parameters for the method call
-     * @return mixed
-     * @throws CakeException when an invalid method is called.
-     */
-    public function __call($name, $params) {
-        if (strpos($name, 'is') === 0) {
-            $type = strtolower(substr($name, 2));
-            return $this->is($type);
-        }
-        throw new CakeException(__d('cake_dev', 'Method %s does not exist', $name));
-    }
-
-    /**
-     * Magic get method allows access to parsed routing parameters directly on the object.
-     *
-     * Allows access to `$this->params['controller']` via `$this->controller`
-     *
-     * @param string $name The property being accessed.
-     * @return mixed Either the value of the parameter or null.
-     */
-    public function __get($name) {
-        if (isset($this->params[$name])) {
-            return $this->params[$name];
-        }
-        return null;
-    }
-
-    /**
-     * Magic isset method allows isset/empty checks
-     * on routing parameters.
-     *
-     * @param string $name The property being accessed.
-     * @return bool Existence
-     */
-    public function __isset($name) {
-        return isset($this->params[$name]);
     }
 
     /**
@@ -515,7 +349,8 @@ class CakeRequest implements ArrayAccess {
      *   this method will return true if the request matches any type.
      * @return bool Whether or not the request is the type you are checking.
      */
-    public function is($type) {
+    public function is($type)
+    {
         if (is_array($type)) {
             foreach ($type as $_type) {
                 if ($this->is($_type)) {
@@ -548,81 +383,13 @@ class CakeRequest implements ArrayAccess {
     }
 
     /**
-     * Detects if a URL extension is present.
-     *
-     * @param array $detect Detector options array.
-     * @return bool Whether or not the request is the type you are checking.
-     */
-    protected function _extensionDetector($detect) {
-        if (is_string($detect['extension'])) {
-            $detect['extension'] = array($detect['extension']);
-        }
-        if (in_array($this->params['ext'], $detect['extension'])) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Detects if a specific accept header is present.
-     *
-     * @param array $detect Detector options array.
-     * @return bool Whether or not the request is the type you are checking.
-     */
-    protected function _acceptHeaderDetector($detect) {
-        $acceptHeaders = explode(',', (string)env('HTTP_ACCEPT'));
-        foreach ($detect['accept'] as $header) {
-            if (in_array($header, $acceptHeaders)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Detects if a specific header is present.
-     *
-     * @param array $detect Detector options array.
-     * @return bool Whether or not the request is the type you are checking.
-     */
-    protected function _headerDetector($detect) {
-        foreach ($detect['header'] as $header => $value) {
-            $header = env('HTTP_' . strtoupper($header));
-            if (!is_null($header)) {
-                if (!is_string($value) && !is_bool($value) && is_callable($value)) {
-                    return call_user_func($value, $header);
-                }
-                return ($header === $value);
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Detects if a specific request parameter is present.
-     *
-     * @param array $detect Detector options array.
-     * @return bool Whether or not the request is the type you are checking.
-     */
-    protected function _paramDetector($detect) {
-        $key = $detect['param'];
-        if (isset($detect['value'])) {
-            $value = $detect['value'];
-            return isset($this->params[$key]) ? $this->params[$key] == $value : false;
-        }
-        if (isset($detect['options'])) {
-            return isset($this->params[$key]) ? in_array($this->params[$key], $detect['options']) : false;
-        }
-        return false;
-    }
-
-    /**
      * Detects if a specific environment variable is present.
      *
      * @param array $detect Detector options array.
      * @return bool Whether or not the request is the type you are checking.
      */
-    protected function _environmentDetector($detect) {
+    protected function _environmentDetector($detect)
+    {
         if (isset($detect['env'])) {
             if (isset($detect['value'])) {
                 return env($detect['env']) == $detect['value'];
@@ -639,6 +406,291 @@ class CakeRequest implements ArrayAccess {
     }
 
     /**
+     * Detects if a specific header is present.
+     *
+     * @param array $detect Detector options array.
+     * @return bool Whether or not the request is the type you are checking.
+     */
+    protected function _headerDetector($detect)
+    {
+        foreach ($detect['header'] as $header => $value) {
+            $header = env('HTTP_' . strtoupper($header));
+            if (!is_null($header)) {
+                if (!is_string($value) && !is_bool($value) && is_callable($value)) {
+                    return call_user_func($value, $header);
+                }
+                return ($header === $value);
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Detects if a specific accept header is present.
+     *
+     * @param array $detect Detector options array.
+     * @return bool Whether or not the request is the type you are checking.
+     */
+    protected function _acceptHeaderDetector($detect)
+    {
+        $acceptHeaders = explode(',', (string)env('HTTP_ACCEPT'));
+        foreach ($detect['accept'] as $header) {
+            if (in_array($header, $acceptHeaders)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Detects if a specific request parameter is present.
+     *
+     * @param array $detect Detector options array.
+     * @return bool Whether or not the request is the type you are checking.
+     */
+    protected function _paramDetector($detect)
+    {
+        $key = $detect['param'];
+        if (isset($detect['value'])) {
+            $value = $detect['value'];
+            return isset($this->params[$key]) ? $this->params[$key] == $value : false;
+        }
+        if (isset($detect['options'])) {
+            return isset($this->params[$key]) ? in_array($this->params[$key], $detect['options']) : false;
+        }
+        return false;
+    }
+
+    /**
+     * Get the content type used in this request.
+     *
+     * @return string
+     */
+    public function contentType()
+    {
+        $type = env('CONTENT_TYPE');
+        if ($type) {
+            return $type;
+        }
+        return env('HTTP_CONTENT_TYPE');
+    }
+
+    /**
+     * Read data from php://input, mocked in tests.
+     *
+     * @return string contents of php://input
+     */
+    protected function _readInput()
+    {
+        if (empty($this->_input)) {
+            $fh = fopen('php://input', 'r');
+            $content = stream_get_contents($fh);
+            fclose($fh);
+            $this->_input = $content;
+        }
+        return $this->_input;
+    }
+
+    /**
+     * Process the GET parameters and move things into the object.
+     *
+     * @return void
+     */
+    protected function _processGet()
+    {
+        if (ini_get('magic_quotes_gpc') === '1') {
+            $query = stripslashes_deep($_GET);
+        } else {
+            $query = $_GET;
+        }
+
+        $unsetUrl = '/' . str_replace(['.', ' '], '_', urldecode($this->url));
+        unset($query[$unsetUrl]);
+        unset($query[$this->base . $unsetUrl]);
+        if (strpos($this->url, '?') !== false) {
+            list($this->url, $querystr) = explode('?', $this->url);
+            parse_str($querystr, $queryArgs);
+            $query += $queryArgs;
+        }
+        if (isset($this->params['url'])) {
+            $query = array_merge($this->params['url'], $query);
+        }
+        $this->query = $query;
+    }
+
+    /**
+     * Process $_FILES and move things into the object.
+     *
+     * @return void
+     */
+    protected function _processFiles()
+    {
+        if (isset($_FILES) && is_array($_FILES)) {
+            foreach ($_FILES as $name => $data) {
+                if ($name !== 'data') {
+                    $this->params['form'][$name] = $data;
+                }
+            }
+        }
+
+        if (isset($_FILES['data'])) {
+            foreach ($_FILES['data'] as $key => $data) {
+                $this->_processFileData('', $data, $key);
+            }
+        }
+    }
+
+    /**
+     * Recursively walks the FILES array restructuring the data
+     * into something sane and useable.
+     *
+     * @param string $path The dot separated path to insert $data into.
+     * @param array $data The data to traverse/insert.
+     * @param string $field The terminal field name, which is the top level key in $_FILES.
+     * @return void
+     */
+    protected function _processFileData($path, $data, $field)
+    {
+        foreach ($data as $key => $fields) {
+            $newPath = $key;
+            if (strlen($path) > 0) {
+                $newPath = $path . '.' . $key;
+            }
+            if (is_array($fields)) {
+                $this->_processFileData($newPath, $fields, $field);
+            } else {
+                $newPath .= '.' . $field;
+                $this->data = Hash::insert($this->data, $newPath, $fields);
+            }
+        }
+    }
+
+    /**
+     * Get the languages accepted by the client, or check if a specific language is accepted.
+     *
+     * Get the list of accepted languages:
+     *
+     * ``` CakeRequest::acceptLanguage(); ```
+     *
+     * Check if a specific language is accepted:
+     *
+     * ``` CakeRequest::acceptLanguage('es-es'); ```
+     *
+     * @param string $language The language to test.
+     * @return mixed If a $language is provided, a boolean. Otherwise the array of accepted languages.
+     */
+    public static function acceptLanguage($language = null)
+    {
+        $raw = static::_parseAcceptWithQualifier(static::header('Accept-Language'));
+        $accept = [];
+        foreach ($raw as $languages) {
+            foreach ($languages as &$lang) {
+                if (strpos($lang, '_')) {
+                    $lang = str_replace('_', '-', $lang);
+                }
+                $lang = strtolower($lang);
+            }
+            $accept = array_merge($accept, $languages);
+        }
+        if ($language === null) {
+            return $accept;
+        }
+        return in_array(strtolower($language), $accept);
+    }
+
+    /**
+     * Get the IP the client is using, or says they are using.
+     *
+     * @param bool $safe Use safe = false when you think the user might manipulate their HTTP_CLIENT_IP
+     *   header. Setting $safe = false will also look at HTTP_X_FORWARDED_FOR
+     * @return string The client IP.
+     */
+    public function clientIp($safe = true)
+    {
+        if (!$safe && env('HTTP_X_FORWARDED_FOR')) {
+            $ipaddr = preg_replace('/(?:,.*)/', '', env('HTTP_X_FORWARDED_FOR'));
+        } else if (!$safe && env('HTTP_CLIENT_IP')) {
+            $ipaddr = env('HTTP_CLIENT_IP');
+        } else {
+            $ipaddr = env('REMOTE_ADDR');
+        }
+        return trim($ipaddr);
+    }
+
+    /**
+     * Returns the referer that referred this request.
+     *
+     * @param bool $local Attempt to return a local address. Local addresses do not contain hostnames.
+     * @return string The referring address for this request.
+     */
+    public function referer($local = false)
+    {
+        $ref = env('HTTP_REFERER');
+
+        $base = Configure::read('App.fullBaseUrl') . $this->webroot;
+        if (!empty($ref) && !empty($base)) {
+            if ($local && strpos($ref, $base) === 0) {
+                $ref = substr($ref, strlen($base));
+                if (!strlen($ref) || strpos($ref, '//') === 0) {
+                    $ref = '/';
+                }
+                if ($ref[0] !== '/') {
+                    $ref = '/' . $ref;
+                }
+                return $ref;
+            } else if (!$local) {
+                return $ref;
+            }
+        }
+        return '/';
+    }
+
+    /**
+     * Missing method handler, handles wrapping older style isAjax() type methods
+     *
+     * @param string $name The method called
+     * @param array $params Array of parameters for the method call
+     * @return mixed
+     * @throws CakeException when an invalid method is called.
+     */
+    public function __call($name, $params)
+    {
+        if (strpos($name, 'is') === 0) {
+            $type = strtolower(substr($name, 2));
+            return $this->is($type);
+        }
+        throw new CakeException(__d('cake_dev', 'Method %s does not exist', $name));
+    }
+
+    /**
+     * Magic get method allows access to parsed routing parameters directly on the object.
+     *
+     * Allows access to `$this->params['controller']` via `$this->controller`
+     *
+     * @param string $name The property being accessed.
+     * @return mixed Either the value of the parameter or null.
+     */
+    public function __get($name)
+    {
+        if (isset($this->params[$name])) {
+            return $this->params[$name];
+        }
+        return null;
+    }
+
+    /**
+     * Magic isset method allows isset/empty checks
+     * on routing parameters.
+     *
+     * @param string $name The property being accessed.
+     * @return bool Existence
+     */
+    public function __isset($name)
+    {
+        return isset($this->params[$name]);
+    }
+
+    /**
      * Check that a request matches all the given types.
      *
      * Allows you to test multiple types and union the results.
@@ -649,7 +701,8 @@ class CakeRequest implements ArrayAccess {
      * @return bool Success.
      * @see CakeRequest::is()
      */
-    public function isAll(array $types) {
+    public function isAll(array $types)
+    {
         foreach ($types as $type) {
             if (!$this->is($type)) {
                 return false;
@@ -705,7 +758,8 @@ class CakeRequest implements ArrayAccess {
      * @param array $options The options for the detector definition. See above.
      * @return void
      */
-    public function addDetector($name, $options) {
+    public function addDetector($name, $options)
+    {
         $name = strtolower($name);
         if (isset($this->_detectors[$name]) && isset($options['options'])) {
             $options = Hash::merge($this->_detectors[$name], $options);
@@ -720,7 +774,8 @@ class CakeRequest implements ArrayAccess {
      * @param array $params Array of parameters to merge in
      * @return self
      */
-    public function addParams($params) {
+    public function addParams($params)
+    {
         $this->params = array_merge($this->params, (array)$params);
         return $this;
     }
@@ -732,8 +787,9 @@ class CakeRequest implements ArrayAccess {
      * @param array $paths Array of paths to merge in
      * @return self
      */
-    public function addPaths($paths) {
-        foreach (array('webroot', 'here', 'base') as $element) {
+    public function addPaths($paths)
+    {
+        foreach (['webroot', 'here', 'base'] as $element) {
             if (isset($paths[$element])) {
                 $this->{$element} = $paths[$element];
             }
@@ -747,7 +803,8 @@ class CakeRequest implements ArrayAccess {
      * @param bool $base Include the base path, set to false to trim the base path off.
      * @return string the current request URL including query string args.
      */
-    public function here($base = true) {
+    public function here($base = true)
+    {
         $url = $this->here;
         if (!empty($this->query)) {
             $url .= '?' . http_build_query($this->query, null, '&');
@@ -756,25 +813,6 @@ class CakeRequest implements ArrayAccess {
             $url = preg_replace('/^' . preg_quote($this->base, '/') . '/', '', $url, 1);
         }
         return $url;
-    }
-
-    /**
-     * Read an HTTP header from the Request information.
-     *
-     * @param string $name Name of the header you want.
-     * @return mixed Either false on no header being set or the value of the header.
-     */
-    public static function header($name) {
-        $httpName = 'HTTP_' . strtoupper(str_replace('-', '_', $name));
-        if (isset($_SERVER[$httpName])) {
-            return $_SERVER[$httpName];
-        }
-        // Use the provided value, in some configurations apache will
-        // pass Authorization with no prefix and in Titlecase.
-        if (isset($_SERVER[$name])) {
-            return $_SERVER[$name];
-        }
-        return false;
     }
 
     /**
@@ -790,21 +828,9 @@ class CakeRequest implements ArrayAccess {
      *
      * @return string The name of the HTTP method used.
      */
-    public function method() {
+    public function method()
+    {
         return env('REQUEST_METHOD');
-    }
-
-    /**
-     * Get the host that the request was handled on.
-     *
-     * @param bool $trustProxy Whether or not to trust the proxy host.
-     * @return string
-     */
-    public function host($trustProxy = false) {
-        if ($trustProxy) {
-            return env('HTTP_X_FORWARDED_HOST');
-        }
-        return env('HTTP_HOST');
     }
 
     /**
@@ -814,10 +840,25 @@ class CakeRequest implements ArrayAccess {
      *   While `example.co.uk` contains 2.
      * @return string Domain name without subdomains.
      */
-    public function domain($tldLength = 1) {
+    public function domain($tldLength = 1)
+    {
         $segments = explode('.', $this->host());
         $domain = array_slice($segments, -1 * ($tldLength + 1));
         return implode('.', $domain);
+    }
+
+    /**
+     * Get the host that the request was handled on.
+     *
+     * @param bool $trustProxy Whether or not to trust the proxy host.
+     * @return string
+     */
+    public function host($trustProxy = false)
+    {
+        if ($trustProxy) {
+            return env('HTTP_X_FORWARDED_HOST');
+        }
+        return env('HTTP_HOST');
     }
 
     /**
@@ -827,7 +868,8 @@ class CakeRequest implements ArrayAccess {
      *   While `example.co.uk` contains 2.
      * @return array An array of subdomains.
      */
-    public function subdomains($tldLength = 1) {
+    public function subdomains($tldLength = 1)
+    {
         $segments = explode('.', $this->host());
         return array_slice($segments, 0, -1 * ($tldLength + 1));
     }
@@ -851,9 +893,10 @@ class CakeRequest implements ArrayAccess {
      * @return mixed Either an array of all the types the client accepts or a boolean if they accept the
      *   provided type.
      */
-    public function accepts($type = null) {
+    public function accepts($type = null)
+    {
         $raw = $this->parseAccept();
-        $accept = array();
+        $accept = [];
         foreach ($raw as $types) {
             $accept = array_merge($accept, $types);
         }
@@ -872,40 +915,9 @@ class CakeRequest implements ArrayAccess {
      *
      * @return array An array of prefValue => array(content/types)
      */
-    public function parseAccept() {
+    public function parseAccept()
+    {
         return $this->_parseAcceptWithQualifier($this->header('accept'));
-    }
-
-    /**
-     * Get the languages accepted by the client, or check if a specific language is accepted.
-     *
-     * Get the list of accepted languages:
-     *
-     * ``` CakeRequest::acceptLanguage(); ```
-     *
-     * Check if a specific language is accepted:
-     *
-     * ``` CakeRequest::acceptLanguage('es-es'); ```
-     *
-     * @param string $language The language to test.
-     * @return mixed If a $language is provided, a boolean. Otherwise the array of accepted languages.
-     */
-    public static function acceptLanguage($language = null) {
-        $raw = static::_parseAcceptWithQualifier(static::header('Accept-Language'));
-        $accept = array();
-        foreach ($raw as $languages) {
-            foreach ($languages as &$lang) {
-                if (strpos($lang, '_')) {
-                    $lang = str_replace('_', '-', $lang);
-                }
-                $lang = strtolower($lang);
-            }
-            $accept = array_merge($accept, $languages);
-        }
-        if ($language === null) {
-            return $accept;
-        }
-        return in_array(strtolower($language), $accept);
     }
 
     /**
@@ -917,8 +929,9 @@ class CakeRequest implements ArrayAccess {
      * @param string $header Header to parse.
      * @return array
      */
-    protected static function _parseAcceptWithQualifier($header) {
-        $accept = array();
+    protected static function _parseAcceptWithQualifier($header)
+    {
+        $accept = [];
         $header = explode(',', $header);
         foreach (array_filter($header) as $value) {
             $prefValue = '1.0';
@@ -937,7 +950,7 @@ class CakeRequest implements ArrayAccess {
             }
 
             if (!isset($accept[$prefValue])) {
-                $accept[$prefValue] = array();
+                $accept[$prefValue] = [];
             }
             if ($prefValue) {
                 $accept[$prefValue][] = $value;
@@ -948,13 +961,34 @@ class CakeRequest implements ArrayAccess {
     }
 
     /**
+     * Read an HTTP header from the Request information.
+     *
+     * @param string $name Name of the header you want.
+     * @return mixed Either false on no header being set or the value of the header.
+     */
+    public static function header($name)
+    {
+        $httpName = 'HTTP_' . strtoupper(str_replace('-', '_', $name));
+        if (isset($_SERVER[$httpName])) {
+            return $_SERVER[$httpName];
+        }
+        // Use the provided value, in some configurations apache will
+        // pass Authorization with no prefix and in Titlecase.
+        if (isset($_SERVER[$name])) {
+            return $_SERVER[$name];
+        }
+        return false;
+    }
+
+    /**
      * Provides a read accessor for `$this->query`. Allows you
      * to use a syntax similar to `CakeSession` for reading URL query data.
      *
      * @param string $name Query string variable name
      * @return mixed The value being read
      */
-    public function query($name) {
+    public function query($name)
+    {
         return Hash::get($this->query, $name);
     }
 
@@ -978,7 +1012,8 @@ class CakeRequest implements ArrayAccess {
      * @param string $name Dot separated name of the value to read/write, one or more args.
      * @return mixed|self Either the value being read, or $this so you can chain consecutive writes.
      */
-    public function data($name) {
+    public function data($name)
+    {
         $args = func_get_args();
         if (count($args) === 2) {
             $this->data = Hash::insert($this->data, $name, $args[1]);
@@ -994,7 +1029,8 @@ class CakeRequest implements ArrayAccess {
      * @return mixed The value of the provided parameter. Will
      *   return false if the parameter doesn't exist or is falsey.
      */
-    public function param($name) {
+    public function param($name)
+    {
         $args = func_get_args();
         if (count($args) === 2) {
             $this->params = Hash::insert($this->params, $name, $args[1]);
@@ -1025,7 +1061,8 @@ class CakeRequest implements ArrayAccess {
      *     supply additional parameters for the decoding callback using var args, see above.
      * @return mixed The decoded/processed request data.
      */
-    public function input($callback = null) {
+    public function input($callback = null)
+    {
         $input = $this->_readInput();
         $args = func_get_args();
         if (!empty($args)) {
@@ -1043,8 +1080,26 @@ class CakeRequest implements ArrayAccess {
      * @param string $input A string to replace original parsed data from input()
      * @return void
      */
-    public function setInput($input) {
+    public function setInput($input)
+    {
         $this->_input = $input;
+    }
+
+    /**
+     * Alias of CakeRequest::allowMethod() for backwards compatibility.
+     *
+     * @param string|array $methods Allowed HTTP request methods.
+     * @return bool true
+     * @throws MethodNotAllowedException
+     * @see CakeRequest::allowMethod()
+     * @deprecated 3.0.0 Since 2.5, use CakeRequest::allowMethod() instead.
+     */
+    public function onlyAllow($methods)
+    {
+        if (!is_array($methods)) {
+            $methods = func_get_args();
+        }
+        return $this->allowMethod($methods);
     }
 
     /**
@@ -1064,7 +1119,8 @@ class CakeRequest implements ArrayAccess {
      * @return bool true
      * @throws MethodNotAllowedException
      */
-    public function allowMethod($methods) {
+    public function allowMethod($methods)
+    {
         if (!is_array($methods)) {
             $methods = func_get_args();
         }
@@ -1080,43 +1136,13 @@ class CakeRequest implements ArrayAccess {
     }
 
     /**
-     * Alias of CakeRequest::allowMethod() for backwards compatibility.
-     *
-     * @param string|array $methods Allowed HTTP request methods.
-     * @return bool true
-     * @throws MethodNotAllowedException
-     * @see CakeRequest::allowMethod()
-     * @deprecated 3.0.0 Since 2.5, use CakeRequest::allowMethod() instead.
-     */
-    public function onlyAllow($methods) {
-        if (!is_array($methods)) {
-            $methods = func_get_args();
-        }
-        return $this->allowMethod($methods);
-    }
-
-    /**
-     * Read data from php://input, mocked in tests.
-     *
-     * @return string contents of php://input
-     */
-    protected function _readInput() {
-        if (empty($this->_input)) {
-            $fh = fopen('php://input', 'r');
-            $content = stream_get_contents($fh);
-            fclose($fh);
-            $this->_input = $content;
-        }
-        return $this->_input;
-    }
-
-    /**
      * Array access read implementation
      *
      * @param string $name Name of the key being accessed.
      * @return mixed
      */
-    public function offsetGet($name) {
+    public function offsetGet($name)
+    {
         if (isset($this->params[$name])) {
             return $this->params[$name];
         }
@@ -1136,7 +1162,8 @@ class CakeRequest implements ArrayAccess {
      * @param mixed $value The value being written.
      * @return void
      */
-    public function offsetSet($name, $value) {
+    public function offsetSet($name, $value)
+    {
         $this->params[$name] = $value;
     }
 
@@ -1146,7 +1173,8 @@ class CakeRequest implements ArrayAccess {
      * @param string $name thing to check.
      * @return bool
      */
-    public function offsetExists($name) {
+    public function offsetExists($name)
+    {
         if ($name === 'url' || $name === 'data') {
             return true;
         }
@@ -1159,8 +1187,26 @@ class CakeRequest implements ArrayAccess {
      * @param string $name Name to unset.
      * @return void
      */
-    public function offsetUnset($name) {
+    public function offsetUnset($name)
+    {
         unset($this->params[$name]);
+    }
+
+    /**
+     * Detects if a URL extension is present.
+     *
+     * @param array $detect Detector options array.
+     * @return bool Whether or not the request is the type you are checking.
+     */
+    protected function _extensionDetector($detect)
+    {
+        if (is_string($detect['extension'])) {
+            $detect['extension'] = [$detect['extension']];
+        }
+        if (in_array($this->params['ext'], $detect['extension'])) {
+            return true;
+        }
+        return false;
     }
 
 }

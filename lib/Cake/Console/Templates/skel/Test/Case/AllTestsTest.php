@@ -16,16 +16,18 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-class AllTestsTest extends CakeTestSuite {
+class AllTestsTest extends CakeTestSuite
+{
 
-/**
- * Get the suite object.
- *
- * @return CakeTestSuite Suite class instance.
- */
-	public static function suite() {
-		$suite = new CakeTestSuite('All application tests');
-		$suite->addTestDirectoryRecursive(TESTS . 'Case');
-		return $suite;
-	}
+    /**
+     * Get the suite object.
+     *
+     * @return CakeTestSuite Suite class instance.
+     */
+    public static function suite()
+    {
+        $suite = new CakeTestSuite('All application tests');
+        $suite->addTestDirectoryRecursive(TESTS . 'Case');
+        return $suite;
+    }
 }

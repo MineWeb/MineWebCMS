@@ -37,128 +37,133 @@ App::uses('ComponentCollection', 'Controller');
  * @link          https://book.cakephp.org/2.0/en/controllers/components.html
  * @see Controller::$components
  */
-class Component extends CakeObject {
+class Component extends CakeObject
+{
 
-/**
- * Component collection class used to lazy load components.
- *
- * @var ComponentCollection
- */
-	protected $_Collection;
+    /**
+     * Settings for this Component
+     *
+     * @var array
+     */
+    public $settings = [];
+    /**
+     * Other Components this component uses.
+     *
+     * @var array
+     */
+    public $components = [];
+    /**
+     * Component collection class used to lazy load components.
+     *
+     * @var ComponentCollection
+     */
+    protected $_Collection;
+    /**
+     * A component lookup table used to lazy load component objects.
+     *
+     * @var array
+     */
+    protected $_componentMap = [];
 
-/**
- * Settings for this Component
- *
- * @var array
- */
-	public $settings = array();
+    /**
+     * Constructor
+     *
+     * @param ComponentCollection $collection A ComponentCollection this component can use to lazy load its components
+     * @param array $settings Array of configuration settings.
+     */
+    public function __construct(ComponentCollection $collection, $settings = [])
+    {
+        $this->_Collection = $collection;
+        $this->settings = $settings;
+        $this->_set($settings);
+        if (!empty($this->components)) {
+            $this->_componentMap = ComponentCollection::normalizeObjectArray($this->components);
+        }
+    }
 
-/**
- * Other Components this component uses.
- *
- * @var array
- */
-	public $components = array();
+    /**
+     * Magic method for lazy loading $components.
+     *
+     * @param string $name Name of component to get.
+     * @return mixed A Component object or null.
+     */
+    public function __get($name)
+    {
+        if (isset($this->_componentMap[$name]) && !isset($this->{$name})) {
+            $settings = (array)$this->_componentMap[$name]['settings'] + ['enabled' => false];
+            $this->{$name} = $this->_Collection->load($this->_componentMap[$name]['class'], $settings);
+        }
+        if (isset($this->{$name})) {
+            return $this->{$name};
+        }
+    }
 
-/**
- * A component lookup table used to lazy load component objects.
- *
- * @var array
- */
-	protected $_componentMap = array();
+    /**
+     * Called before the Controller::beforeFilter().
+     *
+     * @param Controller $controller Controller with components to initialize
+     * @return void
+     * @link https://book.cakephp.org/2.0/en/controllers/components.html#Component::initialize
+     */
+    public function initialize(Controller $controller)
+    {
+    }
 
-/**
- * Constructor
- *
- * @param ComponentCollection $collection A ComponentCollection this component can use to lazy load its components
- * @param array $settings Array of configuration settings.
- */
-	public function __construct(ComponentCollection $collection, $settings = array()) {
-		$this->_Collection = $collection;
-		$this->settings = $settings;
-		$this->_set($settings);
-		if (!empty($this->components)) {
-			$this->_componentMap = ComponentCollection::normalizeObjectArray($this->components);
-		}
-	}
+    /**
+     * Called after the Controller::beforeFilter() and before the controller action
+     *
+     * @param Controller $controller Controller with components to startup
+     * @return void
+     * @link https://book.cakephp.org/2.0/en/controllers/components.html#Component::startup
+     */
+    public function startup(Controller $controller)
+    {
+    }
 
-/**
- * Magic method for lazy loading $components.
- *
- * @param string $name Name of component to get.
- * @return mixed A Component object or null.
- */
-	public function __get($name) {
-		if (isset($this->_componentMap[$name]) && !isset($this->{$name})) {
-			$settings = (array)$this->_componentMap[$name]['settings'] + array('enabled' => false);
-			$this->{$name} = $this->_Collection->load($this->_componentMap[$name]['class'], $settings);
-		}
-		if (isset($this->{$name})) {
-			return $this->{$name};
-		}
-	}
+    /**
+     * Called before the Controller::beforeRender(), and before
+     * the view class is loaded, and before Controller::render()
+     *
+     * @param Controller $controller Controller with components to beforeRender
+     * @return void
+     * @link https://book.cakephp.org/2.0/en/controllers/components.html#Component::beforeRender
+     */
+    public function beforeRender(Controller $controller)
+    {
+    }
 
-/**
- * Called before the Controller::beforeFilter().
- *
- * @param Controller $controller Controller with components to initialize
- * @return void
- * @link https://book.cakephp.org/2.0/en/controllers/components.html#Component::initialize
- */
-	public function initialize(Controller $controller) {
-	}
+    /**
+     * Called after Controller::render() and before the output is printed to the browser.
+     *
+     * @param Controller $controller Controller with components to shutdown
+     * @return void
+     * @link https://book.cakephp.org/2.0/en/controllers/components.html#Component::shutdown
+     */
+    public function shutdown(Controller $controller)
+    {
+    }
 
-/**
- * Called after the Controller::beforeFilter() and before the controller action
- *
- * @param Controller $controller Controller with components to startup
- * @return void
- * @link https://book.cakephp.org/2.0/en/controllers/components.html#Component::startup
- */
-	public function startup(Controller $controller) {
-	}
-
-/**
- * Called before the Controller::beforeRender(), and before
- * the view class is loaded, and before Controller::render()
- *
- * @param Controller $controller Controller with components to beforeRender
- * @return void
- * @link https://book.cakephp.org/2.0/en/controllers/components.html#Component::beforeRender
- */
-	public function beforeRender(Controller $controller) {
-	}
-
-/**
- * Called after Controller::render() and before the output is printed to the browser.
- *
- * @param Controller $controller Controller with components to shutdown
- * @return void
- * @link https://book.cakephp.org/2.0/en/controllers/components.html#Component::shutdown
- */
-	public function shutdown(Controller $controller) {
-	}
-
-/**
- * Called before Controller::redirect(). Allows you to replace the URL that will
- * be redirected to with a new URL. The return of this method can either be an array or a string.
- *
- * If the return is an array and contains a 'url' key. You may also supply the following:
- *
- * - `status` The status code for the redirect
- * - `exit` Whether or not the redirect should exit.
- *
- * If your response is a string or an array that does not contain a 'url' key it will
- * be used as the new URL to redirect to.
- *
- * @param Controller $controller Controller with components to beforeRedirect
- * @param string|array $url Either the string or URL array that is being redirected to.
- * @param int $status The status code of the redirect
- * @param bool $exit Will the script exit.
- * @return array|null Either an array or null.
- * @link https://book.cakephp.org/2.0/en/controllers/components.html#Component::beforeRedirect
- */
-	public function beforeRedirect(Controller $controller, $url, $status = null, $exit = true) {
-	}
+    /**
+     * Called before Controller::redirect(). Allows you to replace the URL that will
+     * be redirected to with a new URL. The return of this method can either be an array or a string.
+     *
+     * If the return is an array and contains a 'url' key. You may also supply the following:
+     *
+     * - `status` The status code for the redirect
+     * - `exit` Whether or not the redirect should exit.
+     *
+     * If your response is a string or an array that does not contain a 'url' key it will
+     * be used as the new URL to redirect to.
+     *
+     * @param Controller $controller Controller with components to beforeRedirect
+     * @param string|array $url Either the string or URL array that is being redirected to.
+     * @param int $status The status code of the redirect
+     * @param bool $exit Will the script exit.
+     * @return array|null Either an array or null.
+     * @link https://book.cakephp.org/2.0/en/controllers/components.html#Component::beforeRedirect
+     */
+    public function beforeRedirect(Controller $controller, $url, $status = null, $exit = true)
+    {
+    }
 
 }

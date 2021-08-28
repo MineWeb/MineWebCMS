@@ -27,324 +27,331 @@ App::uses('Validation', 'Utility');
  * @package       Cake.Model.Validator
  * @link          https://book.cakephp.org/2.0/en/data-validation.html
  */
-class CakeValidationRule {
+class CakeValidationRule
+{
 
-/**
- * Whether the field passed this validation rule
- *
- * @var mixed
- */
-	protected $_valid = true;
+    /**
+     * The 'rule' key
+     *
+     * @var mixed
+     */
+    public $rule = 'blank';
+    /**
+     * The 'required' key
+     *
+     * @var mixed
+     */
+    public $required = null;
+    /**
+     * The 'allowEmpty' key
+     *
+     * @var bool
+     */
+    public $allowEmpty = null;
+    /**
+     * The 'on' key
+     *
+     * @var string
+     */
+    public $on = null;
+    /**
+     * The 'last' key
+     *
+     * @var bool
+     */
+    public $last = true;
+    /**
+     * The 'message' key
+     *
+     * @var string
+     */
+    public $message = null;
+    /**
+     * Whether the field passed this validation rule
+     *
+     * @var mixed
+     */
+    protected $_valid = true;
+    /**
+     * Holds whether the record being validated exists in datasource or not
+     *
+     * @var bool
+     */
+    protected $_recordExists = false;
+    /**
+     * Validation method
+     *
+     * @var mixed
+     */
+    protected $_rule = null;
+    /**
+     * Validation method arguments
+     *
+     * @var array
+     */
+    protected $_ruleParams = [];
+    /**
+     * Holds passed in options
+     *
+     * @var array
+     */
+    protected $_passedOptions = [];
 
-/**
- * Holds whether the record being validated exists in datasource or not
- *
- * @var bool
- */
-	protected $_recordExists = false;
+    /**
+     * Constructor
+     *
+     * @param array $validator [optional] The validator properties
+     */
+    public function __construct($validator = [])
+    {
+        $this->_addValidatorProps($validator);
+    }
 
-/**
- * Validation method
- *
- * @var mixed
- */
-	protected $_rule = null;
+    /**
+     * Sets the rule properties from the rule entry in validate
+     *
+     * @param array $validator [optional]
+     * @return void
+     */
+    protected function _addValidatorProps($validator = [])
+    {
+        if (!is_array($validator)) {
+            $validator = ['rule' => $validator];
+        }
+        foreach ($validator as $key => $value) {
+            if (isset($value) || !empty($value)) {
+                if (in_array($key, ['rule', 'required', 'allowEmpty', 'on', 'message', 'last'])) {
+                    $this->{$key} = $validator[$key];
+                } else {
+                    $this->_passedOptions[$key] = $value;
+                }
+            }
+        }
+    }
 
-/**
- * Validation method arguments
- *
- * @var array
- */
-	protected $_ruleParams = array();
+    /**
+     * Checks if the rule is valid
+     *
+     * @return bool
+     */
+    public function isValid()
+    {
+        if (!$this->_valid || (is_string($this->_valid) && !empty($this->_valid))) {
+            return false;
+        }
 
-/**
- * Holds passed in options
- *
- * @var array
- */
-	protected $_passedOptions = array();
+        return true;
+    }
 
-/**
- * The 'rule' key
- *
- * @var mixed
- */
-	public $rule = 'blank';
+    /**
+     * Returns whether the field can be left blank according to this rule
+     *
+     * @return bool
+     */
+    public function isEmptyAllowed()
+    {
+        return $this->skip() || $this->allowEmpty === true;
+    }
 
-/**
- * The 'required' key
- *
- * @var mixed
- */
-	public $required = null;
+    /**
+     * Checks if the validation rule should be skipped
+     *
+     * @return bool True if the ValidationRule can be skipped
+     */
+    public function skip()
+    {
+        if (!empty($this->on)) {
+            if ($this->on === 'create' && $this->isUpdate() || $this->on === 'update' && !$this->isUpdate()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-/**
- * The 'allowEmpty' key
- *
- * @var bool
- */
-	public $allowEmpty = null;
+    /**
+     * Sets the recordExists configuration value for this rule,
+     * ir refers to whether the model record it is validating exists
+     * exists in the collection or not (create or update operation)
+     *
+     * If called with no parameters it will return whether this rule
+     * is configured for update operations or not.
+     *
+     * @param bool $exists Boolean to indicate if records exists
+     * @return bool
+     */
+    public function isUpdate($exists = null)
+    {
+        if ($exists === null) {
+            return $this->_recordExists;
+        }
+        return $this->_recordExists = $exists;
+    }
 
-/**
- * The 'on' key
- *
- * @var string
- */
-	public $on = null;
+    /**
+     * Checks whether the field failed the `field should be present` validation
+     *
+     * @param string $field Field name
+     * @param array &$data Data to check rule against
+     * @return bool
+     */
+    public function checkRequired($field, &$data)
+    {
+        return (
+            (!array_key_exists($field, $data) && $this->isRequired() === true) ||
+            (
+                array_key_exists($field, $data) && (empty($data[$field]) &&
+                    !is_numeric($data[$field])) && $this->allowEmpty === false
+            )
+        );
+    }
 
-/**
- * The 'last' key
- *
- * @var bool
- */
-	public $last = true;
+    /**
+     * Checks if the field is required according to the `required` property
+     *
+     * @return bool
+     */
+    public function isRequired()
+    {
+        if (in_array($this->required, ['create', 'update'], true)) {
+            if ($this->required === 'create' && !$this->isUpdate() || $this->required === 'update' && $this->isUpdate()) {
+                return true;
+            }
+            return false;
+        }
 
-/**
- * The 'message' key
- *
- * @var string
- */
-	public $message = null;
+        return $this->required;
+    }
 
-/**
- * Constructor
- *
- * @param array $validator [optional] The validator properties
- */
-	public function __construct($validator = array()) {
-		$this->_addValidatorProps($validator);
-	}
+    /**
+     * Checks if the allowEmpty key applies
+     *
+     * @param string $field Field name
+     * @param array &$data data to check rule against
+     * @return bool
+     */
+    public function checkEmpty($field, &$data)
+    {
+        if (empty($data[$field]) && $data[$field] != '0' && $this->allowEmpty === true) {
+            return true;
+        }
+        return false;
+    }
 
-/**
- * Checks if the rule is valid
- *
- * @return bool
- */
-	public function isValid() {
-		if (!$this->_valid || (is_string($this->_valid) && !empty($this->_valid))) {
-			return false;
-		}
+    /**
+     * Returns whether this rule should break validation process for associated field
+     * after it fails
+     *
+     * @return bool
+     */
+    public function isLast()
+    {
+        return (bool)$this->last;
+    }
 
-		return true;
-	}
+    /**
+     * Gets the validation error message
+     *
+     * @return string
+     */
+    public function getValidationResult()
+    {
+        return $this->_valid;
+    }
 
-/**
- * Returns whether the field can be left blank according to this rule
- *
- * @return bool
- */
-	public function isEmptyAllowed() {
-		return $this->skip() || $this->allowEmpty === true;
-	}
+    /**
+     * Dispatches the validation rule to the given validator method
+     *
+     * @param string $field Field name
+     * @param array &$data Data array
+     * @param array &$methods Methods list
+     * @return bool True if the rule could be dispatched, false otherwise
+     */
+    public function process($field, &$data, &$methods)
+    {
+        $this->_valid = true;
+        $this->_parseRule($field, $data);
 
-/**
- * Checks if the field is required according to the `required` property
- *
- * @return bool
- */
-	public function isRequired() {
-		if (in_array($this->required, array('create', 'update'), true)) {
-			if ($this->required === 'create' && !$this->isUpdate() || $this->required === 'update' && $this->isUpdate()) {
-				return true;
-			}
-			return false;
-		}
+        $validator = $this->_getPropertiesArray();
+        $rule = strtolower($this->_rule);
+        if (isset($methods[$rule])) {
+            $this->_ruleParams[] = array_merge($validator, $this->_passedOptions);
+            $this->_ruleParams[0] = [$field => $this->_ruleParams[0]];
+            $this->_valid = call_user_func_array($methods[$rule], $this->_ruleParams);
+        } else if (class_exists('Validation') && method_exists('Validation', $this->_rule)) {
+            $this->_valid = call_user_func_array(['Validation', $this->_rule], $this->_ruleParams);
+        } else if (is_string($validator['rule'])) {
+            $this->_valid = preg_match($this->_rule, $data[$field]);
+        } else {
+            trigger_error(__d('cake_dev', 'Could not find validation handler %s for %s', $this->_rule, $field), E_USER_WARNING);
+            return false;
+        }
 
-		return $this->required;
-	}
+        return true;
+    }
 
-/**
- * Checks whether the field failed the `field should be present` validation
- *
- * @param string $field Field name
- * @param array &$data Data to check rule against
- * @return bool
- */
-	public function checkRequired($field, &$data) {
-		return (
-			(!array_key_exists($field, $data) && $this->isRequired() === true) ||
-			(
-				array_key_exists($field, $data) && (empty($data[$field]) &&
-				!is_numeric($data[$field])) && $this->allowEmpty === false
-			)
-		);
-	}
+    /**
+     * Parses the rule and sets the rule and ruleParams
+     *
+     * @param string $field Field name
+     * @param array &$data Data array
+     * @return void
+     */
+    protected function _parseRule($field, &$data)
+    {
+        if (is_array($this->rule)) {
+            $this->_rule = $this->rule[0];
+            $this->_ruleParams = array_merge([$data[$field]], array_values(array_slice($this->rule, 1)));
+        } else {
+            $this->_rule = $this->rule;
+            $this->_ruleParams = [$data[$field]];
+        }
+    }
 
-/**
- * Checks if the allowEmpty key applies
- *
- * @param string $field Field name
- * @param array &$data data to check rule against
- * @return bool
- */
-	public function checkEmpty($field, &$data) {
-		if (empty($data[$field]) && $data[$field] != '0' && $this->allowEmpty === true) {
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Gets an array with the rule properties
+     *
+     * @return array
+     */
+    protected function _getPropertiesArray()
+    {
+        $rule = $this->rule;
+        if (!is_string($rule)) {
+            unset($rule[0]);
+        }
+        return [
+            'rule' => $rule,
+            'required' => $this->required,
+            'allowEmpty' => $this->allowEmpty,
+            'on' => $this->on,
+            'last' => $this->last,
+            'message' => $this->message
+        ];
+    }
 
-/**
- * Checks if the validation rule should be skipped
- *
- * @return bool True if the ValidationRule can be skipped
- */
-	public function skip() {
-		if (!empty($this->on)) {
-			if ($this->on === 'create' && $this->isUpdate() || $this->on === 'update' && !$this->isUpdate()) {
-				return true;
-			}
-		}
-		return false;
-	}
+    /**
+     * Resets internal state for this rule, by default it will become valid
+     * and it will set isUpdate() to false
+     *
+     * @return void
+     */
+    public function reset()
+    {
+        $this->_valid = true;
+        $this->_recordExists = false;
+    }
 
-/**
- * Returns whether this rule should break validation process for associated field
- * after it fails
- *
- * @return bool
- */
-	public function isLast() {
-		return (bool)$this->last;
-	}
-
-/**
- * Gets the validation error message
- *
- * @return string
- */
-	public function getValidationResult() {
-		return $this->_valid;
-	}
-
-/**
- * Gets an array with the rule properties
- *
- * @return array
- */
-	protected function _getPropertiesArray() {
-		$rule = $this->rule;
-		if (!is_string($rule)) {
-			unset($rule[0]);
-		}
-		return array(
-			'rule' => $rule,
-			'required' => $this->required,
-			'allowEmpty' => $this->allowEmpty,
-			'on' => $this->on,
-			'last' => $this->last,
-			'message' => $this->message
-		);
-	}
-
-/**
- * Sets the recordExists configuration value for this rule,
- * ir refers to whether the model record it is validating exists
- * exists in the collection or not (create or update operation)
- *
- * If called with no parameters it will return whether this rule
- * is configured for update operations or not.
- *
- * @param bool $exists Boolean to indicate if records exists
- * @return bool
- */
-	public function isUpdate($exists = null) {
-		if ($exists === null) {
-			return $this->_recordExists;
-		}
-		return $this->_recordExists = $exists;
-	}
-
-/**
- * Dispatches the validation rule to the given validator method
- *
- * @param string $field Field name
- * @param array &$data Data array
- * @param array &$methods Methods list
- * @return bool True if the rule could be dispatched, false otherwise
- */
-	public function process($field, &$data, &$methods) {
-		$this->_valid = true;
-		$this->_parseRule($field, $data);
-
-		$validator = $this->_getPropertiesArray();
-		$rule = strtolower($this->_rule);
-		if (isset($methods[$rule])) {
-			$this->_ruleParams[] = array_merge($validator, $this->_passedOptions);
-			$this->_ruleParams[0] = array($field => $this->_ruleParams[0]);
-			$this->_valid = call_user_func_array($methods[$rule], $this->_ruleParams);
-		} elseif (class_exists('Validation') && method_exists('Validation', $this->_rule)) {
-			$this->_valid = call_user_func_array(array('Validation', $this->_rule), $this->_ruleParams);
-		} elseif (is_string($validator['rule'])) {
-			$this->_valid = preg_match($this->_rule, $data[$field]);
-		} else {
-			trigger_error(__d('cake_dev', 'Could not find validation handler %s for %s', $this->_rule, $field), E_USER_WARNING);
-			return false;
-		}
-
-		return true;
-	}
-
-/**
- * Resets internal state for this rule, by default it will become valid
- * and it will set isUpdate() to false
- *
- * @return void
- */
-	public function reset() {
-		$this->_valid = true;
-		$this->_recordExists = false;
-	}
-
-/**
- * Returns passed options for this rule
- *
- * @param string|int $key Array index
- * @return array|null
- */
-	public function getOptions($key) {
-		if (!isset($this->_passedOptions[$key])) {
-			return null;
-		}
-		return $this->_passedOptions[$key];
-	}
-
-/**
- * Sets the rule properties from the rule entry in validate
- *
- * @param array $validator [optional]
- * @return void
- */
-	protected function _addValidatorProps($validator = array()) {
-		if (!is_array($validator)) {
-			$validator = array('rule' => $validator);
-		}
-		foreach ($validator as $key => $value) {
-			if (isset($value) || !empty($value)) {
-				if (in_array($key, array('rule', 'required', 'allowEmpty', 'on', 'message', 'last'))) {
-					$this->{$key} = $validator[$key];
-				} else {
-					$this->_passedOptions[$key] = $value;
-				}
-			}
-		}
-	}
-
-/**
- * Parses the rule and sets the rule and ruleParams
- *
- * @param string $field Field name
- * @param array &$data Data array
- * @return void
- */
-	protected function _parseRule($field, &$data) {
-		if (is_array($this->rule)) {
-			$this->_rule = $this->rule[0];
-			$this->_ruleParams = array_merge(array($data[$field]), array_values(array_slice($this->rule, 1)));
-		} else {
-			$this->_rule = $this->rule;
-			$this->_ruleParams = array($data[$field]);
-		}
-	}
+    /**
+     * Returns passed options for this rule
+     *
+     * @param string|int $key Array index
+     * @return array|null
+     */
+    public function getOptions($key)
+    {
+        if (!isset($this->_passedOptions[$key])) {
+            return null;
+        }
+        return $this->_passedOptions[$key];
+    }
 
 }

@@ -24,77 +24,79 @@ App::uses('ObjectCollection', 'Utility');
  *
  * @package       Cake.Console
  */
-class TaskCollection extends ObjectCollection {
+class TaskCollection extends ObjectCollection
+{
 
-/**
- * Shell to use to set params to tasks.
- *
- * @var Shell
- */
-	protected $_Shell;
+    /**
+     * The directory inside each shell path that contains tasks.
+     *
+     * @var string
+     */
+    public $taskPathPrefix = 'tasks/';
+    /**
+     * Shell to use to set params to tasks.
+     *
+     * @var Shell
+     */
+    protected $_Shell;
 
-/**
- * The directory inside each shell path that contains tasks.
- *
- * @var string
- */
-	public $taskPathPrefix = 'tasks/';
+    /**
+     * Constructor
+     *
+     * @param Shell $Shell The shell this task collection is attached to.
+     */
+    public function __construct(Shell $Shell)
+    {
+        $this->_Shell = $Shell;
+    }
 
-/**
- * Constructor
- *
- * @param Shell $Shell The shell this task collection is attached to.
- */
-	public function __construct(Shell $Shell) {
-		$this->_Shell = $Shell;
-	}
+    /**
+     * Loads/constructs a task. Will return the instance in the registry if it already exists.
+     *
+     * You can alias your task as an existing task by setting the 'className' key, i.e.,
+     * ```
+     * public $tasks = array(
+     * 'DbConfig' => array(
+     * 'className' => 'Bakeplus.DbConfigure'
+     * );
+     * );
+     * ```
+     * All calls to the `DbConfig` task would use `DbConfigure` found in the `Bakeplus` plugin instead.
+     *
+     * @param string $task Task name to load
+     * @param array $settings Settings for the task.
+     * @return AppShell A task object, Either the existing loaded task or a new one.
+     * @throws MissingTaskException when the task could not be found
+     */
+    public function load($task, $settings = [])
+    {
+        if (is_array($settings) && isset($settings['className'])) {
+            $alias = $task;
+            $task = $settings['className'];
+        }
+        list($plugin, $name) = pluginSplit($task, true);
+        if (!isset($alias)) {
+            $alias = $name;
+        }
 
-/**
- * Loads/constructs a task. Will return the instance in the registry if it already exists.
- *
- * You can alias your task as an existing task by setting the 'className' key, i.e.,
- * ```
- * public $tasks = array(
- * 'DbConfig' => array(
- * 'className' => 'Bakeplus.DbConfigure'
- * );
- * );
- * ```
- * All calls to the `DbConfig` task would use `DbConfigure` found in the `Bakeplus` plugin instead.
- *
- * @param string $task Task name to load
- * @param array $settings Settings for the task.
- * @return AppShell A task object, Either the existing loaded task or a new one.
- * @throws MissingTaskException when the task could not be found
- */
-	public function load($task, $settings = array()) {
-		if (is_array($settings) && isset($settings['className'])) {
-			$alias = $task;
-			$task = $settings['className'];
-		}
-		list($plugin, $name) = pluginSplit($task, true);
-		if (!isset($alias)) {
-			$alias = $name;
-		}
+        if (isset($this->_loaded[$alias])) {
+            return $this->_loaded[$alias];
+        }
+        $taskClass = $name . 'Task';
+        App::uses($taskClass, $plugin . 'Console/Command/Task');
 
-		if (isset($this->_loaded[$alias])) {
-			return $this->_loaded[$alias];
-		}
-		$taskClass = $name . 'Task';
-		App::uses($taskClass, $plugin . 'Console/Command/Task');
+        $exists = class_exists($taskClass);
+        if (!$exists) {
+            throw new MissingTaskException([
+                'class' => $taskClass,
+                'plugin' => substr($plugin, 0, -1)
+            ]);
+        }
 
-		$exists = class_exists($taskClass);
-		if (!$exists) {
-			throw new MissingTaskException(array(
-				'class' => $taskClass,
-				'plugin' => substr($plugin, 0, -1)
-			));
-		}
-
-		$this->_loaded[$alias] = new $taskClass(
-			$this->_Shell->stdout, $this->_Shell->stderr, $this->_Shell->stdin
-		);
-		return $this->_loaded[$alias];
-	}
+        $this->_loaded[$alias] = new $taskClass(
+            $this->_Shell->stdout, $this->_Shell->stderr, $this->_Shell->stdin
+        );
+        return $this->_loaded[$alias];
+    }
 
 }
