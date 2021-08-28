@@ -236,13 +236,13 @@
             <div class="card">
                 <div class="card-header with-border">
                     <h3 class="card-title"><?= $Lang->get('DASHBOARD__LAST_ACTIONS') ?></h3>
-                </div><!-- /.card-header -->
+                </div>
                 <div class="card-body">
                     <table class="table table-bordered">
                         <tbody>
                         <tr>
                             <th><?= $Lang->get('GLOBAL__ACTIONS') ?></th>
-                            <th><?= $Lang->get('GLOBAL__CATEGORY') ?></th> <!-- ICI -->
+                            <th><?= $Lang->get('GLOBAL__CATEGORY') ?></th>
                             <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
                             <th><?= $Lang->get('GLOBAL__AUTHOR') ?></th>
                         </tr>
@@ -256,9 +256,9 @@
                         <?php } ?>
                         </tbody>
                     </table>
-                </div><!-- /.card-body -->
-            </div><!-- /.card -->
-        </div><!-- /.col -->
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row">
         <?php $i = 0;
@@ -270,7 +270,7 @@
                         <h3 class="card-title"><?= $Lang->get('SERVER__TITLE') ?> - <?= $value['Server']['name'] ?></h3>
                     </div>
 
-                    <div class="card card-body">
+                    <div class="card-body">
                         <?php if ($Server->online($value['Server']['id'])) { ?>
                             <?php if ($value['Server']['type'] != 1 && $value['Server']['type'] != 3 && $Permissions->can('SEND_SERVER_COMMAND_FROM_DASHBOARD')) { ?>
                                 <div class="row-fluid text-center">
@@ -314,7 +314,7 @@
                         <input type="hidden" id="server_id" name="server_id">
 
                         <div class="col-md-8">
-                            <input class="form-control col-md-4" name="cmd" type="text"></input>
+                            <input class="form-control col-md-4" name="cmd" type="text"/>
                         </div>
 
                         <button class="btn btn-info" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
