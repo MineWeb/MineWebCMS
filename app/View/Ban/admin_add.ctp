@@ -23,7 +23,6 @@
                             <div class="form-group">
                                 <label><?= $Lang->get('BAN__REASON') ?></label>
                                 <input type="text" class="form-control"
-                                       value="<?= $page['title'] ?>"
                                        name="reason">
                             </div>
                         </div>
@@ -40,6 +39,7 @@
     </div>
 </section>
 <script type="text/javascript">
+    <?php if($type == '0') { ?>
     $(document).ready(function () {
         $('#users').DataTable({
             "paging": true,
@@ -53,10 +53,61 @@
             "bServerSide": true,
             "sAjaxSource": "<?= $this->Html->url(['action' => 'get_users_not_ban']) ?>",
             "aoColumns": [
-                {mData: "User.ban", "bSearchable": true},
+                {mData: "User.ban", "bSearchable": false},
                 {mData: "User.pseudo", "bSearchable": true},
                 {mData: "User.rank", "bSearchable": false}
             ]
         });
     });
+    <?php } else { ?>
+    $('form[method="search"]').each(function (e) {
+
+        $(this).on('submit', function (e) {
+            e.preventDefault();
+            var val = $(this).find('input[name="search"]').val();
+            window.location = '<?= $this->Html->url(['action' => 'edit']) ?>/' + val;
+        });
+
+        var url = $(this).attr('action');
+        var form = $(this);
+
+        $(this).find('input[name="search"]').keyup(function (e) {
+
+            var value = $(this).val();
+
+            $.ajax({
+                url: url + '/' + encodeURI(value),
+                method: 'GET',
+                dataType: 'JSON',
+                success: function (data) {
+
+                    form.find('.list-group').empty();
+
+                    if (data.status) {
+
+                        var users = data.data;
+
+                        for (var i = 0; i < users.length; i++) {
+
+                            console.log(users[i]);
+
+                            form.find('.list-group').prepend('<a href="<?= $this->Html->url(['action' => 'edit']) ?>/' + users[i]['id'] + '" class="list-group-item">' + users[i]['pseudo'] + '</a>')
+
+                        }
+
+                        form.find('.list-group').slideDown(250);
+
+                    } else {
+                        form.find('.list-group').slideUp(250);
+                    }
+
+                },
+                error: function (data) {
+                    form.find('.list-group').slideUp(250);
+                }
+            })
+
+        });
+    });
+    <?php } ?>
 </script>

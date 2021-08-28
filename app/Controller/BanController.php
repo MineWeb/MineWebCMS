@@ -17,9 +17,8 @@ class BanController extends AppController
 
         $this->set('title_for_layout', $this->Lang->get("BAN__HOME"));
         $this->layout = 'admin';
-
+        $this->loadModel("user");
         $this->loadModel("Ban");
-        $this->loadModel("User");
         $banned_users = $this->Ban->find("all");
 
         $users = $this->User->find("all");
@@ -34,6 +33,7 @@ class BanController extends AppController
 
         $this->set('title_for_layout', $this->Lang->get("BAN__HOME"));
         $this->layout = 'admin';
+        $this->set('type', $this->Configuration->getKey('member_page_type'));
 
         if ($this->request->is("post")) {
             $this->autoRender = false;
@@ -79,12 +79,11 @@ class BanController extends AppController
                     0 => ['label' => 'success', 'name' => $this->Lang->get('USER__RANK_MEMBER')],
                     2 => ['label' => 'warning', 'name' => $this->Lang->get('USER__RANK_MODERATOR')],
                     3 => ['label' => 'danger', 'name' => $this->Lang->get('USER__RANK_ADMINISTRATOR')],
-                    4 => ['label' => 'danger', 'name' => $this->Lang->get('USER__RANK_ADMINISTRATOR')],
-                    5 => ['label' => 'primary', 'name' => $this->Lang->get('USER__RANK_BANNED')]
+                    4 => ['label' => 'danger', 'name' => $this->Lang->get('USER__RANK_ADMINISTRATOR')]
                 ];
                 $this->loadModel('Rank');
                 $custom_ranks = $this->Rank->find('all');
-                foreach ($custom_ranks as $value) {
+                foreach ($custom_ranks as $key => $value) {
                     $available_ranks[$value['Rank']['rank_id']] = [
                         'label' => 'info',
                         'name' => $value['Rank']['name']
@@ -100,7 +99,7 @@ class BanController extends AppController
                 $response = $this->DataTable->getResponse();
                 $users = $response['aaData'];
                 $data = [];
-                foreach ($users as $value) {
+                foreach ($users as $key => $value) {
                     $checkIsBan = $this->Ban->find('first', ["conditions" => ['user_id' => $value['User']['id']]]);
 
                     if ($checkIsBan != null)
@@ -125,6 +124,35 @@ class BanController extends AppController
                 $response['aaData'] = $data;
                 $this->response->body(json_encode($response));
             }
+        }
+    }
+
+    function admin_liveSearch($query = false)
+    {
+        $this->autoRender = false;
+        $this->response->type('json');
+        if ($this->isConnected and $this->Permissions->can('MANAGE_USERS')) {
+            $this->loadModel("User");
+            if ($query != false) {
+                $result = $this->User->find('all', ['conditions' => ['pseudo LIKE' => $query . '%']]);
+                foreach ($result as $key => $value) {
+                    $checkIsBan = $this->Ban->find('first', ["conditions" => ['user_id' => $value['User']['id']]]);
+
+                    if ($checkIsBan != null)
+                        continue;
+
+                    if ($this->Permissions->have($value['User']['rank'], "CAN_BE_BAN"))
+                        continue;
+
+                    $users[] = ['pseudo' => $value['User']['pseudo'], 'id' => $value['User']['id']];
+                }
+                $response = (empty($result)) ? ['status' => false] : ['status' => true, 'data' => $users];
+                $this->response->body($response);
+            } else {
+                $this->response->body(json_encode(['status' => false]));
+            }
+        } else {
+            $this->response->body(json_encode(['status' => false]));
         }
     }
 }
