@@ -6,7 +6,7 @@
                     <h3 class="card-title"><?= $Lang->get('HISTORY__VIEW_GLOBAL') ?></h3>
                 </div>
                 <div class="card-body">
-                    <table class="table table-responsive-sm" style="table-layout: fixed;word-wrap: break-word;">
+                    <table class="table table-bordered" style="table-layout: fixed;word-wrap: break-word;">
                         <thead>
                         <tr>
                             <th><?= $Lang->get('USER__USERNAME') ?></th>
