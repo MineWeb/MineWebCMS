@@ -136,8 +136,13 @@ class ErrorHandler
                 $e->getTraceAsString()
             );
             static::$_bailExceptionRendering = true;
-            echo "<pre>$message</pre>";
-            die('Try to remove files on directory /app/tmp/cache/');
+            App::uses('Folder', 'Utility');
+            $folder = new Folder(ROOT . DS . 'app' . DS . 'tmp' . DS . 'cache' . DS . 'persistent');
+            if (!empty($folder->path)) {
+                $folder->delete();
+            }
+            echo "<b>Essayez d'actualiser et/ou de supprimer le dossier /app/tmp/cache/ - Try to refresh and/or remove files on directory /app/tmp/cache/</b>";
+            die("<pre>$message</pre>");
         }
     }
 
