@@ -30,7 +30,7 @@ class HistoryController extends AppController
         $this->DataTable->mDataProp = true;
         $response = $this->DataTable->getResponse();
         $response["aaData"] = array_map(function($data) {
-            $data["History"]["action"] = $this->Lang->get('HISTORY__ACTION_' . $data["History"]["action"]);
+            $data["History"]["action"] = $this->Lang->history($data["History"]["action"]);
             return $data;
         }, $response["aaData"]);
         $this->response->body(json_encode($response));

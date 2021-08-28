@@ -457,11 +457,10 @@ class LangComponent extends CakeObject
 
         if (file_get_contents(ROOT . '/lang/' . $language . '.json')) {
             $language_file = file_get_contents(ROOT . '/lang/' . $language . '.json');
-            $language_file = json_decode($language_file, true);
         } else {
             $language_file = file_get_contents(ROOT . '/lang/fr.json');
-            $language_file = json_decode($language_file, true);
         }
+        $language_file = json_decode($language_file, true);
 
         if (isset($language_file[$msg])) { // et si le msg existe
             $msg = str_replace('{EMAIL}', $email, $language_file[$msg]);
@@ -473,6 +472,11 @@ class LangComponent extends CakeObject
         }
     }
 
+    function history($action)
+    {
+        $message = $this->lang['messages']["HISTORY__ACTION_" . $action];
+        return !$message ? $action : $message;
+    }
+
 }
 
-?>

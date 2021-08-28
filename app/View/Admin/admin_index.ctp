@@ -248,7 +248,7 @@
                         </tr>
                         <?php foreach ($History->get(false, 5) as $k => $v) { ?>
                             <tr>
-                                <td><?= $v['History']['action'] ?></td>
+                                <td><?= $Lang->history($v['History']['action']) ?></td>
                                 <td><?= $v['History']['category'] ?></td>
                                 <td><?= $Lang->date($v['History']['created']) ?></td>
                                 <td><?= $v['History']['author'] ?></td>
