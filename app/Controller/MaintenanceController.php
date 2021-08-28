@@ -77,6 +77,7 @@ class MaintenanceController extends AppController
 
             $this->Maintenance->read(null, $id);
             $this->Maintenance->set([
+                "sub_url" => $this->request->data["sub_url"],
                 "url" => $this->request->data["url"],
                 "reason" => $this->request->data["reason"]
             ]);

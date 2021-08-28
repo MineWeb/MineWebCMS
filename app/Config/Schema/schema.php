@@ -137,6 +137,7 @@ class AppSchema extends CakeSchema
     ];
     public $maintenances = [
         'id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'],
+        'sub_url' => ['type' => 'integer', 'null' => false, 'default' => 0, 'length' => 1, 'unsigned' => false],
         'url' => ['type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'reason' => ['type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'active' => ['type' => 'integer', 'null' => false, 'default' => 1, 'length' => 1, 'unsigned' => false],

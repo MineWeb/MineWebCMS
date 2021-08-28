@@ -638,6 +638,8 @@
        "MAINTENANCE__DISABLED_PAGE": "Обслуживание страницы {PAGE} отключено",
        "MAINTENANCE__ENABLED_PAGE": "Поддержка страницы {PAGE} включена",
        "MAINTENANCE__DELETED_PAGE": "Обслуживание удаленной страницы {PAGE}",
+       "MAINTENANCE__USE_SUB_URL": "Применить обслуживание ко всем URL-адресам, начинающимся с вашего URL-адреса?",
+       "MAINTENANCE__SUB_URL": "Под включенными URL",
 
        "PAGE__ADD_SUCCESS": "Страница успешно добавлена!",
        "PAGE__EDIT_SUCCESS": "Страница успешно изменена!",

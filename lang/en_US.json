@@ -639,6 +639,8 @@
         "MAINTENANCE__DISABLED_PAGE": "Maintenance of page {PAGE} disabled",
         "MAINTENANCE__ENABLED_PAGE": "Maintenance of page {PAGE} enabled",
         "MAINTENANCE__DELETED_PAGE": "Maintenance of the deleted page {PAGE}",
+        "MAINTENANCE__USE_SUB_URL": "Apply maintenance to all urls starting with your url?",
+        "MAINTENANCE__SUB_URL": "Under URLs included",
 
         "PAGE__ADD_SUCCESS": "Page added successfully!",
         "PAGE__EDIT_SUCCESS": "Page modified successfully!",

@@ -31,6 +31,20 @@
                             <textarea id="editor" name="reason" cols="30" rows="10"><?= $page["reason"] ?></textarea>
                         </div>
 
+                        <div class="form-group">
+                            <input type="hidden" name="sub_url" value="<?= $page['sub_url'] ?>">
+                            <div class="checkbox">
+                                <input name="sub_url_checkbox"
+                                       type="checkbox" <?= $page['sub_url'] == 1 ? 'checked' : '' ?>>
+                                <label><?= $Lang->get('MAINTENANCE__USE_SUB_URL') ?></label>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $('input[name="sub_url_checkbox"]').on('change', function (e) {
+                                $('input[name="sub_url').val($('input[name="sub_url_checkbox"]:checked').length > 0 ? '1' : '0')
+                            })
+                        </script>
+
                         <input type="hidden" name="data[_Token][key]" value="<?= $csrfToken ?>">
 
                         <div class="float-right">

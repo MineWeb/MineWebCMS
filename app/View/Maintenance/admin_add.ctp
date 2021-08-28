@@ -6,7 +6,8 @@
                     <h3 class="card-title"><?= $Lang->get('MAINTENANCE__TITLE') ?></h3>
                 </div>
                 <div class="card-body">
-                    <form method="post" data-ajax="true" data-redirect-url="<?= $this->Html->url(['controller' => 'maintenance', 'action' => 'index', 'admin' => 'true']) ?>">
+                    <form method="post" data-ajax="true"
+                          data-redirect-url="<?= $this->Html->url(['controller' => 'maintenance', 'action' => 'index', 'admin' => 'true']) ?>">
                         <div class="form-group">
                             <label><?= $Lang->get("MAINTENANCE__PAGE") ?></label><br>
                             <i><?= $Lang->get("MAINTENANCE__ADD_EXAMPLE") ?></i><br>
@@ -30,6 +31,20 @@
                             <textarea id="editor" name="reason" cols="30"
                                       rows="10"></textarea>
                         </div>
+
+                        <div class="form-group">
+                            <input type="hidden" name="sub_url">
+                            <div class="checkbox">
+                                <input name="sub_url_checkbox"
+                                       type="checkbox">
+                                <label><?= $Lang->get('MAINTENANCE__USE_SUB_URL') ?></label>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $('input[name="sub_url_checkbox"]').on('change', function (e) {
+                                $('input[name="sub_url').val($('input[name="sub_url_checkbox"]:checked').length > 0 ? '1' : '0')
+                            })
+                        </script>
 
                         <input type="hidden" name="data[_Token][key]" value="<?= $csrfToken ?>">
 

@@ -11,8 +11,9 @@
                         <tr>
                             <th><?= $Lang->get("MAINTENANCE__PAGE") ?></th>
                             <th><?= $Lang->get("MAINTENANCE__REASON") ?></th>
+                            <th><?= $Lang->get("MAINTENANCE__SUB_URL") ?></th>
                             <th><?= $Lang->get("GLOBAL__STATUS") ?></th>
-                            <th><?= $Lang->get("GLOBAL__ACTIONS")?></th>
+                            <th><?= $Lang->get("GLOBAL__ACTIONS") ?></th>
                         </tr>
                         </thead>
 
@@ -21,16 +22,17 @@
                             <tr>
                                 <td><?= $v["Maintenance"]["url"] ?></td>
                                 <td><?= $v["Maintenance"]["reason"] ?></td>
+                                <td><?= $v["Maintenance"]["sub_url"] ? $Lang->get("GLOBAL__YES") : $Lang->get("GLOBAL__NO") ?></td>
                                 <td><?= $v["Maintenance"]["active"] != 1 ? $Lang->get("GLOBAL__DISABLED") : $Lang->get("GLOBAL__ENABLED") ?></td>
                                 <td>
                                     <a href='<?= $this->Html->url(['action' => 'edit', $v["Maintenance"]['id']]) ?>'
                                        class="btn btn-success"><?= $Lang->get('GLOBAL__EDIT') ?></a>
                                     <?php if ($v["Maintenance"]["active"] == 1) { ?>
-                                    <a onClick="confirmDel('<?= $this->Html->url(['action' => 'disable', $v["Maintenance"]['id']]) ?>')"
-                                       class="btn btn-warning"><?= $Lang->get('GLOBAL__DISABLE') ?></a>
+                                        <a onClick="confirmDel('<?= $this->Html->url(['action' => 'disable', $v["Maintenance"]['id']]) ?>')"
+                                           class="btn btn-warning"><?= $Lang->get('GLOBAL__DISABLE') ?></a>
                                     <?php } else { ?>
-                                    <a onClick="confirmDel('<?= $this->Html->url(['action' => 'enable', $v["Maintenance"]['id']]) ?>')"
-                                       class="btn btn-primary"><?= $Lang->get('GLOBAL__ENABLE') ?></a>
+                                        <a onClick="confirmDel('<?= $this->Html->url(['action' => 'enable', $v["Maintenance"]['id']]) ?>')"
+                                           class="btn btn-primary"><?= $Lang->get('GLOBAL__ENABLE') ?></a>
                                     <?php } ?>
                                     <a onClick="confirmDel('<?= $this->Html->url(['action' => 'delete', $v["Maintenance"]['id']]) ?>')"
                                        class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>

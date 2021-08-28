@@ -640,6 +640,8 @@
         "MAINTENANCE__DISABLED_PAGE": "Maintenance de la page {PAGE} désactivée",
         "MAINTENANCE__ENABLED_PAGE": "Maintenance de la page {PAGE} activée",
         "MAINTENANCE__DELETED_PAGE": "Maintenance de la page {PAGE} supprimée",
+        "MAINTENANCE__USE_SUB_URL": "Appliquer la maintenance à toute les urls commençant par votre url ?",
+        "MAINTENANCE__SUB_URL": "Sous URL incluses",
 
         "PAGE__ADD_SUCCESS":"Page ajoutée avec succès !",
         "PAGE__EDIT_SUCCESS":"Page modifiée avec succès !",
