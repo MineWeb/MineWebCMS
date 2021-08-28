@@ -432,6 +432,7 @@
        "USER__EDIT_TITLE": "Редактирование участника",
        "USER__REGISTER_DATE" : "Дата регистрации" ,
        "USER__USERS": "Участники",
+       "USER__MEMBERS_REGISTERED":"Зарегистрированные участники",
        "USER__NBR_REGISTERED": "Зарегистрированные пользователи",
        "USER__PASSWORD_UPDATE_SUCCESS" : "Пароль был обновлен!" ,
        "USER__EMAIL_UPDATE_SUCCESS" : "электронная почта была обновлена!" ,
