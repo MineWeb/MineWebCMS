@@ -26,66 +26,68 @@ App::uses('View', 'View');
  * @package Cake.View
  * @deprecated 3.0.0 Dynamic scaffolding will be removed and replaced in 3.0
  */
-class ScaffoldView extends View {
+class ScaffoldView extends View
+{
 
-/**
- * Override _getViewFileName Appends special scaffolding views in.
- *
- * @param string $name name of the view file to get.
- * @return string action
- * @throws MissingViewException
- */
-	protected function _getViewFileName($name = null) {
-		if ($name === null) {
-			$name = $this->action;
-		}
-		$name = Inflector::underscore($name);
-		$prefixes = Configure::read('Routing.prefixes');
+    /**
+     * Override _getViewFileName Appends special scaffolding views in.
+     *
+     * @param string $name name of the view file to get.
+     * @return string action
+     * @throws MissingViewException
+     */
+    protected function _getViewFileName($name = null)
+    {
+        if ($name === null) {
+            $name = $this->action;
+        }
+        $name = Inflector::underscore($name);
+        $prefixes = Configure::read('Routing.prefixes');
 
-		if (!empty($prefixes)) {
-			foreach ($prefixes as $prefix) {
-				if (strpos($name, $prefix . '_') !== false) {
-					$name = substr($name, strlen($prefix) + 1);
-					break;
-				}
-			}
-		}
+        if (!empty($prefixes)) {
+            foreach ($prefixes as $prefix) {
+                if (strpos($name, $prefix . '_') !== false) {
+                    $name = substr($name, strlen($prefix) + 1);
+                    break;
+                }
+            }
+        }
 
-		if ($name === 'add' || $name === 'edit') {
-			$name = 'form';
-		}
+        if ($name === 'add' || $name === 'edit') {
+            $name = 'form';
+        }
 
-		$scaffoldAction = 'scaffold.' . $name;
+        $scaffoldAction = 'scaffold.' . $name;
 
-		if ($this->subDir !== null) {
-			$subDir = strtolower($this->subDir) . DS;
-		} else {
-			$subDir = null;
-		}
+        if ($this->subDir !== null) {
+            $subDir = strtolower($this->subDir) . DS;
+        } else {
+            $subDir = null;
+        }
 
-		$names[] = $this->viewPath . DS . $subDir . $scaffoldAction;
-		$names[] = 'Scaffolds' . DS . $subDir . $name;
+        $names[] = $this->viewPath . DS . $subDir . $scaffoldAction;
+        $names[] = 'Scaffolds' . DS . $subDir . $name;
 
-		$paths = $this->_paths($this->plugin);
-		$exts = array($this->ext);
-		if ($this->ext !== '.ctp') {
-			$exts[] = '.ctp';
-		}
-		foreach ($exts as $ext) {
-			foreach ($paths as $path) {
-				foreach ($names as $name) {
-					if (file_exists($path . $name . $ext)) {
-						return $path . $name . $ext;
-					}
-				}
-			}
-		}
+        $paths = $this->_paths($this->plugin);
+        $exts = [$this->ext];
+        if ($this->ext !== '.ctp') {
+            $exts[] = '.ctp';
+        }
+        foreach ($exts as $ext) {
+            foreach ($paths as $path) {
+                foreach ($names as $name) {
+                    if (file_exists($path . $name . $ext)) {
+                        return $path . $name . $ext;
+                    }
+                }
+            }
+        }
 
-		if ($name === 'Scaffolds' . DS . $subDir . 'error') {
-			return CAKE . 'View' . DS . 'Errors' . DS . 'scaffold_error.ctp';
-		}
+        if ($name === 'Scaffolds' . DS . $subDir . 'error') {
+            return CAKE . 'View' . DS . 'Errors' . DS . 'scaffold_error.ctp';
+        }
 
-		throw new MissingViewException($paths[0] . $name . $this->ext);
-	}
+        throw new MissingViewException($paths[0] . $name . $this->ext);
+    }
 
 }

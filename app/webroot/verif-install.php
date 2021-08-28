@@ -1,29 +1,30 @@
 <?php
-
-$needDisplayDatabase = (strpos(file_get_contents(ROOT . DS . 'app' . DS . 'Config' . DS . 'database.php'), 'LOGIN1')) ? true : false;
+$database_path = ROOT . DS . 'app' . DS . 'Config' . DS . 'database.php';
+$needDisplayDatabase = strpos(file_get_contents($database_path), 'LOGIN1');
 
 if (!file_exists(ROOT . DS . 'config' . DS . 'install.txt')) {
 
     if ($_POST) {
         if ($_GET['action'] == "db" && $needDisplayDatabase) {
 
-            if (!empty($_POST['host']) && !empty($_POST['database']) && !empty($_POST['login'])) {
+            $sql_type = $_POST['type'];
+            if ($sql_type == 0) { //mysql
 
-                $sql_host = $_POST['host'];
-                $sql_name = $_POST['database'];
-                $sql_user = $_POST['login'];
-                $sql_pass = $_POST['password'];
+                if (!empty($_POST['host']) && !empty($_POST['database']) && !empty($_POST['login'])) {
+                    $sql_host = $_POST['host'];
+                    $sql_name = $_POST['database'];
+                    $sql_user = $_POST['login'];
+                    $sql_pass = $_POST['password'];
 
-                try {
-                    $pdo = new PDO("mysql:host=$sql_host;dbname=$sql_name;", $sql_user, $sql_pass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-                    $sql_error = false;
-                } catch (PDOException $mysqlException) {
-                    $sql_error = true;
-                }
-                if (!$sql_error) {
-                    $dbFile = fopen(ROOT . DS . 'app' . DS . 'Config' . DS . 'database.php', 'w');
+                    try {
+                        $pdo = new PDO("mysql:host=$sql_host;dbname=$sql_name;", $sql_user, $sql_pass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+                        $sql_error = false;
+                    } catch (PDOException $mysqlException) {
+                        $sql_error = true;
+                    }
+                    if (!$sql_error) {
 
-                    $databaseStructure = "<?php
+                        $content = "<?php
 class DATABASE_CONFIG {
 
 	public \$default = [
@@ -37,38 +38,69 @@ class DATABASE_CONFIG {
 	];
 }
 ";
-                    if (!$dbFile || !fwrite($dbFile, $databaseStructure)) {
-                        echo json_encode(['status' => false, 'msg' => 'Le fichier /app/Config/database.php ne peut pas être écris !']);
+                        echo editDatabaseFile($database_path, $content);
                         exit;
+                    } else {
+                        echo json_encode(['status' => false, 'msg' => 'Erreur lors de la connexion ! (<em>' . $mysqlException->getMessage() . '</em>)']);
                     }
-
-                    fclose($dbFile);
-
-                    if (!file_exists(ROOT . DS . 'config' . DS . 'secure.txt') && is_writable(ROOT . DS . 'config')) {
-                        $date = date('H:i:s d/m/Y');
-                        $ip = isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? htmlentities($_SERVER["HTTP_CF_CONNECTING_IP"]) : $_SERVER["REMOTE_ADDR"];
-                        $data = '{ "created": "' . $date . '", "ip": "' . $ip . '" }';
-                        $fp = fopen(ROOT . DS . 'config' . DS . 'secure.txt', 'w+');
-                        fwrite($fp, $data);
-                        fclose($fp);
-                    }
-
-                    echo json_encode(['status' => true]);
-                    exit;
 
                 } else {
-                    echo json_encode(['status' => false, 'msg' => 'Erreur lors de la connexion ! (<em>' . $mysqlException->getMessage() . '</em>)']);
+                    echo json_encode(['status' => false, 'msg' => 'Veuillez remplir tout les champs !']);
+                }
+
+            } else if ($sql_type == 1) { // sqlite3
+                $sqlite_extension = in_array('pdo_mysql', get_loaded_extensions());
+                if (!$sqlite_extension) {
+                    echo json_encode(['status' => false, 'msg' => "Vous devez avoir l'extension PHP : php-sqlite"]);
                     exit;
                 }
 
-            } else {
-                echo json_encode(['status' => false, 'msg' => 'Veuillez remplir tout les champs !']);
+                $content = "<?php
+class DATABASE_CONFIG {
+
+	public \$default = [
+        'datasource' => 'Database/Sqlite',
+        'persistent' => false,
+        'database' => ROOT . '/app/Data/database.db',
+        'prefix' => '',
+        'encoding' => 'utf8',
+	];
+}
+";
+                echo editDatabaseFile($database_path, $content);
                 exit;
             }
+
+
+            exit;
 
         }
 
     }
+}
+
+function editDatabaseFile($database_path, $content)
+{
+    $dbFile = fopen($database_path, 'w');
+
+
+    if (!$dbFile || !fwrite($dbFile, $content)) {
+        return json_encode(['status' => false, 'msg' => 'Le fichier /app/Config/database.php ne peut pas être écris !']);
+    }
+
+    fclose($dbFile);
+
+    if (!file_exists(ROOT . DS . 'config' . DS . 'secure.txt') && is_writable(ROOT . DS . 'config')) {
+        $date = date('H:i:s d/m/Y');
+        $ip = isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? htmlentities($_SERVER["HTTP_CF_CONNECTING_IP"]) : $_SERVER["REMOTE_ADDR"];
+        $data = '{ "created": "' . $date . '", "ip": "' . $ip . '" }';
+        $fp = fopen(ROOT . DS . 'config' . DS . 'secure.txt', 'w+');
+        fwrite($fp, $data);
+        fclose($fp);
+    }
+
+    return json_encode(['status' => true]);
+
 }
 
 function affichImg($bool)
@@ -193,13 +225,17 @@ $compatible = [];
  * @var string $help               Text to help user to solve his installation problems
  */
 
-$compatible['chmod'] = (is_writable(ROOT . DS . 'app' . DS . 'Config') && is_writable(ROOT . DS . 'app' . DS . 'Plugin') && is_writable(ROOT . DS . 'app' . DS . 'View' . DS . 'Themed') && is_writable(ROOT . DS . 'config') && is_writable(ROOT . DS . 'app' . DS . 'tmp')) ? true : false;
+$compatible['chmod'] = (is_writable(ROOT . DS . 'app' . DS . 'Config') && is_writable(ROOT . DS . 'app' . DS . 'Data') && is_writable(ROOT . DS . 'app' . DS . 'Plugin') && is_writable(ROOT . DS . 'app' . DS . 'View' . DS . 'Themed') && is_writable(ROOT . DS . 'config') && is_writable(ROOT . DS . 'app' . DS . 'tmp') && is_writable(ROOT . DS . 'app' . DS . 'webroot' . DS . 'js')) ? true : false;
 
 if (!$compatible['chmod']) {
     $help['chmod'] = "";
 
     if (!is_writable(ROOT . DS . 'app' . DS . 'Config')) {
         $help['chmod'] = "Le dossier /app/Config ne peut être écrit. <br /><br />";
+    }
+
+    if (!is_writable(ROOT . DS . 'app' . DS . 'Data')) {
+        $help['chmod'] = "Le dossier /app/Data ne peut être écrit. <br /><br />";
     }
 
     if (!is_writable(ROOT . DS . 'app' . DS . 'Plugin')) {
@@ -220,6 +256,10 @@ if (!$compatible['chmod']) {
 
     if (!is_writable(ROOT . DS . 'app' . DS . 'tmp')) {
         $help['chmod'] = "Le dossier app/tmp ne peut être écrit. <br /><br />";
+    }
+
+    if (!is_writable(ROOT . DS . 'app' . DS . 'webroot' . DS . 'js')) {
+        $help['chmod'] = "Le dossier app/webroot/js ne peut être écrit. <br /><br />";
     }
 }
 

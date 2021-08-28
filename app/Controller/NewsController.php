@@ -8,27 +8,30 @@ class NewsController extends AppController
     function blog()
     {
         // récupérage des news
-        $this->loadModel('News'); // on charge le model
-        $search_news = $this->News->find('all', ['recursive' => 1, 'order' => 'id desc', 'conditions' => ['published' => 1]]); // on cherche les 3 dernières news (les plus veille)
-
-        foreach ($search_news as $key => $model) {
-            $search_news[$key]['News']['absolute_url'] = Router::url('/blog/' . $model['News']['slug'], true);
-        }
+        $search_news = $this->getNews(); // on charge le model
 
         if ($this->isConnected) {
-            foreach ($news['Like'] as $k => $value) {
-                foreach ($value as $column => $v) {
-                    if ($this->User->getKey('id') == $v) {
-                        $news['News']['liked'] = true;
+            $i = 0;
+            foreach ($search_news as $news => $val) {
+                foreach ($news['Like'] as $k => $value) {
+                    foreach ($value as $column => $v) {
+                        if ($this->User->getKey('id') == $v) {
+                            $search_news[$i]['News']['liked'] = true;
+                        }
                     }
                 }
+                $i++;
             }
         }
-        if (!isset($news['News']['liked'])) {
-            $news['News']['liked'] = false;
+        $i = 0;
+        foreach ($search_news as $news => $val) {
+            if (!isset($news['News']['liked'])) {
+                $search_news[$i]['News']['liked'] = false;
+            }
+            $i++;
         }
 
-        $can_like = ($this->Permissions->can('LIKE_NEWS')) ? true : false;
+        $can_like = $this->Permissions->can('LIKE_NEWS');
 
         $this->set(compact('search_news', 'can_like'));
     }
@@ -40,12 +43,7 @@ class NewsController extends AppController
         $this->response->type('json');
 
         // récupérage des news
-        $this->loadModel('News'); // on charge le model
-        $search_news = $this->News->find('all', ['recursive' => 1, 'order' => 'id desc', 'conditions' => ['published' => 1]]); // on cherche les 3 dernières news (les plus veille)
-
-        foreach ($search_news as $key => $model) {
-            $search_news[$key]['News']['absolute_url'] = Router::url('/blog/' . $model['News']['slug'], true);
-        }
+        $search_news = $this->getNews();
 
         $this->response->body(json_encode($search_news));
     }
@@ -349,6 +347,20 @@ class NewsController extends AppController
             throw new ForbiddenException();
         }
 
+    }
+
+    /**
+     * @return array|int
+     */
+    public function getNews()
+    {
+        $this->loadModel('News'); // on charge le model
+        $search_news = $this->News->find('all', ['recursive' => 1, 'order' => 'id desc', 'conditions' => ['published' => 1]]); // on cherche les 3 dernières news (les plus veille)
+
+        foreach ($search_news as $key => $model) {
+            $search_news[$key]['News']['absolute_url'] = Router::url('/blog/' . $model['News']['slug'], true);
+        }
+        return $search_news;
     }
 
 }

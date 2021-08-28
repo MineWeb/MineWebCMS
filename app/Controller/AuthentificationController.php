@@ -44,6 +44,9 @@ class AuthentificationController extends AppController
         $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN')]));
     }
 
+    /**
+     * @throws Exception
+     */
     public function generateSecret()
     {
         $this->response->type('json');
@@ -110,7 +113,5 @@ class AuthentificationController extends AppController
         $this->Authentification->read(null, $infos['Authentification']['id']);
         $this->Authentification->set(['enabled' => false]);
         $this->Authentification->save();
-        // send to user
-        $this->response->body(json_encode(['qrcode_url' => $qrCodeUrl, 'secret' => $secret]));
     }
 }

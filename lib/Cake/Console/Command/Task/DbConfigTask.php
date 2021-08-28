@@ -22,364 +22,370 @@ App::uses('AppShell', 'Console/Command');
  *
  * @package       Cake.Console.Command.Task
  */
-class DbConfigTask extends AppShell {
+class DbConfigTask extends AppShell
+{
 
-/**
- * path to CONFIG directory
- *
- * @var string
- */
-	public $path = null;
+    /**
+     * path to CONFIG directory
+     *
+     * @var string
+     */
+    public $path = null;
+    /**
+     * String name of the database config class name.
+     * Used for testing.
+     *
+     * @var string
+     */
+    public $databaseClassName = 'DATABASE_CONFIG';
+    /**
+     * Default configuration settings to use
+     *
+     * @var array
+     */
+    protected $_defaultConfig = [
+        'name' => 'default',
+        'datasource' => 'Database/Mysql',
+        'persistent' => 'false',
+        'host' => 'localhost',
+        'login' => 'root',
+        'password' => 'password',
+        'database' => 'project_name',
+        'schema' => null,
+        'prefix' => null,
+        'encoding' => null,
+        'port' => null
+    ];
 
-/**
- * Default configuration settings to use
- *
- * @var array
- */
-	protected $_defaultConfig = array(
-		'name' => 'default',
-		'datasource' => 'Database/Mysql',
-		'persistent' => 'false',
-		'host' => 'localhost',
-		'login' => 'root',
-		'password' => 'password',
-		'database' => 'project_name',
-		'schema' => null,
-		'prefix' => null,
-		'encoding' => null,
-		'port' => null
-	);
+    /**
+     * initialization callback
+     *
+     * @return void
+     */
+    public function initialize()
+    {
+        $this->path = CONFIG;
+    }
 
-/**
- * String name of the database config class name.
- * Used for testing.
- *
- * @var string
- */
-	public $databaseClassName = 'DATABASE_CONFIG';
+    /**
+     * Get a user specified Connection name
+     *
+     * @return void
+     */
+    public function getConfig()
+    {
+        App::uses('ConnectionManager', 'Model');
+        $configs = ConnectionManager::enumConnectionObjects();
 
-/**
- * initialization callback
- *
- * @return void
- */
-	public function initialize() {
-		$this->path = CONFIG;
-	}
+        $useDbConfig = key($configs);
+        if (!is_array($configs) || empty($configs)) {
+            return $this->execute();
+        }
+        $connections = array_keys($configs);
 
-/**
- * Execution method always used for tasks
- *
- * @return void
- */
-	public function execute() {
-		if (empty($this->args)) {
-			$this->_interactive();
-			return $this->_stop();
-		}
-	}
+        if (count($connections) > 1) {
+            $useDbConfig = $this->in(__d('cake_console', 'Use Database Config') . ':', $connections, $useDbConfig);
+        }
+        return $useDbConfig;
+    }
 
-/**
- * Interactive interface
- *
- * @return void
- */
-	protected function _interactive() {
-		$this->hr();
-		$this->out(__d('cake_console', 'Database Configuration:'));
-		$this->hr();
-		$done = false;
-		$dbConfigs = array();
+    /**
+     * Execution method always used for tasks
+     *
+     * @return void
+     */
+    public function execute()
+    {
+        if (empty($this->args)) {
+            $this->_interactive();
+            return $this->_stop();
+        }
+    }
 
-		while (!$done) {
-			$name = '';
+    /**
+     * Interactive interface
+     *
+     * @return void
+     */
+    protected function _interactive()
+    {
+        $this->hr();
+        $this->out(__d('cake_console', 'Database Configuration:'));
+        $this->hr();
+        $done = false;
+        $dbConfigs = [];
 
-			while (!$name) {
-				$name = $this->in(__d('cake_console', "Name:"), null, 'default');
-				if (preg_match('/[^a-z0-9_]/i', $name)) {
-					$name = '';
-					$this->out(__d('cake_console', 'The name may only contain unaccented latin characters, numbers or underscores'));
-				} elseif (preg_match('/^[^a-z_]/i', $name)) {
-					$name = '';
-					$this->out(__d('cake_console', 'The name must start with an unaccented latin character or an underscore'));
-				}
-			}
+        while (!$done) {
+            $name = '';
 
-			$datasource = $this->in(__d('cake_console', 'Datasource:'), array('Mysql', 'Postgres', 'Sqlite', 'Sqlserver'), 'Mysql');
+            while (!$name) {
+                $name = $this->in(__d('cake_console', "Name:"), null, 'default');
+                if (preg_match('/[^a-z0-9_]/i', $name)) {
+                    $name = '';
+                    $this->out(__d('cake_console', 'The name may only contain unaccented latin characters, numbers or underscores'));
+                } else if (preg_match('/^[^a-z_]/i', $name)) {
+                    $name = '';
+                    $this->out(__d('cake_console', 'The name must start with an unaccented latin character or an underscore'));
+                }
+            }
 
-			$persistent = $this->in(__d('cake_console', 'Persistent Connection?'), array('y', 'n'), 'n');
-			if (strtolower($persistent) === 'n') {
-				$persistent = 'false';
-			} else {
-				$persistent = 'true';
-			}
+            $datasource = $this->in(__d('cake_console', 'Datasource:'), ['Mysql', 'Postgres', 'Sqlite', 'Sqlserver'], 'Mysql');
 
-			$host = '';
-			while (!$host) {
-				$host = $this->in(__d('cake_console', 'Database Host:'), null, 'localhost');
-			}
+            $persistent = $this->in(__d('cake_console', 'Persistent Connection?'), ['y', 'n'], 'n');
+            if (strtolower($persistent) === 'n') {
+                $persistent = 'false';
+            } else {
+                $persistent = 'true';
+            }
 
-			$port = '';
-			while (!$port) {
-				$port = $this->in(__d('cake_console', 'Port?'), null, 'n');
-			}
+            $host = '';
+            while (!$host) {
+                $host = $this->in(__d('cake_console', 'Database Host:'), null, 'localhost');
+            }
 
-			if (strtolower($port) === 'n') {
-				$port = null;
-			}
+            $port = '';
+            while (!$port) {
+                $port = $this->in(__d('cake_console', 'Port?'), null, 'n');
+            }
 
-			$login = '';
-			while (!$login) {
-				$login = $this->in(__d('cake_console', 'User:'), null, 'root');
-			}
-			$password = '';
-			$blankPassword = false;
+            if (strtolower($port) === 'n') {
+                $port = null;
+            }
 
-			while (!$password && !$blankPassword) {
-				$password = $this->in(__d('cake_console', 'Password:'));
+            $login = '';
+            while (!$login) {
+                $login = $this->in(__d('cake_console', 'User:'), null, 'root');
+            }
+            $password = '';
+            $blankPassword = false;
 
-				if (!$password) {
-					$blank = $this->in(__d('cake_console', 'The password you supplied was empty. Use an empty password?'), array('y', 'n'), 'n');
-					if ($blank === 'y') {
-						$blankPassword = true;
-					}
-				}
-			}
+            while (!$password && !$blankPassword) {
+                $password = $this->in(__d('cake_console', 'Password:'));
 
-			$database = '';
-			while (!$database) {
-				$database = $this->in(__d('cake_console', 'Database Name:'), null, 'cake');
-			}
+                if (!$password) {
+                    $blank = $this->in(__d('cake_console', 'The password you supplied was empty. Use an empty password?'), ['y', 'n'], 'n');
+                    if ($blank === 'y') {
+                        $blankPassword = true;
+                    }
+                }
+            }
 
-			$prefix = '';
-			while (!$prefix) {
-				$prefix = $this->in(__d('cake_console', 'Table Prefix?'), null, 'n');
-			}
-			if (strtolower($prefix) === 'n') {
-				$prefix = null;
-			}
+            $database = '';
+            while (!$database) {
+                $database = $this->in(__d('cake_console', 'Database Name:'), null, 'cake');
+            }
 
-			$encoding = '';
-			while (!$encoding) {
-				$encoding = $this->in(__d('cake_console', 'Table encoding?'), null, 'n');
-			}
-			if (strtolower($encoding) === 'n') {
-				$encoding = null;
-			}
+            $prefix = '';
+            while (!$prefix) {
+                $prefix = $this->in(__d('cake_console', 'Table Prefix?'), null, 'n');
+            }
+            if (strtolower($prefix) === 'n') {
+                $prefix = null;
+            }
 
-			$schema = '';
-			if ($datasource === 'postgres') {
-				while (!$schema) {
-					$schema = $this->in(__d('cake_console', 'Table schema?'), null, 'n');
-				}
-			}
-			if (strtolower($schema) === 'n') {
-				$schema = null;
-			}
+            $encoding = '';
+            while (!$encoding) {
+                $encoding = $this->in(__d('cake_console', 'Table encoding?'), null, 'n');
+            }
+            if (strtolower($encoding) === 'n') {
+                $encoding = null;
+            }
 
-			$config = compact('name', 'datasource', 'persistent', 'host', 'login', 'password', 'database', 'prefix', 'encoding', 'port', 'schema');
+            $schema = '';
+            if ($datasource === 'postgres') {
+                while (!$schema) {
+                    $schema = $this->in(__d('cake_console', 'Table schema?'), null, 'n');
+                }
+            }
+            if (strtolower($schema) === 'n') {
+                $schema = null;
+            }
 
-			while (!$this->_verify($config)) {
-				$this->_interactive();
-			}
+            $config = compact('name', 'datasource', 'persistent', 'host', 'login', 'password', 'database', 'prefix', 'encoding', 'port', 'schema');
 
-			$dbConfigs[] = $config;
-			$doneYet = $this->in(__d('cake_console', 'Do you wish to add another database configuration?'), null, 'n');
+            while (!$this->_verify($config)) {
+                $this->_interactive();
+            }
 
-			if (strtolower($doneYet === 'n')) {
-				$done = true;
-			}
-		}
+            $dbConfigs[] = $config;
+            $doneYet = $this->in(__d('cake_console', 'Do you wish to add another database configuration?'), null, 'n');
 
-		$this->bake($dbConfigs);
-		config('database');
-		return true;
-	}
+            if (strtolower($doneYet === 'n')) {
+                $done = true;
+            }
+        }
 
-/**
- * Output verification message and bake if it looks good
- *
- * @param array $config The config data.
- * @return bool True if user says it looks good, false otherwise
- */
-	protected function _verify($config) {
-		$config += $this->_defaultConfig;
-		extract($config);
-		$this->out();
-		$this->hr();
-		$this->out(__d('cake_console', 'The following database configuration will be created:'));
-		$this->hr();
-		$this->out(__d('cake_console', "Name:         %s", $name));
-		$this->out(__d('cake_console', "Datasource:   %s", $datasource));
-		$this->out(__d('cake_console', "Persistent:   %s", $persistent));
-		$this->out(__d('cake_console', "Host:         %s", $host));
+        $this->bake($dbConfigs);
+        config('database');
+        return true;
+    }
 
-		if ($port) {
-			$this->out(__d('cake_console', "Port:         %s", $port));
-		}
+    /**
+     * Output verification message and bake if it looks good
+     *
+     * @param array $config The config data.
+     * @return bool True if user says it looks good, false otherwise
+     */
+    protected function _verify($config)
+    {
+        $config += $this->_defaultConfig;
+        extract($config);
+        $this->out();
+        $this->hr();
+        $this->out(__d('cake_console', 'The following database configuration will be created:'));
+        $this->hr();
+        $this->out(__d('cake_console', "Name:         %s", $name));
+        $this->out(__d('cake_console', "Datasource:   %s", $datasource));
+        $this->out(__d('cake_console', "Persistent:   %s", $persistent));
+        $this->out(__d('cake_console', "Host:         %s", $host));
 
-		$this->out(__d('cake_console', "User:         %s", $login));
-		$this->out(__d('cake_console', "Pass:         %s", str_repeat('*', strlen($password))));
-		$this->out(__d('cake_console', "Database:     %s", $database));
+        if ($port) {
+            $this->out(__d('cake_console', "Port:         %s", $port));
+        }
 
-		if ($prefix) {
-			$this->out(__d('cake_console', "Table prefix: %s", $prefix));
-		}
+        $this->out(__d('cake_console', "User:         %s", $login));
+        $this->out(__d('cake_console', "Pass:         %s", str_repeat('*', strlen($password))));
+        $this->out(__d('cake_console', "Database:     %s", $database));
 
-		if ($schema) {
-			$this->out(__d('cake_console', "Schema:       %s", $schema));
-		}
+        if ($prefix) {
+            $this->out(__d('cake_console', "Table prefix: %s", $prefix));
+        }
 
-		if ($encoding) {
-			$this->out(__d('cake_console', "Encoding:     %s", $encoding));
-		}
+        if ($schema) {
+            $this->out(__d('cake_console', "Schema:       %s", $schema));
+        }
 
-		$this->hr();
-		$looksGood = $this->in(__d('cake_console', 'Look okay?'), array('y', 'n'), 'y');
+        if ($encoding) {
+            $this->out(__d('cake_console', "Encoding:     %s", $encoding));
+        }
 
-		if (strtolower($looksGood) === 'y') {
-			return $config;
-		}
-		return false;
-	}
+        $this->hr();
+        $looksGood = $this->in(__d('cake_console', 'Look okay?'), ['y', 'n'], 'y');
 
-/**
- * Assembles and writes database.php
- *
- * @param array $configs Configuration settings to use
- * @return bool Success
- */
-	public function bake($configs) {
-		if (!is_dir($this->path)) {
-			$this->err(__d('cake_console', '%s not found', $this->path));
-			return false;
-		}
+        if (strtolower($looksGood) === 'y') {
+            return $config;
+        }
+        return false;
+    }
 
-		$filename = $this->path . 'database.php';
-		$oldConfigs = array();
+    /**
+     * Assembles and writes database.php
+     *
+     * @param array $configs Configuration settings to use
+     * @return bool Success
+     */
+    public function bake($configs)
+    {
+        if (!is_dir($this->path)) {
+            $this->err(__d('cake_console', '%s not found', $this->path));
+            return false;
+        }
 
-		if (file_exists($filename)) {
-			config('database');
-			$db = new $this->databaseClassName;
-			$temp = get_class_vars(get_class($db));
+        $filename = $this->path . 'database.php';
+        $oldConfigs = [];
 
-			foreach ($temp as $configName => $info) {
-				$info += $this->_defaultConfig;
+        if (file_exists($filename)) {
+            config('database');
+            $db = new $this->databaseClassName;
+            $temp = get_class_vars(get_class($db));
 
-				if (!isset($info['schema'])) {
-					$info['schema'] = null;
-				}
-				if (!isset($info['encoding'])) {
-					$info['encoding'] = null;
-				}
-				if (!isset($info['port'])) {
-					$info['port'] = null;
-				}
+            foreach ($temp as $configName => $info) {
+                $info += $this->_defaultConfig;
 
-				$info['persistent'] = var_export((bool)$info['persistent'], true);
+                if (!isset($info['schema'])) {
+                    $info['schema'] = null;
+                }
+                if (!isset($info['encoding'])) {
+                    $info['encoding'] = null;
+                }
+                if (!isset($info['port'])) {
+                    $info['port'] = null;
+                }
 
-				$oldConfigs[] = array(
-					'name' => $configName,
-					'datasource' => $info['datasource'],
-					'persistent' => $info['persistent'],
-					'host' => $info['host'],
-					'port' => $info['port'],
-					'login' => $info['login'],
-					'password' => $info['password'],
-					'database' => $info['database'],
-					'prefix' => $info['prefix'],
-					'schema' => $info['schema'],
-					'encoding' => $info['encoding']
-				);
-			}
-		}
+                $info['persistent'] = var_export((bool)$info['persistent'], true);
 
-		foreach ($oldConfigs as $key => $oldConfig) {
-			foreach ($configs as $config) {
-				if ($oldConfig['name'] === $config['name']) {
-					unset($oldConfigs[$key]);
-				}
-			}
-		}
+                $oldConfigs[] = [
+                    'name' => $configName,
+                    'datasource' => $info['datasource'],
+                    'persistent' => $info['persistent'],
+                    'host' => $info['host'],
+                    'port' => $info['port'],
+                    'login' => $info['login'],
+                    'password' => $info['password'],
+                    'database' => $info['database'],
+                    'prefix' => $info['prefix'],
+                    'schema' => $info['schema'],
+                    'encoding' => $info['encoding']
+                ];
+            }
+        }
 
-		$configs = array_merge($oldConfigs, $configs);
-		$out = "<?php\n";
-		$out .= "class DATABASE_CONFIG {\n\n";
+        foreach ($oldConfigs as $key => $oldConfig) {
+            foreach ($configs as $config) {
+                if ($oldConfig['name'] === $config['name']) {
+                    unset($oldConfigs[$key]);
+                }
+            }
+        }
 
-		foreach ($configs as $config) {
-			$config += $this->_defaultConfig;
-			extract($config);
+        $configs = array_merge($oldConfigs, $configs);
+        $out = "<?php\n";
+        $out .= "class DATABASE_CONFIG {\n\n";
 
-			if (strpos($datasource, 'Database/') === false) {
-				$datasource = "Database/{$datasource}";
-			}
-			$out .= "\tpublic \${$name} = array(\n";
-			$out .= "\t\t'datasource' => '{$datasource}',\n";
-			$out .= "\t\t'persistent' => {$persistent},\n";
-			$out .= "\t\t'host' => '{$host}',\n";
+        foreach ($configs as $config) {
+            $config += $this->_defaultConfig;
+            extract($config);
 
-			if ($port) {
-				$out .= "\t\t'port' => {$port},\n";
-			}
+            if (strpos($datasource, 'Database/') === false) {
+                $datasource = "Database/{$datasource}";
+            }
+            $out .= "\tpublic \${$name} = array(\n";
+            $out .= "\t\t'datasource' => '{$datasource}',\n";
+            $out .= "\t\t'persistent' => {$persistent},\n";
+            $out .= "\t\t'host' => '{$host}',\n";
 
-			$out .= "\t\t'login' => '{$login}',\n";
-			$out .= "\t\t'password' => '{$password}',\n";
-			$out .= "\t\t'database' => '{$database}',\n";
+            if ($port) {
+                $out .= "\t\t'port' => {$port},\n";
+            }
 
-			if ($schema) {
-				$out .= "\t\t'schema' => '{$schema}',\n";
-			}
+            $out .= "\t\t'login' => '{$login}',\n";
+            $out .= "\t\t'password' => '{$password}',\n";
+            $out .= "\t\t'database' => '{$database}',\n";
 
-			if ($prefix) {
-				$out .= "\t\t'prefix' => '{$prefix}',\n";
-			}
+            if ($schema) {
+                $out .= "\t\t'schema' => '{$schema}',\n";
+            }
 
-			if ($encoding) {
-				$out .= "\t\t'encoding' => '{$encoding}'\n";
-			}
+            if ($prefix) {
+                $out .= "\t\t'prefix' => '{$prefix}',\n";
+            }
 
-			$out .= "\t);\n";
-		}
+            if ($encoding) {
+                $out .= "\t\t'encoding' => '{$encoding}'\n";
+            }
 
-		$out .= "}\n";
-		$filename = $this->path . 'database.php';
-		return $this->createFile($filename, $out);
-	}
+            $out .= "\t);\n";
+        }
 
-/**
- * Get a user specified Connection name
- *
- * @return void
- */
-	public function getConfig() {
-		App::uses('ConnectionManager', 'Model');
-		$configs = ConnectionManager::enumConnectionObjects();
+        $out .= "}\n";
+        $filename = $this->path . 'database.php';
+        return $this->createFile($filename, $out);
+    }
 
-		$useDbConfig = key($configs);
-		if (!is_array($configs) || empty($configs)) {
-			return $this->execute();
-		}
-		$connections = array_keys($configs);
+    /**
+     * Gets the option parser instance and configures it.
+     *
+     * @return ConsoleOptionParser
+     */
+    public function getOptionParser()
+    {
+        $parser = parent::getOptionParser();
 
-		if (count($connections) > 1) {
-			$useDbConfig = $this->in(__d('cake_console', 'Use Database Config') . ':', $connections, $useDbConfig);
-		}
-		return $useDbConfig;
-	}
+        $parser->description(
+            __d('cake_console', 'Bake new database configuration settings.')
+        );
 
-/**
- * Gets the option parser instance and configures it.
- *
- * @return ConsoleOptionParser
- */
-	public function getOptionParser() {
-		$parser = parent::getOptionParser();
-
-		$parser->description(
-			__d('cake_console', 'Bake new database configuration settings.')
-		);
-
-		return $parser;
-	}
+        return $parser;
+    }
 
 }

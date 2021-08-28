@@ -169,7 +169,7 @@ class ServerComponent extends CakeObject
             return $this->config[$server_id];
 
         $this->Configuration = $this->configModel;
-        $configuration = $this->Configuration->find('first');
+        $configuration = $this->Configuration->find();
         if ($configuration['Configuration']['server_state'] != 1)
             return $this->config[$server_id] = false;
 
@@ -310,7 +310,7 @@ class ServerComponent extends CakeObject
     private function decryptWithKey($data, $iv)
     {
         if (!isset($this->key))
-            $this->key = $this->configModel->find('first')['Configuration']['server_secretkey'];
+            $this->key = $this->configModel->find()['Configuration']['server_secretkey'];
         $iv = base64_decode($iv);
         $data = base64_decode($data);
         return openssl_decrypt($data, 'AES-128-CBC', substr($this->key, 0, 16), OPENSSL_RAW_DATA, $iv);
@@ -370,7 +370,7 @@ class ServerComponent extends CakeObject
         if (!$config) // server not found
             return $this->online[$server_id] = false;
         if ($config['type'] == 1 || $config['type'] == 2 || $config['type'] == 3) // ping only
-            return $this->online[$server_id] = ($this->ping(['ip' => $config['ip'], 'port' => $config['port'], 'udp' => $config['type'] == 3])) ? true : false;
+            return $this->online[$server_id] = $this->ping(['ip' => $config['ip'], 'port' => $config['port'], 'udp' => $config['type'] == 3]);
         list($return, $code, $error) = $this->request($this->getUrl($server_id), $this->encryptWithKey("[]"));
         if ($return && $code === 200)
             return $this->online[$server_id] = true;
@@ -414,7 +414,7 @@ class ServerComponent extends CakeObject
 
     public function getSecretKey()
     {
-        $config = $this->configModel->find('first');
+        $config = $this->configModel->find();
         $key = $config['Configuration']['server_secretkey'];
         if (isset($key) && !empty($key))
             return $key;

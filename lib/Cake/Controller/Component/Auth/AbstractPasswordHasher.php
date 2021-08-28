@@ -18,55 +18,58 @@
  *
  * @package       Cake.Controller.Component.Auth
  */
-abstract class AbstractPasswordHasher {
+abstract class AbstractPasswordHasher
+{
 
-/**
- * Configurations for this object. Settings passed from authenticator class to
- * the constructor are merged with this property.
- *
- * @var array
- */
-	protected $_config = array();
+    /**
+     * Configurations for this object. Settings passed from authenticator class to
+     * the constructor are merged with this property.
+     *
+     * @var array
+     */
+    protected $_config = [];
 
-/**
- * Constructor
- *
- * @param array $config Array of config.
- */
-	public function __construct($config = array()) {
-		$this->config($config);
-	}
+    /**
+     * Constructor
+     *
+     * @param array $config Array of config.
+     */
+    public function __construct($config = [])
+    {
+        $this->config($config);
+    }
 
-/**
- * Get/Set the config
- *
- * @param array $config Sets config, if null returns existing config
- * @return array Returns configs
- */
-	public function config($config = null) {
-		if (is_array($config)) {
-			$this->_config = array_merge($this->_config, $config);
-		}
-		return $this->_config;
-	}
+    /**
+     * Get/Set the config
+     *
+     * @param array $config Sets config, if null returns existing config
+     * @return array Returns configs
+     */
+    public function config($config = null)
+    {
+        if (is_array($config)) {
+            $this->_config = array_merge($this->_config, $config);
+        }
+        return $this->_config;
+    }
 
-/**
- * Generates password hash.
- *
- * @param string|array $password Plain text password to hash or array of data
- *   required to generate password hash.
- * @return string Password hash
- */
-	abstract public function hash($password);
+    /**
+     * Generates password hash.
+     *
+     * @param string|array $password Plain text password to hash or array of data
+     *   required to generate password hash.
+     * @return string Password hash
+     */
+    abstract public function hash($password);
 
-/**
- * Check hash. Generate hash from user provided password string or data array
- * and check against existing hash.
- *
- * @param string|array $password Plain text password to hash or data array.
- * @param string $hashedPassword Existing hashed password.
- * @return bool True if hashes match else false.
- */
-	abstract public function check($password, $hashedPassword);
+    /**
+     * Check hash. Generate hash from user provided password string or data array
+     * and check against existing hash.
+     *
+     * @param string|array $password Plain text password to hash or data array.
+     * @param string $hashedPassword Existing hashed password.
+     * @return bool True if hashes match else false.
+     */
+    abstract public function check($password, $hashedPassword);
 
 }

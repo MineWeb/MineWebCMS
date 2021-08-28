@@ -152,8 +152,8 @@
 
                                     <hr>
                                     <div class="form-group">
-                                        <label><?= $Lang->get('CONFIG__CONDITION_TITLE') ?></label>
                                         <div class="form-group">
+                                            <label><?= $Lang->get('CONFIG__CONDITION_TITLE') ?></label>
                                             <?= $this->Form->input(false, [
                                                 'div' => false,
                                                 'type' => 'text',

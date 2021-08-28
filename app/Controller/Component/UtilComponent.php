@@ -58,16 +58,17 @@ class UtilComponent extends CakeObject
 
         if (!$hash)
             $hash = $this->getPasswordHashType();
-        if (!isset($hash) || empty($hash)) {
+        if (empty($hash)) {
             $hash = 'sha256';
         }
+        $salt = false;
 
         if ($hash == 'blowfish') {
             if ($hash_bcrypt)
                 $salt = $hash_bcrypt;
         } else {
             $salt = $this->controller->Configuration->getKey('passwords_salt');
-            if (!isset($salt) || empty($salt)) {
+            if (empty($salt)) {
                 $salt = false;
             }
         }
@@ -122,13 +123,12 @@ class UtilComponent extends CakeObject
         $seconds = ceil($remainingSeconds);
 
         // return the final array
-        $obj = [
+        return [
             'd' => (int)$days,
             'h' => (int)$hours,
             'm' => (int)$minutes,
             's' => (int)$seconds,
         ];
-        return $obj;
     }
 
     /*
@@ -167,7 +167,7 @@ class UtilComponent extends CakeObject
     public function sendMail()
     {
 
-        App::uses('CakeEmail', 'Network/Email');
+        App::uses('CakeEmail', 'Network/Email', 'SocketException');
         $this->Email = new CakeEmail();
 
         if ($this->typeSend == "smtp") {
@@ -189,7 +189,13 @@ class UtilComponent extends CakeObject
             return $event->result;
         }
 
-        return $this->Email->send($this->message);
+        $result = false;
+        try {
+            $result = $this->Email->send($this->message);
+        } catch (SocketException $e) {
+            $this->log($e->getMessage());
+        }
+        return $result;
 
     }
 
@@ -306,7 +312,7 @@ class UtilComponent extends CakeObject
             $response = file_get_contents($url);
         }
 
-        if (empty($response) || is_null($response)) {
+        if (empty($response)) {
             return false;
         }
 
@@ -321,6 +327,7 @@ class UtilComponent extends CakeObject
         $pct = 1000;
         $rand = mt_rand(0, $pct);
         $items = [];
+        $item = null;
 
         foreach ($list as $key => $value) {
             $items[$key] = $value / $probabilityTotal;

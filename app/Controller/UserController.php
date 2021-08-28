@@ -352,8 +352,6 @@ class UserController extends AppController
                 if (!$isValidImg['status']) {
                     $this->response->body(json_encode(['statut' => false, 'msg' => $isValidImg['msg']]));
                     return;
-                } else {
-                    $infos = $isValidImg['infos'];
                 }
                 if (!$this->Util->uploadImage($this->request, $target . $filename)) {
                     $this->response->body(json_encode([
@@ -401,8 +399,6 @@ class UserController extends AppController
                 if (!$isValidImg['status']) {
                     $this->response->body(json_encode(['statut' => false, 'msg' => $isValidImg['msg']]));
                     return;
-                } else {
-                    $infos = $isValidImg['infos'];
                 }
                 if (!$this->Util->uploadImage($this->request, $target . $filename)) {
                     $this->response->body(json_encode([
@@ -451,12 +447,11 @@ class UserController extends AppController
                 0 => $this->Lang->get('USER__RANK_MEMBER'),
                 2 => $this->Lang->get('USER__RANK_MODERATOR'),
                 3 => $this->Lang->get('USER__RANK_ADMINISTRATOR'),
-                4 => $this->Lang->get('USER__RANK_ADMINISTRATOR'),
-                5 => $this->Lang->get('USER__RANK_BANNED')
+                4 => $this->Lang->get('USER__RANK_ADMINISTRATOR')
             ];
             $this->loadModel('Rank');
             $custom_ranks = $this->Rank->find('all');
-            foreach ($custom_ranks as $key => $value) {
+            foreach ($custom_ranks as $value) {
                 $available_ranks[$value['Rank']['rank_id']] = $value['Rank']['name'];
             }
             $this->set(compact('available_ranks'));
@@ -631,7 +626,8 @@ class UserController extends AppController
         if ($this->isConnected and $this->Permissions->can('MANAGE_USERS')) {
             if ($query != false) {
                 $result = $this->User->find('all', ['conditions' => ['pseudo LIKE' => $query . '%']]);
-                foreach ($result as $key => $value) {
+                $users = [];
+                foreach ($result as $value) {
                     $users[] = ['pseudo' => $value['User']['pseudo'], 'id' => $value['User']['id']];
                 }
                 $response = (empty($result)) ? ['status' => false] : ['status' => true, 'data' => $users];
@@ -654,12 +650,11 @@ class UserController extends AppController
                     0 => ['label' => 'success', 'name' => $this->Lang->get('USER__RANK_MEMBER')],
                     2 => ['label' => 'warning', 'name' => $this->Lang->get('USER__RANK_MODERATOR')],
                     3 => ['label' => 'danger', 'name' => $this->Lang->get('USER__RANK_ADMINISTRATOR')],
-                    4 => ['label' => 'danger', 'name' => $this->Lang->get('USER__RANK_ADMINISTRATOR')],
-                    5 => ['label' => 'primary', 'name' => $this->Lang->get('USER__RANK_BANNED')]
+                    4 => ['label' => 'danger', 'name' => $this->Lang->get('USER__RANK_ADMINISTRATOR')]
                 ];
                 $this->loadModel('Rank');
                 $custom_ranks = $this->Rank->find('all');
-                foreach ($custom_ranks as $key => $value) {
+                foreach ($custom_ranks as $value) {
                     $available_ranks[$value['Rank']['rank_id']] = [
                         'label' => 'info',
                         'name' => $value['Rank']['name']
@@ -675,7 +670,7 @@ class UserController extends AppController
                 $response = $this->DataTable->getResponse();
                 $users = $response['aaData'];
                 $data = [];
-                foreach ($users as $key => $value) {
+                foreach ($users as $value) {
                     $username = $value['User']['pseudo'];
                     $date = 'Le ' . $this->Lang->date($value['User']['created']);
                     $rank_label = (isset($available_ranks[$value['User']['rank']])) ? $available_ranks[$value['User']['rank']]['label'] : $available_ranks[0]['label'];
@@ -724,8 +719,7 @@ class UserController extends AppController
                         0 => $this->Lang->get('USER__RANK_MEMBER'),
                         2 => $this->Lang->get('USER__RANK_MODERATOR'),
                         3 => $this->Lang->get('USER__RANK_ADMINISTRATOR'),
-                        4 => $this->Lang->get('USER__RANK_SUPER_ADMINISTRATOR'),
-                        5 => $this->Lang->get('USER__RANK_BANNED')
+                        4 => $this->Lang->get('USER__RANK_SUPER_ADMINISTRATOR')
                     ];
                     $this->loadModel('Rank');
                     $custom_ranks = $this->Rank->find('all');
@@ -764,7 +758,6 @@ class UserController extends AppController
                 $this->User->read(null, $find['User']['id']);
                 $this->User->set(['confirmed' => date('Y-m-d H:i:s')]);
                 $this->User->save();
-                $userSession = $find['User']['id'];
                 $this->redirect(['action' => 'edit', $user_id]);
             } else {
                 throw new NotFoundException();
@@ -862,14 +855,11 @@ class UserController extends AppController
                     $this->User->delete($id);
                     $this->History->set('DELETE_USER', 'user');
                     $this->Session->setFlash($this->Lang->get('USER__DELETE_SUCCESS'), 'default.success');
-                    $this->redirect(['controller' => 'user', 'action' => 'index', 'admin' => true]);
                 } else {
                     $this->Session->setFlash($this->Lang->get('UNKNONW_ID'), 'default.error');
-                    $this->redirect(['controller' => 'user', 'action' => 'index', 'admin' => true]);
                 }
-            } else {
-                $this->redirect(['controller' => 'user', 'action' => 'index', 'admin' => true]);
             }
+            $this->redirect(['controller' => 'user', 'action' => 'index', 'admin' => true]);
         } else {
             $this->redirect('/');
         }

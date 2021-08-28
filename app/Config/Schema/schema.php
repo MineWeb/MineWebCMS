@@ -23,6 +23,17 @@ class AppSchema extends CakeSchema
         ],
         'tableParameters' => ['charset' => 'latin1', 'collate' => 'latin1_swedish_ci', 'engine' => 'InnoDB']
     ];
+
+    public $bans = [
+        'id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'],
+        'user_id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false],
+        'reason' => ['type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
+        'indexes' => [
+            'PRIMARY' => ['column' => 'id', 'unique' => 1]
+        ],
+        'tableParameters' => ['charset' => 'latin1', 'collate' => 'latin1_swedish_ci', 'engine' => 'InnoDB']
+    ];
+
     public $cake_sessions = [
         'id' => ['type' => 'string', 'null' => false, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1', 'key' => 'primary'],
         'data' => ['type' => 'text', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
@@ -47,7 +58,6 @@ class AppSchema extends CakeSchema
         'lang' => ['type' => 'string', 'null' => false, 'default' => 'fr', 'length' => 5, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'theme' => ['type' => 'string', 'null' => false, 'default' => 'default', 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'layout' => ['type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
-        'maintenance' => ['type' => 'text', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'money_name_singular' => ['type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'money_name_plural' => ['type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'server_state' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 1, 'unsigned' => false],
@@ -120,6 +130,17 @@ class AppSchema extends CakeSchema
         'email' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'key' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 10, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'created' => ['type' => 'datetime', 'null' => false, 'default' => null],
+        'indexes' => [
+            'PRIMARY' => ['column' => 'id', 'unique' => 1]
+        ],
+        'tableParameters' => ['charset' => 'latin1', 'collate' => 'latin1_swedish_ci', 'engine' => 'InnoDB']
+    ];
+    public $maintenances = [
+        'id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'],
+        'sub_url' => ['type' => 'integer', 'null' => false, 'default' => 0, 'length' => 1, 'unsigned' => false],
+        'url' => ['type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
+        'reason' => ['type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
+        'active' => ['type' => 'integer', 'null' => false, 'default' => 1, 'length' => 1, 'unsigned' => false],
         'indexes' => [
             'PRIMARY' => ['column' => 'id', 'unique' => 1]
         ],
@@ -376,7 +397,6 @@ class AppSchema extends CakeSchema
                 'lang' => 'fr_FR',
                 'theme' => 'default',
                 'layout' => 'default',
-                'maintenance' => '0',
                 'money_name_singular' => 'point',
                 'money_name_plural' => 'points',
                 'server_state' => 0,

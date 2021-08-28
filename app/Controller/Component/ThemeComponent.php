@@ -81,7 +81,7 @@ class ThemeComponent extends CakeObject
         $bypassedFiles = ['.', '..', '.DS_Store', '__MACOSX', '.gitkeep']; // not a theme
         // set themes on $this->themesAvailable
         if ($api)
-            $this->getThemesOnAPI(true);
+            $this->getThemesOnAPI();
         // each installed themes
         foreach ($themes as $slug) {
             if (in_array($slug, $bypassedFiles)) // not a valid theme
@@ -93,7 +93,7 @@ class ThemeComponent extends CakeObject
             $id = strtolower($config->author . '.' . $config->slug);
             $themesList->$id = $config;
             $checkSupported = $this->checkSupported($slug);
-            $themesList->$id->supported = (empty($checkSupported)) ? true : false;
+            $themesList->$id->supported = empty($checkSupported);
             $themesList->$id->supportedErrors = $checkSupported;
             if ($this->isValid($slug))
                 $themesList->$id->valid = true;
@@ -117,23 +117,23 @@ class ThemeComponent extends CakeObject
 
         // get themes and cache the list
         $themesList = @json_decode($this->controller->sendGetRequest($this->reference), true);
-        Cache::set(['duration' => '+24 hours']);
-        $themes = Cache::read('themes');
-        if (!$themes) {
-            $themes = [];
-            if ($themesList) {
-                foreach ($themesList as $theme) {
-                    if ($theme['free']) {
-                        if (($theme = $this->getThemeFromRepoName($theme['repo']))) {
-                            $theme['free'] = true;
-                            $themes[] = $theme;
-                        }
-                    } else if ($all) {
-                        $themes[] = $theme;
-                    }
+
+        $themes = [];
+        if ($themesList) {
+            $free_themes = [];
+            foreach ($themesList as $theme) {
+                if ($theme['free']) {
+                    $free_themes[] = $theme;
+                } else if ($all) {
+                    $themes[] = $theme;
                 }
             }
-            Cache::write('themes', $themes);
+            if (($th = $this->getThemesFromRepoNames(array_column($free_themes, "repo")))) {
+                foreach ($th as $t) {
+                    $t['free'] = true;
+                    $themes[] = $t;
+                }
+            }
         }
 
         // delete installed themes
@@ -160,6 +160,23 @@ class ThemeComponent extends CakeObject
             return false;
         $config['repo'] = $repo;
         return $config;
+    }
+
+    private function getThemesFromRepoNames($repos)
+    {
+        $urls = [];
+        foreach ($repos as $repo)
+            $urls[] = "https://raw.githubusercontent.com/$repo/master/Config/config.json";
+        $result = $this->controller->sendMultipleGetRequests($urls);
+        $results = [];
+        $i = 0;
+        foreach ($result as $val) {
+            $json = json_decode($val, true);
+            $json['repo'] = $repos[$i];
+            $results[] = $json;
+            $i++;
+        }
+        return $results;
     }
 
     // get themes on api
@@ -502,7 +519,7 @@ class ThemeComponent extends CakeObject
         // on détermine si le thème est installé
         $finded = false;
         $themesInstalled = $this->getThemesInstalled(false);
-        foreach ($themesInstalled as $id => $data) {
+        foreach ($themesInstalled as $data) {
             if ($data->slug == $slug) {
                 $finded = true;
                 $config = $data->configurations;

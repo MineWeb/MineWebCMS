@@ -42,9 +42,27 @@ class AppController extends Controller
     public $view = 'Theme';
 
     protected $isConnected = false;
+    protected $isBanned = false;
 
     public function beforeFilter()
     {
+
+        // lowercase to avoid errors when the controller is called with uppercase
+        $this->params['controller'] = strtolower($this->params['controller']);
+        $this->params['action'] = strtolower($this->params['action']);
+
+        $LoginCondition = $this->here != "/login" || !$this->EyPlugin->isInstalled('phpierre.signinup');
+
+        $this->loadModel("Maintenance");
+        if ($this->params['controller'] != "user" and $this->params['controller'] != "maintenance" and !$this->Permissions->can("BYPASS_MAINTENANCE") and $this->Maintenance->checkMaintenance($this->here) and $LoginCondition) {
+            $this->redirect([
+                'controller' => 'maintenance',
+                'action' => 'index',
+                'plugin' => false,
+                'admin' => false,
+            ]);
+        }
+
         // Plugin disabled
         if ($this->request->params['plugin']) {
             $plugin = $this->EyPlugin->findPlugin('slugLower', $this->request->params['plugin']);
@@ -88,28 +106,7 @@ class AppController extends Controller
             if ($event->isStopped())
                 return $event->result;
         }
-        $LoginCondition = ($this->here != "/login") || !$this->EyPlugin->isInstalled('phpierre.signinup');
-        // Maintenance / Bans
-        // lowercase to avoid errors when the controller is called with uppercase
-        $this->params['controller'] = strtolower($this->params['controller']);
-        $this->params['action'] = strtolower($this->params['action']);
-        if ($this->isConnected and $this->User->getKey('rank') == 5 and $this->params['controller'] != "maintenance" and $this->params['action'] != "logout" and $this->params['controller'] != "api") {
-            $this->redirect([
-                'controller' => 'maintenance',
-                'action' => 'index/banned',
-                'plugin' => false,
-                'admin' => false
-            ]);
-        } else {
-            if ($this->params['controller'] != "user" && $this->params['controller'] != "maintenance" && $this->Configuration->getKey('maintenance') != '0' && !$this->Permissions->can('BYPASS_MAINTENANCE') && $LoginCondition) {
-                $this->redirect([
-                    'controller' => 'maintenance',
-                    'action' => 'index',
-                    'plugin' => false,
-                    'admin' => false
-                ]);
-            }
-        }
+
 
     }
 
@@ -180,7 +177,7 @@ class AppController extends Controller
 
     protected function __setTheme()
     {
-        if (!isset($this->params['prefix']) or $this->params['prefix'] !== "admin")
+        if (!isset($this->params['prefix']) or $this->params['prefix'] !== "admin" or (isset($this->params['prefix']) and $this->params['prefix'] === "admin" and $this->response->statusCode() >= 400))
             $this->theme = Configure::read('theme');
     }
 
@@ -212,6 +209,19 @@ class AppController extends Controller
         $this->isConnected = $this->User->isConnected();
         $this->set('isConnected', $this->isConnected);
 
+        if ($this->isConnected) {
+            $LoginCondition = ($this->here != "/login") || !$this->EyPlugin->isInstalled('phpierre.signinup');
+            if ($this->params['controller'] != "user" and $this->params['controller'] != "ban" and $this->User->isBanned() != false and $LoginCondition) {
+                $this->isBanned = $this->User->isBanned();
+
+                $this->redirect([
+                    'controller' => 'ban',
+                    'action' => 'index',
+                    'plugin' => false,
+                    'admin' => false
+                ]);
+            }
+        }
         $user = ($this->isConnected) ? $this->User->getAllFromCurrentUser() : [];
         if (!empty($user))
             $user['isAdmin'] = $this->User->isAdmin();
@@ -248,6 +258,11 @@ class AppController extends Controller
                         'icon' => 'users',
                         'permission' => 'MANAGE_USERS',
                         'route' => ['controller' => 'user', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
+                    'BAN__MEMBERS' => [
+                        'icon' => 'users',
+                        'permission' => 'MANAGE_BAN',
+                        'route' => ['controller' => 'ban', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
                     'PERMISSIONS__LABEL' => [
                         'icon' => 'user',
@@ -307,22 +322,27 @@ class AppController extends Controller
                 'menu' => [
                     'SERVER__LINK' => [
                         'icon' => 'fas fa-arrows-alt-h',
+                        'permission' => 'MANAGE_SERVERS',
                         'route' => ['controller' => 'server', 'action' => 'link', 'admin' => true, 'plugin' => false]
                     ],
                     'SERVER__BANLIST' => [
                         'icon' => 'ban',
+                        'permission' => 'MANAGE_SERVERS',
                         'route' => ['controller' => 'server', 'action' => 'banlist', 'admin' => true, 'plugin' => false]
                     ],
                     'SERVER__WHITELIST' => [
                         'icon' => 'list',
+                        'permission' => 'MANAGE_SERVERS',
                         'route' => ['controller' => 'server', 'action' => 'whitelist', 'admin' => true, 'plugin' => false]
                     ],
                     'SERVER__ONLINE_PLAYERS' => [
                         'icon' => 'list-ul',
+                        'permission' => 'MANAGE_SERVERS',
                         'route' => ['controller' => 'server', 'action' => 'online', 'admin' => true, 'plugin' => false]
                     ],
                     'SERVER__CMD' => [
                         'icon' => 'key',
+                        'permission' => 'MANAGE_SERVERS',
                         'route' => ['controller' => 'server', 'action' => 'cmd', 'admin' => true, 'plugin' => false]
                     ]
                 ]
@@ -426,8 +446,10 @@ class AppController extends Controller
     {
         $this->loadModel('Navbar');
         $nav = $this->Navbar->find('all', ['order' => 'order']);
-        if (empty($nav))
-            return $this->set('nav', false);
+        if (empty($nav)) {
+            $this->set('nav', false);
+            return;
+        }
         $this->loadModel('Page');
         $pages = $this->Page->find('all', ['fields' => ['id', 'slug']]);
         foreach ($pages as $key => $value)
@@ -463,10 +485,14 @@ class AppController extends Controller
             $server_infos = $this->Server->banner_infos();
         else if (!empty($configuration))
             $server_infos = $this->Server->banner_infos(unserialize($configuration));
-        else
-            return $this->set(['banner_server' => false, 'server_infos' => false]);
-        if (!isset($server_infos['GET_MAX_PLAYERS']) || !isset($server_infos['GET_PLAYER_COUNT']) || $server_infos['GET_MAX_PLAYERS'] === 0)
-            return $this->set(['banner_server' => false, 'server_infos' => $server_infos]);
+        else {
+            $this->set(['banner_server' => false, 'server_infos' => false]);
+            return;
+        }
+        if (!isset($server_infos['GET_MAX_PLAYERS']) || !isset($server_infos['GET_PLAYER_COUNT']) || $server_infos['GET_MAX_PLAYERS'] === 0) {
+            $this->set(['banner_server' => false, 'server_infos' => $server_infos]);
+            return;
+        }
 
         $this->set([
             'banner_server' => $this->Lang->get('SERVER__STATUS_MESSAGE', [
@@ -506,14 +532,15 @@ class AppController extends Controller
         $this->loadModel('Seo');
         $default = $this->Seo->find('first', ["conditions" => ['page' => null]]);
         $current_url = $this->here;
-        $get_page = $this->Seo->find('first', ["conditions" => ['page' => $current_url]]);
+        $get_page = $this->Seo->find('first', ["conditions" => ['page LIKE' => $current_url . "%"]]);
         $seo_config['title'] = (!empty($default['Seo']['title']) ? $default['Seo']['title'] : "{TITLE} - {WEBSITE_NAME}");
         $seo_config['title'] = (!empty($get_page['Seo']['title']) ? $get_page['Seo']['title'] : $seo_config['title']);
         $seo_config['description'] = (!empty($get_page['Seo']['description']) ? $get_page['Seo']['description'] : (!empty($default['Seo']['description']) ? $default['Seo']['description'] : ""));
         $seo_config['img_url'] = (!empty($get_page['Seo']['img_url']) ? $get_page['Seo']['img_url'] : (!empty($default['Seo']['img_url']) ? $default['Seo']['img_url'] : ""));
         $seo_config['favicon_url'] = (!empty($get_page['Seo']['favicon_url']) ? $get_page['Seo']['favicon_url'] : (!empty($default['Seo']['favicon_url']) ? $default['Seo']['favicon_url'] : ""));
-        $seo_config['img_url'] = (empty($seo_config['img_url']) ? $seo_config['favicon_url'] : $seo_config['img_url']);
-        $seo_config['title'] = str_replace(["{TITLE}", "{WEBSITE_NAME}"], [(!empty($this->viewVars['title_for_layout']) ? $this->viewVars['title_for_layout'] : "Error"), (!empty($this->viewVars['website_name']) ? $this->viewVars['website_name'] : "MineWeb")], $seo_config['title']);
+        $seo_config['favicon_url'] = Router::url($seo_config['favicon_url'], true);
+        $seo_config['img_url'] = (empty($seo_config['img_url']) ? $seo_config['favicon_url'] : Router::url($seo_config['img_url'], true));
+        $seo_config['title'] = str_replace(["{TITLE}", "{WEBSITE_NAME}"], [(!empty($this->viewVars['title_for_layout']) ? $this->viewVars['title_for_layout'] : $this->Lang->get("GLOBAL__ERROR")), (!empty($this->viewVars['website_name']) ? $this->viewVars['website_name'] : "MineWeb")], $seo_config['title']);
         $this->set(compact('seo_config'));
     }
 
@@ -555,6 +582,51 @@ class AppController extends Controller
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         $result = curl_exec($ch);
         curl_close($ch);
+        return $result;
+    }
+
+    public function sendMultipleGetRequests($urls)
+    {
+        if (!is_array($urls))
+            $urls = [$urls];
+        $multi = curl_multi_init();
+        $channels = [];
+        $result = [];
+
+        foreach ($urls as $url) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'User-Agent: MineWebCMS'
+            ]);
+            curl_setopt($ch, CURLOPT_HEADER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            curl_multi_add_handle($multi, $ch);
+
+            $channels[$url] = $ch;
+        }
+
+        $active = null;
+        do {
+            $mrc = curl_multi_exec($multi, $active);
+        } while ($mrc == CURLM_CALL_MULTI_PERFORM);
+
+        while ($active && $mrc == CURLM_OK) {
+            if (curl_multi_select($multi) == -1) {
+                continue;
+            }
+            do {
+                $mrc = curl_multi_exec($multi, $active);
+            } while ($mrc == CURLM_CALL_MULTI_PERFORM);
+        }
+
+        foreach ($channels as $channel) {
+            $result[] = curl_multi_getcontent($channel);
+            curl_multi_remove_handle($multi, $channel);
+        }
+
+        curl_multi_close($multi);
         return $result;
     }
 

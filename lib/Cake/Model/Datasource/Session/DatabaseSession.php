@@ -24,139 +24,147 @@ App::uses('ClassRegistry', 'Utility');
  *
  * @package       Cake.Model.Datasource.Session
  */
-class DatabaseSession implements CakeSessionHandlerInterface {
+class DatabaseSession implements CakeSessionHandlerInterface
+{
 
-/**
- * Reference to the model handling the session data
- *
- * @var Model
- */
-	protected $_model;
+    /**
+     * Reference to the model handling the session data
+     *
+     * @var Model
+     */
+    protected $_model;
 
-/**
- * Number of seconds to mark the session as expired
- *
- * @var int
- */
-	protected $_timeout;
+    /**
+     * Number of seconds to mark the session as expired
+     *
+     * @var int
+     */
+    protected $_timeout;
 
-/**
- * Constructor. Looks at Session configuration information and
- * sets up the session model.
- */
-	public function __construct() {
-		$modelName = Configure::read('Session.handler.model');
+    /**
+     * Constructor. Looks at Session configuration information and
+     * sets up the session model.
+     */
+    public function __construct()
+    {
+        $modelName = Configure::read('Session.handler.model');
 
-		if (empty($modelName)) {
-			$settings = array(
-				'class' => 'Session',
-				'alias' => 'Session',
-				'table' => 'cake_sessions',
-			);
-		} else {
-			$settings = array(
-				'class' => $modelName,
-				'alias' => 'Session',
-			);
-		}
-		$this->_model = ClassRegistry::init($settings);
-		$this->_timeout = Configure::read('Session.timeout') * 60;
-	}
+        if (empty($modelName)) {
+            $settings = [
+                'class' => 'Session',
+                'alias' => 'Session',
+                'table' => 'cake_sessions',
+            ];
+        } else {
+            $settings = [
+                'class' => $modelName,
+                'alias' => 'Session',
+            ];
+        }
+        $this->_model = ClassRegistry::init($settings);
+        $this->_timeout = Configure::read('Session.timeout') * 60;
+    }
 
-/**
- * Method called on open of a database session.
- *
- * @return bool Success
- */
-	public function open() {
-		return true;
-	}
+    /**
+     * Method called on open of a database session.
+     *
+     * @return bool Success
+     */
+    public function open()
+    {
+        return true;
+    }
 
-/**
- * Method called on close of a database session.
- *
- * @return bool Success
- */
-	public function close() {
-		return true;
-	}
+    /**
+     * Method called on close of a database session.
+     *
+     * @return bool Success
+     */
+    public function close()
+    {
+        return true;
+    }
 
-/**
- * Method used to read from a database session.
- *
- * @param int|string $id The key of the value to read
- * @return mixed The value of the key or false if it does not exist
- */
-	public function read($id) {
-		$row = $this->_model->find('first', array(
-			'conditions' => array($this->_model->alias . '.' . $this->_model->primaryKey => $id)
-		));
+    /**
+     * Method used to read from a database session.
+     *
+     * @param int|string $id The key of the value to read
+     * @return mixed The value of the key or false if it does not exist
+     */
+    public function read($id)
+    {
+        $row = $this->_model->find('first', [
+            'conditions' => [$this->_model->alias . '.' . $this->_model->primaryKey => $id]
+        ]);
 
-		if (empty($row[$this->_model->alias])) {
-			return '';
-		}
+        if (empty($row[$this->_model->alias])) {
+            return '';
+        }
 
-		if (!is_numeric($row[$this->_model->alias]['data']) && empty($row[$this->_model->alias]['data'])) {
-			return '';
-		}
+        if (!is_numeric($row[$this->_model->alias]['data']) && empty($row[$this->_model->alias]['data'])) {
+            return '';
+        }
 
-		return (string)$row[$this->_model->alias]['data'];
-	}
+        return (string)$row[$this->_model->alias]['data'];
+    }
 
-/**
- * Helper function called on write for database sessions.
- *
- * Will retry, once, if the save triggers a PDOException which
- * can happen if a race condition is encountered
- *
- * @param int $id ID that uniquely identifies session in database
- * @param mixed $data The value of the data to be saved.
- * @return bool True for successful write, false otherwise.
- */
-	public function write($id, $data) {
-		if (!$id) {
-			return false;
-		}
-		$expires = time() + $this->_timeout;
-		$record = compact('id', 'data', 'expires');
-		$record[$this->_model->primaryKey] = $id;
+    /**
+     * Helper function called on write for database sessions.
+     *
+     * Will retry, once, if the save triggers a PDOException which
+     * can happen if a race condition is encountered
+     *
+     * @param int $id ID that uniquely identifies session in database
+     * @param mixed $data The value of the data to be saved.
+     * @return bool True for successful write, false otherwise.
+     */
+    public function write($id, $data)
+    {
+        if (!$id) {
+            return false;
+        }
+        $expires = time() + $this->_timeout;
+        $record = compact('id', 'data', 'expires');
+        $record[$this->_model->primaryKey] = $id;
 
-		$options = array(
-			'validate' => false,
-			'callbacks' => false,
-			'counterCache' => false
-		);
-		try {
-			return (bool)$this->_model->save($record, $options);
-		} catch (PDOException $e) {
-			return (bool)$this->_model->save($record, $options);
-		}
-	}
+        $options = [
+            'validate' => false,
+            'callbacks' => false,
+            'counterCache' => false
+        ];
+        try {
+            return (bool)$this->_model->save($record, $options);
+        } catch (PDOException $e) {
+            return (bool)$this->_model->save($record, $options);
+        }
+    }
 
-/**
- * Method called on the destruction of a database session.
- *
- * @param int $id ID that uniquely identifies session in database
- * @return bool True for successful delete, false otherwise.
- */
-	public function destroy($id) {
-		return (bool)$this->_model->delete($id);
-	}
+    /**
+     * Method called on the destruction of a database session.
+     *
+     * @param int $id ID that uniquely identifies session in database
+     * @return bool True for successful delete, false otherwise.
+     */
+    public function destroy($id)
+    {
+        return (bool)$this->_model->delete($id);
+    }
 
-/**
- * Helper function called on gc for database sessions.
- *
- * @param int $expires Timestamp (defaults to current time)
- * @return bool Success
- */
-	public function gc($expires = null) {
-		if (!$expires) {
-			$expires = time();
-		} else {
-			$expires = time() - $expires;
-		}
-		$this->_model->deleteAll(array($this->_model->alias . ".expires <" => $expires), false, false);
-		return true;
-	}
+    /**
+     * Helper function called on gc for database sessions.
+     *
+     * @param int $expires Timestamp (defaults to current time)
+     * @return bool Success
+     */
+    public function gc($expires = null)
+    {
+        if (!$expires) {
+            $expires = time();
+        } else {
+            $expires = time() - $expires;
+        }
+        $this->_model->deleteAll([$this->_model->alias . ".expires <" => $expires], false, false);
+        return true;
+    }
 
 }

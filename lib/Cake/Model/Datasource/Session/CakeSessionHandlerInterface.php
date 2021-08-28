@@ -20,54 +20,55 @@
  *
  * @package       Cake.Model.Datasource.Session
  */
-interface CakeSessionHandlerInterface {
+interface CakeSessionHandlerInterface
+{
 
-/**
- * Method called on open of a session.
- *
- * @return bool Success
- */
-	public function open();
+    /**
+     * Method called on open of a session.
+     *
+     * @return bool Success
+     */
+    public function open();
 
-/**
- * Method called on close of a session.
- *
- * @return bool Success
- */
-	public function close();
+    /**
+     * Method called on close of a session.
+     *
+     * @return bool Success
+     */
+    public function close();
 
-/**
- * Method used to read from a session.
- *
- * @param string $id The key of the value to read
- * @return mixed The value of the key or false if it does not exist
- */
-	public function read($id);
+    /**
+     * Method used to read from a session.
+     *
+     * @param string $id The key of the value to read
+     * @return mixed The value of the key or false if it does not exist
+     */
+    public function read($id);
 
-/**
- * Helper function called on write for sessions.
- *
- * @param int $id ID that uniquely identifies session in database
- * @param mixed $data The value of the data to be saved.
- * @return bool True for successful write, false otherwise.
- */
-	public function write($id, $data);
+    /**
+     * Helper function called on write for sessions.
+     *
+     * @param int $id ID that uniquely identifies session in database
+     * @param mixed $data The value of the data to be saved.
+     * @return bool True for successful write, false otherwise.
+     */
+    public function write($id, $data);
 
-/**
- * Method called on the destruction of a session.
- *
- * @param int $id ID that uniquely identifies session in database
- * @return bool True for successful delete, false otherwise.
- */
-	public function destroy($id);
+    /**
+     * Method called on the destruction of a session.
+     *
+     * @param int $id ID that uniquely identifies session in database
+     * @return bool True for successful delete, false otherwise.
+     */
+    public function destroy($id);
 
-/**
- * Run the Garbage collection on the session storage. This method should vacuum all
- * expired or dead sessions.
- *
- * @param int $expires Timestamp (defaults to current time)
- * @return bool Success
- */
-	public function gc($expires = null);
+    /**
+     * Run the Garbage collection on the session storage. This method should vacuum all
+     * expired or dead sessions.
+     *
+     * @param int $expires Timestamp (defaults to current time)
+     * @return bool Success
+     */
+    public function gc($expires = null);
 
 }

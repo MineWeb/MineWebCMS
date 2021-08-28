@@ -9,7 +9,7 @@
                     <h3 class="card-title"><?= $Lang->get('PLUGIN__LIST') ?></h3>
                 </div>
 
-                <div class="card-body table-responsive">
+                <div class="card-body">
 
                     <?php
                     $pluginList = $EyPlugin->pluginsLoaded;
@@ -80,7 +80,7 @@
                 <div class="card-header with-border">
                     <h3 class="card-title"><?= $Lang->get('PLUGIN__AVAILABLE') ?></h3>
                 </div>
-                <div class="card-body table-responsive">
+                <div class="card-body">
                     <?php
                     $free_plugins = $EyPlugin->getFreePlugins(true, true);
                     if (!empty($free_plugins)) { ?>
@@ -98,24 +98,29 @@
                                 ?>
                                 <tr plugin-slug="<?= $value['slug'] ?>">
                                     <td><?= $value['name'] ?></td>
-                                    <td><?= isset($value['author']) ? $value['author'] : '' ?></td>
-                                    <td><?= isset($value['version']) ? $value['version'] : $Lang->get('PLUGIN__NEED_PURCHASE') ?></td>
                                     <td>
-                                        <?php if ($value['free']): ?>
-                                            <btn class="btn btn-success install"
-                                                 slug="<?= $value['slug'] ?>"><?= $Lang->get('PLUGIN__INSTALL') ?></btn>
-                                        <?php
-                                        else: // display contact
+                                        <?php if ($value['free']) {
+                                            echo isset($value['author']) ? $value['author'] : '';
+                                        } else { // display contact
                                             foreach ($value['contact'] as $contact) {
                                                 if ($contact['type'] == 'discord') {
                                                     echo '<button class="btn btn-info" style="background-color: #7289da;border-color: #7289da;">Discord - ' . $contact['value'] . '</button>';
                                                 } else if ($contact['type'] === 'email') {
                                                     echo '<button class="btn btn-info">Email - ' . $contact['value'] . '</button>';
+                                                } else {
+                                                    echo '<button class="btn btn-warn">' . $contact['value'] . '</button>';
                                                 }
                                                 echo '&nbsp;&nbsp;';
                                             }
-                                        endif;
+                                        }
                                         ?>
+                                    </td>
+                                    <td><?= isset($value['version']) ? $value['version'] : $Lang->get('PLUGIN__NEED_PURCHASE') ?></td>
+                                    <td>
+                                        <?php if ($value['free']): ?>
+                                            <btn class="btn btn-success install"
+                                                 slug="<?= $value['slug'] ?>"><?= $Lang->get('PLUGIN__INSTALL') ?></btn>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php } ?>

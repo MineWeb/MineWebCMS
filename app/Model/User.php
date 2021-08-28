@@ -20,6 +20,7 @@ class User extends AppModel
     private $userData;
     private $isConnected = null;
     private $isAdmin = null;
+    private $isBanned = null;
 
     public function validRegister($data, $UtilComponent)
     {
@@ -202,6 +203,15 @@ class User extends AppModel
     {
         $user = $this->getDataBySession();
         return !empty($user);
+    }
+
+    public function isBanned()
+    {
+        $check = ClassRegistry::init("Ban")->find('first', ["conditions" => ['user_id' => $this->getKey("id")]]);
+        $this->isBanned = $check ? $check["Ban"]["reason"] : false;
+
+        return $this->isBanned;
+
     }
 
     private function getDataBySession()

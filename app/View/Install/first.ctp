@@ -213,25 +213,35 @@
     <div class="database" style="display:none;" data-need-to-display="<?= ($needDisplayDatabase) ? 'true' : 'false' ?>">
         <form id="saveDB">
             <div class="form-group">
-                <label>Adresse de la base de données</label>
-                <input type="text" class="form-control" name="host" placeholder="Ex: localhost">
+                <label>Type de Base de Données</label>
+                <select name="type" class="form-control">
+                    <option value="0">Mysql</option>
+                    <option value="1">Sqlite3</option>
+                </select>
             </div>
-            <div class="form-group">
-                <label>Nom de la base de données</label>
-                <input type="text" class="form-control" name="database" placeholder="Ex: mineweb">
-            </div>
-            <div class="form-group">
-                <label>Nom d'utilisateur</label>
-                <input type="text" class="form-control" name="login" placeholder="Ex: root">
-            </div>
-            <div class="form-group">
-                <label>Mot de passe</label>
-                <input type="password" class="form-control" name="password" placeholder="Ex: root">
+            <div id="mysql_require">
+                <div class="form-group">
+                    <label>Adresse de la base de données</label>
+                    <input type="text" class="form-control" name="host" placeholder="Ex: localhost">
+                </div>
+                <div class="form-group">
+                    <label>Nom de la base de données</label>
+                    <input type="text" class="form-control" name="database" placeholder="Ex: mineweb">
+                </div>
+                <div class="form-group">
+                    <label>Nom d'utilisateur</label>
+                    <input type="text" class="form-control" name="login" placeholder="Ex: root">
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe</label>
+                    <input type="password" class="form-control" name="password" placeholder="Ex: root">
+                </div>
             </div>
 
             <button type="submit" class="btn btn-success saveDB pull-right">Tester et enregistrer</button>
         </form>
     </div>
+
 
     <button type="submit" class="btn btn-primary btn-block installSQL" style="display:none;">Installer la base de
         données
@@ -245,13 +255,20 @@
 
 <script src="app/webroot/js/jquery.1.12.0.js"></script>
 <script>
-
+    $('select[name=type]').change(function () {
+            if (this.value === '0') {
+                $('#mysql_require').slideDown();
+            } else if (this.value === '1') {
+                $('#mysql_require').slideUp();
+            }
+        }
+    );
     // Messages
-    var TEXT__LOADING = "Chargement...";
-    var TEXT__ERROR = "Erreur";
-    var TEXT__INTERNAL_ERROR = "Une erreur interne est survenue";
-
+    let TEXT__LOADING = "Chargement...";
+    let TEXT__ERROR = "Erreur";
+    let TEXT__INTERNAL_ERROR = "Une erreur interne est survenue";
 </script>
+
 <script src="app/webroot/js/install.js"></script>
 </body>
 </html>

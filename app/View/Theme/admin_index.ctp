@@ -124,24 +124,29 @@
                             <?php foreach ($themesAvailable as $key => $value) { ?>
                                 <tr>
                                     <td><?= $value['name'] ?></td>
-                                    <td><?= isset($value['author']) ? $value['author'] : '' ?></td>
-                                    <td><?= isset($value['version']) ? $value['version'] : $Lang->get('THEME__NEED_PURCHASE') ?></td>
                                     <td>
-                                        <?php if ($value['free']): ?>
-                                            <a href="<?= $this->Html->url(['controller' => 'theme', 'action' => 'install', 'admin' => true, $value['slug']]) ?>"
-                                               class="btn btn-success"><?= $Lang->get('INSTALL__INSTALL') ?></a>
-                                        <?php
-                                        else: // display contact
+                                        <?php if ($value['free']) {
+                                            echo isset($value['author']) ? $value['author'] : '';
+                                        } else { // display contact
                                             foreach ($value['contact'] as $contact) {
                                                 if ($contact['type'] == 'discord') {
                                                     echo '<button class="btn btn-info" style="background-color: #7289da;border-color: #7289da;">Discord - ' . $contact['value'] . '</button>';
                                                 } else if ($contact['type'] === 'email') {
                                                     echo '<button class="btn btn-info">Email - ' . $contact['value'] . '</button>';
+                                                } else {
+                                                    echo '<button class="btn btn-warn">' . $contact['value'] . '</button>';
                                                 }
                                                 echo '&nbsp;&nbsp;';
                                             }
-                                        endif;
+                                        }
                                         ?>
+                                    </td>
+                                    <td><?= isset($value['version']) ? $value['version'] : $Lang->get('THEME__NEED_PURCHASE') ?></td>
+                                    <td>
+                                        <?php if ($value['free']): ?>
+                                            <a href="<?= $this->Html->url(['controller' => 'theme', 'action' => 'install', 'admin' => true, $value['slug']]) ?>"
+                                               class="btn btn-success"><?= $Lang->get('INSTALL__INSTALL') ?></a>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php } ?>

@@ -20,6 +20,7 @@ class PHPGangsta_GoogleAuthenticator
      * @param int $secretLength
      *
      * @return string
+     * @throws Exception
      */
     public function createSecret($secretLength = 16)
     {

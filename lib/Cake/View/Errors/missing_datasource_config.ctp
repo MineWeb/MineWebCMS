@@ -16,12 +16,12 @@
 ?>
 <h2><?php echo __d('cake_dev', 'Missing Datasource Configuration'); ?></h2>
 <p class="error">
-	<strong><?php echo __d('cake_dev', 'Error'); ?>: </strong>
-	<?php echo __d('cake_dev', 'The datasource configuration %1$s was not found in database.php.', '<em>' . h($config) . '</em>'); ?>
+    <strong><?php echo __d('cake_dev', 'Error'); ?>: </strong>
+    <?php echo __d('cake_dev', 'The datasource configuration %1$s was not found in database.php.', '<em>' . h($config) . '</em>'); ?>
 </p>
 <p class="notice">
-	<strong><?php echo __d('cake_dev', 'Notice'); ?>: </strong>
-	<?php echo __d('cake_dev', 'If you want to customize this error message, create %s', APP_DIR . DS . 'View' . DS . 'Errors' . DS . 'missing_datasource_config.ctp'); ?>
+    <strong><?php echo __d('cake_dev', 'Notice'); ?>: </strong>
+    <?php echo __d('cake_dev', 'If you want to customize this error message, create %s', APP_DIR . DS . 'View' . DS . 'Errors' . DS . 'missing_datasource_config.ctp'); ?>
 </p>
 
 <?php

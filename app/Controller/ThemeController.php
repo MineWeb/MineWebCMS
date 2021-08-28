@@ -121,10 +121,7 @@ class ThemeController extends AppController
         App::uses('Folder', 'Utility');
         App::uses('File', 'Utility');
         // config
-        if ($slug == "default")
-            $CSSfolder = ROOT . DS . 'app' . DS . 'webroot' . DS . 'css';
-        else
-            $CSSfolder = ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug . DS . 'webroot' . DS . 'css';
+        $CSSfolder = $this->getCSSfolder($slug);
         $dir = new Folder($CSSfolder);
         // each files
         $files = $dir->findRecursive('.*\.css');
@@ -153,10 +150,7 @@ class ThemeController extends AppController
         unset($file[0]);
         $file = implode(DS, $file);
         $ext = pathinfo($file, PATHINFO_EXTENSION);
-        if ($slug == "default")
-            $CSSfolder = ROOT . DS . 'app' . DS . 'webroot' . DS . 'css';
-        else
-            $CSSfolder = ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug . DS . 'webroot' . DS . 'css';
+        $CSSfolder = $this->getCSSfolder($slug);
 
         if (!file_exists($CSSfolder . DS . $file) || $ext != 'css')
             throw new NotFoundException();
@@ -176,16 +170,26 @@ class ThemeController extends AppController
         $file = $this->request->data['file'];
         $ext = pathinfo($file, PATHINFO_EXTENSION);
         $content = $this->request->data['content'];
-        if ($slug == "default")
-            $CSSfolder = ROOT . DS . 'app' . DS . 'webroot' . DS . 'css';
-        else
-            $CSSfolder = ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug . DS . 'webroot' . DS . 'css';
+        $CSSfolder = $this->getCSSfolder($slug);
 
         if (!file_exists($CSSfolder . DS . $file) || $ext != 'css')
             throw new NotFoundException();
 
         @file_put_contents($CSSfolder . DS . $file, $content);
         $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('THEME__CUSTOM_FILES_FILE_CONTENT_SAVE_SUCCESS')]));
+    }
+
+    /**
+     * @param $slug
+     * @return string
+     */
+    public function getCSSfolder($slug)
+    {
+        if ($slug == "default")
+            $CSSfolder = ROOT . DS . 'app' . DS . 'webroot' . DS . 'css';
+        else
+            $CSSfolder = ROOT . DS . 'app' . DS . 'View' . DS . 'Themed' . DS . $slug . DS . 'webroot' . DS . 'css';
+        return $CSSfolder;
     }
 
 }

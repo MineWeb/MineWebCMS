@@ -345,7 +345,8 @@ class LangComponent extends CakeObject
 
             $newContent['INFORMATIONS']['VERSION'] = $updatedContent['INFORMATIONS']['VERSION']; // on change la version
 
-            $path = end(explode('/', $file));
+            $array = explode('/', $file);
+            $path = end($array);
             $path = explode('.', $path)[0];
 
             foreach ($fileContent['MESSAGES'] as $key => $value) { // on parcours les messages pour éventuellement les mettre à jours
@@ -456,11 +457,10 @@ class LangComponent extends CakeObject
 
         if (file_get_contents(ROOT . '/lang/' . $language . '.json')) {
             $language_file = file_get_contents(ROOT . '/lang/' . $language . '.json');
-            $language_file = json_decode($language_file, true);
         } else {
             $language_file = file_get_contents(ROOT . '/lang/fr.json');
-            $language_file = json_decode($language_file, true);
         }
+        $language_file = json_decode($language_file, true);
 
         if (isset($language_file[$msg])) { // et si le msg existe
             $msg = str_replace('{EMAIL}', $email, $language_file[$msg]);
@@ -472,6 +472,11 @@ class LangComponent extends CakeObject
         }
     }
 
+    function history($action)
+    {
+        $message = $this->lang['messages']["HISTORY__ACTION_" . $action];
+        return !$message ? $action : $message;
+    }
+
 }
 
-?>

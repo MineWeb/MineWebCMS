@@ -26,7 +26,7 @@ class ServerController extends AppController
         }
 
         foreach ($servers as $key => $value)
-            $servers[$key]['Server']['data'] = json_decode($servers[$key]['Server']['data'], true);
+            $servers[$key]['Server']['data'] = json_decode($value['Server']['data'], true);
 
         $bannerMsg = $this->Lang->get('SERVER__STATUS_MESSAGE');
 

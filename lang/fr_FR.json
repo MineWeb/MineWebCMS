@@ -105,7 +105,6 @@
         "HELP__PAGE_EXPLAIN_TITLE":"Explications",
         "HELP__PAGE_EXPLAIN_CONTENT":"<p>Cette page recense une liste de questions et réponses vous permettant de résoudre rapidement vos problèmes.</p><p>La liste de questions est récupérée automatiquement sur mineweb.org, elle est donc actualisée en temps réel.</p>",
         "HELP__ANSWER_TITLE":"Réponse à la question",
-        "HELP__POST_TICKET_TITLE":"Problème non résolu ?",
         "HELP__POST_TICKET_EXPLAIN":"Postez directement votre question au support. Le suivi du ticket se fera sur mineweb.org. Un rapport complet de votre CMS sera envoyé à nos serveurs en même temps que le ticket.<br> Vos tickets déjà ouverts ne s'affichent pas ici, tout cela se passe sur <a href=\"http://mineweb.org/help\" target=\"_blank\">le support</a>.",
         "HELP__POST_TICKET_TITLE":"Titre",
         "HELP__POST_TICKET_TITLE_BOX":"Demander de l'aide",
@@ -344,7 +343,7 @@
         "SEO__PAGE_EDIT_SUCCESS": "Page modifiée avec succès !",
         "SEO__PAGE_DELETE_SUCCESS": "Page supprimée avec succès !",
         "SEO__KEEP_EMPTY": "Laisser vide pour utiliser les valeurs par défaut",
-		
+
         "MOTD__TITLE":"Gérer les MOTD",
         "MOTD__TITLE_DESC":"Vous pouvez dans cette section éditer facilement et instantanément le MOTD de tous vos serveurs, il faut cependant lier votre serveur Bukkit/Bungee (ou autres fork) avec le plugin de MineWeb (en version 3.0.2 ou supérieur) pour que votre serveur s'affiche dans cette liste ! <br>De plus vous pouvez réinitialiser votre MOTD pour que la config de votre serveur ou d'un autre plugin puisse prendre le dessus !",
         "MOTD__RESET":"Réinitialiser le MOTD",
@@ -516,6 +515,7 @@
         "PERMISSIONS__MANAGE_MOTD": "Gérer le MOTD des différents serveurs",
         "PERMISSIONS__SUCCESS_SAVE": "Les permissions ont été sauvegardées avec succès !",
         "PERMISSIONS__BYPASS_MAINTENANCE":"Pouvoir voir le site malgré la maintenance",
+        "PERMISSIONS__BYPASS_BAN": "Contourner un bannissement",
         "PERMISSIONS__MANAGE_MAINTENANCE":"Gérer la maintenance",
         "PERMISSIONS__MANAGE_CONFIGURATION":"Gérer les préférences générales du site",
         "PERMISSIONS__USE_ADMIN_HELP":"Pouvoir utiliser la partie 'aide' du panel admin",
@@ -527,6 +527,7 @@
         "PERMISSIONS__VIEW_STATISTICS": "Voir les statistiques sur le panel admin",
         "PERMISSIONS__MANAGE_THEMES":"Gérer les thèmes du site (activation, désactivation, suppression, installation, customisation)",
         "PERMISSIONS__MANAGE_USERS":"Gérer les utilisateurs (suppression, édition, voir la liste)",
+        "PERMISSIONS__MANAGE_BANS":"Gérer les utilisateurs bannis",
         "PERMISSIONS__SEND_SERVER_COMMAND_FROM_DASHBOARD":"Envoyer des commandes aux serveurs depuis le dashboard admin.",
         "PERMISSIONS__VIEW_WEBSITE_HISTORY": "Voir l'historique du site",
 
@@ -563,6 +564,7 @@
         "SERVER__INVALID_TIMEOUT": "Timeout invalide",
         "SERVER__TIMEOUT_SAVE_SUCCESS": "Le timeout s'est bien enregistré !",
         "SERVER__AFFICH_BANNER": "Afficher ce serveur sur la bannière du site",
+        "SERVER__HIDE_BANNER": "Masquer ce serveur de la bannière du site",
         "SERVER__CONFIG_BANNER_MSG": "Configurer le message affiché sur la bannière",
         "SERVER__EDIT_BANNER_MSG_SUCCESS": "Le message a bien été édité !",
         "SERVER__DISABLE_CACHE": "Désactiver le cache (bannière)",
@@ -629,6 +631,17 @@
         "MAINTENANCE__TITLE":"Maintenance",
         "MAINTENANCE__EDIT_SUCCESS":"Maintenance modifiée avec succès !",
         "MAINTENANCE__REASON":"Raison de la maintenance",
+        "MAINTENANCE__PAGE": "Url de la Page",
+        "MAINTENANCE__ADD_PAGE": "Ajouter une page",
+        "MAINTENANCE__ADD_EXAMPLE": "Exemple: /shop",
+        "MAINTENANCE__ADD_EMPTY_URL": "Vous pouvez laisser vide pour faire une maintenance totale",
+        "MAINTENANCE__ADD_REASON_EMPTY": "Veuillez spécifier une raison",
+        "MAINTENANCE__ADD_SUCCESS": "Page mise en maintenance avec succès",
+        "MAINTENANCE__DISABLED_PAGE": "Maintenance de la page {PAGE} désactivée",
+        "MAINTENANCE__ENABLED_PAGE": "Maintenance de la page {PAGE} activée",
+        "MAINTENANCE__DELETED_PAGE": "Maintenance de la page {PAGE} supprimée",
+        "MAINTENANCE__USE_SUB_URL": "Appliquer la maintenance à toute les urls commençant par votre url ?",
+        "MAINTENANCE__SUB_URL": "Sous URL incluses",
 
         "PAGE__ADD_SUCCESS":"Page ajoutée avec succès !",
         "PAGE__EDIT_SUCCESS":"Page modifiée avec succès !",
@@ -665,6 +678,18 @@
         "API__USE_SKIN_RESTORER": "Utiliser SkinRestorer ?",
         "API__SKIN_RESTORER_SERVER": "Serveur SkinRestorer",
         "API__SKIN_RESTORER_SERVER_DESC": "Si vous utilisez SkinRestorer vous devez choisir un serveur où le skin sera mis (le serveur doit être lié avec le plugin de liaison)",
-        "API__SKIN_RESTORER_NOT_CONNECTED": "Vous devez être connecté en jeu !"
+        "API__SKIN_RESTORER_NOT_CONNECTED": "Vous devez être connecté en jeu !",
+
+        "BAN__MEMBERS": "Membres Bannis",
+        "BAN__HOME": "Bannissements",
+        "BAN__QUESTION": "Bannir ?",
+        "BAN__REASON": "Raison du bannissement",
+        "BAN__ADD": "Bannir un ou des membres",
+        "BAN__SUCCESS": "Membre(s) banni(s)",
+        "BAN__UNBAN": "Révoquer le bannissement",
+        "BAN__EDIT_REASON": "Modifier la raison",
+        "BAN__UNBAN_SUCCESS": "Bannissement révoqué",
+        "BAN__BAN": "Bannis",
+        "BAN__EXPLICATION": "Vous avez été banni pour "
     }
 }

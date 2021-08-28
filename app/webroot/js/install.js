@@ -7,7 +7,7 @@ $(window).load(function() {
   // On affiche alors le petit texte explicatif + logo
   function affichFirst() {
 
-    $(".logo").animate({'margin-top': '25%', 'margin-bottom': '0'}, 1500);
+    $(".logo").animate({'margin-top': '15%', 'margin-bottom': '0'}, 1500);
 
     $('div.first').fadeIn(1500, affichCompatibilite);
   }
@@ -75,6 +75,7 @@ $(window).load(function() {
       var form = $(this);
 
       var inputs = {};
+      inputs['type'] = $(this).find('select[name="type"]').val();
       inputs['host'] = $(this).find('input[name="host"]').val();
       inputs['login'] = $(this).find('input[name="login"]').val();
       inputs['database'] = $(this).find('input[name="database"]').val();

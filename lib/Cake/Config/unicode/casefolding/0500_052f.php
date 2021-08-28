@@ -27,7 +27,7 @@
  *
  * The lower filed is an array of the decimal values that form the lower case version of a character.
  *
- *	The status field is:
+ *    The status field is:
  * C: common case folding, common mappings shared by both simple and full mappings.
  * F: full case folding, mappings that cause strings to grow in length. Multiple characters are separated by spaces.
  * S: simple case folding, mappings to single characters where different from F.
@@ -37,13 +37,13 @@
  *     Note that the Turkic mappings do not maintain canonical equivalence without additional processing.
  *     See the discussions of case mapping in the Unicode Standard for more information.
  */
-$config['0500_052f'][] = array('upper' => 1280, 'status' => 'C', 'lower' => array(1281)); /* CYRILLIC CAPITAL LETTER KOMI DE */
-$config['0500_052f'][] = array('upper' => 1282, 'status' => 'C', 'lower' => array(1283)); /* CYRILLIC CAPITAL LETTER KOMI DJE */
-$config['0500_052f'][] = array('upper' => 1284, 'status' => 'C', 'lower' => array(1285)); /* CYRILLIC CAPITAL LETTER KOMI ZJE */
-$config['0500_052f'][] = array('upper' => 1286, 'status' => 'C', 'lower' => array(1287)); /* CYRILLIC CAPITAL LETTER KOMI DZJE */
-$config['0500_052f'][] = array('upper' => 1288, 'status' => 'C', 'lower' => array(1289)); /* CYRILLIC CAPITAL LETTER KOMI LJE */
-$config['0500_052f'][] = array('upper' => 1290, 'status' => 'C', 'lower' => array(1291)); /* CYRILLIC CAPITAL LETTER KOMI NJE */
-$config['0500_052f'][] = array('upper' => 1292, 'status' => 'C', 'lower' => array(1293)); /* CYRILLIC CAPITAL LETTER KOMI SJE */
-$config['0500_052f'][] = array('upper' => 1294, 'status' => 'C', 'lower' => array(1295)); /* CYRILLIC CAPITAL LETTER KOMI TJE */
-$config['0500_052f'][] = array('upper' => 1296, 'status' => 'C', 'lower' => array(1297)); /* CYRILLIC CAPITAL LETTER ZE */
-$config['0500_052f'][] = array('upper' => 1298, 'status' => 'C', 'lower' => array(1299)); /* CYRILLIC CAPITAL LETTER El with hook */
+$config['0500_052f'][] = ['upper' => 1280, 'status' => 'C', 'lower' => [1281]]; /* CYRILLIC CAPITAL LETTER KOMI DE */
+$config['0500_052f'][] = ['upper' => 1282, 'status' => 'C', 'lower' => [1283]]; /* CYRILLIC CAPITAL LETTER KOMI DJE */
+$config['0500_052f'][] = ['upper' => 1284, 'status' => 'C', 'lower' => [1285]]; /* CYRILLIC CAPITAL LETTER KOMI ZJE */
+$config['0500_052f'][] = ['upper' => 1286, 'status' => 'C', 'lower' => [1287]]; /* CYRILLIC CAPITAL LETTER KOMI DZJE */
+$config['0500_052f'][] = ['upper' => 1288, 'status' => 'C', 'lower' => [1289]]; /* CYRILLIC CAPITAL LETTER KOMI LJE */
+$config['0500_052f'][] = ['upper' => 1290, 'status' => 'C', 'lower' => [1291]]; /* CYRILLIC CAPITAL LETTER KOMI NJE */
+$config['0500_052f'][] = ['upper' => 1292, 'status' => 'C', 'lower' => [1293]]; /* CYRILLIC CAPITAL LETTER KOMI SJE */
+$config['0500_052f'][] = ['upper' => 1294, 'status' => 'C', 'lower' => [1295]]; /* CYRILLIC CAPITAL LETTER KOMI TJE */
+$config['0500_052f'][] = ['upper' => 1296, 'status' => 'C', 'lower' => [1297]]; /* CYRILLIC CAPITAL LETTER ZE */
+$config['0500_052f'][] = ['upper' => 1298, 'status' => 'C', 'lower' => [1299]]; /* CYRILLIC CAPITAL LETTER El with hook */

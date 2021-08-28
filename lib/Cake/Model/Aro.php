@@ -21,19 +21,20 @@ App::uses('AclNode', 'Model');
  *
  * @package       Cake.Model
  */
-class Aro extends AclNode {
+class Aro extends AclNode
+{
 
-/**
- * Model name
- *
- * @var string
- */
-	public $name = 'Aro';
+    /**
+     * Model name
+     *
+     * @var string
+     */
+    public $name = 'Aro';
 
-/**
- * AROs are linked to ACOs by means of Permission
- *
- * @var array
- */
-	public $hasAndBelongsToMany = array('Aco' => array('with' => 'Permission'));
+    /**
+     * AROs are linked to ACOs by means of Permission
+     *
+     * @var array
+     */
+    public $hasAndBelongsToMany = ['Aco' => ['with' => 'Permission']];
 }

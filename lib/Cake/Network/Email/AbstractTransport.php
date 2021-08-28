@@ -21,55 +21,58 @@
  *
  * @package       Cake.Network.Email
  */
-abstract class AbstractTransport {
+abstract class AbstractTransport
+{
 
-/**
- * Configurations
- *
- * @var array
- */
-	protected $_config = array();
+    /**
+     * Configurations
+     *
+     * @var array
+     */
+    protected $_config = [];
 
-/**
- * Send mail
- *
- * @param CakeEmail $email CakeEmail instance.
- * @return array
- */
-	abstract public function send(CakeEmail $email);
+    /**
+     * Send mail
+     *
+     * @param CakeEmail $email CakeEmail instance.
+     * @return array
+     */
+    abstract public function send(CakeEmail $email);
 
-/**
- * Set the config
- *
- * @param array $config Configuration options.
- * @return array Returns configs
- */
-	public function config($config = null) {
-		if (is_array($config)) {
-			$this->_config = $config + $this->_config;
-		}
-		return $this->_config;
-	}
+    /**
+     * Set the config
+     *
+     * @param array $config Configuration options.
+     * @return array Returns configs
+     */
+    public function config($config = null)
+    {
+        if (is_array($config)) {
+            $this->_config = $config + $this->_config;
+        }
+        return $this->_config;
+    }
 
-/**
- * Help to convert headers in string
- *
- * @param array $headers Headers in format key => value
- * @param string $eol End of line string.
- * @return string
- */
-	protected function _headersToString($headers, $eol = "\r\n") {
-		$out = '';
-		foreach ($headers as $key => $value) {
-			if ($value === false || $value === null || $value === '') {
-				continue;
-			}
-			$out .= $key . ': ' . $value . $eol;
-		}
-		if (!empty($out)) {
-			$out = substr($out, 0, -1 * strlen($eol));
-		}
-		return $out;
-	}
+    /**
+     * Help to convert headers in string
+     *
+     * @param array $headers Headers in format key => value
+     * @param string $eol End of line string.
+     * @return string
+     */
+    protected function _headersToString($headers, $eol = "\r\n")
+    {
+        $out = '';
+        foreach ($headers as $key => $value) {
+            if ($value === false || $value === null || $value === '') {
+                continue;
+            }
+            $out .= $key . ': ' . $value . $eol;
+        }
+        if (!empty($out)) {
+            $out = substr($out, 0, -1 * strlen($eol));
+        }
+        return $out;
+    }
 
 }

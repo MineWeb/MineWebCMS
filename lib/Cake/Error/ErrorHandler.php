@@ -142,6 +142,29 @@ class ErrorHandler
     }
 
     /**
+     * Handles exception logging
+     *
+     * @param Exception|ParseError $exception The exception to render.
+     * @param array $config An array of configuration for logging.
+     * @return bool
+     */
+    protected static function _log($exception, $config)
+    {
+        if (empty($config['log'])) {
+            return false;
+        }
+
+        if (!empty($config['skipLog'])) {
+            foreach ((array)$config['skipLog'] as $class) {
+                if ($exception instanceof $class) {
+                    return false;
+                }
+            }
+        }
+        return CakeLog::write(LOG_ERR, static::_getMessage($exception));
+    }
+
+    /**
      * Generates a formatted error message
      *
      * @param Exception $exception Exception instance
@@ -167,29 +190,6 @@ class ErrorHandler
         }
         $message .= "\nStack Trace:\n" . $exception->getTraceAsString();
         return $message;
-    }
-
-    /**
-     * Handles exception logging
-     *
-     * @param Exception|ParseError $exception The exception to render.
-     * @param array $config An array of configuration for logging.
-     * @return bool
-     */
-    protected static function _log($exception, $config)
-    {
-        if (empty($config['log'])) {
-            return false;
-        }
-
-        if (!empty($config['skipLog'])) {
-            foreach ((array)$config['skipLog'] as $class) {
-                if ($exception instanceof $class) {
-                    return false;
-                }
-            }
-        }
-        return CakeLog::write(LOG_ERR, static::_getMessage($exception));
     }
 
     /**
@@ -219,7 +219,7 @@ class ErrorHandler
 
         $debug = Configure::read('debug');
         if ($debug) {
-            $data = array(
+            $data = [
                 'level' => $log,
                 'code' => $code,
                 'error' => $error,
@@ -229,11 +229,54 @@ class ErrorHandler
                 'context' => $context,
                 'start' => 2,
                 'path' => Debugger::trimPath($file)
-            );
+            ];
             return Debugger::getInstance()->outputError($data);
         }
         $message = static::_getErrorMessage($error, $code, $description, $file, $line);
         return CakeLog::write($log, $message);
+    }
+
+    /**
+     * Map an error code into an Error word, and log location.
+     *
+     * @param int $code Error code to map
+     * @return array Array of error word, and log location.
+     */
+    public static function mapErrorCode($code)
+    {
+        $error = $log = null;
+        switch ($code) {
+            case E_PARSE:
+            case E_ERROR:
+            case E_CORE_ERROR:
+            case E_COMPILE_ERROR:
+            case E_USER_ERROR:
+                $error = 'Fatal Error';
+                $log = LOG_ERR;
+                break;
+            case E_WARNING:
+            case E_USER_WARNING:
+            case E_COMPILE_WARNING:
+            case E_RECOVERABLE_ERROR:
+                $error = 'Warning';
+                $log = LOG_WARNING;
+                break;
+            case E_NOTICE:
+            case E_USER_NOTICE:
+                $error = 'Notice';
+                $log = LOG_NOTICE;
+                break;
+            case E_STRICT:
+                $error = 'Strict';
+                $log = LOG_NOTICE;
+                break;
+            case E_DEPRECATED:
+            case E_USER_DEPRECATED:
+                $error = 'Deprecated';
+                $log = LOG_NOTICE;
+                break;
+        }
+        return [$error, $log];
     }
 
     /**
@@ -278,49 +321,6 @@ class ErrorHandler
     }
 
     /**
-     * Map an error code into an Error word, and log location.
-     *
-     * @param int $code Error code to map
-     * @return array Array of error word, and log location.
-     */
-    public static function mapErrorCode($code)
-    {
-        $error = $log = null;
-        switch ($code) {
-            case E_PARSE:
-            case E_ERROR:
-            case E_CORE_ERROR:
-            case E_COMPILE_ERROR:
-            case E_USER_ERROR:
-                $error = 'Fatal Error';
-                $log = LOG_ERR;
-                break;
-            case E_WARNING:
-            case E_USER_WARNING:
-            case E_COMPILE_WARNING:
-            case E_RECOVERABLE_ERROR:
-                $error = 'Warning';
-                $log = LOG_WARNING;
-                break;
-            case E_NOTICE:
-            case E_USER_NOTICE:
-                $error = 'Notice';
-                $log = LOG_NOTICE;
-                break;
-            case E_STRICT:
-                $error = 'Strict';
-                $log = LOG_NOTICE;
-                break;
-            case E_DEPRECATED:
-            case E_USER_DEPRECATED:
-                $error = 'Deprecated';
-                $log = LOG_NOTICE;
-                break;
-        }
-        return array($error, $log);
-    }
-
-    /**
      * Generate the string to use to describe the error.
      *
      * @param string $error The error type (e.g. "Warning")
@@ -345,7 +345,7 @@ class ErrorHandler
                     App::load('CakeText');
                 }
             }
-            $trace = Debugger::trace(array('start' => 1, 'format' => 'log'));
+            $trace = Debugger::trace(['start' => 1, 'format' => 'log']);
             $message .= "\nTrace:\n" . $trace . "\n";
         }
         return $message;

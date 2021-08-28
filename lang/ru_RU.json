@@ -107,7 +107,6 @@
        "HELP__PAGE_EXPLAIN_TITLE": "Объяснить",
        "HELP__PAGE_EXPLAIN_CONTENT": "<p> На этой странице перечислены ваши вопросы и ответы. </ P> <p> Этот список вопросов был автоматически получен с mineweb.org и обновляется в режиме реального времени. </ P>",
        "HELP__ANSWER_TITLE": "Ответ на вопрос",
-       "HELP__POST_TICKET_TITLE": "Проблема не решена?",
        "HELP__POST_TICKET_EXPLAIN": "Опубликуйте вопрос непосредственно к <a href= \"http://mineweb.org/help \"target= \"_blank \"> Поддержка </a> Билет будет отслеживаться на Mineweb.. орг.",
        "HELP__POST_TICKET_TITLE": "Заголовок",
        "HELP__POST_TICKET_TITLE_BOX": "Попросить помощи",
@@ -517,7 +516,8 @@
        "PERMISSIONS__MANAGE_NAV": "Управление панелью навигации (удаление, добавление, редактирование)",
        "PERMISSIONS__MANAGE_SEO": "Управлять SEO-продвижением сайта (удалять, добавлять, редактировать)",
        "PERMISSIONS__SUCCESS_SAVE" : "Разрешения успешно сохранены!" ,
-       "PERMISSIONS__BYPASS_MAINTENANCE" : "Чтобы иметь возможность просматривать сайт, несмотря на техническое обслуживание" ,
+       "PERMISSIONS__BYPASS_MAINTENANCE" : "Чтобы иметь возможность просматривать сайт, несмотря на техническое обслуживание",
+       "PERMISSIONS__BYPASS_BAN": "Обойти бан",
        "PERMISSIONS__MANAGE_MAINTENANCE" : "Управление обслуживанием" ,
        "PERMISSIONS__MANAGE_CONFIGURATION" : "Управление общими настройками сайта" ,
        "PERMISSIONS__USE_ADMIN_HELP" : "Чтобы иметь возможность использовать часть« помощь 'панели администратора'",
@@ -529,6 +529,7 @@
        "PERMISSIONS__VIEW_STATISTICS": "Посмотреть статистику на панели администратора",
        "PERMISSIONS__MANAGE_THEMES" : "Управление темами сайта (активация, деактивация, удаление, установка, настройка)" ,
        "PERMISSIONS__MANAGE_USERS": "Управление пользователями (удаление, редактирование, просмотр списка)",
+       "PERMISSIONS__MANAGE_BANS":"Управление заблокированными пользователями",
        "PERMISSIONS__SEND_SERVER_COMMAND_FROM_DASHBOARD" : "Отправлять команды на серверы с панели администратора" ,
        "PERMISSIONS__VIEW_WEBSITE_HISTORY": "Просмотр истории сайта",
 
@@ -566,6 +567,7 @@
        "SERVER__INVALID_TIMEOUT": "Недопустимый тайм-аут",
        "SERVER__TIMEOUT_SAVE_SUCCESS" : "! Таймаут прописал хорошо" ,
        "SERVER__AFFICH_BANNER": "Показать этот сервер на баннере сайта",
+       "SERVER__HIDE_BANNER": "Скрыть этот сервер с баннера сайта",
        "SERVER__CONFIG_BANNER_MSG" : "Настроить сообщение, отображаемое на баннере" ,
        "SERVER__EDIT_BANNER_MSG_SUCCESS": "Сообщение было отредактировано!",
        "SERVER__DISABLE_CACHE": "Отключить кеш (баннер)",
@@ -626,7 +628,18 @@
 
        "MAINTENANCE__TITLE": "Техническое обслуживание",
        "MAINTENANCE__EDIT_SUCCESS": "Обслуживание успешно изменено!",
-       "MAINTENANCE__REASON" : "Причина обслуживания" ,
+       "MAINTENANCE__REASON" : "Причина обслуживания",
+       "MAINTENANCE__PAGE": "URL страницы",
+       "MAINTENANCE__ADD_PAGE": "Добавить страницу\nDobavit' stranitsu",
+       "MAINTENANCE__ADD_EXAMPLE": "Пример: /shop",
+       "MAINTENANCE__ADD_EMPTY_URL": "Вы можете оставить поле пустым для полного обслуживания",
+       "MAINTENANCE__ADD_REASON_EMPTY": "Укажите причину",
+       "MAINTENANCE__ADD_SUCCESS": "Страница успешно поддерживается",
+       "MAINTENANCE__DISABLED_PAGE": "Обслуживание страницы {PAGE} отключено",
+       "MAINTENANCE__ENABLED_PAGE": "Поддержка страницы {PAGE} включена",
+       "MAINTENANCE__DELETED_PAGE": "Обслуживание удаленной страницы {PAGE}",
+       "MAINTENANCE__USE_SUB_URL": "Применить обслуживание ко всем URL-адресам, начинающимся с вашего URL-адреса?",
+       "MAINTENANCE__SUB_URL": "Под включенными URL",
 
        "PAGE__ADD_SUCCESS": "Страница успешно добавлена!",
        "PAGE__EDIT_SUCCESS": "Страница успешно изменена!",
@@ -663,6 +676,18 @@
        "API__USE_SKIN_RESTORER": "Использовать SkinRestorer?",
        "API__SKIN_RESTORER_SERVER": "Сервер SkinRestorer",
        "API__SKIN_RESTORER_SERVER_DESC": "Если вы используете SkinRestorer, вы должны выбрать сервер, на который будет помещен скин (сервер должен быть связан с плагином ссылки)",
-       "API__SKIN_RESTORER_NOT_CONNECTED": "Вы должны авторизоваться в игре!"
+       "API__SKIN_RESTORER_NOT_CONNECTED": "Вы должны авторизоваться в игре!",
+
+       "BAN__MEMBERS": "Запрещенные участники",
+       "BAN__HOME": "Баны",
+       "BAN__QUESTION": "Запретить?",
+       "BAN__REASON": "Причина бана",
+       "BAN__ADD": "Забанить одного или нескольких участников",
+       "BAN__SUCCESS": "Забаненный участник(ы)",
+       "BAN__UNBAN": "Снять запрет",
+       "BAN__EDIT_REASON": "Измените причину",
+       "BAN__UNBAN_SUCCESS": "Бан отменен",
+       "BAN__BAN": "Запрещено",
+       "BAN__EXPLICATION": "Вас забанили за "
 	}
 }

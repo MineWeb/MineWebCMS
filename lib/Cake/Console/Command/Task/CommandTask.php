@@ -20,164 +20,171 @@ App::uses('AppShell', 'Console/Command');
  *
  * @package       Cake.Console.Command.Task
  */
-class CommandTask extends AppShell {
+class CommandTask extends AppShell
+{
 
-/**
- * Gets the shell command listing.
- *
- * @return array
- */
-	public function getShellList() {
-		$skipFiles = array('AppShell');
+    /**
+     * Return a list of subcommands for a given command
+     *
+     * @param string $commandName The command you want subcommands from.
+     * @return array
+     */
+    public function subCommands($commandName)
+    {
+        $Shell = $this->getShell($commandName);
 
-		$plugins = CakePlugin::loaded();
-		$shellList = array_fill_keys($plugins, null) + array('CORE' => null, 'app' => null);
+        if (!$Shell) {
+            return [];
+        }
 
-		$corePath = App::core('Console/Command');
-		$shells = App::objects('file', $corePath[0]);
-		$shells = array_diff($shells, $skipFiles);
-		$this->_appendShells('CORE', $shells, $shellList);
+        $taskMap = TaskCollection::normalizeObjectArray((array)$Shell->tasks);
+        $return = array_keys($taskMap);
+        $return = array_map('Inflector::underscore', $return);
 
-		$appShells = App::objects('Console/Command', null, false);
-		$appShells = array_diff($appShells, $shells, $skipFiles);
-		$this->_appendShells('app', $appShells, $shellList);
+        $ShellReflection = new ReflectionClass('AppShell');
+        $shellMethods = $ShellReflection->getMethods(ReflectionMethod::IS_PUBLIC);
+        $shellMethodNames = ['main', 'help'];
+        foreach ($shellMethods as $method) {
+            $shellMethodNames[] = $method->getName();
+        }
 
-		foreach ($plugins as $plugin) {
-			$pluginShells = App::objects($plugin . '.Console/Command');
-			$this->_appendShells($plugin, $pluginShells, $shellList);
-		}
+        $Reflection = new ReflectionClass($Shell);
+        $methods = $Reflection->getMethods(ReflectionMethod::IS_PUBLIC);
+        $methodNames = [];
+        foreach ($methods as $method) {
+            $methodNames[] = $method->getName();
+        }
 
-		return array_filter($shellList);
-	}
+        $return += array_diff($methodNames, $shellMethodNames);
+        sort($return);
 
-/**
- * Scan the provided paths for shells, and append them into $shellList
- *
- * @param string $type The type of object.
- * @param array $shells The shell name.
- * @param array &$shellList List of shells.
- * @return void
- */
-	protected function _appendShells($type, $shells, &$shellList) {
-		foreach ($shells as $shell) {
-			$shellList[$type][] = Inflector::underscore(str_replace('Shell', '', $shell));
-		}
-	}
+        return $return;
+    }
 
-/**
- * Return a list of all commands
- *
- * @return array
- */
-	public function commands() {
-		$shellList = $this->getShellList();
+    /**
+     * Get Shell instance for the given command
+     *
+     * @param mixed $commandName The command you want.
+     * @return mixed
+     */
+    public function getShell($commandName)
+    {
+        list($pluginDot, $name) = pluginSplit($commandName, true);
 
-		$options = array();
-		foreach ($shellList as $type => $commands) {
-			$prefix = '';
-			if (!in_array(strtolower($type), array('app', 'core'))) {
-				$prefix = $type . '.';
-			}
+        if (in_array(strtolower($pluginDot), ['app.', 'core.'])) {
+            $commandName = $name;
+            $pluginDot = '';
+        }
 
-			foreach ($commands as $shell) {
-				$options[] = $prefix . $shell;
-			}
-		}
+        if (!in_array($commandName, $this->commands())) {
+            return false;
+        }
 
-		return $options;
-	}
+        $name = Inflector::camelize($name);
+        $pluginDot = Inflector::camelize($pluginDot);
+        $class = $name . 'Shell';
+        App::uses($class, $pluginDot . 'Console/Command');
 
-/**
- * Return a list of subcommands for a given command
- *
- * @param string $commandName The command you want subcommands from.
- * @return array
- */
-	public function subCommands($commandName) {
-		$Shell = $this->getShell($commandName);
+        $Shell = new $class();
+        $Shell->plugin = trim($pluginDot, '.');
+        $Shell->initialize();
 
-		if (!$Shell) {
-			return array();
-		}
+        return $Shell;
+    }
 
-		$taskMap = TaskCollection::normalizeObjectArray((array)$Shell->tasks);
-		$return = array_keys($taskMap);
-		$return = array_map('Inflector::underscore', $return);
+    /**
+     * Return a list of all commands
+     *
+     * @return array
+     */
+    public function commands()
+    {
+        $shellList = $this->getShellList();
 
-		$ShellReflection = new ReflectionClass('AppShell');
-		$shellMethods = $ShellReflection->getMethods(ReflectionMethod::IS_PUBLIC);
-		$shellMethodNames = array('main', 'help');
-		foreach ($shellMethods as $method) {
-			$shellMethodNames[] = $method->getName();
-		}
+        $options = [];
+        foreach ($shellList as $type => $commands) {
+            $prefix = '';
+            if (!in_array(strtolower($type), ['app', 'core'])) {
+                $prefix = $type . '.';
+            }
 
-		$Reflection = new ReflectionClass($Shell);
-		$methods = $Reflection->getMethods(ReflectionMethod::IS_PUBLIC);
-		$methodNames = array();
-		foreach ($methods as $method) {
-			$methodNames[] = $method->getName();
-		}
+            foreach ($commands as $shell) {
+                $options[] = $prefix . $shell;
+            }
+        }
 
-		$return += array_diff($methodNames, $shellMethodNames);
-		sort($return);
+        return $options;
+    }
 
-		return $return;
-	}
+    /**
+     * Gets the shell command listing.
+     *
+     * @return array
+     */
+    public function getShellList()
+    {
+        $skipFiles = ['AppShell'];
 
-/**
- * Get Shell instance for the given command
- *
- * @param mixed $commandName The command you want.
- * @return mixed
- */
-	public function getShell($commandName) {
-		list($pluginDot, $name) = pluginSplit($commandName, true);
+        $plugins = CakePlugin::loaded();
+        $shellList = array_fill_keys($plugins, null) + ['CORE' => null, 'app' => null];
 
-		if (in_array(strtolower($pluginDot), array('app.', 'core.'))) {
-			$commandName = $name;
-			$pluginDot = '';
-		}
+        $corePath = App::core('Console/Command');
+        $shells = App::objects('file', $corePath[0]);
+        $shells = array_diff($shells, $skipFiles);
+        $this->_appendShells('CORE', $shells, $shellList);
 
-		if (!in_array($commandName, $this->commands())) {
-			return false;
-		}
+        $appShells = App::objects('Console/Command', null, false);
+        $appShells = array_diff($appShells, $shells, $skipFiles);
+        $this->_appendShells('app', $appShells, $shellList);
 
-		$name = Inflector::camelize($name);
-		$pluginDot = Inflector::camelize($pluginDot);
-		$class = $name . 'Shell';
-		App::uses($class, $pluginDot . 'Console/Command');
+        foreach ($plugins as $plugin) {
+            $pluginShells = App::objects($plugin . '.Console/Command');
+            $this->_appendShells($plugin, $pluginShells, $shellList);
+        }
 
-		$Shell = new $class();
-		$Shell->plugin = trim($pluginDot, '.');
-		$Shell->initialize();
+        return array_filter($shellList);
+    }
 
-		return $Shell;
-	}
+    /**
+     * Scan the provided paths for shells, and append them into $shellList
+     *
+     * @param string $type The type of object.
+     * @param array $shells The shell name.
+     * @param array &$shellList List of shells.
+     * @return void
+     */
+    protected function _appendShells($type, $shells, &$shellList)
+    {
+        foreach ($shells as $shell) {
+            $shellList[$type][] = Inflector::underscore(str_replace('Shell', '', $shell));
+        }
+    }
 
-/**
- * Get Shell instance for the given command
- *
- * @param mixed $commandName The command to get options for.
- * @return array
- */
-	public function options($commandName) {
-		$Shell = $this->getShell($commandName);
-		if (!$Shell) {
-			$parser = new ConsoleOptionParser();
-		} else {
-			$parser = $Shell->getOptionParser();
-		}
+    /**
+     * Get Shell instance for the given command
+     *
+     * @param mixed $commandName The command to get options for.
+     * @return array
+     */
+    public function options($commandName)
+    {
+        $Shell = $this->getShell($commandName);
+        if (!$Shell) {
+            $parser = new ConsoleOptionParser();
+        } else {
+            $parser = $Shell->getOptionParser();
+        }
 
-		$options = array();
-		$array = $parser->options();
-		foreach ($array as $name => $obj) {
-			$options[] = "--$name";
-			$short = $obj->short();
-			if ($short) {
-				$options[] = "-$short";
-			}
-		}
-		return $options;
-	}
+        $options = [];
+        $array = $parser->options();
+        foreach ($array as $name => $obj) {
+            $options[] = "--$name";
+            $short = $obj->short();
+            if ($short) {
+                $options[] = "-$short";
+            }
+        }
+        return $options;
+    }
 
 }

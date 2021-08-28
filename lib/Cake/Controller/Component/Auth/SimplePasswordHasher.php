@@ -21,35 +21,38 @@ App::uses('Security', 'Utility');
  *
  * @package       Cake.Controller.Component.Auth
  */
-class SimplePasswordHasher extends AbstractPasswordHasher {
+class SimplePasswordHasher extends AbstractPasswordHasher
+{
 
-/**
- * Config for this object.
- *
- * @var array
- */
-	protected $_config = array('hashType' => null);
+    /**
+     * Config for this object.
+     *
+     * @var array
+     */
+    protected $_config = ['hashType' => null];
 
-/**
- * Generates password hash.
- *
- * @param string $password Plain text password to hash.
- * @return string Password hash
- * @link https://book.cakephp.org/2.0/en/core-libraries/components/authentication.html#hashing-passwords
- */
-	public function hash($password) {
-		return Security::hash($password, $this->_config['hashType'], true);
-	}
+    /**
+     * Check hash. Generate hash for user provided password and check against existing hash.
+     *
+     * @param string $password Plain text password to hash.
+     * @param string $hashedPassword Existing hashed password.
+     * @return bool True if hashes match else false.
+     */
+    public function check($password, $hashedPassword)
+    {
+        return $hashedPassword === $this->hash($password);
+    }
 
-/**
- * Check hash. Generate hash for user provided password and check against existing hash.
- *
- * @param string $password Plain text password to hash.
- * @param string $hashedPassword Existing hashed password.
- * @return bool True if hashes match else false.
- */
-	public function check($password, $hashedPassword) {
-		return $hashedPassword === $this->hash($password);
-	}
+    /**
+     * Generates password hash.
+     *
+     * @param string $password Plain text password to hash.
+     * @return string Password hash
+     * @link https://book.cakephp.org/2.0/en/core-libraries/components/authentication.html#hashing-passwords
+     */
+    public function hash($password)
+    {
+        return Security::hash($password, $this->_config['hashType'], true);
+    }
 
 }

@@ -18,6 +18,7 @@ class PermissionsComponent extends CakeObject
         'MANAGE_NAV',
         'MANAGE_SEO',
         'BYPASS_MAINTENANCE',
+        'BYPASS_BAN',
         'MANAGE_MAINTENANCE',
         'MANAGE_CONFIGURATION',
         'USE_ADMIN_HELP',
@@ -29,6 +30,7 @@ class PermissionsComponent extends CakeObject
         'VIEW_STATISTICS',
         'MANAGE_THEMES',
         'MANAGE_USERS',
+        'MANAGE_BANS',
         'VIEW_WEBSITE_HISTORY'
     ];
 

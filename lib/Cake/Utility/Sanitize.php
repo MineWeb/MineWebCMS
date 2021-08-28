@@ -29,241 +29,251 @@ App::uses('ConnectionManager', 'Model');
  * @package       Cake.Utility
  * @deprecated    3.0.0 Deprecated since version 2.4
  */
-class Sanitize {
+class Sanitize
+{
 
-/**
- * Removes any non-alphanumeric characters.
- *
- * @param string|array $string String to sanitize
- * @param array $allowed An array of additional characters that are not to be removed.
- * @return string|array Sanitized string
- */
-	public static function paranoid($string, $allowed = array()) {
-		$allow = null;
-		if (!empty($allowed)) {
-			foreach ($allowed as $value) {
-				$allow .= "\\$value";
-			}
-		}
+    /**
+     * Removes any non-alphanumeric characters.
+     *
+     * @param string|array $string String to sanitize
+     * @param array $allowed An array of additional characters that are not to be removed.
+     * @return string|array Sanitized string
+     */
+    public static function paranoid($string, $allowed = [])
+    {
+        $allow = null;
+        if (!empty($allowed)) {
+            foreach ($allowed as $value) {
+                $allow .= "\\$value";
+            }
+        }
 
-		if (!is_array($string)) {
-			return preg_replace("/[^{$allow}a-zA-Z0-9]/", '', $string);
-		}
+        if (!is_array($string)) {
+            return preg_replace("/[^{$allow}a-zA-Z0-9]/", '', $string);
+        }
 
-		$cleaned = array();
-		foreach ($string as $key => $clean) {
-			$cleaned[$key] = preg_replace("/[^{$allow}a-zA-Z0-9]/", '', $clean);
-		}
+        $cleaned = [];
+        foreach ($string as $key => $clean) {
+            $cleaned[$key] = preg_replace("/[^{$allow}a-zA-Z0-9]/", '', $clean);
+        }
 
-		return $cleaned;
-	}
+        return $cleaned;
+    }
 
-/**
- * Makes a string SQL-safe.
- *
- * @param string $string String to sanitize
- * @param string $connection Database connection being used
- * @return string SQL safe string
- */
-	public static function escape($string, $connection = 'default') {
-		if (is_numeric($string) || $string === null || is_bool($string)) {
-			return $string;
-		}
-		$db = ConnectionManager::getDataSource($connection);
-		$string = $db->value($string, 'string');
-		$start = 1;
-		if ($string{0} === 'N') {
-			$start = 2;
-		}
+    /**
+     * Strips extra whitespace, images, scripts and stylesheets from output
+     *
+     * @param string $str String to sanitize
+     * @return string sanitized string
+     */
+    public static function stripAll($str)
+    {
+        return Sanitize::stripScripts(
+            Sanitize::stripImages(
+                Sanitize::stripWhitespace($str)
+            )
+        );
+    }
 
-		return substr(substr($string, $start), 0, -1);
-	}
+    /**
+     * Strips scripts and stylesheets from output
+     *
+     * @param string $str String to sanitize
+     * @return string String with <link>, <img>, <script>, <style> elements and html comments removed.
+     */
+    public static function stripScripts($str)
+    {
+        $regex =
+            '/(<link[^>]+rel="[^"]*stylesheet"[^>]*>|' .
+            '<img[^>]*>|style="[^"]*")|' .
+            '<script[^>]*>.*?<\/script>|' .
+            '<style[^>]*>.*?<\/style>|' .
+            '<!--.*?-->/is';
+        return preg_replace($regex, '', $str);
+    }
 
-/**
- * Returns given string safe for display as HTML. Renders entities.
- *
- * strip_tags() does not validating HTML syntax or structure, so it might strip whole passages
- * with broken HTML.
- *
- * ### Options:
- *
- * - remove (boolean) if true strips all HTML tags before encoding
- * - charset (string) the charset used to encode the string
- * - quotes (int) see http://php.net/manual/en/function.htmlentities.php
- * - double (boolean) double encode html entities
- *
- * @param string $string String from where to strip tags
- * @param array $options Array of options to use.
- * @return string Sanitized string
- */
-	public static function html($string, $options = array()) {
-		static $defaultCharset = false;
-		if ($defaultCharset === false) {
-			$defaultCharset = Configure::read('App.encoding');
-			if ($defaultCharset === null) {
-				$defaultCharset = 'UTF-8';
-			}
-		}
-		$defaults = array(
-			'remove' => false,
-			'charset' => $defaultCharset,
-			'quotes' => ENT_QUOTES,
-			'double' => true
-		);
+    /**
+     * Strips image tags from output
+     *
+     * @param string $str String to sanitize
+     * @return string Sting with images stripped.
+     */
+    public static function stripImages($str)
+    {
+        $preg = [
+            '/(<a[^>]*>)(<img[^>]+alt=")([^"]*)("[^>]*>)(<\/a>)/i' => '$1$3$5<br />',
+            '/(<img[^>]+alt=")([^"]*)("[^>]*>)/i' => '$2<br />',
+            '/<img[^>]*>/i' => ''
+        ];
 
-		$options += $defaults;
+        return preg_replace(array_keys($preg), array_values($preg), $str);
+    }
 
-		if ($options['remove']) {
-			$string = strip_tags($string);
-		}
+    /**
+     * Strips extra whitespace from output
+     *
+     * @param string $str String to sanitize
+     * @return string whitespace sanitized string
+     */
+    public static function stripWhitespace($str)
+    {
+        return preg_replace('/\s{2,}/u', ' ', preg_replace('/[\n\r\t]+/', '', $str));
+    }
 
-		return htmlentities($string, $options['quotes'], $options['charset'], $options['double']);
-	}
+    /**
+     * Strips the specified tags from output. First parameter is string from
+     * where to remove tags. All subsequent parameters are tags.
+     *
+     * Ex.`$clean = Sanitize::stripTags($dirty, 'b', 'p', 'div');`
+     *
+     * Will remove all `<b>`, `<p>`, and `<div>` tags from the $dirty string.
+     *
+     * @param string $str String to sanitize.
+     * @return string sanitized String
+     */
+    public static function stripTags($str)
+    {
+        $params = func_get_args();
 
-/**
- * Strips extra whitespace from output
- *
- * @param string $str String to sanitize
- * @return string whitespace sanitized string
- */
-	public static function stripWhitespace($str) {
-		return preg_replace('/\s{2,}/u', ' ', preg_replace('/[\n\r\t]+/', '', $str));
-	}
+        for ($i = 1, $count = count($params); $i < $count; $i++) {
+            $str = preg_replace('/<' . $params[$i] . '\b[^>]*>/i', '', $str);
+            $str = preg_replace('/<\/' . $params[$i] . '[^>]*>/i', '', $str);
+        }
+        return $str;
+    }
 
-/**
- * Strips image tags from output
- *
- * @param string $str String to sanitize
- * @return string Sting with images stripped.
- */
-	public static function stripImages($str) {
-		$preg = array(
-			'/(<a[^>]*>)(<img[^>]+alt=")([^"]*)("[^>]*>)(<\/a>)/i' => '$1$3$5<br />',
-			'/(<img[^>]+alt=")([^"]*)("[^>]*>)/i' => '$2<br />',
-			'/<img[^>]*>/i' => ''
-		);
+    /**
+     * Sanitizes given array or value for safe input. Use the options to specify
+     * the connection to use, and what filters should be applied (with a boolean
+     * value). Valid filters:
+     *
+     * - odd_spaces - removes any non space whitespace characters
+     * - encode - Encode any html entities. Encode must be true for the `remove_html` to work.
+     * - dollar - Escape `$` with `\$`
+     * - carriage - Remove `\r`
+     * - unicode -
+     * - escape - Should the string be SQL escaped.
+     * - backslash -
+     * - remove_html - Strip HTML with strip_tags. `encode` must be true for this option to work.
+     *
+     * @param string|array $data Data to sanitize
+     * @param string|array $options If string, DB connection being used, otherwise set of options
+     * @return mixed Sanitized data
+     */
+    public static function clean($data, $options = [])
+    {
+        if (empty($data)) {
+            return $data;
+        }
 
-		return preg_replace(array_keys($preg), array_values($preg), $str);
-	}
+        if (!is_array($options)) {
+            $options = ['connection' => $options];
+        }
 
-/**
- * Strips scripts and stylesheets from output
- *
- * @param string $str String to sanitize
- * @return string String with <link>, <img>, <script>, <style> elements and html comments removed.
- */
-	public static function stripScripts($str) {
-		$regex =
-			'/(<link[^>]+rel="[^"]*stylesheet"[^>]*>|' .
-			'<img[^>]*>|style="[^"]*")|' .
-			'<script[^>]*>.*?<\/script>|' .
-			'<style[^>]*>.*?<\/style>|' .
-			'<!--.*?-->/is';
-		return preg_replace($regex, '', $str);
-	}
+        $options += [
+            'connection' => 'default',
+            'odd_spaces' => true,
+            'remove_html' => false,
+            'encode' => true,
+            'dollar' => true,
+            'carriage' => true,
+            'unicode' => true,
+            'escape' => true,
+            'backslash' => true
+        ];
 
-/**
- * Strips extra whitespace, images, scripts and stylesheets from output
- *
- * @param string $str String to sanitize
- * @return string sanitized string
- */
-	public static function stripAll($str) {
-		return Sanitize::stripScripts(
-			Sanitize::stripImages(
-				Sanitize::stripWhitespace($str)
-			)
-		);
-	}
+        if (is_array($data)) {
+            foreach ($data as $key => $val) {
+                $data[$key] = Sanitize::clean($val, $options);
+            }
+            return $data;
+        }
 
-/**
- * Strips the specified tags from output. First parameter is string from
- * where to remove tags. All subsequent parameters are tags.
- *
- * Ex.`$clean = Sanitize::stripTags($dirty, 'b', 'p', 'div');`
- *
- * Will remove all `<b>`, `<p>`, and `<div>` tags from the $dirty string.
- *
- * @param string $str String to sanitize.
- * @return string sanitized String
- */
-	public static function stripTags($str) {
-		$params = func_get_args();
+        if ($options['odd_spaces']) {
+            $data = str_replace(chr(0xCA), '', $data);
+        }
+        if ($options['encode']) {
+            $data = Sanitize::html($data, ['remove' => $options['remove_html']]);
+        }
+        if ($options['dollar']) {
+            $data = str_replace("\\\$", "$", $data);
+        }
+        if ($options['carriage']) {
+            $data = str_replace("\r", "", $data);
+        }
+        if ($options['unicode']) {
+            $data = preg_replace("/&amp;#([0-9]+);/s", "&#\\1;", $data);
+        }
+        if ($options['escape']) {
+            $data = Sanitize::escape($data, $options['connection']);
+        }
+        if ($options['backslash']) {
+            $data = preg_replace("/\\\(?!&amp;#|\?#)/", "\\", $data);
+        }
+        return $data;
+    }
 
-		for ($i = 1, $count = count($params); $i < $count; $i++) {
-			$str = preg_replace('/<' . $params[$i] . '\b[^>]*>/i', '', $str);
-			$str = preg_replace('/<\/' . $params[$i] . '[^>]*>/i', '', $str);
-		}
-		return $str;
-	}
+    /**
+     * Returns given string safe for display as HTML. Renders entities.
+     *
+     * strip_tags() does not validating HTML syntax or structure, so it might strip whole passages
+     * with broken HTML.
+     *
+     * ### Options:
+     *
+     * - remove (boolean) if true strips all HTML tags before encoding
+     * - charset (string) the charset used to encode the string
+     * - quotes (int) see http://php.net/manual/en/function.htmlentities.php
+     * - double (boolean) double encode html entities
+     *
+     * @param string $string String from where to strip tags
+     * @param array $options Array of options to use.
+     * @return string Sanitized string
+     */
+    public static function html($string, $options = [])
+    {
+        static $defaultCharset = false;
+        if ($defaultCharset === false) {
+            $defaultCharset = Configure::read('App.encoding');
+            if ($defaultCharset === null) {
+                $defaultCharset = 'UTF-8';
+            }
+        }
+        $defaults = [
+            'remove' => false,
+            'charset' => $defaultCharset,
+            'quotes' => ENT_QUOTES,
+            'double' => true
+        ];
 
-/**
- * Sanitizes given array or value for safe input. Use the options to specify
- * the connection to use, and what filters should be applied (with a boolean
- * value). Valid filters:
- *
- * - odd_spaces - removes any non space whitespace characters
- * - encode - Encode any html entities. Encode must be true for the `remove_html` to work.
- * - dollar - Escape `$` with `\$`
- * - carriage - Remove `\r`
- * - unicode -
- * - escape - Should the string be SQL escaped.
- * - backslash -
- * - remove_html - Strip HTML with strip_tags. `encode` must be true for this option to work.
- *
- * @param string|array $data Data to sanitize
- * @param string|array $options If string, DB connection being used, otherwise set of options
- * @return mixed Sanitized data
- */
-	public static function clean($data, $options = array()) {
-		if (empty($data)) {
-			return $data;
-		}
+        $options += $defaults;
 
-		if (!is_array($options)) {
-			$options = array('connection' => $options);
-		}
+        if ($options['remove']) {
+            $string = strip_tags($string);
+        }
 
-		$options += array(
-			'connection' => 'default',
-			'odd_spaces' => true,
-			'remove_html' => false,
-			'encode' => true,
-			'dollar' => true,
-			'carriage' => true,
-			'unicode' => true,
-			'escape' => true,
-			'backslash' => true
-		);
+        return htmlentities($string, $options['quotes'], $options['charset'], $options['double']);
+    }
 
-		if (is_array($data)) {
-			foreach ($data as $key => $val) {
-				$data[$key] = Sanitize::clean($val, $options);
-			}
-			return $data;
-		}
+    /**
+     * Makes a string SQL-safe.
+     *
+     * @param string $string String to sanitize
+     * @param string $connection Database connection being used
+     * @return string SQL safe string
+     */
+    public static function escape($string, $connection = 'default')
+    {
+        if (is_numeric($string) || $string === null || is_bool($string)) {
+            return $string;
+        }
+        $db = ConnectionManager::getDataSource($connection);
+        $string = $db->value($string, 'string');
+        $start = 1;
+        if ($string{0} === 'N') {
+            $start = 2;
+        }
 
-		if ($options['odd_spaces']) {
-			$data = str_replace(chr(0xCA), '', $data);
-		}
-		if ($options['encode']) {
-			$data = Sanitize::html($data, array('remove' => $options['remove_html']));
-		}
-		if ($options['dollar']) {
-			$data = str_replace("\\\$", "$", $data);
-		}
-		if ($options['carriage']) {
-			$data = str_replace("\r", "", $data);
-		}
-		if ($options['unicode']) {
-			$data = preg_replace("/&amp;#([0-9]+);/s", "&#\\1;", $data);
-		}
-		if ($options['escape']) {
-			$data = Sanitize::escape($data, $options['connection']);
-		}
-		if ($options['backslash']) {
-			$data = preg_replace("/\\\(?!&amp;#|\?#)/", "\\", $data);
-		}
-		return $data;
-	}
+        return substr(substr($string, $start), 0, -1);
+    }
 }

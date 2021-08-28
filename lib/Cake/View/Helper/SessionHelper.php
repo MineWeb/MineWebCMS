@@ -27,164 +27,172 @@ App::uses('CakeSession', 'Model/Datasource');
  * @package       Cake.View.Helper
  * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/session.html
  */
-class SessionHelper extends AppHelper {
+class SessionHelper extends AppHelper
+{
 
-/**
- * Reads a session value for a key or returns values for all keys.
- *
- * In your view: `$this->Session->read('Controller.sessKey');`
- * Calling the method without a param will return all session vars
- *
- * @param string $name the name of the session key you want to read
- * @return mixed values from the session vars
- * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/session.html#SessionHelper::read
- */
-	public function read($name = null) {
-		return CakeSession::read($name);
-	}
+    /**
+     * Reads a session value for a key or returns values for all keys.
+     *
+     * In your view: `$this->Session->read('Controller.sessKey');`
+     * Calling the method without a param will return all session vars
+     *
+     * @param string $name the name of the session key you want to read
+     * @return mixed values from the session vars
+     * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/session.html#SessionHelper::read
+     */
+    public function read($name = null)
+    {
+        return CakeSession::read($name);
+    }
 
-/**
- * Reads and deletes a session value for a key.
- *
- * In your view: `$this->Session->consume('Controller.sessKey');`
- *
- * @param string $name the name of the session key you want to read
- * @return mixed values from the session vars
- */
-	public function consume($name) {
-		return CakeSession::consume($name);
-	}
+    /**
+     * Reads and deletes a session value for a key.
+     *
+     * In your view: `$this->Session->consume('Controller.sessKey');`
+     *
+     * @param string $name the name of the session key you want to read
+     * @return mixed values from the session vars
+     */
+    public function consume($name)
+    {
+        return CakeSession::consume($name);
+    }
 
-/**
- * Checks if a session key has been set.
- *
- * In your view: `$this->Session->check('Controller.sessKey');`
- *
- * @param string $name Session key to check.
- * @return bool
- * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/session.html#SessionHelper::check
- */
-	public function check($name) {
-		return CakeSession::check($name);
-	}
+    /**
+     * Checks if a session key has been set.
+     *
+     * In your view: `$this->Session->check('Controller.sessKey');`
+     *
+     * @param string $name Session key to check.
+     * @return bool
+     * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/session.html#SessionHelper::check
+     */
+    public function check($name)
+    {
+        return CakeSession::check($name);
+    }
 
-/**
- * Returns last error encountered in a session
- *
- * In your view: `$this->Session->error();`
- *
- * @return string last error
- * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/session.html#displaying-notifications-or-flash-messages
- */
-	public function error() {
-		return CakeSession::error();
-	}
+    /**
+     * Returns last error encountered in a session
+     *
+     * In your view: `$this->Session->error();`
+     *
+     * @return string last error
+     * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/session.html#displaying-notifications-or-flash-messages
+     */
+    public function error()
+    {
+        return CakeSession::error();
+    }
 
-/**
- * Used to render the message set in Controller::Session::setFlash()
- *
- * In your view: $this->Session->flash('somekey');
- * Will default to flash if no param is passed
- *
- * You can pass additional information into the flash message generation. This allows you
- * to consolidate all the parameters for a given type of flash message into the view.
- *
- * ```
- * echo $this->Session->flash('flash', array('params' => array('class' => 'new-flash')));
- * ```
- *
- * The above would generate a flash message with a custom class name. Using $attrs['params'] you
- * can pass additional data into the element rendering that will be made available as local variables
- * when the element is rendered:
- *
- * ```
- * echo $this->Session->flash('flash', array('params' => array('name' => $user['User']['name'])));
- * ```
- *
- * This would pass the current user's name into the flash message, so you could create personalized
- * messages without the controller needing access to that data.
- *
- * Lastly you can choose the element that is rendered when creating the flash message. Using
- * custom elements allows you to fully customize how flash messages are generated.
- *
- * ```
- * echo $this->Session->flash('flash', array('element' => 'my_custom_element'));
- * ```
- *
- * If you want to use an element from a plugin for rendering your flash message you can do that using the
- * plugin param:
- *
- * ```
- * echo $this->Session->flash('flash', array(
- *		'element' => 'my_custom_element',
- *		'params' => array('plugin' => 'my_plugin')
- * ));
- * ```
- *
- * @param string $key The [Message.]key you are rendering in the view.
- * @param array $attrs Additional attributes to use for the creation of this flash message.
- *    Supports the 'params', and 'element' keys that are used in the helper.
- * @return string
- * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/session.html#SessionHelper::flash
- * @deprecated 3.0.0 Since 2.7, use FlashHelper::render() instead.
- */
-	public function flash($key = 'flash', $attrs = array()) {
-		$out = false;
+    /**
+     * Used to render the message set in Controller::Session::setFlash()
+     *
+     * In your view: $this->Session->flash('somekey');
+     * Will default to flash if no param is passed
+     *
+     * You can pass additional information into the flash message generation. This allows you
+     * to consolidate all the parameters for a given type of flash message into the view.
+     *
+     * ```
+     * echo $this->Session->flash('flash', array('params' => array('class' => 'new-flash')));
+     * ```
+     *
+     * The above would generate a flash message with a custom class name. Using $attrs['params'] you
+     * can pass additional data into the element rendering that will be made available as local variables
+     * when the element is rendered:
+     *
+     * ```
+     * echo $this->Session->flash('flash', array('params' => array('name' => $user['User']['name'])));
+     * ```
+     *
+     * This would pass the current user's name into the flash message, so you could create personalized
+     * messages without the controller needing access to that data.
+     *
+     * Lastly you can choose the element that is rendered when creating the flash message. Using
+     * custom elements allows you to fully customize how flash messages are generated.
+     *
+     * ```
+     * echo $this->Session->flash('flash', array('element' => 'my_custom_element'));
+     * ```
+     *
+     * If you want to use an element from a plugin for rendering your flash message you can do that using the
+     * plugin param:
+     *
+     * ```
+     * echo $this->Session->flash('flash', array(
+     *        'element' => 'my_custom_element',
+     *        'params' => array('plugin' => 'my_plugin')
+     * ));
+     * ```
+     *
+     * @param string $key The [Message.]key you are rendering in the view.
+     * @param array $attrs Additional attributes to use for the creation of this flash message.
+     *    Supports the 'params', and 'element' keys that are used in the helper.
+     * @return string
+     * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/session.html#SessionHelper::flash
+     * @deprecated 3.0.0 Since 2.7, use FlashHelper::render() instead.
+     */
+    public function flash($key = 'flash', $attrs = [])
+    {
+        $out = false;
 
-		if (CakeSession::check('Message.' . $key)) {
-			$flash = CakeSession::read('Message.' . $key);
-			CakeSession::delete('Message.' . $key);
+        if (CakeSession::check('Message.' . $key)) {
+            $flash = CakeSession::read('Message.' . $key);
+            CakeSession::delete('Message.' . $key);
 
-			$out = '';
-			foreach ($flash as $flashArray) {
-				if (!empty($attrs)) {
-					$flashArray = array_merge($flashArray, $attrs);
-				}
-				$flashArray['key'] = $key;
-				$out .= $this->_render($flashArray);
-			}
-		}
-		return $out;
-	}
+            $out = '';
+            foreach ($flash as $flashArray) {
+                if (!empty($attrs)) {
+                    $flashArray = array_merge($flashArray, $attrs);
+                }
+                $flashArray['key'] = $key;
+                $out .= $this->_render($flashArray);
+            }
+        }
+        return $out;
+    }
 
-/**
- * Used to check is a session is valid in a view
- *
- * @return bool
- * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/session.html#SessionHelper::valid
- */
-	public function valid() {
-		return CakeSession::valid();
-	}
+    /**
+     * Renders a flash message
+     *
+     * @param array $flash Flash message array
+     * @return string
+     */
+    protected function _render($flash)
+    {
+        $message = $flash['message'];
+        unset($flash['message']);
 
-/**
- * Renders a flash message
- *
- * @param array $flash Flash message array
- * @return string
- */
-	protected function _render($flash) {
-		$message = $flash['message'];
-		unset($flash['message']);
+        if ($flash['element'] === 'default') {
+            $class = 'message';
+            if (!empty($flash['params']['class'])) {
+                $class = $flash['params']['class'];
+            }
+            $out = '<div id="' . $flash['key'] . 'Message" class="' . $class . '">' . $message . '</div>';
+        } else if (!$flash['element']) {
+            $out = $message;
+        } else {
+            $options = [];
+            if (isset($flash['params']['plugin'])) {
+                $options['plugin'] = $flash['params']['plugin'];
+            }
+            $tmpVars = $flash['params'];
+            $tmpVars['message'] = $message;
+            $tmpVars['key'] = $flash['key'];
+            $out = $this->_View->element($flash['element'], $tmpVars, $options);
+        }
+        return $out;
+    }
 
-		if ($flash['element'] === 'default') {
-			$class = 'message';
-			if (!empty($flash['params']['class'])) {
-				$class = $flash['params']['class'];
-			}
-			$out = '<div id="' . $flash['key'] . 'Message" class="' . $class . '">' . $message . '</div>';
-		} elseif (!$flash['element']) {
-			$out = $message;
-		} else {
-			$options = array();
-			if (isset($flash['params']['plugin'])) {
-				$options['plugin'] = $flash['params']['plugin'];
-			}
-			$tmpVars = $flash['params'];
-			$tmpVars['message'] = $message;
-			$tmpVars['key'] = $flash['key'];
-			$out = $this->_View->element($flash['element'], $tmpVars, $options);
-		}
-		return $out;
-	}
+    /**
+     * Used to check is a session is valid in a view
+     *
+     * @return bool
+     * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/session.html#SessionHelper::valid
+     */
+    public function valid()
+    {
+        return CakeSession::valid();
+    }
 }

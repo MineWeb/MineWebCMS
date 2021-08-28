@@ -31,10 +31,9 @@ class UpdateController extends AppController
         $this->response->type('json');
         $this->autoRender = false;
 
-        $componentUpdated = ($componentUpdated) ? true : false;
         if (!$this->Update->updateCMS($componentUpdated))
             return $this->response->body(json_encode(['statut' => 'error', 'msg' => $this->Update->errorUpdate]));
-        if ($componentUpdated == '0')
+        if (!$componentUpdated)
             return $this->response->body(json_encode(['statut' => 'continue', 'msg' => '']));
         return $this->response->body(json_encode(['statut' => 'success', 'msg' => $this->Lang->get('UPDATE__SUCCESS')]));
     }

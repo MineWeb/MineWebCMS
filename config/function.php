@@ -47,11 +47,10 @@ function clearDir($folder)
             if ($file == '.' || $file == '..') continue;
             if (is_dir($folder . "/" . $file)) {
                 $r = clearDir($folder . "/" . $file);
-                if (!$r) return false;
             } else {
                 $r = unlink($folder . "/" . $file);
-                if (!$r) return false;
             }
+            if (!$r) return false;
         }
         closedir($open);
         rmdir($folder);

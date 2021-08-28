@@ -27,344 +27,358 @@ App::uses('CakeValidationRule', 'Model/Validator');
  * @package       Cake.Model.Validator
  * @link          https://book.cakephp.org/2.0/en/data-validation.html
  */
-class CakeValidationSet implements ArrayAccess, IteratorAggregate, Countable {
+class CakeValidationSet implements ArrayAccess, IteratorAggregate, Countable
+{
 
-/**
- * Holds the CakeValidationRule objects
- *
- * @var CakeValidationRule[]
- */
-	protected $_rules = array();
+    /**
+     * Whether the validation is stopped
+     *
+     * @var bool
+     */
+    public $isStopped = false;
+    /**
+     * Holds the fieldname
+     *
+     * @var string
+     */
+    public $field = null;
+    /**
+     * Holds the original ruleSet
+     *
+     * @var array
+     */
+    public $ruleSet = [];
+    /**
+     * Holds the CakeValidationRule objects
+     *
+     * @var CakeValidationRule[]
+     */
+    protected $_rules = [];
+    /**
+     * List of methods available for validation
+     *
+     * @var array
+     */
+    protected $_methods = [];
+    /**
+     * I18n domain for validation messages.
+     *
+     * @var string
+     */
+    protected $_validationDomain = null;
 
-/**
- * List of methods available for validation
- *
- * @var array
- */
-	protected $_methods = array();
+    /**
+     * Constructor
+     *
+     * @param string $fieldName The fieldname.
+     * @param array $ruleSet Rules set.
+     */
+    public function __construct($fieldName, $ruleSet)
+    {
+        $this->field = $fieldName;
 
-/**
- * I18n domain for validation messages.
- *
- * @var string
- */
-	protected $_validationDomain = null;
+        if (!is_array($ruleSet) || (is_array($ruleSet) && isset($ruleSet['rule']))) {
+            $ruleSet = [$ruleSet];
+        }
 
-/**
- * Whether the validation is stopped
- *
- * @var bool
- */
-	public $isStopped = false;
+        foreach ($ruleSet as $index => $validateProp) {
+            $this->_rules[$index] = new CakeValidationRule($validateProp);
+        }
+        $this->ruleSet = $ruleSet;
+    }
 
-/**
- * Holds the fieldname
- *
- * @var string
- */
-	public $field = null;
+    /**
+     * Sets the list of methods to use for validation
+     *
+     * @param array &$methods Methods list
+     * @return void
+     */
+    public function setMethods(&$methods)
+    {
+        $this->_methods =& $methods;
+    }
 
-/**
- * Holds the original ruleSet
- *
- * @var array
- */
-	public $ruleSet = array();
+    /**
+     * Sets the I18n domain for validation messages.
+     *
+     * @param string $validationDomain The validation domain to be used.
+     * @return void
+     */
+    public function setValidationDomain($validationDomain)
+    {
+        $this->_validationDomain = $validationDomain;
+    }
 
-/**
- * Constructor
- *
- * @param string $fieldName The fieldname.
- * @param array $ruleSet Rules set.
- */
-	public function __construct($fieldName, $ruleSet) {
-		$this->field = $fieldName;
+    /**
+     * Runs all validation rules in this set and returns a list of
+     * validation errors
+     *
+     * @param array $data Data array
+     * @param bool $isUpdate Is record being updated or created
+     * @return array list of validation errors for this field
+     */
+    public function validate($data, $isUpdate = false)
+    {
+        $this->reset();
+        $errors = [];
+        foreach ($this->getRules() as $name => $rule) {
+            $rule->isUpdate($isUpdate);
+            if ($rule->skip()) {
+                continue;
+            }
 
-		if (!is_array($ruleSet) || (is_array($ruleSet) && isset($ruleSet['rule']))) {
-			$ruleSet = array($ruleSet);
-		}
+            $checkRequired = $rule->checkRequired($this->field, $data);
+            if (!$checkRequired && array_key_exists($this->field, $data)) {
+                if ($rule->checkEmpty($this->field, $data)) {
+                    break;
+                }
+                $rule->process($this->field, $data, $this->_methods);
+            }
 
-		foreach ($ruleSet as $index => $validateProp) {
-			$this->_rules[$index] = new CakeValidationRule($validateProp);
-		}
-		$this->ruleSet = $ruleSet;
-	}
+            if ($checkRequired || !$rule->isValid()) {
+                $errors[] = $this->_processValidationResponse($name, $rule);
+                if ($rule->isLast()) {
+                    break;
+                }
+            }
+        }
 
-/**
- * Sets the list of methods to use for validation
- *
- * @param array &$methods Methods list
- * @return void
- */
-	public function setMethods(&$methods) {
-		$this->_methods =& $methods;
-	}
+        return $errors;
+    }
 
-/**
- * Sets the I18n domain for validation messages.
- *
- * @param string $validationDomain The validation domain to be used.
- * @return void
- */
-	public function setValidationDomain($validationDomain) {
-		$this->_validationDomain = $validationDomain;
-	}
+    /**
+     * Resets internal state for all validation rules in this set
+     *
+     * @return void
+     */
+    public function reset()
+    {
+        foreach ($this->getRules() as $rule) {
+            $rule->reset();
+        }
+    }
 
-/**
- * Runs all validation rules in this set and returns a list of
- * validation errors
- *
- * @param array $data Data array
- * @param bool $isUpdate Is record being updated or created
- * @return array list of validation errors for this field
- */
-	public function validate($data, $isUpdate = false) {
-		$this->reset();
-		$errors = array();
-		foreach ($this->getRules() as $name => $rule) {
-			$rule->isUpdate($isUpdate);
-			if ($rule->skip()) {
-				continue;
-			}
+    /**
+     * Returns all rules for this validation set
+     *
+     * @return CakeValidationRule[]
+     */
+    public function getRules()
+    {
+        return $this->_rules;
+    }
 
-			$checkRequired = $rule->checkRequired($this->field, $data);
-			if (!$checkRequired && array_key_exists($this->field, $data)) {
-				if ($rule->checkEmpty($this->field, $data)) {
-					break;
-				}
-				$rule->process($this->field, $data, $this->_methods);
-			}
+    /**
+     * Sets the rules for a given field
+     *
+     * ## Example:
+     *
+     * ```
+     *        $set->setRules(array(
+     *            'required' => array('rule' => 'notBlank', 'required' => true),
+     *            'inRange' => array('rule' => array('between', 4, 10)
+     *        ));
+     * ```
+     *
+     * @param array $rules The rules to be set
+     * @param bool $mergeVars [optional] If true, merges vars instead of replace. Defaults to true.
+     * @return self
+     */
+    public function setRules($rules = [], $mergeVars = true)
+    {
+        if ($mergeVars === false) {
+            $this->_rules = [];
+        }
+        foreach ($rules as $name => $rule) {
+            $this->setRule($name, $rule);
+        }
+        return $this;
+    }
 
-			if ($checkRequired || !$rule->isValid()) {
-				$errors[] = $this->_processValidationResponse($name, $rule);
-				if ($rule->isLast()) {
-					break;
-				}
-			}
-		}
+    /**
+     * Fetches the correct error message for a failed validation
+     *
+     * @param string $name the name of the rule as it was configured
+     * @param CakeValidationRule $rule the object containing validation information
+     * @return string
+     */
+    protected function _processValidationResponse($name, $rule)
+    {
+        $message = $rule->getValidationResult();
+        if (is_string($message)) {
+            return $message;
+        }
+        $message = $rule->message;
 
-		return $errors;
-	}
+        if ($message !== null) {
+            $args = null;
+            if (is_array($message)) {
+                $result = $message[0];
+                $args = array_slice($message, 1);
+            } else {
+                $result = $message;
+            }
+            if (is_array($rule->rule) && $args === null) {
+                $args = array_slice($rule->rule, 1);
+            }
+            $args = $this->_translateArgs($args);
 
-/**
- * Resets internal state for all validation rules in this set
- *
- * @return void
- */
-	public function reset() {
-		foreach ($this->getRules() as $rule) {
-			$rule->reset();
-		}
-	}
+            $message = __d($this->_validationDomain, $result, $args);
+        } else if (is_string($name)) {
+            if (is_array($rule->rule)) {
+                $args = array_slice($rule->rule, 1);
+                $args = $this->_translateArgs($args);
+                $message = __d($this->_validationDomain, $name, $args);
+            } else {
+                $message = __d($this->_validationDomain, $name);
+            }
+        } else {
+            $message = __d('cake', 'This field cannot be left blank');
+        }
 
-/**
- * Gets a rule for a given name if exists
- *
- * @param string $name Field name.
- * @return CakeValidationRule
- */
-	public function getRule($name) {
-		if (!empty($this->_rules[$name])) {
-			return $this->_rules[$name];
-		}
-	}
+        return $message;
+    }
 
-/**
- * Returns all rules for this validation set
- *
- * @return CakeValidationRule[]
- */
-	public function getRules() {
-		return $this->_rules;
-	}
+    /**
+     * Applies translations to validator arguments.
+     *
+     * @param array $args The args to translate
+     * @return array Translated args.
+     */
+    protected function _translateArgs($args)
+    {
+        foreach ((array)$args as $k => $arg) {
+            if (is_string($arg)) {
+                $args[$k] = __d($this->_validationDomain, $arg);
+            }
+        }
+        return $args;
+    }
 
-/**
- * Sets a CakeValidationRule $rule with a $name
- *
- * ## Example:
- *
- * ```
- *		$set
- *			->setRule('required', array('rule' => 'notBlank', 'required' => true))
- *			->setRule('between', array('rule' => array('lengthBetween', 4, 10))
- * ```
- *
- * @param string $name The name under which the rule should be set
- * @param CakeValidationRule|array $rule The validation rule to be set
- * @return self
- */
-	public function setRule($name, $rule) {
-		if (!($rule instanceof CakeValidationRule)) {
-			$rule = new CakeValidationRule($rule);
-		}
-		$this->_rules[$name] = $rule;
-		return $this;
-	}
+    /**
+     * Sets a CakeValidationRule $rule with a $name
+     *
+     * ## Example:
+     *
+     * ```
+     *        $set
+     *            ->setRule('required', array('rule' => 'notBlank', 'required' => true))
+     *            ->setRule('between', array('rule' => array('lengthBetween', 4, 10))
+     * ```
+     *
+     * @param string $name The name under which the rule should be set
+     * @param CakeValidationRule|array $rule The validation rule to be set
+     * @return self
+     */
+    public function setRule($name, $rule)
+    {
+        if (!($rule instanceof CakeValidationRule)) {
+            $rule = new CakeValidationRule($rule);
+        }
+        $this->_rules[$name] = $rule;
+        return $this;
+    }
 
-/**
- * Removes a validation rule from the set
- *
- * ## Example:
- *
- * ```
- *		$set
- *			->removeRule('required')
- *			->removeRule('inRange')
- * ```
- *
- * @param string $name The name under which the rule should be unset
- * @return self
- */
-	public function removeRule($name) {
-		unset($this->_rules[$name]);
-		return $this;
-	}
+    /**
+     * Gets a rule for a given name if exists
+     *
+     * @param string $name Field name.
+     * @return CakeValidationRule
+     */
+    public function getRule($name)
+    {
+        if (!empty($this->_rules[$name])) {
+            return $this->_rules[$name];
+        }
+    }
 
-/**
- * Sets the rules for a given field
- *
- * ## Example:
- *
- * ```
- *		$set->setRules(array(
- *			'required' => array('rule' => 'notBlank', 'required' => true),
- *			'inRange' => array('rule' => array('between', 4, 10)
- * 		));
- * ```
- *
- * @param array $rules The rules to be set
- * @param bool $mergeVars [optional] If true, merges vars instead of replace. Defaults to true.
- * @return self
- */
-	public function setRules($rules = array(), $mergeVars = true) {
-		if ($mergeVars === false) {
-			$this->_rules = array();
-		}
-		foreach ($rules as $name => $rule) {
-			$this->setRule($name, $rule);
-		}
-		return $this;
-	}
+    /**
+     * Removes a validation rule from the set
+     *
+     * ## Example:
+     *
+     * ```
+     *        $set
+     *            ->removeRule('required')
+     *            ->removeRule('inRange')
+     * ```
+     *
+     * @param string $name The name under which the rule should be unset
+     * @return self
+     */
+    public function removeRule($name)
+    {
+        unset($this->_rules[$name]);
+        return $this;
+    }
 
-/**
- * Fetches the correct error message for a failed validation
- *
- * @param string $name the name of the rule as it was configured
- * @param CakeValidationRule $rule the object containing validation information
- * @return string
- */
-	protected function _processValidationResponse($name, $rule) {
-		$message = $rule->getValidationResult();
-		if (is_string($message)) {
-			return $message;
-		}
-		$message = $rule->message;
+    /**
+     * Returns whether an index exists in the rule set
+     *
+     * @param string $index name of the rule
+     * @return bool
+     */
+    public function offsetExists($index)
+    {
+        return isset($this->_rules[$index]);
+    }
 
-		if ($message !== null) {
-			$args = null;
-			if (is_array($message)) {
-				$result = $message[0];
-				$args = array_slice($message, 1);
-			} else {
-				$result = $message;
-			}
-			if (is_array($rule->rule) && $args === null) {
-				$args = array_slice($rule->rule, 1);
-			}
-			$args = $this->_translateArgs($args);
+    /**
+     * Returns a rule object by its index
+     *
+     * @param string $index name of the rule
+     * @return CakeValidationRule
+     */
+    public function offsetGet($index)
+    {
+        return $this->_rules[$index];
+    }
 
-			$message = __d($this->_validationDomain, $result, $args);
-		} elseif (is_string($name)) {
-			if (is_array($rule->rule)) {
-				$args = array_slice($rule->rule, 1);
-				$args = $this->_translateArgs($args);
-				$message = __d($this->_validationDomain, $name, $args);
-			} else {
-				$message = __d($this->_validationDomain, $name);
-			}
-		} else {
-			$message = __d('cake', 'This field cannot be left blank');
-		}
+    /**
+     * Sets or replace a validation rule.
+     *
+     * This is a wrapper for ArrayAccess. Use setRule() directly for
+     * chainable access.
+     *
+     * @param string $index Name of the rule.
+     * @param CakeValidationRule|array $rule Rule to add to $index.
+     * @return void
+     * @see http://www.php.net/manual/en/arrayobject.offsetset.php
+     */
+    public function offsetSet($index, $rule)
+    {
+        $this->setRule($index, $rule);
+    }
 
-		return $message;
-	}
+    /**
+     * Unsets a validation rule
+     *
+     * @param string $index name of the rule
+     * @return void
+     */
+    public function offsetUnset($index)
+    {
+        unset($this->_rules[$index]);
+    }
 
-/**
- * Applies translations to validator arguments.
- *
- * @param array $args The args to translate
- * @return array Translated args.
- */
-	protected function _translateArgs($args) {
-		foreach ((array)$args as $k => $arg) {
-			if (is_string($arg)) {
-				$args[$k] = __d($this->_validationDomain, $arg);
-			}
-		}
-		return $args;
-	}
+    /**
+     * Returns an iterator for each of the rules to be applied
+     *
+     * @return ArrayIterator
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->_rules);
+    }
 
-/**
- * Returns whether an index exists in the rule set
- *
- * @param string $index name of the rule
- * @return bool
- */
-	public function offsetExists($index) {
-		return isset($this->_rules[$index]);
-	}
-
-/**
- * Returns a rule object by its index
- *
- * @param string $index name of the rule
- * @return CakeValidationRule
- */
-	public function offsetGet($index) {
-		return $this->_rules[$index];
-	}
-
-/**
- * Sets or replace a validation rule.
- *
- * This is a wrapper for ArrayAccess. Use setRule() directly for
- * chainable access.
- *
- * @param string $index Name of the rule.
- * @param CakeValidationRule|array $rule Rule to add to $index.
- * @return void
- * @see http://www.php.net/manual/en/arrayobject.offsetset.php
- */
-	public function offsetSet($index, $rule) {
-		$this->setRule($index, $rule);
-	}
-
-/**
- * Unsets a validation rule
- *
- * @param string $index name of the rule
- * @return void
- */
-	public function offsetUnset($index) {
-		unset($this->_rules[$index]);
-	}
-
-/**
- * Returns an iterator for each of the rules to be applied
- *
- * @return ArrayIterator
- */
-	public function getIterator() {
-		return new ArrayIterator($this->_rules);
-	}
-
-/**
- * Returns the number of rules in this set
- *
- * @return int
- */
-	public function count() {
-		return count($this->_rules);
-	}
+    /**
+     * Returns the number of rules in this set
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->_rules);
+    }
 
 }

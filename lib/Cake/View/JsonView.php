@@ -50,126 +50,131 @@ App::uses('View', 'View');
  * @package       Cake.View
  * @since         CakePHP(tm) v 2.1.0
  */
-class JsonView extends View {
+class JsonView extends View
+{
 
-/**
- * JSON views are always located in the 'json' sub directory for
- * controllers' views.
- *
- * @var string
- */
-	public $subDir = 'json';
+    /**
+     * JSON views are always located in the 'json' sub directory for
+     * controllers' views.
+     *
+     * @var string
+     */
+    public $subDir = 'json';
 
-/**
- * Constructor
- *
- * @param Controller $controller Controller instance.
- */
-	public function __construct(Controller $controller = null) {
-		parent::__construct($controller);
-		if (isset($controller->response) && $controller->response instanceof CakeResponse) {
-			$controller->response->type('json');
-		}
-	}
+    /**
+     * Constructor
+     *
+     * @param Controller $controller Controller instance.
+     */
+    public function __construct(Controller $controller = null)
+    {
+        parent::__construct($controller);
+        if (isset($controller->response) && $controller->response instanceof CakeResponse) {
+            $controller->response->type('json');
+        }
+    }
 
-/**
- * Skip loading helpers if this is a _serialize based view.
- *
- * @return void
- */
-	public function loadHelpers() {
-		if (isset($this->viewVars['_serialize'])) {
-			return;
-		}
-		parent::loadHelpers();
-	}
+    /**
+     * Skip loading helpers if this is a _serialize based view.
+     *
+     * @return void
+     */
+    public function loadHelpers()
+    {
+        if (isset($this->viewVars['_serialize'])) {
+            return;
+        }
+        parent::loadHelpers();
+    }
 
-/**
- * Render a JSON view.
- *
- * ### Special parameters
- * `_serialize` To convert a set of view variables into a JSON response.
- *   Its value can be a string for single variable name or array for multiple names.
- *   You can omit the`_serialize` parameter, and use a normal view + layout as well.
- * `_jsonp` Enables JSONP support and wraps response in callback function provided in query string.
- *   - Setting it to true enables the default query string parameter "callback".
- *   - Setting it to a string value, uses the provided query string parameter for finding the
- *     JSONP callback name.
- *
- * @param string $view The view being rendered.
- * @param string $layout The layout being rendered.
- * @return string The rendered view.
- */
-	public function render($view = null, $layout = null) {
-		$return = null;
-		if (isset($this->viewVars['_serialize'])) {
-			$return = $this->_serialize($this->viewVars['_serialize']);
-		} elseif ($view !== false && $this->_getViewFileName($view)) {
-			$return = parent::render($view, false);
-		}
+    /**
+     * Render a JSON view.
+     *
+     * ### Special parameters
+     * `_serialize` To convert a set of view variables into a JSON response.
+     *   Its value can be a string for single variable name or array for multiple names.
+     *   You can omit the`_serialize` parameter, and use a normal view + layout as well.
+     * `_jsonp` Enables JSONP support and wraps response in callback function provided in query string.
+     *   - Setting it to true enables the default query string parameter "callback".
+     *   - Setting it to a string value, uses the provided query string parameter for finding the
+     *     JSONP callback name.
+     *
+     * @param string $view The view being rendered.
+     * @param string $layout The layout being rendered.
+     * @return string The rendered view.
+     */
+    public function render($view = null, $layout = null)
+    {
+        $return = null;
+        if (isset($this->viewVars['_serialize'])) {
+            $return = $this->_serialize($this->viewVars['_serialize']);
+        } else if ($view !== false && $this->_getViewFileName($view)) {
+            $return = parent::render($view, false);
+        }
 
-		if (!empty($this->viewVars['_jsonp'])) {
-			$jsonpParam = $this->viewVars['_jsonp'];
-			if ($this->viewVars['_jsonp'] === true) {
-				$jsonpParam = 'callback';
-			}
-			if (isset($this->request->query[$jsonpParam])) {
-				$return = sprintf('%s(%s)', h($this->request->query[$jsonpParam]), $return);
-				$this->response->type('js');
-			}
-		}
+        if (!empty($this->viewVars['_jsonp'])) {
+            $jsonpParam = $this->viewVars['_jsonp'];
+            if ($this->viewVars['_jsonp'] === true) {
+                $jsonpParam = 'callback';
+            }
+            if (isset($this->request->query[$jsonpParam])) {
+                $return = sprintf('%s(%s)', h($this->request->query[$jsonpParam]), $return);
+                $this->response->type('js');
+            }
+        }
 
-		return $return;
-	}
+        return $return;
+    }
 
-/**
- * Serialize view vars
- *
- * ### Special parameters
- * `_jsonOptions` You can set custom options for json_encode() this way,
- *   e.g. `JSON_HEX_TAG | JSON_HEX_APOS`.
- *
- * @param array $serialize The viewVars that need to be serialized
- * @throws CakeException
- * @return string The serialized data
- */
-	protected function _serialize($serialize) {
-		if (is_array($serialize)) {
-			$data = array();
-			foreach ($serialize as $alias => $key) {
-				if (is_numeric($alias)) {
-					$alias = $key;
-				}
-				if (array_key_exists($key, $this->viewVars)) {
-					$data[$alias] = $this->viewVars[$key];
-				}
-			}
-			$data = !empty($data) ? $data : null;
-		} else {
-			$data = isset($this->viewVars[$serialize]) ? $this->viewVars[$serialize] : null;
-		}
+    /**
+     * Serialize view vars
+     *
+     * ### Special parameters
+     * `_jsonOptions` You can set custom options for json_encode() this way,
+     *   e.g. `JSON_HEX_TAG | JSON_HEX_APOS`.
+     *
+     * @param array $serialize The viewVars that need to be serialized
+     * @return string The serialized data
+     * @throws CakeException
+     */
+    protected function _serialize($serialize)
+    {
+        if (is_array($serialize)) {
+            $data = [];
+            foreach ($serialize as $alias => $key) {
+                if (is_numeric($alias)) {
+                    $alias = $key;
+                }
+                if (array_key_exists($key, $this->viewVars)) {
+                    $data[$alias] = $this->viewVars[$key];
+                }
+            }
+            $data = !empty($data) ? $data : null;
+        } else {
+            $data = isset($this->viewVars[$serialize]) ? $this->viewVars[$serialize] : null;
+        }
 
-		$jsonOptions = 0;
-		if (isset($this->viewVars['_jsonOptions'])) {
-			if ($this->viewVars['_jsonOptions'] === false) {
-				$jsonOptions = 0;
-			} else {
-				$jsonOptions = $this->viewVars['_jsonOptions'];
-			}
-		}
-		if (version_compare(PHP_VERSION, '5.4.0', '>=') && Configure::read('debug')) {
-			$jsonOptions = $jsonOptions | JSON_PRETTY_PRINT;
-		}
+        $jsonOptions = 0;
+        if (isset($this->viewVars['_jsonOptions'])) {
+            if ($this->viewVars['_jsonOptions'] === false) {
+                $jsonOptions = 0;
+            } else {
+                $jsonOptions = $this->viewVars['_jsonOptions'];
+            }
+        }
+        if (version_compare(PHP_VERSION, '5.4.0', '>=') && Configure::read('debug')) {
+            $jsonOptions = $jsonOptions | JSON_PRETTY_PRINT;
+        }
 
-		$json = json_encode($data, $jsonOptions);
+        $json = json_encode($data, $jsonOptions);
 
-		if (function_exists('json_last_error') && json_last_error() !== JSON_ERROR_NONE) {
-			throw new CakeException(json_last_error_msg());
-		}
-		if ($json === false) {
-			throw new CakeException('Failed to parse JSON');
-		}
-		return $json;
-	}
+        if (function_exists('json_last_error') && json_last_error() !== JSON_ERROR_NONE) {
+            throw new CakeException(json_last_error_msg());
+        }
+        if ($json === false) {
+            throw new CakeException('Failed to parse JSON');
+        }
+        return $json;
+    }
 
 }
