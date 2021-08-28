@@ -167,7 +167,7 @@ class UtilComponent extends CakeObject
     public function sendMail()
     {
 
-        App::uses('CakeEmail', 'Network/Email');
+        App::uses('CakeEmail', 'Network/Email', 'SocketException');
         $this->Email = new CakeEmail();
 
         if ($this->typeSend == "smtp") {
@@ -189,7 +189,13 @@ class UtilComponent extends CakeObject
             return $event->result;
         }
 
-        return $this->Email->send($this->message);
+        $result = false;
+        try {
+            $result = $this->Email->send($this->message);
+        } catch (SocketException $e) {
+            $this->log($e->getMessage());
+        }
+        return $result;
 
     }
 
