@@ -7,6 +7,7 @@ class MaintenanceController extends AppController
 
     public function index($url = "")
     {
+        $this->set('title_for_layout', $this->Lang->get('MAINTENANCE__TITLE'));
         $this->loadModel("Maintenance");
 
         if ($this->Permissions->can("BYPASS_MAINTENANCE") || !$this->Maintenance->checkMaintenance("/" . $url))
