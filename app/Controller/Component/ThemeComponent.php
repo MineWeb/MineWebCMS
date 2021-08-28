@@ -129,11 +129,9 @@ class ThemeComponent extends CakeObject
                 }
             }
             if (($th = $this->getThemesFromRepoNames(array_column($free_themes, "repo")))) {
-                $i = 0;
                 foreach ($th as $t) {
                     $t['free'] = true;
                     $themes[] = $t;
-                    $i++;
                 }
             }
         }
