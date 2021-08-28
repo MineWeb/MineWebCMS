@@ -27,8 +27,7 @@ App::uses('CakeSchema', 'Model');
  * @package       Cake.Console.Command
  * @link          https://book.cakephp.org/2.0/en/console-and-shells/schema-management-and-migrations.html
  */
-class SchemaShell extends AppShell
-{
+class SchemaShell extends AppShell {
 
     /**
      * Schema class being used.
@@ -49,13 +48,12 @@ class SchemaShell extends AppShell
      *
      * @return void
      */
-    public function startup()
-    {
+    public function startup() {
         $this->_welcome();
         $this->out('Cake Schema Shell');
         $this->hr();
 
-        Configure::write('Cache.disable', 1);
+        Configure::write('Cache.disable', true);
 
         $name = $path = $connection = $plugin = null;
         if (!empty($this->params['name'])) {
@@ -76,7 +74,6 @@ class SchemaShell extends AppShell
         if (strpos($this->params['file'], '.php') === false) {
             $this->params['file'] .= '.php';
         }
-
         $file = $this->params['file'];
 
         if (!empty($this->params['path'])) {
@@ -102,8 +99,7 @@ class SchemaShell extends AppShell
      *
      * @return void
      */
-    public function view()
-    {
+    public function view() {
         $File = new File($this->Schema->path . DS . $this->params['file']);
         if ($File->exists()) {
             $this->out($File->read());
@@ -120,8 +116,7 @@ class SchemaShell extends AppShell
      *
      * @return void
      */
-    public function generate()
-    {
+    public function generate() {
         $this->out(__d('cake_console', 'Generating Schema...'));
         $options = array();
         if ($this->params['force']) {
@@ -133,15 +128,6 @@ class SchemaShell extends AppShell
         $snapshot = false;
         if (isset($this->args[0]) && $this->args[0] === 'snapshot') {
             $snapshot = true;
-        }
-
-        $plugin = false;
-        if (isset($this->args[0]) && explode('-', $this->args[0])[0] === 'plugin') {
-            $plugin = ucfirst(explode('-', $this->args[0])[1]);
-
-            $this->Schema->path = ROOT . DS . 'app' . DS . 'Plugin' . DS . $plugin . DS . 'SQL';
-            $this->params['file'] = 'schema.php';
-            $options['models'] = false; // forced
         }
 
         if (!$snapshot && file_exists($this->Schema->path . DS . $this->params['file'])) {
@@ -164,34 +150,8 @@ class SchemaShell extends AppShell
 
         Configure::write('Cache.disable', $cacheDisable);
 
-        if ((!empty($this->params['exclude']) || $plugin !== false) && !empty($content)) {
-
-            foreach ($content['tables'] as $tableName => $tableStructure) { // on parcours les tables
-
-                $tableHaveUpdate = false; // pour savoir si y'a des colonnes rajoutés ou non
-
-                foreach ($tableStructure as $columnName => $columnStructure) {
-
-                    if (explode('__', $tableName)[0] != strtolower($plugin)) { // si c'est une table du CMS
-
-                        if (explode('-', $columnName)[0] != strtolower($plugin)) { // on supprime les colonnes qui non pas le prefix du plugin comme nom
-                            unset($content['tables'][$tableName][$columnName]);
-                        } else {
-                            $tableHaveUpdate = true; // on a une nouvelle colonne utile au plugin
-                        }
-
-                    }
-
-                }
-
-                if (explode('__', $tableName)[0] !=  strtolower($plugin) && !$tableHaveUpdate) { // on supprime les tables qui non pas le prefix du plugin comme nom & qui n'ont pas de colonne utile pour le plugin
-                    $excluded[] = $tableName;
-                }
-            }
-
-            if (!$plugin) {
-                $excluded = CakeText::tokenize($this->params['exclude']);
-            }
+        if (!empty($this->params['exclude']) && !empty($content)) {
+            $excluded = CakeText::tokenize($this->params['exclude']);
             foreach ($excluded as $table) {
                 unset($content['tables'][$table]);
             }
@@ -242,8 +202,7 @@ class SchemaShell extends AppShell
      *
      * @return string
      */
-    public function dump()
-    {
+    public function dump() {
         $write = false;
         $Schema = $this->Schema->load();
         if (!$Schema) {
@@ -286,8 +245,7 @@ class SchemaShell extends AppShell
      *
      * @return void
      */
-    public function create()
-    {
+    public function create() {
         list($Schema, $table) = $this->_loadSchema();
         $this->_create($Schema, $table);
     }
@@ -297,8 +255,7 @@ class SchemaShell extends AppShell
      *
      * @return void
      */
-    public function update()
-    {
+    public function update() {
         list($Schema, $table) = $this->_loadSchema();
         $this->_update($Schema, $table);
     }
@@ -308,8 +265,7 @@ class SchemaShell extends AppShell
      *
      * @return void
      */
-    protected function _loadSchema()
-    {
+    protected function _loadSchema() {
         $name = $plugin = null;
         if (!empty($this->params['name'])) {
             $name = $this->params['name'];
@@ -356,8 +312,7 @@ class SchemaShell extends AppShell
      * @param string $table The table name.
      * @return void
      */
-    protected function _create(CakeSchema $Schema, $table = null)
-    {
+    protected function _create(CakeSchema $Schema, $table = null) {
         $db = ConnectionManager::getDataSource($this->Schema->connection);
 
         $drop = $create = array();
@@ -406,8 +361,7 @@ class SchemaShell extends AppShell
      * @param string $table The table name.
      * @return void
      */
-    protected function _update(&$Schema, $table = null)
-    {
+    protected function _update(&$Schema, $table = null) {
         $db = ConnectionManager::getDataSource($this->Schema->connection);
 
         $this->out(__d('cake_console', 'Comparing Database to Schema...'));
@@ -465,8 +419,7 @@ class SchemaShell extends AppShell
      * @param CakeSchema $Schema The schema instance.
      * @return void
      */
-    protected function _run($contents, $event, CakeSchema $Schema)
-    {
+    protected function _run($contents, $event, CakeSchema $Schema) {
         if (empty($contents)) {
             $this->err(__d('cake_console', 'Sql could not be run'));
             return;
@@ -509,8 +462,7 @@ class SchemaShell extends AppShell
      *
      * @return ConsoleOptionParser
      */
-    public function getOptionParser()
-    {
+    public function getOptionParser() {
         $parser = parent::getOptionParser();
 
         $plugin = array(
