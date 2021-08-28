@@ -153,9 +153,7 @@
                             <div class="form-group">
                                 <label><?= $Lang->get('API__CAPE_LABEL') ?></label>
                                 <div class="radio">
-                                    <input type="radio" name="capes" value="1" <?= $config['capes'] ? 'checked="checked"' : '' ?>
-                                        echo ' checked="checked"';
-                                    } ?>>
+                                    <input type="radio" name="capes" value="1" <?= $config['capes'] ? 'checked="checked"' : '' ?>>
                                     <label>
                                         <?= $Lang->get('GLOBAL__ENABLED') ?>
                                     </label>
@@ -193,8 +191,7 @@
                                     <label><?= $Lang->get('API__FILENAME') ?></label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
-                                    <span class="input-group-text"
-                                    ><?= $this->Html->url('/', true) ?></span>
+                                    <span class="input-group-text"><?= $this->Html->url('/', true) ?></span>
                                         </div>
                                         <input type="text" class="form-control" name="cape_filename"
                                                value="<?= $config['cape_filename'] ?>"
