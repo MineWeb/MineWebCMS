@@ -254,13 +254,13 @@ class AppController extends Controller
             'GLOBAL__ADMIN_GENERAL' => [
                 'icon' => 'cogs',
                 'menu' => [
-                    'USER__USERS' => [
+                    'USER__MEMBERS_REGISTERED' => [
                         'icon' => 'users',
                         'permission' => 'MANAGE_USERS',
                         'route' => ['controller' => 'user', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
                     'BAN__MEMBERS' => [
-                        'icon' => 'users',
+                        'icon' => 'ban',
                         'permission' => 'MANAGE_BAN',
                         'route' => ['controller' => 'ban', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],

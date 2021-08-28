@@ -428,6 +428,7 @@
         "USER__EDIT_TITLE": "Editing a member",
         "USER__REGISTER_DATE": "Registration date",
         "USER__USERS": "Members",
+	"USER__MEMBERS_REGISTERED":"Registered members",
         "USER__NBR_REGISTERED": "Registered Users",
         "USER__PASSWORD_UPDATE_SUCCESS": "The password has been updated!",
         "USER__EMAIL_UPDATE_SUCCESS": "The email has been updated!",
@@ -674,7 +675,7 @@
         "API__SKIN_RESTORER_SERVER_DESC": "If you are using SkinRestorer you must choose a server where the skin will be put (the server must be linked with the link plugin)",
         "API__SKIN_RESTORER_NOT_CONNECTED": "You must be logged in in-game!",
 
-        "BAN__MEMBERS": "Banned Members",
+        "BAN__MEMBERS": "Banned members",
         "BAN__HOME": "Bans",
         "BAN__QUESTION": "Ban?",
         "BAN__REASON": "Reason for ban",
