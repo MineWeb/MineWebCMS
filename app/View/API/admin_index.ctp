@@ -17,18 +17,14 @@
                             <div class="form-group">
                                 <label><?= $Lang->get('API__SKIN_LABEL') ?></label>
                                 <div class="radio">
-                                    <input type="radio" name="skins" value="1"<?php if ($config['skins'] == 1) {
-                                        echo ' checked="checked"';
-                                    } ?>>
+                                    <input type="radio" name="skins" value="1" <?= $config['skins'] ? 'checked="checked"' : '' ?>>
                                     <label>
                                         <?= $Lang->get('GLOBAL__ENABLED') ?>
                                     </label>
                                 </div>
 
                                 <div class="radio">
-                                    <input type="radio" name="skins" value="0"<?php if ($config['skins'] == 0) {
-                                        echo ' checked="checked"';
-                                    } ?>>
+                                    <input type="radio" name="skins" value="0" <?= !$config['skins'] ? 'checked="checked"' : '' ?>>
                                     <label>
                                         <?= $Lang->get('GLOBAL__DISABLED') ?>
                                     </label>
@@ -42,9 +38,7 @@
                                 <em><?= $Lang->get('API__SKIN_PREMIUM_DESC') ?></em>
                                 <div class="radio">
                                     <input type="radio" name="get_premium_skins"
-                                           value="1"<?php if ($config['get_premium_skins'] == 1) {
-                                        echo ' checked="checked"';
-                                    } ?>>
+                                           value="1" <?= $config['get_premium_skins'] ? 'checked="checked"' : '' ?>>
                                     <label>
                                         <?= $Lang->get('GLOBAL__ENABLED') ?>
                                     </label>
@@ -52,34 +46,28 @@
 
                                 <div class="radio">
                                     <input type="radio" name="get_premium_skins"
-                                           value="0"<?php if ($config['get_premium_skins'] == 0) {
-                                        echo ' checked="checked"';
-                                    } ?>>
+                                           value="0" <?= !$config['get_premium_skins'] ? 'checked="checked"' : '' ?>>
                                     <label>
                                         <?= $Lang->get('GLOBAL__DISABLED') ?>
                                     </label>
                                 </div>
                             </div>
 
-                            <div class="skins_require">
+                            <div class="skins_require" style="<?= !$config['skins'] ? 'display: none;' : '' ?>">
 
                                 <div class="form-group">
                                     <hr>
                                     <label><?= $Lang->get('API__USE_SKIN_RESTORER') ?></label>
                                     <div class="radio">
                                         <input type="radio" name="use_skin_restorer"
-                                               value="1"<?php if ($config['use_skin_restorer'] == 1) {
-                                            echo ' checked="checked"';
-                                        } ?>>
+                                               value="1" <?= $config['use_skin_restorer'] ? 'checked="checked"' : '' ?>>
                                         <label>
                                             <?= $Lang->get('GLOBAL__ENABLED') ?>
                                         </label>
                                     </div>
                                     <div class="radio">
                                         <input type="radio" name="use_skin_restorer"
-                                               value="0"<?php if ($config['use_skin_restorer'] == 0) {
-                                            echo ' checked="checked"';
-                                        } ?>>
+                                               value="0" <?= !$config['use_skin_restorer'] ? 'checked="checked"' : '' ?>>
                                         <label>
                                             <?= $Lang->get('GLOBAL__DISABLED') ?>
                                         </label>
@@ -102,18 +90,14 @@
                                     <label><?= $Lang->get('API__SKIN_FREE') ?></label>
                                     <div class="radio">
                                         <input type="radio" name="skin_free"
-                                               value="1"<?php if ($config['skin_free'] == 1) {
-                                            echo ' checked="checked"';
-                                        } ?>>
+                                               value="1" <?= $config['skin_free'] ? 'checked="checked"' : '' ?>>
                                         <label>
                                             <?= $Lang->get('GLOBAL__ENABLED') ?>
                                         </label>
                                     </div>
                                     <div class="radio">
                                         <input type="radio" name="skin_free"
-                                               value="0"<?php if ($config['skin_free'] == 0) {
-                                            echo ' checked="checked"';
-                                        } ?>>
+                                               value="0" <?= !$config['skin_free'] ? 'checked="checked"' : '' ?>>
                                         <label>
                                             <?= $Lang->get('GLOBAL__DISABLED') ?>
                                         </label>
@@ -169,7 +153,7 @@
                             <div class="form-group">
                                 <label><?= $Lang->get('API__CAPE_LABEL') ?></label>
                                 <div class="radio">
-                                    <input type="radio" name="capes" value="1"<?php if ($config['capes'] == 1) {
+                                    <input type="radio" name="capes" value="1" <?= $config['capes'] ? 'checked="checked"' : '' ?>
                                         echo ' checked="checked"';
                                     } ?>>
                                     <label>
@@ -177,33 +161,27 @@
                                     </label>
                                 </div>
                                 <div class="radio">
-                                    <input type="radio" name="capes" value="0"<?php if ($config['capes'] == 0) {
-                                        echo ' checked="checked"';
-                                    } ?>>
+                                    <input type="radio" name="capes" value="0" <?= !$config['capes'] ? 'checked="checked"' : '' ?>>
                                     <label>
                                         <?= $Lang->get('GLOBAL__DISABLED') ?>
                                     </label>
                                 </div>
                             </div>
 
-                            <div class="capes_require">
+                            <div class="capes_require" style="<?= !$config['capes'] ? 'display: none;' : '' ?>">
                                 <div class="form-group capes_require">
                                     <hr>
                                     <label><?= $Lang->get('API__CAPE_FREE') ?></label>
                                     <div class="radio">
                                         <input type="radio" name="cape_free"
-                                               value="1"<?php if ($config['cape_free'] == 1) {
-                                            echo ' checked="checked"';
-                                        } ?>>
+                                               value="1" <?= $config['cape_free'] ? 'checked="checked"' : '' ?>>
                                         <label>
                                             <?= $Lang->get('GLOBAL__ENABLED') ?>
                                         </label>
                                     </div>
                                     <div class="radio">
                                         <input type="radio" name="cape_free"
-                                               value="0"<?php if ($config['cape_free'] == 0) {
-                                            echo ' checked="checked"';
-                                        } ?>>
+                                               value="0" <?= !$config['cape_free'] ? 'checked="checked"' : '' ?>>
                                         <label>
                                             <?= $Lang->get('GLOBAL__DISABLED') ?>
                                         </label>
