@@ -6,74 +6,46 @@
                     <h3 class="card-title"><?= $Lang->get('MAINTENANCE__TITLE') ?></h3>
                 </div>
                 <div class="card-body">
+                    <table class="table table-responsive-sm table-bordered">
+                        <thead>
+                        <tr>
+                            <th><?= $Lang->get("MAINTENANCE__PAGE") ?></th>
+                            <th><?= $Lang->get("MAINTENANCE__REASON") ?></th>
+                            <th><?= $Lang->get("GLOBAL__STATUS") ?></th>
+                            <th><?= $Lang->get("GLOBAL__ACTIONS")?></th>
+                        </tr>
+                        </thead>
 
-                    <form action="" method="post">
+                        <tbody>
+                        <?php foreach ($pages as $v) { ?>
+                            <tr>
+                                <td><?= $v["Maintenance"]["url"] ?></td>
+                                <td><?= $v["Maintenance"]["reason"] ?></td>
+                                <td><?= $v["Maintenance"]["active"] != 1 ? $Lang->get("GLOBAL__DISABLED") : $Lang->get("GLOBAL__ENABLED") ?></td>
+                                <td>
+                                    <a href='<?= $this->Html->url(['action' => 'edit', $v["Maintenance"]['id']]) ?>'
+                                       class="btn btn-success"><?= $Lang->get('GLOBAL__EDIT') ?></a>
+                                    <?php if ($v["Maintenance"]["active"] == 1) { ?>
+                                    <a onClick="confirmDel('<?= $this->Html->url(['action' => 'disable', $v["Maintenance"]['id']]) ?>')"
+                                       class="btn btn-warning"><?= $Lang->get('GLOBAL__DISABLE') ?></a>
+                                    <?php } else { ?>
+                                    <a onClick="confirmDel('<?= $this->Html->url(['action' => 'enable', $v["Maintenance"]['id']]) ?>')"
+                                       class="btn btn-primary"><?= $Lang->get('GLOBAL__ENABLE') ?></a>
+                                    <?php } ?>
+                                    <a onClick="confirmDel('<?= $this->Html->url(['action' => 'delete', $v["Maintenance"]['id']]) ?>')"
+                                       class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
 
-                        <div class="ajax-msg"></div>
-
-                        <div class="form-group">
-                            <div class="radio">
-                                <input type="radio" id="activate" class="enabledStatus" name="state"
-                                       value="enabled"<?= ($Configuration->getKey('maintenance') != '0') ? ' checked=""' : '' ?>>
-                                <label for="activate">
-                                    <?= $Lang->get('GLOBAL__ENABLED') ?>
-                                </label>
-                            </div>
-                            <div class="radio">
-                                <input type="radio" id="disable" class="disabledStatus" name="state"
-                                       value="disabled"<?= ($Configuration->getKey('maintenance') == '0') ? ' checked=""' : '' ?>>
-                                <label for="disable">
-                                    <?= $Lang->get('GLOBAL__DISABLED') ?>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="form-group reason<?php if ($Configuration->getKey('maintenance') == '0') {
-                            echo ' d-none';
-                        } ?>">
-                            <label><?= $Lang->get('MAINTENANCE__REASON') ?></label>
-                            <?= $this->Html->script('admin/tinymce/tinymce.min.js') ?>
-                            <script type="text/javascript">
-                                tinymce.init({
-                                    selector: "textarea",
-                                    height: 300,
-                                    width: '100%',
-                                    language: 'fr_FR',
-                                    plugins: "textcolor code image link",
-                                    toolbar: "fontselect fontsizeselect bold italic underline strikethrough link image forecolor backcolor alignleft aligncenter alignright alignjustify cut copy paste bullist numlist outdent indent blockquote code"
-                                });
-                            </script>
-                            <textarea class="form-control" id="editor" name="reason" cols="30"
-                                      rows="10"><?= ($Configuration->getKey('maintenance') == '0') ? '' : $Configuration->getKey('maintenance') ?></textarea>
-                        </div>
-
-                        <input type="hidden" name="data[_Token][key]" value="<?= $csrfToken ?>">
-
-                        <div class="float-right">
-                            <a href="<?= $this->Html->url(['controller' => 'news', 'action' => 'admin_index', 'admin' => true]) ?>"
-                               class="btn btn-default"><?= $Lang->get('GLOBAL__CANCEL') ?></a>
-                            <button class="btn btn-primary" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
-                        </div>
-                    </form>
-
+                <div class="card-body">
+                    <a class="btn btn-large btn-block btn-primary"
+                       href="<?= $this->Html->url(['controller' => 'maintenance', 'action' => 'add', 'admin' => true]) ?>"><?= $Lang->get('MAINTENANCE__ADD_PAGE') ?></a>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<script type="text/javascript">
-    $(".enabledStatus").change(function () {
-        if ($(".enabledStatus").is(':checked')) {
-            $(".reason").removeClass('d-none');
-        } else {
-            $(".reason").addClass('d-none').slideDown(500);
-        }
-    });
-    $(".disabledStatus").change(function () {
-        if ($(".disabledStatus").is(':checked')) {
-            $(".reason").addClass('d-none').slideDown(500);
-        } else {
-            $(".reason").removeClass('d-none');
-        }
-    });
-</script>

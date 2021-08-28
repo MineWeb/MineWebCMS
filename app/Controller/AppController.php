@@ -50,6 +50,19 @@ class AppController extends Controller
         // lowercase to avoid errors when the controller is called with uppercase
         $this->params['controller'] = strtolower($this->params['controller']);
         $this->params['action'] = strtolower($this->params['action']);
+
+        $LoginCondition = $this->here != "/login" || !$this->EyPlugin->isInstalled('phpierre.signinup');
+
+        $this->loadModel("Maintenance");
+        if ($this->params['controller'] != "user" and $this->params['controller'] != "maintenance" and !$this->Permissions->can("BYPASS_MAINTENANCE") and $this->Maintenance->checkMaintenance($this->here) and $LoginCondition) {
+            $this->redirect([
+                'controller' => 'maintenance',
+                'action' => 'index',
+                'plugin' => false,
+                'admin' => false,
+            ]);
+        }
+        
         // Plugin disabled
         if ($this->request->params['plugin']) {
             $plugin = $this->EyPlugin->findPlugin('slugLower', $this->request->params['plugin']);
@@ -92,16 +105,6 @@ class AppController extends Controller
             $this->getEventManager()->dispatch($event);
             if ($event->isStopped())
                 return $event->result;
-        }
-        $LoginCondition = ($this->here != "/login") || !$this->EyPlugin->isInstalled('phpierre.signinup');
-        // Maintenance
-        if ($this->params['controller'] != "user" && $this->params['controller'] != "maintenance" && $this->Configuration->getKey('maintenance') != '0' && !$this->Permissions->can('BYPASS_MAINTENANCE') && $LoginCondition) {
-            $this->redirect([
-                'controller' => 'maintenance',
-                'action' => 'index',
-                'plugin' => false,
-                'admin' => false
-            ]);
         }
 
 
