@@ -526,6 +526,7 @@
         "PERMISSIONS__VIEW_STATISTICS": "Voir les statistiques sur le panel admin",
         "PERMISSIONS__MANAGE_THEMES":"Gérer les thèmes du site (activation, désactivation, suppression, installation, customisation)",
         "PERMISSIONS__MANAGE_USERS":"Gérer les utilisateurs (suppression, édition, voir la liste)",
+        "PERMISSIONS__MANAGE_BANS":"Gérer les utilisateurs bannis",
         "PERMISSIONS__SEND_SERVER_COMMAND_FROM_DASHBOARD":"Envoyer des commandes aux serveurs depuis le dashboard admin.",
         "PERMISSIONS__VIEW_WEBSITE_HISTORY": "Voir l'historique du site",
 
@@ -665,6 +666,18 @@
         "API__USE_SKIN_RESTORER": "Utiliser SkinRestorer ?",
         "API__SKIN_RESTORER_SERVER": "Serveur SkinRestorer",
         "API__SKIN_RESTORER_SERVER_DESC": "Si vous utilisez SkinRestorer vous devez choisir un serveur où le skin sera mis (le serveur doit être lié avec le plugin de liaison)",
-        "API__SKIN_RESTORER_NOT_CONNECTED": "Vous devez être connecté en jeu !"
+        "API__SKIN_RESTORER_NOT_CONNECTED": "Vous devez être connecté en jeu !",
+
+        "BAN__MEMBERS": "Membres Bannis",
+        "BAN__HOME": "Bannissements",
+        "BAN__QUESTION": "Bannir ?",
+        "BAN__REASON": "Raison du bannissement",
+        "BAN__ADD": "Bannir un ou des membres",
+        "BAN__SUCCESS": "Membre(s) banni(s)",
+        "BAN__UNBAN": "Révoquer le bannissement",
+        "BAN__EDIT_REASON": "Modifier la raison",
+        "BAN__UNBAN_SUCCESS": "Bannissement révoqué",
+        "BAN__BAN": "Bannis",
+        "BAN__EXPLICATION": "Vous avez été banni pour "
     }
 }

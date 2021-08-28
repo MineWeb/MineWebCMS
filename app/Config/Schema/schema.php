@@ -23,6 +23,17 @@ class AppSchema extends CakeSchema
         ],
         'tableParameters' => ['charset' => 'latin1', 'collate' => 'latin1_swedish_ci', 'engine' => 'InnoDB']
     ];
+
+    public $bans = [
+        'id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'],
+        'user_id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false],
+        'reason' => ['type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
+        'indexes' => [
+            'PRIMARY' => ['column' => 'id', 'unique' => 1]
+        ],
+        'tableParameters' => ['charset' => 'latin1', 'collate' => 'latin1_swedish_ci', 'engine' => 'InnoDB']
+    ];
+
     public $cake_sessions = [
         'id' => ['type' => 'string', 'null' => false, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1', 'key' => 'primary'],
         'data' => ['type' => 'text', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],

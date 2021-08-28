@@ -528,6 +528,7 @@
        "PERMISSIONS__VIEW_STATISTICS": "Посмотреть статистику на панели администратора",
        "PERMISSIONS__MANAGE_THEMES" : "Управление темами сайта (активация, деактивация, удаление, установка, настройка)" ,
        "PERMISSIONS__MANAGE_USERS": "Управление пользователями (удаление, редактирование, просмотр списка)",
+       "PERMISSIONS__MANAGE_BANS":"Управление заблокированными пользователями",
        "PERMISSIONS__SEND_SERVER_COMMAND_FROM_DASHBOARD" : "Отправлять команды на серверы с панели администратора" ,
        "PERMISSIONS__VIEW_WEBSITE_HISTORY": "Просмотр истории сайта",
 
@@ -663,6 +664,18 @@
        "API__USE_SKIN_RESTORER": "Использовать SkinRestorer?",
        "API__SKIN_RESTORER_SERVER": "Сервер SkinRestorer",
        "API__SKIN_RESTORER_SERVER_DESC": "Если вы используете SkinRestorer, вы должны выбрать сервер, на который будет помещен скин (сервер должен быть связан с плагином ссылки)",
-       "API__SKIN_RESTORER_NOT_CONNECTED": "Вы должны авторизоваться в игре!"
+       "API__SKIN_RESTORER_NOT_CONNECTED": "Вы должны авторизоваться в игре!",
+
+       "BAN__MEMBERS": "Запрещенные участники",
+       "BAN__HOME": "Баны",
+       "BAN__QUESTION": "Запретить?",
+       "BAN__REASON": "Причина бана",
+       "BAN__ADD": "Забанить одного или нескольких участников",
+       "BAN__SUCCESS": "Забаненный участник(ы)",
+       "BAN__UNBAN": "Снять запрет",
+       "BAN__EDIT_REASON": "Измените причину",
+       "BAN__UNBAN_SUCCESS": "Бан отменен",
+       "BAN__BAN": "Запрещено",
+       "BAN__EXPLICATION": "Вас забанили за "
 	}
 }

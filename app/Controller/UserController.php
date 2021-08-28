@@ -447,12 +447,11 @@ class UserController extends AppController
                 0 => $this->Lang->get('USER__RANK_MEMBER'),
                 2 => $this->Lang->get('USER__RANK_MODERATOR'),
                 3 => $this->Lang->get('USER__RANK_ADMINISTRATOR'),
-                4 => $this->Lang->get('USER__RANK_ADMINISTRATOR'),
-                5 => $this->Lang->get('USER__RANK_BANNED')
+                4 => $this->Lang->get('USER__RANK_ADMINISTRATOR')
             ];
             $this->loadModel('Rank');
             $custom_ranks = $this->Rank->find('all');
-            foreach ($custom_ranks as $key => $value) {
+            foreach ($custom_ranks as $value) {
                 $available_ranks[$value['Rank']['rank_id']] = $value['Rank']['name'];
             }
             $this->set(compact('available_ranks'));
@@ -628,7 +627,7 @@ class UserController extends AppController
             if ($query != false) {
                 $result = $this->User->find('all', ['conditions' => ['pseudo LIKE' => $query . '%']]);
                 $users = [];
-                foreach ($result as $key => $value) {
+                foreach ($result as $value) {
                     $users[] = ['pseudo' => $value['User']['pseudo'], 'id' => $value['User']['id']];
                 }
                 $response = (empty($result)) ? ['status' => false] : ['status' => true, 'data' => $users];
@@ -651,8 +650,7 @@ class UserController extends AppController
                     0 => ['label' => 'success', 'name' => $this->Lang->get('USER__RANK_MEMBER')],
                     2 => ['label' => 'warning', 'name' => $this->Lang->get('USER__RANK_MODERATOR')],
                     3 => ['label' => 'danger', 'name' => $this->Lang->get('USER__RANK_ADMINISTRATOR')],
-                    4 => ['label' => 'danger', 'name' => $this->Lang->get('USER__RANK_ADMINISTRATOR')],
-                    5 => ['label' => 'primary', 'name' => $this->Lang->get('USER__RANK_BANNED')]
+                    4 => ['label' => 'danger', 'name' => $this->Lang->get('USER__RANK_ADMINISTRATOR')]
                 ];
                 $this->loadModel('Rank');
                 $custom_ranks = $this->Rank->find('all');
@@ -721,8 +719,7 @@ class UserController extends AppController
                         0 => $this->Lang->get('USER__RANK_MEMBER'),
                         2 => $this->Lang->get('USER__RANK_MODERATOR'),
                         3 => $this->Lang->get('USER__RANK_ADMINISTRATOR'),
-                        4 => $this->Lang->get('USER__RANK_SUPER_ADMINISTRATOR'),
-                        5 => $this->Lang->get('USER__RANK_BANNED')
+                        4 => $this->Lang->get('USER__RANK_SUPER_ADMINISTRATOR')
                     ];
                     $this->loadModel('Rank');
                     $custom_ranks = $this->Rank->find('all');

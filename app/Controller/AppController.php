@@ -42,9 +42,14 @@ class AppController extends Controller
     public $view = 'Theme';
 
     protected $isConnected = false;
+    protected $isBanned = false;
 
     public function beforeFilter()
     {
+
+        // lowercase to avoid errors when the controller is called with uppercase
+        $this->params['controller'] = strtolower($this->params['controller']);
+        $this->params['action'] = strtolower($this->params['action']);
         // Plugin disabled
         if ($this->request->params['plugin']) {
             $plugin = $this->EyPlugin->findPlugin('slugLower', $this->request->params['plugin']);
@@ -89,27 +94,16 @@ class AppController extends Controller
                 return $event->result;
         }
         $LoginCondition = ($this->here != "/login") || !$this->EyPlugin->isInstalled('phpierre.signinup');
-        // Maintenance / Bans
-        // lowercase to avoid errors when the controller is called with uppercase
-        $this->params['controller'] = strtolower($this->params['controller']);
-        $this->params['action'] = strtolower($this->params['action']);
-        if ($this->isConnected and $this->User->getKey('rank') == 5 and $this->params['controller'] != "maintenance" and $this->params['action'] != "logout" and $this->params['controller'] != "api") {
+        // Maintenance
+        if ($this->params['controller'] != "user" && $this->params['controller'] != "maintenance" && $this->Configuration->getKey('maintenance') != '0' && !$this->Permissions->can('BYPASS_MAINTENANCE') && $LoginCondition) {
             $this->redirect([
                 'controller' => 'maintenance',
-                'action' => 'index/banned',
+                'action' => 'index',
                 'plugin' => false,
                 'admin' => false
             ]);
-        } else {
-            if ($this->params['controller'] != "user" && $this->params['controller'] != "maintenance" && $this->Configuration->getKey('maintenance') != '0' && !$this->Permissions->can('BYPASS_MAINTENANCE') && $LoginCondition) {
-                $this->redirect([
-                    'controller' => 'maintenance',
-                    'action' => 'index',
-                    'plugin' => false,
-                    'admin' => false
-                ]);
-            }
         }
+
 
     }
 
@@ -212,6 +206,19 @@ class AppController extends Controller
         $this->isConnected = $this->User->isConnected();
         $this->set('isConnected', $this->isConnected);
 
+        if ($this->isConnected) {
+            $LoginCondition = ($this->here != "/login") || !$this->EyPlugin->isInstalled('phpierre.signinup');
+            if ($this->params['controller'] != "user" and $this->params['controller'] != "ban" and $this->User->isBanned() != false and $LoginCondition) {
+                $this->isBanned = $this->User->isBanned();
+
+                $this->redirect([
+                    'controller' => 'ban',
+                    'action' => 'index',
+                    'plugin' => false,
+                    'admin' => false
+                ]);
+            }
+        }
         $user = ($this->isConnected) ? $this->User->getAllFromCurrentUser() : [];
         if (!empty($user))
             $user['isAdmin'] = $this->User->isAdmin();
@@ -248,6 +255,11 @@ class AppController extends Controller
                         'icon' => 'users',
                         'permission' => 'MANAGE_USERS',
                         'route' => ['controller' => 'user', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
+                    'BAN__MEMBERS' => [
+                        'icon' => 'users',
+                        'permission' => 'MANAGE_BAN',
+                        'route' => ['controller' => 'ban', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
                     'PERMISSIONS__LABEL' => [
                         'icon' => 'user',
@@ -572,7 +584,7 @@ class AppController extends Controller
 
     public function sendMultipleGetRequests($urls)
     {
-        if(!is_array($urls))
+        if (!is_array($urls))
             $urls = [$urls];
         $multi = curl_multi_init();
         $channels = [];
