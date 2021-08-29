@@ -63,7 +63,6 @@
         "GLOBAL__TYPE": "Spell",
         "GLOBAL__TYPE_NORMAL": "Standard",
         "GLOBAL__DEFAULT": "By default",
-        "GLOBAL__JOIN_US": "Join us!",
         "GLOBAL__JOIN_US_SOCIAL": "Join us -",
         "GLOBAL__YESTERDAY": "Yesterday",
         "GLOBAL__VISITORS": "Visitors",
@@ -97,7 +96,6 @@
         "GLOBAL__DATE_R_MINUTE": "minute",
         "GLOBAL__DATE_R_SECONDS": "seconds",
         "GLOBAL__DATE_R_SECOND": "second",
-        "GLOBAL__SAVE": "Save",
         "GLOBAL__CATEGORY": "Category",
         "GLOBAL__TEMPORALY_DISABLED": "Temporarily disabled",
 
@@ -431,7 +429,6 @@
         "USER__EDIT_TITLE": "Editing a member",
         "USER__REGISTER_DATE": "Registration date",
         "USER__USERS": "Members",
-	"USER__MEMBERS_REGISTERED":"Registered members",
         "USER__NBR_REGISTERED": "Registered Users",
         "USER__PASSWORD_UPDATE_SUCCESS": "The password has been updated!",
         "USER__EMAIL_UPDATE_SUCCESS": "The email has been updated!",
@@ -501,6 +498,9 @@
         "HISTORY__ACTION_EDIT_NAV": "Editing a link",
         "HISTORY__ACTION_DELETE_USER": "Deleting a user",
         "HISTORY__ACTION_EDIT_LANG": "Change the language file",
+        "HISTORY__ACTION_UPDATE_PLUGIN": "Updating a plugin",
+        "HISTORY__ACTION_UPDATE_THEME": "Updating a theme",
+        "HISTORY__ACTION_INSTALL_THEME": "Installing a theme",
         "HISTORY__VIEW_GLOBAL": "Site History",
 
         "PERMISSIONS__LABEL": "Permissions",
@@ -680,7 +680,7 @@
         "API__SKIN_RESTORER_SERVER_DESC": "If you are using SkinRestorer you must choose a server where the skin will be put (the server must be linked with the link plugin)",
         "API__SKIN_RESTORER_NOT_CONNECTED": "You must be logged in in-game!",
 
-        "BAN__MEMBERS": "Banned members",
+        "BAN__MEMBERS": "Banned Members",
         "BAN__HOME": "Bans",
         "BAN__QUESTION": "Ban?",
         "BAN__REASON": "Reason for ban",

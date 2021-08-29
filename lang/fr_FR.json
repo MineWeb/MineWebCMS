@@ -430,7 +430,6 @@
         "USER__EDIT_TITLE":"Modification d'un membre",
         "USER__REGISTER_DATE":"Date d'inscription",
         "USER__USERS":"Membres",
-        "USER__MEMBERS_REGISTERED":"Membres inscrits",
         "USER__NBR_REGISTERED":"Utilisateurs enregistrés",
         "USER__PASSWORD_UPDATE_SUCCESS":"Le mot de passe a bien été mis à jour !",
         "USER__EMAIL_UPDATE_SUCCESS":"L'email a bien été mis à jour !",
@@ -499,6 +498,9 @@
         "HISTORY__ACTION_EDIT_NAV":"Modification d'un lien",
         "HISTORY__ACTION_DELETE_USER":"Suppression d'un utilisateur",
         "HISTORY__ACTION_EDIT_LANG":"Changement du fichier de langage",
+        "HISTORY__ACTION_UPDATE_PLUGIN": "Mise à jour d'un plugin",
+        "HISTORY__ACTION_UPDATE_THEME": "Mise à jour d'un thème",
+        "HISTORY__ACTION_INSTALL_THEME": "Installation d'un thème",
         "HISTORY__VIEW_GLOBAL": "Historique du site",
 
         "PERMISSIONS__LABEL": "Permissions",
@@ -681,7 +683,7 @@
         "API__SKIN_RESTORER_SERVER_DESC": "Si vous utilisez SkinRestorer vous devez choisir un serveur où le skin sera mis (le serveur doit être lié avec le plugin de liaison)",
         "API__SKIN_RESTORER_NOT_CONNECTED": "Vous devez être connecté en jeu !",
 
-        "BAN__MEMBERS": "Membres bannis",
+        "BAN__MEMBERS": "Membres Bannis",
         "BAN__HOME": "Bannissements",
         "BAN__QUESTION": "Bannir ?",
         "BAN__REASON": "Raison du bannissement",
