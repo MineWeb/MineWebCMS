@@ -426,6 +426,7 @@
         "USER__EDIT_TITLE": "Editing a member",
         "USER__REGISTER_DATE": "Registration date",
         "USER__USERS": "Members",
+        "USER__MEMBERS_REGISTERED":"Registered members",
         "USER__NBR_REGISTERED": "Registered Users",
         "USER__PASSWORD_UPDATE_SUCCESS": "The password has been updated!",
         "USER__EMAIL_UPDATE_SUCCESS": "The email has been updated!",

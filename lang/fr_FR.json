@@ -430,6 +430,7 @@
         "USER__EDIT_TITLE":"Modification d'un membre",
         "USER__REGISTER_DATE":"Date d'inscription",
         "USER__USERS":"Membres",
+        "USER__MEMBERS_REGISTERED":"Membres inscrits",
         "USER__NBR_REGISTERED":"Utilisateurs enregistrés",
         "USER__PASSWORD_UPDATE_SUCCESS":"Le mot de passe a bien été mis à jour !",
         "USER__EMAIL_UPDATE_SUCCESS":"L'email a bien été mis à jour !",
