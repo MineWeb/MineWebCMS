@@ -63,7 +63,6 @@
        "GLOBAL__TYPE": "Заклинание",
        "GLOBAL__TYPE_NORMAL": "Стандарт",
        "GLOBAL__DEFAULT": "По умолчанию",
-       "GLOBAL__JOIN_US": "Присоединяйся!",
        "GLOBAL__JOIN_US_SOCIAL": "Присоединяйся к нам -",
        "GLOBAL__YESTERDAY": "Вчера",
        "GLOBAL__VISITORS": "Гости",
@@ -97,7 +96,6 @@
        "GLOBAL__DATE_R_MINUTE": "минута",
        "GLOBAL__DATE_R_SECONDS": "секунды",
        "GLOBAL__DATE_R_SECOND": "секунда",
-       "GLOBAL__SAVE": "Сохранить",
        "GLOBAL__CATEGORY": "Категория",
        "GLOBAL__TEMPORALY_DISABLED": "Временно отключен",
         
@@ -461,7 +459,7 @@
        "USER__SECRET_NOT_FOUND" : "Информация отсутствует, перезагрузите страницу и повторите попытку" ,
        "USER__SUCCESS_ENABLED_TWO_FACTOR_AUTH" : "Двухфакторная аутентификация активирована!" ,
 		
-		"HISTORY__CATEGORY_NEWS": "Новости",
+	"HISTORY__CATEGORY_NEWS": "Новости",
        "HISTORY__CATEGORY_VOTE": "Голосовать",
        "HISTORY__CATEGORY_USER": "Пользователь",
        "HISTORY__CATEGORY_CONFIGURATION": "Конфигурация",
@@ -501,6 +499,9 @@
        "HISTORY__ACTION_EDIT_NAV": "Редактирование ссылки",
        "HISTORY__ACTION_DELETE_USER": "Удаление пользователя",
        "HISTORY__ACTION_EDIT_LANG": "Изменить языковой файл",
+       "HISTORY__ACTION_UPDATE_PLUGIN": "Обновление плагина",
+       "HISTORY__ACTION_UPDATE_THEME": "Обновление темы",
+       "HISTORY__ACTION_INSTALL_THEME": "Установка темы",
        "HISTORY__VIEW_GLOBAL": "История сайта",
         
        "PERMISSIONS__LABEL": "Разрешения",

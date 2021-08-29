@@ -63,7 +63,6 @@
         "GLOBAL__TYPE": "Spell",
         "GLOBAL__TYPE_NORMAL": "Standard",
         "GLOBAL__DEFAULT": "By default",
-        "GLOBAL__JOIN_US": "Join us!",
         "GLOBAL__JOIN_US_SOCIAL": "Join us -",
         "GLOBAL__YESTERDAY": "Yesterday",
         "GLOBAL__VISITORS": "Visitors",
@@ -97,7 +96,6 @@
         "GLOBAL__DATE_R_MINUTE": "minute",
         "GLOBAL__DATE_R_SECONDS": "seconds",
         "GLOBAL__DATE_R_SECOND": "second",
-        "GLOBAL__SAVE": "Save",
         "GLOBAL__CATEGORY": "Category",
         "GLOBAL__TEMPORALY_DISABLED": "Temporarily disabled",
 
@@ -497,6 +495,9 @@
         "HISTORY__ACTION_EDIT_NAV": "Editing a link",
         "HISTORY__ACTION_DELETE_USER": "Deleting a user",
         "HISTORY__ACTION_EDIT_LANG": "Change the language file",
+        "HISTORY__ACTION_UPDATE_PLUGIN": "Updating a plugin",
+        "HISTORY__ACTION_UPDATE_THEME": "Updating a theme",
+        "HISTORY__ACTION_INSTALL_THEME": "Installing a theme",
         "HISTORY__VIEW_GLOBAL": "Site History",
 
         "PERMISSIONS__LABEL": "Permissions",

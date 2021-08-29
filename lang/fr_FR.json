@@ -498,6 +498,9 @@
         "HISTORY__ACTION_EDIT_NAV":"Modification d'un lien",
         "HISTORY__ACTION_DELETE_USER":"Suppression d'un utilisateur",
         "HISTORY__ACTION_EDIT_LANG":"Changement du fichier de langage",
+        "HISTORY__ACTION_UPDATE_PLUGIN": "Mise à jour d'un plugin",
+        "HISTORY__ACTION_UPDATE_THEME": "Mise à jour d'un thème",
+        "HISTORY__ACTION_INSTALL_THEME": "Installation d'un thème",
         "HISTORY__VIEW_GLOBAL": "Historique du site",
 
         "PERMISSIONS__LABEL": "Permissions",

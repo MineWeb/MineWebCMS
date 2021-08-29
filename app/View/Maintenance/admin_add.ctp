@@ -33,7 +33,7 @@
                         </div>
 
                         <div class="form-group">
-                            <input type="hidden" name="sub_url">
+                            <input type="hidden" name="sub_url" value="0">
                             <div class="checkbox">
                                 <input name="sub_url_checkbox"
                                        type="checkbox">
