@@ -27,7 +27,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label><?= $Lang->get('SEO__FORM_DESCRIPTION') ?></label>
-                                    <input type="text" class="form-control" value="<?= $default['description'] ?>"
+                                    <input type="text" class="form-control" value="<?= isset($default['description']) ? $default['description'] : "" ?>"
                                            name="description">
                                 </div>
                             </div>
@@ -39,14 +39,14 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <em><?= $Lang->get('SEO__FORM_FAVICON_DESC') ?></em>
-                                    <?= $this->element('form.input.upload.img', ['img' => $default['favicon_url'], 'filename' => "favicon.png", 'title' => $Lang->get('SEO__FORM_FAVICON')]); ?>
+                                    <?= $this->element('form.input.upload.img', ['img' => isset($default['favicon_url']) ? $default['favicon_url'] : "", 'filename' => "favicon.png", 'title' => $Lang->get('SEO__FORM_FAVICON')]); ?>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label><?= $Lang->get('SEO__FORM_IMG_URL') ?></label>
                                     <em><?= $Lang->get('SEO__FORM_IMG_URL_DESC') ?></em>
-                                    <input type="text" class="form-control" value="<?= $default['img_url'] ?>"
+                                    <input type="text" class="form-control" value="<?= isset($default['img_url']) ? $default['img_url'] : "" ?>"
                                            name="img_url">
                                 </div>
                             </div>

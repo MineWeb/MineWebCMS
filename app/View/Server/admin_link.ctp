@@ -122,8 +122,8 @@
                                 <a href="<?= $this->Html->url(['controller' => 'server', 'action' => 'delete', 'admin' => true, $value['Server']['id']]) ?>"
                                    type="submit" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
 
-                                <button class="btn switchBanner float-right <?= ($value['Server']['activeInBanner']) ? 'btn-danger' : 'btn-info' ?>"
-                                        id="<?= $value['Server']['id'] ?>"><?= ($value['Server']['activeInBanner']) ? $Lang->get('SERVER__HIDE_BANNER') : $Lang->get('SERVER__AFFICH_BANNER') ?></button>
+                                <button class="btn switchBanner float-right <?=  (isset($value['Server']['activeInBanner']) && $value['Server']['activeInBanner']) ? 'btn-danger' : 'btn-info' ?>"
+                                        id="<?= $value['Server']['id'] ?>"><?= (isset($value['Server']['activeInBanner']) && $value['Server']['activeInBanner']) ? $Lang->get('SERVER__HIDE_BANNER') : $Lang->get('SERVER__AFFICH_BANNER') ?></button>
 
                             </form>
 

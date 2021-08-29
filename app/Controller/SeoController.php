@@ -12,8 +12,9 @@ class SeoController extends AppController
         $this->set('title_for_layout', $this->Lang->get('SEO__TITLE'));
         $this->layout = 'admin';
         $this->loadModel('Seo');
-        $default = $this->Seo->find('first', ["conditions" => ['page' => null]])['Seo'];
-
+        $default = $this->Seo->find('first', ["conditions" => ['page' => null]]);
+        if (isset($default['Seo']))
+            $default = $default['Seo'];
         $seo_other = $this->Seo->find('all', ["conditions" => ['NOT' => ['page' => null]]]);
         $this->set(compact('default', 'seo_other'));
     }

@@ -536,7 +536,7 @@ class AppController extends Controller
         $get_page = [];
         $start_url = "/" . explode("/", $current_url)[1];
         $check = $this->Seo->find('first', ["conditions" => ['page LIKE' => $start_url . "%"]]);
-        if ($check && ($check['Seo']["url"] == $current_url || $current_url != "/"))
+        if ($check && ($check['Seo']["page"] == $current_url || $current_url != "/") && strlen($current_url) >= strlen($check['Seo']["page"]))
             $get_page = $check;
         $seo_config['title'] = (!empty($default['Seo']['title']) ? $default['Seo']['title'] : "{TITLE} - {WEBSITE_NAME}");
         $seo_config['title'] = (!empty($get_page['Seo']['title']) ? $get_page['Seo']['title'] : $seo_config['title']);
