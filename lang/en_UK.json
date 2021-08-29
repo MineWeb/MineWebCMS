@@ -676,7 +676,7 @@
         "API__SKIN_RESTORER_SERVER_DESC": "If you are using SkinRestorer you must choose a server where the skin will be put (the server must be linked with the link plugin)",
         "API__SKIN_RESTORER_NOT_CONNECTED": "You must be logged in in-game!",
 
-        "BAN__MEMBERS": "Banned Members",
+        "BAN__MEMBERS": "Banned members",
         "BAN__HOME": "Bans",
         "BAN__QUESTION": "Ban?",
         "BAN__REASON": "Reason for ban",
