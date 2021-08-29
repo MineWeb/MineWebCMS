@@ -3,7 +3,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header with-border">
-                    <h3 class="card-title"><?php $Lang->get("BAN__HOME") ?></h3>
+                    <h3 class="card-title"><?= $Lang->get("BAN__HOME") ?></h3>
                 </div>
                 <div class="card-body">
                     <table class="table table-responsive-sm table-bordered">
