@@ -345,20 +345,22 @@ class AppSchema extends CakeSchema
             /* ******* */
             App::uses('Permission', 'Model');
             $permission = ClassRegistry::init('Permission');
+            $exist = $permission->find();
+            if (!$exist) {
+                $permission->create(); // les permissions du rank de base
+                $permission->set([
+                    'rank' => '0',
+                    'permissions' => serialize(['COMMENT_NEWS', 'LIKE_NEWS', 'DELETE_HIS_COMMENT', 'EDIT_HIS_EMAIL'])
+                ]);
+                $permission->save();
 
-            $permission->create(); // les permissions du rank de base
-            $permission->set([
-                'rank' => '0',
-                'permissions' => serialize(['COMMENT_NEWS', 'LIKE_NEWS', 'DELETE_HIS_COMMENT', 'EDIT_HIS_EMAIL'])
-            ]);
-            $permission->save();
-
-            $permission->create(); // les perissions du rank modo
-            $permission->set([
-                'rank' => '2',
-                'permissions' => serialize(['COMMENT_NEWS', 'LIKE_NEWS', 'DELETE_HIS_COMMENT', 'EDIT_HIS_EMAIL'])
-            ]);
-            $permission->save();
+                $permission->create(); // les perissions du rank modo
+                $permission->set([
+                    'rank' => '2',
+                    'permissions' => serialize(['COMMENT_NEWS', 'LIKE_NEWS', 'DELETE_HIS_COMMENT', 'EDIT_HIS_EMAIL'])
+                ]);
+                $permission->save();
+            }
 
             /* ******* */
             /*   API   */
@@ -366,70 +368,75 @@ class AppSchema extends CakeSchema
             App::uses('ApiConfiguration', 'Model');
             $api = ClassRegistry::init('ApiConfiguration');
 
-            $api->create(); // la config de base
-            $api->set([
-                'skins' => 0,
-                'skin_filename' => 'skins/{PLAYER}_skin',
-                'skin_free' => 0,
-                'skin_width' => 64,
-                'skin_height' => 32,
-                'capes' => 0,
-                'cape_filename' => 'skins/capes/{PLAYER}_cape',
-                'cape_free' => 0,
-                'cape_width' => '64',
-                'cape_height' => '32',
-                'get_premium_skins' => 1,
-                'use_skin_restorer' => 0,
-                'skin_restorer_server_id' => 0,
-            ]);
-            $api->save();
+            $exist = $api->find();
+            if (!$exist) {
+                $api->create(); // la config de base
+                $api->set([
+                    'skins' => 0,
+                    'skin_filename' => 'skins/{PLAYER}_skin',
+                    'skin_free' => 0,
+                    'skin_width' => 64,
+                    'skin_height' => 32,
+                    'capes' => 0,
+                    'cape_filename' => 'skins/capes/{PLAYER}_cape',
+                    'cape_free' => 0,
+                    'cape_width' => '64',
+                    'cape_height' => '32',
+                    'get_premium_skins' => 1,
+                    'use_skin_restorer' => 0,
+                    'skin_restorer_server_id' => 0,
+                ]);
+                $api->save();
+            }
 
             /* ******* */
             /* CONFIG  */
             /* ******* */
             App::uses('Configuration', 'Model');
             $configuration = ClassRegistry::init('Configuration');
+            $exist = $configuration->find();
+            if (!$exist) {
+                $configuration->create(); // la config de base
+                $configuration->set([
+                    'name' => 'MineWeb',
+                    'email' => 'noreply@mineweb.org',
+                    'lang' => 'fr_FR',
+                    'theme' => 'default',
+                    'layout' => 'default',
+                    'money_name_singular' => 'point',
+                    'money_name_plural' => 'points',
+                    'server_state' => 0,
+                    'server_cache' => 0,
+                    'server_secretkey' => '',
+                    'server_timeout' => 1,
+                    'condition' => null,
+                    'skype' => 'http://mineweb.org',
+                    'youtube' => 'http://mineweb.org',
+                    'twitter' => 'http://mineweb.org',
+                    'facebook' => 'http://mineweb.org',
+                    'banner_server' => serialize([]),
+                    'email_send_type' => '1',
+                    'smtpHost' => null,
+                    'smtpUsername' => null,
+                    'smtpPort' => null,
+                    'smtpPassword' => null,
+                    'google_analytics' => null,
+                    'end_layout_code' => null,
+                    'check_uuid' => 0,
+                    'captcha_type' => 1,
+                    'captcha_sitekey' => null,
+                    'captcha_secret' => null,
+                    'confirm_mail_signup' => 0,
+                    'confirm_mail_signup_block' => 0,
+                    'member_page_type' => 0,
+                    'passwords_hash' => 'blowfish',
+                    'passwords_salt' => 0,
+                    'forced_updates' => 1,
+                    'session_type' => 'php'
+                ]);
 
-            $configuration->create(); // la config de base
-            $configuration->set([
-                'name' => 'MineWeb',
-                'email' => 'noreply@mineweb.org',
-                'lang' => 'fr_FR',
-                'theme' => 'default',
-                'layout' => 'default',
-                'money_name_singular' => 'point',
-                'money_name_plural' => 'points',
-                'server_state' => 0,
-                'server_cache' => 0,
-                'server_secretkey' => '',
-                'server_timeout' => 1,
-                'condition' => null,
-                'skype' => 'http://mineweb.org',
-                'youtube' => 'http://mineweb.org',
-                'twitter' => 'http://mineweb.org',
-                'facebook' => 'http://mineweb.org',
-                'banner_server' => serialize([]),
-                'email_send_type' => '1',
-                'smtpHost' => null,
-                'smtpUsername' => null,
-                'smtpPort' => null,
-                'smtpPassword' => null,
-                'google_analytics' => null,
-                'end_layout_code' => null,
-                'check_uuid' => 0,
-                'captcha_type' => 1,
-                'captcha_sitekey' => null,
-                'captcha_secret' => null,
-                'confirm_mail_signup' => 0,
-                'confirm_mail_signup_block' => 0,
-                'member_page_type' => 0,
-                'passwords_hash' => 'blowfish',
-                'passwords_salt' => 0,
-                'forced_updates' => 1,
-                'session_type' => 'php'
-            ]);
-
-            $configuration->save();
+                $configuration->save();
+            }
         } else {
             /*
             Exemple :
