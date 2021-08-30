@@ -310,6 +310,11 @@ class AppController extends Controller
                         'permission' => 'MANAGE_SEO',
                         'route' => ['controller' => 'seo', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
+                    'SOCIAL__TITLE' => [
+                        'icon' => 'fas fa-share-alt',
+                        'permission' => 'MANAGE_SOCIAL',
+                        'route' => ['controller' => 'social', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
                     'MOTD__TITLE' => [
                         'icon' => 'fas fa-sort-amount-up-alt',
                         'permission' => 'MANAGE_MOTD',
