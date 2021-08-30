@@ -6,6 +6,8 @@
                     <h3 class="card-title"><?= $Lang->get("BAN__HOME") ?></h3>
                 </div>
                 <div class="card-body">
+                    <a class="btn btn-large btn-block btn-primary" href="<?= $this->Html->url(['controller' => 'ban', 'action' => 'add', 'admin' => true]) ?>"><?= $Lang->get('BAN__ADD') ?></a>
+                    <hr>
                     <table class="table table-responsive-sm table-bordered">
                         <thead>
                             <tr>
@@ -33,11 +35,6 @@
                             <?php } ?>
                         </tbody>
                     </table>
-                </div>
-
-                <div class="card-body">
-                    <a class="btn btn-large btn-block btn-primary"
-                       href="<?= $this->Html->url(['controller' => 'ban', 'action' => 'add', 'admin' => true]) ?>"><?= $Lang->get('BAN__ADD') ?></a>
                 </div>
             </div>
         </div>
