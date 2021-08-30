@@ -21,10 +21,10 @@ class SocialController extends AppController
         $this->layout = 'admin';
 
         $social_default = [
-            ['title' => 'Discord', 'fa' => 'fab fa-discord', 'img' => null, 'color' => '#7289da'],
-            ['title' => 'Twitter', 'fa' => 'fab fa-twitter', 'img' => null, 'color' => '#00acee'],
-            ['title' => 'Youtube', 'fa' => 'fab fa-youtube', 'img' => null, 'color' => '#c4302b'],
-            ['title' => 'FaceBook', 'fa' => 'fab fa-facebook', 'img' => null, 'color' => '#3b5998']
+            ['title' => 'Discord', 'icon' => 'fab fa-discord', 'img' => null, 'color' => '#7289da'],
+            ['title' => 'Twitter', 'icon' => 'fab fa-twitter', 'img' => null, 'color' => '#00acee'],
+            ['title' => 'Youtube', 'icon' => 'fab fa-youtube', 'img' => null, 'color' => '#c4302b'],
+            ['title' => 'FaceBook', 'icon' => 'fab fa-facebook', 'img' => null, 'color' => '#3b5998']
         ];
 
         $this->set('social_default', $social_default);
@@ -35,14 +35,14 @@ class SocialController extends AppController
 
             if (empty($this->request->data("url")))
                 return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]));
-            if(empty($this->request->data("img")) && empty($this->request->data("fa")))
+            if(empty($this->request->data("img")) && empty($this->request->data("icon")))
                 return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('SOCIAL__CANNOT_TOW_TYPE')]));
 
             $this->Social->create();
             $this->Social->set([
                 "title" => $this->request->data("title"),
                 "img" => $this->request->data("img"),
-                "fa" => $this->request->data("fa"),
+                "icon" => $this->request->data("icon"),
                 "color" => $this->request->data("color"),
                 "url" => $this->request->data("url")
             ]);
@@ -83,14 +83,14 @@ class SocialController extends AppController
 
             if (empty($this->request->data("url")))
                 return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]));
-            if(empty($this->request->data("img")) && empty($this->request->data("fa")))
+            if(empty($this->request->data("img")) && empty($this->request->data("icon")))
                 return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('SOCIAL__CANNOT_TOW_TYPE')]));
 
             $this->Social->read(null, $id);
             $this->Social->set([
                 "title" => $this->request->data("title"),
                 "img" => $this->request->data("img"),
-                "fa" => $this->request->data("fa"),
+                "icon" => $this->request->data("icon"),
                 "color" => $this->request->data("color"),
                 "url" => $this->request->data("url")
             ]);
