@@ -2,6 +2,13 @@
 
 class SocialController extends AppController
 {
+    private $social_default = [
+        ['title' => 'Discord', 'icon' => 'fab fa-discord', 'img' => null, 'color' => '#7289da'],
+        ['title' => 'Twitter', 'icon' => 'fab fa-twitter', 'img' => null, 'color' => '#00acee'],
+        ['title' => 'Youtube', 'icon' => 'fab fa-youtube', 'img' => null, 'color' => '#c4302b'],
+        ['title' => 'FaceBook', 'icon' => 'fab fa-facebook', 'img' => null, 'color' => '#3b5998']
+    ];
+
     function admin_index() {
         if (!$this->isConnected || !$this->Permissions->can("MANAGE_SOCIAL"))
             throw new ForbiddenException();
@@ -20,14 +27,7 @@ class SocialController extends AppController
         $this->set('title_for_layout', $this->Lang->get("SOCIAL__HOME"));
         $this->layout = 'admin';
 
-        $social_default = [
-            ['title' => 'Discord', 'icon' => 'fab fa-discord', 'img' => null, 'color' => '#7289da'],
-            ['title' => 'Twitter', 'icon' => 'fab fa-twitter', 'img' => null, 'color' => '#00acee'],
-            ['title' => 'Youtube', 'icon' => 'fab fa-youtube', 'img' => null, 'color' => '#c4302b'],
-            ['title' => 'FaceBook', 'icon' => 'fab fa-facebook', 'img' => null, 'color' => '#3b5998']
-        ];
-
-        $this->set('social_default', $social_default);
+        $this->set('social_default', $this->social_default);
 
         if ($this->request->is("post")) {
             $this->autoRender = false;
@@ -67,15 +67,7 @@ class SocialController extends AppController
         $this->layout = 'admin';
 
         $this->set('social_button', $find['SocialButton']);
-
-        $social_default = ['SocialDefault' => 
-            ['title' => 'Discord', 'fa' => 'fab fa-discord', 'img' => null, 'color' => '#7289da'],
-            ['title' => 'Twitter', 'fa' => 'fab fa-twitter', 'img' => null, 'color' => '#00acee'],
-            ['title' => 'Youtube', 'fa' => 'fab fa-youtube', 'img' => null, 'color' => '#c4302b'],
-            ['title' => 'FaceBook', 'fa' => 'fab fa-facebook', 'img' => null, 'color' => '#3b5998']
-        ];
-
-        $this->set('social_default', $social_default);
+        $this->set('social_default', $this->social_default);
 
         if ($this->request->is("post")) {
             $this->autoRender = false;
@@ -96,7 +88,7 @@ class SocialController extends AppController
             ]);
             $this->Social->save();
 
-            $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('SOCIAL__EDIT_BUTTON_SUCCESS')]));
+            $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('SOCIAL__BUTTON_EDIT_SUCCESS')]));
         }
     }
 
