@@ -105,7 +105,7 @@ class BanController extends AppController
                     if ($checkIsBan != null)
                         continue;
 
-                    if ($this->Permissions->have($value['User']['rank'], "CAN_BE_BAN"))
+                    if ($this->Permissions->have($value['User']['rank'], "BYPASS_BAN"))
                         continue;
 
                     $username = $value['User']['pseudo'];
@@ -131,7 +131,7 @@ class BanController extends AppController
     {
         $this->autoRender = false;
         $this->response->type('json');
-        if ($this->isConnected and $this->Permissions->can('MANAGE_USERS')) {
+        if ($this->isConnected and $this->Permissions->can('MANAGE_BAN')) {
             $this->loadModel("User");
             if ($query != false) {
                 $result = $this->User->find('all', ['conditions' => ['pseudo LIKE' => $query . '%']]);
@@ -141,7 +141,7 @@ class BanController extends AppController
                     if ($checkIsBan != null)
                         continue;
 
-                    if ($this->Permissions->have($value['User']['rank'], "CAN_BE_BAN"))
+                    if ($this->Permissions->have($value['User']['rank'], "BYPASS_BAN"))
                         continue;
 
                     $users[] = ['pseudo' => $value['User']['pseudo'], 'id' => $value['User']['id']];
