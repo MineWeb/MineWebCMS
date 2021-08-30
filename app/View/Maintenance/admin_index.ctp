@@ -6,6 +6,8 @@
                     <h3 class="card-title"><?= $Lang->get('MAINTENANCE__TITLE') ?></h3>
                 </div>
                 <div class="card-body">
+                    <a class="btn btn-large btn-block btn-primary" href="<?= $this->Html->url(['controller' => 'maintenance', 'action' => 'add', 'admin' => true]) ?>"><?= $Lang->get('MAINTENANCE__ADD_PAGE') ?></a>
+                    <hr>
                     <table class="table table-responsive-sm table-bordered">
                         <thead>
                         <tr>
@@ -41,11 +43,6 @@
                         <?php } ?>
                         </tbody>
                     </table>
-                </div>
-
-                <div class="card-body">
-                    <a class="btn btn-large btn-block btn-primary"
-                       href="<?= $this->Html->url(['controller' => 'maintenance', 'action' => 'add', 'admin' => true]) ?>"><?= $Lang->get('MAINTENANCE__ADD_PAGE') ?></a>
                 </div>
             </div>
         </div>
