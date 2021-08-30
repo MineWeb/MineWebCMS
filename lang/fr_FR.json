@@ -704,6 +704,7 @@
         "SOCIAL__BUTTON_FA": "Icones FontAwesome du bouton (optionnel)",
         "SOCIAL__CANNOT_TOW_TYPE": "Il ne peux pas y avoir 2 type d'illustration définis en même temps !",
         "SOCIAL__BUTTON_SUCCESS": "Le bouton a était créé avec succès !",
+        "SOCIAL__BUTTON_EDIT_SUCCESS": "Le bouton a était édité avec succès !",
         "SOCIAL__BUTTON_DELETE_SUCCESS": "Le bouton a était supprimé avec succès !"
     }
 }
