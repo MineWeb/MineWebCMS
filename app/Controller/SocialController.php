@@ -20,7 +20,7 @@ class SocialController extends AppController
         $this->set('title_for_layout', $this->Lang->get("SOCIAL__HOME"));
         $this->layout = 'admin';
 
-        $social_default = ['SocialDefault' => 
+        $social_default = [
             ['title' => 'Discord', 'fa' => 'fab fa-discord', 'img' => null, 'color' => '#7289da'],
             ['title' => 'Twitter', 'fa' => 'fab fa-twitter', 'img' => null, 'color' => '#00acee'],
             ['title' => 'Youtube', 'fa' => 'fab fa-youtube', 'img' => null, 'color' => '#c4302b'],
@@ -35,14 +35,14 @@ class SocialController extends AppController
 
             if (empty($this->request->data("url")))
                 return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]));
-            if(empty($this->request->data("fa")) && empty($this->request->data("fa")))
+            if(empty($this->request->data("img")) && empty($this->request->data("fa")))
                 return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('SOCIAL__CANNOT_TOW_TYPE')]));
 
             $this->Social->create();
             $this->Social->set([
                 "title" => $this->request->data("title"),
-                "fa" => $this->request->data("fa"),
                 "img" => $this->request->data("img"),
+                "fa" => $this->request->data("fa"),
                 "color" => $this->request->data("color"),
                 "url" => $this->request->data("url")
             ]);
@@ -66,8 +66,7 @@ class SocialController extends AppController
         $this->set('title_for_layout', $this->Lang->get("SOCIAL__HOME"));
         $this->layout = 'admin';
 
-        $social_button = $find['SocialButton'];
-        $this->set(compact('social_button'));
+        $this->set('social_button', $find['SocialButton']);
 
         $social_default = ['SocialDefault' => 
             ['title' => 'Discord', 'fa' => 'fab fa-discord', 'img' => null, 'color' => '#7289da'],
@@ -84,20 +83,20 @@ class SocialController extends AppController
 
             if (empty($this->request->data("url")))
                 return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]));
-            if(empty($this->request->data("fa")) && empty($this->request->data("fa")))
+            if(empty($this->request->data("img")) && empty($this->request->data("fa")))
                 return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('SOCIAL__CANNOT_TOW_TYPE')]));
 
-            $this->Social->create();
+            $this->Social->read(null, $id);
             $this->Social->set([
                 "title" => $this->request->data("title"),
-                "fa" => $this->request->data("fa"),
                 "img" => $this->request->data("img"),
+                "fa" => $this->request->data("fa"),
                 "color" => $this->request->data("color"),
                 "url" => $this->request->data("url")
             ]);
             $this->Social->save();
 
-            $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('SOCIAL__BUTTON_SUCCESS')]));
+            $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('SOCIAL__EDIT_BUTTON_SUCCESS')]));
         }
     }
 
