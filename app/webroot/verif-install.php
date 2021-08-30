@@ -51,7 +51,7 @@ class DATABASE_CONFIG {
             } else if ($sql_type == 1) { // sqlite3
                 $sqlite_extension = in_array('pdo_sqlite', get_loaded_extensions());
                 if (!$sqlite_extension) {
-                    echo json_encode(['status' => false, 'msg' => "Vous devez avoir l'extension PHP : php-sqlite"]);
+                    echo json_encode(['status' => false, 'msg' => "Vous devez avoir l'extension PHP : sqlite3"]);
                     exit;
                 }
 
