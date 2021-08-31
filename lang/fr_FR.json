@@ -335,7 +335,7 @@
         "SEO__FORM_IMG_URL_DESC": "(Pour Discord, Facebook, Twitter...) Laisser vide pour utiliser le favicon à la place",
         "SEO__FORM_THEME_COLOR": "Couleur thématique",
         "SEO__FORM_THEME_COLOR_DESC": "(Pour l'embed discord par exemple)",
-        "SEO__FORM_TWITTER_SITE": "Tags du twitter",
+        "SEO__FORM_TWITTER_SITE": "Tag du twitter",
         "SEO__FORM_TWITTER_SITE_DESC": "(De votre serveur par exemple)",
         "SEO__ADD_PAGE": "Ajouter une Page",
         "SEO__EDIT_PAGE": "Modifier une Page",
