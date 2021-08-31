@@ -144,7 +144,7 @@ class ThemeComponent extends CakeObject
                 $themeInstalledID[] = strtolower($themeInstalled->slug);
             }
             foreach ($themes as $key => $theme) {
-                if (in_array(strtolower($theme['slug']), $themeInstalledID))
+                if (isset($theme['slug']) && in_array(strtolower($theme['slug']), $themeInstalledID))
                     unset($themes[$key]);
             }
         }

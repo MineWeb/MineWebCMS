@@ -27,7 +27,7 @@ class AppSchema extends CakeSchema
     public $bans = [
         'id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'],
         'user_id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false],
-        'reason' => ['type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
+        'reason' => ['type' => 'text', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'indexes' => [
             'PRIMARY' => ['column' => 'id', 'unique' => 1]
         ],
@@ -139,7 +139,7 @@ class AppSchema extends CakeSchema
         'id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'],
         'sub_url' => ['type' => 'integer', 'null' => false, 'default' => 0, 'length' => 1, 'unsigned' => false],
         'url' => ['type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
-        'reason' => ['type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
+        'reason' => ['type' => 'text', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'active' => ['type' => 'integer', 'null' => false, 'default' => 1, 'length' => 1, 'unsigned' => false],
         'indexes' => [
             'PRIMARY' => ['column' => 'id', 'unique' => 1]
@@ -238,6 +238,8 @@ class AppSchema extends CakeSchema
         'description' => ['type' => 'text', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'favicon_url' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 255, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'img_url' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 255, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
+        'theme_color' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 255, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
+        'twitter_site' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 255, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'page' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 255, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'indexes' => [
             'PRIMARY' => ['column' => 'id', 'unique' => 1]
@@ -345,20 +347,22 @@ class AppSchema extends CakeSchema
             /* ******* */
             App::uses('Permission', 'Model');
             $permission = ClassRegistry::init('Permission');
+            $exist = $permission->find();
+            if (!$exist) {
+                $permission->create(); // les permissions du rank de base
+                $permission->set([
+                    'rank' => '0',
+                    'permissions' => serialize(['COMMENT_NEWS', 'LIKE_NEWS', 'DELETE_HIS_COMMENT', 'EDIT_HIS_EMAIL'])
+                ]);
+                $permission->save();
 
-            $permission->create(); // les permissions du rank de base
-            $permission->set([
-                'rank' => '0',
-                'permissions' => serialize(['COMMENT_NEWS', 'LIKE_NEWS', 'DELETE_HIS_COMMENT', 'EDIT_HIS_EMAIL'])
-            ]);
-            $permission->save();
-
-            $permission->create(); // les perissions du rank modo
-            $permission->set([
-                'rank' => '2',
-                'permissions' => serialize(['COMMENT_NEWS', 'LIKE_NEWS', 'DELETE_HIS_COMMENT', 'EDIT_HIS_EMAIL'])
-            ]);
-            $permission->save();
+                $permission->create(); // les perissions du rank modo
+                $permission->set([
+                    'rank' => '2',
+                    'permissions' => serialize(['COMMENT_NEWS', 'LIKE_NEWS', 'DELETE_HIS_COMMENT', 'EDIT_HIS_EMAIL'])
+                ]);
+                $permission->save();
+            }
 
             /* ******* */
             /*   API   */
@@ -366,70 +370,75 @@ class AppSchema extends CakeSchema
             App::uses('ApiConfiguration', 'Model');
             $api = ClassRegistry::init('ApiConfiguration');
 
-            $api->create(); // la config de base
-            $api->set([
-                'skins' => 0,
-                'skin_filename' => 'skins/{PLAYER}_skin',
-                'skin_free' => 0,
-                'skin_width' => 64,
-                'skin_height' => 32,
-                'capes' => 0,
-                'cape_filename' => 'skins/capes/{PLAYER}_cape',
-                'cape_free' => 0,
-                'cape_width' => '64',
-                'cape_height' => '32',
-                'get_premium_skins' => 1,
-                'use_skin_restorer' => 0,
-                'skin_restorer_server_id' => 0,
-            ]);
-            $api->save();
+            $exist = $api->find();
+            if (!$exist) {
+                $api->create(); // la config de base
+                $api->set([
+                    'skins' => 0,
+                    'skin_filename' => 'skins/{PLAYER}_skin',
+                    'skin_free' => 0,
+                    'skin_width' => 64,
+                    'skin_height' => 32,
+                    'capes' => 0,
+                    'cape_filename' => 'skins/capes/{PLAYER}_cape',
+                    'cape_free' => 0,
+                    'cape_width' => '64',
+                    'cape_height' => '32',
+                    'get_premium_skins' => 1,
+                    'use_skin_restorer' => 0,
+                    'skin_restorer_server_id' => 0,
+                ]);
+                $api->save();
+            }
 
             /* ******* */
             /* CONFIG  */
             /* ******* */
             App::uses('Configuration', 'Model');
             $configuration = ClassRegistry::init('Configuration');
+            $exist = $configuration->find();
+            if (!$exist) {
+                $configuration->create(); // la config de base
+                $configuration->set([
+                    'name' => 'MineWeb',
+                    'email' => 'noreply@mineweb.org',
+                    'lang' => 'fr_FR',
+                    'theme' => 'default',
+                    'layout' => 'default',
+                    'money_name_singular' => 'point',
+                    'money_name_plural' => 'points',
+                    'server_state' => 0,
+                    'server_cache' => 0,
+                    'server_secretkey' => '',
+                    'server_timeout' => 1,
+                    'condition' => null,
+                    'skype' => 'http://mineweb.org',
+                    'youtube' => 'http://mineweb.org',
+                    'twitter' => 'http://mineweb.org',
+                    'facebook' => 'http://mineweb.org',
+                    'banner_server' => serialize([]),
+                    'email_send_type' => '1',
+                    'smtpHost' => null,
+                    'smtpUsername' => null,
+                    'smtpPort' => null,
+                    'smtpPassword' => null,
+                    'google_analytics' => null,
+                    'end_layout_code' => null,
+                    'check_uuid' => 0,
+                    'captcha_type' => 1,
+                    'captcha_sitekey' => null,
+                    'captcha_secret' => null,
+                    'confirm_mail_signup' => 0,
+                    'confirm_mail_signup_block' => 0,
+                    'member_page_type' => 0,
+                    'passwords_hash' => 'blowfish',
+                    'passwords_salt' => 0,
+                    'forced_updates' => 1,
+                    'session_type' => 'php'
+                ]);
 
-            $configuration->create(); // la config de base
-            $configuration->set([
-                'name' => 'MineWeb',
-                'email' => 'noreply@mineweb.org',
-                'lang' => 'fr_FR',
-                'theme' => 'default',
-                'layout' => 'default',
-                'money_name_singular' => 'point',
-                'money_name_plural' => 'points',
-                'server_state' => 0,
-                'server_cache' => 0,
-                'server_secretkey' => '',
-                'server_timeout' => 1,
-                'condition' => null,
-                'skype' => 'http://mineweb.org',
-                'youtube' => 'http://mineweb.org',
-                'twitter' => 'http://mineweb.org',
-                'facebook' => 'http://mineweb.org',
-                'banner_server' => serialize([]),
-                'email_send_type' => '1',
-                'smtpHost' => null,
-                'smtpUsername' => null,
-                'smtpPort' => null,
-                'smtpPassword' => null,
-                'google_analytics' => null,
-                'end_layout_code' => null,
-                'check_uuid' => 0,
-                'captcha_type' => 1,
-                'captcha_sitekey' => null,
-                'captcha_secret' => null,
-                'confirm_mail_signup' => 0,
-                'confirm_mail_signup_block' => 0,
-                'member_page_type' => 0,
-                'passwords_hash' => 'blowfish',
-                'passwords_salt' => 0,
-                'forced_updates' => 1,
-                'session_type' => 'php'
-            ]);
-
-            $configuration->save();
+                $configuration->save();
+            }
         } else {
             /*
             Exemple :

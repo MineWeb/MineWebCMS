@@ -63,10 +63,10 @@ foreach ($pages as $page => $visitcount) {
                         new Chart(document.getElementById("pieChart_referers"), {
                             type: 'doughnut',
                             data: {
-                                labels: <?= json_encode($ref_pie['label']) ?>,
+                                labels: <?= isset($ref_pie['label']) ? json_encode($ref_pie['label']) : "[]" ?>,
                                 datasets: [{
-                                    backgroundColor: <?= json_encode($ref_pie['color']) ?>,
-                                    data: <?= json_encode($ref_pie['value']) ?>
+                                    backgroundColor: <?= isset($ref_pie['color']) ? json_encode($ref_pie['color']) : "[]" ?>,
+                                    data: <?= isset($ref_pie['value']) ? json_encode($ref_pie['value']) : "[]" ?>
                                 }]
                             },
                             options: {
@@ -93,10 +93,10 @@ foreach ($pages as $page => $visitcount) {
                         new Chart(document.getElementById("pieChart_pages"), {
                             type: 'doughnut',
                             data: {
-                                labels: <?= json_encode($pages_pie['label']) ?>,
+                                labels: <?= isset($pages_pie['label']) ? json_encode($pages_pie['label']) : "[]" ?>,
                                 datasets: [{
-                                    backgroundColor: <?= json_encode($pages_pie['color']) ?>,
-                                    data: <?= json_encode($pages_pie['value']) ?>
+                                    backgroundColor: <?= isset($pages_pie['color']) ? json_encode($pages_pie['color']) : "[]" ?>,
+                                    data: <?= isset($pages_pie['value']) ? json_encode($pages_pie['value']) : "[]" ?>
                                 }]
                             },
                             options: {

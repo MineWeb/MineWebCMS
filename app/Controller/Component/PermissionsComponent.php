@@ -30,7 +30,7 @@ class PermissionsComponent extends CakeObject
         'VIEW_STATISTICS',
         'MANAGE_THEMES',
         'MANAGE_USERS',
-        'MANAGE_BANS',
+        'MANAGE_BAN',
         'VIEW_WEBSITE_HISTORY'
     ];
 
