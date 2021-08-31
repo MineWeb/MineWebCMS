@@ -38,6 +38,7 @@ class SocialController extends AppController
             if(empty($this->request->data("img")) && empty($this->request->data("icon")))
                 return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('SOCIAL__CANNOT_TOW_TYPE')]));
 
+            $this->loadModel('SocialButton');
             $this->SocialButton->create();
             $this->SocialButton->set([
                 "title" => $this->request->data("title"),
@@ -78,6 +79,7 @@ class SocialController extends AppController
             if(empty($this->request->data("img")) && empty($this->request->data("icon")))
                 return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('SOCIAL__CANNOT_TOW_TYPE')]));
 
+            $this->loadModel('SocialButton');
             $this->SocialButton->read(null, $id);
             $this->SocialButton->set([
                 "title" => $this->request->data("title"),
