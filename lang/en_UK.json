@@ -331,7 +331,7 @@
         "SEO__FORM_FAVICON_DESC": "(Small icon in the browser bar)",
         "SEO__FORM_IMG_URL": "Image url",
         "SEO__FORM_IMG_URL_DESC": "(For Discord, Facebook, Twitter ...) Leave blank to use the favicon instead",
-	"SEO__FORM_THEME_COLOR": "Theme color",
+        "SEO__FORM_THEME_COLOR": "Theme color",
         "SEO__FORM_THEME_COLOR_DESC": "(For the embed discord for example)",
         "SEO__FORM_TWITTER_SITE": "Twitter tag",
         "SEO__FORM_TWITTER_SITE_DESC": "(From your server for example)",
