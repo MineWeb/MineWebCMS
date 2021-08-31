@@ -38,22 +38,37 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <em><?= $Lang->get('SEO__FORM_FAVICON_DESC') ?></em>
-                                    <?= $this->element('form.input.upload.img', ['img' => isset($default['favicon_url']) ? $default['favicon_url'] : "", 'filename' => "favicon.png", 'title' => $Lang->get('SEO__FORM_FAVICON')]); ?>
+                                    <label><?= $Lang->get('SEO__FORM_FAVICON') ?></label><em> <?= $Lang->get('SEO__FORM_FAVICON_DESC') ?></em>
+                                    <?= $this->element('form.input.upload.img', ['img' => isset($default['favicon_url']) ? $default['favicon_url'] : "", 'filename' => "favicon.png"]); ?>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label><?= $Lang->get('SEO__FORM_IMG_URL') ?></label>
-                                    <em><?= $Lang->get('SEO__FORM_IMG_URL_DESC') ?></em>
-                                    <input type="text" class="form-control" value="<?= isset($default['img_url']) ? $default['img_url'] : "" ?>"
-                                           name="img_url">
+                                    <label><?= $Lang->get('SEO__FORM_IMG_URL') ?></label><em> <?= $Lang->get('SEO__FORM_IMG_URL_DESC') ?></em>
+                                    <input type="text" class="form-control" value="<?= isset($default['img_url']) ? $default['img_url'] : "" ?>" name="img_url">
                                 </div>
                             </div>
+
+                            <div class="col-12">
+                                <hr>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label><?= $Lang->get('SEO__FORM_THEME_COLOR') ?></label><em> <?= $Lang->get('SEO__FORM_THEME_COLOR_DESC') ?></em>
+                                    <input type="color" class="form-control" value="<?= isset($default['theme_color']) ? $default['theme_color'] : "" ?>" name="theme_color">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label><?= $Lang->get('SEO__FORM_TWITTER_SITE') ?></label><em> <?= $Lang->get('SEO__FORM_TWITTER_SITE_DESC') ?></em>
+                                    <input type="text" class="form-control" value="<?= isset($default['twitter_site']) ? $default['twitter_site'] : "" ?>" name="twitter_site">
+                                </div>
+                            </div>
+
                         </div>
 
-                        <button class="btn btn-primary float-right"
-                                type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
+                        <button class="btn btn-primary float-right" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
 
                     </form>
 
