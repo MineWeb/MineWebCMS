@@ -705,6 +705,7 @@
         "SOCIAL_ICON_DESC": "Liste disponible depuis ce lien : ",
         "SOCIAL__CHOOSE_TYPE_CANCEL": "Ne pas mettre d'illustration",
         "SOCIAL__BUTTON_IMG": "Image du bouton (optionnel)",
+        "SOCIAL__BUTTON_IMG_SIZE": "(Il est conseillé d'avoir une image plus large que haute)",
         "SOCIAL__BUTTON_IMG_ALT": "Image représentant ",
         "SOCIAL__BUTTON_ICON": "Icones FontAwesome du bouton (optionnel)",
         "SOCIAL__CANNOT_TOW_TYPE": "Il ne peux pas y avoir 2 type d'illustration définis en même temps !",
