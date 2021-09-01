@@ -156,7 +156,7 @@ class UpdateComponent extends CakeObject
                 // We stop here if the file isn't writable
                 $path = "zip://" . ROOT . DS . "app" . DS . "tmp" . DS . $this->lastVersion . ".zip#{$this->source['repo']}-{$this->lastVersion}/" . "$filename";
                 $updateFile[$path] = ROOT . DS . $filename;
-                if (file_exists($updateFile[$path]) && !is_writable($updateFile[$path])) {
+                if (file_exists($updateFile[$path]) && (!is_writable($updateFile[$path]) || !touch($updateFile[$path]))) {
                     $this->errorUpdate = $this->Lang->get('UPDATE__FAILED_FILE', [
                         '{FILE}' => $updateFile[$path],
                     ]);
