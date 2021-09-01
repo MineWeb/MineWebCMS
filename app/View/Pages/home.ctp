@@ -94,13 +94,13 @@
         foreach ($findSocialButtons as $key => $value) {
             echo '<div class="col-md-' . $col . ' text-center"><a class="btn btn-default btn-block btn-lg" style="background-color:' . $value['SocialButton']['color'] . ';color:white;font-size:18px;" target="_blank" href="' . $value['SocialButton']['url'] . '">';
             if (!empty($value['SocialButton']['img'])) {
-                echo '<img src="' . $value['SocialButton']['img'] . '" alt="' . $Lang->get("SOCIAL__BUTTON_IMG_ALT") . $value['SocialButton']['title'] . '" style="max-width: 100px;">';
+                echo '<img src="' . $value['SocialButton']['img'] . '" alt="' . $Lang->get("SOCIAL__BUTTON_IMG_ALT") . $value['SocialButton']['title'] . '">';
             }
             if (!empty($value['SocialButton']['icon'])) {
                 echo '<i class="' . $value['SocialButton']['icon'] . '"></i>';
             }
             if (!empty($value['SocialButton']['title'])) {
-                echo (!empty($value['SocialButton']['img'])) ? '<br>' . $value['SocialButton']['title'] : ' ' . $value['SocialButton']['title'];
+                echo ' ' . $value['SocialButton']['title'];
             }
             echo '</a></div>';
         }
