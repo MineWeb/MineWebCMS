@@ -35,15 +35,29 @@ class SocialController extends AppController
 
             if (empty($this->request->data("url")))
                 return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]));
-            if(empty($this->request->data("img")) && empty($this->request->data("icon")))
+            if(!empty($this->request->data("img")) && !empty($this->request->data("icon")) && empty($this->request->data("type")))
                 return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('SOCIAL__CANNOT_TOW_TYPE')]));
+            
+            // Vérify if having many input and select with radio:type
+            $icon = $this->request->data("icon");
+            $img = $this->request->data("img");
+
+            if(!empty($this->request->data("type"))) {
+                if($this->request->data("type") == "img") {
+                    $icon = null;
+                }
+
+                if($this->request->data("type") == "icon") {
+                    $img = null;
+                }
+            }
 
             $this->loadModel('SocialButton');
             $this->SocialButton->create();
             $this->SocialButton->set([
                 "title" => $this->request->data("title"),
-                "img" => $this->request->data("img"),
-                "icon" => $this->request->data("icon"),
+                "img" => $img,
+                "icon" => $icon,
                 "color" => $this->request->data("color"),
                 "url" => $this->request->data("url")
             ]);
@@ -76,15 +90,29 @@ class SocialController extends AppController
 
             if (empty($this->request->data("url")))
                 return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]));
-            if(empty($this->request->data("img")) && empty($this->request->data("icon")))
+            if(!empty($this->request->data("img")) && !empty($this->request->data("icon")) && empty($this->request->data("type")))
                 return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('SOCIAL__CANNOT_TOW_TYPE')]));
+
+            // Vérify if having many input and select with radio:type
+            $icon = $this->request->data("icon");
+            $img = $this->request->data("img");
+
+            if(!empty($this->request->data("type"))) {
+                if($this->request->data("type") == "img") {
+                    $icon = null;
+                }
+
+                if($this->request->data("type") == "icon") {
+                    $img = null;
+                }
+            }
 
             $this->loadModel('SocialButton');
             $this->SocialButton->read(null, $id);
             $this->SocialButton->set([
                 "title" => $this->request->data("title"),
-                "img" => $this->request->data("img"),
-                "icon" => $this->request->data("icon"),
+                "img" => $img,
+                "icon" => $icon,
                 "color" => $this->request->data("color"),
                 "url" => $this->request->data("url")
             ]);
