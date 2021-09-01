@@ -37,7 +37,7 @@
 
                             <div id="type-is-img" <?php if($social_button['img'] == null) { ?>class="d-none"<?php } ?>>
                                 <div class="form-group mx-5">
-                                    <label><?= $Lang->get('SOCIAL__BUTTON_IMG') ?></label>
+                                    <label><?= $Lang->get('SOCIAL__BUTTON_IMG') ?></label><em> <?= $Lang->get('SOCIAL__BUTTON_IMG_SIZE') ?></em>
                                     <input type="text" name="img" class="form-control img-or-icon-input global-reset-input" placeholder="https://images.google.com" value="<?= $social_button['img'] ?>">
                                 </div>
                                 <div class="text-right mx-5">
