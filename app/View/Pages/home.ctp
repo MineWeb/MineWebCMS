@@ -83,11 +83,7 @@
     <div class="row btn-socials text-center">
         <?php
         $howManyBtns = 0;
-        $howManyBtns += (!empty($facebook_link));
-        $howManyBtns += (!empty($twitter_link));
-        $howManyBtns += (!empty($youtube_link));
-        $howManyBtns += (!empty($skype_link));
-        $howManyBtns += count($findSocialButtons);
+        $howManyBtns = count($findSocialButtons);
 
         $maxBtnsByLine = 4;
         if ($howManyBtns > 0) {
@@ -95,25 +91,16 @@
             $col = 12 / $howManyBtnsDivided;
         }
 
-        if (!empty($facebook_link)) {
-            echo '<div class="col-md-' . $col . ' text-center"><a href="' . $facebook_link . '" target="_blank" class="btn btn-lg btn-block btn-primary"><i class="fa fa-facebook-square"></i> ' . $Lang->get('GLOBAL__JOIN_US_SOCIAL') . ' Facebook</a></div>';
-        }
-        if (!empty($twitter_link)) {
-            echo '<div class="col-md-' . $col . ' text-center"><a href="' . $twitter_link . '" target="_blank" class="btn btn-lg btn-block btn-info"><i class="fa fa-twitter"></i> ' . $Lang->get('GLOBAL__JOIN_US_SOCIAL') . ' Twitter</a></div>';
-        }
-        if (!empty($youtube_link)) {
-            echo '<div class="col-md-' . $col . ' text-center"><a href="' . $youtube_link . '" target="_blank" class="btn btn-lg btn-block btn-danger"><i class="fa fa-youtube"></i> ' . $Lang->get('GLOBAL__JOIN_US_SOCIAL') . ' YouTube</a></div>';
-        }
-        if (!empty($skype_link)) {
-            echo '<div class="col-md-' . $col . ' text-center"><a href="' . $skype_link . '" target="_blank" class="btn btn-lg btn-block btn-info"><i class="fa fa-skype"></i> ' . $Lang->get('GLOBAL__JOIN_US_SOCIAL') . ' Skype</a></div>';
-        }
         foreach ($findSocialButtons as $key => $value) {
             echo '<div class="col-md-' . $col . ' text-center"><a class="btn btn-default btn-block btn-lg" style="background-color:' . $value['SocialButton']['color'] . ';color:white;font-size:18px;" target="_blank" href="' . $value['SocialButton']['url'] . '">';
             if (!empty($value['SocialButton']['img'])) {
-                echo '<img src="' . $value['SocialButton']['img'] . '">';
+                echo '<img src="' . $value['SocialButton']['img'] . '" alt="' . $Lang->get("SOCIAL__BUTTON_IMG_ALT") . $value['SocialButton']['title'] . '" style="max-width: 100px;">';
+            }
+            if (!empty($value['SocialButton']['icon'])) {
+                echo '<i class="' . $value['SocialButton']['icon'] . '"></i>';
             }
             if (!empty($value['SocialButton']['title'])) {
-                echo (!empty($value['SocialButton']['img'])) ? '<br>' . $value['SocialButton']['title'] : $value['SocialButton']['title'];
+                echo (!empty($value['SocialButton']['img'])) ? '<br>' . $value['SocialButton']['title'] : ' ' . $value['SocialButton']['title'];
             }
             echo '</a></div>';
         }
