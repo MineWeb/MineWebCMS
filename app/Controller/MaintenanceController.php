@@ -10,10 +10,8 @@ class MaintenanceController extends AppController
         $this->set('title_for_layout', $this->Lang->get('MAINTENANCE__TITLE'));
         $this->loadModel("Maintenance");
         $check = $this->Maintenance->checkMaintenance("/" . $url);
-        if ($this->Permissions->can("BYPASS_MAINTENANCE") || !$check) {
+        if ($this->Permissions->can("BYPASS_MAINTENANCE") || !$check)
             $this->redirect("/");
-        }
-
         $msg = $check["reason"];
         $this->set(compact('msg'));
     }

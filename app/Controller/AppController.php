@@ -54,13 +54,12 @@ class AppController extends Controller
         $LoginCondition = $this->here != "/login" || !$this->EyPlugin->isInstalled('phpierre.signinup');
 
         $this->loadModel("Maintenance");
-        if ($this->params['controller'] != "user" and $this->params['controller'] != "maintenance" and !$this->Permissions->can("BYPASS_MAINTENANCE") and $this->Maintenance->checkMaintenance($this->here) and $LoginCondition) {
+        if ($this->params['controller'] != "user" and $this->params['controller'] != "maintenance" and !$this->Permissions->can("BYPASS_MAINTENANCE") and $maintenance = $this->Maintenance->checkMaintenance($this->here) and $LoginCondition) {
             $this->redirect([
                 'controller' => 'maintenance',
-                'action' => 'index',
+                'action' => $maintenance['url'],
                 'plugin' => false,
-                'admin' => false,
-                explode("/", $this->here)[1]
+                'admin' => false
             ]);
         }
 
@@ -534,7 +533,7 @@ class AppController extends Controller
         $default = $this->Seo->find('first', ["conditions" => ['page' => null]])['Seo'];
         $current_url = $this->here;
         $get_page = [];
-        $check = $this->Seo->find('first', ['conditions' => ["'".$current_url . "' LIKE CONCAT(page, '%')"]]);
+        $check = $this->Seo->find('first', ['conditions' => ["'" . $current_url . "' LIKE CONCAT(page, '%')"]]);
         if ($check && ($check['Seo']["page"] == $current_url || $current_url != "/"))
             $get_page = $check['Seo'];
         $seo_config['title'] = (!empty($default['title']) ? $default['title'] : "{TITLE} - {WEBSITE_NAME}");
