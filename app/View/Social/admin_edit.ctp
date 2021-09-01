@@ -10,16 +10,16 @@
                         <div class="form-group">
                             <label><?= $Lang->get('SOCIAL__BUTTON_SELECT_DEFAULT') ?></label>    
                             <select class="form-control" aria-label="><?= $Lang->get('SOCIAL__BUTTON_SELECT_DEFAULT') ?>" id="select-social-default">
-                                <?php foreach($social_default as $value) { ?>
-                                    <option value="<?= strtolower($value['title']) ?>" <?php if(strtolower($social_button['title']) == strtolower($value['title'])) { echo "selected"; } ?>><?= $value['title'] ?></option>
+                                <?php $haveSelected = false;foreach($social_default as $value) { ?>
+                                    <option value="<?= strtolower($value['title']) ?>" <?php if(strtolower($social_button['title']) == strtolower($value['title'])) { echo "selected"; $haveSelected = true; } ?>><?= $value['title'] ?></option>
                                 <?php } ?>
-                                <option value="custom">Custom</option>
+                                <option value="custom" <?php if(!$haveSelected) { echo "selected"; } ?>>Custom</option>
                             </select>
                         </div>
 
                         <div class="form-group">
                             <label><?= $Lang->get('SOCIAL__BUTTON_TITLE') ?></label>
-                            <input type="text" name="title" class="form-control" id="social-title" value="<?= $social_button['title'] ?>">
+                            <input type="text" name="title" class="form-control global-reset-input" id="social-title" value="<?= $social_button['title'] ?>">
                         </div>
 
                         <div class="form-group">
@@ -38,7 +38,7 @@
                             <div id="type-is-img" <?php if($social_button['img'] == null) { ?>class="d-none"<?php } ?>>
                                 <div class="form-group mx-5">
                                     <label><?= $Lang->get('SOCIAL__BUTTON_IMG') ?></label>
-                                    <input type="text" name="img" class="form-control img-or-icon-input" placeholder="https://images.google.com" value="<?= $social_button['img'] ?>">
+                                    <input type="text" name="img" class="form-control img-or-icon-input global-reset-input" placeholder="https://images.google.com" value="<?= $social_button['img'] ?>">
                                 </div>
                                 <div class="text-right mx-5">
                                     <a class="btn btn-default type-cancel"><?= $Lang->get('SOCIAL__CHOOSE_TYPE_CANCEL') ?></a>
@@ -53,7 +53,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">FA</span>
                                         </div>
-                                        <input type="text" name="icon" class="form-control img-or-icon-input" placeholder="fab fa-teamspeak"  value="<?= $social_button['icon'] ?>">
+                                        <input type="text" name="icon" class="form-control img-or-icon-input global-reset-input" placeholder="fab fa-teamspeak"  value="<?= $social_button['icon'] ?>">
                                     </div>
                                 </div>
                                 <div class="text-right mx-5">
@@ -69,7 +69,7 @@
 
                         <div class="form-group">
                             <label><?= $Lang->get('SOCIAL__BUTTON_COLOR') ?></label>
-                            <input type="color" name="color" class="form-control" id="social-color" value="<?= $social_button['color'] ?>">
+                            <input type="color" name="color" class="form-control global-reset-input" id="social-color" value="<?= $social_button['color'] ?>">
                         </div>
 
                         <div class="float-right">
@@ -129,7 +129,7 @@
             $('input:radio[name="type"]').prop('checked', false);
             $("#type-is-img").addClass("d-none");
             $("#type-is-icon").addClass("d-none");
-            $("#add-social-button input").val("");
+            $(".global-reset-input").val("");
         }
     
     // Type of illustration //
