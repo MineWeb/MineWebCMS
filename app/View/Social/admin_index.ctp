@@ -22,12 +22,12 @@
                         <tbody>
                             <?php $i = 0;foreach ($social_buttons as $key => $value) { $i++ ?>
                                 <tr>
-                                    <td><?= htmlentities($value['SocialButton']['title']) ?></td>
+                                    <td><?= $value['SocialButton']['title'] ?></td>
                                     <td class="d-flex">
                                         <?php if($value['SocialButton']['img']) { ?>
-                                            <img src="<?= $value['SocialButton']['img'] ?>" class="m-auto" alt="Image représentant <?= htmlentities($value['SocialButton']['title']) ?>" width="50">
+                                            <a href="#" class="m-auto text-dark" title="<?= $value['SocialButton']['img'] ?>"><img src="<?= $value['SocialButton']['img'] ?>" class="m-auto" alt="<?= $Lang->get("SOCIAL__BUTTON_IMG_ALT") . $value['SocialButton']['title'] ?>" width="50"></a>
                                         <?php } if($value['SocialButton']['icon']) { ?>
-                                            <i class="<?= $value['SocialButton']['icon'] ?> fa-3x m-auto"></i>
+                                            <a href="#" class="m-auto text-dark" title="<?= $value['SocialButton']['icon'] ?>"><i class="<?= $value['SocialButton']['icon'] ?> fa-3x m-auto"></i></a>
                                         <?php } ?>
                                     </td>
                                     <td><a href="<?= $value['SocialButton']['url'] ?>"><?= $value['SocialButton']['url'] ?></a></td>
