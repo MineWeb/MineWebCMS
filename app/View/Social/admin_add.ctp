@@ -19,7 +19,7 @@
 
                         <div class="form-group">
                             <label><?= $Lang->get('SOCIAL__BUTTON_TITLE') ?></label>
-                            <input type="text" name="title" class="form-control" id="social-title">
+                            <input type="text" name="title" class="form-control global-reset-input" id="social-title">
                         </div>
 
                         <div class="form-group">
@@ -38,7 +38,7 @@
                             <div id="type-is-img" class="d-none">
                                 <div class="form-group mx-5">
                                     <label><?= $Lang->get('SOCIAL__BUTTON_IMG') ?></label>
-                                    <input type="text" name="img" class="form-control" placeholder="https://images.google.com">
+                                    <input type="text" name="img" class="form-control global-reset-input" placeholder="https://images.google.com">
                                 </div>
                                 <div class="text-right mx-5">
                                     <a class="btn btn-default type-cancel"><?= $Lang->get('SOCIAL__CHOOSE_TYPE_CANCEL') ?></a>
@@ -53,7 +53,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">FA</span>
                                         </div>
-                                        <input type="text" name="icon" class="form-control" placeholder="fab fa-teamspeak">
+                                        <input type="text" name="icon" class="form-control global-reset-input" placeholder="fab fa-teamspeak">
                                     </div>
                                 </div>
                                 <div class="text-right mx-5">
@@ -69,7 +69,7 @@
 
                         <div class="form-group">
                             <label><?= $Lang->get('SOCIAL__BUTTON_COLOR') ?></label>
-                            <input type="color" name="color" class="form-control" id="social-color">
+                            <input type="color" name="color" class="form-control global-reset-input" id="social-color">
                         </div>
 
                         <div class="float-right">
@@ -124,7 +124,7 @@
                 $("#type-is-icon").removeClass("d-none");
                 $("#type-is-icon input").val(icon);
             }
-            
+
             $("#social-color").val(color);
         }
 
@@ -133,27 +133,28 @@
             $('input:radio[name="type"]').prop('checked', false);
             $("#type-is-img").addClass("d-none");
             $("#type-is-icon").addClass("d-none");
-            $("#add-social-button input").val("");
+            $(".global-reset-input").val("");
         }
     
     // Type of illustration //
-    $('input:radio[name="type"]').change(function() {
-        if ($(this).is(':checked')) {
-            if($(this).val() == 'img') {
-                $("#type-is-img").removeClass("d-none");
-                $("#type-is-icon").addClass("d-none");
-            }
-            if($(this).val() == 'icon') {
-                $("#type-is-img").addClass("d-none");
-                $("#type-is-icon").removeClass("d-none");
-            }
-        }
-    });
 
-    //reset type part
-    $('.type-cancel').click(function() {
-        $('input:radio[name="type"]').prop('checked', false);
-        $("#type-is-img").addClass("d-none");
-        $("#type-is-icon").addClass("d-none");
-    });
+        //events
+        $('input:radio[name="type"]').change(function() {
+            if ($(this).is(':checked')) {
+                if($(this).val() == 'img') {
+                    $("#type-is-img").removeClass("d-none");
+                    $("#type-is-icon").addClass("d-none");
+                }
+                if($(this).val() == 'icon') {
+                    $("#type-is-img").addClass("d-none");
+                    $("#type-is-icon").removeClass("d-none");
+                }
+            }
+        });
+
+        $('.type-cancel').click(function() {
+            $('input:radio[name="type"]').prop('checked', false);
+            $("#type-is-img").addClass("d-none");
+            $("#type-is-icon").addClass("d-none");
+        });
 </script>
