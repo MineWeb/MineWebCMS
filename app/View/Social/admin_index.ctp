@@ -25,7 +25,7 @@
                                     <td><?= $value['SocialButton']['title'] ?></td>
                                     <td class="d-flex">
                                         <?php if($value['SocialButton']['img']) { ?>
-                                            <a href="#" class="m-auto text-dark" title="<?= $value['SocialButton']['img'] ?>"><img src="<?= $value['SocialButton']['img'] ?>" class="m-auto" alt="<?= $Lang->get("SOCIAL__BUTTON_IMG_ALT") . $value['SocialButton']['title'] ?>" width="50"></a>
+                                            <a href="#" class="m-auto text-dark" title="<?= $value['SocialButton']['img'] ?>"><img src="<?= $value['SocialButton']['img'] ?>" class="m-auto" alt="<?= $Lang->get("SOCIAL__BUTTON_IMG_ALT") . $value['SocialButton']['title'] ?>" style="height: 3em;"></a>
                                         <?php } if($value['SocialButton']['icon']) { ?>
                                             <a href="#" class="m-auto text-dark" title="<?= $value['SocialButton']['icon'] ?>"><i class="<?= $value['SocialButton']['icon'] ?> fa-3x m-auto"></i></a>
                                         <?php } ?>
