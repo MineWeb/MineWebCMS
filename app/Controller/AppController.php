@@ -54,13 +54,12 @@ class AppController extends Controller
         $LoginCondition = $this->here != "/login" || !$this->EyPlugin->isInstalled('phpierre.signinup');
 
         $this->loadModel("Maintenance");
-        if ($this->params['controller'] != "user" and $this->params['controller'] != "maintenance" and !$this->Permissions->can("BYPASS_MAINTENANCE") and $this->Maintenance->checkMaintenance($this->here) and $LoginCondition) {
+        if ($this->params['controller'] != "user" and $this->params['controller'] != "maintenance" and !$this->Permissions->can("BYPASS_MAINTENANCE") and $maintenance = $this->Maintenance->checkMaintenance($this->here) and $LoginCondition) {
             $this->redirect([
                 'controller' => 'maintenance',
-                'action' => 'index',
+                'action' => $maintenance['url'],
                 'plugin' => false,
-                'admin' => false,
-                explode("/", $this->here)[1]
+                'admin' => false
             ]);
         }
 
@@ -536,23 +535,22 @@ class AppController extends Controller
     public function __initSeoConfiguration()
     {
         $this->loadModel('Seo');
-        $default = $this->Seo->find('first', ["conditions" => ['page' => null]]);
+        $default = $this->Seo->find('first', ["conditions" => ['page' => null]])['Seo'];
         $current_url = $this->here;
         $get_page = [];
-        $start_url = "/" . explode("/", $current_url)[1];
-        $check = $this->Seo->find('first', ["conditions" => ['page LIKE' => $start_url . "%"]]);
-        if ($check && ($check['Seo']["page"] == $current_url || $current_url != "/") && strlen($current_url) >= strlen($check['Seo']["page"]))
-            $get_page = $check;
-        $seo_config['title'] = (!empty($default['Seo']['title']) ? $default['Seo']['title'] : "{TITLE} - {WEBSITE_NAME}");
-        $seo_config['title'] = (!empty($get_page['Seo']['title']) ? $get_page['Seo']['title'] : $seo_config['title']);
-        $seo_config['description'] = (!empty($get_page['Seo']['description']) ? $get_page['Seo']['description'] : (!empty($default['Seo']['description']) ? $default['Seo']['description'] : ""));
-        $seo_config['img_url'] = (!empty($get_page['Seo']['img_url']) ? $get_page['Seo']['img_url'] : (!empty($default['Seo']['img_url']) ? $default['Seo']['img_url'] : ""));
-        $seo_config['favicon_url'] = (!empty($get_page['Seo']['favicon_url']) ? $get_page['Seo']['favicon_url'] : (!empty($default['Seo']['favicon_url']) ? $default['Seo']['favicon_url'] : ""));
+        $check = $this->Seo->find('first', ['conditions' => ["'" . $current_url . "' LIKE CONCAT(page, '%')"]]);
+        if ($check && ($check['Seo']["page"] == $current_url || $current_url != "/"))
+            $get_page = $check['Seo'];
+        $seo_config['title'] = (!empty($default['title']) ? $default['title'] : "{TITLE} - {WEBSITE_NAME}");
+        $seo_config['title'] = (!empty($get_page['title']) ? $get_page['title'] : $seo_config['title']);
+        $seo_config['description'] = (!empty($get_page['description']) ? $get_page['description'] : (!empty($default['description']) ? $default['description'] : ""));
+        $seo_config['img_url'] = (!empty($get_page['img_url']) ? $get_page['img_url'] : (!empty($default['img_url']) ? $default['img_url'] : ""));
+        $seo_config['favicon_url'] = (!empty($get_page['favicon_url']) ? $get_page['favicon_url'] : (!empty($default['favicon_url']) ? $default['favicon_url'] : ""));
         $seo_config['favicon_url'] = Router::url($seo_config['favicon_url'], true);
         $seo_config['img_url'] = (empty($seo_config['img_url']) ? $seo_config['favicon_url'] : Router::url($seo_config['img_url'], true));
         $seo_config['title'] = str_replace(["{TITLE}", "{WEBSITE_NAME}"], [(!empty($this->viewVars['title_for_layout']) ? $this->viewVars['title_for_layout'] : $this->Lang->get("GLOBAL__ERROR")), (!empty($this->viewVars['website_name']) ? $this->viewVars['website_name'] : "MineWeb")], $seo_config['title']);
-        $seo_config['theme_color'] = (!empty($get_page['Seo']['theme_color']) ? $get_page['Seo']['theme_color'] : (!empty($default['Seo']['theme_color']) ? $default['Seo']['theme_color'] : ""));
-        $seo_config['twitter_site'] = (!empty($get_page['Seo']['twitter_site']) ? $get_page['Seo']['twitter_site'] : (!empty($default['Seo']['twitter_site']) ? $default['Seo']['twitter_site'] : ""));
+        $seo_config['theme_color'] = (!empty($get_page['theme_color']) ? $get_page['theme_color'] : (!empty($default['theme_color']) ? $default['theme_color'] : ""));
+        $seo_config['twitter_site'] = (!empty($get_page['twitter_site']) ? $get_page['twitter_site'] : (!empty($default['twitter_site']) ? $default['twitter_site'] : ""));
         $this->set(compact('seo_config'));
     }
 
