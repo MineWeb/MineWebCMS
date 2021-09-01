@@ -277,8 +277,7 @@ class AppSchema extends CakeSchema
     public $social_buttons = [
         'id' => ['type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'],
         'title' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 20, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
-        'img' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 120, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
-        'icon' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 30, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
+        'extra' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 120, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'color' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 30, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'url' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 120, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'indexes' => [
