@@ -151,23 +151,31 @@ class UpdateComponent extends CakeObject
             if (in_array($filename, $this->bypassFiles)) continue;
             // If the folder doesn't exist, create it recursively
             if (!is_dir(ROOT . DS . $dirname)) mkdir(ROOT . DS . $dirname, 0775, true);
+
             // Copy file content if it's a file
             if ($stats['size'] > 0) {
                 // We stop here if the file isn't writable
                 $path = "zip://" . ROOT . DS . "app" . DS . "tmp" . DS . $this->lastVersion . ".zip#{$this->source['repo']}-{$this->lastVersion}/" . "$filename";
                 $updateFile[$path] = ROOT . DS . $filename;
-                if (file_exists($updateFile[$path]) && !is_writable($updateFile[$path])) {
+                $file = $updateFile[$path];
+                if (file_exists($file) && !is_writable($file)) {
                     $this->errorUpdate = $this->Lang->get('UPDATE__FAILED_FILE', [
-                        '{FILE}' => $updateFile[$path],
+                        '{FILE}' => $file,
                     ]);
-                    $this->log("The file " . $updateFile[$path] . " is not writable!");
+                    $this->log("The file " . $file . " is not writable!");
                     return false;
                 }
             }
         }
 
+        $this->log("Start UPDATE");
+
         // We copy the files here
         foreach ($updateFile as $key => $v) {
+            $has_key = hash_file('sha1', $key);
+            $hash = hash_file('sha1', $v);
+            if($has_key == $hash)
+                continue;
             if (!copy($key, $v)) {
                 $this->errorUpdate = $this->Lang->get('UPDATE__FAILED_FILE', [
                     '{FILE}' => $v,
@@ -175,7 +183,10 @@ class UpdateComponent extends CakeObject
                 $this->log("Failed to copy file from $key to " . $v);
                 return false;
             }
+            $this->log("The file " .$v. " was replaced with success !");
         }
+
+        $this->log("End UPDATE");
 
         $zip->close();
 
