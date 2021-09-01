@@ -7,14 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="Eywek">
-
-    <title><?= $seo_config['title'] ?></title>
-    <link rel="icon" type="image/png" href="<?= $seo_config['favicon_url'] ?>"/>
-    <meta name="title" content="<?= $seo_config['title'] ?>">
-    <meta property="og:title" content="<?= $seo_config['title'] ?>">
-    <meta name="description" content="<?= $seo_config['description'] ?>">
-    <meta property="og:description" content="<?= $seo_config['description'] ?>">
-    <meta property="og:image" content="<?= $seo_config['img_url'] ?>">
+    
+    <?= $this->element('seo') ?>
 
     <!-- Font Awesome 5 -->
     <script src="https://kit.fontawesome.com/fb032ab5a6.js" crossorigin="anonymous"></script>

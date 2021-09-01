@@ -43,22 +43,43 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <em><?= $Lang->get('SEO__FORM_FAVICON_DESC') ?></em>
+                                    <label><?= $Lang->get('SEO__FORM_FAVICON') ?></label><em> <?= $Lang->get('SEO__FORM_FAVICON_DESC') ?></em>
                                     <br>
                                     <em><?= $Lang->get('SEO__KEEP_EMPTY') ?></em>
-                                    <?= $this->element('form.input.upload.img', ['filename' => "favicon.png", 'title' => $Lang->get('SEO__FORM_FAVICON')]); ?>
+                                    <?= $this->element('form.input.upload.img', ['filename' => "favicon.png"]); ?>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label><?= $Lang->get('SEO__FORM_IMG_URL') ?></label>
-                                    <em><?= $Lang->get('SEO__FORM_IMG_URL_DESC') ?></em>
+                                    <label><?= $Lang->get('SEO__FORM_IMG_URL') ?></label><em> <?= $Lang->get('SEO__FORM_IMG_URL_DESC') ?></em>
                                     <br>
                                     <em><?= $Lang->get('SEO__KEEP_EMPTY') ?></em>
                                     <input type="text" class="form-control" name="img_url">
                                 </div>
                             </div>
+
+                            <div class="col-12">
+                                <hr>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label><?= $Lang->get('SEO__FORM_THEME_COLOR') ?></label><em> <?= $Lang->get('SEO__FORM_THEME_COLOR_DESC') ?></em>
+                                    <br>
+                                    <em><?= $Lang->get('SEO__KEEP_EMPTY') ?></em>
+                                    <input type="color" class="form-control" name="theme_color">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label><?= $Lang->get('SEO__FORM_TWITTER_SITE') ?></label><em> <?= $Lang->get('SEO__FORM_TWITTER_SITE_DESC') ?></em>
+                                    <br>
+                                    <em><?= $Lang->get('SEO__KEEP_EMPTY') ?></em>
+                                    <input type="text" class="form-control" name="twitter_site">
+                                </div>
+                            </div>
                         </div>
+
 
                         <div class="float-right">
                             <a href="<?= $this->Html->url(['controller' => 'seo', 'action' => 'index', 'admin' => true]) ?>"

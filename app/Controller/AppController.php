@@ -551,6 +551,8 @@ class AppController extends Controller
         $seo_config['favicon_url'] = Router::url($seo_config['favicon_url'], true);
         $seo_config['img_url'] = (empty($seo_config['img_url']) ? $seo_config['favicon_url'] : Router::url($seo_config['img_url'], true));
         $seo_config['title'] = str_replace(["{TITLE}", "{WEBSITE_NAME}"], [(!empty($this->viewVars['title_for_layout']) ? $this->viewVars['title_for_layout'] : $this->Lang->get("GLOBAL__ERROR")), (!empty($this->viewVars['website_name']) ? $this->viewVars['website_name'] : "MineWeb")], $seo_config['title']);
+        $seo_config['theme_color'] = (!empty($get_page['Seo']['theme_color']) ? $get_page['Seo']['theme_color'] : (!empty($default['Seo']['theme_color']) ? $default['Seo']['theme_color'] : ""));
+        $seo_config['twitter_site'] = (!empty($get_page['Seo']['twitter_site']) ? $get_page['Seo']['twitter_site'] : (!empty($default['Seo']['twitter_site']) ? $default['Seo']['twitter_site'] : ""));
         $this->set(compact('seo_config'));
     }
 
