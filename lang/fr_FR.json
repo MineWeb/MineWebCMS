@@ -702,6 +702,7 @@
         "SOCIAL__CHOOSE_TYPE": "Choisir un type d'illustration (optionnel)",
         "SOCIAL__CHOOSE_TYPE_IMG": "Image",
         "SOCIAL__CHOOSE_TYPE_ICON": "Icones FontAwesome",
+        "SOCIAL__EMPTY_TYPE": "Aucune illustration",
         "SOCIAL_ICON_DESC": "Liste disponible depuis ce lien : ",
         "SOCIAL__CHOOSE_TYPE_CANCEL": "Ne pas mettre d'illustration",
         "SOCIAL__BUTTON_IMG": "Image du bouton (optionnel)",
