@@ -3,10 +3,10 @@
 class SocialController extends AppController
 {
     private $social_default = [
-        ['title' => 'Discord', 'icon' => 'fab fa-discord', 'img' => null, 'color' => '#7289da'],
-        ['title' => 'Twitter', 'icon' => 'fab fa-twitter', 'img' => null, 'color' => '#00acee'],
-        ['title' => 'Youtube', 'icon' => 'fab fa-youtube', 'img' => null, 'color' => '#c4302b'],
-        ['title' => 'FaceBook', 'icon' => 'fab fa-facebook', 'img' => null, 'color' => '#3b5998']
+        ['title' => 'Discord', 'extra' => 'fab fa-discord', 'color' => '#7289da'],
+        ['title' => 'Twitter', 'extra' => 'fab fa-twitter', 'color' => '#00acee'],
+        ['title' => 'Youtube', 'extra' => 'fab fa-youtube', 'color' => '#c4302b'],
+        ['title' => 'FaceBook', 'extra' => 'fab fa-facebook', 'color' => '#3b5998']
     ];
 
     function admin_index() {
@@ -38,17 +38,12 @@ class SocialController extends AppController
             if(!empty($this->request->data("img")) && !empty($this->request->data("icon")) && empty($this->request->data("type")))
                 return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('SOCIAL__CANNOT_TOW_TYPE')]));
             
-            // Vérify if having many input and select with radio:type
-            $icon = $this->request->data("icon");
-            $img = $this->request->data("img");
-
+            $extra = null;
             if(!empty($this->request->data("type"))) {
                 if($this->request->data("type") == "img") {
-                    $icon = null;
-                }
-
-                if($this->request->data("type") == "icon") {
-                    $img = null;
+                    $extra = $this->request->data("img");;
+                } else {
+                    $extra = $this->request->data("icon");;
                 }
             }
 
@@ -56,8 +51,7 @@ class SocialController extends AppController
             $this->SocialButton->create();
             $this->SocialButton->set([
                 "title" => $this->request->data("title"),
-                "img" => $img,
-                "icon" => $icon,
+                "extra" => $extra,
                 "color" => $this->request->data("color"),
                 "url" => $this->request->data("url")
             ]);
@@ -81,8 +75,19 @@ class SocialController extends AppController
         $this->set('title_for_layout', $this->Lang->get("SOCIAL__HOME"));
         $this->layout = 'admin';
 
+        $social_button_type = null;
+        if(!empty($find['SocialButton']['extra'])) {
+            if(strpos($find['SocialButton']['extra'], 'fa-')) {
+                $social_button_type = 'fa';
+            } else {
+                $social_button_type = 'img';
+            }
+        }
+
+
         $this->set('social_button', $find['SocialButton']);
         $this->set('social_default', $this->social_default);
+        $this->set('social_button_type', $social_button_type);
 
         if ($this->request->is("post")) {
             $this->autoRender = false;
@@ -93,17 +98,12 @@ class SocialController extends AppController
             if(!empty($this->request->data("img")) && !empty($this->request->data("icon")) && empty($this->request->data("type")))
                 return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('SOCIAL__CANNOT_TOW_TYPE')]));
 
-            // Vérify if having many input and select with radio:type
-            $icon = $this->request->data("icon");
-            $img = $this->request->data("img");
-
+            $extra = null;
             if(!empty($this->request->data("type"))) {
                 if($this->request->data("type") == "img") {
-                    $icon = null;
-                }
-
-                if($this->request->data("type") == "icon") {
-                    $img = null;
+                    $extra = $this->request->data("img");;
+                } else {
+                    $extra = $this->request->data("icon");;
                 }
             }
 
@@ -111,8 +111,7 @@ class SocialController extends AppController
             $this->SocialButton->read(null, $id);
             $this->SocialButton->set([
                 "title" => $this->request->data("title"),
-                "img" => $img,
-                "icon" => $icon,
+                "extra" => $extra,
                 "color" => $this->request->data("color"),
                 "url" => $this->request->data("url")
             ]);
