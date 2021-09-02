@@ -87,7 +87,7 @@
    
         // events
         $(document).ready(function() {
-            getSelectValue("discord");
+            getSelectValue("<?= strtolower($social_default[0]['title']); ?>");
         });
 
         $('#select-social-default').change(function() {
@@ -98,7 +98,7 @@
             switch (value) {
                 <?php foreach($social_default as $value) { ?>
                 case '<?= strtolower($value['title']) ?>':
-                    dispatchData('<?= $value['title'] ?>', '<?= $value['icon'] ?>', '<?= $value['img'] ?>', '<?= $value['color'] ?>');
+                    dispatchData('<?= $value['title'] ?>', '<?= $value['extra'] ?>', '<?= $value['color'] ?>');
                     break;
                 <?php } ?>
                 default:
@@ -109,22 +109,23 @@
         }
 
         //Function for default
-        function dispatchData(title, icon, img, color) {
+        function dispatchData(title, extra, color) {
             $("#social-title").val(title);
 
-            if(img.length > 0) {
-                $('#choose-is-img').prop('checked', true);
-                $("#type-is-img").removeClass("d-none");
-                $("#type-is-icon").addClass("d-none");
-                $("#type-is-img input").val(img);
+            if(extra.length > 0 ) {
+                if(extra.includes('fa-')) {
+                    $('#choose-is-icon').prop('checked', true);
+                    $("#type-is-img").addClass("d-none");
+                    $("#type-is-icon").removeClass("d-none");
+                    $("#type-is-icon input").val(extra);
+                } else {
+                    $('#choose-is-img').prop('checked', true);
+                    $("#type-is-img").removeClass("d-none");
+                    $("#type-is-icon").addClass("d-none");
+                    $("#type-is-img input").val(extra);
+                }
             }
-            if(icon.length > 0) {
-                $('#choose-is-icon').prop('checked', true);
-                $("#type-is-img").addClass("d-none");
-                $("#type-is-icon").removeClass("d-none");
-                $("#type-is-icon input").val(icon);
-            }
-
+            
             $("#social-color").val(color);
         }
 
