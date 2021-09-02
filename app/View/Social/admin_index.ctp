@@ -15,7 +15,7 @@
                                 <th><?= $Lang->get("SOCIAL__BUTTON_TYPE") ?></th>
                                 <th><?= $Lang->get("SOCIAL__BUTTON_URL") ?></th>
                                 <th><?= $Lang->get("SOCIAL__BUTTON_COLOR") ?></th>
-                                <th class="right"><?= $Lang->get("GLOBAL__ACTIONS")?></th>
+                                <th class="right"><?= $Lang->get("GLOBAL__ACTIONS") ?></th>
                             </tr>
                         </thead>
                         
@@ -23,12 +23,18 @@
                             <?php $i = 0;foreach ($social_buttons as $key => $value) { $i++ ?>
                                 <tr>
                                     <td><?= $value['SocialButton']['title'] ?></td>
-                                    <td class="d-flex">
-                                        <?php if($value['SocialButton']['img']) { ?>
-                                            <a href="#" class="m-auto text-dark" title="<?= $value['SocialButton']['img'] ?>"><img src="<?= $value['SocialButton']['img'] ?>" class="m-auto" alt="<?= $Lang->get("SOCIAL__BUTTON_IMG_ALT") . $value['SocialButton']['title'] ?>" style="height: 3em;"></a>
-                                        <?php } if($value['SocialButton']['icon']) { ?>
-                                            <a href="#" class="m-auto text-dark" title="<?= $value['SocialButton']['icon'] ?>"><i class="<?= $value['SocialButton']['icon'] ?> fa-3x m-auto"></i></a>
-                                        <?php } ?>
+                                    <td>
+                                        <?php if(!empty($value['SocialButton']['extra'])) { ?>
+                                            <a href="#" class="m-auto text-dark" title="<?= $value['SocialButton']['extra'] ?>">
+                                                <?php if(strpos($value['SocialButton']['extra'], 'fa-')) { ?>
+                                                    <i class="<?= $value['SocialButton']['extra'] ?> fa-3x m-auto"></i>
+                                                <?php } else { ?>
+                                                    <img src="<?= $value['SocialButton']['extra'] ?>" class="m-auto" alt="<?= $Lang->get("SOCIAL__BUTTON_IMG_ALT") . $value['SocialButton']['title'] ?>" style="height: 3em;">
+                                                <?php } ?>
+                                            </a>
+                                        <?php } else {
+                                            echo $Lang->get("SOCIAL__EMPTY_TYPE");
+                                        } ?>
                                     </td>
                                     <td><a href="<?= $value['SocialButton']['url'] ?>"><?= $value['SocialButton']['url'] ?></a></td>
                                     <td><div class="socialbutton-color p-2 text-center" style="background-color: <?= $value['SocialButton']['color'] ?>"><?= $value['SocialButton']['color'] ?><div></td>
