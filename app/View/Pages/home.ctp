@@ -93,12 +93,15 @@
 
         foreach ($findSocialButtons as $key => $value) {
             echo '<div class="col-md-' . $col . ' text-center"><a class="btn btn-default btn-block btn-lg" style="background-color:' . $value['SocialButton']['color'] . ';color:white;font-size:18px;" target="_blank" href="' . $value['SocialButton']['url'] . '">';
-            if (!empty($value['SocialButton']['img'])) {
-                echo '<img src="' . $value['SocialButton']['img'] . '" alt="' . $Lang->get("SOCIAL__BUTTON_IMG_ALT") . $value['SocialButton']['title'] . '">';
+            
+            if(!empty($value['SocialButton']['extra'])) {
+                if (strpos($value['SocialButton']['extra'], 'fa-')) {
+                    echo '<i class="' . $value['SocialButton']['extra'] . '"></i>';
+                } else {
+                    echo '<img src="' . $value['SocialButton']['extra'] . '" alt="' . $Lang->get("SOCIAL__BUTTON_IMG_ALT") . $value['SocialButton']['title'] . '">';
+                }
             }
-            if (!empty($value['SocialButton']['icon'])) {
-                echo '<i class="' . $value['SocialButton']['icon'] . '"></i>';
-            }
+
             if (!empty($value['SocialButton']['title'])) {
                 echo ' ' . $value['SocialButton']['title'];
             }
