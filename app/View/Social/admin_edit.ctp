@@ -25,27 +25,27 @@
                         <div class="form-group">
                             <label><?= $Lang->get('SOCIAL__CHOOSE_TYPE') ?></label>
                             <div class="form-check">    
-                                <input class="form-check-input"  type="radio" id="choose-is-img" name="type" value="img" <?php if($social_button['img'] != null) { echo "checked"; } ?>>
+                                <input class="form-check-input"  type="radio" id="choose-is-img" name="type" value="img" <?php if($social_button_type == 'img') { echo "checked"; } ?>>
                                 <label class="form-check-label" for="choose-is-img"><?= $Lang->get('SOCIAL__CHOOSE_TYPE_IMG') ?></label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" id="choose-is-icon" name="type" value="icon" <?php if($social_button['icon'] != null) { echo "checked"; } ?>>
+                                <input class="form-check-input" type="radio" id="choose-is-icon" name="type" value="icon" <?php if($social_button_type == 'fa') { echo "checked"; } ?>>
                                 <label class="form-check-label" for="choose-is-icon"><?= $Lang->get('SOCIAL__CHOOSE_TYPE_ICON') ?></label>
                             </div>
                         </div>
 
 
-                            <div id="type-is-img" <?php if($social_button['img'] == null) { ?>class="d-none"<?php } ?>>
+                            <div id="type-is-img" <?php if($social_button_type != 'img') { ?>class="d-none"<?php } ?>>
                                 <div class="form-group mx-5">
                                     <label><?= $Lang->get('SOCIAL__BUTTON_IMG') ?></label><em> <?= $Lang->get('SOCIAL__BUTTON_IMG_SIZE') ?></em>
-                                    <input type="text" name="img" class="form-control img-or-icon-input global-reset-input" placeholder="https://images.google.com" value="<?= $social_button['img'] ?>">
+                                    <input type="text" name="img" class="form-control img-or-icon-input global-reset-input" placeholder="https://images.google.com" value="<?= $social_button['extra'] ?>">
                                 </div>
                                 <div class="text-right mx-5">
                                     <a class="btn btn-default type-cancel"><?= $Lang->get('SOCIAL__CHOOSE_TYPE_CANCEL') ?></a>
                                 </div>
                             </div>
 
-                            <div id="type-is-icon" <?php if($social_button['icon'] == null) { ?>class="d-none"<?php } ?>>
+                            <div id="type-is-icon" <?php if($social_button_type != 'fa') { ?>class="d-none"<?php } ?>>
                                 <div class="form-group mx-5">
                                     <label><?= $Lang->get('SOCIAL__BUTTON_ICON') ?></label>
                                     <p><?= $Lang->get('SOCIAL_ICON_DESC') ?><a target="_blank" href="https://fontawesome.com/" title="Lien vers fontawesome">https://fontawesome.com/</a>
@@ -53,7 +53,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">FA</span>
                                         </div>
-                                        <input type="text" name="icon" class="form-control img-or-icon-input global-reset-input" placeholder="fab fa-teamspeak"  value="<?= $social_button['icon'] ?>">
+                                        <input type="text" name="icon" class="form-control img-or-icon-input global-reset-input" placeholder="fab fa-teamspeak"  value="<?= $social_button['extra'] ?>">
                                     </div>
                                 </div>
                                 <div class="text-right mx-5">
@@ -94,7 +94,7 @@
             switch (value) {
                 <?php foreach($social_default as $value) { ?>
                 case '<?= strtolower($value['title']) ?>':
-                    dispatchData('<?= $value['title'] ?>', '<?= $value['icon'] ?>', '<?= $value['img'] ?>', '<?= $value['color'] ?>');
+                    dispatchData('<?= $value['title'] ?>', '<?= $value['extra'] ?>', '<?= $value['color'] ?>');
                     break;
                 <?php } ?>
                 default:
@@ -105,20 +105,21 @@
         }
 
         //Function for default
-        function dispatchData(title, icon, img, color) {
+        function dispatchData(title, extra, color) {
             $("#social-title").val(title);
 
-            if(img.length > 0) {
-                $('#choose-is-img').prop('checked', true);
-                $("#type-is-img").removeClass("d-none");
-                $("#type-is-icon").addClass("d-none");
-                $("#type-is-img input").val(img);
-            }
-            if(icon.length > 0) {
-                $('#choose-is-icon').prop('checked', true);
-                $("#type-is-img").addClass("d-none");
-                $("#type-is-icon").removeClass("d-none");
-                $("#type-is-icon input").val(icon);
+            if(extra.length > 0 ) {
+                if(extra.includes('fa-')) {
+                    $('#choose-is-icon').prop('checked', true);
+                    $("#type-is-img").addClass("d-none");
+                    $("#type-is-icon").removeClass("d-none");
+                    $("#type-is-icon input").val(extra);
+                } else {
+                    $('#choose-is-img').prop('checked', true);
+                    $("#type-is-img").removeClass("d-none");
+                    $("#type-is-icon").addClass("d-none");
+                    $("#type-is-img input").val(extra);
+                }
             }
             
             $("#social-color").val(color);
