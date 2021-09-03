@@ -5,7 +5,7 @@
 		"version": "1.0.0"
 	},
 	"MESSAGES":  {
-       "GLOBAL__HOME": "Дом",
+       "GLOBAL__HOME": "Главная",
        "GLOBAL__FOOTER": "Все права защищены - 2021 <span class = \"pull-right \"> Работает на <a href= \"http://mineweb.org \"> mineweb.org </a> </ span >",
        "GLOBAL__FOOTER_ADMIN": "<р> Разработка <a href= \"http://eywek.fr \"> Eywek </a> и спроектированный <a href= \"http://thisismac.fr \"> Mac '</a>. </ P> <p> Веб-сайт предоставлен <a href= \"http://mineweb.org \"> MineWeb </a> - все права защищены. </ P> <p> Эта CMS должна использоваться только лицом, которое приобрело лицензию. </ P> <ul> <li> <a href= \"http://mineweb.org \"> MineWeb </a> </ li> <li class = \"muted \">· </ Li> <li> <a href= \"http://eywek.fr \"> Eywek </a> </ li> <li class = \"приглушенный \"> · </ li> <li> <a href= \"http://thisismac.fr \"> Mac '</a> </ li> </ ul>",
        "GLOBAL__JOIN_US": "Присоединяйся к нам",
