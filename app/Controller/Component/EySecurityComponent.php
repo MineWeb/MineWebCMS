@@ -30,7 +30,7 @@ class EySecurityComponent extends CakeObject
     {
 
         require_once ROOT . '/vendors/anti-xss/AntiXSS.php';
-        return htmLawed($string, ['safe' => 1, 'deny_attribute' => '* -title -src -alt -style']);
+        return htmLawed($string, ['safe' => 1, 'deny_attribute' => '* -title -src -alt -style -href']);
 
     }
 }
