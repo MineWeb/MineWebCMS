@@ -533,7 +533,7 @@ class AppController extends Controller
         $default = $this->Seo->find('first', ["conditions" => ['page' => null]])['Seo'];
         $current_url = $this->here;
         $get_page = [];
-        $check = $this->Seo->find('first', ['conditions' => ["'" . $current_url . "' LIKE CONCAT(page, '%')"]]);
+        $check = max($this->Seo->find('all', ['conditions' => ["'" . $current_url . "' LIKE CONCAT(page, '%')"]]));
         if ($check && ($check['Seo']["page"] == $current_url || $current_url != "/"))
             $get_page = $check['Seo'];
         $seo_config['title'] = (!empty($default['title']) ? $default['title'] : "{TITLE} - {WEBSITE_NAME}");
