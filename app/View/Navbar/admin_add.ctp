@@ -81,7 +81,7 @@
 
                         <div id="type-dropdown" class="d-none">
                             <div class="form-group">
-                                <div class="card card-body bg-light" id="nav-1">
+                                <div class="card card-body" id="nav-1">
                                     <div class="form-group">
                                         <label><?= $Lang->get('NAVBAR__LINK_NAME') ?></label>
                                         <input type="text" class="form-control name_of_nav" name="name_of_nav">
@@ -92,7 +92,7 @@
                                                placeholder="<?= $Lang->get('NAVBAR__CUSTOM_URL') ?>" name="url">
                                     </div>
                                     <a href="#"
-                                       class="text-danger delete-nav float-right"><?= $Lang->get('GLOBAL__DELETE') ?></a>
+                                       class="btn btn-danger delete-nav float-right"><?= $Lang->get('GLOBAL__DELETE') ?></a>
                                     <br>
                                 </div>
                             </div>
@@ -126,7 +126,7 @@
         e.preventDefault();
         var how = $('#add-js').attr('data-number');
         how = parseInt(how) + 1;
-        var add = '<div class="form-group"><div class="card card-body bg-light" id="nav-' + how + '"><div class="form-group"><label><?= addslashes($Lang->get('NAVBAR__LINK_NAME')) ?></label><input type="text" class="form-control name_of_nav" name="name_of_nav"></div><div class="form-group"><label><?= $Lang->get('URL') ?></label><input type="text" class="form-control url_of_nav" placeholder="<?= $Lang->get('NAVBAR__CUSTOM_URL') ?>" name="url"></div><a href="#" class="text-danger delete-nav float-right"><?= $Lang->get('GLOBAL__DELETE') ?></a><br></div></div>';
+        var add = '<div class="form-group"><div class="card card-body" id="nav-' + how + '"><div class="form-group"><label><?= addslashes($Lang->get('NAVBAR__LINK_NAME')) ?></label><input type="text" class="form-control name_of_nav" name="name_of_nav"></div><div class="form-group"><label><?= $Lang->get('URL') ?></label><input type="text" class="form-control url_of_nav" placeholder="<?= $Lang->get('NAVBAR__CUSTOM_URL') ?>" name="url"></div><a href="#" class="btn btn-danger delete-nav float-right"><?= $Lang->get('GLOBAL__DELETE') ?></a><br></div></div>';
         $('#add-js').append(add);
         $('#add-js').attr('data-number', how);
         deleteNavEvents();
