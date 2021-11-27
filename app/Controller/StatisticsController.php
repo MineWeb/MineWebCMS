@@ -35,17 +35,10 @@ class StatisticsController extends AppController
 
             if ($visits) {
                 foreach ($visits as $key => $value) {
+                    $oldDate = strtotime($key);
+                    $newDate = $oldDate * 1000;
 
-                    $date = strtotime($key);
-                    $date = $date * 1000;
-
-                    $visitsToFormatte[$date] = intval($value);
-
-                }
-
-                $i = 0;
-                foreach ($visitsToFormatte as $key => $value) {
-                    $visitsFormatted[] = [$key, $value];
+                    $visitsFormatted[] = [$newDate, intval($value)];
                 }
 
                 $this->response->body(json_encode($visitsFormatted));
