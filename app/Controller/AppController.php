@@ -36,7 +36,7 @@ require ROOT . '/config/function.php';
 class AppController extends Controller
 {
 
-    public $components = ['Util', 'Module', 'Session', 'Cookie', 'Security', 'EyPlugin', 'Lang', 'Theme', 'History', 'Statistics', 'Permissions', 'Update', 'Server'];
+    public $components = ['Util', 'Module', 'Session', 'Cookie', 'Security', 'EyPlugin', 'Lang', 'Theme', 'History', 'Statistics', 'Permissions', 'Update', 'Server', 'EySecurity'];
     public $helpers = ['Session'];
 
     public $view = 'Theme';
@@ -46,7 +46,10 @@ class AppController extends Controller
 
     public function beforeFilter()
     {
-
+        // find any xss vulnability on request data
+        $datas = $this->request->data;
+        $this->request->data = $this->xssProtection($datas);
+        $this->request->data["xss"] = $datas;
         // lowercase to avoid errors when the controller is called with uppercase
         $this->params['controller'] = strtolower($this->params['controller']);
         $this->params['action'] = strtolower($this->params['action']);
@@ -107,6 +110,15 @@ class AppController extends Controller
                 return $event->result;
         }
 
+
+    }
+
+    public function xssProtection($array)
+    {
+        foreach ($array as $key => $value) {
+            $array[$key] = is_array($value) ? $this->xssProtection($value) : $this->EySecurity->xssProtection($value);
+        }
+        return $array;
 
     }
 

@@ -69,6 +69,8 @@ class ConfigurationController extends AppController
                     ['password_hash' => null]
                 );
 
+                $data['end_layout_code'] = $data['xss']['end_layout_code'];
+
                 $this->Configuration->read(null, 1);
                 $this->Configuration->set($data);
                 $this->Configuration->save();
