@@ -142,7 +142,7 @@ class AppController extends Controller
         $condition = $this->Configuration->getKey('condition');
 
         $this->loadModel('SocialButton');
-        $findSocialButtons = $this->SocialButton->find('all');
+        $findSocialButtons = $this->SocialButton->find('all', ['order' => 'order']);
         $type = "";
         switch ($this->Configuration->getKey('captcha_type')) {
             case "1":
