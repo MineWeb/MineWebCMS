@@ -48,7 +48,7 @@
                             <div id="type-is-icon" class="d-none">
                                 <div class="form-group mx-5">
                                     <label><?= $Lang->get('SOCIAL__BUTTON_ICON') ?></label>
-                                    <p><?= $Lang->get('SOCIAL_ICON_DESC') ?><a target="_blank" href="https://fontawesome.com/" title="Lien vers fontawesome">https://fontawesome.com/</a>
+                                    <p><?= $Lang->get('SOCIAL__ICON_DESC') ?><a target="_blank" href="https://fontawesome.com/" title="Lien vers fontawesome">https://fontawesome.com/</a>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">FA</span>
