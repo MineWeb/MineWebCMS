@@ -698,6 +698,8 @@
         "SOCIAL__BUTTON_TYPE": "Illustration [Image / Icones] (optionnel)",
         "SOCIAL__BUTTON_URL": "Lien du bouton",
         "SOCIAL__BUTTON_COLOR": "Couleur de fond du bouton (optionnel)",
+        "SOCIAL__SAVE_SUCCESS": "Sauvegardé !",
+        "SOCIAL__SAVE_IN_PROGRESS": "Sauvegarde automatique...",
         "SOCIAL__BUTTON_SELECT_DEFAULT": "Sélection de l'autocompletion des réseaux sociaux",
         "SOCIAL__CHOOSE_TYPE": "Choisir un type d'illustration (optionnel)",
         "SOCIAL__CHOOSE_TYPE_IMG": "Image",
