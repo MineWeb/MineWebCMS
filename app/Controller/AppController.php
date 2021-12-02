@@ -36,7 +36,7 @@ require ROOT . '/config/function.php';
 class AppController extends Controller
 {
 
-    public $components = ['Util', 'Module', 'Session', 'Cookie', 'Security', 'EyPlugin', 'Lang', 'Theme', 'History', 'Statistics', 'Permissions', 'Update', 'Server'];
+    public $components = ['Util', 'Module', 'Session', 'Cookie', 'Security', 'EyPlugin', 'Lang', 'Theme', 'History', 'Statistics', 'Permissions', 'Update', 'Server', 'EySecurity'];
     public $helpers = ['Session'];
 
     public $view = 'Theme';
@@ -46,7 +46,10 @@ class AppController extends Controller
 
     public function beforeFilter()
     {
-
+        // find any xss vulnability on request data
+        $datas = $this->request->data;
+        $this->request->data = $this->xssProtection($datas);
+        $this->request->data["xss"] = $datas;
         // lowercase to avoid errors when the controller is called with uppercase
         $this->params['controller'] = strtolower($this->params['controller']);
         $this->params['action'] = strtolower($this->params['action']);
@@ -107,6 +110,15 @@ class AppController extends Controller
                 return $event->result;
         }
 
+
+    }
+
+    public function xssProtection($array)
+    {
+        foreach ($array as $key => $value) {
+            $array[$key] = is_array($value) ? $this->xssProtection($value) : $this->EySecurity->xssProtection($value);
+        }
+        return $array;
 
     }
 
@@ -538,7 +550,7 @@ class AppController extends Controller
         $default = $this->Seo->find('first', ["conditions" => ['page' => null]])['Seo'];
         $current_url = $this->here;
         $get_page = [];
-        $check = $this->Seo->find('first', ['conditions' => ["'" . $current_url . "' LIKE CONCAT(page, '%')"]]);
+        $check = max($this->Seo->find('all', ['conditions' => ["'" . $current_url . "' LIKE CONCAT(page, '%')"]]));
         if ($check && ($check['Seo']["page"] == $current_url || $current_url != "/"))
             $get_page = $check['Seo'];
         $seo_config['title'] = (!empty($default['title']) ? $default['title'] : "{TITLE} - {WEBSITE_NAME}");
@@ -590,6 +602,7 @@ class AppController extends Controller
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $result = curl_exec($ch);
         curl_close($ch);
         return $result;
@@ -611,6 +624,7 @@ class AppController extends Controller
             ]);
             curl_setopt($ch, CURLOPT_HEADER, false);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
             curl_multi_add_handle($multi, $ch);
 

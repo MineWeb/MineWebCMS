@@ -5,7 +5,7 @@
 		"version": "1.0.0"
 	},
 	"MESSAGES":  {
-       "GLOBAL__HOME": "Дом",
+       "GLOBAL__HOME": "Главная",
        "GLOBAL__FOOTER": "Все права защищены - 2021 <span class = \"pull-right \"> Работает на <a href= \"http://mineweb.org \"> mineweb.org </a> </ span >",
        "GLOBAL__FOOTER_ADMIN": "<р> Разработка <a href= \"http://eywek.fr \"> Eywek </a> и спроектированный <a href= \"http://thisismac.fr \"> Mac '</a>. </ P> <p> Веб-сайт предоставлен <a href= \"http://mineweb.org \"> MineWeb </a> - все права защищены. </ P> <p> Эта CMS должна использоваться только лицом, которое приобрело лицензию. </ P> <ul> <li> <a href= \"http://mineweb.org \"> MineWeb </a> </ li> <li class = \"muted \">· </ Li> <li> <a href= \"http://eywek.fr \"> Eywek </a> </ li> <li class = \"приглушенный \"> · </ li> <li> <a href= \"http://thisismac.fr \"> Mac '</a> </ li> </ ul>",
        "GLOBAL__JOIN_US": "Присоединяйся к нам",
@@ -464,7 +464,7 @@
        "USER__SECRET_NOT_FOUND" : "Информация отсутствует, перезагрузите страницу и повторите попытку" ,
        "USER__SUCCESS_ENABLED_TWO_FACTOR_AUTH" : "Двухфакторная аутентификация активирована!" ,
 		
-	"HISTORY__CATEGORY_NEWS": "Новости",
+       "HISTORY__CATEGORY_NEWS": "Новости",
        "HISTORY__CATEGORY_VOTE": "Голосовать",
        "HISTORY__CATEGORY_USER": "Пользователь",
        "HISTORY__CATEGORY_CONFIGURATION": "Конфигурация",
@@ -592,6 +592,8 @@
        "SERVER__CMD_NAME": "Название заказа",
        "SERVER__CMD_SLASH": "Не вводите '/' в команду",
        "SERVER__CMD_ADD": "Заказ был успешно добавлен",
+       "SERVER__SEEMS_USED": "Похоже, что порт занят процессом.",
+       "SERVER__SEEMS_CLOSE_OR_BLOCKED": "Порт веб-сервера кажется закрытым, так как брандмауэр блокирует соединение.",
 
        "UPDATE__CHECK_STATUS" : "Проверить, доступно ли обновление" ,
        "UPDATE__VIEW_CHANGELOG": "Посмотреть изменения",
@@ -616,6 +618,8 @@
        "UPDATE__AUTHORIZE_FORCED_UPDATE_EXPLAIN" : "Включает автоматические обновления. Это полезно, если требуется исправление безопасности или если необходимо исправить существенную проблему." ,
        "UPDATE__MAJOR_WARNING": "Доступное обновление является важным обновлением. Прежде чем продолжить, проверьте ваши файлы, так как это может помешать правильной работе некоторых функций плагина / темы.",
        "UPDATE__MAJOR_WARNING_EXTENSION" : "Доступное обновление важно. Прежде чем продолжить, проверьте ваши файлы, так как это может помешать правильной работе некоторых функций плагина / темы. Вы действительно хотите обновить CMS?" ,
+       "UPDATE__FAILED_FILE":"Невозможно записать файл '${FILE}', проверьте права доступа к файлу и повторите попытку!",
+       	
 
        "STATS__TITLE": "Статистика",
        "STATS__NBR_VISITS": "Количество посещений",

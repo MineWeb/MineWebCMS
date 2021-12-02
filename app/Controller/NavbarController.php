@@ -54,7 +54,7 @@ class NavbarController extends AppController
 
             if ($this->request->is('post')) {
                 if (!empty($this->request->data)) {
-                    $data = $this->request->data['nav'];
+                    $data = $this->request->data['xss']['nav'];
                     $data = explode('&', $data);
                     $i = 1;
                     foreach ($data as $key => $value) {
