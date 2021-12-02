@@ -694,6 +694,31 @@
        "BAN__EDIT_REASON": "Измените причину",
        "BAN__UNBAN_SUCCESS": "Бан отменен",
        "BAN__BAN": "Запрещено",
-       "BAN__EXPLICATION": "Вас забанили за "
+       "BAN__EXPLICATION": "Вас забанили за ",
+        
+        "SOCIAL__TITLE": "Управление социальными сетями",
+        "SOCIAL__HOME": "Социальные сети",
+        "SOCIAL__ADD": "Добавить социальную сеть",
+        "SOCIAL__BUTTON_TITLE": "Название кнопки (необязательно)",
+        "SOCIAL__BUTTON_TYPE": "Иллюстрация [Изображение / Значки] (необязательно)",
+        "SOCIAL__BUTTON_URL": "Ссылка на кнопку",
+        "SOCIAL__BUTTON_COLOR": "Цвет фона кнопки (необязательно)",
+        "SOCIAL__SAVE_SUCCESS": "Сохранено!",
+        "SOCIAL__SAVE_IN_PROGRESS": "Автоматическое сохранение ...",
+        "SOCIAL__BUTTON_SELECT_DEFAULT": "Выбор автозаполнения социальных сетей",
+        "SOCIAL__CHOOSE_TYPE": "Выберите тип иллюстрации (необязательно)",
+        "SOCIAL__CHOOSE_TYPE_IMG": "Изображение",
+        "SOCIAL__CHOOSE_TYPE_ICON": "Иконки FontAwesome",
+        "SOCIAL__EMPTY_TYPE": "Без иллюстрации",
+        "SOCIAL_ICON_DESC": "Список доступен по этой ссылке:",
+        "SOCIAL__CHOOSE_TYPE_CANCEL": "Не помещайте никаких иллюстраций",
+        "SOCIAL__BUTTON_IMG": "Изображение кнопки (необязательно)",
+        "SOCIAL__BUTTON_IMG_SIZE": "(Желательно, чтобы изображение было шире, чем его высота)",
+        "SOCIAL__BUTTON_IMG_ALT": "Репрезентативное изображение",
+        "SOCIAL__BUTTON_ICON": "Значки Button FontAwesome (необязательно)",
+        "SOCIAL__CANNOT_TOW_TYPE": "Не может быть одновременно определено 2 типа иллюстраций!",
+        "SOCIAL__BUTTON_SUCCESS": "Кнопка успешно создана!",
+        "SOCIAL__BUTTON_EDIT_SUCCESS": "Кнопка успешно отредактирована!",
+        "SOCIAL__BUTTON_DELETE_SUCCESS": "Кнопка была успешно удалена!"
 	}
 }
