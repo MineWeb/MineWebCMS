@@ -507,6 +507,9 @@
        "HISTORY__ACTION_UPDATE_PLUGIN": "Обновление плагина",
        "HISTORY__ACTION_UPDATE_THEME": "Обновление темы",
        "HISTORY__ACTION_INSTALL_THEME": "Установка темы",
+       "HISTORY__ACTION_ADD_SOCIAL": "Добавление кнопки",
+       "HISTORY__ACTION_EDIT_SOCIAL": "Модификация кнопки",
+       "HISTORY__ACTION_DELETE_SOCIAL": "Удалить кнопку",
        "HISTORY__VIEW_GLOBAL": "История сайта",
         
        "PERMISSIONS__LABEL": "Разрешения",
