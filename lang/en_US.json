@@ -463,7 +463,7 @@
         "USER__SECRET_NOT_FOUND": "Information is missing, please reload the page and try again",
         "USER__SUCCESS_ENABLED_TWO_FACTOR_AUTH": "Two-factor authentication has been activated!",
 
-		"HISTORY__CATEGORY_NEWS": "News",
+	"HISTORY__CATEGORY_NEWS": "News",
         "HISTORY__CATEGORY_VOTE": "Vote",
         "HISTORY__CATEGORY_USER": "User",
         "HISTORY__CATEGORY_CONFIGURATION": "Configuration",
@@ -506,6 +506,9 @@
         "HISTORY__ACTION_UPDATE_PLUGIN": "Updating a plugin",
         "HISTORY__ACTION_UPDATE_THEME": "Updating a theme",
         "HISTORY__ACTION_INSTALL_THEME": "Installing a theme",
+	"HISTORY__ACTION_ADD_SOCIAL": "Adding a button",
+        "HISTORY__ACTION_EDIT_SOCIAL": "Modification of a button",
+        "HISTORY__ACTION_DELETE_SOCIAL": "Delete a button",
         "HISTORY__VIEW_GLOBAL": "Site History",
 
         "PERMISSIONS__LABEL": "Permissions",
