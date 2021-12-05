@@ -82,7 +82,6 @@
     </div>
     <div class="row btn-socials text-center">
         <?php
-        $howManyBtns = 0;
         $howManyBtns = count($findSocialButtons);
 
         $maxBtnsByLine = 4;
