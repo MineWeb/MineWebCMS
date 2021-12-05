@@ -695,7 +695,7 @@
         "SOCIAL__HOME": "Réseaux sociaux",
         "SOCIAL__ADD": "Ajouter un réseau social",
         "SOCIAL__BUTTON_TITLE": "Titre du bouton (optionnel)",
-        "SOCIAL__BUTTON_TYPE": "Illustration [Image / Icones] (optionnel)",
+        "SOCIAL__BUTTON_TYPE": "Illustration [Image / Icone] (optionnel)",
         "SOCIAL__BUTTON_URL": "Lien du bouton",
         "SOCIAL__BUTTON_COLOR": "Couleur de fond du bouton (optionnel)",
         "SOCIAL__SAVE_SUCCESS": "Sauvegardé !",
@@ -711,7 +711,7 @@
         "SOCIAL__BUTTON_IMG_SIZE": "(Il est conseillé d'avoir une image plus large que haute)",
         "SOCIAL__BUTTON_IMG_ALT": "Image représentant ",
         "SOCIAL__BUTTON_ICON": "Icones FontAwesome du bouton (optionnel)",
-        "SOCIAL__CANNOT_TOW_TYPE": "Il ne peux pas y avoir 2 type d'illustration définis en même temps !",
+        "SOCIAL__CANNOT_TOW_TYPE": "Il ne peux pas y avoir 2 types d'illustrations définis en même temps !",
         "SOCIAL__BUTTON_SUCCESS": "Le bouton a était créé avec succès !",
         "SOCIAL__BUTTON_EDIT_SUCCESS": "Le bouton a était édité avec succès !",
         "SOCIAL__BUTTON_DELETE_SUCCESS": "Le bouton a était supprimé avec succès !"
