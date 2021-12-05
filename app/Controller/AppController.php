@@ -154,7 +154,7 @@ class AppController extends Controller
         $condition = $this->Configuration->getKey('condition');
 
         $this->loadModel('SocialButton');
-        $findSocialButtons = $this->SocialButton->find('all');
+        $findSocialButtons = $this->SocialButton->find('all', ['order' => 'order']);
         $type = "";
         switch ($this->Configuration->getKey('captcha_type')) {
             case "1":
@@ -320,6 +320,11 @@ class AppController extends Controller
                         'icon' => 'fab fa-google',
                         'permission' => 'MANAGE_SEO',
                         'route' => ['controller' => 'seo', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
+                    'SOCIAL__TITLE' => [
+                        'icon' => 'fas fa-share-alt',
+                        'permission' => 'MANAGE_SOCIAL',
+                        'route' => ['controller' => 'social', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
                     'MOTD__TITLE' => [
                         'icon' => 'fas fa-sort-amount-up-alt',

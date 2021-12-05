@@ -463,7 +463,7 @@
         "USER__SECRET_NOT_FOUND": "Information is missing, please reload the page and try again",
         "USER__SUCCESS_ENABLED_TWO_FACTOR_AUTH": "Two-factor authentication has been activated!",
 
-		"HISTORY__CATEGORY_NEWS": "News",
+	"HISTORY__CATEGORY_NEWS": "News",
         "HISTORY__CATEGORY_VOTE": "Vote",
         "HISTORY__CATEGORY_USER": "User",
         "HISTORY__CATEGORY_CONFIGURATION": "Configuration",
@@ -506,6 +506,9 @@
         "HISTORY__ACTION_UPDATE_PLUGIN": "Updating a plugin",
         "HISTORY__ACTION_UPDATE_THEME": "Updating a theme",
         "HISTORY__ACTION_INSTALL_THEME": "Installing a theme",
+	"HISTORY__ACTION_ADD_SOCIAL": "Adding a button",
+        "HISTORY__ACTION_EDIT_SOCIAL": "Modification of a button",
+        "HISTORY__ACTION_DELETE_SOCIAL": "Delete a button",
         "HISTORY__VIEW_GLOBAL": "Site History",
 
         "PERMISSIONS__LABEL": "Permissions",
@@ -695,6 +698,31 @@
         "BAN__EDIT_REASON": "Change the reason",
         "BAN__UNBAN_SUCCESS": "Ban revoked",
         "BAN__BAN": "Banned",
-        "BAN__EXPLICATION": "You have been banned for "
+        "BAN__EXPLICATION": "You have been banned for ",
+
+        "SOCIAL__TITLE": "Manage social networks",
+        "SOCIAL__HOME": "Social networks",
+        "SOCIAL__ADD": "Add a social network",
+        "SOCIAL__BUTTON_TITLE": "Button title (optional)",
+        "SOCIAL__BUTTON_TYPE": "Illustration [Image / Icon] (optional)",
+        "SOCIAL__BUTTON_URL": "Button link",
+        "SOCIAL__BUTTON_COLOR": "Background color of the button (optional)",
+        "SOCIAL__SAVE_SUCCESS": "Saved!",
+        "SOCIAL__SAVE_IN_PROGRESS": "Automatic save ...",
+        "SOCIAL__BUTTON_SELECT_DEFAULT": "Selecting the autocompletion of social networks",
+        "SOCIAL__CHOOSE_TYPE": "Choose a type of illustration (optional)",
+        "SOCIAL__CHOOSE_TYPE_IMG": "Image",
+        "SOCIAL__CHOOSE_TYPE_ICON": "Icons FontAwesome",
+        "SOCIAL__EMPTY_TYPE": "No illustration",
+        "SOCIAL__ICON_DESC": "List available from this link:",
+        "SOCIAL__CHOOSE_TYPE_CANCEL": "Do not put any illustration",
+        "SOCIAL__BUTTON_IMG": "Image of button (optional)",
+        "SOCIAL__BUTTON_IMG_SIZE": "(It is advisable to have an image wider than it is tall)",
+        "SOCIAL__BUTTON_IMG_ALT": "Representative image",
+        "SOCIAL__BUTTON_ICON": "Button FontAwesome icons (optional)",
+        "SOCIAL__CANNOT_TOW_TYPE": "There cannot be 2 types of illustrations defined at the same time!",
+        "SOCIAL__BUTTON_SUCCESS": "The button was created successfully!",
+        "SOCIAL__BUTTON_EDIT_SUCCESS": "The button has been edited successfully!",
+        "SOCIAL__BUTTON_DELETE_SUCCESS": "The button was deleted successfully!" 
 	}
 }
