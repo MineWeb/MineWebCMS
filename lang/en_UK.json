@@ -696,7 +696,7 @@
         "SOCIAL__HOME": "Social networks",
         "SOCIAL__ADD": "Add a social network",
         "SOCIAL__BUTTON_TITLE": "Button title (optional)",
-        "SOCIAL__BUTTON_TYPE": "Illustration [Image / Icons] (optional)",
+        "SOCIAL__BUTTON_TYPE": "Illustration [Image / Icon] (optional)",
         "SOCIAL__BUTTON_URL": "Button link",
         "SOCIAL__BUTTON_COLOR": "Background color of the button (optional)",
         "SOCIAL__SAVE_SUCCESS": "Saved!",
@@ -712,7 +712,7 @@
         "SOCIAL__BUTTON_IMG_SIZE": "(It is advisable to have an image wider than it is tall)",
         "SOCIAL__BUTTON_IMG_ALT": "Representative image",
         "SOCIAL__BUTTON_ICON": "Button FontAwesome icons (optional)",
-        "SOCIAL__CANNOT_TOW_TYPE": "There cannot be 2 types of illustration defined at the same time!",
+        "SOCIAL__CANNOT_TOW_TYPE": "There cannot be 2 types of illustrations defined at the same time!",
         "SOCIAL__BUTTON_SUCCESS": "The button was created successfully!",
         "SOCIAL__BUTTON_EDIT_SUCCESS": "The button has been edited successfully!",
         "SOCIAL__BUTTON_DELETE_SUCCESS": "The button was deleted successfully!" 
