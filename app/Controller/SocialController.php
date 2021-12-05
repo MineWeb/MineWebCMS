@@ -109,6 +109,7 @@ class SocialController extends AppController
             ]);
             $this->SocialButton->save();
 
+            $this->History->set('ADD_SOCIAL', 'social network');
             $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('SOCIAL__BUTTON_SUCCESS')]));
         }
     }
@@ -169,6 +170,7 @@ class SocialController extends AppController
             ]);
             $this->SocialButton->save();
 
+            $this->History->set('EDIT_SOCIAL', 'social network');
             $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('SOCIAL__BUTTON_EDIT_SUCCESS')]));
         }
     }
@@ -180,7 +182,7 @@ class SocialController extends AppController
 
                 $this->loadModel('SocialButton');
                 if ($this->SocialButton->delete($id)) {
-                    $this->History->set('DELETE_SOCIAL', 'réseaux sociaux');
+                    $this->History->set('DELETE_SOCIAL', 'social network');
                     $this->Session->setFlash($this->Lang->get('SOCIAL__BUTTON_DELETE_SUCCESS'), 'default.success');
                     $this->redirect(['controller' => 'social', 'action' => 'index', 'admin' => true]);
                 } else {
