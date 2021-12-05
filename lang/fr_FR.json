@@ -495,6 +495,8 @@
         "HISTORY__ACTION_UPDATE_PLUGIN": "Mise à jour d'un plugin",
         "HISTORY__ACTION_UPDATE_THEME": "Mise à jour d'un thème",
         "HISTORY__ACTION_INSTALL_THEME": "Installation d'un thème",
+        "HISTORY__ACTION_ADD_SOCIAL": "Ajout d'un bouton",
+        "HISTORY__ACTION_EDIT_SOCIAL": "Modification d'un bouton",
         "HISTORY__ACTION_DELETE_SOCIAL": "Suppression d'un bouton",
         "HISTORY__VIEW_GLOBAL": "Historique du site",
 
