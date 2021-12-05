@@ -50,8 +50,8 @@ class NavbarController extends AppController
     public function admin_save_ajax()
     {
         $this->autoRender = false;
+        $this->response->type('json');
         if ($this->isConnected and $this->Permissions->can('MANAGE_NAV')) {
-
             if ($this->request->is('post')) {
                 if (!empty($this->request->data)) {
                     $data = $this->request->data['xss']['nav'];
@@ -68,7 +68,7 @@ class NavbarController extends AppController
                     $data = $data1;
                     $this->loadModel('Navbar');
                     foreach ($data as $key => $value) {
-                        $find = $this->Navbar->find('first', ['conditions' => ['name' => $key]]);
+                        $find = $this->Navbar->find('first', ['conditions' => ['id' => $key]]);
                         if (!empty($find)) {
                             $id = $find['Navbar']['id'];
                             $this->Navbar->read(null, $id);
@@ -82,16 +82,15 @@ class NavbarController extends AppController
                         }
                     }
                     if (empty($error)) {
-                        $this->History->set('EDIT_NAVBAR', 'navbar');
-                        echo $this->Lang->get('NAVBAR__SAVE_SUCCESS') . '|true';
+                        return $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('NAVBAR__SAVE_SUCCESS')]));
                     } else {
-                        echo $this->Lang->get('ERROR__INTERNAL_ERROR') . '|false';
+                        return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]));
                     }
                 } else {
-                    echo $this->Lang->get('ERROR__FILL_ALL_FIELDS') . '|false';
+                    return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]));
                 }
             } else {
-                echo $this->Lang->get('ERROR__BAD_REQUEST') . '|false';
+                return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('ERROR__BAD_REQUEST')]));
             }
         } else {
             $this->redirect('/');
