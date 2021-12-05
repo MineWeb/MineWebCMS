@@ -79,11 +79,10 @@
                 $('#yolo').text(nav);
                 inputs['data[_Token][key]'] = '<?= $csrfToken ?>';
                 $.post("<?= $this->Html->url(['controller' => 'navbar', 'action' => 'save_ajax', 'admin' => true]) ?>", inputs, function (data) {
-                    data2 = data.split("|");
-                    if (data.indexOf('true') != -1) {
+                    if (data.statut) {
                         $('#save').empty().html('<?= $Lang->get('NAVBAR__SAVE_SUCCESS') ?>');
-                    } else if (data.indexOf('false') != -1) {
-                        $('.ajax-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> ' + data2[0] + '</i></div>').fadeIn(500);
+                    } else if (!data.statut) {
+                        $('.ajax-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> ' + data.msg + '</i></div>').fadeIn(500);
                     } else {
                         $('.ajax-msg').empty().html('<div class="alert alert-danger" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><i class="icon icon-warning-sign"></i> <b><?= $Lang->get('GLOBAL__ERROR') ?> :</b> <?= $Lang->get('ERROR__INTERNAL_ERROR') ?></i></div>');
                     }
