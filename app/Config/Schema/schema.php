@@ -28,6 +28,7 @@ class AppSchema extends CakeSchema
         'id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'],
         'user_id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false],
         'reason' => ['type' => 'text', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
+        'ip' => ['type' => 'text', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'indexes' => [
             'PRIMARY' => ['column' => 'id', 'unique' => 1]
         ],

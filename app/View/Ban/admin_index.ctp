@@ -13,6 +13,7 @@
                             <tr>
                                 <th><?= $Lang->get("USER__USERNAME") ?></th>
                                 <th><?= $Lang->get("BAN__REASON") ?></th>
+                                <th><?= $Lang->get("BAN__IS_BAN_IP") ?></th>
                                 <th><?= $Lang->get("GLOBAL__ACTIONS")?></th>
                             </tr>
                         </thead>
@@ -27,6 +28,7 @@
                                         }
                                     } ?>
                                     <td><?= $v["Ban"]["reason"] ?></td>
+                                    <td><?= $v["Ban"]["ip"] != null ? $v["Ban"]["ip"] : $Lang->get("BAN__NOT_BAN_IP") ?></td>
                                     <td>
                                         <a onClick="confirmDel('<?= $this->Html->url(['action' => 'unban', $v["Ban"]['id']]) ?>')"
                                            class="btn btn-danger"><?= $Lang->get('BAN__UNBAN') ?></a>
