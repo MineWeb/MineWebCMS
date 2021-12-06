@@ -57,7 +57,7 @@ class AppController extends Controller
         $LoginCondition = $this->here != "/login" || !$this->EyPlugin->isInstalled('phpierre.signinup');
 
         $this->loadModel("Maintenance");
-        if ($this->params['controller'] != "user" and $this->params['controller'] != "maintenance" and !$this->Permissions->can("BYPASS_MAINTENANCE") and $maintenance = $this->Maintenance->checkMaintenance($this->here) and $LoginCondition) {
+        if ($this->params['controller'] != "user" and $this->params['controller'] != "maintenance" and !$this->Permissions->can("BYPASS_MAINTENANCE") and $maintenance = $this->Maintenance->checkMaintenance($this->here, $this->Util) and $LoginCondition) {
             $this->redirect([
                 'controller' => 'maintenance',
                 'action' => $maintenance['url'],
@@ -553,7 +553,13 @@ class AppController extends Controller
         $default = $this->Seo->find('first', ["conditions" => ['page' => null]])['Seo'];
         $current_url = $this->here;
         $get_page = [];
-        $check = $this->Seo->find('all', ['conditions' => ["'" . $current_url . "' LIKE CONCAT(page, '%')"]]);
+        $condition = ["'" . $current_url . "' LIKE CONCAT(page, '%')"];
+
+        $db_type = $this->Util->getDBType();
+
+        if (strpos(strtolower($db_type), "sqlite"))
+            $condition = ["'" . $current_url . "' LIKE 'page' || '%' "];
+        $check = $this->Seo->find('all', ['conditions' => $condition]);
 
         if ($check && ($check = max($check)) && ($check['Seo']["page"] == $current_url || $current_url != "/"))
             $get_page = $check['Seo'];

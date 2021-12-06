@@ -1,5 +1,6 @@
 <?php
 App::uses('CakeObject', 'Core');
+App::uses('ConnectionManager', 'Model');
 
 class UtilComponent extends CakeObject
 {
@@ -13,6 +14,8 @@ class UtilComponent extends CakeObject
     private $typeSend = 'default';
 
     private $smtpOptions = [];
+
+    private $db_type;
 
     function shutdown($controller)
     {
@@ -33,6 +36,8 @@ class UtilComponent extends CakeObject
         if ($this->controller->Configuration === null) {
             $this->controller->Configuration = ClassRegistry::init('Configuration');
         }
+
+        $db_type = ConnectionManager::$config->default['datasource'];
     }
 
     function startup($controller)
