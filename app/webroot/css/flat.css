@@ -116,6 +116,11 @@ header.carousel {
 	margin-bottom: 5px;
 }
 
+
+.btn-socials img {
+	height: 1em;
+}
+
 .comment {
 	border: solid 1px #bcbcbc;
 	padding: 10px;

@@ -31,6 +31,7 @@ class PermissionsComponent extends CakeObject
         'MANAGE_THEMES',
         'MANAGE_USERS',
         'MANAGE_BAN',
+        'MANAGE_SOCIAL',
         'VIEW_WEBSITE_HISTORY'
     ];
 
