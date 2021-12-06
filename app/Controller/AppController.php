@@ -48,7 +48,7 @@ class AppController extends Controller
     {
         // find any xss vulnability on request data
         $datas = $this->request->data;
-        $this->request->data = $this->xssProtection($datas);
+        $this->request->data = $this->xssProtection($datas, ['command', 'cmd', 'order', 'broadcast']);
         $this->request->data["xss"] = $datas;
         // lowercase to avoid errors when the controller is called with uppercase
         $this->params['controller'] = strtolower($this->params['controller']);
@@ -57,7 +57,7 @@ class AppController extends Controller
         $LoginCondition = $this->here != "/login" || !$this->EyPlugin->isInstalled('phpierre.signinup');
 
         $this->loadModel("Maintenance");
-        if ($this->params['controller'] != "user" and $this->params['controller'] != "maintenance" and !$this->Permissions->can("BYPASS_MAINTENANCE") and $maintenance = $this->Maintenance->checkMaintenance($this->here) and $LoginCondition) {
+        if ($this->params['controller'] != "user" and $this->params['controller'] != "maintenance" and !$this->Permissions->can("BYPASS_MAINTENANCE") and $maintenance = $this->Maintenance->checkMaintenance($this->here, $this->Util) and $LoginCondition) {
             $this->redirect([
                 'controller' => 'maintenance',
                 'action' => $maintenance['url'],
@@ -113,10 +113,13 @@ class AppController extends Controller
 
     }
 
-    public function xssProtection($array)
+    public function xssProtection($array, $excluded = [])
     {
         foreach ($array as $key => $value) {
-            $array[$key] = is_array($value) ? $this->xssProtection($value) : $this->EySecurity->xssProtection($value);
+            if (strlen(str_replace($excluded, '', $key)) !== strlen($key))
+                $array[$key] = $value;
+            else
+                $array[$key] = is_array($value) ? $this->xssProtection($value) : $this->EySecurity->xssProtection($value);
         }
         return $array;
 
@@ -550,9 +553,17 @@ class AppController extends Controller
         $default = $this->Seo->find('first', ["conditions" => ['page' => null]])['Seo'];
         $current_url = $this->here;
         $get_page = [];
-        $check = max($this->Seo->find('all', ['conditions' => ["'" . $current_url . "' LIKE CONCAT(page, '%')"]]));
-        if ($check && ($check['Seo']["page"] == $current_url || $current_url != "/"))
+        $condition = ["'" . $current_url . "' LIKE CONCAT(page, '%')"];
+
+        $use_sqlite = $this->Util->useSqlite();
+
+        if ($use_sqlite)
+            $condition = ["'" . $current_url . "' LIKE 'page' || '%' "];
+        $check = $this->Seo->find('all', ['conditions' => $condition]);
+
+        if ($check && ($check = max($check)) && ($check['Seo']["page"] == $current_url || $current_url != "/"))
             $get_page = $check['Seo'];
+
         $seo_config['title'] = (!empty($default['title']) ? $default['title'] : "{TITLE} - {WEBSITE_NAME}");
         $seo_config['title'] = (!empty($get_page['title']) ? $get_page['title'] : $seo_config['title']);
         $seo_config['description'] = (!empty($get_page['description']) ? $get_page['description'] : (!empty($default['description']) ? $default['description'] : ""));

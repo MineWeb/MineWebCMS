@@ -54,7 +54,7 @@ class NavbarController extends AppController
         if ($this->isConnected and $this->Permissions->can('MANAGE_NAV')) {
             if ($this->request->is('post')) {
                 if (!empty($this->request->data)) {
-                    $data = $this->request->data['xss']['nav'];
+                    $data = $this->request->data['navbar_order'];
                     $data = explode('&', $data);
                     $i = 1;
                     foreach ($data as $key => $value) {

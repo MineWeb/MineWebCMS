@@ -2,9 +2,16 @@
 
 class Maintenance extends AppModel
 {
-    function checkMaintenance($url = "")
+    function checkMaintenance($url, $utilComponent)
     {
-        $check = $this->find("first", ["conditions" => ["'" . $url . "' LIKE CONCAT(Maintenance.url, '%')", "active" => 1]]);
+        $use_sqlite = $utilComponent->useSqlite();
+
+        $condition = ["'" . $url . "' LIKE CONCAT(Maintenance.url, '%')", "active" => 1];
+
+        if ($use_sqlite)
+            $condition = ["'" . $url . "' LIKE 'Maintenance.url' || '%')", "active" => 1];
+
+        $check = $this->find("first", ["conditions" => $condition]);
         if (isset($check["Maintenance"]))
             $check = $check["Maintenance"];
         if ($check && (($check["url"] == $url) || ($check["sub_url"] && $url != "/")))
