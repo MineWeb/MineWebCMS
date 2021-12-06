@@ -677,7 +677,6 @@ class AppController extends Controller
 
     public function IPisBan() {
         $this->loadModel("Ban");
-        $this->log($this->Util->getIP());
         $ipIsBan = $this->Ban->find('first', ['conditions' => ['ip' => $this->Util->getIP()]]);
 
         if (isset($ipIsBan["Ban"])) {
