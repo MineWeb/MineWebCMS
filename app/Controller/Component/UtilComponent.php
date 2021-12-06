@@ -37,7 +37,7 @@ class UtilComponent extends CakeObject
             $this->controller->Configuration = ClassRegistry::init('Configuration');
         }
 
-        $db_type = ConnectionManager::$config->default['datasource'];
+        $this->db_type = ConnectionManager::$config->default['datasource'];
     }
 
     function startup($controller)
@@ -349,6 +349,11 @@ class UtilComponent extends CakeObject
             }
         }
         return $item;
+    }
+
+    public function getDBType()
+    {
+        return $this->db_type;
     }
 
 
