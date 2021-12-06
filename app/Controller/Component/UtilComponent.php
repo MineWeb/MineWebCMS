@@ -15,7 +15,7 @@ class UtilComponent extends CakeObject
 
     private $smtpOptions = [];
 
-    private $db_type;
+    private $db_type = "mysql";
 
     function shutdown($controller)
     {
@@ -37,11 +37,11 @@ class UtilComponent extends CakeObject
             $this->controller->Configuration = ClassRegistry::init('Configuration');
         }
 
-        $this->db_type = ConnectionManager::$config->default['datasource'];
     }
 
     function startup($controller)
     {
+        $this->db_type = ConnectionManager::$config->default['datasource'];
     }
 
     // Get ip (support cloudfare)
