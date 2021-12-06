@@ -65,10 +65,6 @@ class AppSchema extends CakeSchema
         'server_secretkey' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'server_timeout' => ['type' => 'float', 'null' => false, 'default' => null, 'unsigned' => false],
         'condition' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 250, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
-        'skype' => ['type' => 'text', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
-        'youtube' => ['type' => 'text', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
-        'twitter' => ['type' => 'text', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
-        'facebook' => ['type' => 'text', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'banner_server' => ['type' => 'text', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'email_send_type' => ['type' => 'integer', 'null' => true, 'default' => '1', 'length' => 1, 'unsigned' => false, 'comment' => '1 = default, 2 = smtp'],
         'smtpHost' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 30, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
@@ -280,8 +276,9 @@ class AppSchema extends CakeSchema
     ];
     public $social_buttons = [
         'id' => ['type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'],
+        'order' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 2, 'unsigned' => false],
         'title' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 20, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
-        'img' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 120, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
+        'extra' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 120, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'color' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 30, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'url' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 120, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'indexes' => [
@@ -412,10 +409,6 @@ class AppSchema extends CakeSchema
                     'server_secretkey' => '',
                     'server_timeout' => 1,
                     'condition' => null,
-                    'skype' => 'http://mineweb.org',
-                    'youtube' => 'http://mineweb.org',
-                    'twitter' => 'http://mineweb.org',
-                    'facebook' => 'http://mineweb.org',
                     'banner_server' => serialize([]),
                     'email_send_type' => '1',
                     'smtpHost' => null,
