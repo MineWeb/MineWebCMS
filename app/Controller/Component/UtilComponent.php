@@ -1,5 +1,6 @@
 <?php
 App::uses('CakeObject', 'Core');
+App::uses('ConnectionManager', 'Model');
 
 class UtilComponent extends CakeObject
 {
@@ -13,6 +14,8 @@ class UtilComponent extends CakeObject
     private $typeSend = 'default';
 
     private $smtpOptions = [];
+
+    private $db_type = "mysql";
 
     function shutdown($controller)
     {
@@ -33,10 +36,12 @@ class UtilComponent extends CakeObject
         if ($this->controller->Configuration === null) {
             $this->controller->Configuration = ClassRegistry::init('Configuration');
         }
+
     }
 
     function startup($controller)
     {
+        $this->db_type = ConnectionManager::$config->default['datasource'];
     }
 
     // Get ip (support cloudfare)
@@ -344,6 +349,17 @@ class UtilComponent extends CakeObject
             }
         }
         return $item;
+    }
+
+    public function getDBType()
+    {
+        return $this->db_type;
+    }
+
+    public function useSqlite() {
+        if (strpos(strtolower($this->getDBType()), "sqlite"))
+            return true;
+        return false;
     }
 
 
