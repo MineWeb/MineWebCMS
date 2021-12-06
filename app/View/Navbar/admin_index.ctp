@@ -73,10 +73,8 @@
             axis: 'y',
             stop: function (event, ui) {
                 $('#save').empty().html('<?= $Lang->get('NAVBAR__SAVE_IN_PROGRESS') ?>');
-                var inputs = {};
-                var nav = $(this).sortable('serialize');
-                inputs['nav'] = nav;
-                $('#yolo').text(nav);
+                let inputs = {};
+                inputs['navbar_order'] = $(this).sortable('serialize');
                 inputs['data[_Token][key]'] = '<?= $csrfToken ?>';
                 $.post("<?= $this->Html->url(['controller' => 'navbar', 'action' => 'save_ajax', 'admin' => true]) ?>", inputs, function (data) {
                     if (data.statut) {
