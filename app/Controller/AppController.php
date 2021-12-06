@@ -48,7 +48,7 @@ class AppController extends Controller
     {
         // find any xss vulnability on request data
         $datas = $this->request->data;
-        $this->request->data = $this->xssProtection($datas, ['command', 'order', 'broadcast']);
+        $this->request->data = $this->xssProtection($datas, ['command', 'cmd', 'order', 'broadcast']);
         $this->request->data["xss"] = $datas;
         // lowercase to avoid errors when the controller is called with uppercase
         $this->params['controller'] = strtolower($this->params['controller']);
@@ -553,9 +553,11 @@ class AppController extends Controller
         $default = $this->Seo->find('first', ["conditions" => ['page' => null]])['Seo'];
         $current_url = $this->here;
         $get_page = [];
-        $check = max($this->Seo->find('all', ['conditions' => ["'" . $current_url . "' LIKE CONCAT(page, '%')"]]));
-        if ($check && ($check['Seo']["page"] == $current_url || $current_url != "/"))
+        $check = $this->Seo->find('all', ['conditions' => ["'" . $current_url . "' LIKE CONCAT(page, '%')"]]);
+
+        if ($check && ($check = max($check)) && ($check['Seo']["page"] == $current_url || $current_url != "/"))
             $get_page = $check['Seo'];
+
         $seo_config['title'] = (!empty($default['title']) ? $default['title'] : "{TITLE} - {WEBSITE_NAME}");
         $seo_config['title'] = (!empty($get_page['title']) ? $get_page['title'] : $seo_config['title']);
         $seo_config['description'] = (!empty($get_page['description']) ? $get_page['description'] : (!empty($default['description']) ? $default['description'] : ""));
