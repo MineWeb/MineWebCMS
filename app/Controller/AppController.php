@@ -48,7 +48,7 @@ class AppController extends Controller
     {
         // find any xss vulnability on request data
         $datas = $this->request->data;
-        $this->request->data = $this->xssProtection($datas);
+        $this->request->data = $this->xssProtection($datas, ['command', 'order', 'broadcast']);
         $this->request->data["xss"] = $datas;
         // lowercase to avoid errors when the controller is called with uppercase
         $this->params['controller'] = strtolower($this->params['controller']);
@@ -122,10 +122,13 @@ class AppController extends Controller
 
     }
 
-    public function xssProtection($array)
+    public function xssProtection($array, $excluded = [])
     {
         foreach ($array as $key => $value) {
-            $array[$key] = is_array($value) ? $this->xssProtection($value) : $this->EySecurity->xssProtection($value);
+            if (strlen(str_replace($excluded, '', $key)) !== strlen($key))
+                $array[$key] = $value;
+            else
+                $array[$key] = is_array($value) ? $this->xssProtection($value) : $this->EySecurity->xssProtection($value);
         }
         return $array;
 
