@@ -4,11 +4,11 @@ class Maintenance extends AppModel
 {
     function checkMaintenance($url, $utilComponent)
     {
-        $db_type = $utilComponent->getDBType();
+        $use_sqlite = $utilComponent->useSqlite();
 
         $condition = ["'" . $url . "' LIKE CONCAT(Maintenance.url, '%')", "active" => 1];
 
-        if (strpos(strtolower($db_type), "sqlite"))
+        if ($use_sqlite)
             $condition = ["'" . $url . "' LIKE 'Maintenance.url' || '%')", "active" => 1];
 
         $check = $this->find("first", ["conditions" => $condition]);

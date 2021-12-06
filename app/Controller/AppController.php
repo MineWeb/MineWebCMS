@@ -555,9 +555,9 @@ class AppController extends Controller
         $get_page = [];
         $condition = ["'" . $current_url . "' LIKE CONCAT(page, '%')"];
 
-        $db_type = $this->Util->getDBType();
+        $use_sqlite = $this->Util->useSqlite();
 
-        if (strpos(strtolower($db_type), "sqlite"))
+        if ($use_sqlite)
             $condition = ["'" . $current_url . "' LIKE 'page' || '%' "];
         $check = $this->Seo->find('all', ['conditions' => $condition]);
 

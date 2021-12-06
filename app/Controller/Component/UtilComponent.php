@@ -356,5 +356,11 @@ class UtilComponent extends CakeObject
         return $this->db_type;
     }
 
+    public function useSqlite() {
+        if (strpos(strtolower($this->getDBType()), "sqlite"))
+            return true;
+        return false;
+    }
+
 
 }
