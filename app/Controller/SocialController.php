@@ -26,7 +26,7 @@ class SocialController extends AppController
         if ($this->isConnected AND $this->Permissions->can('MANAGE_SOCIAL')) {
             if ($this->request->is('post')) {
                 if (!empty($this->request->data)) {
-                    $data = $this->request->data['xss']['social_button_order'];
+                    $data = $this->request->data['social_button_order'];
                     $data = explode('&', $data);
                     $i = 1;
                     foreach ($data as $key => $value) {
