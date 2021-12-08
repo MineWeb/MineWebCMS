@@ -54,7 +54,9 @@ class AppController extends Controller
         $this->params['controller'] = strtolower($this->params['controller']);
         $this->params['action'] = strtolower($this->params['action']);
 
-        if ($this->IPisBan() != false and $this->params['controller'] != "ban" and !$this->Permissions->can("BYPASS_BAN")) {
+        $LoginCondition = $this->here != "/login" || !$this->EyPlugin->isInstalled('phpierre.signinup');
+
+        if ($this->IPisBan() != false and $this->params['controller'] != "user" and $LoginCondition and $this->params['controller'] != "ban" and !$this->Permissions->can("BYPASS_BAN")) {
             $this->redirect([
                 'controller' => 'ban',
                 'action' => 'ip',
@@ -62,8 +64,6 @@ class AppController extends Controller
                 'admin' => false
             ]);
         }
-
-        $LoginCondition = $this->here != "/login" || !$this->EyPlugin->isInstalled('phpierre.signinup');
 
         $this->loadModel("Maintenance");
         if ($this->params['controller'] != "user" and $this->params['controller'] != "maintenance" and !$this->Permissions->can("BYPASS_MAINTENANCE") and $maintenance = $this->Maintenance->checkMaintenance($this->here, $this->Util) and $LoginCondition) {
