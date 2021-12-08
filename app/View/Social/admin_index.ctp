@@ -61,10 +61,8 @@
             items: '.item:not(.fixed)',
             stop: function (event, ui) {
                 $('#save').empty().html('<?= $Lang->get('SOCIAL__SAVE_IN_PROGRESS') ?>');
-                var inputs = {};
-                var social_button_order = $(this).sortable('serialize');
-                inputs['social_button_order'] = social_button_order;
-                $('#social_button_order').text(social_button_order);
+                let inputs = {};
+                inputs['social_button_order'] = $(this).sortable('serialize');
                 inputs['data[_Token][key]'] = '<?= $csrfToken ?>';
                 $.post("<?= $this->Html->url(array('controller' => 'social', 'action' => 'save_ajax', 'admin' => true)) ?>", inputs, function(data) {
                     if(data.statut) {
@@ -79,3 +77,4 @@
         });
     });
 </script>
+
