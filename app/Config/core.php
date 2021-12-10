@@ -81,7 +81,11 @@ Configure::write('Exception', [
     'renderer' => 'ExceptionRenderer',
     'log' => true,
     'skipLog' => [
-        'MissingControllerException'
+        'NotFoundException',
+        'ForbiddenException',
+        'MissingControllerException',
+        'BadRequestException',
+        'MissingActionException'
     ]
 ]);
 
