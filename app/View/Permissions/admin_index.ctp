@@ -15,20 +15,19 @@
                     <form action="" method="post">
                         <input name="data[_Token][key]" value="<?= $csrfToken ?>" type="hidden">
 
-                        <table class="table table-bordered table-responsive-sm">
+                        <table class="table table-bordered">
                             <thead>
                             <tr>
                                 <th><?= $Lang->get('PERMISSIONS__LABEL') ?></th>
-                                <th><?= $Lang->get('GLOBAL__TYPE_NORMAL') ?></th>
-                                <th><?= $Lang->get('USER__RANK_MODERATOR') ?></th>
-                                <th><?= $Lang->get('USER__RANK_ADMINISTRATOR') ?></th>
                                 <?php
-                                if (!empty($custom_ranks)) {
-                                    foreach ($custom_ranks as $k => $data) {
+                                if (!empty($all_ranks)) {
+                                    foreach ($all_ranks as $k => $data) {
                                         echo '<th>' . $data['Rank']['name'] . '</th>';
                                     }
                                 }
                                 ?>
+                                <th><?= $Lang->get('USER__RANK_ADMINISTRATOR') ?></th>
+
                             </tr>
                             </thead>
                             <tbody>
@@ -36,20 +35,16 @@
                             foreach ($permissions as $permission => $ranks) { ?>
                                 <tr>
                                     <td><?= $Lang->get('PERMISSIONS__' . $permission) ?></td>
-                                    <td><input type="checkbox"
-                                               name="<?= $permission ?>-0"<?= ($ranks[0]) ? ' checked="checked"' : '' ?>>
-                                    </td>
-                                    <td><input type="checkbox"
-                                               name="<?= $permission ?>-2"<?= ($ranks[2]) ? ' checked="checked"' : '' ?>>
-                                    </td>
-                                    <td><input type="checkbox" checked="checked" disabled="disabled"></td>
-                                    <?php if (!empty($custom_ranks)) { ?>
-                                        <?php foreach ($custom_ranks as $k => $data) { ?>
+
+                                    <?php if (!empty($all_ranks)) { ?>
+                                        <?php foreach ($all_ranks as $k => $data) { ?>
                                             <td><input type="checkbox"
                                                        name="<?= $permission ?>-<?= $data['Rank']['rank_id'] ?>"<?= (isset($ranks[$data['Rank']['rank_id']]) && $ranks[$data['Rank']['rank_id']]) ? ' checked="checked"' : '' ?>>
                                             </td>
                                         <?php } ?>
+
                                     <?php } ?>
+                                    <td><input type="checkbox" checked="checked" disabled="disabled"></td>
                                 </tr>
                             <?php } ?>
                             <tr>

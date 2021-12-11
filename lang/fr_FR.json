@@ -684,6 +684,7 @@
         "BAN__MEMBERS": "Membres bannis",
         "BAN__HOME": "Bannissements",
         "BAN__QUESTION": "Bannir ?",
+        "BAN__IP_QUESTION": "Bannir l'IP ?",
         "BAN__REASON": "Raison du bannissement",
         "BAN__ADD": "Bannir un ou des membres",
         "BAN__SUCCESS": "Membre(s) banni(s)",
@@ -692,6 +693,9 @@
         "BAN__UNBAN_SUCCESS": "Bannissement révoqué",
         "BAN__BAN": "Bannis",
         "BAN__EXPLICATION": "Vous avez été banni pour ",
+        "BAN__IP_EXPLICATION": "Votre IP a été bannie pour ",
+        "BAN__IS_BAN_IP" : "Bannissement d'IP ?",
+        "BAN__NOT_BAN_IP" : "L'IP n'est pas bannie",
 
         "SOCIAL__TITLE": "Gérer les réseaux sociaux",
         "SOCIAL__HOME": "Réseaux sociaux",

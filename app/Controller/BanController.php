@@ -10,6 +10,14 @@ class BanController extends AppController
         $this->set('reason', $this->User->isBanned());
     }
 
+    function ip() {
+        if (!$this->isIPBan($this->Util->getIP()))
+            $this->redirect("/");
+
+        $this->set('title_for_layout', $this->Lang->get("BAN__BAN"));
+        $this->set('reason', $this->isBanned);
+    }
+
     function admin_index()
     {
         if (!$this->isConnected || !$this->Permissions->can("MANAGE_BAN"))
@@ -42,15 +50,22 @@ class BanController extends AppController
             if (empty($this->request->data("reason")))
                 return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]));
 
+            $this->loadModel("User");
             foreach ($this->request->data as $key => $v) {
-                if ($v != "on" || $key == "name")
+                if ($v != "on" || $key == "name" || strpos($key, "-ip"))
                     continue;
 
                 $this->Ban->create();
                 $this->Ban->set([
-                   "user_id" => $key,
-                   "reason" => $this->request->data("reason")
+                    "user_id" => $key,
+                    "reason" => $this->request->data("reason")
                 ]);
+
+                if ($this->request->data($key . "-ip") == "on")
+                    $this->Ban->set([
+                        "ip" => $this->User->find("first", ["conditions" => ['id' => $key]])['User']['ip']
+                    ]);
+
                 $this->Ban->save();
             }
 
@@ -93,7 +108,7 @@ class BanController extends AppController
                 $this->modelClass = 'User';
                 $this->DataTable->initialize($this);
                 $this->paginate = [
-                    'fields' => ['User.id', 'User.pseudo', 'User.rank'],
+                    'fields' => ['User.id', 'User.pseudo', 'User.rank', 'User.ip'],
                 ];
                 $this->DataTable->mDataProp = true;
                 $response = $this->DataTable->getResponse();
@@ -113,11 +128,14 @@ class BanController extends AppController
                     $rank_name = (isset($available_ranks[$value['User']['rank']])) ? $available_ranks[$value['User']['rank']]['name'] : $available_ranks[0]['name'];
                     $rank = '<span class="label label-' . $rank_label . '">' . $rank_name . '</span>';
                     $checkbox = "<input type='checkbox' name=" . $value['User']['id'] . ">";
+                    $banIpCheckbox = "<input type='checkbox' name=" . $value['User']['id'] . "-ip>";
                     $data[] = [
                         'User' => [
                             'pseudo' => $username,
                             'ban' => $checkbox,
-                            'rank' => $rank
+                            'banIp' => $banIpCheckbox,
+                            'rank' => $rank,
+                            'ip' => $value['User']['ip']
                         ]
                     ];
                 }

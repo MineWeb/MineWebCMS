@@ -3,13 +3,13 @@
 class MaintenanceController extends AppController
 {
 
-    public $components = ['Session'];
+    public $components = ['Session', 'Util'];
 
     public function index($url = "")
     {
         $this->set('title_for_layout', $this->Lang->get('MAINTENANCE__TITLE'));
         $this->loadModel("Maintenance");
-        $check = $this->Maintenance->checkMaintenance("/" . $url);
+        $check = $this->Maintenance->checkMaintenance("/" . $url, $this->Util);
         if ($this->Permissions->can("BYPASS_MAINTENANCE") || !$check)
             $this->redirect("/");
         $msg = $check["reason"];

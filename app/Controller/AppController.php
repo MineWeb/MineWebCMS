@@ -56,14 +56,25 @@ class AppController extends Controller
 
         $LoginCondition = $this->here != "/login" || !$this->EyPlugin->isInstalled('phpierre.signinup');
 
-        $this->loadModel("Maintenance");
-        if ($this->params['controller'] != "user" and $this->params['controller'] != "maintenance" and !$this->Permissions->can("BYPASS_MAINTENANCE") and $maintenance = $this->Maintenance->checkMaintenance($this->here, $this->Util) and $LoginCondition) {
-            $this->redirect([
-                'controller' => 'maintenance',
-                'action' => $maintenance['url'],
-                'plugin' => false,
-                'admin' => false
-            ]);
+        if ($this->params['controller'] != "user" and $LoginCondition) {
+            if ($this->isIPBan($this->Util->getIP()) and $this->params['controller'] != "ban" and !$this->Permissions->can("BYPASS_BAN")) {
+                $this->redirect([
+                    'controller' => 'ban',
+                    'action' => 'ip',
+                    'plugin' => false,
+                    'admin' => false
+                ]);
+            }
+    
+            $this->loadModel("Maintenance");
+            if ($this->params['controller'] != "maintenance" and !$this->Permissions->can("BYPASS_MAINTENANCE") and $maintenance = $this->Maintenance->checkMaintenance($this->here, $this->Util)) {
+                $this->redirect([
+                    'controller' => 'maintenance',
+                    'action' => $maintenance['url'],
+                    'plugin' => false,
+                    'admin' => false
+                ]);
+            }
         }
 
         // Plugin disabled
@@ -670,5 +681,17 @@ class AppController extends Controller
         $this->response->type('json');
         $this->autoRender = false;
         return $this->response->body(json_encode($data));
+    }
+
+    public function isIPBan($ip) {
+        $this->loadModel("Ban");
+        $ipIsBan = $this->Ban->find('first', ['conditions' => ['ip' => $ip]]);
+
+        if (isset($ipIsBan["Ban"])) {
+            $this->isBanned = $ipIsBan["Ban"]["reason"];
+            return $this->isBanned;
+        } else {
+            return false;
+        }
     }
 }

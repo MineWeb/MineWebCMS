@@ -694,6 +694,7 @@
        "BAN__MEMBERS": "Запрещенные участники",
        "BAN__HOME": "Баны",
        "BAN__QUESTION": "Запретить?",
+       "BAN__IP_QUESTION": "Запретить IP?",
        "BAN__REASON": "Причина бана",
        "BAN__ADD": "Забанить одного или нескольких участников",
        "BAN__SUCCESS": "Забаненный участник(ы)",
@@ -702,6 +703,9 @@
        "BAN__UNBAN_SUCCESS": "Бан отменен",
        "BAN__BAN": "Запрещено",
        "BAN__EXPLICATION": "Вас забанили за ",
+       "BAN__IP_EXPLICATION": "Ваш IP заблокирован на ",
+       "BAN__IS_BAN_IP" : "Бан по IP?",
+       "BAN__NOT_BAN_IP" : "IP не забанен",
         
         "SOCIAL__TITLE": "Управление социальными сетями",
         "SOCIAL__HOME": "Социальные сети",

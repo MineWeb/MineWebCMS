@@ -13,13 +13,36 @@ class PermissionsController extends AppController
         $this->layout = 'admin';
 
         $this->loadModel('Rank');
-        $custom_ranks = $this->Rank->find('all');
-        $this->set(compact('custom_ranks'));
+        $all_ranks = [
+            [
+                "Rank" => [
+                    'rank_id' => 0,
+                    'name' => $this->Lang->get('GLOBAL__TYPE_NORMAL'),
+                ],
+            ],
+            [
+                "Rank" => [
+                    'rank_id' => 2,
+                    'name' => $this->Lang->get('USER__RANK_MODERATOR'),
+                ],
+            ],
+        ];
+
+        $all_ranks = array_merge($all_ranks, $this->Rank->find('all'));
+        $this->set(compact('all_ranks'));
 
 
         if ($this->request->is('post')) {
             $permissions = [];
+
+            foreach ($all_ranks as $rank) {
+                $rank = $rank['Rank'];
+                $permissions[$rank['rank_id']] = [];
+            }
+
             foreach ($this->request->data as $permission => $checked) {
+                if (is_array($checked))
+                    continue;
                 list($permission, $rank) = explode('-', $permission);
                 $permissions[$rank][] = $permission;
             }

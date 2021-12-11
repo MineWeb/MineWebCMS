@@ -35,6 +35,7 @@ class UserController extends AppController
             $conditionsChecked = !empty($this->request->data['condition']) || !$this->Configuration->getKey('condition');
             if (!empty($this->request->data['pseudo']) && !empty($this->request->data['password']) && $conditionsChecked && !empty($this->request->data['password_confirmation']) && !empty($this->request->data['email'])) { // si tout les champs sont bien remplis
                 //check uuid if needed
+                $this->request->data = $this->request->data['xss'];
                 if ($this->Configuration->getKey('check_uuid')) {
                     $pseudoToUUID = file_get_contents("https://api.mojang.com/users/profiles/minecraft/" . htmlentities($this->request->data['pseudo']));
                     if (!$pseudoToUUID) {
@@ -137,6 +138,7 @@ class UserController extends AppController
         $this->response->type('json');
         $this->loadModel('Authentification');
         $this->loadModel('User');
+        $this->request->data = $this->request->data['xss'];
         $user_login = $this->User->getAllFromUser($this->request->data['pseudo']);
         $infos = $this->Authentification->find('first', ['conditions' => ['user_id' => $user_login['id'], 'enabled' => true]]);
 
@@ -279,6 +281,7 @@ class UserController extends AppController
         $this->response->type('json');
         if ($this->request->is('ajax')) {
             if (!empty($this->request->data['password']) and !empty($this->request->data['password2']) and !empty($this->request->data['email']) && !empty($this->request->data['key'])) {
+                $this->request->data = $this->request->data['xss'];
                 $reset = $this->User->resetPass($this->request->data, $this);
                 if (isset($reset['status']) && $reset['status'] === true) {
                     $this->Session->write('user', $reset['session']);
@@ -517,6 +520,7 @@ class UserController extends AppController
         if ($this->isConnected) {
             if ($this->request->is('ajax')) {
                 if (!empty($this->request->data['password']) and !empty($this->request->data['password_confirmation'])) {
+                    $this->request->data = $this->request->data['xss'];
                     $password = $this->Util->password($this->request->data['password'], $this->User->getKey('pseudo'));
                     $password_confirmation = $this->Util->password($this->request->data['password_confirmation'], $this->User->getKey('pseudo'), $password);
                     if ($password == $password_confirmation) {
@@ -775,6 +779,7 @@ class UserController extends AppController
             if ($this->request->is('post')) {
                 $this->loadModel('User');
                 if (!empty($this->request->data['id']) && !empty($this->request->data['email']) && !empty($this->request->data['pseudo']) && (!empty($this->request->data['rank']) || $this->request->data['rank'] == 0)) {
+                    $this->request->data = $this->request->data['xss'];
                     $findUser = $this->User->find('first',
                         ['conditions' => ['id' => intval($this->request->data['id'])]]);
                     if (empty($findUser)) {
