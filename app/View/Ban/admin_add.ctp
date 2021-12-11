@@ -15,6 +15,8 @@
                                 <th><?= $Lang->get('BAN__QUESTION') ?></th>
                                 <th><?= $Lang->get('USER__TITLE') ?></th>
                                 <th><?= $Lang->get('USER__RANK') ?></th>
+                                <th>IP</th>
+                                <th><?= $Lang->get('BAN__IP_QUESTION') ?></th>
                             </tr>
                             </thead>
                         </table>
@@ -55,7 +57,9 @@
             "aoColumns": [
                 {mData: "User.ban", "bSearchable": false},
                 {mData: "User.pseudo", "bSearchable": true},
-                {mData: "User.rank", "bSearchable": false}
+                {mData: "User.rank", "bSearchable": false},
+                {mData: "User.ip", "bSearchable": true},
+                {mData: "User.banIp", "bSearchable": false}
             ]
         });
     });

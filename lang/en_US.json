@@ -691,6 +691,7 @@
         "BAN__MEMBERS": "Banned members",
         "BAN__HOME": "Bans",
         "BAN__QUESTION": "Ban?",
+        "BAN__IP_QUESTION": "IP's ban ?",
         "BAN__REASON": "Reason for ban",
         "BAN__ADD": "Ban one or more members",
         "BAN__SUCCESS": "Banned member(s)",
@@ -699,6 +700,9 @@
         "BAN__UNBAN_SUCCESS": "Ban revoked",
         "BAN__BAN": "Banned",
         "BAN__EXPLICATION": "You have been banned for ",
+        "BAN__IP_EXPLICATION": "Your IP have been banned for ",
+        "BAN__IS_BAN_IP" : "The IP have been banned ?",
+        "BAN__NOT_BAN_IP" : "The IP is not banned",
 
         "SOCIAL__TITLE": "Manage social networks",
         "SOCIAL__HOME": "Social networks",
