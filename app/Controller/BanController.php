@@ -11,7 +11,7 @@ class BanController extends AppController
     }
 
     function ip() {
-        if (!$this->IPisBan())
+        if (!$this->isIPBan($this->Util->getIP()))
             $this->redirect("/");
 
         $this->set('title_for_layout', $this->Lang->get("BAN__BAN"));
