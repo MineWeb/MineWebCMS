@@ -23,7 +23,7 @@
                                 </div>
                             <?php } 
                         } else { ?>
-                            <p>Il n'y a pas de debugs</p>
+                            <p><?= $Lang->get("LOG__NO_DEBUG") ?></p>
                     <?php } ?> 
                 </div>
             </div>
