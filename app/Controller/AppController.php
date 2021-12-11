@@ -57,7 +57,7 @@ class AppController extends Controller
         $LoginCondition = $this->here != "/login" || !$this->EyPlugin->isInstalled('phpierre.signinup');
 
         if ($this->params['controller'] != "user" and $LoginCondition) {
-            if ($this->IPisBan() and $this->params['controller'] != "ban" and !$this->Permissions->can("BYPASS_BAN")) {
+            if ($this->isIPBan($this->Util->getIP()) and $this->params['controller'] != "ban" and !$this->Permissions->can("BYPASS_BAN")) {
                 $this->redirect([
                     'controller' => 'ban',
                     'action' => 'ip',
@@ -683,9 +683,9 @@ class AppController extends Controller
         return $this->response->body(json_encode($data));
     }
 
-    public function IPisBan() {
+    public function isIPBan($ip) {
         $this->loadModel("Ban");
-        $ipIsBan = $this->Ban->find('first', ['conditions' => ['ip' => $this->Util->getIP()]]);
+        $ipIsBan = $this->Ban->find('first', ['conditions' => ['ip' => $ip]]);
 
         if (isset($ipIsBan["Ban"])) {
             $this->isBanned = $ipIsBan["Ban"]["reason"];
