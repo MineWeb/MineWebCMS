@@ -356,10 +356,31 @@ class UtilComponent extends CakeObject
         return $this->db_type;
     }
 
-    public function useSqlite() {
+    public function useSqlite()
+    {
         if (strpos(strtolower($this->getDBType()), "sqlite"))
             return true;
         return false;
+    }
+
+    public function saveFolderInZIP($path, $location, $name)
+    {
+        $rootPath = realpath($path);
+        $zip = new ZipArchive();
+        $zip->open($location . $name . '.zip', ZipArchive::CREATE | ZipArchive::OVERWRITE);
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($rootPath),
+            RecursiveIteratorIterator::LEAVES_ONLY
+        );
+
+        foreach ($files as $file) {
+            if (!$file->isDir()) {
+                $file_path = $file->getRealPath();
+                $relativePath = substr($file_path, strlen($rootPath) + 1);
+                $zip->addFile($file_path, $relativePath);
+            }
+        }
+        $zip->close();
     }
 
 

@@ -9,7 +9,7 @@ if (file_exists(ROOT . DS . 'lib' . DS . 'Cake' . DS . 'Core' . DS . 'CakeObject
 
 class UpdateComponent extends CakeObject
 {
-    public $components = ['Session', 'Configuration', 'Lang'];
+    public $components = ['Session', 'Configuration', 'Lang', 'Util'];
 
     public $cmsVersion;
     public $lastVersion;
@@ -56,6 +56,7 @@ class UpdateComponent extends CakeObject
     {
         $this->controller = $controller;
         $this->Lang = $this->controller->Lang;
+        $this->Util = $this->controller->Util;
         $controller->set('Update', $this);
 
         $this->updateLogFile = ROOT . DS . 'app' . DS . 'tmp' . DS . 'logs' . DS . 'update' . DS;
@@ -134,6 +135,9 @@ class UpdateComponent extends CakeObject
             return true;
         }
 
+        if (method_exists($this->Util, 'saveFolderInZIP'))
+            $this->Util->saveFolderInZIP(ROOT . DS, ROOT . DS . 'app' . DS . 'tmp' . DS, "SAVE-" . $this->cmsVersion . "-" . time());
+
         // We need to copy all files
         // We avoid extractTo() method because we need to avoid copying $bypassFiles
         $zip = new ZipArchive;
@@ -174,7 +178,7 @@ class UpdateComponent extends CakeObject
         foreach ($updateFile as $key => $v) {
             $has_key = hash_file('sha1', $key);
             $hash = hash_file('sha1', $v);
-            if($has_key == $hash)
+            if ($has_key == $hash)
                 continue;
             if (!copy($key, $v)) {
                 $this->errorUpdate = $this->Lang->get('UPDATE__FAILED_FILE', [
@@ -183,7 +187,7 @@ class UpdateComponent extends CakeObject
                 $this->log("Failed to copy file from $key to " . $v);
                 return false;
             }
-            $this->log("The file " .$v. " was replaced with success !");
+            $this->log("The file " . $v . " was replaced with success !");
         }
 
         $this->log("End UPDATE");
