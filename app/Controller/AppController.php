@@ -56,23 +56,25 @@ class AppController extends Controller
 
         $LoginCondition = $this->here != "/login" || !$this->EyPlugin->isInstalled('phpierre.signinup');
 
-        if ($this->IPisBan() != false and $this->params['controller'] != "user" and $LoginCondition and $this->params['controller'] != "ban" and !$this->Permissions->can("BYPASS_BAN")) {
-            $this->redirect([
-                'controller' => 'ban',
-                'action' => 'ip',
-                'plugin' => false,
-                'admin' => false
-            ]);
-        }
-
-        $this->loadModel("Maintenance");
-        if ($this->params['controller'] != "user" and $this->params['controller'] != "maintenance" and !$this->Permissions->can("BYPASS_MAINTENANCE") and $maintenance = $this->Maintenance->checkMaintenance($this->here, $this->Util) and $LoginCondition) {
-            $this->redirect([
-                'controller' => 'maintenance',
-                'action' => $maintenance['url'],
-                'plugin' => false,
-                'admin' => false
-            ]);
+        if ($this->params['controller'] != "user" and $LoginCondition) {
+            if ($this->IPisBan() and $this->params['controller'] != "ban" and !$this->Permissions->can("BYPASS_BAN")) {
+                $this->redirect([
+                    'controller' => 'ban',
+                    'action' => 'ip',
+                    'plugin' => false,
+                    'admin' => false
+                ]);
+            }
+    
+            $this->loadModel("Maintenance");
+            if ($this->params['controller'] != "maintenance" and !$this->Permissions->can("BYPASS_MAINTENANCE") and $maintenance = $this->Maintenance->checkMaintenance($this->here, $this->Util)) {
+                $this->redirect([
+                    'controller' => 'maintenance',
+                    'action' => $maintenance['url'],
+                    'plugin' => false,
+                    'admin' => false
+                ]);
+            }
         }
 
         // Plugin disabled
