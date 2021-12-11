@@ -20,6 +20,9 @@ class PermissionsController extends AppController
         if ($this->request->is('post')) {
             $permissions = [];
             foreach ($this->request->data as $permission => $checked) {
+                if ($checked != "on")
+                    continue;
+                
                 list($permission, $rank) = explode('-', $permission);
                 $permissions[$rank][] = $permission;
             }
