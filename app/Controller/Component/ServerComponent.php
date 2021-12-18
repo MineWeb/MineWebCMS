@@ -85,11 +85,6 @@ class ServerComponent extends CakeObject
             $multi = false;
         }
 
-        if (empty($config)) {
-            $this->lastErrorMessage = 'Config not defined.';
-            return false;
-        }
-
         if ($config['type'] == 1 || $config['type'] == 2 || $config['type'] == 3) {
             $methodsName = array_map(function ($method) {
                 return array_keys($method)[0];
