@@ -204,6 +204,18 @@ class ServerController extends AppController
             if ($id) {
                 $this->loadModel('Server');
                 if ($this->Server->delete($id)) {
+                    $banner = unserialize($this->Configuration->getKey('banner_server'));
+
+                    if ($banner) {
+                        if (in_array($id, $banner)) {
+                            unset($banner[array_search($id, $banner)]);
+                        }
+
+                        $banner = array_values($banner);
+
+                        $this->Configuration->setKey('banner_server', serialize($banner));
+                    }
+
                     $this->Session->setFlash($this->Lang->get('SERVER__DELETE_SERVER_SUCCESS'), 'default.success');
                     $this->redirect(['controller' => 'server', 'action' => 'link', 'admin' => true]);
                 } else {
