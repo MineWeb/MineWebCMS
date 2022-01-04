@@ -214,7 +214,7 @@
         "CONFIG__KEY_GOOGLE_ANALYTICS": "Google Analytics ID",
         "CONFIG__KEY_CAPTCHA_TYPE": "Type of captcha (Anti-robot security code)",
         "CONFIG__TYPE_CAPTCHA_GOOGLE": "ReCaptcha (Google)",
-        "CONFIG__TYPE_CAPTCHA_GOOGLE": "H-Captcha",
+        "CONFIG__TYPE_CAPTCHA_HCAPTCHA": "H-Captcha",
         "CONFIG__KEY_CAPTCHA_SITEKEY": "Site Key (Available on the Captcha website)",
         "CONFIG__KEY_CAPTCHA_SECRET": "Secret Key (Available on the Captcha website)",
         "CONFIG__KEY_CONFIRM_MAIL_SIGNUP": "Confirmation of the email at registration",
