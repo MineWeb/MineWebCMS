@@ -511,7 +511,7 @@ class AppController extends Controller
 
     public function __initServerInfos()
     {
-        $configuration = $this->Configuration->getKey('banner_server');
+        $configuration = unserialize($this->Configuration->getKey('banner_server'));
         if (empty($configuration) && $this->Server->online())
             $server_infos = $this->Server->banner_infos();
         else if (!empty($configuration))
