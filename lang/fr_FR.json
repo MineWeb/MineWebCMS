@@ -98,6 +98,7 @@
         "GLOBAL__SAVE": "Sauvegarder",
         "GLOBAL__CATEGORY": "Catégorie",
         "GLOBAL__TEMPORALY_DISABLED":"Temporairement désactivé",
+        "GLOBAL__ADMIN_LOGS_TITLE": "Logs",
 
         "HELP__TITLE":"J'ai besoin d'aide",
         "HELP__TICKET_ADD_SUCCESS":"Le ticket a bien été envoyé à nos serveurs !",
@@ -531,6 +532,7 @@
         "PERMISSIONS__MANAGE_SOCIAL":"Gérer les boutons des réseaux sociaux",
         "PERMISSIONS__SEND_SERVER_COMMAND_FROM_DASHBOARD":"Envoyer des commandes aux serveurs depuis le dashboard admin.",
         "PERMISSIONS__VIEW_WEBSITE_HISTORY": "Voir l'historique du site",
+        "PERMISSIONS__VIEW_WEBSITE_LOGS": "Voir les logs du site",
 
         "SERVER__TITLE":"Serveur",
         "SERVER__LINK": "Lier serveur-site",
@@ -720,6 +722,11 @@
         "SOCIAL__CANNOT_TOW_TYPE": "Il ne peux pas y avoir 2 types d'illustrations définis en même temps !",
         "SOCIAL__BUTTON_SUCCESS": "Le bouton a était créé avec succès !",
         "SOCIAL__BUTTON_EDIT_SUCCESS": "Le bouton a était édité avec succès !",
-        "SOCIAL__BUTTON_DELETE_SUCCESS": "Le bouton a était supprimé avec succès !"
+        "SOCIAL__BUTTON_DELETE_SUCCESS": "Le bouton a était supprimé avec succès !",
+
+        "LOG__VIEW_ERROR": "Logs d'erreurs",
+        "LOG__VIEW_DEBUG": "Logs de debugs",
+        "LOG__NO_ERROR": "Il n'y a pas d'erreurs",
+        "LOG__NO_DEBUG": "Il n'y a pas de debugs"
     }
 }
