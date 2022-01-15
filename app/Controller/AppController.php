@@ -515,7 +515,7 @@ class AppController extends Controller
         if (empty($configuration) && $this->Server->online())
             $server_infos = $this->Server->banner_infos();
         else if (!empty($configuration))
-            $server_infos = $this->Server->banner_infos(unserialize($configuration));
+            $server_infos = $this->Server->banner_infos($configuration);
         else {
             $this->set(['banner_server' => false, 'server_infos' => false]);
             return;
