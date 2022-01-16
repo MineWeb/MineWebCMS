@@ -13,14 +13,27 @@
 
                             <ul class="nav nav-tabs">
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark active" href="#tab_1" data-toggle="tab" aria-expanded="true"><?= $Lang->get('CONFIG__GENERAL_PREFERENCES') ?></a>
+                                    <a class="nav-link text-dark active" href="#tab_1" data-toggle="tab"
+                                       aria-expanded="true"><?= $Lang->get('CONFIG__GENERAL_PREFERENCES') ?></a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" href="#tab_2" data-toggle="tab" aria-expanded="false"><?= $Lang->get('CONFIG__OTHER_PREFERENCES') ?></a>
+                                    <a class="nav-link text-dark" href="#tab_2" data-toggle="tab"
+                                       aria-expanded="false"><?= $Lang->get('CONFIG__OTHER_PREFERENCES') ?></a>
                                 </li>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane fade show active" id="tab_1">
+
+                                    <div class="form-group">
+                                        <label><?= $Lang->get('CONFIG__KEY_WEBSITE_URL') ?></label>
+                                        <?= $this->Form->input(false, [
+                                            'div' => false,
+                                            'type' => 'text',
+                                            'name' => 'name',
+                                            'class' => 'form-control',
+                                            'value' => $config['website_url']
+                                        ]); ?>
+                                    </div>
 
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_NAME') ?></label>

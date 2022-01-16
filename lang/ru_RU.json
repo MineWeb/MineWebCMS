@@ -185,6 +185,7 @@
        "CONFIG__SOCIAL_PREFERENCES" : "Социальные предпочтения" ,
        "CONFIG__OTHER_PREFERENCES": "Настройки другого",
        "CONFIG__EDIT_SUCCESS" : "Конфигурация успешно изменена!" ,
+       "CONFIG__KEY_WEBSITE_URL": "Адрес сайта (С протоколом, http/https)",
        "CONFIG__KEY_NAME": "Имя сайта",
        "CONFIG__KEY_VERSION": "Версия CMS",
        "CONFIG__KEY_EMAIL": "Электронная почта для отправки электронных писем пользователям",

@@ -185,6 +185,7 @@
         "CONFIG__SOCIAL_PREFERENCES": "Social preferences",
         "CONFIG__OTHER_PREFERENCES": "Preferences other",
         "CONFIG__EDIT_SUCCESS": "Configuration successfully changed!",
+        "CONFIG__KEY_WEBSITE_URL": "Site address (With protocol, http/https)",
         "CONFIG__KEY_NAME": "Site Name",
         "CONFIG__KEY_VERSION": "CMS Version",
         "CONFIG__KEY_EMAIL": "Email to send emails to users",
