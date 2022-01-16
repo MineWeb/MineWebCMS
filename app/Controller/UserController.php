@@ -72,7 +72,7 @@ class UserController extends AppController
                         if ($this->Configuration->getKey('confirm_mail_signup')) {
                             $confirmCode = substr(md5(uniqid()), 0, 12);
                             $emailMsg = $this->Lang->get('EMAIL__CONTENT_CONFIRM_MAIL', [
-                                '{LINK}' => Router::url('/user/confirm/', true) . $confirmCode,
+                                '{LINK}' => $this->Configuration->getKey('website_url') . "/user/confirm/$confirmCode",
                                 '{IP}' => $this->Util->getIP(),
                                 '{USERNAME}' => $this->request->data['pseudo'],
                                 '{DATE}' => $this->Lang->date(date('Y-m-d H:i:s'))
@@ -225,7 +225,7 @@ class UserController extends AppController
                         $message = $this->Lang->get('USER__PASSWORD_RESET_EMAIL_CONTENT', [
                             '{EMAIL}' => $this->request->data['email'],
                             '{PSEUDO}' => $search['User']['pseudo'],
-                            '{LINK}' =>  $this->Configuration->getKey('website_url') . DS . "/?resetpasswd_$key"
+                            '{LINK}' =>  $this->Configuration->getKey('website_url') . "/?resetpasswd_$key"
                         ]);
                         $event = new CakeEvent('beforeSendResetPassMail', $this, ['user_id' => $search['User']['id'], 'key' => $key]);
                         $this->getEventManager()->dispatch($event);
