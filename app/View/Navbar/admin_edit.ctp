@@ -96,12 +96,12 @@
                                         <div class="form-group">
                                             <label><?= $Lang->get('NAVBAR__LINK_NAME') ?></label>
                                             <input type="text" class="form-control name_of_nav"
-                                                   value="<?= urldecode($name) ?>" name="name_of_nav">
+                                                   value="<?= $name ?>" name="name_of_nav">
                                         </div>
                                         <div class="form-group">
                                             <label><?= $Lang->get('URL') ?></label>
                                             <input type="text" class="form-control url_of_nav"
-                                                   value="<?= urldecode($url) ?>"
+                                                   value="<?= $url ?>"
                                                    placeholder="<?= $Lang->get('NAVBAR__CUSTOM_URL') ?>" name="url">
                                         </div>
                                         <a href="#"
@@ -238,9 +238,9 @@
             url = {};
             for (var key in test = names) {
                 var l = test[key].split('=');
-                l = l[1];
+                l = decodeURIComponent(l[1]);
                 var p = urls[key].split('=');
-                p = p[1];
+                p = decodeURIComponent(p[1]);
                 url[l] = p;
             }
         }

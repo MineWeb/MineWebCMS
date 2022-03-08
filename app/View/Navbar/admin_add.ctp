@@ -224,9 +224,9 @@
             url = {};
             for (var key in test = names) {
                 var l = test[key].split('=');
-                l = l[1];
+                l = decodeURIComponent(l[1]);
                 var p = urls[key].split('=');
-                p = p[1];
+                p = decodeURIComponent(p[1]);
                 url[l] = p;
             }
         }
