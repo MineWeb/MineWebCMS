@@ -213,10 +213,13 @@ class AppController extends Controller
         $this->Security->validatePost = false;
         $this->Security->csrfUseOnce = false;
 
-        $csrfToken = $this->Session->read('_Token')['key'];
-        if (empty($csrfToken)) {
-            $this->Security->generateToken($this->request);
-            $csrfToken = $this->Session->read('_Token')['key'];
+        $token = $this->Session->read('_Token');
+        if (empty($token) { 
+            $csrfToken = $token['key'];
+            if(empty($csrfToken)) {
+                $this->Security->generateToken($this->request);
+                $csrfToken = $this->Session->read('_Token')['key'];
+            }
         }
         $this->set(compact('csrfToken'));
     }
