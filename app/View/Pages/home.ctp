@@ -17,19 +17,19 @@
                 } ?>
             <?php } else { ?>
                 <div class="item active">
-                    <div class="fill" style="background-image:url('http://placehold.it/1905x420&text=1905x420');"></div>
+                    <div class="fill" style="background-image:url('https://via.placeholder.com/1905x420&text=1905x420');"></div>
                     <div class="carousel-caption">
                         <h2>Caption 1</h2>
                     </div>
                 </div>
                 <div class="item">
-                    <div class="fill" style="background-image:url('http://placehold.it/1905x420&text=1905x420');"></div>
+                    <div class="fill" style="background-image:url('https://via.placeholder.com/1905x420&text=1905x420');"></div>
                     <div class="carousel-caption">
                         <h2>Caption 2</h2>
                     </div>
                 </div>
                 <div class="item">
-                    <div class="fill" style="background-image:url('http://placehold.it/1905x420&text=1905x420');"></div>
+                    <div class="fill" style="background-image:url('https://via.placeholder.com/1905x420&text=1905x420');"></div>
                     <div class="carousel-caption">
                         <h2>Caption 3</h2>
                     </div>
