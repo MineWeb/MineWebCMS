@@ -195,6 +195,20 @@
                 </tr>
             <?php endif; ?>
             <tr>
+                <td>XML</td>
+                <td><?= affichImg($compatible['xml']) ?></td>
+            </tr>
+            <?php if (!$compatible['xml'] && isset($help['xml'])): ?>
+                <tr>
+                    <td>
+                        <div class="panel panel-default">
+                            <div class="panel-body"><?= $help['xml']; ?></div>
+                        </div>
+                    </td>
+                    <td></td>
+                </tr>
+            <?php endif; ?>
+            <tr>
                 <td>OpenSSL</td>
                 <td><?= affichImg($compatible['openSSL']) ?></td>
             </tr>
