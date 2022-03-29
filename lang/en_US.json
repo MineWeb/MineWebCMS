@@ -98,6 +98,7 @@
         "GLOBAL__DATE_R_SECOND": "second",
         "GLOBAL__CATEGORY": "Category",
         "GLOBAL__TEMPORALY_DISABLED": "Temporarily disabled",
+        "GLOBAL__ADMIN_LOGS_TITLE": "Logs",
 
         "HELP__TITLE": "I need help",
         "HELP__TICKET_ADD_SUCCESS": "Your ticket has been sent!",
@@ -542,6 +543,7 @@
         "PERMISSIONS__MANAGE_BANS":"Manage banned users",
         "PERMISSIONS__SEND_SERVER_COMMAND_FROM_DASHBOARD": "Send commands to the servers from the admin dashboard",
         "PERMISSIONS__VIEW_WEBSITE_HISTORY": "View site history",
+        "PERMISSIONS__VIEW_WEBSITE_LOGS": "View site logs",
 
         "SERVER__TITLE": "Server",
         "SERVER__LINK": "Link server-site",
@@ -728,6 +730,11 @@
         "SOCIAL__CANNOT_TOW_TYPE": "There cannot be 2 types of illustrations defined at the same time!",
         "SOCIAL__BUTTON_SUCCESS": "The button was created successfully!",
         "SOCIAL__BUTTON_EDIT_SUCCESS": "The button has been edited successfully!",
-        "SOCIAL__BUTTON_DELETE_SUCCESS": "The button was deleted successfully!" 
+        "SOCIAL__BUTTON_DELETE_SUCCESS": "The button was deleted successfully!",
+
+        "LOG__VIEW_ERROR": "Error logs",
+        "LOG__VIEW_DEBUG": "Debug logs",
+        "LOG__NO_ERROR": "There are no errors",
+        "LOG__NO_DEBUG": "There are no debugs"
 	}
 }

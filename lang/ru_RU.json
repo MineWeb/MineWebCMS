@@ -98,6 +98,7 @@
        "GLOBAL__DATE_R_SECOND": "секунда",
        "GLOBAL__CATEGORY": "Категория",
        "GLOBAL__TEMPORALY_DISABLED": "Временно отключен",
+       "GLOBAL__ADMIN_LOGS_TITLE": "Журналы",
         
        "HELP__TITLE": "Мне нужна помощь",
        "HELP__TICKET_ADD_SUCCESS": "Ваш билет отправлен!",
@@ -542,6 +543,7 @@
        "PERMISSIONS__MANAGE_BANS":"Управление заблокированными пользователями",
        "PERMISSIONS__SEND_SERVER_COMMAND_FROM_DASHBOARD" : "Отправлять команды на серверы с панели администратора" ,
        "PERMISSIONS__VIEW_WEBSITE_HISTORY": "Просмотр истории сайта",
+       "PERMISSIONS__VIEW_WEBSITE_LOGS": "Просмотр журналов сайта",
 
        "SERVER__TITLE": "Сервер",
        "SERVER__LINK": "Ссылка сервер-сайт",
@@ -731,6 +733,11 @@
         "SOCIAL__CANNOT_TOW_TYPE": "Не может быть одновременно определено 2 типа иллюстраций!",
         "SOCIAL__BUTTON_SUCCESS": "Кнопка успешно создана!",
         "SOCIAL__BUTTON_EDIT_SUCCESS": "Кнопка успешно отредактирована!",
-        "SOCIAL__BUTTON_DELETE_SUCCESS": "Кнопка была успешно удалена!"
+        "SOCIAL__BUTTON_DELETE_SUCCESS": "Кнопка была успешно удалена!",
+
+        "LOG__VIEW_ERROR": "Журналы ошибок",
+        "LOG__VIEW_DEBUG": "Отчет об ошибках",
+        "LOG__NO_ERROR": "Нет ошибок",
+        "LOG__NO_DEBUG": "Нет никаких отладок"
 	}
 }

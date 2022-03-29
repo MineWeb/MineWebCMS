@@ -383,6 +383,21 @@ class AppController extends Controller
             'GLOBAL__ADMIN_PLUGINS' => [
                 'icon' => 'puzzle-piece'
             ],
+            'GLOBAL__ADMIN_LOGS_TITLE' => [
+                'icon' => 'scroll',
+                'menu' => [
+                    'LOG__VIEW_ERROR' => [
+                        'icon' => 'exclamation-circle',
+                        'permission' => 'VIEW_WEBSITE_LOGS',
+                        'route' => ['controller' => 'log', 'action' => 'error', 'admin' => true, 'plugin' => false]
+                    ],
+                    'LOG__VIEW_DEBUG' => [
+                        'icon' => 'exclamation-triangle',
+                        'permission' => 'VIEW_WEBSITE_LOGS',
+                        'route' => ['controller' => 'log', 'action' => 'debug', 'admin' => true, 'plugin' => false]
+                    ]
+                ]
+            ],
             'GLOBAL__ADMIN_OTHER_TITLE' => [
                 'icon' => 'fas fa-folder-open',
                 'menu' => [

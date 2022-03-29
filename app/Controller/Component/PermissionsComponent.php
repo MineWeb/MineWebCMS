@@ -32,7 +32,8 @@ class PermissionsComponent extends CakeObject
         'MANAGE_USERS',
         'MANAGE_BAN',
         'MANAGE_SOCIAL',
-        'VIEW_WEBSITE_HISTORY'
+        'VIEW_WEBSITE_HISTORY',
+        'VIEW_WEBSITE_LOGS'
     ];
 
     public $components = ['Session'];
