@@ -1,12 +1,12 @@
 {
-    "INFORMATIONS": {
-        "name": "English (UK)",
-        "author": "Kuro, Permanently",
-        "version": "1.0.0"
-    },
-    "MESSAGES": {
+	"INFORMATIONS":{
+		"name":"English (UK)",
+		"author":"Kuro, Permanently",
+		"version":"1.0.0"
+	},
+	"MESSAGES":{
         "GLOBAL__HOME": "Home",
-        "GLOBAL__FOOTER": "All rights reserved - 2021 <span class =\"pull-right\"> Powered by <a href=\"http://mineweb.org\"> mineweb.org </a> </span> ",
+        "GLOBAL__FOOTER": "All rights reserved - 2022 <span class =\"pull-right\"> Powered by <a href=\"http://mineweb.org\"> mineweb.org </a> </span> ",
         "GLOBAL__FOOTER_ADMIN": "<p>Developed by <a href=\"http://eywek.fr\">Eywek</a> & designed by <a href=\"http://thisismac.fr\">Mac'</a>.</p><p>Website provided by <a href=\"http://mineweb.org\">MineWeb</a> - All right reserved.</p><p>This CMS must be used only by a person who has purchased the license.</p><ul><li><a href=\"http://mineweb.org\">MineWeb</a></li><li class=\"muted\">·</li><li><a href=\"http://eywek.fr\">Eywek</a></li><li class=\"muted\">·</li><li><a href=\"http://thisismac.fr\">Mac'</a></li></ul>",
         "GLOBAL__JOIN_US": "Join us on",
         "GLOBAL__FORMAT_DATE": "{%day}/{%month}/{%year} at {%hour|24}h{%minutes}",
@@ -56,7 +56,7 @@
         "GLOBAL__DISABLE": "Deactivate",
         "GLOBAL__STATUS": "Status",
         "GLOBAL__ADMIN_OTHER_TITLE": "Others",
-        "GLOBAL__ADMIN_PLUGINS": "Plugins",
+        "GLOBAL__ADMIN_PLUGINS":"Plugins",
         "GLOBAL__UPDATE": "Update",
         "GLOBAL__SLUG": "Custom URL",
         "GLOBAL__GENERATE": "Generate",
@@ -98,6 +98,7 @@
         "GLOBAL__DATE_R_SECOND": "second",
         "GLOBAL__CATEGORY": "Category",
         "GLOBAL__TEMPORALY_DISABLED": "Temporarily disabled",
+        "GLOBAL__ADMIN_LOGS_TITLE": "Logs",
 
         "HELP__TITLE": "I need help",
         "HELP__TICKET_ADD_SUCCESS": "Your ticket has been sent!",
@@ -185,6 +186,7 @@
         "CONFIG__SOCIAL_PREFERENCES": "Social preferences",
         "CONFIG__OTHER_PREFERENCES": "Preferences other",
         "CONFIG__EDIT_SUCCESS": "Configuration successfully changed!",
+        "CONFIG__KEY_WEBSITE_URL": "Site address (With protocol, http/https)",
         "CONFIG__KEY_NAME": "Site Name",
         "CONFIG__KEY_VERSION": "CMS Version",
         "CONFIG__KEY_EMAIL": "Email to send emails to users",
@@ -300,8 +302,8 @@
         "NEWS__WANT_TO_PUBLISH": "Publish?",
 
         "NAVBAR__TITLE": "Navigation bar",
-        "NAVBAR__ICON": "Icons",
-        "NAVBAR__ICON__DESC": "Name of a fa-icon : <a>https://fontawesome.com/v4.7.0/icons/</a> . E.g. 'fas fa-angle-up'",
+        "NAVBAR__ICON":"Icons",
+        "NAVBAR__ICON__DESC":"Name of a fa-icon : <a>https://fontawesome.com/v4.7.0/icons/</a> . E.g. 'fas fa-angle-up'",
         "NAVBAR__OPEN_IN_NEW_TAB": "Open in a new tab",
         "NAVBAR__EDIT_TITLE": "Edit a link",
         "NAVBAR__SAVE_IN_PROGRESS": "Automatic backup...",
@@ -318,7 +320,7 @@
         "NAVBAR__LINK_TYPE_PAGE": "Page",
         "NAVBAR__LINK_TYPE_CUSTOM": "Custom",
 
-        "SEO__TITLE": "SEO",
+        "SEO__TITLE":"SEO",
         "SEO__CALLOUT": "SEO",
         "SEO__CALLOUT_MESSAGE": "Search Engine Optimization (SEO) helps search engines find information about your site and its pages. <br> Default settings will be applied to all pages on your site unless you have changed the information for a particular page.",
         "SEO__TITLE_DEFAULT": "Default Information (For all pages)",
@@ -346,16 +348,16 @@
         "SEO__PAGE_DELETE_SUCCESS": "Page successfully deleted!",
         "SEO__KEEP_EMPTY": "Leave blank to use default values",
 
-        "MOTD__TITLE": "Manage the MOTD",
-        "MOTD__TITLE_DESC": "You can in this section edit the MOTD of all your servers easily and instantly, however you must link your bukkit / bungee (or other fork) server with the MineWeb plugin (in version 3.0.2 or higher) so that your server displayed in this list! <br> In addition you can reset your MOTD so that the config of your server or another plugin can take over!",
-        "MOTD__RESET": "Reset the MOTD",
+        "MOTD__TITLE":"Manage the MOTD",
+        "MOTD__TITLE_DESC":"You can in this section edit the MOTD of all your servers easily and instantly, however you must link your bukkit / bungee (or other fork) server with the MineWeb plugin (in version 3.0.2 or higher) so that your server displayed in this list! <br> In addition you can reset your MOTD so that the config of your server or another plugin can take over!",
+        "MOTD__RESET":"Reset the MOTD",
         "MOTD__EDIT_TITLE": "Edit the Motd",
-        "MOTD__EDIT_SUCCESS": "Motd successfully changed!",
-        "MOTD__RESET_SUCCESS": "Motd successfully reseted!",
-        "MOTD__DESC": "You can modify the 2 lines of your MOTD. If you want to reset the default one, reset this one or don't put anything below!",
-        "MOTD__LINE": "Line",
-        "MOTD__VARIABLES": "Available variables",
-        "MOTD__VARIABLE_PLAYERS": "Number of players online",
+        "MOTD__EDIT_SUCCESS":"Motd successfully changed!",
+        "MOTD__RESET_SUCCESS":"Motd successfully reseted!",
+        "MOTD__DESC":"You can modify the 2 lines of your MOTD. If you want to reset the default one, reset this one or don't put anything below!",
+        "MOTD__LINE":"Line",
+        "MOTD__VARIABLES":"Available variables",
+        "MOTD__VARIABLE_PLAYERS":"Number of players online",
 
         "FORM__UPLOAD_IMAGE": "Send an image",
         "FORM__BROWSE": "Choose file",
@@ -383,8 +385,8 @@
         "USER__LOGIN": "Login",
         "USER__REGISTER": "Register",
         "USER__USERNAME": "Username",
-        "USER__CONDITION_1": "Accept the",
-        "USER__CONDITION_2": "Terms of Service",
+        "USER__CONDITION_1":"Accept the",
+        "USER__CONDITION_2":"Terms of Service",
         "USER__USERNAME_LABEL": "Enter your username",
         "USER__PASSWORD": "Password",
         "USER__PASSWORD_LABEL": "Enter your password",
@@ -430,7 +432,7 @@
         "USER__EDIT_TITLE": "Editing a member",
         "USER__REGISTER_DATE": "Registration date",
         "USER__USERS": "Members",
-        "USER__MEMBERS_REGISTERED": "Registered members",
+        "USER__MEMBERS_REGISTERED":"Registered members",
         "USER__NBR_REGISTERED": "Registered Users",
         "USER__PASSWORD_UPDATE_SUCCESS": "The password has been updated!",
         "USER__EMAIL_UPDATE_SUCCESS": "The email has been updated!",
@@ -460,7 +462,7 @@
         "USER__SECRET_NOT_FOUND": "Information is missing, please reload the page and try again",
         "USER__SUCCESS_ENABLED_TWO_FACTOR_AUTH": "Two-factor authentication has been activated!",
 
-        "HISTORY__CATEGORY_NEWS": "News",
+	    "HISTORY__CATEGORY_NEWS": "News",
         "HISTORY__CATEGORY_VOTE": "Vote",
         "HISTORY__CATEGORY_USER": "User",
         "HISTORY__CATEGORY_CONFIGURATION": "Configuration",
@@ -504,7 +506,7 @@
         "HISTORY__ACTION_UPDATE_PLUGIN": "Updating a plugin",
         "HISTORY__ACTION_UPDATE_THEME": "Updating a theme",
         "HISTORY__ACTION_INSTALL_THEME": "Installing a theme",
-        "HISTORY__ACTION_ADD_SOCIAL": "Adding a button",
+	    "HISTORY__ACTION_ADD_SOCIAL": "Adding a button",
         "HISTORY__ACTION_EDIT_SOCIAL": "Modification of a button",
         "HISTORY__ACTION_DELETE_SOCIAL": "Delete a button",
         "HISTORY__VIEW_GLOBAL": "Site History",
@@ -535,9 +537,10 @@
         "PERMISSIONS__VIEW_STATISTICS": "See the statistics on the admin panel",
         "PERMISSIONS__MANAGE_THEMES": "Manage themes of the site (enable, disable, deletion, installation, customisation)",
         "PERMISSIONS__MANAGE_USERS": "Manage users (delete, edit, see list)",
-        "PERMISSIONS__MANAGE_BANS": "Manage banned users",
+        "PERMISSIONS__MANAGE_BANS":"Manage banned users",
         "PERMISSIONS__SEND_SERVER_COMMAND_FROM_DASHBOARD": "Send commands to the servers from the admin dashboard",
         "PERMISSIONS__VIEW_WEBSITE_HISTORY": "View site history",
+        "PERMISSIONS__VIEW_WEBSITE_LOGS": "View site logs",
 
         "SERVER__TITLE": "Server",
         "SERVER__LINK": "Link server-site",
@@ -678,7 +681,7 @@
         "API__CAPE_FREE": "Cape modifiable by all",
         "API__UPLOAD_SKIN_SUCCESS": "The skin has been saved!",
         "API__UPLOAD_CAPE_SUCCESS": "The cape has been saved!",
-        "API__FILE_SIZE": "File Size (Width by Height)",
+        "API__FILE_SIZE":"File Size (Width by Height)",
         "API__USE_SKIN_RESTORER": "Use SkinRestorer?",
         "API__SKIN_RESTORER_SERVER": "SkinRestorer Server",
         "API__SKIN_RESTORER_SERVER_DESC": "If you are using SkinRestorer you must choose a server where the skin will be put (the server must be linked with the link plugin)",
@@ -697,8 +700,8 @@
         "BAN__BAN": "Banned",
         "BAN__EXPLICATION": "You have been banned for ",
         "BAN__IP_EXPLICATION": "Your IP have been banned for ",
-        "BAN__IS_BAN_IP": "The IP have been banned ?",
-        "BAN__NOT_BAN_IP": "The IP is not banned",
+        "BAN__IS_BAN_IP" : "The IP have been banned ?",
+        "BAN__NOT_BAN_IP" : "The IP is not banned",
 
         "SOCIAL__TITLE": "Manage social networks",
         "SOCIAL__HOME": "Social networks",
@@ -723,6 +726,11 @@
         "SOCIAL__CANNOT_TOW_TYPE": "There cannot be 2 types of illustrations defined at the same time!",
         "SOCIAL__BUTTON_SUCCESS": "The button was created successfully!",
         "SOCIAL__BUTTON_EDIT_SUCCESS": "The button has been edited successfully!",
-        "SOCIAL__BUTTON_DELETE_SUCCESS": "The button was deleted successfully!"
-    }
+        "SOCIAL__BUTTON_DELETE_SUCCESS": "The button was deleted successfully!",
+
+        "LOG__VIEW_ERROR": "Error logs",
+        "LOG__VIEW_DEBUG": "Debug logs",
+        "LOG__NO_ERROR": "There are no errors",
+        "LOG__NO_DEBUG": "There are no debugs"
+	}
 }
