@@ -471,6 +471,7 @@
         "HISTORY__ACTION_DELETE_MEMBER": "Suppression d'un utilisateur",
         "HISTORY__ACTION_EDIT_USER": "Modification d'un utilisateur",
         "HISTORY__ACTION_ADD_MEMBER": "Ajout d'un membre",
+        "HISTORY__ACTION_RESET_PASSWORD": "Réinitialisation du mot de passe",
         "HISTORY__ACTION_ADD_NEWS": "Ajout d'une news",
         "HISTORY__ACTION_EDIT_NEWS": "Modification d'une news",
         "HISTORY__ACTION_DELETE_NEWS": "Suppression d'une news",
