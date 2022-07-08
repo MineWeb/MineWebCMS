@@ -120,7 +120,7 @@
                                     <?php } ?>
                                     <li class="divider"></li>
                                     <li>
-                                        <a href="<?= $this->Html->url(['controller' => 'user', 'action' => 'logout', 'plugin' => false]) ?>"><?= $Lang->get('USER__LOGOUT') ?></a>
+                                        <a href="<?= $connected_by_microsoft ? $logout_microsoft_user_url : $this->Html->url(['controller' => 'user', 'action' => 'logout', 'plugin' => false]) ?>"><?= $Lang->get('USER__LOGOUT') ?></a>
                                     </li>
                                 <?php } else { ?>
                                     <li><a href="#" data-toggle="modal"

@@ -106,7 +106,7 @@ class User extends AppModel
             return 'LOGIN__BLOCKED';
 
         $username = $user['pseudo'];
-        if ($user['password'] != $UtilComponent->password($data['password'], $username, $user['password'], $user['password_hash']))
+        if (!$user['microsoft_connection'] && $user['password'] != $UtilComponent->password($data['password'], $username, $user['password'], $user['password_hash']))
             return 'USER__ERROR_INVALID_CREDENTIALS';
         $LoginRetryTable->deleteAll(['ip' => $ip]);
         $conditions = [];

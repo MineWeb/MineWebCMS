@@ -86,6 +86,8 @@ class AppSchema extends CakeSchema
         'passwords_salt' => ['type' => 'integer', 'null' => true, 'default' => 0, 'length' => 1, 'unsigned' => false],
         'forced_updates' => ['type' => 'integer', 'null' => true, 'default' => 1, 'length' => 1, 'unsigned' => false],
         'session_type' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 10, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
+        'microsoft_client_id' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+        'microsoft_client_secret' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
         'indexes' => [
             'PRIMARY' => ['column' => 'id', 'unique' => 1]
         ],
@@ -290,6 +292,8 @@ class AppSchema extends CakeSchema
     ];
     public $users = [
         'id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'],
+        'microsoft_user_id' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+        'registered_by_microsoft' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
         'pseudo' => ['type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'uuid' => ['type' => 'string', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'password' => ['type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
@@ -430,7 +434,9 @@ class AppSchema extends CakeSchema
                     'passwords_hash' => 'blowfish',
                     'passwords_salt' => 0,
                     'forced_updates' => 1,
-                    'session_type' => 'php'
+                    'session_type' => 'php',
+                    'microsoft_client_id' => null,
+                    'microsoft_client_secret' => null,
                 ]);
 
                 $configuration->save();

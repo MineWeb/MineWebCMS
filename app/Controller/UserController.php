@@ -66,9 +66,11 @@ class UserController extends AppController
                         if ($event->isStopped()) {
                             return $event->result;
                         }
-                        // on enregistre
+                        // we record
+                        $this->request->data['microsoft_user_id'] = null;
+                        $this->request->data['registered_by_microsoft'] = false;
                         $userSession = $this->User->register($this->request->data, $this->Util);
-                        // On envoie le mail de confirmation si demandé
+                        // We send the mail if in the configuration it is activated
                         if ($this->Configuration->getKey('confirm_mail_signup')) {
                             $confirmCode = substr(md5(uniqid()), 0, 12);
                             $emailMsg = $this->Lang->get('EMAIL__CONTENT_CONFIRM_MAIL', [
@@ -218,6 +220,8 @@ class UserController extends AppController
                 if (filter_var($this->request->data['email'], FILTER_VALIDATE_EMAIL)) {
                     $search = $this->User->find('first', ['conditions' => ['email' => $this->request->data['email']]]);
                     if (!empty($search)) {
+                        if ($search['User']['registered_by_microsoft'])
+                            return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('USER__AUTH_MICROSOFT_CANNOT_RESET_PASSWORD')]));
                         $this->loadModel('Lostpassword');
                         $key = substr(md5(rand() . date('sihYdm')), 0, 10);
                         $to = $this->request->data['email'];
@@ -225,7 +229,7 @@ class UserController extends AppController
                         $message = $this->Lang->get('USER__PASSWORD_RESET_EMAIL_CONTENT', [
                             '{EMAIL}' => $this->request->data['email'],
                             '{PSEUDO}' => $search['User']['pseudo'],
-                            '{LINK}' =>  $this->Configuration->getKey('website_url') . "/?resetpasswd_$key"
+                            '{LINK}' => $this->Configuration->getKey('website_url') . "/?resetpasswd_$key"
                         ]);
                         $event = new CakeEvent('beforeSendResetPassMail', $this, ['user_id' => $search['User']['id'], 'key' => $key]);
                         $this->getEventManager()->dispatch($event);
@@ -315,6 +319,11 @@ class UserController extends AppController
         if ($event->isStopped()) {
             return $event->result;
         }
+
+        if ($this->Cookie->read('microsoft_user_id')) {
+            $this->Cookie->delete('microsoft_user_id');
+        }
+
         if ($this->Cookie->read('remember_me')) {
             $this->Cookie->delete('remember_me');
         }
@@ -471,6 +480,11 @@ class UserController extends AppController
             if ($this->Configuration->getKey('confirm_mail_signup') && !empty($confirmed) && date('Y-m-d H:i:s', strtotime($confirmed)) != $confirmed) { // si ca ne correspond pas à une date -> compte non confirmé
                 $this->Session->setFlash($this->Lang->get('USER__MSG_NOT_CONFIRMED_EMAIL', ['{URL_RESEND_EMAIL}' => Router::url(['action' => 'resend_confirmation'])]), 'default.warning');
             }
+            $connected_by_microsoft = false;
+            $microsoft_user_id = $this->Cookie->read('microsoft_user_id');
+            if (isset($microsoft_user_id))
+                $connected_by_microsoft = true;
+            $this->set(compact('connected_by_microsoft'));
         } else {
             $this->redirect('/');
         }

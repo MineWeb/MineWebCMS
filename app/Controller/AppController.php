@@ -65,7 +65,7 @@ class AppController extends Controller
                     'admin' => false
                 ]);
             }
-    
+
             $this->loadModel("Maintenance");
             if ($this->params['controller'] != "maintenance" and !$this->Permissions->can("BYPASS_MAINTENANCE") and $maintenance = $this->Maintenance->checkMaintenance($this->here, $this->Util)) {
                 $this->redirect([
@@ -214,7 +214,7 @@ class AppController extends Controller
         $this->Security->csrfUseOnce = false;
 
         $token = $this->Session->read('_Token');
-        if (empty($token) || empty($token['key'])) { 
+        if (empty($token) || empty($token['key'])) {
             $this->Security->generateToken($this->request);
             $csrfToken = $this->Session->read('_Token')['key'];
         } else {
@@ -254,7 +254,16 @@ class AppController extends Controller
         if (!empty($user))
             $user['isAdmin'] = $this->User->isAdmin();
 
-        $this->set(compact('user'));
+        $microsoft_user_id = $this->Cookie->read('microsoft_user_id');
+        $microsoft_logout_redirect_uri = urlencode(Router::url('/user/logout', true));
+        $microsoft_login_redirect_uri = urlencode(Router::url('/microsoft/auth', true));
+        $microsoft_client_id = $this->Configuration->getKey('microsoft_client_id');
+        $allow_microsoft_connection = $microsoft_client_id && $this->Configuration->getKey('check_uuid');
+        $logout_microsoft_user_url = "https://login.live.com/oauth20_logout.srf?client_id=$microsoft_client_id&redirect_uri=$microsoft_logout_redirect_uri";
+
+        $microsoft_connection_url = "https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=$microsoft_client_id&response_type=code&scope=XboxLive.signin%20User.Read%20offline_access&redirect_uri=$microsoft_login_redirect_uri";
+
+        $this->set(compact('user', 'microsoft_user_id', 'logout_microsoft_user_url', 'microsoft_connection_url', 'allow_microsoft_connection'));
     }
 
     public function __initWebsiteInfos()
@@ -700,7 +709,8 @@ class AppController extends Controller
         return $this->response->body(json_encode($data));
     }
 
-    public function isIPBan($ip) {
+    public function isIPBan($ip)
+    {
         $this->loadModel("Ban");
         $ipIsBan = $this->Ban->find('first', ['conditions' => ['ip' => $ip]]);
 
