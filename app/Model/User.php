@@ -64,7 +64,7 @@ class User extends AppModel
         $data_to_save['pseudo'] = htmlentities($data['pseudo']);
         $data_to_save['email'] = htmlentities($data['email']);
 
-        $data_to_save['ip'] = isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? htmlentities($_SERVER["HTTP_CF_CONNECTING_IP"]) : $_SERVER["REMOTE_ADDR"];
+        $data_to_save['ip'] = $UtilComponent->getIP();
         $data_to_save['rank'] = 0;
 
         $data_to_save['uuid'] = htmlentities($data['uuid']);
