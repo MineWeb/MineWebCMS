@@ -21,7 +21,7 @@ class MicroSoftController extends AppController
 
         $microsoft_token_url = "https://login.live.com/oauth20_token.srf";
 
-        $xbox_result = json_decode($this->Util->http_post($microsoft_token_url, "client_id=" . $microsoft_client_id . "&client_secret=" . $microsoft_client_secret . "&scope=XboxLive.signin%20&code=" . $microsoft_code . "&grant_type=authorization_code&redirect_uri=$microsoft_redirect_uri", ['Content-Type: application/x-www-form-urlencoded']), true);
+        $xbox_result = json_decode($this->Util->sendHTTPPostRequest($microsoft_token_url, "client_id=" . $microsoft_client_id . "&client_secret=" . $microsoft_client_secret . "&scope=XboxLive.signin%20&code=" . $microsoft_code . "&grant_type=authorization_code&redirect_uri=$microsoft_redirect_uri", ['Content-Type: application/x-www-form-urlencoded']), true);
         $xbox_user_id = $xbox_result["user_id"];
         $xbox_access_token = $xbox_result["access_token"];
 
@@ -30,9 +30,9 @@ class MicroSoftController extends AppController
         if (!isset($xbox_user_id) || !isset($xbox_access_token) | !isset($xbox_refresh_token))
             return $this->redirect($this->referer());
 
-        $microsoft_result = json_decode($this->Util->http_post($microsoft_token_url, "client_id=" . $microsoft_client_id . "&client_secret=" . $microsoft_client_secret . "&scope=User.Read&refresh_token=" . $xbox_refresh_token . "&grant_type=refresh_token&redirect_uri=$microsoft_redirect_uri", ['Content-Type: application/x-www-form-urlencoded']), true);
+        $microsoft_result = json_decode($this->Util->sendHTTPPostRequest($microsoft_token_url, "client_id=" . $microsoft_client_id . "&client_secret=" . $microsoft_client_secret . "&scope=User.Read&refresh_token=" . $xbox_refresh_token . "&grant_type=refresh_token&redirect_uri=$microsoft_redirect_uri", ['Content-Type: application/x-www-form-urlencoded']), true);
         $microsoft_access_token = $microsoft_result["access_token"];
-        $microsoft_emails = json_decode($this->Util->http_get('https://graph.microsoft.com/v1.0/users?$select=identities', ["Authorization: Bearer $microsoft_access_token", 'Content-Type: application/json']), true);
+        $microsoft_emails = json_decode($this->Util->sendHTTPGetRequest('https://graph.microsoft.com/v1.0/users?$select=identities', ["Authorization: Bearer $microsoft_access_token", 'Content-Type: application/json']), true);
         $microsoft_email = $microsoft_emails["value"][0]["userPrincipalName"];
         if (!isset($microsoft_email))
             return $this->redirect($this->referer());
@@ -49,7 +49,7 @@ class MicroSoftController extends AppController
                 "RelyingParty" => "http://auth.xboxlive.com",
                 "TokenType" => "JWT"
             ];
-            $xbl_result = json_decode($this->Util->http_post("https://user.auth.xboxlive.com/user/authenticate", json_encode($xbl_params), ['Content-Type: application/json', 'Accept: application/json']), true);
+            $xbl_result = json_decode($this->Util->sendHTTPPostRequest("https://user.auth.xboxlive.com/user/authenticate", json_encode($xbl_params), ['Content-Type: application/json', 'Accept: application/json']), true);
             $xbl_token = $xbl_result["Token"];
             $xbl_uhs = $xbl_result["DisplayClaims"]["xui"][0]["uhs"];
 
@@ -64,16 +64,16 @@ class MicroSoftController extends AppController
                 "TokenType" => "JWT"
             ];
 
-            $xsts_result = json_decode($this->Util->http_post("https://xsts.auth.xboxlive.com/xsts/authorize", json_encode($xsts_params), ['Content-Type: application/json', 'Accept: application/json']), true);
+            $xsts_result = json_decode($this->Util->sendHTTPPostRequest("https://xsts.auth.xboxlive.com/xsts/authorize", json_encode($xsts_params), ['Content-Type: application/json', 'Accept: application/json']), true);
             $xsts_token = $xsts_result["Token"];
             $mc_params = [
                 "identityToken" => "XBL3.0 x=" . $xbl_uhs . ";" . $xsts_token
             ];
 
-            $mc_result = json_decode($this->Util->http_post("https://api.minecraftservices.com/authentication/login_with_xbox", json_encode($mc_params), ['Content-Type: application/json', 'Accept: application/json']), true);
+            $mc_result = json_decode($this->Util->sendHTTPPostRequest("https://api.minecraftservices.com/authentication/login_with_xbox", json_encode($mc_params), ['Content-Type: application/json', 'Accept: application/json']), true);
             $mc_token = $mc_result["access_token"];
 
-            $mc_profile = json_decode($this->Util->http_get("https://api.minecraftservices.com/minecraft/profile", ["Authorization: Bearer $mc_token"]), true);
+            $mc_profile = json_decode($this->Util->sendHTTPGetRequest("https://api.minecraftservices.com/minecraft/profile", ["Authorization: Bearer $mc_token"]), true);
             $uuid = $mc_profile["id"];
             if (!isset($uuid)) {
                 $this->Session->setFlash($this->Lang->get('USER__AUTH_MICROSOFT_DOESNT_HAVE_MINECRAFT'), 'default.error');
