@@ -494,6 +494,7 @@
        "HISTORY__ACTION_DELETE_MEMBER": "Удаление пользователя",
        "HISTORY__ACTION_EDIT_USER": "Редактирование пользователя",
        "HISTORY__ACTION_ADD_MEMBER": "Добавление участника",
+       "HISTORY__ACTION_RESET_PASSWORD": "Сброс пароля",
        "HISTORY__ACTION_ADD_NEWS": "Добавление новостей",
        "HISTORY__ACTION_EDIT_NEWS": "Редактирование новостей",
        "HISTORY__ACTION_DELETE_NEWS": "Удаление новости",

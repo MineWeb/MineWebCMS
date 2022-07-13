@@ -467,7 +467,7 @@
         "USER__VALID_CODE": "Enable two-factor authentication",
         "USER__SECRET_NOT_FOUND": "Information is missing, please reload the page and try again",
         "USER__SUCCESS_ENABLED_TWO_FACTOR_AUTH": "Two-factor authentication has been activated!",
-
+	
         "USER__AUTH_MICROSOFT_CANNOT_RESET_PASSWORD": "You cannot reset the password for a Microsoft-registered account!",
         "USER__AUTH_MICROSOFT_DOESNT_HAVE_MINECRAFT": "You don't have minecraft on this microsoft account!",
         "USER__AUTH_MICROSOFT_USERNAME_ALREADY_EXIST": "This nickname already exists with another UUID, please contact the administration.",
@@ -492,6 +492,7 @@
         "HISTORY__ACTION_DELETE_MEMBER": "Deleting a user",
         "HISTORY__ACTION_EDIT_USER": "Editing a user",
         "HISTORY__ACTION_ADD_MEMBER": "Adding a member",
+        "HISTORY__ACTION_RESET_PASSWORD": "Reset password",
         "HISTORY__ACTION_ADD_NEWS": "Adding a news",
         "HISTORY__ACTION_EDIT_NEWS": "Editing a news",
         "HISTORY__ACTION_DELETE_NEWS": "Deleting a news",
@@ -518,7 +519,7 @@
         "HISTORY__ACTION_UPDATE_PLUGIN": "Updating a plugin",
         "HISTORY__ACTION_UPDATE_THEME": "Updating a theme",
         "HISTORY__ACTION_INSTALL_THEME": "Installing a theme",
-	"HISTORY__ACTION_ADD_SOCIAL": "Adding a button",
+	    "HISTORY__ACTION_ADD_SOCIAL": "Adding a button",
         "HISTORY__ACTION_EDIT_SOCIAL": "Modification of a button",
         "HISTORY__ACTION_DELETE_SOCIAL": "Delete a button",
         "HISTORY__VIEW_GLOBAL": "Site History",
