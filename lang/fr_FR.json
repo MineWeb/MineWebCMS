@@ -227,6 +227,10 @@
         "CONFIG__KEY_SESSION_TYPE_DB":"Base de données",
         "CONFIG__CHECK_UUID":"Permettre aux utilisateurs seulement premium de s'inscrire",
         "CONFIG__CHECK_UUID_CHANGE":"Ainsi que l'activation de la sauvegarde des UUID pour changer automatiquement le pseudo du joueur ?",
+        "CONFIG__MICROSOFT_CONNECTION": "Permettre la connexion par Microsoft pour les joueurs premium",
+        "CONFIG__MICROSOFT_CONNECTION_REQUIREMENT": "Vous devez obligatoire n'autoriser que les joueurs premium à s'inscrire pour utiliser Microsoft !",
+        "CONFIG__MICROSOFT_CLIENT_ID": "Identifiant de l'application",
+        "CONFIG__MICROSOFT_CLIENT_SECRET": "Identifiant secret de l'application",
 
         "EMAIL__TITLE_CONFIRM_MAIL": "Confirmer votre email",
         "EMAIL__CONTENT_CONFIRM_MAIL": "Salut {USERNAME} ! <br> Tu t'es inscrit le {DATE} avec l'IP <b>{IP}<\/b>, tu dois confirmer ton email en te rendant sur ce lien <a href=\"{LINK}\">{LINK}<\/a>.<br><br><br>Cet email est automatique, inutile d'y répondre.",
@@ -453,6 +457,13 @@
         "USER__VALID_CODE": "Activer la double authentification",
         "USER__SECRET_NOT_FOUND": "Des informations sont manquantes, veuillez recharger la page et réessayer",
         "USER__SUCCESS_ENABLED_TWO_FACTOR_AUTH": "La double authentification a bien été activée !",
+
+        "USER__AUTH_MICROSOFT_CANNOT_RESET_PASSWORD": "Vous ne pouvez pas réinitialiser le mot de passe d'un compte enregistré par microsoft !",
+        "USER__AUTH_MICROSOFT_DOESNT_HAVE_MINECRAFT": "Vous n'avez pas minecraft sur ce compte microsoft !",
+        "USER__AUTH_MICROSOFT_USERNAME_ALREADY_EXIST": "Ce pseudo existe déjà avec un autre UUID, veuillez contacter l'administration.",
+        "USER__AUTH_MICROSOFT_USER_ALREADY_LINK": "Ce compte minecraft a déjà un compte microsoft de lié !",
+        "USER__AUTH_MICROSOFT_LOGIN_WITH_MICROSOFT": "Se connecter avec Microsoft",
+        "USER__AUTH_MICROSOFT_REGISTER_WITH_MICROSOFT": "S'inscrire avec Microsoft",
 
         "HISTORY__CATEGORY_NEWS": "News",
         "HISTORY__CATEGORY_VOTE": "Vote",

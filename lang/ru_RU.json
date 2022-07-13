@@ -238,6 +238,10 @@
        "CONFIG__KEY_SESSION_TYPE_DB": "База данных",
        "CONFIG__CHECK_UUID" : "Разрешить регистрацию только премиум-пользователям" ,
        "CONFIG__CHECK_UUID_CHANGE" : "Помимо активации резервной копии UUID для автоматического изменения никнейма игрока?" ,
+       "CONFIG__MICROSOFT_CONNECTION": "Разрешить вход через Microsoft для премиум-игроков",
+       "CONFIG__MICROSOFT_CONNECTION_REQUIREMENT": "Вы должны разрешать только премиум-игрокам регистрироваться для использования Microsoft!",
+       "CONFIG__MICROSOFT_CLIENT_ID": "Идентификатор приложения",
+       "CONFIG__MICROSOFT_CLIENT_SECRET": "Идентификатор секрета приложения",
         
        "EMAIL__TITLE_CONFIRM_MAIL": "Подтвердите свою электронную почту",
        "EMAIL__CONTENT_CONFIRM_MAIL": "Здравствуйте, {USERNAME}! <br> Вы зарегистрированы на {DATE} с IP-адресом <b> {IP} </b>, вам необходимо подтвердить свой адрес электронной почты, перейдя по этой ссылке <a href=\"{LINK}\">{LINK}</a>. <br> <br> <br> Это письмо автоматически, пожалуйста, не отвечайте.",
@@ -464,7 +468,14 @@
        "USER__LOGIN_CODE_INVALID" : "Код недействителен" ,
        "USER__VALID_CODE" : "Включить двухфакторную аутентификацию" ,
        "USER__SECRET_NOT_FOUND" : "Информация отсутствует, перезагрузите страницу и повторите попытку" ,
-       "USER__SUCCESS_ENABLED_TWO_FACTOR_AUTH" : "Двухфакторная аутентификация активирована!" ,
+       "USER__SUCCESS_ENABLED_TWO_FACTOR_AUTH" : "Двухфакторная аутентификация активирована!",
+
+       "USER__AUTH_MICROSOFT_CANNOT_RESET_PASSWORD": "Вы не можете сбросить пароль для учетной записи, зарегистрированной в Microsoft!",
+       "USER__AUTH_MICROSOFT_DOESNT_HAVE_MINECRAFT": "У вас нет майнкрафта на этой учетной записи майкрософт!",
+       "USER__AUTH_MICROSOFT_USERNAME_ALREADY_EXIST": "Этот никнейм уже существует с другим UUID, свяжитесь с администрацией.",
+       "USER__AUTH_MICROSOFT_USER_ALREADY_LINK": "К этой учетной записи Minecraft уже привязана учетная запись Microsoft!",
+       "USER__AUTH_MICROSOFT_LOGIN_WITH_MICROSOFT": "Войти с помощью Майкрософт",
+       "USER__AUTH_MICROSOFT_REGISTER_WITH_MICROSOFT": "Зарегистрироваться в Майкрософт",
 		
        "HISTORY__CATEGORY_NEWS": "Новости",
        "HISTORY__CATEGORY_VOTE": "Голосовать",

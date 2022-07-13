@@ -160,6 +160,33 @@
                                     </div>
 
                                     <hr>
+
+                                    <div class="form-group">
+                                        <label><?= $Lang->get('CONFIG__MICROSOFT_CONNECTION') ?></label>
+                                        <br>
+                                        <small class="text-danger"><?= $Lang->get('CONFIG__MICROSOFT_CONNECTION_REQUIREMENT') ?></small>
+                                        <br>
+
+                                        <label><?= $Lang->get('CONFIG__MICROSOFT_CLIENT_ID') ?></label>
+                                        <?= $this->Form->input(false, array(
+                                            'div' => false,
+                                            'type' => 'text',
+                                            'name' => 'microsoft_client_id',
+                                            'class' => 'form-control',
+                                            'value' => $config['microsoft_client_id']
+                                        )); ?>
+
+                                        <label><?= $Lang->get('CONFIG__MICROSOFT_CLIENT_SECRET') ?></label>
+                                        <?= $this->Form->input(false, array(
+                                            'div' => false,
+                                            'type' => 'text',
+                                            'name' => 'microsoft_client_secret',
+                                            'class' => 'form-control',
+                                            'value' => $config['microsoft_client_secret']
+                                        )); ?>
+                                    </div>
+
+                                    <hr>
                                     <div class="form-group">
                                         <div class="form-group">
                                             <label><?= $Lang->get('CONFIG__CONDITION_TITLE') ?></label>
