@@ -461,8 +461,15 @@
         "USER__VALID_CODE": "Enable two-factor authentication",
         "USER__SECRET_NOT_FOUND": "Information is missing, please reload the page and try again",
         "USER__SUCCESS_ENABLED_TWO_FACTOR_AUTH": "Two-factor authentication has been activated!",
+ 	
+	"USER__AUTH_MICROSOFT_CANNOT_RESET_PASSWORD": "You cannot reset the password for a Microsoft-registered account!",
+        "USER__AUTH_MICROSOFT_DOESNT_HAVE_MINECRAFT": "You don't have minecraft on this microsoft account!",
+        "USER__AUTH_MICROSOFT_USERNAME_ALREADY_EXIST": "This nickname already exists with another UUID, please contact the administration.",
+        "USER__AUTH_MICROSOFT_USER_ALREADY_LINK": "This minecraft account already has a linked microsoft account!",
+        "USER__AUTH_MICROSOFT_LOGIN_WITH_MICROSOFT": "Sign in with Microsoft",
+        "USER__AUTH_MICROSOFT_REGISTER_WITH_MICROSOFT": "Register with Microsoft",
 
-	    "HISTORY__CATEGORY_NEWS": "News",
+        "HISTORY__CATEGORY_NEWS": "News",
         "HISTORY__CATEGORY_VOTE": "Vote",
         "HISTORY__CATEGORY_USER": "User",
         "HISTORY__CATEGORY_CONFIGURATION": "Configuration",
