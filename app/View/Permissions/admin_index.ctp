@@ -77,8 +77,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('USER__RANK_ADD') ?></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
             <div class="modal-body">
                 <form action="<?= $this->Html->url(['action' => 'add_rank']) ?>" method="post" data-ajax="true"
@@ -88,8 +88,8 @@
                         <input type="text" class="form-control" name="name"
                                placeholder="<?= $Lang->get('GLOBAL__NAME') ?>">
                         <span class="input-group-btn">
-              <button class="btn btn-info btn-flat" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
-            </span>
+                            <button class="btn btn-info btn-flat" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
+                        </span>
                     </div>
                 </form>
             </div>
