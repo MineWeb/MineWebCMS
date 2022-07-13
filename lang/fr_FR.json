@@ -541,7 +541,7 @@
         "PERMISSIONS__VIEW_STATISTICS": "Voir les statistiques sur le panel admin",
         "PERMISSIONS__MANAGE_THEMES":"Gérer les thèmes du site (activation, désactivation, suppression, installation, customisation)",
         "PERMISSIONS__MANAGE_USERS":"Gérer les utilisateurs (suppression, édition, voir la liste)",
-        "PERMISSIONS__MANAGE_BANS":"Gérer les utilisateurs bannis",
+        "PERMISSIONS__MANAGE_BAN":"Gérer les utilisateurs bannis",
         "PERMISSIONS__MANAGE_SOCIAL":"Gérer les boutons des réseaux sociaux",
         "PERMISSIONS__SEND_SERVER_COMMAND_FROM_DASHBOARD":"Envoyer des commandes aux serveurs depuis le dashboard admin.",
         "PERMISSIONS__VIEW_WEBSITE_HISTORY": "Voir l'historique du site",
