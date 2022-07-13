@@ -461,7 +461,6 @@
         "USER__VALID_CODE": "Enable two-factor authentication",
         "USER__SECRET_NOT_FOUND": "Information is missing, please reload the page and try again",
         "USER__SUCCESS_ENABLED_TWO_FACTOR_AUTH": "Two-factor authentication has been activated!",
- 	
 	"USER__AUTH_MICROSOFT_CANNOT_RESET_PASSWORD": "You cannot reset the password for a Microsoft-registered account!",
         "USER__AUTH_MICROSOFT_DOESNT_HAVE_MINECRAFT": "You don't have minecraft on this microsoft account!",
         "USER__AUTH_MICROSOFT_USERNAME_ALREADY_EXIST": "This nickname already exists with another UUID, please contact the administration.",
