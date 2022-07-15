@@ -57,11 +57,18 @@
                     if (btn.is(':checked')) {
                         $('body').addClass("dark-mode");
                     } else {
-
                         $('body').removeClass("dark-mode");
                     }
 
                     $.get('<?= $this->Html->url(['action' => 'switchAdminDarkMode', 'controller' => 'admin', 'admin' => true]) ?>');
+
+                    // Update TinyMCE
+                    if ($("#editor").length) {
+                        tinymce.remove("#editor");
+                        tinyParams.skin = btn.is(":checked") ? 'oxide-dark' : "";
+                        tinyParams.content_css = btn.is(":checked") ? "dark" : "";
+                        tinymce.init(tinyParams);
+                    }
 
                     return false;
                 });
@@ -217,6 +224,23 @@
             <?= (isset($admin_custom_message['messageHTML'])) ? $admin_custom_message['messageHTML'] : '' ?>
             <?php echo $this->Session->flash(); ?>
         </section>
+
+        <script type="text/javascript">
+            let tinyParams = {
+                selector: "textarea",
+                height: 300,
+                width: '100%',
+                language: 'fr_FR',
+                plugins: "code image link",
+                toolbar: "fontselect fontsizeselect bold italic underline strikethrough link image forecolor backcolor alignleft aligncenter alignright alignjustify cut copy paste bullist numlist outdent indent blockquote code"
+            };
+            <?php
+            if ($admin_dark_mode) { ?>
+            tinyParams.skin = 'oxide-dark';
+            tinyParams.content_css = "dark";
+            <?php }
+            ?>
+        </script>
 
         <?php echo $this->fetch('content'); ?>
     </div>
