@@ -225,6 +225,23 @@
             <?php echo $this->Session->flash(); ?>
         </section>
 
+        <script type="text/javascript">
+            let tinyParams = {
+                selector: "textarea",
+                height: 300,
+                width: '100%',
+                language: 'fr_FR',
+                plugins: "code image link",
+                toolbar: "fontselect fontsizeselect bold italic underline strikethrough link image forecolor backcolor alignleft aligncenter alignright alignjustify cut copy paste bullist numlist outdent indent blockquote code"
+            };
+            <?php
+            if ($admin_dark_mode) { ?>
+            tinyParams.skin = 'oxide-dark';
+            tinyParams.content_css = "dark";
+            <?php }
+            ?>
+        </script>
+
         <?php echo $this->fetch('content'); ?>
     </div>
 
