@@ -38,14 +38,23 @@
                         <div class="form-group">
                             <?= $this->Html->script('admin/tinymce/tinymce.min.js') ?>
                             <script type="text/javascript">
-                                tinymce.init({
+                                let tinyParams = {
                                     selector: "textarea",
                                     height: 300,
                                     width: '100%',
                                     language: 'fr_FR',
-                                    plugins: "textcolor code image link",
+                                    plugins: "code image link",
                                     toolbar: "fontselect fontsizeselect bold italic underline strikethrough link image forecolor backcolor alignleft aligncenter alignright alignjustify cut copy paste bullist numlist outdent indent blockquote code"
-                                });
+                                };
+
+                                <?php
+                                if ($admin_dark_mode) { ?>
+                                    tinyParams.skin = 'oxide-dark';
+                                    tinyParams.content_css = "dark";
+                                <?php }
+                                ?>
+
+                                tinymce.init(tinyParams);
                             </script>
                             <textarea id="editor" name="content" cols="30" rows="10"><?= $page['content'] ?></textarea>
                         </div>

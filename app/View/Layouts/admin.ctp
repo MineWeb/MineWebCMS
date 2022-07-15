@@ -57,11 +57,18 @@
                     if (btn.is(':checked')) {
                         $('body').addClass("dark-mode");
                     } else {
-
                         $('body').removeClass("dark-mode");
                     }
 
                     $.get('<?= $this->Html->url(['action' => 'switchAdminDarkMode', 'controller' => 'admin', 'admin' => true]) ?>');
+
+                    // Update TinyMCE
+                    if ($("#editor").length) {
+                        tinymce.remove("#editor");
+                        tinyParams.skin = btn.is(":checked") ? 'oxide-dark' : "";
+                        tinyParams.content_css = btn.is(":checked") ? "dark" : "";
+                        tinymce.init(tinyParams);
+                    }
 
                     return false;
                 });
