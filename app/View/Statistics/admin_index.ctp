@@ -119,7 +119,7 @@ foreach ($pages as $page => $visitcount) {
                     <h3 class="card-title"><?= $Lang->get('GLOBAL__VISITORS') ?></h3>
                 </div>
                 <div class="card-body">
-                    <?= $this->Html->script('chart.js/highcharts.js') ?>
+                    <?= $this->Html->script('highcharts.js') ?>
                     <div id="visits"></div>
                 </div>
             </div>
