@@ -51,10 +51,11 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
                                 <?php
-                                if (!empty($custom_ranks)) {
-                                    foreach ($custom_ranks as $k => $data) {
+                                if (!empty($all_ranks)) {
+                                    foreach ($all_ranks as $k => $data) {
+                                        if ($data['Rank']['rank_id'] < 5)
+                                            continue;
                                         echo '<td><a class="btn btn-danger" href="' . $this->Html->url(['controller' => 'permissions', 'action' => 'delete_rank', 'admin' => true, $data['Rank']['rank_id']]) . '">' . $Lang->get('GLOBAL__DELETE') . '</a></td>';
                                     }
                                 }
