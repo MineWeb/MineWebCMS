@@ -346,10 +346,10 @@ class ThemeComponent extends CakeObject
 
     private function getThemeFromAPI($slug)
     {
-        if (isset($this->themesAvailable['all']))
-            foreach ($this->themesAvailable['all'] as $theme)
-                if (strtolower($theme['slug']) === strtolower($slug))
-                    return $theme;
+        if (isset($this->themesAvailable['all'])) foreach ($this->themesAvailable['all'] as $theme) {
+            if(empty($theme['slug'])) continue;
+            if (strtolower($theme['slug']) === strtolower($slug)) return $theme;
+        }
         return false;
     }
 
