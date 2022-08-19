@@ -230,7 +230,9 @@
                 selector: "textarea",
                 height: 300,
                 width: "100%",
-                language: "<?= (strpos($config_lang, 'en') !== 0) ? $config_lang : '' ?>",
+                <?php if((strpos($config_lang, 'en') !== 0)) {
+                    echo "language: '".$config_lang."',\n";
+                } ?>
                 plugins: "code image link",
                 toolbar: "fontselect fontsizeselect bold italic underline strikethrough link image forecolor backcolor alignleft aligncenter alignright alignjustify cut copy paste bullist numlist outdent indent blockquote code"
             };
