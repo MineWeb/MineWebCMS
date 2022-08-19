@@ -156,16 +156,11 @@ class AppController extends Controller
             ]);
         }
 
-        // partie sociale
-        $facebook_link = $this->Configuration->getKey('facebook');
-        $skype_link = $this->Configuration->getKey('skype');
-        $youtube_link = $this->Configuration->getKey('youtube');
-        $twitter_link = $this->Configuration->getKey('twitter');
-
         // Variables
         $google_analytics = $this->Configuration->getKey('google_analytics');
         $configuration_end_code = $this->Configuration->getKey('end_layout_code');
         $condition = $this->Configuration->getKey('condition');
+        $config_lang = $this->Configuration->getKey('lang');
 
         $this->loadModel('SocialButton');
         $findSocialButtons = $this->SocialButton->find('all', ['order' => 'order']);
@@ -189,12 +184,9 @@ class AppController extends Controller
             'reCaptcha',
             'captcha',
             'condition',
+            'config_lang',
             'website_name',
             'theme_config',
-            'facebook_link',
-            'skype_link',
-            'youtube_link',
-            'twitter_link',
             'findSocialButtons',
             'google_analytics',
             'configuration_end_code'
