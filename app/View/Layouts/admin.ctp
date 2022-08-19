@@ -230,7 +230,7 @@
                 selector: "textarea",
                 height: 300,
                 width: "100%",
-                language: "<?= $config_lang ?>",
+                language: "<?= (strpos($config_lang, 'en') !== 0) ? $config_lang : '' ?>",
                 plugins: "code image link",
                 toolbar: "fontselect fontsizeselect bold italic underline strikethrough link image forecolor backcolor alignleft aligncenter alignright alignjustify cut copy paste bullist numlist outdent indent blockquote code"
             };
