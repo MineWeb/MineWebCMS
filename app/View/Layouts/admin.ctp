@@ -65,8 +65,8 @@
                     // Update TinyMCE
                     if ($("#editor").length) {
                         tinymce.remove("#editor");
-                        tinyParams.skin = btn.is(":checked") ? 'oxide-dark' : "";
-                        tinyParams.content_css = btn.is(":checked") ? "dark" : "";
+                        tinyParams.skin = btn.is(":checked") ? 'oxide-dark' : "oxide";
+                        tinyParams.content_css = btn.is(":checked") ? "dark" : "default";
                         tinymce.init(tinyParams);
                     }
 
@@ -227,7 +227,7 @@
 
         <script type="text/javascript">
             let tinyParams = {
-                selector: "textarea",
+                selector: "textarea#editor",
                 height: 300,
                 width: "100%",
                 <?php if((strpos($config_lang, 'en') !== 0)) {
@@ -236,12 +236,10 @@
                 plugins: "code image link",
                 toolbar: "fontselect fontsizeselect bold italic underline strikethrough link image forecolor backcolor alignleft aligncenter alignright alignjustify cut copy paste bullist numlist outdent indent blockquote code"
             };
-            <?php
-            if ($admin_dark_mode) { ?>
-            tinyParams.skin = 'oxide-dark';
-            tinyParams.content_css = "dark";
-            <?php }
-            ?>
+            <?php if ($admin_dark_mode) { ?>
+                tinyParams.skin = 'oxide-dark';
+                tinyParams.content_css = "dark";
+            <?php } ?>
         </script>
 
         <?php echo $this->fetch('content'); ?>
