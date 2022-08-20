@@ -60,7 +60,7 @@
                         $('body').removeClass("dark-mode");
                     }
 
-                    $.get('<?= $this->Html->url(['action' => 'switchAdminDarkMode', 'controller' => 'admin', 'admin' => true]) ?>');
+                    $.get('<?= $this->Html->url(['plugin' => null, 'controller' => 'admin', 'action' => 'switchAdminDarkMode', 'admin' => true]) ?>');
 
                     // Update TinyMCE
                     if ($("#editor").length) {
