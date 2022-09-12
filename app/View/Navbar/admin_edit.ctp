@@ -89,7 +89,7 @@
                             <div class="form-group">
                                 <?php
                                 $i = 0;
-                                foreach (json_decode($nav['submenu'], true) as $name => $url) {
+                                if(!empty($nav['submenu'])) foreach (json_decode($nav['submenu'], true) as $name => $url) {
                                     $i++;
                                     ?>
                                     <div class="card card-body" id="nav-<?= $i ?>">
