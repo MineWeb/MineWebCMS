@@ -54,7 +54,7 @@ class AppSchema extends CakeSchema
     ];
     public $configurations = [
         'id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'],
-        'website_url' => ['type' => 'text', 'null' => false, 'default' => "https://domain.fr", 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
+        'website_url' => ['type' => 'text', 'null' => false, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'name' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'email' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'lang' => ['type' => 'string', 'null' => false, 'default' => 'fr', 'length' => 5, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
