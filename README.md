@@ -11,15 +11,15 @@ Vous pourrez tenir vos joueurs au courant des actualités, leur faire acheter de
 
 ### Le CMS est gratuit et opensource ?
 
-Jusqu'en mars 2018, il vous fallait avoir une licence payante pour utiliser le CMS. Mais désormais celui-ci est entièrement disponible sur Github et gratuitement. Il vous suffit de télécharger le repo pour utiliser le CMS sans aucun problème, celui-ci n'est plus dépendant de notre API. 
+Jusqu'en mars 2018, il vous fallait avoir une licence payante pour utiliser le CMS. Mais désormais celui-ci est entièrement disponible sur GitHub et gratuitement. Il vous suffit de télécharger le repo pour utiliser le CMS sans aucun problème, celui-ci n'est plus dépendant de notre API. 
 
 #### Pourquoi l'avoir rendu gratuit et opensource ?
 
-Premièrement je maintenais ce projet depuis plusieurs années presque complètement seul (hormis les 2/3 supports et 2 amis pour m'aider sur l'infrastructure) et je commençais à m'en lasser, de plus, ne jouant plus à Minecraft je ne m'intéressais plus à ce domaine. Dès mars 2018 j'ai eu ma réelle première expérience professionnelle me poussant également a arrêter ce projet. 
+Premièrement je maintenais ce projet depuis plusieurs années presque complètement seul (hormis les 2/3 supports et 2 amis pour m'aider sur l'infrastructure) et je commençais à m'en lasser, de plus, ne jouant plus à Minecraft je ne m'intéressais plus à ce domaine. Dès mars 2018 j'ai eu ma réelle première expérience professionnelle me poussant également à arrêter ce projet. 
 
 Deuxièmement, le CMS est en développement depuis plusieurs années sur un vieux framework, le code est vieux et j'ai évolué depuis le début, une refonte sera nécessaire pour rajouter des fonctionnalités intéressantes et maintenir correctement le projet mais le manque de temps et de motivation ne m'ont pas permis de le faire.
 
-Troisièmement je ne tenais pas a faire disparaitre le CMS et empêcher mes anciens utilisateurs de l'utiliser. De plus, cela ajoute du contenu sur mon Github. 
+Troisièmement je ne tenais pas à faire disparaitre le CMS et empêcher mes anciens utilisateurs de l'utiliser. De plus, cela ajoute du contenu sur mon GitHub. 
 
 ### Statistiques
 
@@ -33,7 +33,7 @@ Pour installer le CMS, rien de plus simple, il vous suffit de télécharger les 
 
 ### Support
 
-Le site officiel étant partiellement coupé, plus aucun support officiel n'est assuré, mais vous pouvez toujours faire part de vos problèmes sur le [Discord](https://discordapp.com/invite/3QYdt8r) ou avec les [Issues](https://github.com/MineWeb/MineWebCMS/issues) sur Github. 
+Le site officiel étant partiellement coupé, plus aucun support officiel n'est assuré, mais vous pouvez toujours faire part de vos problèmes sur le [Discord](https://discordapp.com/invite/3QYdt8r) ou avec les [Issues](https://github.com/MineWeb/MineWebCMS/issues) sur GitHub. 
 
 ### Plugins et thèmes
 
