@@ -47,7 +47,7 @@ Cache::config('default', ['engine' => 'File']);
  *     'Locale'                    => array('/path/to/locales/', '/next/path/to/locales/'),
  *     'Vendor'                    => array('/path/to/vendors/', '/next/path/to/vendors/'),
  *     'Plugin'                    => array('/path/to/plugins/', '/next/path/to/plugins/'),
- * ));
+ *  ));
  *
  */
 
@@ -70,13 +70,7 @@ Cache::config('default', ['engine' => 'File']);
  *
  */
 CakePlugin::loadAll([['bootstrap' => true, 'routes' => true, 'ignoreMissing' => true]]);
-/*
-App::import('Component', 'EyPlugin');
-$pluginsComponent = new EyPluginComponent();
-$pluginsComponent->loadPlugins();
 
-debug(CakePlugin::loaded());
-*/
 /**
  * You can attach event listeners to the request lifecycle as Dispatcher Filter. By default CakePHP bundles two filters:
  *
@@ -92,7 +86,7 @@ debug(CakePlugin::loaded());
  *        array('callable' => $aFunction, 'on' => 'before', 'priority' => 9), // A valid PHP callback type to be called on beforeDispatch
  *        array('callable' => $anotherMethod, 'on' => 'after'), // A valid PHP callback type to be called on afterDispatch
  *
- * ));
+ *  ));
  */
 
 //App::uses('AppExceptionHandler', 'Lib');
@@ -116,6 +110,10 @@ CakeLog::config('error', [
     'types' => ['warning', 'error', 'critical', 'alert', 'emergency'],
     'file' => 'error',
 ]);
+
+if (!defined('LC_MESSAGES')) {
+    define('LC_MESSAGES', 6);
+}
 
 @setlocale(LC_MESSAGES, 'fr_FR');
 setlocale(LC_ALL, 'fr_FR');
@@ -159,12 +157,10 @@ if (!file_exists(ROOT . DS . 'config' . DS . 'install.txt')) {
             $contents[$table] = $db->createSchema($Schema, $table);
         } else {
 
-            // on vérifie que ce soit pas un plugin (pour ne pas supprimer ses modifications sur la tables lors d'une MISE A JOUR)
-            if (isset($compare[$table]['drop'])) { // si ca concerne un drop de colonne
+            if (isset($compare[$table]['drop'])) {
 
                 foreach ($compare[$table]['drop'] as $column => $structure) {
 
-                    // vérifions que cela ne correspond pas à une colonne de plugin
                     if (count(explode('__', $column)) > 1) {
                         unset($compare[$table]['drop'][$column]);
                     }
@@ -173,7 +169,7 @@ if (!file_exists(ROOT . DS . 'config' . DS . 'install.txt')) {
             }
 
             if (isset($compare[$table]['drop']) && count($compare[$table]['drop']) <= 0) {
-                unset($compare[$table]['drop']); // on supprime l'action si y'a plus rien à faire dessus
+                unset($compare[$table]['drop']);
             }
 
             if (count($compare[$table]) > 0) {
@@ -182,8 +178,9 @@ if (!file_exists(ROOT . DS . 'config' . DS . 'install.txt')) {
         }
     }
 
-    if (!file_exists(ROOT . DS . 'app' . DS . 'tmp' . DS . 'logs' . DS . 'db.log'))
+    if (!file_exists(ROOT . DS . 'app' . DS . 'tmp' . DS . 'logs' . DS . 'db.log')) {
         @mkdir(ROOT . DS . 'app' . DS . 'tmp' . DS . 'logs' . DS, 0755, true);
+    }
     file_put_contents(ROOT . DS . 'app' . DS . 'tmp' . DS . 'logs' . DS . 'db.log', '');
     $error = [];
     if (!empty($contents)) {
@@ -193,7 +190,8 @@ if (!file_exists(ROOT . DS . 'config' . DS . 'install.txt')) {
                     $db->execute($query);
                 } catch (PDOException $e) {
                     $error[] = $table . ': ' . $e->getMessage();
-                    file_put_contents(ROOT . DS . 'app' . DS . 'tmp' . DS . 'logs' . DS . 'db.log',
+                    file_put_contents(
+                        ROOT . DS . 'app' . DS . 'tmp' . DS . 'logs' . DS . 'db.log',
                         file_get_contents(ROOT . DS . 'app' . DS . 'tmp' . DS . 'logs' . DS . 'db.log') .
                         "\n" . $e->getMessage()
                     );

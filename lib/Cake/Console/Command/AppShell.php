@@ -25,7 +25,6 @@ App::uses('Shell', 'Console');
  *
  * @package       app.Console.Command
  */
-class AppShell extends Shell
-{
+class AppShell extends Shell {
 
 }

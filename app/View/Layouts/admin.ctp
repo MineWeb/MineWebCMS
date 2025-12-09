@@ -248,6 +248,7 @@
     <footer class="main-footer text-center">
         <?= $Lang->get('GLOBAL__FOOTER_ADMIN') ?>
         <p>CakePhP version : <a href="https://cakephp.org/"><?= Configure::version(); ?></a></p>
+        <p>PHP version : <?= phpversion(); ?></p>
         Credits <a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong>
     </footer>
 

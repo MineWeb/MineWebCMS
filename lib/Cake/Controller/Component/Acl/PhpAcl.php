@@ -22,560 +22,540 @@
  *
  * @package Cake.Controller.Component.Acl
  */
-class PhpAcl extends CakeObject implements AclInterface
-{
+class PhpAcl extends CakeObject implements AclInterface {
 
-    /**
-     * Constant for deny
-     *
-     * @var bool
-     */
-    const DENY = false;
+/**
+ * Constant for deny
+ *
+ * @var bool
+ */
+	const DENY = false;
 
-    /**
-     * Constant for allow
-     *
-     * @var bool
-     */
-    const ALLOW = true;
+/**
+ * Constant for allow
+ *
+ * @var bool
+ */
+	const ALLOW = true;
 
-    /**
-     * Options:
-     *  - policy: determines behavior of the check method. Deny policy needs explicit allow rules, allow policy needs explicit deny rules
-     *  - config: absolute path to config file that contains the acl rules (@see app/Config/acl.php)
-     *
-     * @var array
-     */
-    public $options = [];
+/**
+ * Options:
+ *  - policy: determines behavior of the check method. Deny policy needs explicit allow rules, allow policy needs explicit deny rules
+ *  - config: absolute path to config file that contains the acl rules (@see app/Config/acl.php)
+ *
+ * @var array
+ */
+	public $options = array();
 
-    /**
-     * Aro Object
-     *
-     * @var PhpAro
-     */
-    public $Aro = null;
+/**
+ * Aro Object
+ *
+ * @var PhpAro
+ */
+	public $Aro = null;
 
-    /**
-     * Aco Object
-     *
-     * @var PhpAco
-     */
-    public $Aco = null;
+/**
+ * Aco Object
+ *
+ * @var PhpAco
+ */
+	public $Aco = null;
 
-    /**
-     * Constructor
-     *
-     * Sets a few default settings up.
-     */
-    public function __construct()
-    {
-        $this->options = [
-            'policy' => static::DENY,
-            'config' => CONFIG . 'acl.php',
-        ];
-    }
+/**
+ * Constructor
+ *
+ * Sets a few default settings up.
+ */
+	public function __construct() {
+		$this->options = array(
+			'policy' => static::DENY,
+			'config' => CONFIG . 'acl.php',
+		);
+	}
 
-    /**
-     * Initialize method
-     *
-     * @param AclComponent $Component Component instance
-     * @return void
-     */
-    public function initialize(Component $Component)
-    {
-        if (!empty($Component->settings['adapter'])) {
-            $this->options = $Component->settings['adapter'] + $this->options;
-        }
+/**
+ * Initialize method
+ *
+ * @param AclComponent $Component Component instance
+ * @return void
+ */
+	public function initialize(Component $Component) {
+		if (!empty($Component->settings['adapter'])) {
+			$this->options = $Component->settings['adapter'] + $this->options;
+		}
 
-        App::uses('PhpReader', 'Configure');
-        $Reader = new PhpReader(dirname($this->options['config']) . DS);
-        $config = $Reader->read(basename($this->options['config']));
-        $this->build($config);
-        $Component->Aco = $this->Aco;
-        $Component->Aro = $this->Aro;
-    }
+		App::uses('PhpReader', 'Configure');
+		$Reader = new PhpReader(dirname($this->options['config']) . DS);
+		$config = $Reader->read(basename($this->options['config']));
+		$this->build($config);
+		$Component->Aco = $this->Aco;
+		$Component->Aro = $this->Aro;
+	}
 
-    /**
-     * build and setup internal ACL representation
-     *
-     * @param array $config configuration array, see docs
-     * @return void
-     * @throws AclException When required keys are missing.
-     */
-    public function build(array $config)
-    {
-        if (empty($config['roles'])) {
-            throw new AclException(__d('cake_dev', '"roles" section not found in configuration.'));
-        }
+/**
+ * build and setup internal ACL representation
+ *
+ * @param array $config configuration array, see docs
+ * @return void
+ * @throws AclException When required keys are missing.
+ */
+	public function build(array $config) {
+		if (empty($config['roles'])) {
+			throw new AclException(__d('cake_dev', '"roles" section not found in configuration.'));
+		}
 
-        if (empty($config['rules']['allow']) && empty($config['rules']['deny'])) {
-            throw new AclException(__d('cake_dev', 'Neither "allow" nor "deny" rules were provided in configuration.'));
-        }
+		if (empty($config['rules']['allow']) && empty($config['rules']['deny'])) {
+			throw new AclException(__d('cake_dev', 'Neither "allow" nor "deny" rules were provided in configuration.'));
+		}
 
-        $rules['allow'] = !empty($config['rules']['allow']) ? $config['rules']['allow'] : [];
-        $rules['deny'] = !empty($config['rules']['deny']) ? $config['rules']['deny'] : [];
-        $roles = !empty($config['roles']) ? $config['roles'] : [];
-        $map = !empty($config['map']) ? $config['map'] : [];
-        $alias = !empty($config['alias']) ? $config['alias'] : [];
+		$rules['allow'] = !empty($config['rules']['allow']) ? $config['rules']['allow'] : array();
+		$rules['deny'] = !empty($config['rules']['deny']) ? $config['rules']['deny'] : array();
+		$roles = !empty($config['roles']) ? $config['roles'] : array();
+		$map = !empty($config['map']) ? $config['map'] : array();
+		$alias = !empty($config['alias']) ? $config['alias'] : array();
 
-        $this->Aro = new PhpAro($roles, $map, $alias);
-        $this->Aco = new PhpAco($rules);
-    }
+		$this->Aro = new PhpAro($roles, $map, $alias);
+		$this->Aco = new PhpAco($rules);
+	}
 
-    /**
-     * No op method, allow cannot be done with PhpAcl
-     *
-     * @param string $aro ARO The requesting object identifier.
-     * @param string $aco ACO The controlled object identifier.
-     * @param string $action Action (defaults to *)
-     * @return bool Success
-     */
-    public function allow($aro, $aco, $action = "*")
-    {
-        return $this->Aco->access($this->Aro->resolve($aro), $aco, $action, 'allow');
-    }
+/**
+ * No op method, allow cannot be done with PhpAcl
+ *
+ * @param string $aro ARO The requesting object identifier.
+ * @param string $aco ACO The controlled object identifier.
+ * @param string $action Action (defaults to *)
+ * @return bool Success
+ */
+	public function allow($aro, $aco, $action = "*") {
+		return $this->Aco->access($this->Aro->resolve($aro), $aco, $action, 'allow');
+	}
 
-    /**
-     * deny ARO access to ACO
-     *
-     * @param string $aro ARO The requesting object identifier.
-     * @param string $aco ACO The controlled object identifier.
-     * @param string $action Action (defaults to *)
-     * @return bool Success
-     */
-    public function deny($aro, $aco, $action = "*")
-    {
-        return $this->Aco->access($this->Aro->resolve($aro), $aco, $action, 'deny');
-    }
+/**
+ * deny ARO access to ACO
+ *
+ * @param string $aro ARO The requesting object identifier.
+ * @param string $aco ACO The controlled object identifier.
+ * @param string $action Action (defaults to *)
+ * @return bool Success
+ */
+	public function deny($aro, $aco, $action = "*") {
+		return $this->Aco->access($this->Aro->resolve($aro), $aco, $action, 'deny');
+	}
 
-    /**
-     * No op method
-     *
-     * @param string $aro ARO The requesting object identifier.
-     * @param string $aco ACO The controlled object identifier.
-     * @param string $action Action (defaults to *)
-     * @return bool Success
-     */
-    public function inherit($aro, $aco, $action = "*")
-    {
-        return false;
-    }
+/**
+ * No op method
+ *
+ * @param string $aro ARO The requesting object identifier.
+ * @param string $aco ACO The controlled object identifier.
+ * @param string $action Action (defaults to *)
+ * @return bool Success
+ */
+	public function inherit($aro, $aco, $action = "*") {
+		return false;
+	}
 
-    /**
-     * Main ACL check function. Checks to see if the ARO (access request object) has access to the
-     * ACO (access control object).
-     *
-     * @param string $aro ARO
-     * @param string $aco ACO
-     * @param string $action Action
-     * @return bool true if access is granted, false otherwise
-     */
-    public function check($aro, $aco, $action = "*")
-    {
-        $allow = $this->options['policy'];
-        $prioritizedAros = $this->Aro->roles($aro);
+/**
+ * Main ACL check function. Checks to see if the ARO (access request object) has access to the
+ * ACO (access control object).
+ *
+ * @param string $aro ARO
+ * @param string $aco ACO
+ * @param string $action Action
+ * @return bool true if access is granted, false otherwise
+ */
+	public function check($aro, $aco, $action = "*") {
+		$allow = $this->options['policy'];
+		$prioritizedAros = $this->Aro->roles($aro);
 
-        if ($action && $action !== "*") {
-            $aco .= '/' . $action;
-        }
+		if ($action && $action !== "*") {
+			$aco .= '/' . $action;
+		}
 
-        $path = $this->Aco->path($aco);
+		$path = $this->Aco->path($aco);
 
-        if (empty($path)) {
-            return $allow;
-        }
+		if (empty($path)) {
+			return $allow;
+		}
 
-        foreach ($path as $node) {
-            foreach ($prioritizedAros as $aros) {
-                if (!empty($node['allow'])) {
-                    $allow = $allow || count(array_intersect($node['allow'], $aros));
-                }
+		foreach ($path as $node) {
+			foreach ($prioritizedAros as $aros) {
+				if (!empty($node['allow'])) {
+					$allow = $allow || count(array_intersect($node['allow'], $aros));
+				}
 
-                if (!empty($node['deny'])) {
-                    $allow = $allow && !count(array_intersect($node['deny'], $aros));
-                }
-            }
-        }
+				if (!empty($node['deny'])) {
+					$allow = $allow && !count(array_intersect($node['deny'], $aros));
+				}
+			}
+		}
 
-        return $allow;
-    }
+		return $allow;
+	}
 
 }
 
 /**
  * Access Control Object
  */
-class PhpAco
-{
+class PhpAco {
 
-    /**
-     * map modifiers for ACO paths to their respective PCRE pattern
-     *
-     * @var array
-     */
-    public static $modifiers = [
-        '*' => '.*',
-    ];
-    /**
-     * holds internal ACO representation
-     *
-     * @var array
-     */
-    protected $_tree = [];
+/**
+ * holds internal ACO representation
+ *
+ * @var array
+ */
+	protected $_tree = array();
 
-    /**
-     * Constructor
-     *
-     * @param array $rules Rules array
-     */
-    public function __construct(array $rules = [])
-    {
-        foreach (['allow', 'deny'] as $type) {
-            if (empty($rules[$type])) {
-                $rules[$type] = [];
-            }
-        }
+/**
+ * map modifiers for ACO paths to their respective PCRE pattern
+ *
+ * @var array
+ */
+	public static $modifiers = array(
+		'*' => '.*',
+	);
 
-        $this->build($rules['allow'], $rules['deny']);
-    }
+/**
+ * Constructor
+ *
+ * @param array $rules Rules array
+ */
+	public function __construct(array $rules = array()) {
+		foreach (array('allow', 'deny') as $type) {
+			if (empty($rules[$type])) {
+				$rules[$type] = array();
+			}
+		}
 
-    /**
-     * build a tree representation from the given allow/deny informations for ACO paths
-     *
-     * @param array $allow ACO allow rules
-     * @param array $deny ACO deny rules
-     * @return void
-     */
-    public function build(array $allow, array $deny = [])
-    {
-        $this->_tree = [];
+		$this->build($rules['allow'], $rules['deny']);
+	}
 
-        foreach ($allow as $dotPath => $aros) {
-            if (is_string($aros)) {
-                $aros = array_map('trim', explode(',', $aros));
-            }
+/**
+ * return path to the requested ACO with allow and deny rules attached on each level
+ *
+ * @param string $aco ACO string
+ * @return array
+ */
+	public function path($aco) {
+		$aco = $this->resolve($aco);
+		$path = array();
+		$level = 0;
+		$root = $this->_tree;
+		$stack = array(array($root, 0));
 
-            $this->access($aros, $dotPath, null, 'allow');
-        }
+		while (!empty($stack)) {
+			list($root, $level) = array_pop($stack);
 
-        foreach ($deny as $dotPath => $aros) {
-            if (is_string($aros)) {
-                $aros = array_map('trim', explode(',', $aros));
-            }
+			if (empty($path[$level])) {
+				$path[$level] = array();
+			}
 
-            $this->access($aros, $dotPath, null, 'deny');
-        }
-    }
+			foreach ($root as $node => $elements) {
+				$pattern = '/^' . str_replace(array_keys(static::$modifiers), array_values(static::$modifiers), $node) . '$/';
 
-    /**
-     * allow/deny ARO access to ARO
-     *
-     * @param string $aro ARO string
-     * @param string $aco ACO string
-     * @param string $action Action string
-     * @param string $type access type
-     * @return void
-     */
-    public function access($aro, $aco, $action, $type = 'deny')
-    {
-        $aco = $this->resolve($aco);
-        $depth = count($aco);
-        $root = $this->_tree;
-        $tree = &$root;
+				if ($node == $aco[$level] || preg_match($pattern, $aco[$level])) {
+					// merge allow/denies with $path of current level
+					foreach (array('allow', 'deny') as $policy) {
+						if (!empty($elements[$policy])) {
+							if (empty($path[$level][$policy])) {
+								$path[$level][$policy] = array();
+							}
+							$path[$level][$policy] = array_merge($path[$level][$policy], $elements[$policy]);
+						}
+					}
 
-        foreach ($aco as $i => $node) {
-            if (!isset($tree[$node])) {
-                $tree[$node] = [
-                    'children' => [],
-                ];
-            }
+					// traverse
+					if (!empty($elements['children']) && isset($aco[$level + 1])) {
+						array_push($stack, array($elements['children'], $level + 1));
+					}
+				}
+			}
+		}
 
-            if ($i < $depth - 1) {
-                $tree = &$tree[$node]['children'];
-            } else {
-                if (empty($tree[$node][$type])) {
-                    $tree[$node][$type] = [];
-                }
+		return $path;
+	}
 
-                $tree[$node][$type] = array_merge(is_array($aro) ? $aro : [$aro], $tree[$node][$type]);
-            }
-        }
+/**
+ * allow/deny ARO access to ARO
+ *
+ * @param string $aro ARO string
+ * @param string $aco ACO string
+ * @param string $action Action string
+ * @param string $type access type
+ * @return void
+ */
+	public function access($aro, $aco, $action, $type = 'deny') {
+		$aco = $this->resolve($aco);
+		$depth = count($aco);
+		$root = $this->_tree;
+		$tree = &$root;
 
-        $this->_tree = &$root;
-    }
+		foreach ($aco as $i => $node) {
+			if (!isset($tree[$node])) {
+				$tree[$node] = array(
+					'children' => array(),
+				);
+			}
 
-    /**
-     * resolve given ACO string to a path
-     *
-     * @param string $aco ACO string
-     * @return array path
-     */
-    public function resolve($aco)
-    {
-        if (is_array($aco)) {
-            return array_map('strtolower', $aco);
-        }
+			if ($i < $depth - 1) {
+				$tree = &$tree[$node]['children'];
+			} else {
+				if (empty($tree[$node][$type])) {
+					$tree[$node][$type] = array();
+				}
 
-        // strip multiple occurrences of '/'
-        $aco = preg_replace('#/+#', '/', $aco);
-        // make case insensitive
-        $aco = ltrim(strtolower($aco), '/');
-        return array_filter(array_map('trim', explode('/', $aco)));
-    }
+				$tree[$node][$type] = array_merge(is_array($aro) ? $aro : array($aro), $tree[$node][$type]);
+			}
+		}
 
-    /**
-     * return path to the requested ACO with allow and deny rules attached on each level
-     *
-     * @param string $aco ACO string
-     * @return array
-     */
-    public function path($aco)
-    {
-        $aco = $this->resolve($aco);
-        $path = [];
-        $level = 0;
-        $root = $this->_tree;
-        $stack = [[$root, 0]];
+		$this->_tree = &$root;
+	}
 
-        while (!empty($stack)) {
-            list($root, $level) = array_pop($stack);
+/**
+ * resolve given ACO string to a path
+ *
+ * @param string $aco ACO string
+ * @return array path
+ */
+	public function resolve($aco) {
+		if (is_array($aco)) {
+			return array_map('strtolower', $aco);
+		}
 
-            if (empty($path[$level])) {
-                $path[$level] = [];
-            }
+		// strip multiple occurrences of '/'
+		$aco = preg_replace('#/+#', '/', $aco);
+		// make case insensitive
+		$aco = ltrim(strtolower($aco), '/');
+		return array_filter(array_map('trim', explode('/', $aco)));
+	}
 
-            foreach ($root as $node => $elements) {
-                $pattern = '/^' . str_replace(array_keys(static::$modifiers), array_values(static::$modifiers), $node) . '$/';
+/**
+ * build a tree representation from the given allow/deny informations for ACO paths
+ *
+ * @param array $allow ACO allow rules
+ * @param array $deny ACO deny rules
+ * @return void
+ */
+	public function build(array $allow, array $deny = array()) {
+		$this->_tree = array();
 
-                if ($node == $aco[$level] || preg_match($pattern, $aco[$level])) {
-                    // merge allow/denies with $path of current level
-                    foreach (['allow', 'deny'] as $policy) {
-                        if (!empty($elements[$policy])) {
-                            if (empty($path[$level][$policy])) {
-                                $path[$level][$policy] = [];
-                            }
-                            $path[$level][$policy] = array_merge($path[$level][$policy], $elements[$policy]);
-                        }
-                    }
+		foreach ($allow as $dotPath => $aros) {
+			if (is_string($aros)) {
+				$aros = array_map('trim', explode(',', $aros));
+			}
 
-                    // traverse
-                    if (!empty($elements['children']) && isset($aco[$level + 1])) {
-                        array_push($stack, [$elements['children'], $level + 1]);
-                    }
-                }
-            }
-        }
+			$this->access($aros, $dotPath, null, 'allow');
+		}
 
-        return $path;
-    }
+		foreach ($deny as $dotPath => $aros) {
+			if (is_string($aros)) {
+				$aros = array_map('trim', explode(',', $aros));
+			}
+
+			$this->access($aros, $dotPath, null, 'deny');
+		}
+	}
 
 }
 
 /**
  * Access Request Object
  */
-class PhpAro
-{
+class PhpAro {
 
-    /**
-     * role to resolve to when a provided ARO is not listed in
-     * the internal tree
-     *
-     * @var string
-     */
-    const DEFAULT_ROLE = 'Role/default';
+/**
+ * role to resolve to when a provided ARO is not listed in
+ * the internal tree
+ *
+ * @var string
+ */
+	const DEFAULT_ROLE = 'Role/default';
 
-    /**
-     * map external identifiers. E.g. if
-     *
-     * array('User' => array('username' => 'jeff', 'role' => 'editor'))
-     *
-     * is passed as an ARO to one of the methods of AclComponent, PhpAcl
-     * will check if it can be resolved to an User or a Role defined in the
-     * configuration file.
-     *
-     * @var array
-     * @see app/Config/acl.php
-     */
-    public $map = [
-        'User' => 'User/username',
-        'Role' => 'User/role',
-    ];
+/**
+ * map external identifiers. E.g. if
+ *
+ * array('User' => array('username' => 'jeff', 'role' => 'editor'))
+ *
+ * is passed as an ARO to one of the methods of AclComponent, PhpAcl
+ * will check if it can be resolved to an User or a Role defined in the
+ * configuration file.
+ *
+ * @var array
+ * @see app/Config/acl.php
+ */
+	public $map = array(
+		'User' => 'User/username',
+		'Role' => 'User/role',
+	);
 
-    /**
-     * aliases to map
-     *
-     * @var array
-     */
-    public $aliases = [];
+/**
+ * aliases to map
+ *
+ * @var array
+ */
+	public $aliases = array();
 
-    /**
-     * internal ARO representation
-     *
-     * @var array
-     */
-    protected $_tree = [];
+/**
+ * internal ARO representation
+ *
+ * @var array
+ */
+	protected $_tree = array();
 
-    /**
-     * Constructor
-     *
-     * @param array $aro The aro data
-     * @param array $map The identifier mappings
-     * @param array $aliases The aliases to map.
-     */
-    public function __construct(array $aro = [], array $map = [], array $aliases = [])
-    {
-        if (!empty($map)) {
-            $this->map = $map;
-        }
+/**
+ * Constructor
+ *
+ * @param array $aro The aro data
+ * @param array $map The identifier mappings
+ * @param array $aliases The aliases to map.
+ */
+	public function __construct(array $aro = array(), array $map = array(), array $aliases = array()) {
+		if (!empty($map)) {
+			$this->map = $map;
+		}
 
-        $this->aliases = $aliases;
-        $this->build($aro);
-    }
+		$this->aliases = $aliases;
+		$this->build($aro);
+	}
 
-    /**
-     * build an ARO tree structure for internal processing
-     *
-     * @param array $aros array of AROs as key and their inherited AROs as values
-     * @return void
-     */
-    public function build(array $aros)
-    {
-        $this->_tree = [];
-        $this->addRole($aros);
-    }
+/**
+ * From the perspective of the given ARO, walk down the tree and
+ * collect all inherited AROs levelwise such that AROs from different
+ * branches with equal distance to the requested ARO will be collected at the same
+ * index. The resulting array will contain a prioritized list of (list of) roles ordered from
+ * the most distant AROs to the requested one itself.
+ *
+ * @param string|array $aro An ARO identifier
+ * @return array prioritized AROs
+ */
+	public function roles($aro) {
+		$aros = array();
+		$aro = $this->resolve($aro);
+		$stack = array(array($aro, 0));
 
-    /**
-     * adds a new ARO to the tree
-     *
-     * @param array $aro one or more ARO records
-     * @return void
-     */
-    public function addRole(array $aro)
-    {
-        foreach ($aro as $role => $inheritedRoles) {
-            if (!isset($this->_tree[$role])) {
-                $this->_tree[$role] = [];
-            }
+		while (!empty($stack)) {
+			list($element, $depth) = array_pop($stack);
+			$aros[$depth][] = $element;
 
-            if (!empty($inheritedRoles)) {
-                if (is_string($inheritedRoles)) {
-                    $inheritedRoles = array_map('trim', explode(',', $inheritedRoles));
-                }
+			foreach ($this->_tree as $node => $children) {
+				if (in_array($element, $children)) {
+					array_push($stack, array($node, $depth + 1));
+				}
+			}
+		}
 
-                foreach ($inheritedRoles as $dependency) {
-                    // detect cycles
-                    $roles = $this->roles($dependency);
+		return array_reverse($aros);
+	}
 
-                    if (in_array($role, Hash::flatten($roles))) {
-                        $path = '';
+/**
+ * resolve an ARO identifier to an internal ARO string using
+ * the internal mapping information.
+ *
+ * @param string|array $aro ARO identifier (User.jeff, array('User' => ...), etc)
+ * @return string internal aro string (e.g. User/jeff, Role/default)
+ */
+	public function resolve($aro) {
+		foreach ($this->map as $aroGroup => $map) {
+			list ($model, $field) = explode('/', $map, 2);
+			$mapped = '';
 
-                        foreach ($roles as $roleDependencies) {
-                            $path .= implode('|', (array)$roleDependencies) . ' -> ';
-                        }
+			if (is_array($aro)) {
+				if (isset($aro['model']) && isset($aro['foreign_key']) && $aro['model'] === $aroGroup) {
+					$mapped = $aroGroup . '/' . $aro['foreign_key'];
+				} elseif (isset($aro[$model][$field])) {
+					$mapped = $aroGroup . '/' . $aro[$model][$field];
+				} elseif (isset($aro[$field])) {
+					$mapped = $aroGroup . '/' . $aro[$field];
+				}
+			} elseif (is_string($aro)) {
+				$aro = ltrim($aro, '/');
 
-                        trigger_error(__d('cake_dev', 'cycle detected when inheriting %s from %s. Path: %s', $role, $dependency, $path . $role));
-                        continue;
-                    }
+				if (strpos($aro, '/') === false) {
+					$mapped = $aroGroup . '/' . $aro;
+				} else {
+					list($aroModel, $aroValue) = explode('/', $aro, 2);
 
-                    if (!isset($this->_tree[$dependency])) {
-                        $this->_tree[$dependency] = [];
-                    }
+					$aroModel = Inflector::camelize($aroModel);
 
-                    $this->_tree[$dependency][] = $role;
-                }
-            }
-        }
-    }
+					if ($aroModel === $model || $aroModel === $aroGroup) {
+						$mapped = $aroGroup . '/' . $aroValue;
+					}
+				}
+			}
 
-    /**
-     * From the perspective of the given ARO, walk down the tree and
-     * collect all inherited AROs levelwise such that AROs from different
-     * branches with equal distance to the requested ARO will be collected at the same
-     * index. The resulting array will contain a prioritized list of (list of) roles ordered from
-     * the most distant AROs to the requested one itself.
-     *
-     * @param string|array $aro An ARO identifier
-     * @return array prioritized AROs
-     */
-    public function roles($aro)
-    {
-        $aros = [];
-        $aro = $this->resolve($aro);
-        $stack = [[$aro, 0]];
+			if (isset($this->_tree[$mapped])) {
+				return $mapped;
+			}
 
-        while (!empty($stack)) {
-            list($element, $depth) = array_pop($stack);
-            $aros[$depth][] = $element;
+			// is there a matching alias defined (e.g. Role/1 => Role/admin)?
+			if (!empty($this->aliases[$mapped])) {
+				return $this->aliases[$mapped];
+			}
+		}
+		return static::DEFAULT_ROLE;
+	}
 
-            foreach ($this->_tree as $node => $children) {
-                if (in_array($element, $children)) {
-                    array_push($stack, [$node, $depth + 1]);
-                }
-            }
-        }
+/**
+ * adds a new ARO to the tree
+ *
+ * @param array $aro one or more ARO records
+ * @return void
+ */
+	public function addRole(array $aro) {
+		foreach ($aro as $role => $inheritedRoles) {
+			if (!isset($this->_tree[$role])) {
+				$this->_tree[$role] = array();
+			}
 
-        return array_reverse($aros);
-    }
+			if (!empty($inheritedRoles)) {
+				if (is_string($inheritedRoles)) {
+					$inheritedRoles = array_map('trim', explode(',', $inheritedRoles));
+				}
 
-    /**
-     * resolve an ARO identifier to an internal ARO string using
-     * the internal mapping information.
-     *
-     * @param string|array $aro ARO identifier (User.jeff, array('User' => ...), etc)
-     * @return string internal aro string (e.g. User/jeff, Role/default)
-     */
-    public function resolve($aro)
-    {
-        foreach ($this->map as $aroGroup => $map) {
-            list ($model, $field) = explode('/', $map, 2);
-            $mapped = '';
+				foreach ($inheritedRoles as $dependency) {
+					// detect cycles
+					$roles = $this->roles($dependency);
 
-            if (is_array($aro)) {
-                if (isset($aro['model']) && isset($aro['foreign_key']) && $aro['model'] === $aroGroup) {
-                    $mapped = $aroGroup . '/' . $aro['foreign_key'];
-                } else if (isset($aro[$model][$field])) {
-                    $mapped = $aroGroup . '/' . $aro[$model][$field];
-                } else if (isset($aro[$field])) {
-                    $mapped = $aroGroup . '/' . $aro[$field];
-                }
-            } else if (is_string($aro)) {
-                $aro = ltrim($aro, '/');
+					if (in_array($role, Hash::flatten($roles))) {
+						$path = '';
 
-                if (strpos($aro, '/') === false) {
-                    $mapped = $aroGroup . '/' . $aro;
-                } else {
-                    list($aroModel, $aroValue) = explode('/', $aro, 2);
+						foreach ($roles as $roleDependencies) {
+							$path .= implode('|', (array)$roleDependencies) . ' -> ';
+						}
 
-                    $aroModel = Inflector::camelize($aroModel);
+						trigger_error(__d('cake_dev', 'cycle detected when inheriting %s from %s. Path: %s', $role, $dependency, $path . $role));
+						continue;
+					}
 
-                    if ($aroModel === $model || $aroModel === $aroGroup) {
-                        $mapped = $aroGroup . '/' . $aroValue;
-                    }
-                }
-            }
+					if (!isset($this->_tree[$dependency])) {
+						$this->_tree[$dependency] = array();
+					}
 
-            if (isset($this->_tree[$mapped])) {
-                return $mapped;
-            }
+					$this->_tree[$dependency][] = $role;
+				}
+			}
+		}
+	}
 
-            // is there a matching alias defined (e.g. Role/1 => Role/admin)?
-            if (!empty($this->aliases[$mapped])) {
-                return $this->aliases[$mapped];
-            }
-        }
-        return static::DEFAULT_ROLE;
-    }
+/**
+ * adds one or more aliases to the internal map. Overwrites existing entries.
+ *
+ * @param array $alias alias from => to (e.g. Role/13 -> Role/editor)
+ * @return void
+ */
+	public function addAlias(array $alias) {
+		$this->aliases = $alias + $this->aliases;
+	}
 
-    /**
-     * adds one or more aliases to the internal map. Overwrites existing entries.
-     *
-     * @param array $alias alias from => to (e.g. Role/13 -> Role/editor)
-     * @return void
-     */
-    public function addAlias(array $alias)
-    {
-        $this->aliases = $alias + $this->aliases;
-    }
+/**
+ * build an ARO tree structure for internal processing
+ *
+ * @param array $aros array of AROs as key and their inherited AROs as values
+ * @return void
+ */
+	public function build(array $aros) {
+		$this->_tree = array();
+		$this->addRole($aros);
+	}
 
 }
