@@ -162,6 +162,17 @@ class User extends AppModel
     public function resetPass($data, $controller)
     {
         $UtilComponent = $controller->Util;
+        // Security: the email must be a single, valid address.
+        // Without this guard an attacker can submit "email" as an array
+        // (email[]=attacker@x&email[]=victim@x). CakePHP then turns the
+        // condition into "email IN ('attacker@x', 'victim@x')", so the
+        // reset key only has to match the attacker's own address while the
+        // password of the FIRST row returned (potentially another user) is
+        // overwritten — an account takeover. Forcing email to a scalar valid
+        // address collapses the IN(...) back to a single-account lookup.
+        if (!is_string($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            return 'USER__ERROR_EMAIL_NOT_VALID';
+        }
         if ($data['password'] == $data['password2']) {
             unset($data['password2']);
             $search = $this->find('all', ['conditions' => ['email' => $data['email']]]);
