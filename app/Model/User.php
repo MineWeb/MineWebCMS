@@ -161,32 +161,43 @@ class User extends AppModel
 
     public function resetPass($data, $controller)
     {
+        foreach (['email', 'key', 'password', 'password2'] as $field) {
+            if (!isset($data[$field]) || !is_string($data[$field]) || $data[$field] === '') {
+                return 'ERROR__FILL_ALL_FIELDS';
+            }
+        }
+
         $UtilComponent = $controller->Util;
-        if ($data['password'] == $data['password2']) {
+        if ($data['password'] === $data['password2']) {
             unset($data['password2']);
-            $search = $this->find('all', ['conditions' => ['email' => $data['email']]]);
-            if (!empty($search)) {
+            $matchingUsers = $this->find('all', ['conditions' => ['email' => $data['email']], 'limit' => 2]);
+            if (!empty($matchingUsers)) {
+                if (count($matchingUsers) > 1) {
+                    return 'USER__PASSWORD_RESET_INVALID_KEY';
+                }
+                $user = $matchingUsers[0]['User'];
 
                 $this->Lostpassword = ClassRegistry::init('Lostpassword');
                 $Lostpassword = $this->Lostpassword->find('all', ['conditions' => ['email' => $data['email'], 'key' => $data['key']]]);
                 if (!empty($Lostpassword) && strtotime('+1 hour', strtotime($Lostpassword[0]['Lostpassword']['created'])) >= time()) {
 
-                    $data_to_save['password'] = $UtilComponent->password($data['password'], $search['0']['User']['pseudo']);
+                    $data_to_save['password'] = $UtilComponent->password($data['password'], $user['pseudo']);
                     $data_to_save['password_hash'] = $UtilComponent->getPasswordHashType();
 
-                    $event = new CakeEvent('beforeResetPassword', $this, ['user_id' => $search[0]['User']['id'], 'new_password' => $data_to_save['password']]);
+                    $event = new CakeEvent('beforeResetPassword', $this, ['user_id' => $user['id'], 'new_password' => $data_to_save['password']]);
                     $controller->getEventManager()->dispatch($event);
                     if ($event->isStopped()) {
                         return $event->result;
                     }
 
-                    $this->Lostpassword->delete($Lostpassword[0]['Lostpassword']['id']);
+                    if (!$this->Lostpassword->delete($Lostpassword[0]['Lostpassword']['id'])) {
+                        return 'USER__PASSWORD_RESET_INVALID_KEY';
+                    }
+                    if (!$this->read(null, $user['id']) || !$this->save($data_to_save)) {
+                        return 'ERROR__INTERNAL_ERROR';
+                    }
 
-                    $this->read(null, $search['0']['User']['id']);
-                    $this->set($data_to_save);
-                    $this->save();
-
-                    return ['status' => true, 'session' => $search[0]['User']['id']];
+                    return ['status' => true, 'session' => $user['id']];
 
                 } else {
                     return 'USER__PASSWORD_RESET_INVALID_KEY';
