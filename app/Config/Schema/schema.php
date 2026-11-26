@@ -128,7 +128,7 @@ class AppSchema extends CakeSchema
     public $lostpasswords = [
         'id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'],
         'email' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
-        'key' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 10, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
+        'key' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 32, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'created' => ['type' => 'datetime', 'null' => false, 'default' => null],
         'indexes' => [
             'PRIMARY' => ['column' => 'id', 'unique' => 1]

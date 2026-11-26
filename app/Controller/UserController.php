@@ -223,7 +223,12 @@ class UserController extends AppController
                         if ($search['User']['registered_by_microsoft'])
                             return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('USER__AUTH_MICROSOFT_CANNOT_RESET_PASSWORD')]));
                         $this->loadModel('Lostpassword');
-                        $key = substr(md5(rand() . date('sihYdm')), 0, 10);
+                        try {
+                            $key = $this->Lostpassword->generateKey();
+                        } catch (Exception $e) {
+                            $this->log($e->getMessage(), 'error');
+                            return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get('ERROR__INTERNAL_ERROR')]);
+                        }
                         $to = $this->request->data['email'];
                         $subject = $this->Lang->get('USER__PASSWORD_RESET_LINK');
                         $message = $this->Lang->get('USER__PASSWORD_RESET_EMAIL_CONTENT', [
