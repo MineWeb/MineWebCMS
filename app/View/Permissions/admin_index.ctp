@@ -49,19 +49,17 @@
                             <?php } ?>
                             <tr>
                                 <td></td>
+                                <?php foreach ($all_ranks as $data) { ?>
+                                    <td>
+                                        <?php if (isset($data['Rank']['id'])) { ?>
+                                            <?= $this->Form->postLink($Lang->get('GLOBAL__DELETE'), ['action' => 'delete_rank', $data['Rank']['rank_id']], [
+                                                'class' => 'btn btn-danger',
+                                                'inline' => false
+                                            ]) ?>
+                                        <?php } ?>
+                                    </td>
+                                <?php } ?>
                                 <td></td>
-                                <td></td>
-                                <td></td>
-                                <?php
-                                if (!empty($custom_ranks)) {
-                                    foreach ($custom_ranks as $k => $data) {
-                                        echo '<td>' . $this->Form->postLink($Lang->get('GLOBAL__DELETE'), ['action' => 'delete_rank', $data['Rank']['rank_id']], [
-                                            'class' => 'btn btn-danger',
-                                            'inline' => false
-                                        ]) . '</td>';
-                                    }
-                                }
-                                ?>
                             </tr>
                             </tbody>
                         </table>

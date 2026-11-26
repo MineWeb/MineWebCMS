@@ -68,7 +68,7 @@
                                 <div class="page<?= ($nav['url']['type'] == "page") ? '' : ' d-none' ?>">
                                     <select class="form-control" name="url_page">
                                         <?php foreach ($url_pages as $key => $value) { ?>
-                                            <option value="<?= $key ?>"<?= ($nav['url']['id'] == $key) ? ' selected' : '' ?>><?= $value ?></option>
+                                            <option value="<?= $key ?>"<?= ($nav['url']['type'] === 'page' && $nav['url']['id'] == $key) ? ' selected' : '' ?>><?= $value ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
@@ -89,7 +89,8 @@
                             <div class="form-group">
                                 <?php
                                 $i = 0;
-                                foreach (json_decode($nav['submenu'], true) as $name => $url) {
+                                $submenu = json_decode((string)$nav['submenu'], true);
+                                foreach (is_array($submenu) ? $submenu : [] as $name => $url) {
                                     $i++;
                                     ?>
                                     <div class="card card-body" id="nav-<?= $i ?>">

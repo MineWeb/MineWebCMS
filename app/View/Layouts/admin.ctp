@@ -230,7 +230,7 @@
                 selector: "textarea",
                 height: 300,
                 width: '100%',
-                language: 'fr_FR',
+                language: <?= json_encode(Hash::get(['fr_FR' => 'fr_FR', 'ru_RU' => 'ru'], $Lang->lang['path'], 'en')) ?>,
                 plugins: "code image link",
                 toolbar: "fontselect fontsizeselect bold italic underline strikethrough link image forecolor backcolor alignleft aligncenter alignright alignjustify cut copy paste bullist numlist outdent indent blockquote code"
             };
