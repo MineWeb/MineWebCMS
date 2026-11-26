@@ -165,12 +165,7 @@ class UserController extends AppController
                 'two-factor-auth' => true
             ]);
         } else {
-            if ($this->request->data['remember_me']) {
-                $this->Cookie->write('remember_me', [
-                    'pseudo' => $this->request->data['pseudo'],
-                    'password' => $this->User->getFromUser('password', $this->request->data['pseudo'])
-                ], true, '1 week');
-            }
+            $this->setRememberMe($login['session'], !empty($this->request->data['remember_me']));
             $this->Session->write('user', $login['session']);
             $this->sendJSON(['statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN')]);
         }
@@ -329,10 +324,8 @@ class UserController extends AppController
             $this->Cookie->delete('microsoft_user_id');
         }
 
-        if ($this->Cookie->read('remember_me')) {
-            $this->Cookie->delete('remember_me');
-        }
         $this->Session->delete('user');
+        $this->forgetRememberedUser();
         $this->redirect($this->referer());
     }
 

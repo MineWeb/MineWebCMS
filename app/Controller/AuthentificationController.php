@@ -33,8 +33,7 @@ class AuthentificationController extends AppController
         // remove TwoFactorAuth session
         $this->Session->delete('user_id_two_factor_auth');
         // login
-        if ($this->request->data['remember_me'])
-            $this->Cookie->write('remember_me', ['pseudo' => $user['User']['pseudo'], 'password' => $user['User']['password'], true, '1 week']);
+        $this->setRememberMe($user['User']['id'], !empty($this->request->data['remember_me']));
         $this->Session->write('user', $user['User']['id']);
         $event = new CakeEvent('afterLogin', $this, ['user' => $this->User->getAllFromUser($user['User']['pseudo'])]);
         $this->getEventManager()->dispatch($event);

@@ -128,11 +128,13 @@ class UpdateComponent extends CakeObject
             $zip = new ZipArchive;
             if ($zip->open(ROOT . DS . 'app' . DS . 'tmp' . DS . $this->lastVersion . '.zip') !== true) return false;
 
-            $path = DS . 'app' . DS . 'Controller' . DS . 'Component' . DS . 'UpdateComponent.php';
-            $newContent = $zip->getFromName("{$this->source['repo']}-{$this->lastVersion}{$path}");
-            file_put_contents(ROOT . $path, $newContent);
+            $path = 'app/Controller/Component/UpdateComponent.php';
+            $newContent = $zip->getFromName("{$this->source['repo']}-{$this->lastVersion}/{$path}");
             $zip->close();
-            return true;
+            if ($newContent === false || $newContent === '') {
+                return false;
+            }
+            return file_put_contents(ROOT . DS . $path, $newContent) === strlen($newContent);
         }
 
         if (method_exists($this->Util, 'saveFolderInZIP'))
@@ -176,10 +178,9 @@ class UpdateComponent extends CakeObject
 
         // We copy the files here
         foreach ($updateFile as $key => $v) {
-            $has_key = hash_file('sha1', $key);
-            $hash = hash_file('sha1', $v);
-            if ($has_key == $hash)
+            if (is_file($v) && hash_file('sha1', $key) === hash_file('sha1', $v)) {
                 continue;
+            }
             if (!copy($key, $v)) {
                 $this->errorUpdate = $this->Lang->get('UPDATE__FAILED_FILE', [
                     '{FILE}' => $v,

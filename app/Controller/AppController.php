@@ -227,11 +227,18 @@ class AppController extends Controller
     {
         $this->loadModel('User');
 
-        if (!$this->User->isConnected() && ($cookie = $this->Cookie->read('remember_me')) && isset($cookie['pseudo']) && isset($cookie['password'])) {
-            $user = $this->User->find('first', ['conditions' => ['pseudo' => $cookie['pseudo']]]);
-
-            if (!empty($user) && $user['User']['password'] == $cookie['password'])
-                $this->Session->write('user', $user['User']['id']);
+        $token = $this->Cookie->read('remember_me');
+        if ($token !== null && !is_string($token)) {
+            $this->Cookie->delete('remember_me');
+        } elseif ($token !== null && !$this->User->isConnected()) {
+            $this->loadModel('RememberToken');
+            $userId = $this->RememberToken->userIdFor($token);
+            if ($userId === null) {
+                $this->Cookie->delete('remember_me');
+            } else {
+                $this->Session->renew();
+                $this->Session->write('user', $userId);
+            }
         }
 
         $this->isConnected = $this->User->isConnected();
@@ -264,6 +271,43 @@ class AppController extends Controller
         $microsoft_connection_url = "https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=$microsoft_client_id&response_type=code&scope=XboxLive.signin%20User.Read%20offline_access&redirect_uri=$microsoft_login_redirect_uri";
 
         $this->set(compact('user', 'microsoft_user_id', 'logout_microsoft_user_url', 'microsoft_connection_url', 'allow_microsoft_connection'));
+    }
+
+    protected function setRememberMe($userId, $enabled)
+    {
+        $this->forgetRememberedUser();
+        if (!$enabled) {
+            return;
+        }
+
+        $this->loadModel('RememberToken');
+        try {
+            $token = $this->RememberToken->issue($userId);
+        } catch (Exception $e) {
+            $this->log($e->getMessage(), 'error');
+            return;
+        }
+        if ($token === null) {
+            return;
+        }
+
+        $this->Cookie->write('remember_me', $token, false);
+        $cookie = $this->response->cookie($this->Cookie->name . '[remember_me]');
+        $cookie['expire'] = time() + WEEK;
+        $cookie['secure'] = $this->Cookie->secure || $this->request->is('ssl');
+        $cookie['httpOnly'] = true;
+        $this->response->cookie($cookie);
+    }
+
+    protected function forgetRememberedUser()
+    {
+        $token = $this->Cookie->read('remember_me');
+        if ($token === null) {
+            return;
+        }
+        $this->Cookie->delete('remember_me');
+        $this->loadModel('RememberToken');
+        $this->RememberToken->revoke($token);
     }
 
     public function __initWebsiteInfos()

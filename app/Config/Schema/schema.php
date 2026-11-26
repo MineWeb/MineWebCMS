@@ -232,6 +232,17 @@ class AppSchema extends CakeSchema
         ],
         'tableParameters' => ['charset' => 'latin1', 'collate' => 'latin1_swedish_ci', 'engine' => 'InnoDB']
     ];
+    public $remember_tokens = [
+        'token_hash' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 64, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1', 'key' => 'primary'],
+        'user_id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false],
+        'password_fingerprint' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 64, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
+        'expires' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 10, 'unsigned' => true, 'key' => 'index'],
+        'indexes' => [
+            'PRIMARY' => ['column' => 'token_hash', 'unique' => 1],
+            'expires' => ['column' => 'expires', 'unique' => 0]
+        ],
+        'tableParameters' => ['charset' => 'latin1', 'collate' => 'latin1_swedish_ci', 'engine' => 'InnoDB']
+    ];
     public $seo = [
         'id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'],
         'title' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 255, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],

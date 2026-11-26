@@ -144,8 +144,7 @@ class MicroSoftController extends AppController
             $this->Session->setFlash($this->Lang->get($login), 'default.error');
             return $this->redirect(Router::url($login_page, true));
         }
-        $username = $user["pseudo"];
-        $this->Cookie->write('remember_me', ['pseudo' => $username, 'password' => $user["password"]], true, '1 week');
+        $this->setRememberMe($login['session'], true);
         $this->Session->write('user', $user['id']);
 
         $this->Cookie->write('microsoft_user_id', $xbox_user_id);
