@@ -4,6 +4,8 @@ App::uses('CakeObject', 'Core');
 class APIComponent extends CakeObject
 {
 
+    const MAX_SKIN_BYTES = 10000000;
+
     public $components = ['Session', 'Configuration', 'Lang'];
     public $skin_active;
     public $cape_active;
@@ -90,22 +92,34 @@ class APIComponent extends CakeObject
 
     private function _getSkinImage($username)
     {
-        $content = "";
-        if ($this->skin_active) {
+        $content = false;
+        $validUsername = is_string($username) && preg_match('/\A[a-zA-Z0-9_]{1,16}\z/', $username);
+        if ($validUsername && $this->skin_active) {
             $filename = str_replace('{PLAYER}', $username, $this->config['skin_filename']);
-            $content = @file_get_contents(WWW_ROOT . $filename . '.png');
+            $path = WWW_ROOT . $filename . '.png';
+            if (is_file($path)) {
+                $content = $this->_readSkinFile($path);
+            }
         }
-        if (empty($content) && $this->config['get_premium_skins']) {
-            $content = base64_decode(Cache::read('skin_' . $username, 'skin'));
-            if (empty($content)) {
-                $content = $this->_getSkinFromUsername($username);
-                Cache::remember('skin_' . $username, function () use ($content) {
-                    return base64_encode($content);
-                }, 'skin');
+        if ($validUsername && !$content && $this->config['get_premium_skins']) {
+            $encoded = Cache::remember('skin_' . $username, function () use ($username) {
+                return base64_encode($this->_getSkinFromUsername($username));
+            }, 'skin');
+            if (is_string($encoded) && strlen($encoded) <= 4 * ceil(self::MAX_SKIN_BYTES / 3)) {
+                $content = base64_decode($encoded, true);
             }
         }
 
-        if ($content) return @imagecreatefromstring($content);
+        if ($content) {
+            $info = @getimagesizefromstring($content);
+            if ($info && $info[2] === IMAGETYPE_PNG && $info[0] >= 64 && $info[0] <= 1024
+                && $info[1] >= 32 && $info[1] <= 1024) {
+                $image = @imagecreatefromstring($content);
+                if ($image !== false) {
+                    return $image;
+                }
+            }
+        }
         // Return steve skin
         return imagecreatefromstring(base64_decode('iVBORw0KGgoAAAANSUhEUgAAAEAAAAAgCAMAAACVQ462AAAABGdBTUEAALGPC/xhBQAAAwBQTFRF' .
             'AAAAHxALIxcJJBgIJBgKJhgLJhoKJxsLJhoMKBsKKBsLKBoNKBwLKRwMKh0NKx4NKx4OLR0OLB4O' .
@@ -142,31 +156,43 @@ class APIComponent extends CakeObject
             'SUVORK5CYII='));
     }
 
+    private function _readSkinFile($path, $context = null)
+    {
+        $content = @file_get_contents($path, false, $context, 0, self::MAX_SKIN_BYTES + 1);
+        return $content !== false && strlen($content) <= self::MAX_SKIN_BYTES ? $content : false;
+    }
+
     private function _getSkinFromUsername($username)
     {
-        // We need to get UUID
-        $user = @json_decode(@file_get_contents("https://api.mojang.com/users/profiles/minecraft/$username"), true);
-        if (!$user) return false;
-        $uuid = $user['id'];
-        // Get profile with skin as base64
-        $profile = @json_decode(@file_get_contents("https://sessionserver.mojang.com/session/minecraft/profile/$uuid"), true);
-        if (!$profile) return false;
-        // Get texture item
-        $properties = $profile['properties'];
-        $textures = null;
-        foreach ($properties as $property)
-            if ($property['name'] === 'textures')
-                $textures = $property;
-        if (!$textures) return false;
-        // Decode value
-        $texturesObject = @json_decode(@base64_decode($textures['value']), true);
-        if (!$texturesObject) return false;
-        $url = $texturesObject['textures']['SKIN']['url'];
-        return file_get_contents($url);
+        $context = stream_context_create(['http' => ['timeout' => 3, 'follow_location' => 0]]);
+        $user = json_decode(@file_get_contents("https://api.mojang.com/users/profiles/minecraft/$username", false, $context, 0, 65536), true);
+        if (!isset($user['id']) || !is_string($user['id']) || !preg_match('/\A[a-f0-9]{32}\z/i', $user['id'])) {
+            return false;
+        }
+
+        $profile = json_decode(@file_get_contents('https://sessionserver.mojang.com/session/minecraft/profile/' . $user['id'], false, $context, 0, 65536), true);
+        if (!isset($profile['properties']) || !is_array($profile['properties'])) {
+            return false;
+        }
+        foreach ($profile['properties'] as $property) {
+            if (!isset($property['name'], $property['value']) || $property['name'] !== 'textures' || !is_string($property['value'])) {
+                continue;
+            }
+            $textures = json_decode(base64_decode($property['value'], true), true);
+            $url = isset($textures['textures']['SKIN']['url']) ? $textures['textures']['SKIN']['url'] : null;
+            if (is_string($url) && preg_match('~\Ahttps?://textures\.minecraft\.net/texture/([a-f0-9]{1,64})\z~i', $url, $match)) {
+                return $this->_readSkinFile('https://textures.minecraft.net/texture/' . $match[1], $context);
+            }
+        }
+        return false;
     }
 
     public function get_head_skin($username, $size = 50)
     {
+        if ((!is_int($size) && !is_string($size)) || !ctype_digit((string)$size) || $size < 1 || $size > 512) {
+            throw new BadRequestException();
+        }
+        $size = (int)$size;
         $src = $this->_getSkinImage($username);
         $dest = imagecreatetruecolor(8, 8);
         imagecopy($dest, $src, 0, 0, 8, 8, 8, 8);
