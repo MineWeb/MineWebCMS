@@ -183,7 +183,7 @@ class ThemeController extends AppController
      * @param $slug
      * @return string
      */
-    public function getCSSfolder($slug)
+    protected function getCSSfolder($slug)
     {
         if ($slug == "default")
             $CSSfolder = ROOT . DS . 'app' . DS . 'webroot' . DS . 'css';

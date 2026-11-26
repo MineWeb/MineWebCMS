@@ -229,7 +229,7 @@ class NavbarController extends AppController
      * @param array $data
      * @throws Exception
      */
-    public function extracted(array $data)
+    protected function extracted(array $data)
     {
         $this->loadModel('Navbar');
         if ($this->request->data['type'] == "dropdown") {

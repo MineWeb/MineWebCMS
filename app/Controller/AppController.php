@@ -44,6 +44,11 @@ class AppController extends Controller
     protected $isConnected = false;
     protected $isBanned = false;
 
+    protected function _isPrivateAction(ReflectionMethod $method, CakeRequest $request)
+    {
+        return method_exists(__CLASS__, $method->name) || parent::_isPrivateAction($method, $request);
+    }
+
     public function beforeFilter()
     {
         // find any xss vulnability on request data

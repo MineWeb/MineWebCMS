@@ -352,7 +352,7 @@ class NewsController extends AppController
     /**
      * @return array|int
      */
-    public function getNews()
+    protected function getNews()
     {
         $this->loadModel('News'); // on charge le model
         $search_news = $this->News->find('all', ['recursive' => 1, 'order' => 'id desc', 'conditions' => ['published' => 1]]); // on cherche les 3 dernières news (les plus veille)
