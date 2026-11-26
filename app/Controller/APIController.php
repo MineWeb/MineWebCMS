@@ -3,14 +3,30 @@
 class APIController extends AppController
 {
 
-    public $components = ['Session', 'API'];
+    public $components = ['Session', 'API', 'Security' => ['unlockedActions' => ['launcher']]];
 
-    public function launcher($username, $password, $args = null)
+    public function launcher()
     {
-        $this->autoRender = false;
-        $this->response->type('json');
-        $args = explode(',', $args);
-        $this->response->body(json_encode($this->API->get($username, $password, $args)));
+        $this->response->header('Cache-Control', 'no-store');
+        if (!$this->request->is('post')) {
+            $this->response->header('Allow', 'POST');
+            $this->response->statusCode(405);
+            return $this->sendJSON(['status' => false]);
+        }
+
+        $data = $this->request->data['xss'];
+        if (!empty($this->request->params['pass']) || !isset($data['username'], $data['password'])) {
+            return $this->sendJSON(['status' => false]);
+        }
+        $args = isset($data['args']) ? $data['args'] : [];
+        if (is_string($args)) {
+            $args = explode(',', $args);
+        }
+        if (!is_array($args)) {
+            return $this->sendJSON(['status' => false]);
+        }
+        $code = isset($data['code']) ? $data['code'] : null;
+        return $this->sendJSON($this->API->get($data['username'], $data['password'], $args, $code));
     }
 
     public function admin_index()

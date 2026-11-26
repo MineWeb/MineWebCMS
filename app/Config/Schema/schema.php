@@ -323,6 +323,8 @@ class AppSchema extends CakeSchema
         'tableParameters' => ['charset' => 'latin1', 'collate' => 'latin1_swedish_ci', 'engine' => 'InnoDB']
     ];
     public $users__twofactorauth = [
+        'attempts' => ['type' => 'integer', 'null' => false, 'default' => 0],
+        'attempts_since' => ['type' => 'integer', 'null' => false, 'default' => 0],
         'id' => ['type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'],
         'user_id' => ['type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false],
         'secret' => ['type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],

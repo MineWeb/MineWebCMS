@@ -91,9 +91,8 @@ function editDatabaseFile($database_path, $content)
     fclose($dbFile);
 
     if (!file_exists(ROOT . DS . 'config' . DS . 'secure.txt') && is_writable(ROOT . DS . 'config')) {
-        $date = date('H:i:s d/m/Y');
-        $ip = isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? htmlentities($_SERVER["HTTP_CF_CONNECTING_IP"]) : $_SERVER["REMOTE_ADDR"];
-        $data = '{ "created": "' . $date . '", "ip": "' . $ip . '" }';
+        require_once ROOT . DS . 'app' . DS . 'Lib' . DS . 'ClientIp.php';
+        $data = json_encode(['created' => date('H:i:s d/m/Y'), 'ip' => ClientIp::get()]);
         $fp = fopen(ROOT . DS . 'config' . DS . 'secure.txt', 'w+');
         fwrite($fp, $data);
         fclose($fp);

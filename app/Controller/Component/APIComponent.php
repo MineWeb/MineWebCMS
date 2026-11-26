@@ -193,34 +193,32 @@ class APIComponent extends CakeObject
 
     /* API Launcher (connexion) */
 
-    public function get($username, $password, array $args = null)
+    public function get($username, $password, array $args = null, $code = null)
     {
-        if (empty($username) || empty($password))
-            return ['status' => false]; // password must be a password encrypted by sha256
-        if (!is_array($args))
+        if (!is_string($username) || $username === '' || !is_string($password) || $password === '') {
             return ['status' => false];
+        }
 
-        $user = $this->User->find('first', ['conditions' => ['pseudo' => $username, 'password' => $password]]);
-        if (empty($user))
+        $record = $this->User->find('first', ['conditions' => ['User.pseudo' => $username]]);
+        $user = empty($record) ? [] : $record['User'];
+        unset($user['microsoft_connection']);
+        $confirmEmail = $this->Configuration->getKey('confirm_mail_signup') && $this->Configuration->getKey('confirm_mail_signup_block');
+        $login = $this->User->login($user, ['password' => $password], $confirmEmail, false, $this->controller, false);
+        if (empty($login['status'])) {
             return ['status' => false];
-        $user = $user['User'];
+        }
+
+        $auth = ClassRegistry::init('Authentification');
+        if ($auth->requiresCode($user['id']) && !$auth->verifyCode($user['id'], $code)) {
+            return ['status' => false];
+        }
 
         $result = ['status' => true];
-        if (in_array('id', $args))
-            $result['args']['id'] = $user['id'];
-        if (in_array('email', $args))
-            $result['args']['email'] = $user['email'];
-        if (in_array('rank', $args))
-            $result['args']['rank'] = $user['rank'];
-        if (in_array('money', $args))
-            $result['args']['money'] = $user['money'];
-        if (in_array('ip', $args))
-            $result['args']['ip'] = $user['ip'];
-        if (in_array('vote', $args))
-            $result['args']['vote'] = $user['vote'];
-        if (in_array('created', $args))
-            $result['args']['created'] = $user['created'];
-
+        foreach (['id', 'email', 'rank', 'money', 'ip', 'vote', 'created'] as $field) {
+            if (in_array($field, (array)$args, true)) {
+                $result['args'][$field] = isset($user[$field]) ? $user[$field] : null;
+            }
+        }
         return $result;
     }
 }

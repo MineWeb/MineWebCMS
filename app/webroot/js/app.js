@@ -1,3 +1,10 @@
+$(document).on('ajaxError', function (event, xhr, request) {
+    if (request.type === 'GET' && !request.crossDomain && xhr.status === 403 &&
+        xhr.responseJSON && xhr.responseJSON.confirmTwoFactor === true) {
+        window.location.assign(request.url);
+    }
+});
+
 $(document).ready(function(){
 
 	// Captcha reload

@@ -1,6 +1,7 @@
 <?php
 App::uses('CakeObject', 'Core');
 App::uses('ConnectionManager', 'Model');
+App::uses('ClientIp', 'Lib');
 
 class UtilComponent extends CakeObject
 {
@@ -44,11 +45,9 @@ class UtilComponent extends CakeObject
         $this->db_type = ConnectionManager::$config->default['datasource'];
     }
 
-    // Get ip (support cloudfare)
-
     public function getIP()
     {
-        return isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? htmlentities($_SERVER["HTTP_CF_CONNECTING_IP"]) : htmlentities($_SERVER["REMOTE_ADDR"]);
+        return ClientIp::get();
     }
 
     // Encoder un mot de passe

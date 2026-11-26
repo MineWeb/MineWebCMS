@@ -10,7 +10,7 @@ class RememberToken extends AppModel
 
     public function issue($userId)
     {
-        if (!filter_var($userId, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])) {
+        if (!filter_var($userId, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]) || ClassRegistry::init('Authentification')->requiresCode($userId)) {
             return null;
         }
 
@@ -49,7 +49,11 @@ class RememberToken extends AppModel
         }
 
         $fingerprint = hash_hmac('sha256', $record['User']['password'], $token);
-        return hash_equals($record['RememberToken']['password_fingerprint'], $fingerprint) ? $record['User']['id'] : null;
+        $userId = $record['User']['id'];
+        if (!hash_equals($record['RememberToken']['password_fingerprint'], $fingerprint) || ClassRegistry::init('Authentification')->requiresCode($userId)) {
+            return null;
+        }
+        return $userId;
     }
 
     public function revoke($token)

@@ -82,6 +82,18 @@ class PermissionsComponent extends CakeObject
         return in_array($perm, $this->getRankPermissions($rank));
     }
 
+    public function canManageRank($rank)
+    {
+        if (!$this->userModel->isConnected() || filter_var($rank, FILTER_VALIDATE_INT) === false)
+            return false;
+        if ($this->userModel->isAdmin())
+            return true;
+        if (in_array((int)$rank, [3, 4], true))
+            return false;
+
+        return !array_diff($this->getRankPermissions($rank), $this->getRankPermissions($this->userModel->getKey('rank')));
+    }
+
     public function getRankPermissions($rank)
     {
         if (isset($this->ranks[$rank]))

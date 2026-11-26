@@ -241,8 +241,7 @@ class AppController extends Controller
             if ($userId === null) {
                 $this->Cookie->delete('remember_me');
             } else {
-                $this->Session->renew();
-                $this->Session->write('user', $userId);
+                $this->renewUserSession($userId);
             }
         }
 
@@ -276,6 +275,36 @@ class AppController extends Controller
         $microsoft_connection_url = "https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=$microsoft_client_id&response_type=code&scope=XboxLive.signin%20User.Read%20offline_access&redirect_uri=$microsoft_login_redirect_uri";
 
         $this->set(compact('user', 'microsoft_user_id', 'logout_microsoft_user_url', 'microsoft_connection_url', 'allow_microsoft_connection'));
+    }
+
+    protected function renewUserSession($userId = null)
+    {
+        $this->Session->renew();
+        $this->Session->delete('TwoFactor');
+        $this->Session->delete('user_id_two_factor_auth');
+        $this->Session->delete('two-factor-auth-secret');
+        if ($userId === null) {
+            $this->Session->delete('user');
+        } else {
+            $this->Session->write('user', $userId);
+        }
+    }
+
+    protected function beginTwoFactorLogin($userId, $microsoftId = null)
+    {
+        $this->loadModel('Authentification');
+        if (!$this->Authentification->requiresCode($userId)) {
+            return false;
+        }
+
+        $this->forgetRememberedUser();
+        $this->renewUserSession();
+        $this->Session->write('TwoFactor.login', [
+            'user_id' => $userId,
+            'expires' => time() + 600,
+            'microsoft_id' => $microsoftId
+        ]);
+        return true;
     }
 
     protected function setRememberMe($userId, $enabled)

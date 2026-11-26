@@ -4,22 +4,17 @@ class Maintenance extends AppModel
 {
     function checkMaintenance($url, $utilComponent)
     {
-        $use_sqlite = $utilComponent->useSqlite();
-
-        $condition = ["'" . $url . "' LIKE CONCAT(Maintenance.url, '%')", "active" => 1];
-
-        if ($use_sqlite)
-            $condition = ["'" . $url . "' LIKE 'Maintenance.url' || '%')", "active" => 1];
-
-        $check = $this->find("first", ["conditions" => $condition]);
-        if (isset($check["Maintenance"]))
-            $check = $check["Maintenance"];
-        if ($check && (($check["url"] == $url) || ($check["sub_url"] && $url != "/")))
-            return $check;
-        $is_full = $this->isFullMaintenance();
-        if ($is_full)
-            return $is_full;
-        return false;
+        $result = $this->find('first', [
+            'conditions' => [
+                'active' => 1,
+                'OR' => [
+                    'url' => ['', $url],
+                    ['sub_url' => 1, 'INSTR(LOWER(?), LOWER(Maintenance.url)) = 1' => $url]
+                ]
+            ],
+            'order' => ['LENGTH(Maintenance.url)' => 'DESC', 'Maintenance.id' => 'ASC']
+        ]);
+        return $result ? $result['Maintenance'] : false;
     }
 
     function isFullMaintenance()

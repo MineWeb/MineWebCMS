@@ -25,36 +25,30 @@ class User extends AppModel
 
     public function validRegister($data, $UtilComponent)
     {
-        if (preg_match('`^([a-zA-Z0-9_]{2,16})$`', $data['pseudo'])) {
-            if ($data['password'] == $data['password_confirmation']) {
-                $data['password'] = $data['password_confirmation'] = $UtilComponent->password($data['password'], $data['pseudo']);
-
-                if (filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-                    $search_member_by_pseudo = $this->find('all', ['conditions' => ['pseudo' => $data['pseudo']]]);
-                    $search_member_by_uuid = $this->find('all', ['conditions' => ['uuid' => $data['uuid']]]);
-                    $search_member_by_email = $this->find('all', ['conditions' => ['email' => $data['email']]]);
-                    if (empty($search_member_by_pseudo)) {
-                        if (!ClassRegistry::init('Configuration')->getKey('check_uuid') || empty($search_member_by_uuid)) {
-                            if (empty($search_member_by_email)) {
-                                return true;
-                            } else {
-                                return 'USER__ERROR_EMAIL_ALREADY_REGISTERED';
-                            }
-                        } else {
-                            return 'USER__ERROR_UUID_ALREADY_REGISTERED';
-                        }
-                    } else {
-                        return 'USER__ERROR_PSEUDO_ALREADY_REGISTERED';
-                    }
-                } else {
-                    return 'USER__ERROR_EMAIL_NOT_VALID';
-                }
-            } else {
-                return 'USER__ERROR_PASSWORDS_NOT_SAME';
-            }
-        } else {
+        if (!isset($data['pseudo']) || !is_string($data['pseudo']) || !preg_match('/^[a-zA-Z0-9_]{2,16}\z/', $data['pseudo'])) {
             return 'USER__ERROR_PSEUDO_INVALID_FORMAT';
         }
+        if (!isset($data['password'], $data['password_confirmation']) || !is_string($data['password']) || $data['password'] !== $data['password_confirmation']) {
+            return 'USER__ERROR_PASSWORDS_NOT_SAME';
+        }
+        if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            return 'USER__ERROR_EMAIL_NOT_VALID';
+        }
+        if ($this->hasAny(['pseudo' => $data['pseudo']])) {
+            return 'USER__ERROR_PSEUDO_ALREADY_REGISTERED';
+        }
+        if (ClassRegistry::init('Configuration')->getKey('check_uuid')) {
+            if (empty($data['uuid']) || !is_string($data['uuid'])) {
+                return 'USER__ERROR_UUID';
+            }
+            if ($this->hasAny(['uuid' => $data['uuid']])) {
+                return 'USER__ERROR_UUID_ALREADY_REGISTERED';
+            }
+        }
+        if ($this->hasAny(['email' => $data['email']])) {
+            return 'USER__ERROR_EMAIL_ALREADY_REGISTERED';
+        }
+        return true;
     }
 
     public function register($data, $UtilComponent, $confirmEmail = false, $microsoftUserId = null)
@@ -99,7 +93,7 @@ class User extends AppModel
             && $this->getAffectedRows() === 1;
     }
 
-    public function login($user, $data, $confirmEmailIsNeeded = false, $checkUUID = false, $controller)
+    public function login($user, $data, $confirmEmailIsNeeded = false, $checkUUID = false, $controller = null, $storePendingEmail = true)
     {
         $UtilComponent = $controller->Util;
         $LoginRetryTable = ClassRegistry::init('LoginRetry');
@@ -126,19 +120,42 @@ class User extends AppModel
         if (!empty($findRetryWithIP) && $findRetryWithIP['LoginRetry']['count'] >= 5)
             return 'LOGIN__BLOCKED';
 
-        $username = $user['pseudo'];
-        if (!$user['microsoft_connection'] && $user['password'] != $UtilComponent->password($data['password'], $username, $user['password'], $user['password_hash']))
+        if (empty($user)) {
             return 'USER__ERROR_INVALID_CREDENTIALS';
-        $LoginRetryTable->deleteAll(['ip' => $ip]);
-        $conditions = [];
-
-        if ($this->getFromUser('password_hash', $username) != $UtilComponent->getPasswordHashType()) {
-            $conditions['password'] = $UtilComponent->password($data['password'], $username);
-            $conditions['password_hash'] = $UtilComponent->getPasswordHashType();
         }
 
+        $username = $user['pseudo'];
+        $conditions = [];
+        if (empty($user['microsoft_connection'])) {
+            if (!isset($data['password']) || !is_string($data['password']) || $data['password'] === '' || empty($user['password'])) {
+                return 'USER__ERROR_INVALID_CREDENTIALS';
+            }
+            $storedHash = preg_match('/^\$2[axy]\$/', $user['password']) ? 'blowfish' : $user['password_hash'];
+            $candidate = $UtilComponent->password($data['password'], $username, $user['password'], $storedHash);
+            if (!is_string($candidate) || !hash_equals($user['password'], $candidate)) {
+                return 'USER__ERROR_INVALID_CREDENTIALS';
+            }
+
+            $hash = $UtilComponent->getPasswordHashType();
+            // bcrypt truncates after 72 bytes. Preserve a longer legacy password in full.
+            if ($hash && $storedHash && $storedHash !== $hash && ($hash !== 'blowfish' || strlen($data['password']) <= 72)) {
+                $db = $this->getDataSource();
+                $password = $UtilComponent->password($data['password'], $username);
+                $changed = $this->updateAll([
+                    'password' => $db->value($password, 'string'),
+                    'password_hash' => $db->value($hash, 'string')
+                ], ['id' => $user['id'], 'password' => $user['password']]);
+                if (!$changed || $this->getAffectedRows() !== 1) {
+                    return 'USER__ERROR_INVALID_CREDENTIALS';
+                }
+            }
+        }
+        $LoginRetryTable->deleteAll(['ip' => $ip]);
+
         if ($confirmEmailIsNeeded && !empty($user['confirmed']) && date('Y-m-d H:i:s', strtotime($user['confirmed'])) != $user['confirmed']) {
-            $controller->Session->write('email.confirm.user.id', $user['id']);
+            if ($storePendingEmail) {
+                $controller->Session->write('email.confirm.user.id', $user['id']);
+            }
             return 'USER__MSG_NOT_CONFIRMED_EMAIL';
         }
         if ($checkUUID) {
@@ -154,9 +171,10 @@ class User extends AppModel
         }
         $conditions['ip'] = $ip;
 
-        $this->read(null, $user['id']);
-        $this->set($conditions);
-        $this->save();
+        $this->id = $user['id'];
+        if (!$this->save($conditions, true, array_keys($conditions))) {
+            return 'ERROR__INTERNAL_ERROR';
+        }
 
         return ['status' => true, 'session' => $user['id']];
     }

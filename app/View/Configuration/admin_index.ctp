@@ -24,17 +24,19 @@
                             <div class="tab-content">
                                 <div class="tab-pane fade show active" id="tab_1">
 
+                                    <?php if ($isAdmin) { ?>
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_WEBSITE_URL') ?></label>
                                         <?= $this->Form->input(false, [
                                             'div' => false,
                                             'type' => 'text',
-                                            'name' => 'name',
+                                            'name' => 'website_url',
                                             'class' => 'form-control',
                                             'value' => $config['website_url']
                                         ]); ?>
                                     </div>
 
+                                    <?php } ?>
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_NAME') ?></label>
                                         <?= $this->Form->input(false, [
@@ -46,6 +48,7 @@
                                         ]); ?>
                                     </div>
 
+                                    <?php if ($isAdmin) { ?>
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_EMAIL') ?></label>
                                         <?= $this->Form->input(false, [
@@ -57,6 +60,7 @@
                                         ]); ?>
                                     </div>
 
+                                    <?php } ?>
                                     <?php if ($shopIsInstalled) { ?>
 
                                         <div class="form-group">
@@ -97,11 +101,14 @@
                                                 'options' => $config['languages_available'],
                                                 'selected' => $config['lang']
                                             ]); ?>
+                                            <?php if ($isAdmin) { ?>
                                             <a href="<?= $this->Html->url(['action' => 'editLang']) ?>"
                                                class="btn btn-info"><?= $Lang->get('CONFIG__EDIT_LANG_FILE') ?></a>
+                                            <?php } ?>
                                         </div>
                                     </div>
 
+                                    <?php if ($isAdmin) { ?>
                                     <hr>
 
                                     <div class="form-group">
@@ -221,6 +228,7 @@
                                         <small class="text-info"><?= $Lang->get('CONFIG__KEY_SESSION_TYPE_INFO') ?></small>
                                     </div>
 
+                                    <?php } ?>
                                     <hr>
 
                                     <div class="form-group">
@@ -249,6 +257,7 @@
                                         </div>
                                     </div>
 
+                                    <?php if ($isAdmin) { ?>
                                     <hr>
 
                                     <div class="form-group">
@@ -458,6 +467,7 @@
 
                                     </div>
 
+                                    <?php } ?>
                                 </div>
                                 <!-- /.tab-pane -->
                             </div>

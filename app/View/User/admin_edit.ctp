@@ -14,26 +14,26 @@
 
                         <div class="form-group">
                             <label><?= $Lang->get('USER__USERNAME') ?></label>
-                            <input name="pseudo" class="form-control" value="<?= $search_user['pseudo'] ?>" type="text"
+                            <input name="pseudo" class="form-control" value="<?= h($search_user['pseudo'], false) ?>" type="text"
                                    autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label>UUID</label>
-                            <input name="uuid" class="form-control" value="<?= $search_user['uuid'] ?>" type="text"
+                            <input name="uuid" class="form-control" value="<?= h($search_user['uuid'], false) ?>" type="text"
                                    autocomplete="off">
                         </div>
 
                         <?php if (!$Configuration->getKey('confirm_mail_signup')) { ?>
                             <div class="form-group">
                                 <label><?= $Lang->get('USER__EMAIL') ?></label>
-                                <input name="email" class="form-control" value="<?= $search_user['email'] ?>"
+                                <input name="email" class="form-control" value="<?= h($search_user['email'], false) ?>"
                                        type="email" autocomplete="off">
                             </div>
                         <?php } else { ?>
                             <div class="form-group">
                                 <label><?= $Lang->get('USER__EMAIL') ?></label>
                                 <div class="input-group mb-3">
-                                    <input value="<?= $search_user['email'] ?>" type="email" name="email"
+                                    <input value="<?= h($search_user['email'], false) ?>" type="email" name="email"
                                            class="form-control">
                                     <div class="input-group-append">
                                         <a class="btn btn-success<?= ($search_user['confirmed']) ? ' disabled' : '' ?>"
@@ -52,7 +52,7 @@
                             <label><?= $Lang->get('USER__RANK') ?></label>
                             <select class="form-control" name="rank">
                                 <?php foreach ($options_ranks as $key => $value) { ?>
-                                    <option value="<?= $key ?>"<?= ($search_user['rank'] == $key) ? ' selected' : '' ?>><?= $value ?></option>
+                                    <option value="<?= $key ?>"<?= ($search_user['rank'] == $key) ? ' selected' : '' ?>><?= h($value, false) ?></option>
                                 <?php } ?>
                             </select>
                         </div>
@@ -60,14 +60,14 @@
                         <?php if ($EyPlugin->isInstalled('eywek.shop')) { ?>
                             <div class="form-group">
                                 <label><?= $Lang->get('USER__MONEY') ?></label>
-                                <input name="money" class="form-control" value="<?= $search_user['money'] ?>"
+                                <input name="money" class="form-control" value="<?= h($search_user['money'], false) ?>"
                                        type="text">
                             </div>
                         <?php } ?>
 
                         <div class="form-group">
                             <label>IP</label>
-                            <input class="form-control" value="<?= $search_user['ip'] ?>" type="text" disabled="">
+                            <input class="form-control" value="<?= h($search_user['ip'], false) ?>" type="text" disabled="">
                         </div>
 
                         <div class="form-group">

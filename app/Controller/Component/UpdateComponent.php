@@ -302,31 +302,41 @@ class UpdateComponent extends CakeObject
         $queries = [];
         foreach ($diffSchema as $table => $changes) {
 
-            // If we have columns to drop, we need to check this is not about a plugin
+            if (isset($changes['create'])) {
+                $queries[] = $db->createSchema($newSchema, $table);
+                continue;
+            }
+            if ($db instanceof Sqlite) {
+                foreach (isset($changes['add']) ? $changes['add'] : [] as $field => $definition) {
+                    if (!isset($definition['type'])) {
+                        continue;
+                    }
+                    if ($table === 'configurations' && $field === 'website_url') {
+                        $definition['default'] = '';
+                    }
+                    $queries[] = 'ALTER TABLE ' . $db->fullTableName($table) . ' ADD COLUMN '
+                        . $db->buildColumn(['name' => $field] + $definition);
+                }
+                continue;
+            }
+
             if (isset($changes['drop'])) {
-                foreach ($changes['drop'] as $column => $structure) { // For each drop, check column name
-                    if (count(explode('-', $column)) > 1) { // Plugin columns are prefixed by `pluginname-<column>`
-                        unset($diffSchema[$table]['drop'][$column]);
+                foreach (array_keys($changes['drop']) as $column) {
+                    if (strpos($column, '-') !== false) {
+                        unset($changes['drop'][$column]);
                     }
                 }
+                if (!$changes['drop']) {
+                    unset($changes['drop']);
+                }
             }
-            // Just delete `drop` action if we have removed all columns to drop (above)
-            if (isset($changes['drop']) && count($diffSchema[$table]['drop']) <= 0) {
-                unset($diffSchema[$table]['drop']);
-            }
-
-            // If we have actions (maybe we've removed the only action `drop`)
-            if (count($diffSchema[$table]) > 0) {
-                $queries[$table] = $db->alterSchema([$table => $diffSchema[$table]], $table);
-            }
-
-            if (isset($diffSchema[$table]['create'])) {
-                $queries[$table] = $db->createSchema($newSchema, $table);
+            if ($changes) {
+                $queries[] = $db->alterSchema([$table => $changes], $table);
             }
         }
 
         // Execute all queries generated from diff
-        foreach ($queries as $table => $query) {
+        foreach ($queries as $query) {
             try {
                 $db->execute($query);
             } catch (PDOException $e) {

@@ -29,43 +29,39 @@ class PermissionsController extends AppController
         ];
 
         $all_ranks = array_merge($all_ranks, $this->Rank->find('all'));
+        foreach ($all_ranks as $key => $rank) {
+            if (!$this->Permissions->canManageRank($rank['Rank']['rank_id']))
+                unset($all_ranks[$key]);
+        }
         $this->set(compact('all_ranks'));
 
-
+        $matrix = $this->Permissions->get_all();
+        $available = array_filter(array_keys($matrix), [$this->Permissions, 'can']);
         if ($this->request->is('post')) {
-            $permissions = [];
-
-            foreach ($all_ranks as $rank) {
-                $rank = $rank['Rank'];
-                $permissions[$rank['rank_id']] = [];
-            }
-
-            foreach ($this->request->data as $permission => $checked) {
-                if (is_array($checked))
-                    continue;
-                list($permission, $rank) = explode('-', $permission);
-                $permissions[$rank][] = $permission;
-            }
-
             $this->loadModel('Permission');
-            foreach ($permissions as $rank => $permission) {
-                if (!empty(($row = $this->Permission->find('first', ['conditions' => ['rank' => $rank]]))))
-                    $this->Permission->read(null, $row['Permission']['id']);
-                else
-                    $this->Permission->create();
-                $this->Permission->set([
-                    'permissions' => serialize($permission),
+            foreach ($all_ranks as $rankRow) {
+                $rank = $rankRow['Rank']['rank_id'];
+                $permissions = array_values(array_diff($this->Permissions->getRankPermissions($rank), $available));
+                foreach ($available as $permission) {
+                    if (isset($this->request->data[$permission . '-' . $rank]))
+                        $permissions[] = $permission;
+                }
+
+                $this->Permission->create();
+                $this->Permission->id = $this->Permission->field('id', ['rank' => $rank]);
+                $this->Permission->save([
+                    'permissions' => serialize($permissions),
                     'rank' => $rank
                 ]);
-                $this->Permission->save();
             }
 
             $this->Session->setFlash($this->Lang->get('PERMISSIONS__SUCCESS_SAVE'), 'default.success');
+            $this->Permissions->ranks = [];
+            $this->Permissions->permModel->cacheQueries = false;
+            $matrix = $this->Permissions->get_all();
         }
 
-        $this->Permissions->ranks = [];
-        $this->Permissions->permModel->cacheQueries = false;
-        $this->set('permissions', $this->Permissions->get_all());
+        $this->set('permissions', array_intersect_key($matrix, array_flip($available)));
     }
 
     function admin_add_rank()
@@ -118,6 +114,8 @@ class PermissionsController extends AppController
             $this->loadModel('Rank');
             $search = $this->Rank->find('first', ['conditions' => ['rank_id' => $id]]);
             if (!empty($search)) {
+                if (!$this->Permissions->canManageRank($search['Rank']['rank_id']))
+                    throw new ForbiddenException();
 
                 $this->Rank->delete($search['Rank']['id']);
 

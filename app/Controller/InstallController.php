@@ -35,7 +35,7 @@ class InstallController extends AppController
         $ip = $this->Util->getIP();
         if (file_exists(ROOT . DS . 'config' . DS . 'secure.txt')) {
             $secure = json_decode(file_get_contents(ROOT . DS . 'config' . DS . 'secure.txt'), true);
-            if ($secure['ip'] != $ip)
+            if ($ip === '' || !isset($secure['ip']) || $secure['ip'] !== $ip)
                 return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('ERROR__IP_WRONG')]));
         }
         if (empty($this->request->data['pseudo']) || empty($this->request->data['password']) || empty($this->request->data['password_confirmation']) || empty($this->request->data['email']))
@@ -48,6 +48,7 @@ class InstallController extends AppController
         $this->request->data['ip'] = $ip;
         $this->request->data['rank'] = 4;
         $this->request->data['password'] = $this->Util->password($this->request->data['password'], $this->request->data['pseudo']);
+        $this->request->data['password_hash'] = $this->Util->getPasswordHashType();
 
         $this->loadModel('User');
         $this->User->create();

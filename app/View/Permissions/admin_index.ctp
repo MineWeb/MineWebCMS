@@ -22,7 +22,7 @@
                                 <?php
                                 if (!empty($all_ranks)) {
                                     foreach ($all_ranks as $k => $data) {
-                                        echo '<th>' . $data['Rank']['name'] . '</th>';
+                                        echo '<th>' . h($data['Rank']['name'], false) . '</th>';
                                     }
                                 }
                                 ?>

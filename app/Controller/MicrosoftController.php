@@ -125,8 +125,11 @@ class MicroSoftController extends AppController
             $this->Session->setFlash($message, 'default.error');
             return $this->redirect(Router::url($login_page, true));
         }
+        if ($this->beginTwoFactorLogin($login['session'], $xbox_user_id)) {
+            return $this->redirect(['plugin' => null, 'controller' => 'authentification', 'action' => 'challenge']);
+        }
         $this->setRememberMe($login['session'], true);
-        $this->Session->write('user', $user['id']);
+        $this->renewUserSession($login['session']);
 
         $this->Cookie->write('microsoft_user_id', $xbox_user_id);
 
