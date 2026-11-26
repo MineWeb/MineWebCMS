@@ -137,8 +137,9 @@ class UpdateComponent extends CakeObject
             return file_put_contents(ROOT . DS . $path, $newContent) === strlen($newContent);
         }
 
-        if (method_exists($this->Util, 'saveFolderInZIP'))
-            $this->Util->saveFolderInZIP(ROOT . DS, ROOT . DS . 'app' . DS . 'tmp' . DS, "SAVE-" . $this->cmsVersion . "-" . time());
+        if (!$this->backupSite()) {
+            $this->log('Unable to create the automatic backup before the update.');
+        }
 
         // We need to copy all files
         // We avoid extractTo() method because we need to avoid copying $bypassFiles
@@ -204,6 +205,40 @@ class UpdateComponent extends CakeObject
 
         // Update database
         return $this->updateDb();
+    }
+
+    private function backupSite()
+    {
+        $tmp = ROOT . DS . 'app' . DS . 'tmp';
+        $backup = $tmp . DS . 'SAVE-' . $this->cmsVersion . '-' . time() . '.zip';
+        $release = $this->lastVersion . '.zip';
+        $zip = new ZipArchive();
+        if ($zip->open($backup, ZipArchive::CREATE | ZipArchive::EXCL) !== true) {
+            return false;
+        }
+
+        try {
+            $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(ROOT, FilesystemIterator::SKIP_DOTS));
+            foreach ($files as $file) {
+                if (!$file->isFile()) {
+                    continue;
+                }
+                $name = $file->getFilename();
+                if ($file->getPath() === $tmp && ($name === $release || preg_match('/^SAVE-.+-[0-9]+\.zip\z/', $name))) {
+                    continue;
+                }
+                $path = $file->getPathname();
+                $entry = str_replace(DS, '/', substr($path, strlen(ROOT) + 1));
+                if (!$zip->addFile($path, $entry)) {
+                    throw new RuntimeException("Unable to add $entry to the backup.");
+                }
+            }
+        } catch (RuntimeException $e) {
+            $zip->unchangeAll();
+            $zip->close();
+            return false;
+        }
+        return $zip->close();
     }
 
     /**
