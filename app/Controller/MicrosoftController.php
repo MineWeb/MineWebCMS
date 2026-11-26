@@ -17,7 +17,7 @@ class MicroSoftController extends AppController
         $microsoft_client_secret = $this->Configuration->getKey('microsoft_client_secret');
 
         $microsoft_redirect_uri = urlencode(Router::url('/microsoft/auth', true));
-        $login_page = "/login";
+        $login_page = $this->EyPlugin->isInstalled('phpierre.signinup') ? '/login' : '/';
 
         $microsoft_token_url = "https://login.live.com/oauth20_token.srf";
 
@@ -89,59 +89,40 @@ class MicroSoftController extends AppController
 
             $user = $this->User->find('first', ['conditions' => ['uuid' => $uuid]]);
             if ($user) {
-                $user = $user["User"];
-                if (isset($user['microsoft_user_id'])) {
+                if (isset($user['User']['microsoft_user_id'])) {
                     $this->Session->setFlash($this->Lang->get('USER__AUTH_MICROSOFT_USER_ALREADY_LINK'), 'default.error');
                     return $this->redirect(Router::url($login_page, true));
                 }
-                $this->User->read(null, $user['id']);
-                $this->User->set(['microsoft_user_id' => $xbox_user_id]);
-                $this->User->save();
+                $this->User->id = $user['User']['id'];
+                if (!$this->User->saveField('microsoft_user_id', $xbox_user_id)) {
+                    throw new InternalErrorException();
+                }
             } else {
 
                 $data_to_save['pseudo'] = $username;
                 $data_to_save['email'] = $microsoft_email;
-                $data_to_save['microsoft_user_id'] = $xbox_user_id;
-
-                $data_to_save['registered_by_microsoft'] = true;
 
                 $data_to_save['uuid'] = $uuid;
 
                 $data_to_save['password'] = $this->Util->generateRandomString(40);
-                $data_to_save['password_hash'] = $this->Util->getPasswordHashType();
 
-                $id = $this->User->register($data_to_save, $this->Util);
-
-
-                if ($this->Configuration->getKey('confirm_mail_signup')) {
-                    $confirmCode = substr(md5(uniqid()), 0, 12);
-                    $emailMsg = $this->Lang->get('EMAIL__CONTENT_CONFIRM_MAIL', [
-                        '{LINK}' => $this->Configuration->getKey('website_url') . "/user/confirm/$confirmCode",
-                        '{IP}' => $this->Util->getIP(),
-                        '{USERNAME}' => $username,
-                        '{DATE}' => $this->Lang->date(date('Y-m-d H:i:s'))
-                    ]);
-                    $email = $this->Util->prepareMail(
-                        $data_to_save['email'],
-                        $this->Lang->get('EMAIL__TITLE_CONFIRM_MAIL'),
-                        $emailMsg
-                    )->sendMail();
-                    if ($email) {
-                        $this->User->read(null, $id);
-                        $this->User->set(['confirmed' => $confirmCode]);
-                        $this->User->save();
-                    }
-                }
+                $id = $this->User->register(
+                    $data_to_save,
+                    $this->Util,
+                    $this->Configuration->getKey('confirm_mail_signup'),
+                    $xbox_user_id
+                );
+                $user = $this->User->read(null, $id);
             }
-
         }
-        if(isset($id))
-            $user = $this->User->find('first', ['conditions' => ['uuid' => $uuid]]);
         $user = $user["User"];
         $user['microsoft_connection'] = true;
         $login = $this->User->login($user, $user, ($this->Configuration->getKey('confirm_mail_signup') && $this->Configuration->getKey('confirm_mail_signup_block')), $this->Configuration->getKey('check_uuid'), $this);
         if (!isset($login['status']) || !$login['status'] ) {
-            $this->Session->setFlash($this->Lang->get($login), 'default.error');
+            $message = $this->Lang->get($login, [
+                '{URL_RESEND_EMAIL}' => Router::url(['controller' => 'user', 'action' => 'resend_confirmation'])
+            ]);
+            $this->Session->setFlash($message, 'default.error');
             return $this->redirect(Router::url($login_page, true));
         }
         $this->setRememberMe($login['session'], true);

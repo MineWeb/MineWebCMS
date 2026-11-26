@@ -69,27 +69,11 @@ class UserController extends AppController
                         // we record
                         $this->request->data['microsoft_user_id'] = null;
                         $this->request->data['registered_by_microsoft'] = false;
-                        $userSession = $this->User->register($this->request->data, $this->Util);
-                        // We send the mail if in the configuration it is activated
-                        if ($this->Configuration->getKey('confirm_mail_signup')) {
-                            $confirmCode = substr(md5(uniqid()), 0, 12);
-                            $emailMsg = $this->Lang->get('EMAIL__CONTENT_CONFIRM_MAIL', [
-                                '{LINK}' => $this->Configuration->getKey('website_url') . "/user/confirm/$confirmCode",
-                                '{IP}' => $this->Util->getIP(),
-                                '{USERNAME}' => $this->request->data['pseudo'],
-                                '{DATE}' => $this->Lang->date(date('Y-m-d H:i:s'))
-                            ]);
-                            $email = $this->Util->prepareMail(
-                                $this->request->data['email'],
-                                $this->Lang->get('EMAIL__TITLE_CONFIRM_MAIL'),
-                                $emailMsg
-                            )->sendMail();
-                            if ($email) {
-                                $this->User->read(null, $this->User->getLastInsertID());
-                                $this->User->set(['confirmed' => $confirmCode]);
-                                $this->User->save();
-                            }
-                        }
+                        $userSession = $this->User->register(
+                            $this->request->data,
+                            $this->Util,
+                            $this->Configuration->getKey('confirm_mail_signup')
+                        );
                         if (!$this->Configuration->getKey('confirm_mail_signup_block')) { // si on doit pas bloquer le compte si non confirmé
                             // on prépare la connexion
                             $this->Session->write('user', $userSession);
@@ -172,36 +156,36 @@ class UserController extends AppController
 
     }
 
-    function confirm($code = false)
+    function confirm($code = null)
     {
         $this->autoRender = false;
-        if (isset($code)) {
-            $find = $this->User->find('first', ['conditions' => ['confirmed' => $code]]);
-            if (!empty($find)) {
-                $event = new CakeEvent('beforeConfirmAccount', $this, ['user_id' => $find['User']['id']]);
-                $this->getEventManager()->dispatch($event);
-                if ($event->isStopped()) {
-                    return $event->result;
-                }
-                $this->User->read(null, $find['User']['id']);
-                $this->User->set(['confirmed' => date('Y-m-d H:i:s')]);
-                $this->User->save();
-                $userSession = $find['User']['id'];
-                $this->loadModel('Notification');
-                $this->Notification->setToUser($this->Lang->get('USER__CONFIRM_NOTIFICATION'), $find['User']['id']);
-                $this->Session->write('user', $userSession);
-                $event = new CakeEvent('onLogin', $this, ['user' => $this->User->getAllFromCurrentUser(), 'confirmAccount' => true]);
-                $this->getEventManager()->dispatch($event);
-                if ($event->isStopped()) {
-                    return $event->result;
-                }
-                $this->redirect(['action' => 'profile']);
-            } else {
-                throw new NotFoundException();
-            }
-        } else {
+        if (!is_string($code) || !in_array(strlen($code), [12, 24], true) || !ctype_xdigit($code)) {
             throw new NotFoundException();
         }
+
+        $user = $this->User->find('first', [
+            'fields' => ['User.id', 'User.confirmed'],
+            'conditions' => ['User.confirmed' => $code]
+        ]);
+        if (empty($user) || $user['User']['confirmed'] !== $code) {
+            throw new NotFoundException();
+        }
+
+        $userId = $user['User']['id'];
+        $event = new CakeEvent('beforeConfirmAccount', $this, ['user_id' => $userId]);
+        $this->getEventManager()->dispatch($event);
+        if ($event->isStopped()) {
+            return $event->result;
+        }
+        if (!$this->User->confirmEmail($userId, $code)) {
+            throw new NotFoundException();
+        }
+
+        $message = $this->Lang->get('USER__CONFIRM_NOTIFICATION');
+        $this->loadModel('Notification');
+        $this->Notification->setToUser($message, $userId);
+        $this->Session->setFlash($message, 'default.success');
+        return $this->redirect($this->isConnected ? ['action' => 'profile'] : '/');
     }
 
     function ajax_lostpasswd()
@@ -504,17 +488,7 @@ class UserController extends AppController
         $confirmed = $user['confirmed'];
         if (!$this->Configuration->getKey('confirm_mail_signup') || empty($confirmed) || date('Y-m-d H:i:s', strtotime($confirmed)) == $confirmed)
             throw new NotFoundException();
-        $emailMsg = $this->Lang->get('EMAIL__CONTENT_CONFIRM_MAIL', [
-            '{LINK}' => $this->Configuration->getKey('website_url') . "/user/confirm/$confirmed",
-            '{IP}' => $this->Util->getIP(),
-            '{USERNAME}' => $user['pseudo'],
-            '{DATE}' => $this->Lang->date(date('Y-m-d H:i:s'))
-        ]);
-        $email = $this->Util->prepareMail(
-            $user['email'],
-            $this->Lang->get('EMAIL__TITLE_CONFIRM_MAIL'),
-            $emailMsg
-        )->sendMail();
+        $email = $this->Util->sendConfirmationEmail($user['email'], $user['pseudo'], $confirmed);
         if ($email)
             $this->Session->setFlash($this->Lang->get('USER__CONFIRM_EMAIL_RESEND_SUCCESS'), 'default.success');
         else

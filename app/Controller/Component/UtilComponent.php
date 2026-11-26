@@ -140,6 +140,17 @@ class UtilComponent extends CakeObject
       MAIL
     */
 
+    public function sendConfirmationEmail($email, $username, $code)
+    {
+        $message = $this->controller->Lang->get('EMAIL__CONTENT_CONFIRM_MAIL', [
+            '{LINK}' => $this->controller->Configuration->getKey('website_url') . "/user/confirm/$code",
+            '{IP}' => $this->getIP(),
+            '{USERNAME}' => $username,
+            '{DATE}' => $this->controller->Lang->date(date('Y-m-d H:i:s'))
+        ]);
+        return $this->prepareMail($email, $this->controller->Lang->get('EMAIL__TITLE_CONFIRM_MAIL'), $message)->sendMail();
+    }
+
     public function prepareMail($to, $subject, $message)
     {
 

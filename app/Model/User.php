@@ -1,5 +1,6 @@
 <?php
 App::uses('CakeEvent', 'Event');
+App::uses('SecureRandom', 'Lib');
 
 class User extends AppModel
 {
@@ -56,7 +57,7 @@ class User extends AppModel
         }
     }
 
-    public function register($data, $UtilComponent)
+    public function register($data, $UtilComponent, $confirmEmail = false, $microsoftUserId = null)
     {
 
         $data_to_save = [];
@@ -72,10 +73,30 @@ class User extends AppModel
         $data_to_save['password'] = $UtilComponent->password($data['password'], $data['pseudo']);
         $data_to_save['password_hash'] = $UtilComponent->getPasswordHashType();
 
+        if ($microsoftUserId !== null) {
+            $data_to_save['microsoft_user_id'] = $microsoftUserId;
+            $data_to_save['registered_by_microsoft'] = true;
+        }
+        if ($confirmEmail) {
+            $data_to_save['confirmed'] = SecureRandom::hex(12);
+        }
+
         $this->create();
-        $this->set($data_to_save);
-        $this->save();
-        return $this->getLastInsertId();
+        if (!$this->save($data_to_save)) {
+            throw new InternalErrorException();
+        }
+        $userId = $this->getLastInsertId();
+        if ($confirmEmail) {
+            $UtilComponent->sendConfirmationEmail($data['email'], $data['pseudo'], $data_to_save['confirmed']);
+        }
+        return $userId;
+    }
+
+    public function confirmEmail($userId, $code)
+    {
+        $date = $this->getDataSource()->value(date('Y-m-d H:i:s'), 'string');
+        return $this->updateAll(['confirmed' => $date], ['id' => $userId, 'confirmed' => $code])
+            && $this->getAffectedRows() === 1;
     }
 
     public function login($user, $data, $confirmEmailIsNeeded = false, $checkUUID = false, $controller)
