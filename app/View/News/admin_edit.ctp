@@ -39,14 +39,7 @@
                         <div class="form-group">
                             <?= $this->Html->script('admin/tinymce/tinymce.min.js') ?>
                             <script type="text/javascript">
-                                tinymce.init({
-                                    selector: "textarea",
-                                    height: 300,
-                                    width: '100%',
-                                    language: 'fr_FR',
-                                    plugins: "textcolor code image link",
-                                    toolbar: "fontselect fontsizeselect bold italic underline strikethrough link image forecolor backcolor alignleft aligncenter alignright alignjustify cut copy paste bullist numlist outdent indent blockquote code"
-                                });
+                                tinymce.init(tinyParams);
                             </script>
                             <textarea id="editor" name="content" cols="30" rows="10"><?= $news['content'] ?></textarea>
                         </div>

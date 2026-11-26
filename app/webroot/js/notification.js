@@ -167,59 +167,49 @@
       },
 
       clear: function(id) {
-        var url = $.Notification.defaultOptions.url.clear;
-        url = url.replace('NOTIF_ID', id);
-
-        $.get(url);
-
-        delete this.notifications[id];
-
-        this.updateDOM();
+        var self = this;
+        var url = $.Notification.defaultOptions.url.clear.replace('NOTIF_ID', id);
+        $.post(url, {'data[_Token][key]': CSRF_TOKEN}, function(data) {
+          if (data.status) {
+            delete self.notifications[id];
+            self.updateDOM();
+          }
+        });
       },
+
       clearAll: function() {
-        var url = $.Notification.defaultOptions.url.clearAll;
-
-        $.get(url);
-
-        this.notifications = {};
-
-        this.updateDOM();
+        var self = this;
+        $.post($.Notification.defaultOptions.url.clearAll, {'data[_Token][key]': CSRF_TOKEN}, function(data) {
+          if (data.status) {
+            self.notifications = {};
+            self.updateDOM();
+          }
+        });
       },
 
       markAsSeen: function(id) {
-        var url = $.Notification.defaultOptions.url.markAsSeen;
-        url = url.replace('NOTIF_ID', id);
-
-        $.get(url);
-
-        this.notifications[id].seen = true;
-
-        this.updateDOM();
+        var self = this;
+        var url = $.Notification.defaultOptions.url.markAsSeen.replace('NOTIF_ID', id);
+        $.post(url, {'data[_Token][key]': CSRF_TOKEN}, function(data) {
+          if (data.status && self.notifications[id]) {
+            self.notifications[id].seen = true;
+            self.updateDOM();
+          }
+        });
       },
 
       markAllAsSeen: function(time) {
-
         var self = this;
-
-        if(time == undefined) {
-          time = 0;
-        }
-        time = time*1000;
-
-        setTimeout(function(){
-
-          var url = $.Notification.defaultOptions.url.markAllAsSeen;
-
-          $.get(url);
-
-          for (var k in notification.notifications) {
-            notification.notifications[k].seen = true;
-          }
-
-          self.updateDOM();
-
-        }, time);
-
+        setTimeout(function() {
+          $.post($.Notification.defaultOptions.url.markAllAsSeen, {'data[_Token][key]': CSRF_TOKEN}, function(data) {
+            if (data.status) {
+              for (var id in self.notifications) {
+                self.notifications[id].seen = true;
+              }
+              self.updateDOM();
+            }
+          });
+        }, (time || 0) * 1000);
       }
 
     };

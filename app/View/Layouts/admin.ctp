@@ -57,11 +57,18 @@
                     if (btn.is(':checked')) {
                         $('body').addClass("dark-mode");
                     } else {
-
                         $('body').removeClass("dark-mode");
                     }
 
-                    $.get('<?= $this->Html->url(['action' => 'switchAdminDarkMode', 'controller' => 'admin', 'admin' => true]) ?>');
+                    $.post('<?= $this->Html->url(['action' => 'switchAdminDarkMode', 'controller' => 'admin', 'admin' => true]) ?>', {'data[_Token][key]': CSRF_TOKEN});
+
+                    // Update TinyMCE
+                    if ($("#editor").length) {
+                        tinymce.remove("#editor");
+                        tinyParams.skin = btn.is(":checked") ? 'oxide-dark' : "";
+                        tinyParams.content_css = btn.is(":checked") ? "dark" : "";
+                        tinymce.init(tinyParams);
+                    }
 
                     return false;
                 });
@@ -82,9 +89,9 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link"
-                   href="<?= $this->Html->url(['controller' => 'user', 'action' => 'logout', 'admin' => false, 'plugin' => false]); ?>"><i
-                            class="fa fa-power-off"></i> <?= $Lang->get('USER__LOGOUT') ?></a>
+                <?= $this->Form->postLink('<i class="fa fa-power-off"></i> ' . h($Lang->get('USER__LOGOUT')),
+                    ['controller' => 'user', 'action' => 'logout', 'admin' => false, 'plugin' => false],
+                    ['class' => 'nav-link', 'escape' => false]) ?>
             </li>
         </ul>
 
@@ -160,43 +167,38 @@
 
                     <?php
 
-                    function checkCurrent($nav, $context)
+                    function prepareAdminNav($nav, $context, $currentUrl)
                     {
-                        if (is_array($nav))
-                            foreach ($nav as $name => $value) {
-                                if (isset($v['menu']))
-                                    return checkCurrent($v['menu'], $context);
-                                $route = (isset($value['route']) ? $context->Html->url($value['route']) : '#');
-                                $current = $route == $context->Html->url(null, false);
-                                if ($current == $route)
-                                    return true;
-                            }
-                        return false;
+                        $visible = [];
+                        foreach ($nav as $name => $item) {
+                            $item['menu'] = isset($item['menu']) ? prepareAdminNav($item['menu'], $context, $currentUrl) : [];
+                            $url = null;
+                            if (isset($item['route']) && (!isset($item['permission']) || $context->Permissions->can($item['permission'])))
+                                $url = $context->Html->url($item['route']);
+                            if ($url === null && !$item['menu'])
+                                continue;
+
+                            $item['url'] = $url === null ? '#' : $url;
+                            $item['active'] = $url === $currentUrl || in_array(true, array_column($item['menu'], 'active'), true);
+                            $visible[$name] = $item;
+                        }
+                        return $visible;
                     }
 
                     function displayNav($nav, $context)
                     {
                         foreach ($nav as $name => $value) {
-                            if (!isset($value['menu']) && !isset($value['route']))
-                                continue;
-                            if (!isset($value['menu']) && isset($value['permission']) && !$context->Permissions->can($value['permission'])) // Check perms
-                                continue;
-                            $currentMenu = false;
-                            if (isset($value['menu'])) {
-                                $currentMenu = checkCurrent($value['menu'], $context) ? "menu-open" : "";
-                                echo '<li class="nav-item has-treeview ' . ($currentMenu ? "menu-open" : "") . '">';
-                            } else
+                            if ($value['menu'])
+                                echo '<li class="nav-item has-treeview' . ($value['active'] ? ' menu-open' : '') . '">';
+                            else
                                 echo '<li class="nav-item">';
-                            // Link
-                            $route = (isset($value['route']) ? $context->Html->url($value['route']) : '#');
-                            $current = $route == $context->Html->url(null, false);
-                            echo '<a class="nav-link' . ($current || $currentMenu ? " active" : "") . '" href="' . $route . '">';
+                            echo '<a class="nav-link' . ($value['active'] ? ' active' : '') . '" href="' . $value['url'] . '">';
                             echo '<i class="' . (strpos($value['icon'], "fa-") ? $value['icon'] : "fa fa-" . $value['icon']) . ' nav-icon"></i>  <p>' . $context->Lang->get($name);
-                            if (isset($value['menu']))
+                            if ($value['menu'])
                                 echo '<i class="fas fa-angle-left right"></i></p>';
                             else echo '</p>';
                             echo '</a>';
-                            if (isset($value['menu'])) {
+                            if ($value['menu']) {
                                 echo '<ul class="nav nav-treeview">';
                                 displayNav($value['menu'], $context);
                                 echo '</ul>';
@@ -205,7 +207,8 @@
                         }
                     }
 
-                    displayNav($adminNavbar, (object)['Lang' => $Lang, 'Permissions' => $Permissions, 'Html' => $this->Html]);
+                    $context = (object)['Lang' => $Lang, 'Permissions' => $Permissions, 'Html' => $this->Html];
+                    displayNav(prepareAdminNav($adminNavbar, $context, $this->Html->url(null, false)), $context);
                     ?>
                 </ul>
             </nav>
@@ -217,6 +220,23 @@
             <?= (isset($admin_custom_message['messageHTML'])) ? $admin_custom_message['messageHTML'] : '' ?>
             <?php echo $this->Session->flash(); ?>
         </section>
+
+        <script type="text/javascript">
+            let tinyParams = {
+                selector: "textarea",
+                height: 300,
+                width: '100%',
+                language: <?= json_encode(Hash::get(['fr_FR' => 'fr_FR', 'ru_RU' => 'ru'], $Lang->lang['path'], 'en')) ?>,
+                plugins: "code image link",
+                toolbar: "fontselect fontsizeselect bold italic underline strikethrough link image forecolor backcolor alignleft aligncenter alignright alignjustify cut copy paste bullist numlist outdent indent blockquote code"
+            };
+            <?php
+            if ($admin_dark_mode) { ?>
+            tinyParams.skin = 'oxide-dark';
+            tinyParams.content_css = "dark";
+            <?php }
+            ?>
+        </script>
 
         <?php echo $this->fetch('content'); ?>
     </div>
@@ -283,6 +303,7 @@
     var CSRF_TOKEN = "<?= $csrfToken ?>";
 </script>
 
+<?= $this->fetch('postLink') ?>
 <?= $this->element('mineweb_admin_js'); ?>
 </body>
 </html>

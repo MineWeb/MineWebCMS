@@ -89,6 +89,9 @@ function initForms() {
         var contentType = false;
         var processData = false;
         inputs = (window.FormData) ? new FormData(form[0]) : null;
+        if (inputs && !form.find('input[name="data[_Token][key]"]:enabled').length) {
+          inputs.append('data[_Token][key]', CSRF_TOKEN);
+        }
       }
 
     } else {

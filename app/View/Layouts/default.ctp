@@ -76,8 +76,8 @@
                                        aria-expanded="false"><?= $value['Navbar']['name'] ?> <span class="caret"></span></a>
                                     <ul class="dropdown-menu" role="menu">
                                         <?php
-                                        $submenu = json_decode($value['Navbar']['submenu']);
-                                        foreach ($submenu as $k => $v) {
+                                        $submenu = json_decode($value['Navbar']['submenu'], true);
+                                        foreach (is_array($submenu) ? $submenu : [] as $k => $v) {
                                             ?>
                                             <li>
                                                 <a href="<?= rawurldecode($v) ?>"<?= ($value['Navbar']['open_new_tab']) ? ' target="_blank"' : '' ?>><?= rawurldecode(str_replace('+', ' ', $k)) ?></a>
@@ -120,7 +120,7 @@
                                     <?php } ?>
                                     <li class="divider"></li>
                                     <li>
-                                        <a href="<?= $this->Html->url(['controller' => 'user', 'action' => 'logout', 'plugin' => false]) ?>"><?= $Lang->get('USER__LOGOUT') ?></a>
+                                        <?= $this->Form->postLink($Lang->get('USER__LOGOUT'), ['controller' => 'user', 'action' => 'logout', 'plugin' => false]) ?>
                                     </li>
                                 <?php } else { ?>
                                     <li><a href="#" data-toggle="modal"

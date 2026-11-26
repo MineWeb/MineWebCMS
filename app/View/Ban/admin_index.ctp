@@ -30,8 +30,10 @@
                                     <td><?= $v["Ban"]["reason"] ?></td>
                                     <td><?= $v["Ban"]["ip"] != null ? $v["Ban"]["ip"] : $Lang->get("BAN__NOT_BAN_IP") ?></td>
                                     <td>
-                                        <a onClick="confirmDel('<?= $this->Html->url(['action' => 'unban', $v["Ban"]['id']]) ?>')"
-                                           class="btn btn-danger"><?= $Lang->get('BAN__UNBAN') ?></a>
+                                        <?= $this->Form->postLink($Lang->get('BAN__UNBAN'), ['action' => 'unban', $v["Ban"]['id']], [
+                                            'class' => 'btn btn-danger',
+                                            'confirm' => $Lang->get('GLOBAL__CONFIRM_DELETE')
+                                        ]) ?>
                                     </td>
                                 </tr>
                             <?php } ?>

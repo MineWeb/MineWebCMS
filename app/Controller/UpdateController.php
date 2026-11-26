@@ -14,6 +14,10 @@ class UpdateController extends AppController
     public function admin_clear_cache()
     {
         if (!$this->User->isAdmin()) throw new BadRequestException();
+        if ($this->request->is('get')) {
+            return $this->redirect(['action' => 'index']);
+        }
+        $this->request->allowMethod('post');
         $this->autoRender = false;
 
         App::uses('Folder', 'Utility');
@@ -27,6 +31,7 @@ class UpdateController extends AppController
 
     public function admin_update($componentUpdated = '0')
     {
+        $this->request->allowMethod('post');
         if (!$this->User->isAdmin()) throw new BadRequestException();
         $this->response->type('json');
         $this->autoRender = false;
@@ -40,7 +45,11 @@ class UpdateController extends AppController
 
     public function admin_check()
     {
-        unlink(ROOT . '/config/update');
+        $this->request->allowMethod('post');
+        if (!$this->User->isAdmin()) throw new BadRequestException();
+        if (is_file(ROOT . '/config/update')) {
+            unlink(ROOT . '/config/update');
+        }
         $this->redirect(['action' => 'index']);
     }
 }

@@ -66,31 +66,17 @@ class UserController extends AppController
                         if ($event->isStopped()) {
                             return $event->result;
                         }
-                        // on enregistre
-                        $userSession = $this->User->register($this->request->data, $this->Util);
-                        // On envoie le mail de confirmation si demandé
-                        if ($this->Configuration->getKey('confirm_mail_signup')) {
-                            $confirmCode = substr(md5(uniqid()), 0, 12);
-                            $emailMsg = $this->Lang->get('EMAIL__CONTENT_CONFIRM_MAIL', [
-                                '{LINK}' => Router::url('/user/confirm/', true) . $confirmCode,
-                                '{IP}' => $this->Util->getIP(),
-                                '{USERNAME}' => $this->request->data['pseudo'],
-                                '{DATE}' => $this->Lang->date(date('Y-m-d H:i:s'))
-                            ]);
-                            $email = $this->Util->prepareMail(
-                                $this->request->data['email'],
-                                $this->Lang->get('EMAIL__TITLE_CONFIRM_MAIL'),
-                                $emailMsg
-                            )->sendMail();
-                            if ($email) {
-                                $this->User->read(null, $this->User->getLastInsertID());
-                                $this->User->set(['confirmed' => $confirmCode]);
-                                $this->User->save();
-                            }
-                        }
+                        // we record
+                        $this->request->data['microsoft_user_id'] = null;
+                        $this->request->data['registered_by_microsoft'] = false;
+                        $userSession = $this->User->register(
+                            $this->request->data,
+                            $this->Util,
+                            $this->Configuration->getKey('confirm_mail_signup')
+                        );
                         if (!$this->Configuration->getKey('confirm_mail_signup_block')) { // si on doit pas bloquer le compte si non confirmé
                             // on prépare la connexion
-                            $this->Session->write('user', $userSession);
+                            $this->renewUserSession($userSession);
                             $event = new CakeEvent('onLogin', $this, ['user' => $this->User->getAllFromCurrentUser(), 'register' => true]);
                             $this->getEventManager()->dispatch($event);
                             if ($event->isStopped()) {
@@ -136,11 +122,9 @@ class UserController extends AppController
             return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]);
         $this->autoRender = false;
         $this->response->type('json');
-        $this->loadModel('Authentification');
         $this->loadModel('User');
         $this->request->data = $this->request->data['xss'];
         $user_login = $this->User->getAllFromUser($this->request->data['pseudo']);
-        $infos = $this->Authentification->find('first', ['conditions' => ['user_id' => $user_login['id'], 'enabled' => true]]);
 
         $confirmEmailIsNeeded = ($this->Configuration->getKey('confirm_mail_signup') && $this->Configuration->getKey('confirm_mail_signup_block'));
         $login = $this->User->login($user_login, $this->request->data, $confirmEmailIsNeeded, $this->Configuration->getKey('check_uuid'), $this);
@@ -151,60 +135,59 @@ class UserController extends AppController
             ]);
         }
 
-        $event = new CakeEvent('onLogin', $this, ['user' => $user_login]);
-        $this->getEventManager()->dispatch($event);
-        if ($event->isStopped())
-            return $event->result;
-        if ($infos) {
-            $this->Session->write('user_id_two_factor_auth', $user_login['id']);
-            $this->sendJSON([
+        if ($this->beginTwoFactorLogin($login['session'])) {
+            return $this->sendJSON([
                 'statut' => true,
                 'msg' => $this->Lang->get('USER__REGISTER_LOGIN'),
                 'two-factor-auth' => true
             ]);
-        } else {
-            if ($this->request->data['remember_me']) {
-                $this->Cookie->write('remember_me', [
-                    'pseudo' => $this->request->data['pseudo'],
-                    'password' => $this->User->getFromUser('password', $this->request->data['pseudo'])
-                ], true, '1 week');
-            }
-            $this->Session->write('user', $login['session']);
-            $this->sendJSON(['statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN')]);
         }
+        $event = new CakeEvent('onLogin', $this, ['user' => $user_login]);
+        $this->getEventManager()->dispatch($event);
+        if ($event->isStopped())
+            return $event->result;
+        $this->setRememberMe($login['session'], !empty($this->request->data['remember_me']));
+        $this->renewUserSession($login['session']);
+        return $this->sendJSON(['statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN')]);
 
     }
 
-    function confirm($code = false)
+    function confirm($code = null)
     {
         $this->autoRender = false;
-        if (isset($code)) {
-            $find = $this->User->find('first', ['conditions' => ['confirmed' => $code]]);
-            if (!empty($find)) {
-                $event = new CakeEvent('beforeConfirmAccount', $this, ['user_id' => $find['User']['id']]);
-                $this->getEventManager()->dispatch($event);
-                if ($event->isStopped()) {
-                    return $event->result;
-                }
-                $this->User->read(null, $find['User']['id']);
-                $this->User->set(['confirmed' => date('Y-m-d H:i:s')]);
-                $this->User->save();
-                $userSession = $find['User']['id'];
-                $this->loadModel('Notification');
-                $this->Notification->setToUser($this->Lang->get('USER__CONFIRM_NOTIFICATION'), $find['User']['id']);
-                $this->Session->write('user', $userSession);
-                $event = new CakeEvent('onLogin', $this, ['user' => $this->User->getAllFromCurrentUser(), 'confirmAccount' => true]);
-                $this->getEventManager()->dispatch($event);
-                if ($event->isStopped()) {
-                    return $event->result;
-                }
-                $this->redirect(['action' => 'profile']);
-            } else {
-                throw new NotFoundException();
-            }
-        } else {
+        if (!is_string($code) || !in_array(strlen($code), [12, 24], true) || !ctype_xdigit($code)) {
             throw new NotFoundException();
         }
+
+        $user = $this->User->find('first', [
+            'fields' => ['User.id', 'User.confirmed'],
+            'conditions' => ['User.confirmed' => $code]
+        ]);
+        if (empty($user) || $user['User']['confirmed'] !== $code) {
+            throw new NotFoundException();
+        }
+
+        $this->request->allowMethod('get', 'post');
+        if ($this->request->is('get')) {
+            $this->set('actionLabel', 'USER__CONFIRM_EMAIL');
+            return $this->render('confirm_action');
+        }
+
+        $userId = $user['User']['id'];
+        $event = new CakeEvent('beforeConfirmAccount', $this, ['user_id' => $userId]);
+        $this->getEventManager()->dispatch($event);
+        if ($event->isStopped()) {
+            return $event->result;
+        }
+        if (!$this->User->confirmEmail($userId, $code)) {
+            throw new NotFoundException();
+        }
+
+        $message = $this->Lang->get('USER__CONFIRM_NOTIFICATION');
+        $this->loadModel('Notification');
+        $this->Notification->setToUser($message, $userId);
+        $this->Session->setFlash($message, 'default.success');
+        return $this->redirect($this->isConnected ? ['action' => 'profile'] : '/');
     }
 
     function ajax_lostpasswd()
@@ -218,14 +201,21 @@ class UserController extends AppController
                 if (filter_var($this->request->data['email'], FILTER_VALIDATE_EMAIL)) {
                     $search = $this->User->find('first', ['conditions' => ['email' => $this->request->data['email']]]);
                     if (!empty($search)) {
+                        if ($search['User']['registered_by_microsoft'])
+                            return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('USER__AUTH_MICROSOFT_CANNOT_RESET_PASSWORD')]));
                         $this->loadModel('Lostpassword');
-                        $key = substr(md5(rand() . date('sihYdm')), 0, 10);
+                        try {
+                            $key = $this->Lostpassword->generateKey();
+                        } catch (Exception $e) {
+                            $this->log($e->getMessage(), 'error');
+                            return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get('ERROR__INTERNAL_ERROR')]);
+                        }
                         $to = $this->request->data['email'];
                         $subject = $this->Lang->get('USER__PASSWORD_RESET_LINK');
                         $message = $this->Lang->get('USER__PASSWORD_RESET_EMAIL_CONTENT', [
                             '{EMAIL}' => $this->request->data['email'],
                             '{PSEUDO}' => $search['User']['pseudo'],
-                            '{LINK}' => Router::url('/?resetpasswd_' . $key, true)
+                            '{LINK}' => $this->Configuration->getKey('website_url') . "/?resetpasswd_$key"
                         ]);
                         $event = new CakeEvent('beforeSendResetPassMail', $this, ['user_id' => $search['User']['id'], 'key' => $key]);
                         $this->getEventManager()->dispatch($event);
@@ -284,8 +274,11 @@ class UserController extends AppController
                 $this->request->data = $this->request->data['xss'];
                 $reset = $this->User->resetPass($this->request->data, $this);
                 if (isset($reset['status']) && $reset['status'] === true) {
-                    $this->Session->write('user', $reset['session']);
-                    $this->History->set('RESET_PASSWORD', 'user');
+                    $this->loadModel('Authentification');
+                    if (!$this->Authentification->requiresCode($reset['session'])) {
+                        $this->renewUserSession($reset['session']);
+                    }
+                    $this->History->set('RESET_PASSWORD', 'user', null, $reset['session']);
                     $this->response->body(json_encode([
                         'statut' => true,
                         'msg' => $this->Lang->get('USER__PASSWORD_RESET_SUCCESS')
@@ -309,17 +302,30 @@ class UserController extends AppController
 
     function logout()
     {
+        $this->request->allowMethod('get', 'post');
+        if ($this->request->is('get')) {
+            if (!$this->isConnected) {
+                return $this->redirect('/');
+            }
+            $this->set('actionLabel', 'USER__LOGOUT');
+            return $this->render('confirm_action');
+        }
+
         $this->autoRender = false;
         $event = new CakeEvent('onLogout', $this, ['session' => $this->Session->read('user')]);
         $this->getEventManager()->dispatch($event);
         if ($event->isStopped()) {
             return $event->result;
         }
-        if ($this->Cookie->read('remember_me')) {
-            $this->Cookie->delete('remember_me');
+
+        $microsoftLogout = $this->Cookie->read('microsoft_user_id');
+        if ($microsoftLogout) {
+            $this->Cookie->delete('microsoft_user_id');
         }
-        $this->Session->delete('user');
-        $this->redirect($this->referer());
+
+        $this->renewUserSession();
+        $this->forgetRememberedUser();
+        return $this->redirect($microsoftLogout ? $this->viewVars['logout_microsoft_user_url'] : '/');
     }
 
     function uploadSkin()
@@ -423,13 +429,8 @@ class UserController extends AppController
     function profile()
     {
         if ($this->isConnected) {
-            // Check if user has twofactorauth enabled
             $this->loadModel('Authentification');
-            $infos = $this->Authentification->find('first', ['conditions' => ['user_id' => $this->User->getKey('id'), 'enabled' => true]]);
-            if (empty($infos)) // no two factor auth
-                $this->set('twoFactorAuthStatus', false);
-            else
-                $this->set('twoFactorAuthStatus', true);
+            $this->set('twoFactorAuthStatus', $this->Authentification->requiresCode($this->User->getKey('id')));
             $this->loadModel('User');
             $this->set('title_for_layout', $this->User->getKey('pseudo'));
             $this->layout = $this->Configuration->getKey('layout');
@@ -471,6 +472,11 @@ class UserController extends AppController
             if ($this->Configuration->getKey('confirm_mail_signup') && !empty($confirmed) && date('Y-m-d H:i:s', strtotime($confirmed)) != $confirmed) { // si ca ne correspond pas à une date -> compte non confirmé
                 $this->Session->setFlash($this->Lang->get('USER__MSG_NOT_CONFIRMED_EMAIL', ['{URL_RESEND_EMAIL}' => Router::url(['action' => 'resend_confirmation'])]), 'default.warning');
             }
+            $connected_by_microsoft = false;
+            $microsoft_user_id = $this->Cookie->read('microsoft_user_id');
+            if (isset($microsoft_user_id))
+                $connected_by_microsoft = true;
+            $this->set(compact('connected_by_microsoft'));
         } else {
             $this->redirect('/');
         }
@@ -478,13 +484,13 @@ class UserController extends AppController
 
     function resend_confirmation()
     {
+        $this->request->allowMethod('get', 'post');
         if (!$this->isConnected && !$this->Session->check('email.confirm.user.id'))
             throw new ForbiddenException();
         if ($this->isConnected)
             $user = $this->User->getAllFromCurrentUser();
         else
             $user = $this->User->find('first', ['conditions' => ['id' => $this->Session->read('email.confirm.user.id')]]);
-        $this->Session->delete('email.confirm.user.id');
         if (!$user || empty($user))
             throw new NotFoundException();
         if (isset($user['User']))
@@ -492,17 +498,12 @@ class UserController extends AppController
         $confirmed = $user['confirmed'];
         if (!$this->Configuration->getKey('confirm_mail_signup') || empty($confirmed) || date('Y-m-d H:i:s', strtotime($confirmed)) == $confirmed)
             throw new NotFoundException();
-        $emailMsg = $this->Lang->get('EMAIL__CONTENT_CONFIRM_MAIL', [
-            '{LINK}' => Router::url('/user/confirm/', true) . $confirmed,
-            '{IP}' => $this->Util->getIP(),
-            '{USERNAME}' => $user['pseudo'],
-            '{DATE}' => $this->Lang->date(date('Y-m-d H:i:s'))
-        ]);
-        $email = $this->Util->prepareMail(
-            $user['email'],
-            $this->Lang->get('EMAIL__TITLE_CONFIRM_MAIL'),
-            $emailMsg
-        )->sendMail();
+        if ($this->request->is('get')) {
+            $this->set('actionLabel', 'USER__RESEND_CONFIRMATION_EMAIL');
+            return $this->render('confirm_action');
+        }
+        $this->Session->delete('email.confirm.user.id');
+        $email = $this->Util->sendConfirmationEmail($user['email'], $user['pseudo'], $confirmed);
         if ($email)
             $this->Session->setFlash($this->Lang->get('USER__CONFIRM_EMAIL_RESEND_SUCCESS'), 'default.success');
         else
@@ -521,9 +522,8 @@ class UserController extends AppController
             if ($this->request->is('ajax')) {
                 if (!empty($this->request->data['password']) and !empty($this->request->data['password_confirmation'])) {
                     $this->request->data = $this->request->data['xss'];
-                    $password = $this->Util->password($this->request->data['password'], $this->User->getKey('pseudo'));
-                    $password_confirmation = $this->Util->password($this->request->data['password_confirmation'], $this->User->getKey('pseudo'), $password);
-                    if ($password == $password_confirmation) {
+                    if (is_string($this->request->data['password']) && $this->request->data['password'] === $this->request->data['password_confirmation']) {
+                        $password = $this->Util->password($this->request->data['password'], $this->User->getKey('pseudo'));
                         $event = new CakeEvent('beforeUpdatePassword', $this, ['user' => $this->User->getAllFromCurrentUser(), 'new_password' => $password]);
                         $this->getEventManager()->dispatch($event);
                         if ($event->isStopped()) {
@@ -673,31 +673,30 @@ class UserController extends AppController
                 $this->DataTable->mDataProp = true;
                 $response = $this->DataTable->getResponse();
                 $users = $response['aaData'];
+                $view = $this->_getViewObject();
                 $data = [];
                 foreach ($users as $value) {
-                    $username = $value['User']['pseudo'];
+                    $username = h($value['User']['pseudo'], false);
                     $date = 'Le ' . $this->Lang->date($value['User']['created']);
                     $rank_label = (isset($available_ranks[$value['User']['rank']])) ? $available_ranks[$value['User']['rank']]['label'] : $available_ranks[0]['label'];
                     $rank_name = (isset($available_ranks[$value['User']['rank']])) ? $available_ranks[$value['User']['rank']]['name'] : $available_ranks[0]['name'];
-                    $rank = '<span class="label label-' . $rank_label . '">' . $rank_name . '</span>';
+                    $rank = '<span class="label label-' . $rank_label . '">' . h($rank_name, false) . '</span>';
                     $btns = '<a href="' . Router::url([
                             'controller' => 'user',
                             'action' => 'edit/' . $value["User"]["id"],
                             'admin' => true
                         ]) . '" class="btn btn-info">' . $this->Lang->get('GLOBAL__EDIT') . '</a>';
-                    $btns .= '&nbsp;<a onClick="confirmDel(\'' . Router::url([
-                            'controller' => 'user',
-                            'action' => 'delete/' . $value["User"]["id"],
-                            'admin' => true
-                        ]) . '\')" class="btn btn-danger">' . $this->Lang->get('GLOBAL__DELETE') . '</button>';
+                    $btns .= '&nbsp;' . $view->Form->postLink($this->Lang->get('GLOBAL__DELETE'), [
+                        'action' => 'delete', $value['User']['id']
+                    ], ['class' => 'btn btn-danger', 'confirm' => $this->Lang->get('GLOBAL__CONFIRM_DELETE')]);
                     $data[] = [
                         'User' => [
                             'pseudo' => $username,
-                            'email' => $value['User']['email'],
+                            'email' => h($value['User']['email'], false),
                             'created' => $date,
                             'rank' => $rank
                         ],
-                        'actions' => $btns
+                        'actions' => $this->Permissions->canManageRank($value['User']['rank']) ? $btns : ''
                     ];
                 }
                 $response['aaData'] = $data;
@@ -713,9 +712,10 @@ class UserController extends AppController
                 $this->layout = 'admin';
                 $this->set('title_for_layout', $this->Lang->get('USER__EDIT_TITLE'));
                 $this->loadModel('User');
-                $find = $this->User->find('all', ['conditions' => $this->User->__makeCondition($search)]);
-                if (!empty($find)) {
-                    $search_user = $find[0]['User'];
+                $search_user = $this->User->getAllFromUser($search);
+                if ($search_user) {
+                    if (!$this->Permissions->canManageRank($search_user['rank']))
+                        throw new ForbiddenException();
                     $this->loadModel('History');
                     $findHistory = $this->History->getLastFromUser($search_user['id']);
                     $search_user['History'] = $this->History->format($findHistory, $this->Lang);
@@ -729,6 +729,10 @@ class UserController extends AppController
                     $custom_ranks = $this->Rank->find('all');
                     foreach ($custom_ranks as $key => $value) {
                         $options_ranks[$value['Rank']['rank_id']] = $value['Rank']['name'];
+                    }
+                    foreach ($options_ranks as $rank => $name) {
+                        if (!$this->Permissions->canManageRank($rank))
+                            unset($options_ranks[$rank]);
                     }
                     if ($this->Configuration->getKey('confirm_mail_signup') && !empty($search_user['confirmed']) && date('Y-m-d H:i:s', strtotime($search_user['confirmed'])) != $search_user['confirmed']) {
                         $search_user['confirmed'] = false;
@@ -750,10 +754,13 @@ class UserController extends AppController
 
     function admin_confirm($user_id = false)
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         if (isset($user_id) && $this->isConnected and $this->Permissions->can('MANAGE_USERS')) {
             $find = $this->User->find('first', ['conditions' => ['id' => $user_id]]);
             if (!empty($find)) {
+                if (!$this->Permissions->canManageRank($find['User']['rank']))
+                    throw new ForbiddenException();
                 $event = new CakeEvent('beforeConfirmAccount', $this, ['user_id' => $find['User']['id'], 'manual' => true]);
                 $this->getEventManager()->dispatch($event);
                 if ($event->isStopped()) {
@@ -775,83 +782,108 @@ class UserController extends AppController
     {
         $this->autoRender = false;
         $this->response->type('json');
-        if ($this->isConnected && $this->Permissions->can('MANAGE_USERS')) {
-            if ($this->request->is('post')) {
-                $this->loadModel('User');
-                if (!empty($this->request->data['id']) && !empty($this->request->data['email']) && !empty($this->request->data['pseudo']) && (!empty($this->request->data['rank']) || $this->request->data['rank'] == 0)) {
-                    $this->request->data = $this->request->data['xss'];
-                    $findUser = $this->User->find('first',
-                        ['conditions' => ['id' => intval($this->request->data['id'])]]);
-                    if (empty($findUser)) {
-                        $this->response->body(json_encode([
-                            'statut' => false,
-                            'msg' => $this->Lang->get('USER__EDIT_ERROR_UNKNOWN')
-                        ]));
-                        return;
-                    }
-                    if ($findUser['User']['id'] == $this->User->getKey('id') && $this->request->data['rank'] != $this->User->getKey('rank')) {
-                        $this->response->body(json_encode([
-                            'statut' => false,
-                            'msg' => $this->Lang->get('USER__EDIT_ERROR_YOURSELF')
-                        ]));
-                        return;
-                    }
-                    $data = [
-                        'email' => $this->request->data['email'],
-                        'rank' => $this->request->data['rank'],
-                        'pseudo' => $this->request->data['pseudo'],
-                        'uuid' => $this->request->data['uuid']
-                    ];
-
-                    if (!empty($this->request->data['password'])) {
-                        $data['password'] = $this->Util->password($this->request->data['password'], $findUser['User']['pseudo']);
-                        $password_updated = true;
-                    } else {
-                        $password_updated = false;
-                    }
-                    if ($this->EyPlugin->isInstalled('eywek.shop')) {
-                        $data['money'] = $this->request->data['money'];
-                    }
-                    $event = new CakeEvent('beforeEditUser', $this, [
-                        'user_id' => $findUser['User']['id'],
-                        'data' => $data,
-                        'password_updated' => $password_updated
-                    ]);
-                    $this->getEventManager()->dispatch($event);
-                    if ($event->isStopped()) {
-                        return $event->result;
-                    }
-                    $this->User->read(null, $findUser['User']['id']);
-                    $this->User->set($data);
-                    $this->User->save();
-                    $this->History->set('EDIT_USER', 'user');
-                    $this->Session->setFlash($this->Lang->get('USER__EDIT_SUCCESS'), 'default.success');
-                    $this->response->body(json_encode([
-                        'statut' => true,
-                        'msg' => $this->Lang->get('USER__EDIT_SUCCESS')
-                    ]));
-                } else {
-                    $this->response->body(json_encode([
-                        'statut' => false,
-                        'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')
-                    ]));
-                }
-            } else {
-                throw new NotFoundException();
-            }
-        } else {
+        if (!$this->Permissions->can('MANAGE_USERS')) {
             throw new ForbiddenException();
         }
+        if (!$this->request->is('post')) {
+            throw new NotFoundException();
+        }
+        $this->request->data = $this->request->data['xss'];
+        $input = $this->request->data;
+        if (empty($input['id']) || empty($input['email']) || empty($input['pseudo']) || !isset($input['rank'])) {
+            return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]);
+        }
+        $record = $this->User->findById((int)$input['id']);
+        if (!$record) {
+            return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get('USER__EDIT_ERROR_UNKNOWN')]);
+        }
+        $user = $record['User'];
+        $rank = filter_var($input['rank'], FILTER_VALIDATE_INT);
+        if ($rank === false || !$this->Permissions->canManageRank($user['rank']) || !$this->Permissions->canManageRank($rank))
+            throw new ForbiddenException();
+        if ($rank !== (int)$user['rank']) {
+            if ($user['id'] == $this->User->getKey('id')) {
+                return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get('USER__EDIT_ERROR_YOURSELF')]);
+            }
+            if (!in_array($rank, [0, 2, 3, 4], true)) {
+                $this->loadModel('Rank');
+                if (!$this->Rank->hasAny(['rank_id' => $rank])) {
+                    throw new ForbiddenException();
+                }
+            }
+        }
+        $pseudo = $input['pseudo'];
+        if (!is_string($pseudo) || ($pseudo !== $user['pseudo'] && !preg_match('/^[a-zA-Z0-9_]{2,16}\z/', $pseudo)))
+            return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get('USER__ERROR_PSEUDO_INVALID_FORMAT')]);
+        if (!filter_var($input['email'], FILTER_VALIDATE_EMAIL) && $input['email'] !== $user['email'])
+            return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get('USER__ERROR_EMAIL_NOT_VALID')]);
+        $data = [
+            'email' => $input['email'],
+            'rank' => $rank,
+            'pseudo' => $pseudo,
+            'uuid' => isset($input['uuid']) ? $input['uuid'] : $user['uuid']
+        ];
+        $identityFields = [
+            'pseudo' => 'USER__ERROR_PSEUDO_ALREADY_REGISTERED',
+            'email' => 'USER__ERROR_EMAIL_ALREADY_REGISTERED',
+            'uuid' => 'USER__ERROR_UUID_ALREADY_REGISTERED'
+        ];
+        foreach ($identityFields as $field => $message) {
+            $value = $data[$field];
+            if ($value === $user[$field] || $value === '' || $value === null)
+                continue;
+            if ($field === 'uuid') {
+                if (!is_string($value) || !preg_match('/^([a-f0-9]{8})-?([a-f0-9]{4})-?([a-f0-9]{4})-?([a-f0-9]{4})-?([a-f0-9]{12})\z/i', $value, $groups))
+                    return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get('USER__ERROR_UUID')]);
+                $groups = array_slice($groups, 1);
+                $data['uuid'] = strtolower(implode('', $groups));
+                $value = [$data['uuid'], strtolower(implode('-', $groups))];
+            }
+            if ($this->User->hasAny(['id !=' => $user['id'], $field => $value]))
+                return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get($message)]);
+        }
+
+        $passwordUpdated = !empty($input['password']);
+        if ($passwordUpdated) {
+            if (!is_string($input['password'])) {
+                return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS')]);
+            }
+            $data['password'] = $this->Util->password($input['password'], $user['pseudo']);
+            $data['password_hash'] = $this->Util->getPasswordHashType();
+        }
+        if ($this->EyPlugin->isInstalled('eywek.shop') && isset($input['money'])) {
+            $data['money'] = $input['money'];
+        }
+        $event = new CakeEvent('beforeEditUser', $this, [
+            'user_id' => $user['id'],
+            'data' => $data,
+            'password_updated' => $passwordUpdated
+        ]);
+        $this->getEventManager()->dispatch($event);
+        if ($event->isStopped()) {
+            return $event->result;
+        }
+        $this->User->id = $user['id'];
+        if (!$this->User->save($data, true, array_keys($data))) {
+            return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get('ERROR__INTERNAL_ERROR')]);
+        }
+        $this->History->set('EDIT_USER', 'user');
+        $message = $this->Lang->get('USER__EDIT_SUCCESS');
+        $this->Session->setFlash($message, 'default.success');
+        return $this->sendJSON(['statut' => true, 'msg' => $message]);
     }
 
     function admin_delete($id = false)
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         if ($this->isConnected and $this->Permissions->can('MANAGE_USERS')) {
             if ($id != false) {
                 $this->loadModel('User');
-                $find = $this->User->find('all', ['conditions' => ['id' => $id]]);
+                $find = $this->User->find('first', ['conditions' => ['id' => $id]]);
                 if (!empty($find)) {
+                    if (!$this->Permissions->canManageRank($find['User']['rank']))
+                        throw new ForbiddenException();
                     $event = new CakeEvent('beforeDeleteUser', $this, ['user' => $find['User']]);
                     $this->getEventManager()->dispatch($event);
                     if ($event->isStopped()) {

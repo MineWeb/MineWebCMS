@@ -54,8 +54,8 @@
             <div class="alert alert-success"><?= $Lang->get('INSTALL__STEP_2_DESC') ?></div>
 
             <p>
-                <a href="<?= $this->Html->url(['controller' => 'install', 'action' => 'end']) ?>"
-                   class="btn btn-block btn-success"><?= $Lang->get('INSTALL__GO_TO_INDEX') ?></a>
+                <?= $this->Form->postLink($Lang->get('INSTALL__GO_TO_INDEX'), ['action' => 'end'],
+                    ['id' => 'finish-install', 'class' => 'btn btn-block btn-success']) ?>
             <ul class="pager wizard">
                 <li class="previous disabled"><a href="javascript:"><?= $Lang->get('GLOBAL__PREVIOUS') ?></a></li>
                 <li class="next" style="display: inline;"><a id="tabsleft-link"

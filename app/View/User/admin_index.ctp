@@ -92,9 +92,8 @@
 
                         for (var i = 0; i < users.length; i++) {
 
-                            console.log(users[i]);
-
-                            form.find('.list-group').prepend('<a href="<?= $this->Html->url(['action' => 'edit']) ?>/' + users[i]['id'] + '" class="list-group-item">' + users[i]['pseudo'] + '</a>')
+                            var link = $('<a>', { href: '<?= $this->Html->url(['action' => 'edit']) ?>/' + users[i]['id'], 'class': 'list-group-item' });
+                            form.find('.list-group').prepend(link.text(users[i]['pseudo']));
 
                         }
 

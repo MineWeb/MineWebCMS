@@ -44,12 +44,19 @@ class AppController extends Controller
     protected $isConnected = false;
     protected $isBanned = false;
 
+    protected function _isPrivateAction(ReflectionMethod $method, CakeRequest $request)
+    {
+        return method_exists(__CLASS__, $method->name) || parent::_isPrivateAction($method, $request);
+    }
+
     public function beforeFilter()
     {
         // find any xss vulnability on request data
-        $datas = $this->request->data;
-        $this->request->data = $this->xssProtection($datas, ['command', 'cmd', 'order', 'broadcast']);
-        $this->request->data["xss"] = $datas;
+        if ($this->request->data || $this->request->is('post')) {
+            $datas = $this->request->data;
+            $this->request->data = $this->xssProtection($datas, ['command', 'cmd', 'order', 'broadcast']);
+            $this->request->data['xss'] = $datas;
+        }
         // lowercase to avoid errors when the controller is called with uppercase
         $this->params['controller'] = strtolower($this->params['controller']);
         $this->params['action'] = strtolower($this->params['action']);
@@ -65,7 +72,7 @@ class AppController extends Controller
                     'admin' => false
                 ]);
             }
-    
+
             $this->loadModel("Maintenance");
             if ($this->params['controller'] != "maintenance" and !$this->Permissions->can("BYPASS_MAINTENANCE") and $maintenance = $this->Maintenance->checkMaintenance($this->here, $this->Util)) {
                 $this->redirect([
@@ -109,19 +116,24 @@ class AppController extends Controller
         // Plugins events
         $this->EyPlugin->initEventsListeners($this);
 
-        $event = new CakeEvent('requestPage', $this, $this->request->data);
-        $this->getEventManager()->dispatch($event);
-        if ($event->isStopped())
-            return $event->result;
+        $this->getEventManager()->attach(function () {
+            $this->set('csrfToken', $this->Session->read('_Token.key'));
+            if ($this instanceof CakeErrorController) {
+                return;
+            }
 
-        if ($this->request->is('post')) {
-            $event = new CakeEvent('onPostRequest', $this, $this->request->data);
+            $event = new CakeEvent('requestPage', $this, $this->request->data);
             $this->getEventManager()->dispatch($event);
             if ($event->isStopped())
                 return $event->result;
-        }
 
-
+            if ($this->request->is('post')) {
+                $event = new CakeEvent('onPostRequest', $this, $this->request->data);
+                $this->getEventManager()->dispatch($event);
+                if ($event->isStopped())
+                    return $event->result;
+            }
+        }, 'Controller.startup', ['priority' => 20]);
     }
 
     public function xssProtection($array, $excluded = [])
@@ -212,24 +224,23 @@ class AppController extends Controller
         $this->Security->blackHoleCallback = 'blackhole';
         $this->Security->validatePost = false;
         $this->Security->csrfUseOnce = false;
-
-        $csrfToken = $this->Session->read('_Token')['key'];
-        if (empty($csrfToken)) {
-            $this->Security->generateToken($this->request);
-            $csrfToken = $this->Session->read('_Token')['key'];
-        }
-        $this->set(compact('csrfToken'));
     }
 
     private function __initUser()
     {
         $this->loadModel('User');
 
-        if (!$this->User->isConnected() && ($cookie = $this->Cookie->read('remember_me')) && isset($cookie['pseudo']) && isset($cookie['password'])) {
-            $user = $this->User->find('first', ['conditions' => ['pseudo' => $cookie['pseudo']]]);
-
-            if (!empty($user) && $user['User']['password'] == $cookie['password'])
-                $this->Session->write('user', $user['User']['id']);
+        $token = $this->Cookie->read('remember_me');
+        if ($token !== null && !is_string($token)) {
+            $this->Cookie->delete('remember_me');
+        } elseif ($token !== null && !$this->User->isConnected()) {
+            $this->loadModel('RememberToken');
+            $userId = $this->RememberToken->userIdFor($token);
+            if ($userId === null) {
+                $this->Cookie->delete('remember_me');
+            } else {
+                $this->renewUserSession($userId);
+            }
         }
 
         $this->isConnected = $this->User->isConnected();
@@ -252,7 +263,83 @@ class AppController extends Controller
         if (!empty($user))
             $user['isAdmin'] = $this->User->isAdmin();
 
-        $this->set(compact('user'));
+        $microsoft_user_id = $this->Cookie->read('microsoft_user_id');
+        $microsoft_logout_redirect_uri = urlencode(Router::url('/user/logout', true));
+        $microsoft_client_id = $this->Configuration->getKey('microsoft_client_id');
+        $allow_microsoft_connection = $microsoft_client_id && $this->Configuration->getKey('check_uuid');
+        $logout_microsoft_user_url = "https://login.live.com/oauth20_logout.srf?client_id=$microsoft_client_id&redirect_uri=$microsoft_logout_redirect_uri";
+
+        $microsoft_connection_url = Router::url(['plugin' => null, 'admin' => false, 'controller' => 'microsoft', 'action' => 'login'], true);
+
+        $this->set(compact('user', 'microsoft_user_id', 'logout_microsoft_user_url', 'microsoft_connection_url', 'allow_microsoft_connection'));
+    }
+
+    protected function renewUserSession($userId = null)
+    {
+        $this->Session->renew();
+        $this->Session->delete('TwoFactor');
+        $this->Session->delete('Microsoft.state');
+        $this->Session->delete('user_id_two_factor_auth');
+        $this->Session->delete('two-factor-auth-secret');
+        if ($userId === null) {
+            $this->Session->delete('user');
+        } else {
+            $this->Session->write('user', $userId);
+        }
+    }
+
+    protected function beginTwoFactorLogin($userId, $microsoftId = null)
+    {
+        $this->loadModel('Authentification');
+        if (!$this->Authentification->requiresCode($userId)) {
+            return false;
+        }
+
+        $this->forgetRememberedUser();
+        $this->renewUserSession();
+        $this->Session->write('TwoFactor.login', [
+            'user_id' => $userId,
+            'expires' => time() + 600,
+            'microsoft_id' => $microsoftId
+        ]);
+        return true;
+    }
+
+    protected function setRememberMe($userId, $enabled)
+    {
+        $this->forgetRememberedUser();
+        if (!$enabled) {
+            return;
+        }
+
+        $this->loadModel('RememberToken');
+        try {
+            $token = $this->RememberToken->issue($userId);
+        } catch (Exception $e) {
+            $this->log($e->getMessage(), 'error');
+            return;
+        }
+        if ($token === null) {
+            return;
+        }
+
+        $this->Cookie->write('remember_me', $token, false);
+        $cookie = $this->response->cookie($this->Cookie->name . '[remember_me]');
+        $cookie['expire'] = time() + WEEK;
+        $cookie['secure'] = $this->Cookie->secure || $this->request->is('ssl');
+        $cookie['httpOnly'] = true;
+        $this->response->cookie($cookie);
+    }
+
+    protected function forgetRememberedUser()
+    {
+        $token = $this->Cookie->read('remember_me');
+        if ($token === null) {
+            return;
+        }
+        $this->Cookie->delete('remember_me');
+        $this->loadModel('RememberToken');
+        $this->RememberToken->revoke($token);
     }
 
     public function __initWebsiteInfos()
@@ -315,11 +402,6 @@ class AppController extends Controller
             'GLOBAL__CUSTOMIZE' => [
                 'icon' => 'fas fa-copy',
                 'menu' => [
-                    'NEWS__TITLE' => [
-                        'icon' => 'fas fa-pencil-ruler',
-                        'permission' => 'MANAGE_NEWS',
-                        'route' => ['controller' => 'news', 'action' => 'index', 'admin' => true, 'plugin' => false]
-                    ],
                     'PAGE__TITLE' => [
                         'icon' => 'fas fa-file-alt',
                         'permission' => 'MANAGE_PAGE',
@@ -329,6 +411,21 @@ class AppController extends Controller
                         'icon' => 'fas fa-bars',
                         'permission' => 'MANAGE_NAV',
                         'route' => ['controller' => 'navbar', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
+                    'MOTD__TITLE' => [
+                        'icon' => 'fas fa-sort-amount-up-alt',
+                        'permission' => 'MANAGE_MOTD',
+                        'route' => ['controller' => 'motd', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ]
+                ]
+            ],
+            'GLOBAL__COMMUNICATION' => [
+                'icon' => 'fas fa-bullhorn',
+                'menu' => [
+                    'NEWS__TITLE' => [
+                        'icon' => 'fas fa-pencil-ruler',
+                        'permission' => 'MANAGE_NEWS',
+                        'route' => ['controller' => 'news', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
                     'SEO__TITLE' => [
                         'icon' => 'fab fa-google',
@@ -340,10 +437,10 @@ class AppController extends Controller
                         'permission' => 'MANAGE_SOCIAL',
                         'route' => ['controller' => 'social', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
-                    'MOTD__TITLE' => [
-                        'icon' => 'fas fa-sort-amount-up-alt',
-                        'permission' => 'MANAGE_MOTD',
-                        'route' => ['controller' => 'motd', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    'NOTIFICATION__TITLE' => [
+                        'icon' => 'flag',
+                        'permission' => 'MANAGE_NOTIFICATIONS',
+                        'route' => ['controller' => 'notifications', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ]
                 ]
             ],
@@ -381,6 +478,21 @@ class AppController extends Controller
             'GLOBAL__ADMIN_PLUGINS' => [
                 'icon' => 'puzzle-piece'
             ],
+            'GLOBAL__ADMIN_LOGS_TITLE' => [
+                'icon' => 'scroll',
+                'menu' => [
+                    'LOG__VIEW_ERROR' => [
+                        'icon' => 'exclamation-circle',
+                        'permission' => 'VIEW_WEBSITE_LOGS',
+                        'route' => ['controller' => 'log', 'action' => 'error', 'admin' => true, 'plugin' => false]
+                    ],
+                    'LOG__VIEW_DEBUG' => [
+                        'icon' => 'exclamation-triangle',
+                        'permission' => 'VIEW_WEBSITE_LOGS',
+                        'route' => ['controller' => 'log', 'action' => 'debug', 'admin' => true, 'plugin' => false]
+                    ]
+                ]
+            ],
             'GLOBAL__ADMIN_OTHER_TITLE' => [
                 'icon' => 'fas fa-folder-open',
                 'menu' => [
@@ -398,11 +510,6 @@ class AppController extends Controller
                         'icon' => 'sitemap',
                         'permission' => 'MANAGE_API',
                         'route' => ['controller' => 'API', 'action' => 'index', 'admin' => true, 'plugin' => false]
-                    ],
-                    'NOTIFICATION__TITLE' => [
-                        'icon' => 'flag',
-                        'permission' => 'MANAGE_NOTIFICATIONS',
-                        'route' => ['controller' => 'notifications', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
                     'HISTORY__VIEW_GLOBAL' => [
                         'icon' => 'table',
@@ -511,11 +618,11 @@ class AppController extends Controller
 
     public function __initServerInfos()
     {
-        $configuration = $this->Configuration->getKey('banner_server');
+        $configuration = unserialize($this->Configuration->getKey('banner_server'));
         if (empty($configuration) && $this->Server->online())
             $server_infos = $this->Server->banner_infos();
         else if (!empty($configuration))
-            $server_infos = $this->Server->banner_infos(unserialize($configuration));
+            $server_infos = $this->Server->banner_infos($configuration);
         else {
             $this->set(['banner_server' => false, 'server_infos' => false]);
             return;
@@ -564,13 +671,8 @@ class AppController extends Controller
         $default = $this->Seo->find('first', ["conditions" => ['page' => null]])['Seo'];
         $current_url = $this->here;
         $get_page = [];
-        $condition = ["'" . $current_url . "' LIKE CONCAT(page, '%')"];
-
-        $use_sqlite = $this->Util->useSqlite();
-
-        if ($use_sqlite)
-            $condition = ["'" . $current_url . "' LIKE 'page' || '%' "];
-        $check = $this->Seo->find('all', ['conditions' => $condition]);
+        $prefixCondition = $this->Util->useSqlite() ? "? LIKE (page || '%')" : "? LIKE CONCAT(page, '%')";
+        $check = $this->Seo->find('all', ['conditions' => [$prefixCondition => $current_url]]);
 
         if ($check && ($check = max($check)) && ($check['Seo']["page"] == $current_url || $current_url != "/"))
             $get_page = $check['Seo'];
@@ -601,18 +703,18 @@ class AppController extends Controller
 
     public function blackhole($type)
     {
-        if ($type == "csrf") {
-            $this->autoRender = false;
-            if ($this->request->is('ajax')) {
-                $this->response->type('json');
-                $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('ERROR__CSRF')]));
-                $this->response->send();
-                exit;
-            } else {
-                $this->Session->setFlash($this->Lang->get('ERROR__CSRF'), 'default.error');
-                $this->redirect($this->referer());
-            }
+        if ($type !== 'secure' && $type !== 'csrf') {
+            throw new BadRequestException();
         }
+        $message = $this->Lang->get('ERROR__CSRF');
+        if ($this->request->is('ajax')) {
+            $this->response->statusCode(403);
+            $this->response->type('json');
+            $this->response->body(json_encode(['statut' => false, 'msg' => $message]));
+            $this->response->send();
+            exit;
+        }
+        throw new ForbiddenException($message);
     }
 
     public function sendGetRequest($url)
@@ -683,7 +785,8 @@ class AppController extends Controller
         return $this->response->body(json_encode($data));
     }
 
-    public function isIPBan($ip) {
+    public function isIPBan($ip)
+    {
         $this->loadModel("Ban");
         $ipIsBan = $this->Ban->find('first', ['conditions' => ['ip' => $ip]]);
 

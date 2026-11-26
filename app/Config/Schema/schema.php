@@ -54,6 +54,7 @@ class AppSchema extends CakeSchema
     ];
     public $configurations = [
         'id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'],
+        'website_url' => ['type' => 'text', 'null' => false, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'name' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'email' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'lang' => ['type' => 'string', 'null' => false, 'default' => 'fr', 'length' => 5, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
@@ -85,6 +86,8 @@ class AppSchema extends CakeSchema
         'passwords_salt' => ['type' => 'integer', 'null' => true, 'default' => 0, 'length' => 1, 'unsigned' => false],
         'forced_updates' => ['type' => 'integer', 'null' => true, 'default' => 1, 'length' => 1, 'unsigned' => false],
         'session_type' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 10, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
+        'microsoft_client_id' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+        'microsoft_client_secret' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
         'indexes' => [
             'PRIMARY' => ['column' => 'id', 'unique' => 1]
         ],
@@ -125,7 +128,7 @@ class AppSchema extends CakeSchema
     public $lostpasswords = [
         'id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'],
         'email' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
-        'key' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 10, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
+        'key' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 32, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'created' => ['type' => 'datetime', 'null' => false, 'default' => null],
         'indexes' => [
             'PRIMARY' => ['column' => 'id', 'unique' => 1]
@@ -229,6 +232,17 @@ class AppSchema extends CakeSchema
         ],
         'tableParameters' => ['charset' => 'latin1', 'collate' => 'latin1_swedish_ci', 'engine' => 'InnoDB']
     ];
+    public $remember_tokens = [
+        'token_hash' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 64, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1', 'key' => 'primary'],
+        'user_id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false],
+        'password_fingerprint' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 64, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
+        'expires' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 10, 'unsigned' => true, 'key' => 'index'],
+        'indexes' => [
+            'PRIMARY' => ['column' => 'token_hash', 'unique' => 1],
+            'expires' => ['column' => 'expires', 'unique' => 0]
+        ],
+        'tableParameters' => ['charset' => 'latin1', 'collate' => 'latin1_swedish_ci', 'engine' => 'InnoDB']
+    ];
     public $seo = [
         'id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'],
         'title' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 255, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
@@ -289,6 +303,8 @@ class AppSchema extends CakeSchema
     ];
     public $users = [
         'id' => ['type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'unsigned' => false, 'key' => 'primary'],
+        'microsoft_user_id' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 50, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+        'registered_by_microsoft' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
         'pseudo' => ['type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'uuid' => ['type' => 'string', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
         'password' => ['type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
@@ -307,6 +323,8 @@ class AppSchema extends CakeSchema
         'tableParameters' => ['charset' => 'latin1', 'collate' => 'latin1_swedish_ci', 'engine' => 'InnoDB']
     ];
     public $users__twofactorauth = [
+        'attempts' => ['type' => 'integer', 'null' => false, 'default' => 0],
+        'attempts_since' => ['type' => 'integer', 'null' => false, 'default' => 0],
         'id' => ['type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'],
         'user_id' => ['type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false],
         'secret' => ['type' => 'string', 'null' => false, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'],
@@ -398,6 +416,7 @@ class AppSchema extends CakeSchema
             if (!$exist) {
                 $configuration->create(); // la config de base
                 $configuration->set([
+                    'website_url' => 'https://domain.fr',
                     'name' => 'MineWeb',
                     'email' => 'noreply@mineweb.org',
                     'lang' => 'fr_FR',
@@ -428,7 +447,9 @@ class AppSchema extends CakeSchema
                     'passwords_hash' => 'blowfish',
                     'passwords_salt' => 0,
                     'forced_updates' => 1,
-                    'session_type' => 'php'
+                    'session_type' => 'php',
+                    'microsoft_client_id' => null,
+                    'microsoft_client_secret' => null,
                 ]);
 
                 $configuration->save();

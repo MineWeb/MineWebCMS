@@ -17,6 +17,7 @@ class ThemeController extends AppController
 
     function admin_enable($slug = false)
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         if (!$this->isConnected || !$this->Permissions->can('MANAGE_THEMES'))
             throw new ForbiddenException();
@@ -31,6 +32,7 @@ class ThemeController extends AppController
 
     function admin_delete($slug = false)
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         if (!$this->isConnected || !$this->Permissions->can('MANAGE_THEMES'))
             throw new ForbiddenException();
@@ -50,6 +52,7 @@ class ThemeController extends AppController
 
     function admin_install($slug = false)
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         if (!$this->isConnected || !$this->Permissions->can('MANAGE_THEMES'))
             throw new ForbiddenException();
@@ -70,6 +73,7 @@ class ThemeController extends AppController
 
     function admin_update($slug)
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         if (!$this->isConnected || !$this->Permissions->can('MANAGE_THEMES'))
             throw new ForbiddenException();
@@ -161,6 +165,7 @@ class ThemeController extends AppController
 
     public function admin_save_custom_file($slug)
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         if (!$this->isConnected || !$this->Permissions->can('MANAGE_THEMES'))
             throw new ForbiddenException();
@@ -183,7 +188,7 @@ class ThemeController extends AppController
      * @param $slug
      * @return string
      */
-    public function getCSSfolder($slug)
+    protected function getCSSfolder($slug)
     {
         if ($slug == "default")
             $CSSfolder = ROOT . DS . 'app' . DS . 'webroot' . DS . 'css';

@@ -40,7 +40,10 @@
                                     <td><div class="socialbutton-color p-2 text-center" style="border: 1px solid #ccc;background-color: <?= $value['SocialButton']['color'] ?>"><?= $value['SocialButton']['color'] ?><div></td>
                                     <td>
                                         <a href="<?= $this->Html->url(['controller' => 'social', 'action' => 'edit', $value['SocialButton']['id']]) ?>" class="btn btn-info"><?= $Lang->get('GLOBAL__EDIT') ?></a>
-                                        <a onClick="confirmDel('<?= $this->Html->url(['controller' => 'social', 'action' => 'delete', $value['SocialButton']['id']]) ?>')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
+                                        <?= $this->Form->postLink($Lang->get('GLOBAL__DELETE'), ['action' => 'delete', $value['SocialButton']['id']], [
+                                            'class' => 'btn btn-danger',
+                                            'confirm' => $Lang->get('GLOBAL__CONFIRM_DELETE')
+                                        ]) ?>
                                     </td>
                                 </tr>
                             <?php } ?>

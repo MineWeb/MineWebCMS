@@ -22,7 +22,7 @@
                                 <?php
                                 if (!empty($all_ranks)) {
                                     foreach ($all_ranks as $k => $data) {
-                                        echo '<th>' . $data['Rank']['name'] . '</th>';
+                                        echo '<th>' . h($data['Rank']['name'], false) . '</th>';
                                     }
                                 }
                                 ?>
@@ -49,16 +49,17 @@
                             <?php } ?>
                             <tr>
                                 <td></td>
+                                <?php foreach ($all_ranks as $data) { ?>
+                                    <td>
+                                        <?php if (isset($data['Rank']['id'])) { ?>
+                                            <?= $this->Form->postLink($Lang->get('GLOBAL__DELETE'), ['action' => 'delete_rank', $data['Rank']['rank_id']], [
+                                                'class' => 'btn btn-danger',
+                                                'inline' => false
+                                            ]) ?>
+                                        <?php } ?>
+                                    </td>
+                                <?php } ?>
                                 <td></td>
-                                <td></td>
-                                <td></td>
-                                <?php
-                                if (!empty($custom_ranks)) {
-                                    foreach ($custom_ranks as $k => $data) {
-                                        echo '<td><a class="btn btn-danger" href="' . $this->Html->url(['controller' => 'permissions', 'action' => 'delete_rank', 'admin' => true, $data['Rank']['rank_id']]) . '">' . $Lang->get('GLOBAL__DELETE') . '</a></td>';
-                                    }
-                                }
-                                ?>
                             </tr>
                             </tbody>
                         </table>
@@ -77,8 +78,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="myModalLabel"><?= $Lang->get('USER__RANK_ADD') ?></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
             <div class="modal-body">
                 <form action="<?= $this->Html->url(['action' => 'add_rank']) ?>" method="post" data-ajax="true"
@@ -88,8 +89,8 @@
                         <input type="text" class="form-control" name="name"
                                placeholder="<?= $Lang->get('GLOBAL__NAME') ?>">
                         <span class="input-group-btn">
-              <button class="btn btn-info btn-flat" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
-            </span>
+                            <button class="btn btn-info btn-flat" type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
+                        </span>
                     </div>
                 </form>
             </div>

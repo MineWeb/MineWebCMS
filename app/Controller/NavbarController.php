@@ -99,6 +99,7 @@ class NavbarController extends AppController
 
     public function admin_delete($id = false)
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         if ($this->isConnected and $this->Permissions->can('MANAGE_NAV')) {
             if ($id != false) {
@@ -138,6 +139,7 @@ class NavbarController extends AppController
 
     public function admin_add_ajax()
     {
+        $this->request->allowMethod('post');
         if (!$this->Permissions->can('MANAGE_NAV'))
             throw new ForbiddenException();
         if (!$this->request->is('ajax'))
@@ -198,6 +200,7 @@ class NavbarController extends AppController
 
     public function admin_edit_ajax($id)
     {
+        $this->request->allowMethod('post');
         if (!$this->Permissions->can('MANAGE_NAV'))
             throw new ForbiddenException();
         if (!$this->request->is('ajax'))
@@ -229,7 +232,7 @@ class NavbarController extends AppController
      * @param array $data
      * @throws Exception
      */
-    public function extracted(array $data)
+    protected function extracted(array $data)
     {
         $this->loadModel('Navbar');
         if ($this->request->data['type'] == "dropdown") {

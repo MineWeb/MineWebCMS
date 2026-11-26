@@ -91,9 +91,8 @@ function editDatabaseFile($database_path, $content)
     fclose($dbFile);
 
     if (!file_exists(ROOT . DS . 'config' . DS . 'secure.txt') && is_writable(ROOT . DS . 'config')) {
-        $date = date('H:i:s d/m/Y');
-        $ip = isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? htmlentities($_SERVER["HTTP_CF_CONNECTING_IP"]) : $_SERVER["REMOTE_ADDR"];
-        $data = '{ "created": "' . $date . '", "ip": "' . $ip . '" }';
+        require_once ROOT . DS . 'app' . DS . 'Lib' . DS . 'ClientIp.php';
+        $data = json_encode(['created' => date('H:i:s d/m/Y'), 'ip' => ClientIp::get()]);
         $fp = fopen(ROOT . DS . 'config' . DS . 'secure.txt', 'w+');
         fwrite($fp, $data);
         fclose($fp);
@@ -270,6 +269,7 @@ $compatible['rewriteUrl'] = false;
 $compatible['gd2'] = false;
 $compatible['openZip'] = false;
 $compatible['openSSL'] = false;
+$compatible['xml'] = false;
 
 $compatible['curl'] = extension_loaded('cURL');
 
@@ -327,6 +327,13 @@ if (!$compatible['openZip']) {
 }
 
 $compatible['openSSL'] = function_exists('openssl_pkey_new');
+
+$compatible['xml'] = extension_loaded('xml');
+
+if (!$compatible['xml']) {
+    $help['xml'] = "<a target='_blank' href='https://www.google.fr/search?query=Install+php" . $php . "-xml+on+$os'>Aide à propos de l'installation de php-xml sur ma machine</a><br /><br />";
+    $help['xml'] .= "<i class='fa fa-info'></i> Essayer cette commande : <b>sudo apt-get install php" . $php . "-xml</b>";
+}
 
 //allow_url_fopen
 if (function_exists('ini_get') && ini_get('allow_url_fopen') == "1") {

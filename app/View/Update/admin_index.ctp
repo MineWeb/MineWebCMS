@@ -24,10 +24,8 @@
                         <div class="btn-group">
                             <button id="update"
                                     class="btn btn-large btn-primary"><?= $Lang->get('GLOBAL__UPDATE') ?></button>
-                            <a class="btn btn-warning"
-                               href="<?= $this->Html->url(['action' => 'clear_cache']) ?>"><?= $Lang->get('UPDATE__CLEAR_CACHE') ?></a>
-                            <a href="<?= $this->Html->url(['action' => 'check']) ?>"
-                               class="btn btn-large btn-info"><?= $Lang->get('UPDATE__CHECK_STATUS') ?></a>
+                            <?= $this->Form->postLink($Lang->get('UPDATE__CLEAR_CACHE'), ['action' => 'clear_cache'], ['class' => 'btn btn-warning']) ?>
+                            <?= $this->Form->postLink($Lang->get('UPDATE__CHECK_STATUS'), ['action' => 'check'], ['class' => 'btn btn-large btn-info']) ?>
                             <a href="https://github.com/MineWeb/MineWebCMS/releases" target="_blank"
                                class="btn btn-large btn-default"><?= $Lang->get('UPDATE__VIEW_CHANGELOG') ?></a>
                         </div>
@@ -61,7 +59,7 @@
                 if (data.statut == "success") {
                     $('#update-msg').empty().html('<div class="alert alert-success" style="margin-top:10px;margin-right:10px;margin-left:10px;"><a class="close" data-dismiss="alert">×</a><b><?= $Lang->get('GLOBAL__SUCCESS') ?> :</b> ' + data.msg + '</i></div>').fadeIn(500);
                     $('#update').remove();
-                    window.location = '<?= $this->Html->url(['action' => 'clear_cache']) ?>';
+                    window.location = '<?= $this->Html->url(['action' => 'index']) ?>';
                 } else if (data.statut == "continue") {
                     callMAJ('1');
                 } else if (data.statut == "error") {

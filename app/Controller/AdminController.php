@@ -72,7 +72,7 @@ class AdminController extends AppController
             $this->loadModel('Server');
             $servers = $this->Server->find('all');
 
-            if ($this->request->is('ajax') && $this->Permissions->can('SEND_SERVER_COMMAND_FROM_DASHBOARD')) {
+            if ($this->request->is('post') && $this->request->is('ajax') && $this->Permissions->can('SEND_SERVER_COMMAND_FROM_DASHBOARD')) {
                 if (!empty($this->request->data['server_id'])) {
                     $this->ServerComponent = $this->Components->load('Server');
                     $this->autoRender = false;
@@ -105,6 +105,7 @@ class AdminController extends AppController
 
     public function admin_switchAdminDarkMode()
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         if ($this->isConnected) {
             $admin_dark_mode = $this->Cookie->read('use_admin_dark_mode');

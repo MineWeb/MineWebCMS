@@ -13,15 +13,30 @@
 
                             <ul class="nav nav-tabs">
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark active" href="#tab_1" data-toggle="tab" aria-expanded="true"><?= $Lang->get('CONFIG__GENERAL_PREFERENCES') ?></a>
+                                    <a class="nav-link text-dark active" href="#tab_1" data-toggle="tab"
+                                       aria-expanded="true"><?= $Lang->get('CONFIG__GENERAL_PREFERENCES') ?></a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" href="#tab_2" data-toggle="tab" aria-expanded="false"><?= $Lang->get('CONFIG__OTHER_PREFERENCES') ?></a>
+                                    <a class="nav-link text-dark" href="#tab_2" data-toggle="tab"
+                                       aria-expanded="false"><?= $Lang->get('CONFIG__OTHER_PREFERENCES') ?></a>
                                 </li>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane fade show active" id="tab_1">
 
+                                    <?php if ($isAdmin) { ?>
+                                    <div class="form-group">
+                                        <label><?= $Lang->get('CONFIG__KEY_WEBSITE_URL') ?></label>
+                                        <?= $this->Form->input(false, [
+                                            'div' => false,
+                                            'type' => 'text',
+                                            'name' => 'website_url',
+                                            'class' => 'form-control',
+                                            'value' => $config['website_url']
+                                        ]); ?>
+                                    </div>
+
+                                    <?php } ?>
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_NAME') ?></label>
                                         <?= $this->Form->input(false, [
@@ -33,6 +48,7 @@
                                         ]); ?>
                                     </div>
 
+                                    <?php if ($isAdmin) { ?>
                                     <div class="form-group">
                                         <label><?= $Lang->get('CONFIG__KEY_EMAIL') ?></label>
                                         <?= $this->Form->input(false, [
@@ -44,6 +60,7 @@
                                         ]); ?>
                                     </div>
 
+                                    <?php } ?>
                                     <?php if ($shopIsInstalled) { ?>
 
                                         <div class="form-group">
@@ -84,11 +101,14 @@
                                                 'options' => $config['languages_available'],
                                                 'selected' => $config['lang']
                                             ]); ?>
+                                            <?php if ($isAdmin) { ?>
                                             <a href="<?= $this->Html->url(['action' => 'editLang']) ?>"
                                                class="btn btn-info"><?= $Lang->get('CONFIG__EDIT_LANG_FILE') ?></a>
+                                            <?php } ?>
                                         </div>
                                     </div>
 
+                                    <?php if ($isAdmin) { ?>
                                     <hr>
 
                                     <div class="form-group">
@@ -147,6 +167,33 @@
                                     </div>
 
                                     <hr>
+
+                                    <div class="form-group">
+                                        <label><?= $Lang->get('CONFIG__MICROSOFT_CONNECTION') ?></label>
+                                        <br>
+                                        <small class="text-danger"><?= $Lang->get('CONFIG__MICROSOFT_CONNECTION_REQUIREMENT') ?></small>
+                                        <br>
+
+                                        <label><?= $Lang->get('CONFIG__MICROSOFT_CLIENT_ID') ?></label>
+                                        <?= $this->Form->input(false, array(
+                                            'div' => false,
+                                            'type' => 'text',
+                                            'name' => 'microsoft_client_id',
+                                            'class' => 'form-control',
+                                            'value' => $config['microsoft_client_id']
+                                        )); ?>
+
+                                        <label><?= $Lang->get('CONFIG__MICROSOFT_CLIENT_SECRET') ?></label>
+                                        <?= $this->Form->input(false, array(
+                                            'div' => false,
+                                            'type' => 'text',
+                                            'name' => 'microsoft_client_secret',
+                                            'class' => 'form-control',
+                                            'value' => $config['microsoft_client_secret']
+                                        )); ?>
+                                    </div>
+
+                                    <hr>
                                     <div class="form-group">
                                         <div class="form-group">
                                             <label><?= $Lang->get('CONFIG__CONDITION_TITLE') ?></label>
@@ -181,6 +228,7 @@
                                         <small class="text-info"><?= $Lang->get('CONFIG__KEY_SESSION_TYPE_INFO') ?></small>
                                     </div>
 
+                                    <?php } ?>
                                     <hr>
 
                                     <div class="form-group">
@@ -209,6 +257,7 @@
                                         </div>
                                     </div>
 
+                                    <?php if ($isAdmin) { ?>
                                     <hr>
 
                                     <div class="form-group">
@@ -418,6 +467,7 @@
 
                                     </div>
 
+                                    <?php } ?>
                                 </div>
                                 <!-- /.tab-pane -->
                             </div>

@@ -13,6 +13,7 @@ class PluginController extends AppController
 
     function admin_delete($id = false)
     {
+        $this->request->allowMethod('post');
         if (!$this->isConnected || !$this->Permissions->can('MANAGE_PLUGINS'))
             throw new ForbiddenException();
         if (!$id)
@@ -37,6 +38,7 @@ class PluginController extends AppController
 
     function admin_enable($id = false)
     {
+        $this->request->allowMethod('post');
         if (!$this->isConnected || !$this->Permissions->can('MANAGE_PLUGINS'))
             throw new ForbiddenException();
         if (!$id)
@@ -52,6 +54,7 @@ class PluginController extends AppController
 
     function admin_disable($id = false)
     {
+        $this->request->allowMethod('post');
         if (!$this->isConnected || !$this->Permissions->can('MANAGE_PLUGINS'))
             throw new ForbiddenException();
         if (!$id)
@@ -67,6 +70,7 @@ class PluginController extends AppController
 
     function admin_install($slug = false)
     {
+        $this->request->allowMethod('post');
         if (!$this->isConnected || !$this->Permissions->can('MANAGE_PLUGINS'))
             throw new ForbiddenException();
         if (!$slug)
@@ -90,8 +94,15 @@ class PluginController extends AppController
         $this->loadModel('Plugin');
         $this->Plugin->cacheQueries = false;
         $search = $this->Plugin->find('first', ['conditions' => ['name' => $slug]]);
+        $view = $this->_getViewObject();
+        $id = $search['Plugin']['id'];
+        $disable = $view->Form->postLink($this->Lang->get('GLOBAL__DISABLE'), ['action' => 'disable', $id], ['class' => 'btn btn-info']);
+        $delete = $view->Form->postLink($this->Lang->get('GLOBAL__DELETE'), ['action' => 'delete', $id], [
+            'class' => 'btn btn-danger', 'confirm' => $this->Lang->get('GLOBAL__CONFIRM_DELETE')
+        ]);
         $this->response->body(json_encode([
             'statut' => 'success',
+            'actions' => $disable . ' ' . $delete,
             'plugin' => [
                 'name' => $search['Plugin']['name'],
                 'DBid' => $search['Plugin']['id'],
@@ -104,6 +115,7 @@ class PluginController extends AppController
 
     function admin_update($slug)
     {
+        $this->request->allowMethod('post');
         if (!$this->isConnected || !$this->Permissions->can('MANAGE_PLUGINS'))
             throw new ForbiddenException();
         if (!$slug)

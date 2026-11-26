@@ -75,6 +75,7 @@ class BanController extends AppController
 
     function admin_unban($id = false)
     {
+        $this->request->allowMethod('post');
         if (!$this->isConnected || !$this->Permissions->can("MANAGE_BAN"))
             throw new ForbiddenException();
 

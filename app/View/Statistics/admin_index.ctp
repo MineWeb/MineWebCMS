@@ -47,8 +47,7 @@ foreach ($pages as $page => $visitcount) {
     <div class="row">
 
         <div class="col-md-12">
-            <a href="<?= $this->Html->url(['action' => 'reset']) ?>"
-               class="btn btn-info btn-block"><?= $Lang->get('STATS__RESET_LABEL') ?></a>
+            <?= $this->Form->postLink($Lang->get('STATS__RESET_LABEL'), ['action' => 'reset'], ['class' => 'btn btn-info btn-block']) ?>
         </div>
         <br><br>
 

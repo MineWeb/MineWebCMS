@@ -1,6 +1,7 @@
 <?php
 App::uses('CakeObject', 'Core');
 App::uses('ConnectionManager', 'Model');
+App::uses('ClientIp', 'Lib');
 
 class UtilComponent extends CakeObject
 {
@@ -44,11 +45,9 @@ class UtilComponent extends CakeObject
         $this->db_type = ConnectionManager::$config->default['datasource'];
     }
 
-    // Get ip (support cloudfare)
-
     public function getIP()
     {
-        return isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? htmlentities($_SERVER["HTTP_CF_CONNECTING_IP"]) : htmlentities($_SERVER["REMOTE_ADDR"]);
+        return ClientIp::get();
     }
 
     // Encoder un mot de passe
@@ -139,6 +138,17 @@ class UtilComponent extends CakeObject
     /*
       MAIL
     */
+
+    public function sendConfirmationEmail($email, $username, $code)
+    {
+        $message = $this->controller->Lang->get('EMAIL__CONTENT_CONFIRM_MAIL', [
+            '{LINK}' => $this->controller->Configuration->getKey('website_url') . "/user/confirm/$code",
+            '{IP}' => $this->getIP(),
+            '{USERNAME}' => $username,
+            '{DATE}' => $this->controller->Lang->date(date('Y-m-d H:i:s'))
+        ]);
+        return $this->prepareMail($email, $this->controller->Lang->get('EMAIL__TITLE_CONFIRM_MAIL'), $message)->sendMail();
+    }
 
     public function prepareMail($to, $subject, $message)
     {
@@ -356,10 +366,64 @@ class UtilComponent extends CakeObject
         return $this->db_type;
     }
 
-    public function useSqlite() {
+    public function useSqlite()
+    {
         if (strpos(strtolower($this->getDBType()), "sqlite"))
             return true;
         return false;
+    }
+
+    public function saveFolderInZIP($path, $location, $name)
+    {
+        $rootPath = realpath($path);
+        $zip = new ZipArchive();
+        $zip->open($location . $name . '.zip', ZipArchive::CREATE | ZipArchive::OVERWRITE);
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($rootPath),
+            RecursiveIteratorIterator::LEAVES_ONLY
+        );
+
+        foreach ($files as $file) {
+            if (!$file->isDir()) {
+                $file_path = $file->getRealPath();
+                $relativePath = substr($file_path, strlen($rootPath) + 1);
+                $zip->addFile($file_path, $relativePath);
+            }
+        }
+        $zip->close();
+    }
+
+    function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
+    public function sendHTTPPostRequest($url, $data, $headers)
+    {
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        $response = curl_exec($curl);
+        curl_close($curl);
+        return $response;
+    }
+
+    public function sendHTTPGetRequest($url, $headers)
+    {
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        $response = curl_exec($curl);
+        curl_close($curl);
+        return $response;
     }
 
 

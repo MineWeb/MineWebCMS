@@ -100,7 +100,8 @@ class ThemeComponent extends CakeObject
             else
                 $themesList->$id->valid = false;
             // set last version
-            if (($theme = $this->getThemeFromAPI($config->slug)) && $theme['version'])
+            $theme = $this->getThemeFromAPI($config->slug);
+            if (!empty($theme['version']))
                 $themesList->$id->lastVersion = $theme['version'];
         }
         // cache for this request
@@ -169,12 +170,12 @@ class ThemeComponent extends CakeObject
             $urls[] = "https://raw.githubusercontent.com/$repo/master/Config/config.json";
         $result = $this->controller->sendMultipleGetRequests($urls);
         $results = [];
-        $i = 0;
-        foreach ($result as $val) {
+        foreach ($result as $i => $val) {
             $json = json_decode($val, true);
+            if (!isset($json['name'], $json['slug']))
+                continue;
             $json['repo'] = $repos[$i];
             $results[] = $json;
-            $i++;
         }
         return $results;
     }
@@ -346,10 +347,12 @@ class ThemeComponent extends CakeObject
 
     private function getThemeFromAPI($slug)
     {
-        if (isset($this->themesAvailable['all']))
-            foreach ($this->themesAvailable['all'] as $theme)
-                if (strtolower($theme['slug']) === strtolower($slug))
+        if (isset($this->themesAvailable['all'])) {
+            foreach ($this->themesAvailable['all'] as $theme) {
+                if (isset($theme['slug']) && strcasecmp($theme['slug'], $slug) === 0)
                     return $theme;
+            }
+        }
         return false;
     }
 

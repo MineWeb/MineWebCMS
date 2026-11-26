@@ -6,7 +6,7 @@
 	},
 	"MESSAGES":  {
        "GLOBAL__HOME": "Главная",
-       "GLOBAL__FOOTER": "Все права защищены - 2021 <span class = \"pull-right \"> Работает на <a href= \"http://mineweb.org \"> mineweb.org </a> </ span >",
+       "GLOBAL__FOOTER": "Все права защищены - 2022 <span class = \"pull-right \"> Работает на <a href= \"http://mineweb.org \"> mineweb.org </a> </ span >",
        "GLOBAL__FOOTER_ADMIN": "<р> Разработка <a href= \"http://eywek.fr \"> Eywek </a> и спроектированный <a href= \"http://thisismac.fr \"> Mac '</a>. </ P> <p> Веб-сайт предоставлен <a href= \"http://mineweb.org \"> MineWeb </a> - все права защищены. </ P> <p> Эта CMS должна использоваться только лицом, которое приобрело лицензию. </ P> <ul> <li> <a href= \"http://mineweb.org \"> MineWeb </a> </ li> <li class = \"muted \">· </ Li> <li> <a href= \"http://eywek.fr \"> Eywek </a> </ li> <li class = \"приглушенный \"> · </ li> <li> <a href= \"http://thisismac.fr \"> Mac '</a> </ li> </ ul>",
        "GLOBAL__JOIN_US": "Присоединяйся к нам",
        "GLOBAL__FORMAT_DATE": "{%day} / {%month} / {%year} в {%hour | 24} h {%minutes}",
@@ -20,6 +20,7 @@
        "GLOBAL__CLOSE": "Закрыть",
        "GLOBAL__UPDATE_LOOK": "Смотрите обновление",
        "GLOBAL__CUSTOMIZE": "Настройка",
+       "GLOBAL__COMMUNICATION": "Коммуникация",
        "GLOBAL__SUCCESS": "Успех",
        "GLOBAL__INFO": "Информация",
        "GLOBAL__WARNING": "Предупреждение",
@@ -98,6 +99,7 @@
        "GLOBAL__DATE_R_SECOND": "секунда",
        "GLOBAL__CATEGORY": "Категория",
        "GLOBAL__TEMPORALY_DISABLED": "Временно отключен",
+       "GLOBAL__ADMIN_LOGS_TITLE": "Журналы",
         
        "HELP__TITLE": "Мне нужна помощь",
        "HELP__TICKET_ADD_SUCCESS": "Ваш билет отправлен!",
@@ -185,6 +187,7 @@
        "CONFIG__SOCIAL_PREFERENCES" : "Социальные предпочтения" ,
        "CONFIG__OTHER_PREFERENCES": "Настройки другого",
        "CONFIG__EDIT_SUCCESS" : "Конфигурация успешно изменена!" ,
+       "CONFIG__KEY_WEBSITE_URL": "Адрес сайта (С протоколом, http/https)",
        "CONFIG__KEY_NAME": "Имя сайта",
        "CONFIG__KEY_VERSION": "Версия CMS",
        "CONFIG__KEY_EMAIL": "Электронная почта для отправки электронных писем пользователям",
@@ -214,7 +217,7 @@
        "CONFIG__KEY_GOOGLE_ANALYTICS": "Идентификатор Google Analytics",
        "CONFIG__KEY_CAPTCHA_TYPE": "Тип капчи (код безопасности анти-робота)",
        "CONFIG__TYPE_CAPTCHA_GOOGLE": "ReCaptcha (Google)",
-       "CONFIG__TYPE_CAPTCHA_GOOGLE": "H-Captcha",
+       "CONFIG__TYPE_CAPTCHA_HCAPTCHA": "H-Captcha",
        "CONFIG__KEY_CAPTCHA_SITEKEY": "Ключ сайта (Доступно на сайте Captcha)",
        "CONFIG__KEY_CAPTCHA_SECRET" : "Секретный ключ (Доступно на сайте Captcha)" ,
        "CONFIG__KEY_CONFIRM_MAIL_SIGNUP" : "Подтверждение электронного адреса при регистрации" ,
@@ -236,6 +239,10 @@
        "CONFIG__KEY_SESSION_TYPE_DB": "База данных",
        "CONFIG__CHECK_UUID" : "Разрешить регистрацию только премиум-пользователям" ,
        "CONFIG__CHECK_UUID_CHANGE" : "Помимо активации резервной копии UUID для автоматического изменения никнейма игрока?" ,
+       "CONFIG__MICROSOFT_CONNECTION": "Разрешить вход через Microsoft для премиум-игроков",
+       "CONFIG__MICROSOFT_CONNECTION_REQUIREMENT": "Вы должны разрешать только премиум-игрокам регистрироваться для использования Microsoft!",
+       "CONFIG__MICROSOFT_CLIENT_ID": "Идентификатор приложения",
+       "CONFIG__MICROSOFT_CLIENT_SECRET": "Идентификатор секрета приложения",
         
        "EMAIL__TITLE_CONFIRM_MAIL": "Подтвердите свою электронную почту",
        "EMAIL__CONTENT_CONFIRM_MAIL": "Здравствуйте, {USERNAME}! <br> Вы зарегистрированы на {DATE} с IP-адресом <b> {IP} </b>, вам необходимо подтвердить свой адрес электронной почты, перейдя по этой ссылке <a href=\"{LINK}\">{LINK}</a>. <br> <br> <br> Это письмо автоматически, пожалуйста, не отвечайте.",
@@ -450,6 +457,7 @@
        "USER__IMG_UPLOAD_WIDTH_MAX" : "Максимум {PIXELS} пикселей ширины" ,
        "USER__IMG_UPLOAD_HEIGHT_MAX" : "Максимальная высота {PIXELS} пикселей" ,
        "USER__IMG_UPLOAD_TYPE_PNG" : "Должно быть в формате PNG" ,
+       "USER__RESEND_CONFIRMATION_EMAIL": "Отправить письмо подтверждения ещё раз",
        "USER__CONFIRM_EMAIL_RESEND_SUCCESS": "Письмо с подтверждением было отправлено вам повторно !",
        "USER__CONFIRM_EMAIL_RESEND_FAIL": "Не удалось отправить электронное письмо с подтверждением! Повторите попытку позже.",
        "USER__REMEMBER_ME": "Запомнить меня",
@@ -462,7 +470,14 @@
        "USER__LOGIN_CODE_INVALID" : "Код недействителен" ,
        "USER__VALID_CODE" : "Включить двухфакторную аутентификацию" ,
        "USER__SECRET_NOT_FOUND" : "Информация отсутствует, перезагрузите страницу и повторите попытку" ,
-       "USER__SUCCESS_ENABLED_TWO_FACTOR_AUTH" : "Двухфакторная аутентификация активирована!" ,
+       "USER__SUCCESS_ENABLED_TWO_FACTOR_AUTH" : "Двухфакторная аутентификация активирована!",
+
+       "USER__AUTH_MICROSOFT_CANNOT_RESET_PASSWORD": "Вы не можете сбросить пароль для учетной записи, зарегистрированной в Microsoft!",
+       "USER__AUTH_MICROSOFT_DOESNT_HAVE_MINECRAFT": "У вас нет майнкрафта на этой учетной записи майкрософт!",
+       "USER__AUTH_MICROSOFT_USERNAME_ALREADY_EXIST": "Этот никнейм уже существует с другим UUID, свяжитесь с администрацией.",
+       "USER__AUTH_MICROSOFT_USER_ALREADY_LINK": "К этой учетной записи Minecraft уже привязана учетная запись Microsoft!",
+       "USER__AUTH_MICROSOFT_LOGIN_WITH_MICROSOFT": "Войти с помощью Майкрософт",
+       "USER__AUTH_MICROSOFT_REGISTER_WITH_MICROSOFT": "Зарегистрироваться в Майкрософт",
 		
        "HISTORY__CATEGORY_NEWS": "Новости",
        "HISTORY__CATEGORY_VOTE": "Голосовать",
@@ -481,6 +496,7 @@
        "HISTORY__ACTION_DELETE_MEMBER": "Удаление пользователя",
        "HISTORY__ACTION_EDIT_USER": "Редактирование пользователя",
        "HISTORY__ACTION_ADD_MEMBER": "Добавление участника",
+       "HISTORY__ACTION_RESET_PASSWORD": "Сброс пароля",
        "HISTORY__ACTION_ADD_NEWS": "Добавление новостей",
        "HISTORY__ACTION_EDIT_NEWS": "Редактирование новостей",
        "HISTORY__ACTION_DELETE_NEWS": "Удаление новости",
@@ -538,9 +554,11 @@
        "PERMISSIONS__VIEW_STATISTICS": "Посмотреть статистику на панели администратора",
        "PERMISSIONS__MANAGE_THEMES" : "Управление темами сайта (активация, деактивация, удаление, установка, настройка)" ,
        "PERMISSIONS__MANAGE_USERS": "Управление пользователями (удаление, редактирование, просмотр списка)",
-       "PERMISSIONS__MANAGE_BANS":"Управление заблокированными пользователями",
+       "PERMISSIONS__MANAGE_BAN": "Управление заблокированными пользователями",
+       "PERMISSIONS__MANAGE_SOCIAL": "Управление социальными кнопками",
        "PERMISSIONS__SEND_SERVER_COMMAND_FROM_DASHBOARD" : "Отправлять команды на серверы с панели администратора" ,
        "PERMISSIONS__VIEW_WEBSITE_HISTORY": "Просмотр истории сайта",
+       "PERMISSIONS__VIEW_WEBSITE_LOGS": "Просмотр журналов сайта",
 
        "SERVER__TITLE": "Сервер",
        "SERVER__LINK": "Ссылка сервер-сайт",
@@ -730,6 +748,11 @@
         "SOCIAL__CANNOT_TOW_TYPE": "Не может быть одновременно определено 2 типа иллюстраций!",
         "SOCIAL__BUTTON_SUCCESS": "Кнопка успешно создана!",
         "SOCIAL__BUTTON_EDIT_SUCCESS": "Кнопка успешно отредактирована!",
-        "SOCIAL__BUTTON_DELETE_SUCCESS": "Кнопка была успешно удалена!"
+        "SOCIAL__BUTTON_DELETE_SUCCESS": "Кнопка была успешно удалена!",
+
+        "LOG__VIEW_ERROR": "Журналы ошибок",
+        "LOG__VIEW_DEBUG": "Отчет об ошибках",
+        "LOG__NO_ERROR": "Нет ошибок",
+        "LOG__NO_DEBUG": "Нет никаких отладок"
 	}
 }

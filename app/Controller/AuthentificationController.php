@@ -1,47 +1,70 @@
 <?php
 
+use MineWeb\Vendor\PhpQrCode\QRCode;
+
 class AuthentificationController extends AppController
 {
 
+    public function beforeFilter()
+    {
+        $this->response->disableCache();
+        return parent::beforeFilter();
+    }
+
+    public function challenge()
+    {
+        if ($this->Session->read('TwoFactor.login.expires') <= time()) {
+            return $this->redirect('/');
+        }
+        $this->set('verificationAction', 'validLogin');
+    }
+
     public function validLogin()
     {
-        $this->response->type('json');
-        $this->autoRender = false;
-        // valid request
-        if (!$this->request->is('post'))
+        if (!$this->request->is('post')) {
             throw new NotFoundException('Not post');
-        if (!$this->Session->read('user_id_two_factor_auth'))
-            return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('USER__LOGIN_INFOS_NOT_FOUND')]));
-        if (empty($this->request->data['code']))
-            return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('USER__LOGIN_CODE_EMPTY')]));
-        // find user
-        $user = $this->User->find('first', ['conditions' => ['id' => $this->Session->read('user_id_two_factor_auth')]]);
-        if (empty($user))
-            return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('USER__LOGIN_INFOS_NOT_FOUND')]));
-        // get user infos
-        $this->loadModel('Authentification');
-        $infos = $this->Authentification->find('first', ['conditions' => ['user_id' => $user['User']['id']]]);
-        if (empty($infos) || !$infos['Authentification']['enabled'])
-            return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('USER__LOGIN_INFOS_NOT_FOUND')]));
-        // include library & init
-        require ROOT . DS . 'vendors' . DS . 'auth' . DS . 'GoogleAuthentificator.php';
-        $ga = new PHPGangsta_GoogleAuthenticator();
-        // check code
-        $checkResult = $ga->verifyCode($infos['Authentification']['secret'], $this->request->data['code'], 2);    // 2 = 2*30sec clock tolerance
-        if (!$checkResult)
-            return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('USER__LOGIN_CODE_INVALID')]));
-        // remove TwoFactorAuth session
-        $this->Session->delete('user_id_two_factor_auth');
-        // login
-        if ($this->request->data['remember_me'])
-            $this->Cookie->write('remember_me', ['pseudo' => $user['User']['pseudo'], 'password' => $user['User']['password'], true, '1 week']);
-        $this->Session->write('user', $user['User']['id']);
-        $event = new CakeEvent('afterLogin', $this, ['user' => $this->User->getAllFromUser($user['User']['pseudo'])]);
+        }
+
+        $this->autoRender = false;
+        $this->response->type('json');
+        $challenge = $this->Session->read('TwoFactor.login');
+        if (empty($challenge['user_id']) || $challenge['expires'] <= time()) {
+            return $this->verificationError('USER__LOGIN_INFOS_NOT_FOUND', 'challenge');
+        }
+        $code = $this->request->data('code');
+        if ($code === null || $code === '') {
+            return $this->verificationError('USER__LOGIN_CODE_EMPTY', 'challenge');
+        }
+        $userId = $challenge['user_id'];
+        if (!$this->Authentification->verifyCode($userId, $code)) {
+            return $this->verificationError('USER__LOGIN_CODE_INVALID', 'challenge');
+        }
+        $user = $this->User->findById($userId);
+        if (!$user) {
+            return $this->verificationError('USER__LOGIN_INFOS_NOT_FOUND', 'challenge');
+        }
+
+        $this->Session->delete('TwoFactor.login');
+        if ($challenge['microsoft_id'] === null) {
+            $event = new CakeEvent('onLogin', $this, ['user' => $user['User']]);
+            $this->getEventManager()->dispatch($event);
+            if ($event->isStopped()) {
+                return $event->result;
+            }
+        }
+        $this->renewUserSession($userId);
+        if ($challenge['microsoft_id'] !== null) {
+            $this->Cookie->write('microsoft_user_id', $challenge['microsoft_id']);
+        }
+        $event = new CakeEvent('afterLogin', $this, ['user' => $user['User']]);
         $this->getEventManager()->dispatch($event);
         if ($event->isStopped()) {
             return $event->result;
         }
-        $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN')]));
+        if ($this->request->data('standalone')) {
+            return $this->redirect('/');
+        }
+        return $this->sendJSON(['statut' => true, 'msg' => $this->Lang->get('USER__REGISTER_LOGIN')]);
     }
 
     /**
@@ -49,69 +72,130 @@ class AuthentificationController extends AppController
      */
     public function generateSecret()
     {
-        $this->response->type('json');
-        $this->autoRender = false;
-        // valid request
-        if (!$this->isConnected)
+        if (!$this->isConnected) {
             throw new ForbiddenException('Not logged');
-        // include library & init
-        require ROOT . DS . 'vendors' . DS . 'auth' . DS . 'GoogleAuthentificator.php';
-        $ga = new PHPGangsta_GoogleAuthenticator();
-        // generate and set into session
-        $secret = $ga->createSecret();
-        $qrCodeUrl = $ga->getQRCodeGoogleUrl($this->User->getKey('pseudo'), $secret, $this->Configuration->getKey('name'));
-        $this->Session->write('two-factor-auth-secret', $secret);
-        // send to user
-        $this->response->body(json_encode(['qrcode_url' => $qrCodeUrl, 'secret' => $secret]));
+        }
+        $userId = $this->User->getKey('id');
+        if ($this->Authentification->requiresCode($userId)) {
+            throw new ForbiddenException();
+        }
+
+        $secret = $this->Session->read('TwoFactor.secret.' . $userId);
+        if (!$secret) {
+            require_once ROOT . DS . 'vendors' . DS . 'auth' . DS . 'GoogleAuthentificator.php';
+            $authenticator = new PHPGangsta_GoogleAuthenticator();
+            $secret = $authenticator->createSecret();
+            if (!$this->Session->write('TwoFactor.secret', [$userId => $secret])) {
+                throw new InternalErrorException();
+            }
+        }
+        return $this->sendJSON([
+            'qrcode_url' => Router::url(['plugin' => null, 'controller' => 'authentification', 'action' => 'qrCode']),
+            'secret' => $secret
+        ]);
+    }
+
+    public function qrCode()
+    {
+        if (!$this->isConnected) {
+            throw new ForbiddenException('Not logged');
+        }
+        $userId = $this->User->getKey('id');
+        $secret = $this->Session->read('TwoFactor.secret.' . $userId);
+        if (!$secret || $this->Authentification->requiresCode($userId)) {
+            throw new NotFoundException();
+        }
+
+        require_once ROOT . DS . 'vendors' . DS . 'php-qrcode-0.1' . DS . 'QRCode.php';
+        $uri = 'otpauth://totp/' . rawurlencode($this->User->getKey('pseudo'))
+            . '?secret=' . $secret . '&issuer=' . rawurlencode($this->Configuration->getKey('name'));
+        $this->response->type('svg');
+        $this->response->body(QRCode::svg($uri, ['s' => 'qrm']));
+        return $this->response;
     }
 
     public function validEnable()
     {
-        $this->response->type('json');
-        $this->autoRender = false;
-        // valid request
-        if (!$this->request->is('post'))
+        if (!$this->request->is('post')) {
             throw new NotFoundException('Not post');
-        if (!$this->isConnected)
+        }
+        if (!$this->isConnected) {
             throw new ForbiddenException('Not logged');
-        if (empty($this->request->data['code']))
-            return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('USER__LOGIN_CODE_EMPTY')]));
-        if (!$this->Session->read('two-factor-auth-secret'))
-            return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('USER__SECRET_NOT_FOUND')]));
-        $secret = $this->Session->read('two-factor-auth-secret');
-        // include library & init
-        require ROOT . DS . 'vendors' . DS . 'auth' . DS . 'GoogleAuthentificator.php';
-        $ga = new PHPGangsta_GoogleAuthenticator();
-        // check code
-        $checkResult = $ga->verifyCode($secret, $this->request->data['code'], 2);    // 2 = 2*30sec clock tolerance
-        if (!$checkResult)
-            return $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('USER__LOGIN_CODE_INVALID')]));
-        // remove TwoFactorAuth session
-        $this->Session->delete('two-factor-auth-secret');
-        // save into db
-        $this->loadModel('Authentification');
-        if ($infos = $this->Authentification->find('first', ['conditions' => ['user_id' => $this->User->getKey('id')]]))
-            $this->Authentification->read(null, $infos['Authentification']['id']);
-        else
-            $this->Authentification->create();
-        $this->Authentification->set(['secret' => $secret, 'enabled' => true, 'user_id' => $this->User->getKey('id')]);
-        $this->Authentification->save();
-        // send to user
-        $this->response->body(json_encode(['statut' => true, 'msg' => $this->Lang->get('USER__SUCCESS_ENABLED_TWO_FACTOR_AUTH')]));
+        }
+        $code = $this->request->data('code');
+        if (empty($code)) {
+            return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get('USER__LOGIN_CODE_EMPTY')]);
+        }
+        $userId = $this->User->getKey('id');
+        $secret = $this->Session->read('TwoFactor.secret.' . $userId);
+        if (!$secret) {
+            return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get('USER__SECRET_NOT_FOUND')]);
+        }
+
+        $factor = $this->Authentification->find('first', [
+            'conditions' => ['user_id' => $userId],
+            'fields' => ['id', 'enabled'],
+            'order' => ['enabled' => 'DESC']
+        ]);
+        if (!empty($factor['Authentification']['enabled'])) {
+            throw new ForbiddenException();
+        }
+        require_once ROOT . DS . 'vendors' . DS . 'auth' . DS . 'GoogleAuthentificator.php';
+        $authenticator = new PHPGangsta_GoogleAuthenticator();
+        if (!is_string($code) || !$authenticator->verifyCode($secret, $code, 2)) {
+            return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get('USER__LOGIN_CODE_INVALID')]);
+        }
+
+        $this->Authentification->id = $factor ? $factor['Authentification']['id'] : false;
+        if (!$this->Authentification->save(['user_id' => $userId, 'secret' => $secret, 'enabled' => true])) {
+            return $this->sendJSON(['statut' => false, 'msg' => $this->Lang->get('ERROR__INTERNAL_ERROR')]);
+        }
+        $this->Session->delete('TwoFactor.secret');
+        return $this->sendJSON(['statut' => true, 'msg' => $this->Lang->get('USER__SUCCESS_ENABLED_TWO_FACTOR_AUTH')]);
     }
 
     public function disable()
     {
-        $this->response->type('json');
-        $this->autoRender = false;
-        // valid request
-        if (!$this->isConnected)
+        if (!$this->isConnected) {
             throw new ForbiddenException('Not logged');
-        // save into db
-        $this->loadModel('Authentification');
-        $infos = $this->Authentification->find('first', ['conditions' => ['user_id' => $this->User->getKey('id')]]);
-        $this->Authentification->read(null, $infos['Authentification']['id']);
-        $this->Authentification->set(['enabled' => false]);
-        $this->Authentification->save();
+        }
+        if ($this->request->is('get') && !$this->request->is('ajax')) {
+            $this->set('verificationAction', 'disable');
+            return $this->render('challenge');
+        }
+        if (!$this->request->is('post') || empty($this->request->data['code'])) {
+            $this->response->statusCode(403);
+            return $this->sendJSON([
+                'statut' => false,
+                'msg' => $this->Lang->get('USER__LOGIN_CODE_EMPTY'),
+                'confirmTwoFactor' => $this->request->is('get'),
+                'url' => Router::url(['plugin' => null, 'controller' => 'authentification', 'action' => 'disable'])
+            ]);
+        }
+        $userId = $this->User->getKey('id');
+        if (!$this->Authentification->verifyCode($userId, $this->request->data('code'))) {
+            return $this->verificationError('USER__LOGIN_CODE_INVALID', 'disable');
+        }
+
+        $this->loadModel('RememberToken');
+        if (!$this->RememberToken->deleteAll(['user_id' => $userId], false) ||
+            !$this->Authentification->updateAll(['enabled' => 0], ['user_id' => $userId, 'enabled' => true])) {
+            return $this->verificationError('ERROR__INTERNAL_ERROR', 'disable');
+        }
+        $this->Session->delete('TwoFactor.secret');
+        if ($this->request->data('standalone')) {
+            return $this->redirect(['controller' => 'user', 'action' => 'profile']);
+        }
+        return $this->sendJSON(['statut' => true, 'msg' => $this->Lang->get('GLOBAL__SUCCESS')]);
+    }
+
+    private function verificationError($key, $action)
+    {
+        $message = $this->Lang->get($key);
+        if ($this->request->data('standalone')) {
+            $this->Session->setFlash($message, 'default.error');
+            return $this->redirect(['action' => $action]);
+        }
+        return $this->sendJSON(['statut' => false, 'msg' => $message]);
     }
 }

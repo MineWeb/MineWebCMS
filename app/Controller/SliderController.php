@@ -21,6 +21,7 @@ class SliderController extends AppController
 
     public function admin_delete($id = false)
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         if ($this->isConnected and $this->Permissions->can('MANAGE_SLIDER')) {
             if ($id != false) {

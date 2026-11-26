@@ -9,7 +9,7 @@ if (file_exists(ROOT . DS . 'lib' . DS . 'Cake' . DS . 'Core' . DS . 'CakeObject
 
 class UpdateComponent extends CakeObject
 {
-    public $components = ['Session', 'Configuration', 'Lang'];
+    public $components = ['Session', 'Configuration', 'Lang', 'Util'];
 
     public $cmsVersion;
     public $lastVersion;
@@ -56,6 +56,7 @@ class UpdateComponent extends CakeObject
     {
         $this->controller = $controller;
         $this->Lang = $this->controller->Lang;
+        $this->Util = $this->controller->Util;
         $controller->set('Update', $this);
 
         $this->updateLogFile = ROOT . DS . 'app' . DS . 'tmp' . DS . 'logs' . DS . 'update' . DS;
@@ -127,11 +128,17 @@ class UpdateComponent extends CakeObject
             $zip = new ZipArchive;
             if ($zip->open(ROOT . DS . 'app' . DS . 'tmp' . DS . $this->lastVersion . '.zip') !== true) return false;
 
-            $path = DS . 'app' . DS . 'Controller' . DS . 'Component' . DS . 'UpdateComponent.php';
-            $newContent = $zip->getFromName("{$this->source['repo']}-{$this->lastVersion}{$path}");
-            file_put_contents(ROOT . $path, $newContent);
+            $path = 'app/Controller/Component/UpdateComponent.php';
+            $newContent = $zip->getFromName("{$this->source['repo']}-{$this->lastVersion}/{$path}");
             $zip->close();
-            return true;
+            if ($newContent === false || $newContent === '') {
+                return false;
+            }
+            return file_put_contents(ROOT . DS . $path, $newContent) === strlen($newContent);
+        }
+
+        if (!$this->backupSite()) {
+            $this->log('Unable to create the automatic backup before the update.');
         }
 
         // We need to copy all files
@@ -172,10 +179,9 @@ class UpdateComponent extends CakeObject
 
         // We copy the files here
         foreach ($updateFile as $key => $v) {
-            $has_key = hash_file('sha1', $key);
-            $hash = hash_file('sha1', $v);
-            if($has_key == $hash)
+            if (is_file($v) && hash_file('sha1', $key) === hash_file('sha1', $v)) {
                 continue;
+            }
             if (!copy($key, $v)) {
                 $this->errorUpdate = $this->Lang->get('UPDATE__FAILED_FILE', [
                     '{FILE}' => $v,
@@ -183,7 +189,7 @@ class UpdateComponent extends CakeObject
                 $this->log("Failed to copy file from $key to " . $v);
                 return false;
             }
-            $this->log("The file " .$v. " was replaced with success !");
+            $this->log("The file " . $v . " was replaced with success !");
         }
 
         $this->log("End UPDATE");
@@ -199,6 +205,40 @@ class UpdateComponent extends CakeObject
 
         // Update database
         return $this->updateDb();
+    }
+
+    private function backupSite()
+    {
+        $tmp = ROOT . DS . 'app' . DS . 'tmp';
+        $backup = $tmp . DS . 'SAVE-' . $this->cmsVersion . '-' . time() . '.zip';
+        $release = $this->lastVersion . '.zip';
+        $zip = new ZipArchive();
+        if ($zip->open($backup, ZipArchive::CREATE | ZipArchive::EXCL) !== true) {
+            return false;
+        }
+
+        try {
+            $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(ROOT, FilesystemIterator::SKIP_DOTS));
+            foreach ($files as $file) {
+                if (!$file->isFile()) {
+                    continue;
+                }
+                $name = $file->getFilename();
+                if ($file->getPath() === $tmp && ($name === $release || preg_match('/^SAVE-.+-[0-9]+\.zip\z/', $name))) {
+                    continue;
+                }
+                $path = $file->getPathname();
+                $entry = str_replace(DS, '/', substr($path, strlen(ROOT) + 1));
+                if (!$zip->addFile($path, $entry)) {
+                    throw new RuntimeException("Unable to add $entry to the backup.");
+                }
+            }
+        } catch (RuntimeException $e) {
+            $zip->unchangeAll();
+            $zip->close();
+            return false;
+        }
+        return $zip->close();
     }
 
     /**
@@ -262,31 +302,41 @@ class UpdateComponent extends CakeObject
         $queries = [];
         foreach ($diffSchema as $table => $changes) {
 
-            // If we have columns to drop, we need to check this is not about a plugin
+            if (isset($changes['create'])) {
+                $queries[] = $db->createSchema($newSchema, $table);
+                continue;
+            }
+            if ($db instanceof Sqlite) {
+                foreach (isset($changes['add']) ? $changes['add'] : [] as $field => $definition) {
+                    if (!isset($definition['type'])) {
+                        continue;
+                    }
+                    if ($table === 'configurations' && $field === 'website_url') {
+                        $definition['default'] = '';
+                    }
+                    $queries[] = 'ALTER TABLE ' . $db->fullTableName($table) . ' ADD COLUMN '
+                        . $db->buildColumn(['name' => $field] + $definition);
+                }
+                continue;
+            }
+
             if (isset($changes['drop'])) {
-                foreach ($changes['drop'] as $column => $structure) { // For each drop, check column name
-                    if (count(explode('-', $column)) > 1) { // Plugin columns are prefixed by `pluginname-<column>`
-                        unset($diffSchema[$table]['drop'][$column]);
+                foreach (array_keys($changes['drop']) as $column) {
+                    if (strpos($column, '-') !== false) {
+                        unset($changes['drop'][$column]);
                     }
                 }
+                if (!$changes['drop']) {
+                    unset($changes['drop']);
+                }
             }
-            // Just delete `drop` action if we have removed all columns to drop (above)
-            if (isset($changes['drop']) && count($diffSchema[$table]['drop']) <= 0) {
-                unset($diffSchema[$table]['drop']);
-            }
-
-            // If we have actions (maybe we've removed the only action `drop`)
-            if (count($diffSchema[$table]) > 0) {
-                $queries[$table] = $db->alterSchema([$table => $diffSchema[$table]], $table);
-            }
-
-            if (isset($diffSchema[$table]['create'])) {
-                $queries[$table] = $db->createSchema($newSchema, $table);
+            if ($changes) {
+                $queries[] = $db->alterSchema([$table => $changes], $table);
             }
         }
 
         // Execute all queries generated from diff
-        foreach ($queries as $table => $query) {
+        foreach ($queries as $query) {
             try {
                 $db->execute($query);
             } catch (PDOException $e) {

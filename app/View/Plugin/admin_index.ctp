@@ -47,20 +47,21 @@
                                     </td>
                                     <td>
                                         <?php if ($value->active) { ?>
-                                            <a href="<?= $this->Html->url(['controller' => 'plugin', 'action' => 'disable/' . $value->DBid, 'admin' => true]) ?>"
-                                               class="btn btn-info disable"><?= $Lang->get('GLOBAL__DISABLE') ?></a>
+                                            <?= $this->Form->postLink($Lang->get('GLOBAL__DISABLE'), ['action' => 'disable', $value->DBid], ['class' => 'btn btn-info disable']) ?>
                                         <?php } else { ?>
-                                            <a href="<?= $this->Html->url(['controller' => 'plugin', 'action' => 'enable/' . $value->DBid, 'admin' => true]) ?>"
-                                               class="btn btn-info enable"><?= $Lang->get('GLOBAL__ENABLE') ?></a>
+                                            <?= $this->Form->postLink($Lang->get('GLOBAL__ENABLE'), ['action' => 'enable', $value->DBid], ['class' => 'btn btn-info enable']) ?>
                                         <?php } ?>
-                                        <a onClick="confirmDel('<?= $this->Html->url(['controller' => 'plugin', 'action' => 'delete/' . $value->DBid, 'admin' => true]) ?>')"
-                                           class="btn btn-danger delete"><?= $Lang->get('GLOBAL__DELETE') ?></a>
+                                        <?= $this->Form->postLink($Lang->get('GLOBAL__DELETE'), ['action' => 'delete', $value->DBid], [
+                                            'class' => 'btn btn-danger delete',
+                                            'confirm' => $Lang->get('GLOBAL__CONFIRM_DELETE')
+                                        ]) ?>
                                         <?php
                                         $lastVersion = (isset($versions[$value->slug])) ? $versions[$value->slug] : false;
                                         if ($lastVersion && $value->version != $lastVersion) { ?>
-                                            <a <?= (explode('.', $lastVersion)[0] > explode('.', $value->version)[0] ? 'data-warning-update' : '') ?>
-                                                    href="<?= $this->Html->url(['controller' => 'plugin', 'action' => 'update', $value->slug, 'admin' => true]) ?>"
-                                                    class="btn btn-warning update"><?= $Lang->get('GLOBAL__UPDATE') ?></a> <!-- ICI -->
+                                            <?= $this->Form->postLink($Lang->get('GLOBAL__UPDATE'), ['action' => 'update', $value->slug], [
+                                                'class' => 'btn btn-warning update',
+                                                'confirm' => explode('.', $lastVersion)[0] > explode('.', $value->version)[0] ? $Lang->get('UPDATE__MAJOR_WARNING_EXTENSION') : false
+                                            ]) ?> <!-- ICI -->
                                         <?php } ?>
                                     </td>
                                 </tr>
@@ -138,12 +139,6 @@
 </section>
 <script type="text/javascript">
 
-    $('a[data-warning-update]').on('click', function (e) {
-        e.preventDefault();
-        if (confirm("<?= $Lang->get('UPDATE__MAJOR_WARNING_EXTENSION') ?>"))
-            window.location = $(this).attr('href');
-    });
-
     $('.install').click(function (e) {
         e.preventDefault();
 
@@ -177,7 +172,7 @@
             $('.ajax').empty().html('<div class="alert alert-info"><?= $Lang->get('PLUGIN__INSTALL_LOADING') ?>...</b></div>').fadeIn(500);
 
             // On lance la requête
-            $.get('<?= $this->Html->url(['action' => 'install']) ?>/' + slug, function (data) {
+            $.post('<?= $this->Html->url(['action' => 'install']) ?>/' + slug, {'data[_Token][key]': CSRF_TOKEN}, function (data) {
                 if (typeof data != 'object') {
                     data = JSON.parse(data);
                 }
@@ -199,9 +194,7 @@
                         tr += '<td><span class="label label-success"><?= $Lang->get('GLOBAL__YES') ?></span></td>';
                         tr += '<td><span class="label label-success"><?= $Lang->get('GLOBAL__ENABLED') ?></span></td>';
                         tr += '<td>';
-                        tr += '<a href="<?= $this->Html->url(['action' => 'disable']) ?>/' + data.plugin.DBid + '" class="btn btn-info"><?= $Lang->get('GLOBAL__DISABLED') ?></a>';
-                        tr += "\n";
-                        tr += '<a onClick="confirmDel(\'<?= $this->Html->url(['controller' => 'plugin', 'action' => 'delete', 'admin' => true]) ?>/' + data.plugin.DBid + '\')" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>';
+                        tr += data.actions;
                         tr += '</td>';
                         tr += '</tr>';
 

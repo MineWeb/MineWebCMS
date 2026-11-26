@@ -10,30 +10,47 @@ class ConfigurationController extends AppController
         if ($this->isConnected and $this->Permissions->can('MANAGE_CONFIGURATION')) {
             $this->layout = "admin";
 
-            $data = [];
+            $isAdmin = $this->User->isAdmin();
+            $generalFields = array_flip(['name', 'money_name_singular', 'money_name_plural', 'lang', 'member_page_type']);
+            $this->set('isAdmin', $isAdmin);
 
             if ($this->request->is('post')) {
-                foreach ($this->request->data as $key => $value) {
-                    if ($key != "version") {
-                        if ($key == "banner_server") {
-                            $value = serialize($value);
+                $data = $this->request->data;
+                if ($isAdmin) {
+                    if (isset($data['xss']['end_layout_code']))
+                        $data['end_layout_code'] = $data['xss']['end_layout_code'];
+                    unset($data['id'], $data['version'], $data['Configuration'], $data['xss'], $data['_Token']);
+                    if (isset($data['banner_server']))
+                        $data['banner_server'] = serialize($data['banner_server']);
+
+                    if (isset($data['passwords_hash'])) {
+                        $previousHash = $this->Util->getPasswordHashType() ?: 'sha256';
+                        if (($data['passwords_hash'] ?: 'sha256') === $previousHash) {
+                            unset($data['passwords_hash']);
+                        } else {
+                            $oldType = $this->User->getDataSource()->value($previousHash, 'string');
+                            $storedType = "CASE WHEN SUBSTR(password, 1, 4) IN ('$2a$', '$2x$', '$2y$') THEN 'blowfish' ELSE $oldType END";
+                            if (!$this->User->updateAll(
+                                ['password_hash' => $storedType],
+                                ['OR' => [['password_hash' => null], ['password_hash' => '']]]
+                            )) {
+                                throw new InternalErrorException();
+                            }
                         }
-                        $data[$key] = $value;
                     }
+                } else {
+                    $data = array_intersect_key($data, $generalFields);
+                    if (!$data || array_filter($data, 'is_string') !== $data)
+                        throw new BadRequestException();
+                    if (isset($data['lang']) && !isset($this->Lang->languages[$data['lang']]))
+                        throw new BadRequestException();
+                    if (isset($data['member_page_type']) && !in_array($data['member_page_type'], ['0', '1'], true))
+                        throw new BadRequestException();
+                    $data = array_map('strip_tags', $data);
                 }
 
-                $this->loadModel('User');
-                $hash = $this->Configuration->getKey('passwords_hash');
-                $this->User->updateAll(
-                    ['password_hash' => "'$hash'"],
-                    ['password_hash' => null]
-                );
-
-                $data['end_layout_code'] = $data['xss']['end_layout_code'];
-
                 $this->Configuration->read(null, 1);
-                $this->Configuration->set($data);
-                $this->Configuration->save();
+                $this->Configuration->save($data, true, array_keys($data));
 
                 $this->History->set('EDIT_CONFIGURATION', 'configuration');
 
@@ -45,6 +62,8 @@ class ConfigurationController extends AppController
             }
 
             $config = $this->Configuration->getAll();
+            if (!$isAdmin)
+                $config = array_intersect_key($config, $generalFields);
 
             $this->Configuration->cacheQueries = true; //On le réactive
 
@@ -65,7 +84,7 @@ class ConfigurationController extends AppController
 
     public function admin_editLang()
     {
-        if ($this->isConnected and $this->Permissions->can('MANAGE_CONFIGURATION')) {
+        if ($this->isConnected and $this->User->isAdmin()) {
 
             $this->layout = 'admin';
 

@@ -150,7 +150,8 @@
 
             $.ajax({
                 url: url,
-                method: 'GET',
+                method: 'POST',
+                data: {'data[_Token][key]': CSRF_TOKEN},
                 dataType: 'JSON',
                 success: function (data) {
                     if (data.status) {
@@ -179,7 +180,8 @@
 
             $.ajax({
                 url: url,
-                method: 'GET',
+                method: 'POST',
+                data: {'data[_Token][key]': CSRF_TOKEN},
                 dataType: 'JSON',
                 success: function (data) {
                     if (data.status) {
@@ -204,7 +206,8 @@
 
             $.ajax({
                 url: url,
-                method: 'GET',
+                method: 'POST',
+                data: {'data[_Token][key]': CSRF_TOKEN},
                 dataType: 'JSON',
                 success: function (data) {
                     if (data.status) {
@@ -229,7 +232,8 @@
 
             $.ajax({
                 url: url,
-                method: 'GET',
+                method: 'POST',
+                data: {'data[_Token][key]': CSRF_TOKEN},
                 dataType: 'JSON',
                 success: function (data) {
                     if (data.status) {

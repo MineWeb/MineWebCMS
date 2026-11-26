@@ -6,7 +6,7 @@
     },
     "MESSAGES": {
         "GLOBAL__HOME": "Accueil",
-        "GLOBAL__FOOTER": "Tous droits réservés - 2021 <span class=\"pull-right\">Propulsé par <a href=\"http:\/\/mineweb.org\">mineweb.org<\/a><\/span>",
+        "GLOBAL__FOOTER": "Tous droits réservés - 2022 <span class=\"pull-right\">Propulsé par <a href=\"http:\/\/mineweb.org\">mineweb.org<\/a><\/span>",
         "GLOBAL__FOOTER_ADMIN": "<p>Développé par <a href=\"http:\/\/eywek.fr\">Eywek<\/a> & Designé par <a href=\"http:\/\/thisismac.fr\">Mac'<\/a>.<\/p><p>Site proposé par <a href=\"http:\/\/mineweb.org\">MineWeb<\/a> - Tous droit réservés.<\/p><p>Ce CMS est distribué sous la licence Open Source <a href=\"https://www.gnu.org/licenses/gpl-3.0.fr.html\" target=\"_blank\">GNU GPLv3</a>.<\/p><ul><li><a href=\"http:\/\/mineweb.org\">MineWeb<\/a><\/li><li class=\"muted\">·<\/li><li><a href=\"http:\/\/eywek.fr\">Eywek<\/a><\/li><li class=\"muted\">·<\/li><li><a href=\"http:\/\/thisismac.fr\">Mac'<\/a><\/li><\/ul>",
         "GLOBAL__FORMAT_DATE": "{%day}\/{%month}\/{%year} à {%hour|24}h{%minutes}",
         "GLOBAL__BY": "Par",
@@ -18,6 +18,7 @@
         "GLOBAL__CLOSE": "Fermer",
         "GLOBAL__UPDATE_LOOK": "Voir la mise à jour",
         "GLOBAL__CUSTOMIZE": "Personnalisation",
+        "GLOBAL__COMMUNICATION": "Communication",
         "GLOBAL__SUCCESS":"Succès",
         "GLOBAL__INFO":"Information",
         "GLOBAL__WARNING":"Attention",
@@ -98,6 +99,7 @@
         "GLOBAL__SAVE": "Sauvegarder",
         "GLOBAL__CATEGORY": "Catégorie",
         "GLOBAL__TEMPORALY_DISABLED":"Temporairement désactivé",
+        "GLOBAL__ADMIN_LOGS_TITLE": "Logs",
 
         "HELP__TITLE":"J'ai besoin d'aide",
         "HELP__TICKET_ADD_SUCCESS":"Le ticket a bien été envoyé à nos serveurs !",
@@ -185,6 +187,7 @@
         "CONFIG__SOCIAL_PREFERENCES": "Préférences sociales",
         "CONFIG__OTHER_PREFERENCES": "Préférences autres",
         "CONFIG__EDIT_SUCCESS":"Configuration modifiée avec succès !",
+        "CONFIG__KEY_WEBSITE_URL": "Adresse du Site (Avec protocol, http/https)",
         "CONFIG__KEY_NAME": "Nom du site",
         "CONFIG__KEY_VERSION": "Version du CMS",
         "CONFIG__KEY_EMAIL": "Email pour envoyer des emails aux utilisateurs",
@@ -225,6 +228,10 @@
         "CONFIG__KEY_SESSION_TYPE_DB":"Base de données",
         "CONFIG__CHECK_UUID":"Permettre aux utilisateurs seulement premium de s'inscrire",
         "CONFIG__CHECK_UUID_CHANGE":"Ainsi que l'activation de la sauvegarde des UUID pour changer automatiquement le pseudo du joueur ?",
+        "CONFIG__MICROSOFT_CONNECTION": "Permettre la connexion par Microsoft pour les joueurs premium",
+        "CONFIG__MICROSOFT_CONNECTION_REQUIREMENT": "Vous devez obligatoire n'autoriser que les joueurs premium à s'inscrire pour utiliser Microsoft !",
+        "CONFIG__MICROSOFT_CLIENT_ID": "Identifiant de l'application",
+        "CONFIG__MICROSOFT_CLIENT_SECRET": "Identifiant secret de l'application",
 
         "EMAIL__TITLE_CONFIRM_MAIL": "Confirmer votre email",
         "EMAIL__CONTENT_CONFIRM_MAIL": "Salut {USERNAME} ! <br> Tu t'es inscrit le {DATE} avec l'IP <b>{IP}<\/b>, tu dois confirmer ton email en te rendant sur ce lien <a href=\"{LINK}\">{LINK}<\/a>.<br><br><br>Cet email est automatique, inutile d'y répondre.",
@@ -439,6 +446,7 @@
         "USER__IMG_UPLOAD_WIDTH_MAX": "Maximum {PIXELS} pixels de largeur",
         "USER__IMG_UPLOAD_HEIGHT_MAX": "Maximum {PIXELS} pixels de hauteur",
         "USER__IMG_UPLOAD_TYPE_PNG": "Doit être au format PNG",
+        "USER__RESEND_CONFIRMATION_EMAIL": "Renvoyer l'e-mail de confirmation",
         "USER__CONFIRM_EMAIL_RESEND_SUCCESS":"L'email de confirmation vous a bien été renvoyé !",
         "USER__CONFIRM_EMAIL_RESEND_FAIL":"L'email de confirmation n'a pas pu être envoyé ! Réessayez plus tard.",
         "USER__REMEMBER_ME":"Se souvenir de moi",
@@ -451,6 +459,13 @@
         "USER__VALID_CODE": "Activer la double authentification",
         "USER__SECRET_NOT_FOUND": "Des informations sont manquantes, veuillez recharger la page et réessayer",
         "USER__SUCCESS_ENABLED_TWO_FACTOR_AUTH": "La double authentification a bien été activée !",
+
+        "USER__AUTH_MICROSOFT_CANNOT_RESET_PASSWORD": "Vous ne pouvez pas réinitialiser le mot de passe d'un compte enregistré par microsoft !",
+        "USER__AUTH_MICROSOFT_DOESNT_HAVE_MINECRAFT": "Vous n'avez pas minecraft sur ce compte microsoft !",
+        "USER__AUTH_MICROSOFT_USERNAME_ALREADY_EXIST": "Ce pseudo existe déjà avec un autre UUID, veuillez contacter l'administration.",
+        "USER__AUTH_MICROSOFT_USER_ALREADY_LINK": "Ce compte minecraft a déjà un compte microsoft de lié !",
+        "USER__AUTH_MICROSOFT_LOGIN_WITH_MICROSOFT": "Se connecter avec Microsoft",
+        "USER__AUTH_MICROSOFT_REGISTER_WITH_MICROSOFT": "S'inscrire avec Microsoft",
 
         "HISTORY__CATEGORY_NEWS": "News",
         "HISTORY__CATEGORY_VOTE": "Vote",
@@ -469,6 +484,7 @@
         "HISTORY__ACTION_DELETE_MEMBER": "Suppression d'un utilisateur",
         "HISTORY__ACTION_EDIT_USER": "Modification d'un utilisateur",
         "HISTORY__ACTION_ADD_MEMBER": "Ajout d'un membre",
+        "HISTORY__ACTION_RESET_PASSWORD": "Réinitialisation du mot de passe",
         "HISTORY__ACTION_ADD_NEWS": "Ajout d'une news",
         "HISTORY__ACTION_EDIT_NEWS": "Modification d'une news",
         "HISTORY__ACTION_DELETE_NEWS": "Suppression d'une news",
@@ -527,10 +543,11 @@
         "PERMISSIONS__VIEW_STATISTICS": "Voir les statistiques sur le panel admin",
         "PERMISSIONS__MANAGE_THEMES":"Gérer les thèmes du site (activation, désactivation, suppression, installation, customisation)",
         "PERMISSIONS__MANAGE_USERS":"Gérer les utilisateurs (suppression, édition, voir la liste)",
-        "PERMISSIONS__MANAGE_BANS":"Gérer les utilisateurs bannis",
+        "PERMISSIONS__MANAGE_BAN":"Gérer les utilisateurs bannis",
         "PERMISSIONS__MANAGE_SOCIAL":"Gérer les boutons des réseaux sociaux",
         "PERMISSIONS__SEND_SERVER_COMMAND_FROM_DASHBOARD":"Envoyer des commandes aux serveurs depuis le dashboard admin.",
         "PERMISSIONS__VIEW_WEBSITE_HISTORY": "Voir l'historique du site",
+        "PERMISSIONS__VIEW_WEBSITE_LOGS": "Voir les logs du site",
 
         "SERVER__TITLE":"Serveur",
         "SERVER__LINK": "Lier serveur-site",
@@ -720,6 +737,11 @@
         "SOCIAL__CANNOT_TOW_TYPE": "Il ne peux pas y avoir 2 types d'illustrations définis en même temps !",
         "SOCIAL__BUTTON_SUCCESS": "Le bouton a était créé avec succès !",
         "SOCIAL__BUTTON_EDIT_SUCCESS": "Le bouton a était édité avec succès !",
-        "SOCIAL__BUTTON_DELETE_SUCCESS": "Le bouton a était supprimé avec succès !"
+        "SOCIAL__BUTTON_DELETE_SUCCESS": "Le bouton a était supprimé avec succès !",
+
+        "LOG__VIEW_ERROR": "Logs d'erreurs",
+        "LOG__VIEW_DEBUG": "Logs de debugs",
+        "LOG__NO_ERROR": "Il n'y a pas d'erreurs",
+        "LOG__NO_DEBUG": "Il n'y a pas de debugs"
     }
 }

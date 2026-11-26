@@ -108,8 +108,10 @@
                                 <td>
                                     <a class="btn btn-info"
                                        href="<?= $this->Html->url(['action' => 'edit', $v["Seo"]['id']]) ?>"><?= $Lang->get('GLOBAL__EDIT') ?></a>
-                                    <a onClick="confirmDel('<?= $this->Html->url(['action' => 'delete', $v["Seo"]['id']]) ?>')"
-                                       class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
+                                    <?= $this->Form->postLink($Lang->get('GLOBAL__DELETE'), ['action' => 'delete', $v["Seo"]['id']], [
+                                        'class' => 'btn btn-danger',
+                                        'confirm' => $Lang->get('GLOBAL__CONFIRM_DELETE')
+                                    ]) ?>
                                 </td>
                             </tr>
 
