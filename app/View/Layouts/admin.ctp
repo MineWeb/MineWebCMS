@@ -167,43 +167,38 @@
 
                     <?php
 
-                    function checkCurrent($nav, $context)
+                    function prepareAdminNav($nav, $context, $currentUrl)
                     {
-                        if (is_array($nav))
-                            foreach ($nav as $name => $value) {
-                                if (isset($v['menu']))
-                                    return checkCurrent($v['menu'], $context);
-                                $route = (isset($value['route']) ? $context->Html->url($value['route']) : '#');
-                                $current = $route == $context->Html->url(null, false);
-                                if ($current == $route)
-                                    return true;
-                            }
-                        return false;
+                        $visible = [];
+                        foreach ($nav as $name => $item) {
+                            $item['menu'] = isset($item['menu']) ? prepareAdminNav($item['menu'], $context, $currentUrl) : [];
+                            $url = null;
+                            if (isset($item['route']) && (!isset($item['permission']) || $context->Permissions->can($item['permission'])))
+                                $url = $context->Html->url($item['route']);
+                            if ($url === null && !$item['menu'])
+                                continue;
+
+                            $item['url'] = $url === null ? '#' : $url;
+                            $item['active'] = $url === $currentUrl || in_array(true, array_column($item['menu'], 'active'), true);
+                            $visible[$name] = $item;
+                        }
+                        return $visible;
                     }
 
                     function displayNav($nav, $context)
                     {
                         foreach ($nav as $name => $value) {
-                            if (!isset($value['menu']) && !isset($value['route']))
-                                continue;
-                            if (!isset($value['menu']) && isset($value['permission']) && !$context->Permissions->can($value['permission'])) // Check perms
-                                continue;
-                            $currentMenu = false;
-                            if (isset($value['menu'])) {
-                                $currentMenu = checkCurrent($value['menu'], $context) ? "menu-open" : "";
-                                echo '<li class="nav-item has-treeview ' . ($currentMenu ? "menu-open" : "") . '">';
-                            } else
+                            if ($value['menu'])
+                                echo '<li class="nav-item has-treeview' . ($value['active'] ? ' menu-open' : '') . '">';
+                            else
                                 echo '<li class="nav-item">';
-                            // Link
-                            $route = (isset($value['route']) ? $context->Html->url($value['route']) : '#');
-                            $current = $route == $context->Html->url(null, false);
-                            echo '<a class="nav-link' . ($current || $currentMenu ? " active" : "") . '" href="' . $route . '">';
+                            echo '<a class="nav-link' . ($value['active'] ? ' active' : '') . '" href="' . $value['url'] . '">';
                             echo '<i class="' . (strpos($value['icon'], "fa-") ? $value['icon'] : "fa fa-" . $value['icon']) . ' nav-icon"></i>  <p>' . $context->Lang->get($name);
-                            if (isset($value['menu']))
+                            if ($value['menu'])
                                 echo '<i class="fas fa-angle-left right"></i></p>';
                             else echo '</p>';
                             echo '</a>';
-                            if (isset($value['menu'])) {
+                            if ($value['menu']) {
                                 echo '<ul class="nav nav-treeview">';
                                 displayNav($value['menu'], $context);
                                 echo '</ul>';
@@ -212,7 +207,8 @@
                         }
                     }
 
-                    displayNav($adminNavbar, (object)['Lang' => $Lang, 'Permissions' => $Permissions, 'Html' => $this->Html]);
+                    $context = (object)['Lang' => $Lang, 'Permissions' => $Permissions, 'Html' => $this->Html];
+                    displayNav(prepareAdminNav($adminNavbar, $context, $this->Html->url(null, false)), $context);
                     ?>
                 </ul>
             </nav>
