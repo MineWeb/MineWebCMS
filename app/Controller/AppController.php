@@ -402,11 +402,6 @@ class AppController extends Controller
             'GLOBAL__CUSTOMIZE' => [
                 'icon' => 'fas fa-copy',
                 'menu' => [
-                    'NEWS__TITLE' => [
-                        'icon' => 'fas fa-pencil-ruler',
-                        'permission' => 'MANAGE_NEWS',
-                        'route' => ['controller' => 'news', 'action' => 'index', 'admin' => true, 'plugin' => false]
-                    ],
                     'PAGE__TITLE' => [
                         'icon' => 'fas fa-file-alt',
                         'permission' => 'MANAGE_PAGE',
@@ -416,6 +411,21 @@ class AppController extends Controller
                         'icon' => 'fas fa-bars',
                         'permission' => 'MANAGE_NAV',
                         'route' => ['controller' => 'navbar', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ],
+                    'MOTD__TITLE' => [
+                        'icon' => 'fas fa-sort-amount-up-alt',
+                        'permission' => 'MANAGE_MOTD',
+                        'route' => ['controller' => 'motd', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    ]
+                ]
+            ],
+            'GLOBAL__COMMUNICATION' => [
+                'icon' => 'fas fa-bullhorn',
+                'menu' => [
+                    'NEWS__TITLE' => [
+                        'icon' => 'fas fa-pencil-ruler',
+                        'permission' => 'MANAGE_NEWS',
+                        'route' => ['controller' => 'news', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
                     'SEO__TITLE' => [
                         'icon' => 'fab fa-google',
@@ -427,10 +437,10 @@ class AppController extends Controller
                         'permission' => 'MANAGE_SOCIAL',
                         'route' => ['controller' => 'social', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
-                    'MOTD__TITLE' => [
-                        'icon' => 'fas fa-sort-amount-up-alt',
-                        'permission' => 'MANAGE_MOTD',
-                        'route' => ['controller' => 'motd', 'action' => 'index', 'admin' => true, 'plugin' => false]
+                    'NOTIFICATION__TITLE' => [
+                        'icon' => 'flag',
+                        'permission' => 'MANAGE_NOTIFICATIONS',
+                        'route' => ['controller' => 'notifications', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ]
                 ]
             ],
@@ -500,11 +510,6 @@ class AppController extends Controller
                         'icon' => 'sitemap',
                         'permission' => 'MANAGE_API',
                         'route' => ['controller' => 'API', 'action' => 'index', 'admin' => true, 'plugin' => false]
-                    ],
-                    'NOTIFICATION__TITLE' => [
-                        'icon' => 'flag',
-                        'permission' => 'MANAGE_NOTIFICATIONS',
-                        'route' => ['controller' => 'notifications', 'action' => 'index', 'admin' => true, 'plugin' => false]
                     ],
                     'HISTORY__VIEW_GLOBAL' => [
                         'icon' => 'table',
