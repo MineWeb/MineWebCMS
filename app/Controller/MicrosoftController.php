@@ -2,6 +2,26 @@
 
 class MicroSoftController extends AppController
 {
+    public function login()
+    {
+        $this->request->allowMethod('get');
+        $clientId = $this->Configuration->getKey('microsoft_client_id');
+        if ($this->isConnected || !$clientId || !$this->Configuration->getKey('check_uuid')) {
+            return $this->redirect('/');
+        }
+
+        App::uses('SecureRandom', 'Lib');
+        $state = SecureRandom::hex(32);
+        $this->Session->write('Microsoft.state', $state);
+        return $this->redirect('https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?' . http_build_query([
+            'client_id' => $clientId,
+            'response_type' => 'code',
+            'scope' => 'XboxLive.signin User.Read offline_access',
+            'redirect_uri' => Router::url('/microsoft/auth', true),
+            'state' => $state
+        ], '', '&', PHP_QUERY_RFC3986));
+    }
+
     public function auth()
     {
 
@@ -12,7 +32,17 @@ class MicroSoftController extends AppController
             return $this->redirect($this->referer());
         }
 
-        $microsoft_code = $this->params['url']["code"];
+        $this->request->allowMethod('get');
+        $expected = $this->Session->read('Microsoft.state');
+        $state = $this->request->query('state');
+        if (!is_string($expected) || !is_string($state) || !hash_equals($expected, $state)) {
+            throw new BadRequestException();
+        }
+        $this->Session->delete('Microsoft.state');
+        $microsoft_code = $this->request->query('code');
+        if (!is_string($microsoft_code) || $microsoft_code === '') {
+            return $this->redirect('/');
+        }
         $microsoft_client_id = $this->Configuration->getKey('microsoft_client_id');
         $microsoft_client_secret = $this->Configuration->getKey('microsoft_client_secret');
 
@@ -21,7 +51,7 @@ class MicroSoftController extends AppController
 
         $microsoft_token_url = "https://login.live.com/oauth20_token.srf";
 
-        $xbox_result = json_decode($this->Util->sendHTTPPostRequest($microsoft_token_url, "client_id=" . $microsoft_client_id . "&client_secret=" . $microsoft_client_secret . "&scope=XboxLive.signin%20&code=" . $microsoft_code . "&grant_type=authorization_code&redirect_uri=$microsoft_redirect_uri", ['Content-Type: application/x-www-form-urlencoded']), true);
+        $xbox_result = json_decode($this->Util->sendHTTPPostRequest($microsoft_token_url, "client_id=" . $microsoft_client_id . "&client_secret=" . $microsoft_client_secret . "&scope=XboxLive.signin%20&code=" . rawurlencode($microsoft_code) . "&grant_type=authorization_code&redirect_uri=$microsoft_redirect_uri", ['Content-Type: application/x-www-form-urlencoded']), true);
         $xbox_user_id = $xbox_result["user_id"];
         $xbox_access_token = $xbox_result["access_token"];
 

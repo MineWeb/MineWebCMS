@@ -30,14 +30,20 @@
                                     <a href='<?= $this->Html->url(['action' => 'edit', $v["Maintenance"]['id']]) ?>'
                                        class="btn btn-success"><?= $Lang->get('GLOBAL__EDIT') ?></a>
                                     <?php if ($v["Maintenance"]["active"] == 1) { ?>
-                                        <a onClick="confirmDel('<?= $this->Html->url(['action' => 'disable', $v["Maintenance"]['id']]) ?>')"
-                                           class="btn btn-warning"><?= $Lang->get('GLOBAL__DISABLE') ?></a>
+                                        <?= $this->Form->postLink($Lang->get('GLOBAL__DISABLE'), ['action' => 'disable', $v["Maintenance"]['id']], [
+                                            'class' => 'btn btn-warning',
+                                            'confirm' => $Lang->get('GLOBAL__CONFIRM_DELETE')
+                                        ]) ?>
                                     <?php } else { ?>
-                                        <a onClick="confirmDel('<?= $this->Html->url(['action' => 'enable', $v["Maintenance"]['id']]) ?>')"
-                                           class="btn btn-primary"><?= $Lang->get('GLOBAL__ENABLE') ?></a>
+                                        <?= $this->Form->postLink($Lang->get('GLOBAL__ENABLE'), ['action' => 'enable', $v["Maintenance"]['id']], [
+                                            'class' => 'btn btn-primary',
+                                            'confirm' => $Lang->get('GLOBAL__CONFIRM_DELETE')
+                                        ]) ?>
                                     <?php } ?>
-                                    <a onClick="confirmDel('<?= $this->Html->url(['action' => 'delete', $v["Maintenance"]['id']]) ?>')"
-                                       class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
+                                    <?= $this->Form->postLink($Lang->get('GLOBAL__DELETE'), ['action' => 'delete', $v["Maintenance"]['id']], [
+                                        'class' => 'btn btn-danger',
+                                        'confirm' => $Lang->get('GLOBAL__CONFIRM_DELETE')
+                                    ]) ?>
                                 </td>
                             </tr>
                         <?php } ?>

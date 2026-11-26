@@ -167,6 +167,12 @@ class UserController extends AppController
             throw new NotFoundException();
         }
 
+        $this->request->allowMethod('get', 'post');
+        if ($this->request->is('get')) {
+            $this->set('actionLabel', 'USER__CONFIRM_EMAIL');
+            return $this->render('confirm_action');
+        }
+
         $userId = $user['User']['id'];
         $event = new CakeEvent('beforeConfirmAccount', $this, ['user_id' => $userId]);
         $this->getEventManager()->dispatch($event);
@@ -296,6 +302,15 @@ class UserController extends AppController
 
     function logout()
     {
+        $this->request->allowMethod('get', 'post');
+        if ($this->request->is('get')) {
+            if (!$this->isConnected) {
+                return $this->redirect('/');
+            }
+            $this->set('actionLabel', 'USER__LOGOUT');
+            return $this->render('confirm_action');
+        }
+
         $this->autoRender = false;
         $event = new CakeEvent('onLogout', $this, ['session' => $this->Session->read('user')]);
         $this->getEventManager()->dispatch($event);
@@ -303,13 +318,14 @@ class UserController extends AppController
             return $event->result;
         }
 
-        if ($this->Cookie->read('microsoft_user_id')) {
+        $microsoftLogout = $this->Cookie->read('microsoft_user_id');
+        if ($microsoftLogout) {
             $this->Cookie->delete('microsoft_user_id');
         }
 
         $this->renewUserSession();
         $this->forgetRememberedUser();
-        $this->redirect($this->referer());
+        return $this->redirect($microsoftLogout ? $this->viewVars['logout_microsoft_user_url'] : '/');
     }
 
     function uploadSkin()
@@ -468,13 +484,13 @@ class UserController extends AppController
 
     function resend_confirmation()
     {
+        $this->request->allowMethod('get', 'post');
         if (!$this->isConnected && !$this->Session->check('email.confirm.user.id'))
             throw new ForbiddenException();
         if ($this->isConnected)
             $user = $this->User->getAllFromCurrentUser();
         else
             $user = $this->User->find('first', ['conditions' => ['id' => $this->Session->read('email.confirm.user.id')]]);
-        $this->Session->delete('email.confirm.user.id');
         if (!$user || empty($user))
             throw new NotFoundException();
         if (isset($user['User']))
@@ -482,6 +498,11 @@ class UserController extends AppController
         $confirmed = $user['confirmed'];
         if (!$this->Configuration->getKey('confirm_mail_signup') || empty($confirmed) || date('Y-m-d H:i:s', strtotime($confirmed)) == $confirmed)
             throw new NotFoundException();
+        if ($this->request->is('get')) {
+            $this->set('actionLabel', 'USER__RESEND_CONFIRMATION_EMAIL');
+            return $this->render('confirm_action');
+        }
+        $this->Session->delete('email.confirm.user.id');
         $email = $this->Util->sendConfirmationEmail($user['email'], $user['pseudo'], $confirmed);
         if ($email)
             $this->Session->setFlash($this->Lang->get('USER__CONFIRM_EMAIL_RESEND_SUCCESS'), 'default.success');
@@ -652,6 +673,7 @@ class UserController extends AppController
                 $this->DataTable->mDataProp = true;
                 $response = $this->DataTable->getResponse();
                 $users = $response['aaData'];
+                $view = $this->_getViewObject();
                 $data = [];
                 foreach ($users as $value) {
                     $username = h($value['User']['pseudo'], false);
@@ -664,11 +686,9 @@ class UserController extends AppController
                             'action' => 'edit/' . $value["User"]["id"],
                             'admin' => true
                         ]) . '" class="btn btn-info">' . $this->Lang->get('GLOBAL__EDIT') . '</a>';
-                    $btns .= '&nbsp;<a onClick="confirmDel(\'' . Router::url([
-                            'controller' => 'user',
-                            'action' => 'delete/' . $value["User"]["id"],
-                            'admin' => true
-                        ]) . '\')" class="btn btn-danger">' . $this->Lang->get('GLOBAL__DELETE') . '</button>';
+                    $btns .= '&nbsp;' . $view->Form->postLink($this->Lang->get('GLOBAL__DELETE'), [
+                        'action' => 'delete', $value['User']['id']
+                    ], ['class' => 'btn btn-danger', 'confirm' => $this->Lang->get('GLOBAL__CONFIRM_DELETE')]);
                     $data[] = [
                         'User' => [
                             'pseudo' => $username,
@@ -734,6 +754,7 @@ class UserController extends AppController
 
     function admin_confirm($user_id = false)
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         if (isset($user_id) && $this->isConnected and $this->Permissions->can('MANAGE_USERS')) {
             $find = $this->User->find('first', ['conditions' => ['id' => $user_id]]);
@@ -854,6 +875,7 @@ class UserController extends AppController
 
     function admin_delete($id = false)
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         if ($this->isConnected and $this->Permissions->can('MANAGE_USERS')) {
             if ($id != false) {

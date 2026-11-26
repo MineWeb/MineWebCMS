@@ -176,7 +176,7 @@
             });
 
             $('#tabsleft .finish').click(function () {
-                document.location.href = "<?= $this->Html->url(['controller' => 'install', 'action' => 'end']) ?>";
+                document.getElementById('finish-install').click();
             });
         });
     </script>

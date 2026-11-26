@@ -37,8 +37,7 @@
                             </td>
                             <td>
                                 <?php if ('default' != $Configuration->getKey('theme')) { ?>
-                                    <a href="<?= $this->Html->url(['controller' => 'theme', 'action' => 'enable', 'default', 'admin' => true]) ?>"
-                                       class="btn btn-success"><?= $Lang->get('GLOBAL__ENABLE') ?></a>
+                                    <?= $this->Form->postLink($Lang->get('GLOBAL__ENABLE'), ['action' => 'enable', 'default'], ['class' => 'btn btn-success']) ?>
                                 <?php } ?>
                                 <a href="<?= $this->Html->url(['controller' => 'theme', 'action' => 'custom', 'default', 'admin' => true]) ?>"
                                    class="btn btn-info"><?= $Lang->get('THEME__CUSTOMIZATION') ?></a>
@@ -73,11 +72,12 @@
                                     </td>
                                     <td>
                                         <?php if ($value->slug != $Configuration->getKey('theme') && $value->valid) { ?>
-                                            <a href="<?= $this->Html->url(['controller' => 'theme', 'action' => 'enable', $value->slug, 'admin' => true]) ?>"
-                                               class="btn btn-success"><?= $Lang->get('GLOBAL__ENABLE') ?></a>
+                                            <?= $this->Form->postLink($Lang->get('GLOBAL__ENABLE'), ['action' => 'enable', $value->slug], ['class' => 'btn btn-success']) ?>
                                         <?php } ?>
-                                        <a onClick="confirmDel('<?= $this->Html->url(['controller' => 'theme', 'action' => 'delete', $value->slug, 'admin' => true]) ?>')"
-                                           class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
+                                        <?= $this->Form->postLink($Lang->get('GLOBAL__DELETE'), ['action' => 'delete', $value->slug], [
+                                            'class' => 'btn btn-danger',
+                                            'confirm' => $Lang->get('GLOBAL__CONFIRM_DELETE')
+                                        ]) ?>
                                         <?php if (file_exists(ROOT . '/app/View/Themed/' . $value->slug . '/Config/view.ctp')) { ?>
                                             <a href="<?= $this->Html->url(['controller' => 'theme', 'action' => 'custom', $value->slug, 'admin' => true]) ?>"
                                                class="btn btn-info"><?= $Lang->get('THEME__CUSTOMIZATION') ?></a>
@@ -86,9 +86,10 @@
                                            class="btn btn-primary"><?= $Lang->get('THEME__CUSTOM_FILES') ?></a>
                                         <?php if (isset($value->lastVersion)) { ?>
                                             <?php if ($value->version !== $value->lastVersion) { ?>
-                                                <a <?= (explode('.', $value->lastVersion)[0] > explode('.', $value->version)[0] ? 'data-warning-update' : '') ?>
-                                                        href="<?= $this->Html->url(['controller' => 'theme', 'action' => 'update', 'admin' => true, $value->slug]) ?>"
-                                                        class="btn btn-warning"><?= $Lang->get('GLOBAL__UPDATE') ?></a>
+                                                <?= $this->Form->postLink($Lang->get('GLOBAL__UPDATE'), ['action' => 'update', $value->slug], [
+                                                    'class' => 'btn btn-warning',
+                                                    'confirm' => explode('.', $value->lastVersion)[0] > explode('.', $value->version)[0] ? $Lang->get('UPDATE__MAJOR_WARNING_EXTENSION') : false
+                                                ]) ?>
                                             <?php } ?>
                                         <?php } ?>
                                     </td>
@@ -144,8 +145,7 @@
                                     <td><?= isset($value['version']) ? $value['version'] : $Lang->get('THEME__NEED_PURCHASE') ?></td>
                                     <td>
                                         <?php if ($value['free']): ?>
-                                            <a href="<?= $this->Html->url(['controller' => 'theme', 'action' => 'install', 'admin' => true, $value['slug']]) ?>"
-                                               class="btn btn-success"><?= $Lang->get('INSTALL__INSTALL') ?></a>
+                                            <?= $this->Form->postLink($Lang->get('INSTALL__INSTALL'), ['action' => 'install', $value['slug']], ['class' => 'btn btn-success']) ?>
                                         <?php endif; ?>
                                     </td>
                                 </tr>
@@ -162,10 +162,3 @@
         </div>
     </div>
 </section>
-<script type="text/javascript">
-    $('a[data-warning-update]').on('click', function (e) {
-        e.preventDefault();
-        if (confirm("<?= $Lang->get('UPDATE__MAJOR_WARNING_EXTENSION') ?>"))
-            window.location = $(this).attr('href');
-    });
-</script>

@@ -51,7 +51,7 @@
                         <?= before_display($v['content']) ?>
                     </div>
                     <div class="pull-right">
-                        <?php if ($Permissions->can('DELETE_COMMENT') or $Permissions->can('DELETE_HIS_COMMENT') and $user['pseudo'] == $v['author']) { ?>
+                        <?php if ($Permissions->can('DELETE_COMMENT') or $Permissions->can('DELETE_HIS_COMMENT') and $user['id'] == $v['user_id']) { ?>
                             <p><a id="<?= $v['id'] ?>" title="<?= $Lang->get('GLOBAL__DELETE') ?>"
                                   class="comment-delete btn btn-danger btn-sm">
                                     <icon class="fa fa-times"></icon>

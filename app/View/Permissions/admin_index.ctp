@@ -55,7 +55,10 @@
                                 <?php
                                 if (!empty($custom_ranks)) {
                                     foreach ($custom_ranks as $k => $data) {
-                                        echo '<td><a class="btn btn-danger" href="' . $this->Html->url(['controller' => 'permissions', 'action' => 'delete_rank', 'admin' => true, $data['Rank']['rank_id']]) . '">' . $Lang->get('GLOBAL__DELETE') . '</a></td>';
+                                        echo '<td>' . $this->Form->postLink($Lang->get('GLOBAL__DELETE'), ['action' => 'delete_rank', $data['Rank']['rank_id']], [
+                                            'class' => 'btn btn-danger',
+                                            'inline' => false
+                                        ]) . '</td>';
                                     }
                                 }
                                 ?>

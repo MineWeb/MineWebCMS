@@ -10,25 +10,8 @@ class NewsController extends AppController
         // récupérage des news
         $search_news = $this->getNews(); // on charge le model
 
-        if ($this->isConnected) {
-            $i = 0;
-            foreach ($search_news as $news => $val) {
-                foreach ($news['Like'] as $k => $value) {
-                    foreach ($value as $column => $v) {
-                        if ($this->User->getKey('id') == $v) {
-                            $search_news[$i]['News']['liked'] = true;
-                        }
-                    }
-                }
-                $i++;
-            }
-        }
-        $i = 0;
-        foreach ($search_news as $news => $val) {
-            if (!isset($news['News']['liked'])) {
-                $search_news[$i]['News']['liked'] = false;
-            }
-            $i++;
+        foreach ($search_news as $key => $news) {
+            $search_news[$key]['News']['liked'] = $this->isConnected && in_array($this->User->getKey('id'), Hash::extract($news['Like'], '{n}.user_id'));
         }
 
         $can_like = $this->Permissions->can('LIKE_NEWS');
@@ -54,21 +37,10 @@ class NewsController extends AppController
 
         if (isset($slug)) { // si le slug est présent
             $this->loadModel('News'); // on charge le model
-            $news = $this->News->find('first', ['recursive' => 1, 'order' => 'id desc', 'conditions' => ['slug' => $slug]]); // on cherche les 3 dernières news (les plus veille)
+            $news = $this->News->find('first', ['recursive' => 1, 'order' => 'id desc', 'conditions' => ['News.slug' => $slug, 'News.published' => 1]]);
             if ($news) { // si le slug existe
 
-                if ($this->isConnected) {
-                    foreach ($news['Like'] as $k => $value) {
-                        foreach ($value as $column => $v) {
-                            if ($this->User->getKey('id') == $v) {
-                                $news['News']['liked'] = true;
-                            }
-                        }
-                    }
-                }
-                if (!isset($news['News']['liked'])) {
-                    $news['News']['liked'] = false;
-                }
+                $news['News']['liked'] = $this->isConnected && in_array($this->User->getKey('id'), Hash::extract($news['Like'], '{n}.user_id'));
 
                 $this->set('title_for_layout', $news['News']['title']);
 
@@ -89,7 +61,10 @@ class NewsController extends AppController
         $this->response->type('json');
         if ($this->request->is('post')) {
             if ($this->Permissions->can('COMMENT_NEWS')) {
-                if (!empty($this->request->data['content']) && !empty($this->request->data['news_id'])) {
+                if (!empty($this->request->data['content']) && is_string($this->request->data['content']) && !empty($this->request->data['news_id'])) {
+                    if (!$this->News->isPublished($this->request->data['news_id'])) {
+                        throw new NotFoundException();
+                    }
 
                     $event = new CakeEvent('beforeAddComment', $this, ['content' => $this->request->data['content'], 'news_id' => $this->request->data['news_id'], 'user' => $this->User->getAllFromCurrentUser()]);
                     $this->getEventManager()->dispatch($event);
@@ -123,6 +98,9 @@ class NewsController extends AppController
         $this->autoRender = false;
         if ($this->request->is('post')) {
             if ($this->Permissions->can('LIKE_NEWS')) {
+                if (!$this->News->isPublished($this->request->data('id'))) {
+                    throw new NotFoundException();
+                }
                 $this->loadModel('Like');
                 $already = $this->Like->find('all', ['conditions' => ['news_id' => $this->request->data['id'], 'user_id' => $this->User->getKey('id')]]);
                 if (empty($already)) {
@@ -146,6 +124,9 @@ class NewsController extends AppController
         $this->autoRender = false;
         if ($this->request->is('post')) {
             if ($this->Permissions->can('LIKE_NEWS')) {
+                if (!$this->News->isPublished($this->request->data('id'))) {
+                    throw new NotFoundException();
+                }
                 $this->loadModel('Like');
                 $already = $this->Like->find('all', ['conditions' => ['news_id' => $this->request->data['id'], 'user_id' => $this->User->getKey('id')]]);
                 if (!empty($already)) {
@@ -156,7 +137,7 @@ class NewsController extends AppController
                         return $event->result;
                     }
 
-                    $this->Like->deleteAll(['Like.news_id' => $this->request->data['id'], 'Like.user_id' => $this->User->getKey('id')]);
+                    $this->Like->deleteAll(['Like.news_id' => $this->request->data['id'], 'Like.user_id' => $this->User->getKey('id')], false, true);
                 }
             }
         }
@@ -166,25 +147,33 @@ class NewsController extends AppController
     function ajax_comment_delete()
     {
         $this->autoRender = false;
-        $this->loadModel('Comment');
-        $search = $this->Comment->find('all', ['conditions' => ['id' => $this->request->data['id']]]);
-        if ($this->Permissions->can('DELETE_COMMENT') or $this->Permissions->can('DELETE_HIS_COMMENT') and $this->User->getKey('pseudo') == $search[0]['Comment']['author']) {
-            if ($this->request->is('post')) {
-
-                $event = new CakeEvent('beforeDeleteComment', $this, ['comment_id' => $this->request->data['id'], 'news_id' => $search[0]['Comment']['news_id'], 'user' => $this->User->getAllFromCurrentUser()]);
-                $this->getEventManager()->dispatch($event);
-                if ($event->isStopped()) {
-                    return $event->result;
-                }
-
-                $this->Comment->delete($this->request->data['id']);
-                echo 'true';
-            } else {
-                echo 'NOT_POST';
-            }
-        } else {
-            echo 'NOT_ADMIN';
+        $this->request->allowMethod('post');
+        $id = filter_var($this->request->data('id'), FILTER_VALIDATE_INT);
+        if ($id < 1) {
+            throw new NotFoundException();
         }
+
+        $this->loadModel('Comment');
+        $comment = $this->Comment->find('first', [
+            'fields' => ['Comment.id', 'Comment.user_id', 'Comment.news_id'],
+            'conditions' => ['Comment.id' => $id, 'News.published' => 1],
+            'recursive' => 0
+        ]);
+        if (!$comment) {
+            throw new NotFoundException();
+        }
+        if (!$this->Permissions->can('DELETE_COMMENT') && !($this->Permissions->can('DELETE_HIS_COMMENT') && $this->User->getKey('id') == $comment['Comment']['user_id'])) {
+            echo 'NOT_ADMIN';
+            return;
+        }
+
+        $event = new CakeEvent('beforeDeleteComment', $this, ['comment_id' => $this->request->data['id'], 'news_id' => $comment['Comment']['news_id'], 'user' => $this->User->getAllFromCurrentUser()]);
+        $this->getEventManager()->dispatch($event);
+        if ($event->isStopped()) {
+            return $event->result;
+        }
+        $this->Comment->delete($id);
+        echo 'true';
     }
 
     function admin_index()
@@ -203,6 +192,7 @@ class NewsController extends AppController
 
     function admin_delete($id = false)
     {
+        $this->request->allowMethod('post');
         if ($this->isConnected and $this->Permissions->can('MANAGE_NEWS')) {
             if ($id != false) {
 

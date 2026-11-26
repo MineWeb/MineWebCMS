@@ -167,6 +167,7 @@ class SeoController extends AppController
 
     public function admin_delete($id = false)
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         if (!$this->isConnected || !$this->Permissions->can('MANAGE_SEO') || !$id)
             throw new ForbiddenException();

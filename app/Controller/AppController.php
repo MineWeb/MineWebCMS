@@ -52,9 +52,11 @@ class AppController extends Controller
     public function beforeFilter()
     {
         // find any xss vulnability on request data
-        $datas = $this->request->data;
-        $this->request->data = $this->xssProtection($datas, ['command', 'cmd', 'order', 'broadcast']);
-        $this->request->data["xss"] = $datas;
+        if ($this->request->data || $this->request->is('post')) {
+            $datas = $this->request->data;
+            $this->request->data = $this->xssProtection($datas, ['command', 'cmd', 'order', 'broadcast']);
+            $this->request->data['xss'] = $datas;
+        }
         // lowercase to avoid errors when the controller is called with uppercase
         $this->params['controller'] = strtolower($this->params['controller']);
         $this->params['action'] = strtolower($this->params['action']);
@@ -114,19 +116,24 @@ class AppController extends Controller
         // Plugins events
         $this->EyPlugin->initEventsListeners($this);
 
-        $event = new CakeEvent('requestPage', $this, $this->request->data);
-        $this->getEventManager()->dispatch($event);
-        if ($event->isStopped())
-            return $event->result;
+        $this->getEventManager()->attach(function () {
+            $this->set('csrfToken', $this->Session->read('_Token.key'));
+            if ($this instanceof CakeErrorController) {
+                return;
+            }
 
-        if ($this->request->is('post')) {
-            $event = new CakeEvent('onPostRequest', $this, $this->request->data);
+            $event = new CakeEvent('requestPage', $this, $this->request->data);
             $this->getEventManager()->dispatch($event);
             if ($event->isStopped())
                 return $event->result;
-        }
 
-
+            if ($this->request->is('post')) {
+                $event = new CakeEvent('onPostRequest', $this, $this->request->data);
+                $this->getEventManager()->dispatch($event);
+                if ($event->isStopped())
+                    return $event->result;
+            }
+        }, 'Controller.startup', ['priority' => 20]);
     }
 
     public function xssProtection($array, $excluded = [])
@@ -217,15 +224,6 @@ class AppController extends Controller
         $this->Security->blackHoleCallback = 'blackhole';
         $this->Security->validatePost = false;
         $this->Security->csrfUseOnce = false;
-
-        $token = $this->Session->read('_Token');
-        if (empty($token) || empty($token['key'])) {
-            $this->Security->generateToken($this->request);
-            $csrfToken = $this->Session->read('_Token')['key'];
-        } else {
-            $csrfToken = $token['key'];
-        }
-        $this->set(compact('csrfToken'));
     }
 
     private function __initUser()
@@ -267,12 +265,11 @@ class AppController extends Controller
 
         $microsoft_user_id = $this->Cookie->read('microsoft_user_id');
         $microsoft_logout_redirect_uri = urlencode(Router::url('/user/logout', true));
-        $microsoft_login_redirect_uri = urlencode(Router::url('/microsoft/auth', true));
         $microsoft_client_id = $this->Configuration->getKey('microsoft_client_id');
         $allow_microsoft_connection = $microsoft_client_id && $this->Configuration->getKey('check_uuid');
         $logout_microsoft_user_url = "https://login.live.com/oauth20_logout.srf?client_id=$microsoft_client_id&redirect_uri=$microsoft_logout_redirect_uri";
 
-        $microsoft_connection_url = "https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=$microsoft_client_id&response_type=code&scope=XboxLive.signin%20User.Read%20offline_access&redirect_uri=$microsoft_login_redirect_uri";
+        $microsoft_connection_url = Router::url(['plugin' => null, 'admin' => false, 'controller' => 'microsoft', 'action' => 'login'], true);
 
         $this->set(compact('user', 'microsoft_user_id', 'logout_microsoft_user_url', 'microsoft_connection_url', 'allow_microsoft_connection'));
     }
@@ -281,6 +278,7 @@ class AppController extends Controller
     {
         $this->Session->renew();
         $this->Session->delete('TwoFactor');
+        $this->Session->delete('Microsoft.state');
         $this->Session->delete('user_id_two_factor_auth');
         $this->Session->delete('two-factor-auth-secret');
         if ($userId === null) {
@@ -668,13 +666,8 @@ class AppController extends Controller
         $default = $this->Seo->find('first', ["conditions" => ['page' => null]])['Seo'];
         $current_url = $this->here;
         $get_page = [];
-        $condition = ["'" . $current_url . "' LIKE CONCAT(page, '%')"];
-
-        $use_sqlite = $this->Util->useSqlite();
-
-        if ($use_sqlite)
-            $condition = ["'" . $current_url . "' LIKE 'page' || '%' "];
-        $check = $this->Seo->find('all', ['conditions' => $condition]);
+        $prefixCondition = $this->Util->useSqlite() ? "? LIKE (page || '%')" : "? LIKE CONCAT(page, '%')";
+        $check = $this->Seo->find('all', ['conditions' => [$prefixCondition => $current_url]]);
 
         if ($check && ($check = max($check)) && ($check['Seo']["page"] == $current_url || $current_url != "/"))
             $get_page = $check['Seo'];
@@ -705,18 +698,18 @@ class AppController extends Controller
 
     public function blackhole($type)
     {
-        if ($type == "csrf") {
-            $this->autoRender = false;
-            if ($this->request->is('ajax')) {
-                $this->response->type('json');
-                $this->response->body(json_encode(['statut' => false, 'msg' => $this->Lang->get('ERROR__CSRF')]));
-                $this->response->send();
-                exit;
-            } else {
-                $this->Session->setFlash($this->Lang->get('ERROR__CSRF'), 'default.error');
-                $this->redirect($this->referer());
-            }
+        if ($type !== 'secure' && $type !== 'csrf') {
+            throw new BadRequestException();
         }
+        $message = $this->Lang->get('ERROR__CSRF');
+        if ($this->request->is('ajax')) {
+            $this->response->statusCode(403);
+            $this->response->type('json');
+            $this->response->body(json_encode(['statut' => false, 'msg' => $message]));
+            $this->response->send();
+            exit;
+        }
+        throw new ForbiddenException($message);
     }
 
     public function sendGetRequest($url)

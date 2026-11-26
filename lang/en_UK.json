@@ -454,6 +454,7 @@
         "USER__IMG_UPLOAD_WIDTH_MAX": "Maximum {PIXELS} pixels of width",
         "USER__IMG_UPLOAD_HEIGHT_MAX": "Maximum {PIXELS} pixels in height",
         "USER__IMG_UPLOAD_TYPE_PNG": "Must be in PNG format",
+        "USER__RESEND_CONFIRMATION_EMAIL": "Resend confirmation email",
         "USER__CONFIRM_EMAIL_RESEND_SUCCESS": "The confirmation email has been resent to you!",
         "USER__CONFIRM_EMAIL_RESEND_FAIL": "The confirmation email could not be resent! Please try again later.",
         "USER__REMEMBER_ME": "Remember me",

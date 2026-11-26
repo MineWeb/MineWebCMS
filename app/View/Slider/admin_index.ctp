@@ -30,8 +30,10 @@
                                 <td>
                                     <a href="<?= $this->Html->url(['controller' => 'slider', 'action' => 'edit/' . $v['Slider']['id'], 'admin' => true]) ?>"
                                        class="btn btn-info"><?= $Lang->get('GLOBAL__EDIT') ?></a>
-                                    <a onClick="confirmDel('<?= $this->Html->url(['controller' => 'slider', 'action' => 'delete/' . $v['Slider']['id'], 'admin' => true]) ?>')"
-                                       class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
+                                    <?= $this->Form->postLink($Lang->get('GLOBAL__DELETE'), ['action' => 'delete', $v['Slider']['id']], [
+                                        'class' => 'btn btn-danger',
+                                        'confirm' => $Lang->get('GLOBAL__CONFIRM_DELETE')
+                                    ]) ?>
                             </tr>
                         <?php } ?>
                         </tbody>

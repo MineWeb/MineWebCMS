@@ -36,8 +36,10 @@
                                 <td>
                                     <a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'edit/' . $value['Page']['id'], 'admin' => true]) ?>"
                                        class="btn btn-info"><?= $Lang->get('GLOBAL__EDIT') ?></a>
-                                    <a onClick="confirmDel('<?= $this->Html->url(['controller' => 'pages', 'action' => 'delete/' . $value['Page']['id'], 'admin' => true]) ?>')"
-                                       class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
+                                    <?= $this->Form->postLink($Lang->get('GLOBAL__DELETE'), ['action' => 'delete', $value['Page']['id']], [
+                                        'class' => 'btn btn-danger',
+                                        'confirm' => $Lang->get('GLOBAL__CONFIRM_DELETE')
+                                    ]) ?>
                                 </td>
                             </tr>
                         <?php } ?>

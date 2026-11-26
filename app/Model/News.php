@@ -82,6 +82,15 @@ class News extends AppModel
         return $result[$index];
     }
 
+    public function isPublished($id)
+    {
+        $id = filter_var($id, FILTER_VALIDATE_INT);
+        return $id > 0 && parent::find('count', [
+            'conditions' => ['News.id' => $id, 'News.published' => 1],
+            'recursive' => -1
+        ]);
+    }
+
     private function getUserFromID($id)
     {
         if (!isset($this->usersByID[$id])) {

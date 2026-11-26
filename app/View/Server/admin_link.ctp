@@ -18,10 +18,14 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
-                        <a href="<?= $this->Html->url(['action' => 'switchState']) ?>"
-                           class="btn btn-<?= ($isEnabled) ? 'danger' : 'success' ?>"><?= ($isEnabled) ? $Lang->get('SERVER__DISABLE_SERVER') : $Lang->get('SERVER__ENABLE_SERVER') ?></a>
-                        <a href="<?= $this->Html->url(['action' => 'switchCacheState']) ?>"
-                           class="btn btn-<?= ($isCacheEnabled) ? 'danger' : 'success' ?>"><?= ($isCacheEnabled) ? $Lang->get('SERVER__DISABLE_CACHE') : $Lang->get('SERVER__ENABLE_CACHE') ?></a>
+                        <?= $this->Form->postLink(($isEnabled) ? $Lang->get('SERVER__DISABLE_SERVER') : $Lang->get('SERVER__ENABLE_SERVER'), ['action' => 'switchState'], [
+                            'class' => 'btn btn-' . ($isEnabled ? 'danger' : 'success'),
+                            'inline' => false
+                        ]) ?>
+                        <?= $this->Form->postLink(($isCacheEnabled) ? $Lang->get('SERVER__DISABLE_CACHE') : $Lang->get('SERVER__ENABLE_CACHE'), ['action' => 'switchCacheState'], [
+                            'class' => 'btn btn-' . ($isCacheEnabled ? 'danger' : 'success'),
+                            'inline' => false
+                        ]) ?>
 
                     </form>
 
@@ -119,8 +123,10 @@
 
                                 <button type="submit"
                                         class="btn btn-success"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
-                                <a href="<?= $this->Html->url(['controller' => 'server', 'action' => 'delete', 'admin' => true, $value['Server']['id']]) ?>"
-                                   type="submit" class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
+                                <?= $this->Form->postLink($Lang->get('GLOBAL__DELETE'), ['action' => 'delete', $value['Server']['id']], [
+                                    'class' => 'btn btn-danger',
+                                    'inline' => false
+                                ]) ?>
 
                                 <button class="btn switchBanner float-right <?=  (isset($value['Server']['activeInBanner']) && $value['Server']['activeInBanner']) ? 'btn-danger' : 'btn-info' ?>"
                                         id="<?= $value['Server']['id'] ?>"><?= (isset($value['Server']['activeInBanner']) && $value['Server']['activeInBanner']) ? $Lang->get('SERVER__HIDE_BANNER') : $Lang->get('SERVER__AFFICH_BANNER') ?></button>
@@ -157,7 +163,7 @@
             btn.text("<?= $Lang->get('SERVER__HIDE_BANNER') ?>");
         }
 
-        $.get('<?= $this->Html->url(['action' => 'switchBanner']) ?>/' + id);
+        $.post('<?= $this->Html->url(['action' => 'switchBanner']) ?>/' + id, {'data[_Token][key]': CSRF_TOKEN});
 
         return false;
     });

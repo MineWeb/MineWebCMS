@@ -71,6 +71,7 @@ class MaintenanceController extends AppController
 
     public function admin_disable($id = false)
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         if (!$id)
             throw new ForbiddenException();
@@ -89,6 +90,7 @@ class MaintenanceController extends AppController
 
     public function admin_enable($id = false)
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         if (!$id)
             throw new ForbiddenException();
@@ -107,6 +109,7 @@ class MaintenanceController extends AppController
 
     public function admin_delete($id = false)
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         if (!$id)
             throw new ForbiddenException();

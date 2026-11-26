@@ -55,6 +55,7 @@ class ServerController extends AppController
 
     public function admin_delete_cmd($id)
     {
+        $this->request->allowMethod('post');
         $this->autoRender = null;
         if (!$this->isConnected || !$this->Permissions->can('MANAGE_SERVERS'))
             throw new ForbiddenException();
@@ -66,6 +67,7 @@ class ServerController extends AppController
 
     public function admin_execute_cmd()
     {
+        $this->request->allowMethod('post');
         $this->autoRender = null;
         if (!$this->isConnected || !$this->Permissions->can('MANAGE_SERVERS'))
             throw new ForbiddenException();
@@ -79,6 +81,7 @@ class ServerController extends AppController
 
     public function admin_add_cmd()
     {
+        $this->request->allowMethod('post');
         $this->autoRender = null;
         $this->response->type('json');
 
@@ -112,6 +115,7 @@ class ServerController extends AppController
 
     public function admin_editBannerMsg()
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         $this->response->type('json');
 
@@ -132,6 +136,7 @@ class ServerController extends AppController
 
     public function admin_switchState()
     {
+        $this->request->allowMethod('post');
         if ($this->isConnected and $this->Permissions->can('MANAGE_SERVERS')) {
 
             $this->autoRender = false;
@@ -150,6 +155,7 @@ class ServerController extends AppController
 
     public function admin_switchCacheState()
     {
+        $this->request->allowMethod('post');
         if ($this->isConnected and $this->Permissions->can('MANAGE_SERVERS')) {
 
             $this->autoRender = false;
@@ -168,6 +174,7 @@ class ServerController extends AppController
 
     public function admin_switchBanner($id = false)
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         if ($this->isConnected && $this->Permissions->can('MANAGE_SERVERS')) {
             if ($id) {
@@ -199,6 +206,7 @@ class ServerController extends AppController
 
     public function admin_delete($id = false)
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         if ($this->isConnected && $this->Permissions->can('MANAGE_SERVERS')) {
             if ($id) {
@@ -233,6 +241,7 @@ class ServerController extends AppController
 
     public function admin_config()
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         $this->response->type('json');
         if ($this->isConnected and $this->Permissions->can('MANAGE_SERVERS')) {
@@ -260,6 +269,7 @@ class ServerController extends AppController
 
     public function admin_link_ajax()
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         $this->response->type('json');
 

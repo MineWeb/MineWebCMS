@@ -86,21 +86,16 @@ class DataTableComponent extends Component
             $isFiltered = true;
         }
 
-        if (isset($this->controller->request->query)) {
-            $httpGet = $this->controller->request->query;
+        $query = $this->controller->request->query;
+        $fields = $this->getColumnFields($query);
+        $sort = isset($query['iSortCol_0']) ? $query['iSortCol_0'] : null;
+        if ((is_string($sort) || is_int($sort)) && isset($fields[$sort]) && (!isset($query['sEcho']) || $query['sEcho'] != 1)) {
+            $direction = isset($query['sSortDir_0']) && $query['sSortDir_0'] === 'asc' ? 'ASC' : 'DESC';
+            $this->controller->paginate = array_merge($this->controller->paginate, ['order' => [$fields[$sort] => $direction]]);
         }
 
-        // check for ORDER BY in GET request
-        if (isset($httpGet) && isset($httpGet['iSortCol_0']) && $httpGet['sEcho'] != 1) {
-            $orderBy = $this->getOrderByStatements();
-            if (!empty($orderBy)) {
-                $this->controller->paginate = array_merge($this->controller->paginate, ['order' => $orderBy]);
-            }
-        }
-
-        // check for WHERE statement in GET request
-        if (isset($httpGet) && !empty($httpGet['sSearch'])) {
-            $conditions = $this->getWhereConditions();
+        if (isset($query['sSearch']) && is_string($query['sSearch']) && $query['sSearch'] !== '') {
+            $conditions = $this->getWhereConditions($fields);
 
             if (!empty($this->controller->paginate['contain'])) {
                 $this->controller->paginate = array_merge_recursive($this->controller->paginate, ['contain' => $conditions]);
@@ -185,104 +180,50 @@ class DataTableComponent extends Component
         }
     }
 
-    /**
-     * returns sql order by string after converting dataTables GET request into Cake style order by
-     * @param void
-     * @return string
-     */
-    private function getOrderByStatements()
+    private function getColumnFields($query)
     {
-
-        if (!isset($this->controller->paginate['fields']) && !empty($this->controller->paginate['contain']) && empty($this->fields)) {
-            throw new Exception("Missing field and/or contain option in Paginate. Please set the fields so I know what to order by.");
+        $fields = $this->fields;
+        if (!$fields && !empty($this->controller->paginate['fields'])) {
+            $fields = $this->controller->paginate['fields'];
+        }
+        if (!$this->mDataProp) {
+            return $fields;
+        }
+        if (!$fields) {
+            foreach (array_keys($this->model->schema()) as $field) {
+                $fields[] = $this->model->alias . '.' . $field;
+            }
         }
 
-        $orderBy = '';
-
-        $fields = !empty($this->fields) ? $this->fields : $this->controller->paginate['fields'];
-
-        // loop through sorting columbns in GET
-        //for ( $i=0 ; $i<intval( $this->controller->request->query['iSortingCols'] ) ; $i++ ){
-        // if column is found in paginate fields list then add to $orderBy
-        if ($this->mDataProp == true) {
-            $direction = $this->controller->request->query['sSortDir_0'] === 'asc' ? 'asc' : 'desc';
-            $mDataProp = $this->controller->request->query['iSortCol_0'];
-            $orderBy = $this->controller->request->query['mDataProp_' . $mDataProp] . ' ' . $direction . ', ';
-        } else if (!empty($fields) && isset($this->controller->request->query['iSortCol_0'])) {
-            $direction = $this->controller->request->query['sSortDir_0'] === 'asc' ? 'asc' : 'desc';
-            $orderBy = $fields[$this->controller->request->query['iSortCol_0']] . ' ' . $direction . ', ';
+        $columns = [];
+        foreach ($query as $key => $field) {
+            if (preg_match('/^mDataProp_([0-9]+)\z/', $key, $matches) && in_array($field, $fields, true)) {
+                $columns[$matches[1]] = $field;
+            }
         }
-        //}
-
-        if (!empty($orderBy)) {
-            return substr($orderBy, 0, -2);
-        }
-
-        return $orderBy;
+        return $columns;
     }
 
-    /**
-     * returns sql conditions array after converting dataTables GET request into Cake style conditions
-     * will only search on fields with bSearchable set to true (which is the default value for bSearchable)
-     * @param void
-     * @return array
-     */
-    private function getWhereConditions()
+    private function getWhereConditions($fields)
     {
-
-        if ($this->mDataProp == false && !isset($this->controller->paginate['fields']) && empty($this->fields)) {
-            throw new Exception("Field list is not set. Please set the fields so I know how to build where statement.");
-        }
-
         $conditions = [];
-
-        $fields = [];
-        if ($this->mDataProp == true) {
-            for ($i = 0; $i < $this->controller->request->query['iColumns']; $i++) {
-                if (!isset($this->controller->request->query['bSearchable_' . $i]) || $this->controller->request->query['bSearchable_' . $i] == true) {
-                    $fields[] = $this->controller->request->query['mDataProp_' . $i];
-                }
+        $query = $this->controller->request->query;
+        foreach ($fields as $index => $column) {
+            if (!isset($query['bSearchable_' . $index]) || !in_array($query['bSearchable_' . $index], ['true', true], true)) {
+                continue;
             }
-        } else if (!empty($this->fields) || !empty($this->controller->paginate['fields'])) {
-            $fields = !empty($this->fields) ? $this->fields : $this->controller->paginate['fields'];
-        }
-
-        foreach ($fields as $x => $column) {
-
-            // only create conditions on bSearchable fields
-            if ($this->controller->request->query['bSearchable_' . $x] == 'true') {
-
-                if ($this->mDataProp == true) {
-                    $conditions['OR'][] = [
-                        $this->controller->request->query['mDataProp_' . $x] . ' LIKE' => '%' . $this->controller->request->query['sSearch'] . '%'
-                    ];
-                } else {
-
-                    list($table, $field) = explode('.', $column);
-
-                    // attempt using definitions in $model->validate to build intelligent conditions
-                    if ($this->conditionsByValidate == 1 && array_key_exists($column, $this->model->validate)) {
-
-                        if (!empty($this->controller->paginate['contain'])) {
-                            if (array_key_exists($table, $this->controller->paginate['contain']) && in_array($field, $this->controller->paginate['contain'][$table]['fields'])) {
-                                $conditions[$table]['conditions'][] = $this->conditionByDataType($column);
-                            }
-                        } else {
-                            $conditions['OR'][] = $this->conditionByDataType($column);
-                        }
-                    } else {
-
-                        if (!empty($this->controller->paginate['contain'])) {
-                            if (array_key_exists($table, $this->controller->paginate['contain']) && in_array($field, $this->controller->paginate['contain'][$table]['fields'])) {
-                                $conditions[$table]['conditions'][] = $column . ' LIKE "%' . $this->controller->request->query['sSearch'] . '%"';
-                            }
-                        } else {
-                            $conditions['OR'][] = [
-                                $column . ' LIKE' => '%' . $this->controller->request->query['sSearch'] . '%'
-                            ];
-                        }
-                    }
-                }
+            $condition = [$column . ' LIKE' => '%' . $query['sSearch'] . '%'];
+            if (!$this->mDataProp && $this->conditionsByValidate && isset($this->model->validate[$column])) {
+                $condition = $this->conditionByDataType($column);
+            }
+            if ($this->mDataProp || empty($this->controller->paginate['contain'])) {
+                $conditions['OR'][] = $condition;
+                continue;
+            }
+            $field = explode('.', $column, 2);
+            if (isset($field[1], $this->controller->paginate['contain'][$field[0]]['fields'])
+                && in_array($field[1], $this->controller->paginate['contain'][$field[0]]['fields'], true)) {
+                $conditions[$field[0]]['conditions'][] = $condition;
             }
         }
         return $conditions;

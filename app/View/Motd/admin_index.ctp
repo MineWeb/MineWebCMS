@@ -31,8 +31,10 @@
                         <td>
                             <a class="btn btn-info"
                                href="<?= $this->Html->url(['action' => 'edit', $key]) ?>"><?= $Lang->get('GLOBAL__EDIT') ?></a>
-                            <a onClick="confirmDel('<?= $this->Html->url(['action' => 'reset', $key]) ?>')"
-                               class="btn btn-danger"><?= $Lang->get('MOTD__RESET') ?></a>
+                            <?= $this->Form->postLink($Lang->get('MOTD__RESET'), ['action' => 'reset', $key], [
+                                'class' => 'btn btn-danger',
+                                'confirm' => $Lang->get('GLOBAL__CONFIRM_DELETE')
+                            ]) ?>
                         </td>
                     </tr>
                 <?php } ?>

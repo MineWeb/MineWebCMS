@@ -51,6 +51,7 @@ class StatisticsController extends AppController
 
     function admin_reset()
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         if ($this->isConnected and $this->Permissions->can('VIEW_STATISTICS')) {
             $this->loadModel('Visit');

@@ -456,6 +456,7 @@
        "USER__IMG_UPLOAD_WIDTH_MAX" : "Максимум {PIXELS} пикселей ширины" ,
        "USER__IMG_UPLOAD_HEIGHT_MAX" : "Максимальная высота {PIXELS} пикселей" ,
        "USER__IMG_UPLOAD_TYPE_PNG" : "Должно быть в формате PNG" ,
+       "USER__RESEND_CONFIRMATION_EMAIL": "Отправить письмо подтверждения ещё раз",
        "USER__CONFIRM_EMAIL_RESEND_SUCCESS": "Письмо с подтверждением было отправлено вам повторно !",
        "USER__CONFIRM_EMAIL_RESEND_FAIL": "Не удалось отправить электронное письмо с подтверждением! Повторите попытку позже.",
        "USER__REMEMBER_ME": "Запомнить меня",

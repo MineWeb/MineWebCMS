@@ -24,6 +24,7 @@ class NotificationsController extends AppController
 
     public function clear($id = 0)
     {
+        $this->request->allowMethod('post');
         if ($this->isConnected) {
             $notifications = $this->Notification->clearFromUser($id, $this->User->getKey('id'));
             $this->response->body(json_encode(['status' => $notifications]));
@@ -32,6 +33,7 @@ class NotificationsController extends AppController
 
     public function clearAll()
     {
+        $this->request->allowMethod('post');
         if ($this->isConnected) {
             $notifications = $this->Notification->clearAllFromUser($this->User->getKey('id'));
             $this->response->body(json_encode(['status' => $notifications]));
@@ -40,6 +42,7 @@ class NotificationsController extends AppController
 
     public function markAsSeen($id = 0)
     {
+        $this->request->allowMethod('post');
         if ($this->isConnected) {
             $notifications = $this->Notification->markAsSeenFromUser($id, $this->User->getKey('id'));
             $this->response->body(json_encode(['status' => $notifications]));
@@ -48,6 +51,7 @@ class NotificationsController extends AppController
 
     public function markAllAsSeen()
     {
+        $this->request->allowMethod('post');
         if ($this->isConnected) {
             $notifications = $this->Notification->markAllAsSeenFromUser($this->User->getKey('id'));
             $this->response->body(json_encode(['status' => $notifications]));
@@ -123,6 +127,7 @@ class NotificationsController extends AppController
 
     public function admin_setTo()
     {
+        $this->request->allowMethod('post');
         if ($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
 
             if ($this->request->is('ajax')) {
@@ -163,6 +168,7 @@ class NotificationsController extends AppController
 
     public function admin_clearFromUser($id, $user_id)
     {
+        $this->request->allowMethod('post');
         if ($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
             $notifications = $this->Notification->clearFromUser($id, $user_id);
             $this->response->body(json_encode(['status' => $notifications]));
@@ -173,6 +179,7 @@ class NotificationsController extends AppController
 
     public function admin_clearAllFromUser($user_id)
     {
+        $this->request->allowMethod('post');
         if ($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
             $notifications = $this->Notification->clearAllFromUser($user_id);
             $this->response->body(json_encode(['status' => $notifications]));
@@ -183,6 +190,7 @@ class NotificationsController extends AppController
 
     public function admin_clearFromAllUsers($id)
     {
+        $this->request->allowMethod('post');
         if ($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
             $notifications = $this->Notification->clearFromAllUsers($id);
             $this->response->body(json_encode(['status' => $notifications]));
@@ -193,6 +201,7 @@ class NotificationsController extends AppController
 
     public function admin_clearAllFromAllUsers()
     {
+        $this->request->allowMethod('post');
         if ($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
             $notifications = $this->Notification->clearAllFromAllUsers();
             $this->response->body(json_encode(['status' => $notifications]));
@@ -203,6 +212,7 @@ class NotificationsController extends AppController
 
     public function admin_markAsSeenFromUser($id, $user_id)
     {
+        $this->request->allowMethod('post');
         if ($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
             $notifications = $this->Notification->markAsSeenFromUser($id, $user_id);
             $this->response->body(json_encode(['status' => $notifications]));
@@ -213,6 +223,7 @@ class NotificationsController extends AppController
 
     public function admin_markAllAsSeenFromUser($user_id)
     {
+        $this->request->allowMethod('post');
         if ($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
             $notifications = $this->Notification->markAllAsSeenFromUser($user_id);
             $this->response->body(json_encode(['status' => $notifications]));
@@ -223,6 +234,7 @@ class NotificationsController extends AppController
 
     public function admin_markAsSeenFromAllUsers($id)
     {
+        $this->request->allowMethod('post');
         if ($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
             $notifications = $this->Notification->markAsSeenFromAllUsers($id);
             $this->response->body(json_encode(['status' => $notifications]));
@@ -233,6 +245,7 @@ class NotificationsController extends AppController
 
     public function admin_markAllAsSeenFromAllUsers()
     {
+        $this->request->allowMethod('post');
         if ($this->isConnected && $this->Permissions->can('MANAGE_NOTIFICATIONS')) {
             $notifications = $this->Notification->markAllAsSeenFromAllUsers();
             $this->response->body(json_encode(['status' => $notifications]));
@@ -243,6 +256,7 @@ class NotificationsController extends AppController
 
     public function admin_clearAllFromGroup()
     {
+        $this->request->allowMethod('post');
         if (!$this->isConnected || !$this->Permissions->can('MANAGE_NOTIFICATIONS'))
             throw new ForbiddenException();
         if (!isset($this->request->data['group']) || empty($this->request->data['group']))

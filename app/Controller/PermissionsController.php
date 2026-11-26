@@ -66,6 +66,7 @@ class PermissionsController extends AppController
 
     function admin_add_rank()
     {
+        $this->request->allowMethod('post');
         if ($this->isConnected && $this->Permissions->can('MANAGE_PERMISSIONS')) {
             $this->autoRender = false;
             $this->response->type('json');
@@ -108,6 +109,7 @@ class PermissionsController extends AppController
 
     function admin_delete_rank($id = false)
     {
+        $this->request->allowMethod('post');
         if ($this->isConnected && $this->Permissions->can('MANAGE_PERMISSIONS')) {
             $this->autoRender = false;
 

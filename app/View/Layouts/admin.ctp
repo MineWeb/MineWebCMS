@@ -60,7 +60,7 @@
                         $('body').removeClass("dark-mode");
                     }
 
-                    $.get('<?= $this->Html->url(['action' => 'switchAdminDarkMode', 'controller' => 'admin', 'admin' => true]) ?>');
+                    $.post('<?= $this->Html->url(['action' => 'switchAdminDarkMode', 'controller' => 'admin', 'admin' => true]) ?>', {'data[_Token][key]': CSRF_TOKEN});
 
                     // Update TinyMCE
                     if ($("#editor").length) {
@@ -89,9 +89,9 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link"
-                   href="<?= $this->Html->url(['controller' => 'user', 'action' => 'logout', 'admin' => false, 'plugin' => false]); ?>"><i
-                            class="fa fa-power-off"></i> <?= $Lang->get('USER__LOGOUT') ?></a>
+                <?= $this->Form->postLink('<i class="fa fa-power-off"></i> ' . h($Lang->get('USER__LOGOUT')),
+                    ['controller' => 'user', 'action' => 'logout', 'admin' => false, 'plugin' => false],
+                    ['class' => 'nav-link', 'escape' => false]) ?>
             </li>
         </ul>
 
@@ -307,6 +307,7 @@
     var CSRF_TOKEN = "<?= $csrfToken ?>";
 </script>
 
+<?= $this->fetch('postLink') ?>
 <?= $this->element('mineweb_admin_js'); ?>
 </body>
 </html>

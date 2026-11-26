@@ -59,6 +59,7 @@ class MotdController extends AppController
 
     public function admin_edit_ajax($server_id)
     {
+        $this->request->allowMethod('post');
         if (!$this->Permissions->can('MANAGE_MOTD'))
             throw new ForbiddenException();
         if (!$this->request->is('ajax'))
@@ -77,6 +78,7 @@ class MotdController extends AppController
 
     public function admin_reset($server_id = false)
     {
+        $this->request->allowMethod('post');
         $this->autoRender = false;
         if (!$this->Permissions->can('MANAGE_MOTD'))
             throw new ForbiddenException();

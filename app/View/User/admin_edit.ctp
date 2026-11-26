@@ -36,8 +36,14 @@
                                     <input value="<?= h($search_user['email'], false) ?>" type="email" name="email"
                                            class="form-control">
                                     <div class="input-group-append">
-                                        <a class="btn btn-success<?= ($search_user['confirmed']) ? ' disabled' : '' ?>"
-                                           href="<?= ($search_user['confirmed']) ? '#' : $this->Html->url(['action' => 'confirm', $search_user['id']]) ?>"><?= ($search_user['confirmed']) ? $Lang->get('USER__EMAIL_CONFIRMED') : $Lang->get('USER__CONFIRM_EMAIL') ?></a>
+                                        <?php if ($search_user['confirmed']) { ?>
+                                            <a class="btn btn-success disabled" href="#"><?= $Lang->get('USER__EMAIL_CONFIRMED') ?></a>
+                                        <?php } else { ?>
+                                            <?= $this->Form->postLink($Lang->get('USER__CONFIRM_EMAIL'), ['action' => 'confirm', $search_user['id']], [
+                                                'class' => 'btn btn-success',
+                                                'inline' => false
+                                            ]) ?>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>

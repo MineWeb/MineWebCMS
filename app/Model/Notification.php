@@ -94,12 +94,14 @@ class Notification extends AppModel
 
     public function setToAll($content, $from = null)
     {
-        if (empty($from)) {
-            $from = 'NULL';
-        }
-        $group = $this->generateGroup();
-        $content = addslashes($content);
-        $this->query("INSERT INTO notifications (`group`, `user_id`, `from`, `content`, `type`, `created`) SELECT '$group', id, $from, '$content', 'user', '" . date('Y-m-d H:i:s') . "' FROM users");
+        $db = $this->getDataSource();
+        $notifications = $db->fullTableName($this);
+        $users = $db->fullTableName($this->User);
+        $db->execute(
+            "INSERT INTO $notifications (`group`, `user_id`, `from`, `content`, `type`, `created`) SELECT ?, id, ?, ?, 'user', ? FROM $users",
+            [],
+            [$this->generateGroup(), $from ?: null, $content, date('Y-m-d H:i:s')]
+        );
     }
 
     public function clearFromUser($id, $user_id)

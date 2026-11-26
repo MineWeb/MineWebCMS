@@ -35,8 +35,7 @@
                                 <td>
                                     <a href="<?= $this->Html->url(['controller' => 'news', 'action' => 'edit/' . $v['News']['id'], 'admin' => true]) ?>"
                                        class="btn btn-info"><?= $Lang->get('GLOBAL__EDIT') ?></a>
-                                    <a onClick="confirmDel('<?= $this->Html->url(['controller' => 'news', 'action' => 'delete/' . $v['News']['id'], 'admin' => true]) ?>')"
-                                       class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
+                                    <?= $this->Form->postLink($Lang->get('GLOBAL__DELETE'), ['controller' => 'news', 'action' => 'delete', $v['News']['id'], 'admin' => true], ['class' => 'btn btn-danger', 'confirm' => $Lang->get('GLOBAL__CONFIRM_DELETE')]) ?>
                                 </td>
                             </tr>
                         <?php } ?>

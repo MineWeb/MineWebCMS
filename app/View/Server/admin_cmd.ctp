@@ -38,8 +38,11 @@
                                         <button class="btn btn-primary"
                                                 type="submit"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
 
-                                        <a onClick="confirmDel('<?= $this->Html->url(['controller' => 'server', 'action' => 'delete_cmd/' . $c['ServerCmd']['id'], 'admin' => true]) ?>')"
-                                           class="btn btn-danger"><?= $Lang->get('GLOBAL__DELETE') ?></a>
+                                        <?= $this->Form->postLink($Lang->get('GLOBAL__DELETE'), ['action' => 'delete_cmd', $c['ServerCmd']['id']], [
+                                            'class' => 'btn btn-danger',
+                                            'confirm' => $Lang->get('GLOBAL__CONFIRM_DELETE'),
+                                            'inline' => false
+                                        ]) ?>
                                     </form>
                                 </td>
                             </tr>
