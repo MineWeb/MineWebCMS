@@ -7,7 +7,7 @@
 	"MESSAGES":{
         "GLOBAL__HOME": "Home",
         "GLOBAL__FOOTER": "All rights reserved - 2022 <span class =\"pull-right\"> Powered by <a href=\"http://mineweb.org\"> mineweb.org </a> </span> ",
-        "GLOBAL__FOOTER_ADMIN": "<p>Developed by <a href=\"http://eywek.fr\">Eywek</a> & designed by <a href=\"http://thisismac.fr\">Mac'</a>.</p><p>Website provided by <a href=\"http://mineweb.org\">MineWeb</a> - All right reserved.</p><p>This CMS must be used only by a person who has purchased the license.</p><ul><li><a href=\"http://mineweb.org\">MineWeb</a></li><li class=\"muted\">·</li><li><a href=\"http://eywek.fr\">Eywek</a></li><li class=\"muted\">·</li><li><a href=\"http://thisismac.fr\">Mac'</a></li></ul>",
+        "GLOBAL__FOOTER_ADMIN": "<p>Developed by <a href=\"http://eywek.fr\">Eywek</a> & designed by <a href=\"http://thisismac.fr\">Mac'</a>.</p><p>Website provided by <a href=\"http://mineweb.org\">MineWeb</a> - All right reserved.</p><p>This CMS is distributed under the Open Source license <a href=\"https://www.gnu.org/licenses/gpl-3.0.fr.html\" target=\"_blank\">GNU GPLv3</a>.</p><ul><li><a href=\"http://mineweb.org\">MineWeb</a></li><li class=\"muted\">·</li><li><a href=\"http://eywek.fr\">Eywek</a></li><li class=\"muted\">·</li><li><a href=\"http://thisismac.fr\">Mac'</a></li></ul>",
         "GLOBAL__JOIN_US": "Join us on",
         "GLOBAL__FORMAT_DATE": "{%day}/{%month}/{%year} at {%hour|24}h{%minutes}",
         "GLOBAL__BY": "By",
