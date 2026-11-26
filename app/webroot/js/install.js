@@ -1,4 +1,4 @@
-$(window).load(function() {
+$(window).on('load', function() {
 
   // La page chargée, on enlève le svg qui fais patienter
   $('.container svg.loader').fadeOut(550, affichFirst);
