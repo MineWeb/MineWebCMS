@@ -156,6 +156,7 @@ class UpdateComponent extends CakeObject
             $dirname = substr($fileinfo['dirname'], strlen("{$this->source['repo']}-{$this->lastVersion}/"));
             // We check if that file need to be updated or not
             if (in_array($filename, $this->bypassFiles)) continue;
+            if ($filename === 'config/theme.default.json' && is_file(ROOT . DS . $filename)) continue;
             // If the folder doesn't exist, create it recursively
             if (!is_dir(ROOT . DS . $dirname)) mkdir(ROOT . DS . $dirname, 0775, true);
 
